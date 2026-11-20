@@ -29,3 +29,25 @@ Semantic token names and file paths under `css/` are public API; primitive token
 - Tooling: html-validate, Stylelint, a token discipline check, and Playwright + axe-core
   accessibility tests in light and dark, all run by `npm test`.
 - GitHub Actions: CI on pull requests and pushes to `main`, and a GitHub Pages skeleton.
+- Atoms in `css/components/atoms/`, imported into the `components` layer, each with one attribute API:
+  - Text helpers: `data-text="lead | small | muted"`.
+  - Quiet link: `data-link="quiet"` (inherits text color, keeps its underline).
+  - Buttons: `data-button="[primary | secondary | quiet] [small | large]"` on `<button>`, `<input>`
+    and `<a href>`; `aria-disabled="true"` and `aria-busy="true"` states; an inner focus ring on
+    primary buttons. `type="submit"` stays primary by default.
+  - Switch: `role="switch"` on `<input type="checkbox">`, per the APG Switch pattern, with
+    forced-colors support.
+  - Field: `data-field` with `data-field="hint"` and `data-field="error"`; invalid style for
+    `aria-invalid="true"` and `:user-invalid`.
+  - Badge: `data-badge="neutral | accent | success | warning | danger"`.
+- Semantic tokens: `--dui-color-warning`, `--dui-color-accent-surface`, `--dui-color-success-surface`,
+  `--dui-color-warning-surface`, `--dui-color-danger-surface`, `--dui-tint-amount`, `--dui-border-tint-amount`,
+  `--dui-size-target-small`, `--dui-size-target-large` (and their primitives).
+- `examples/atoms/`: an index and one page per atom; the theming example now shows atoms in both themes.
+- Tests: atom states through Playwright accessibility APIs, rendered focus-ring contrast on every
+  button variant, contrast pairs for every new token, and scoped theming of atoms.
+- Firefox and WebKit Playwright projects alongside Chromium, installed in CI.
+
+### Fixed
+
+- Base button hover and press styles no longer apply to buttons with `aria-disabled="true"`.

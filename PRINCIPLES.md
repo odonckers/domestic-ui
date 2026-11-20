@@ -82,7 +82,7 @@ unlayered CSS beats all of them**, so overriding never needs `!important` or spe
 | `tokens` | Primitive and semantic custom properties |
 | `base` | Native elements: typography, lists, tables, forms, buttons, dialog, details, focus |
 | `layout` | `.stack`, `.cluster`, `.grid` |
-| `components` | Molecules and organisms (M2, M3; empty for now) |
+| `components` | Atoms in `css/components/atoms/` (M2); molecules and organisms later. See the [atoms index](css/components/atoms/README.md) |
 | `utilities` | Single-purpose helpers such as `.visually-hidden`; last so they always apply |
 
 **Our choice:** this order, because each layer only refines the ones before it, and a
@@ -130,7 +130,8 @@ with a `data-theme` attribute or a `theme-*` class to scope it:
 Check your theme's contrast in both schemes; `tests/tokens.spec.js` shows how.
 
 A few semantic tokens are defined in terms of others (`--dui-color-link`, `--dui-color-focus`
-and `--dui-color-accent-hover` follow `--dui-color-accent`). A custom property's `var()` is
+and `--dui-color-accent-hover` follow `--dui-color-accent`; the badge tints
+`--dui-color-*-surface` mix a tone into `--dui-color-surface`). A custom property's `var()` is
 resolved on the element that declares it ([CSS Variables, "Resolving dependency cycles"](https://www.w3.org/TR/css-variables-1/#cycles)),
 so these, plus `color`, `background-color` and `font-family`, are re-applied on every
 `[data-theme]`, `.theme-*` and `[data-color-scheme]` element.
@@ -159,6 +160,7 @@ may change. Fluid `--dui-step-*` values are `clamp()` expressions; see `primitiv
 | `--dui-color-link-visited` | Visited links | light: `color-purple-700` (#6b2fb3)<br>dark: `color-purple-300` (#d2a8ff) |
 | `--dui-color-danger` | Errors, :user-invalid borders | light: `color-red-700` (#b42318)<br>dark: `color-red-300` (#ff8a80) |
 | `--dui-color-success` | Success messages | light: `color-green-700` (#17773a)<br>dark: `color-green-300` (#5fd38d) |
+| `--dui-color-warning` | Warning badges and messages | light: `color-amber-700` (#8a5a00)<br>dark: `color-amber-300` (#f2c14e) |
 | `--dui-color-mark` | mark and ::selection background | light: `color-yellow-100` (#fff1a8)<br>dark: `color-yellow-300` (#e3c84f) |
 | `--dui-color-mark-text` | Text on mark | light: `color-gray-900` (#12151b)<br>dark: `color-gray-900` (#12151b) |
 | `--dui-color-backdrop` | dialog::backdrop | light: `color-black-a40` (rgb(0 0 0 / 40%))<br>dark: `color-black-a60` (rgb(0 0 0 / 60%)) |
@@ -191,6 +193,8 @@ may change. Fluid `--dui-step-*` values are `clamp()` expressions; see `primitiv
 | `--dui-space-2xl` | Space scale | `space-8` (3rem) |
 | `--dui-space-3xl` | Space scale | `space-9` (4rem) |
 | `--dui-size-target` | Min height of controls and buttons (WCAG 2.5.8 needs 24px; this gives 44px) | `size-2-75` (2.75rem) |
+| `--dui-size-target-small` | Small buttons (32px: under 44px, over the 24px minimum) | `size-2` (2rem) |
+| `--dui-size-target-large` | Large buttons | `size-3-25` (3.25rem) |
 | `--dui-size-check` | Checkbox and radio size | `size-1-25` (1.25rem) |
 | `--dui-size-column-min` | Default .grid min column width | `size-16` (16rem) |
 | `--dui-radius-control` | Controls, buttons, inline code | `radius-2` (0.375rem) |
@@ -206,15 +210,23 @@ may change. Fluid `--dui-step-*` values are `clamp()` expressions; see `primitiv
 | `--dui-duration-fast` | Hover transitions (0s with reduced motion) | `duration-150` (150ms) |
 | `--dui-duration-normal` | Larger transitions (0s with reduced motion) | `duration-250` (250ms) |
 | `--dui-easing-standard` | Easing curve (linear with reduced motion) | `--dui-easing-ease-out` |
-| `--dui-opacity-disabled` | Disabled controls | `opacity-60` (0.6) |
+| `--dui-opacity-disabled` | Disabled controls, `disabled` and `aria-disabled="true"` | `opacity-60` (0.6) |
+| `--dui-tint-amount` | How much of a tone goes into a tinted surface | `mix-8` (8%) |
+| `--dui-border-tint-amount` | How much of the text color goes into a tinted border (badges) | `mix-35` (35%) |
 | `--dui-color-link` | Links | `--dui-color-accent` |
 | `--dui-color-focus` | Focus ring (3:1 against surfaces) | `--dui-color-accent` |
 | `--dui-color-accent-hover` | Primary button hover | `color-mix()` of 82% `--dui-color-accent` with `--dui-color-text` |
 | `--dui-font-heading` | Heading font stack | `--dui-font-body` |
 | `--dui-shadow-raised` | dialog shadow | two-layer shadow using `--dui-color-shadow` |
+| `--dui-color-accent-surface` | Accent badge background | `color-mix()` of `--dui-tint-amount` `--dui-color-accent` into `--dui-color-surface` |
+| `--dui-color-success-surface` | Success badge background | same, with `--dui-color-success` |
+| `--dui-color-warning-surface` | Warning badge background | same, with `--dui-color-warning` |
+| `--dui-color-danger-surface` | Danger badge background | same, with `--dui-color-danger` |
 
 Derived (re-resolved on each theme scope): `--dui-color-link`, `--dui-color-focus`,
-`--dui-color-accent-hover`, `--dui-font-heading`, `--dui-shadow-raised`.
+`--dui-color-accent-hover`, `--dui-font-heading`, `--dui-shadow-raised`,
+`--dui-color-accent-surface`, `--dui-color-success-surface`, `--dui-color-warning-surface`,
+`--dui-color-danger-surface`.
 
 ## 6. Opinions we hold
 
@@ -237,6 +249,10 @@ Each of these is a choice between valid options, not a standard.
 - **Our choice:** checkboxes, radios and range keep native rendering tinted with
   [`accent-color`](https://developer.mozilla.org/en-US/docs/Web/CSS/accent-color), because
   native controls keep their platform accessibility.
+- **Our choice:** each atom has one `data-<atom>` attribute whose value is a space-separated
+  list (`data-button="primary small"`), matched with `~=`, instead of modifier classes. The
+  other atom choices (button variants, focus rings, switch, field errors, badge tints) are
+  listed with their reasons in the [atoms index](css/components/atoms/README.md#our-choices).
 - **Our choice:** layout primitives come from [Every Layout](https://every-layout.dev/)'s
   Stack, Cluster and Grid. Their custom properties are registered with
   [`@property`](https://developer.mozilla.org/en-US/docs/Web/CSS/@property) as non-inheriting,
@@ -265,10 +281,10 @@ On a `ul` or `ol`, the primitive also removes list markers and padding.
 | `lint:html` | [html-validate](https://html-validate.org/) | `examples/**/*.html` against `html-validate:recommended` |
 | `lint:css` | [Stylelint](https://stylelint.io/) | `css/**/*.css` against `stylelint-config-standard` |
 | `lint:tokens` | `scripts/check-tokens.mjs` | Semantic-only tokens and no literal colors or sizes outside `css/tokens/` |
-| `test:a11y` | [Playwright](https://playwright.dev/) + [axe-core](https://github.com/dequelabs/axe-core) | Every `examples/*.html` in light and dark with tags `wcag2a`, `wcag2aa`, `wcag21a`, `wcag21aa`, `wcag22aa`, including open dialogs and details; no external requests; token contrast pairs; scoped theming |
+| `test:a11y` | [Playwright](https://playwright.dev/) + [axe-core](https://github.com/dequelabs/axe-core) | Every `examples/**/*.html` (atoms included) in light and dark, in Chromium, Firefox and WebKit, with tags `wcag2a`, `wcag2aa`, `wcag21a`, `wcag21aa`, `wcag22aa`, including open dialogs and details; no external requests; token contrast pairs (atoms included) in the default and forest themes; rendered focus-ring contrast on every button variant; atom states through accessibility APIs; scoped theming of atoms |
 
 Preview locally with `npm run serve` (a zero-dependency static server) and open
-<http://127.0.0.1:4173/examples/base.html>.
+<http://127.0.0.1:4173/examples/base.html>. To run tests from two checkouts at once, give each its own port, e.g. `PORT=4273 npm test`.
 
 Rule relaxations, each with its reason:
 
@@ -276,6 +292,11 @@ Rule relaxations, each with its reason:
   pattern rejects `--dui-step--1` (the double hyphen marks a negative step, a common naming for
   type scales below zero). The replacement still requires kebab-case and only allows names
   starting with `--dui-` or the documented layout properties (`--stack-*`, `--cluster-*`, `--grid-*`).
+- **Engine-specific test**: the field test also reads the `invalid` state from the accessibility
+  tree through the Chrome DevTools Protocol, which only Chromium offers; Firefox and WebKit run the
+  rest of that test (attribute and accessible description). No browser is skipped.
+- **External-request check**: same-origin `blob:` URLs are allowed, because WebKit routes these
+  in-memory objects through the request handler. Any other origin still fails the test.
 - **html-validate**: none. `html-validate:recommended` is used as-is. Inline `style` attributes
   that set only custom properties are already allowed by its
   [`no-inline-style`](https://html-validate.org/rules/no-inline-style.html) default
