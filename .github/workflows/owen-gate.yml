@@ -1,0 +1,30 @@
+name: Owen approval gate
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, labeled, unlabeled]
+
+permissions:
+  contents: read
+
+jobs:
+  owen-gate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check Owen approval
+        env:
+          AUTHOR: ${{ github.event.pull_request.user.login }}
+          LABELS: ${{ join(github.event.pull_request.labels.*.name, ',') }}
+        run: |
+          if [ "$AUTHOR" = "odonckers" ]; then
+            echo "Author is odonckers; gate passes."
+            exit 0
+          fi
+          case ",$LABELS," in
+            *,owen-approved,*)
+              echo "PR has the owen-approved label; gate passes."
+              exit 0
+              ;;
+          esac
+          echo "Outside pull requests need the owen-approved label before they can merge."
+          exit 1
