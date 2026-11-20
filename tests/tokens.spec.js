@@ -30,6 +30,32 @@ const PAIRS = [
   ["--dui-color-focus", "--dui-color-surface", 3],
   ["--dui-color-focus", "--dui-color-surface-raised", 3],
   ["--dui-color-accent", "--dui-color-surface", 3],
+
+  // Atoms: buttons (css/components/atoms/button.css), default and hover.
+  // Primary text is accent-contrast on accent / accent-hover (above).
+  // Secondary text is text on surface-raised / surface-sunken (above).
+  ["--dui-color-accent", "--dui-color-surface", 4.5], // quiet text
+  ["--dui-color-accent", "--dui-color-surface-sunken", 4.5], // quiet text, hover
+  // Focus ring: the outer ring sits on the surface; it must also stand out from
+  // each fill it touches. Primary adds an inner ring in its text color.
+  ["--dui-color-focus", "--dui-color-surface-sunken", 3], // secondary and quiet hover fill
+  ["--dui-color-accent-contrast", "--dui-color-accent", 3], // primary inner ring on fill
+  ["--dui-color-accent-contrast", "--dui-color-accent-hover", 3], // primary inner ring, hover
+
+  // Atoms: switch (css/components/atoms/switch.css). Track border and off thumb
+  // are --dui-color-border-control on the surface (above).
+  ["--dui-color-accent-hover", "--dui-color-surface", 3], // on track, hover
+  ["--dui-color-text-muted", "--dui-color-surface", 3], // off track border, hover
+
+  // Atoms: badges (css/components/atoms/badge.css). Neutral is text on surface-sunken (above).
+  ["--dui-color-accent", "--dui-color-accent-surface", 4.5],
+  ["--dui-color-success", "--dui-color-success-surface", 4.5],
+  ["--dui-color-warning", "--dui-color-warning-surface", 4.5],
+  ["--dui-color-danger", "--dui-color-danger-surface", 4.5],
+  ["--dui-color-warning", "--dui-color-surface", 4.5], // same as danger and success above
+
+  // Atoms: field (css/components/atoms/field.css). Hint is muted text and error is
+  // danger on the surface; the invalid border is danger on the surface (all above).
 ];
 
 /**

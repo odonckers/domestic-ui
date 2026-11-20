@@ -1,7 +1,8 @@
 // @ts-check
 import { defineConfig, devices } from "@playwright/test";
 
-const port = 4173;
+// PORT lets parallel worktrees run tests at once without reusing each other's server.
+const port = Number(process.env.PORT) || 4173;
 
 export default defineConfig({
   testDir: "tests",
@@ -12,7 +13,11 @@ export default defineConfig({
   use: {
     baseURL: `http://127.0.0.1:${port}/`,
   },
-  projects: [{ name: "chromium", use: { ...devices["Desktop Chrome"] } }],
+  projects: [
+    { name: "chromium", use: { ...devices["Desktop Chrome"] } },
+    { name: "firefox", use: { ...devices["Desktop Firefox"] } },
+    { name: "webkit", use: { ...devices["Desktop Safari"] } },
+  ],
   webServer: {
     command: `node scripts/serve.mjs ${port}`,
     url: `http://127.0.0.1:${port}/examples/base.html`,
