@@ -1,0 +1,144 @@
+// @ts-check
+import { test, expect } from "@playwright/test";
+import { schemes } from "./helpers.js";
+
+/*
+ * Token contrast and scoping checks that axe cannot do on its own:
+ * axe checks text it can see, not focus rings, control borders or
+ * hover states. Each pair is [foreground, background, minimum ratio].
+ * WCAG 1.4.3: https://www.w3.org/WAI/WCAG22/Understanding/contrast-minimum.html
+ * WCAG 1.4.11: https://www.w3.org/WAI/WCAG22/Understanding/non-text-contrast.html
+ */
+const PAIRS = [
+  ["--dui-color-text", "--dui-color-surface", 4.5],
+  ["--dui-color-text", "--dui-color-surface-raised", 4.5],
+  ["--dui-color-text", "--dui-color-surface-sunken", 4.5],
+  ["--dui-color-text-muted", "--dui-color-surface", 4.5],
+  ["--dui-color-text-muted", "--dui-color-surface-raised", 4.5],
+  ["--dui-color-text-muted", "--dui-color-surface-sunken", 4.5],
+  ["--dui-color-link", "--dui-color-surface", 4.5],
+  ["--dui-color-link", "--dui-color-surface-raised", 4.5],
+  ["--dui-color-link-visited", "--dui-color-surface", 4.5],
+  ["--dui-color-link-visited", "--dui-color-surface-raised", 4.5],
+  ["--dui-color-accent-contrast", "--dui-color-accent", 4.5],
+  ["--dui-color-accent-contrast", "--dui-color-accent-hover", 4.5],
+  ["--dui-color-danger", "--dui-color-surface", 4.5],
+  ["--dui-color-success", "--dui-color-surface", 4.5],
+  ["--dui-color-mark-text", "--dui-color-mark", 4.5],
+  ["--dui-color-border-control", "--dui-color-surface", 3],
+  ["--dui-color-border-control", "--dui-color-surface-raised", 3],
+  ["--dui-color-focus", "--dui-color-surface", 3],
+  ["--dui-color-focus", "--dui-color-surface-raised", 3],
+  ["--dui-color-accent", "--dui-color-surface", 3],
+];
+
+/**
+ * Resolve tokens to sRGB on a probe inside `scopeSelector`, then compute
+ * WCAG contrast ratios. A canvas normalizes any CSS color syntax
+ * (light-dark(), color-mix(), oklab) to sRGB bytes.
+ */
+const measure = (scopeSelector, pairs) => {
+  const scope = document.querySelector(scopeSelector);
+  if (!scope) throw new Error(`No element matches ${scopeSelector}`);
+  const probe = document.createElement("span");
+  scope.append(probe);
+  const ctx = document.createElement("canvas").getContext("2d", { willReadFrequently: true });
+  const rgb = (token) => {
+    probe.style.color = `var(${token})`;
+    ctx.clearRect(0, 0, 1, 1);
+    ctx.fillStyle = getComputedStyle(probe).color;
+    ctx.fillRect(0, 0, 1, 1);
+    return [...ctx.getImageData(0, 0, 1, 1).data.slice(0, 3)];
+  };
+  const luminance = ([r, g, b]) => {
+    const [R, G, B] = [r, g, b].map((v) => {
+      const c = v / 255;
+      return c <= 0.04045 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4;
+    });
+    return 0.2126 * R + 0.7152 * G + 0.0722 * B;
+  };
+  const results = pairs.map(([fg, bg, min]) => {
+    const a = luminance(rgb(fg));
+    const b = luminance(rgb(bg));
+    const ratio = (Math.max(a, b) + 0.05) / (Math.min(a, b) + 0.05);
+    return { pair: `${fg} on ${bg}`, ratio: Math.round(ratio * 100) / 100, min };
+  });
+  probe.remove();
+  return results;
+};
+
+const SCOPES = [
+  ["default theme", ":root body"],
+  ["forest theme", '[data-theme="forest"]'],
+];
+
+for (const colorScheme of schemes) {
+  for (const [name, selector] of SCOPES) {
+    test(`${name} token pairs meet WCAG 2.2 AA (${colorScheme})`, async ({ page }) => {
+      await page.emulateMedia({ colorScheme });
+      await page.goto("examples/theming.html");
+      const results = await page.evaluate(([s, p]) => (0, eval)(`(${s})`)(...p), [measure.toString(), [selector, PAIRS]]);
+      const failing = results.filter((r) => r.ratio < r.min);
+      expect(failing, JSON.stringify(results, null, 2)).toEqual([]);
+    });
+  }
+}
+
+test("scoped overrides re-derive dependent tokens on [data-theme] and .theme-*", async ({ page }) => {
+  await page.goto("examples/theming.html");
+  const result = await page.evaluate(() => {
+    const make = (attrs) => {
+      const scope = document.createElement("div");
+      Object.entries(attrs).forEach(([k, v]) => scope.setAttribute(k, v));
+      scope.style.setProperty("--dui-color-accent", "rgb(1, 2, 3)");
+      scope.innerHTML = `<div><a href="#x">link</a><button type="submit">Go</button></div>`;
+      document.body.append(scope);
+      const a = scope.querySelector("a");
+      const button = scope.querySelector("button");
+      const style = getComputedStyle(scope);
+      const out = {
+        link: getComputedStyle(a).color,
+        submit: getComputedStyle(button).backgroundColor,
+        focus: style.getPropertyValue("--dui-color-focus").trim(),
+      };
+      scope.remove();
+      return out;
+    };
+    const direct = document.createElement("section");
+    direct.dataset.theme = "probe";
+    direct.style.setProperty("--dui-color-link", "rgb(4, 5, 6)");
+    direct.innerHTML = `<div><p><a href="#y">nested link</a></p></div>`;
+    document.body.append(direct);
+    const nested = getComputedStyle(direct.querySelector("a")).color;
+    direct.remove();
+    return { attr: make({ "data-theme": "probe" }), klass: make({ class: "card theme-probe" }), nested };
+  });
+  for (const scoped of [result.attr, result.klass]) {
+    expect(scoped.link).toBe("rgb(1, 2, 3)");
+    expect(scoped.submit).toBe("rgb(1, 2, 3)");
+    expect(scoped.focus).toBe("rgb(1, 2, 3)");
+  }
+  // Overriding a dependent token directly also reaches nested elements.
+  expect(result.nested).toBe("rgb(4, 5, 6)");
+});
+
+test("forest panel actually differs from the default panel", async ({ page }) => {
+  await page.goto("examples/theming.html");
+  const [defaultPanel, forestPanel] = await page.locator(".panel").evaluateAll((panels) =>
+    panels.map((panel) => ({
+      background: getComputedStyle(panel).backgroundColor,
+      link: getComputedStyle(panel.querySelector("a")).color,
+      heading: getComputedStyle(panel.querySelector("h2")).fontFamily,
+    })),
+  );
+  expect(forestPanel.background).not.toEqual(defaultPanel.background);
+  expect(forestPanel.link).not.toEqual(defaultPanel.link);
+  expect(forestPanel.heading).not.toEqual(defaultPanel.heading);
+});
+
+test("motion tokens collapse under prefers-reduced-motion", async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  await page.goto("examples/base.html");
+  const duration = await page.evaluate(() => getComputedStyle(document.querySelector("button")).transitionDuration);
+  expect(duration.split(",").every((d) => Number.parseFloat(d) === 0)).toBe(true);
+});

@@ -1,0 +1,11 @@
+{
+  "extends": ["stylelint-config-standard"],
+  "rules": {
+    "custom-property-pattern": [
+      "^(dui-[a-z0-9]+(-{1,2}[a-z0-9]+)*|(stack|cluster|grid)-[a-z]+)$",
+      {
+        "message": "Expected custom property \"%s\" to be a --dui-* token (kebab-case, \"--\" allowed for negative steps) or a documented layout property"
+      }
+    ]
+  }
+}
