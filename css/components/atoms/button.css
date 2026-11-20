@@ -1,0 +1,138 @@
+/*
+ * Atom: button variants, sizes and states
+ *
+ * Plain <button> is already styled in css/base/forms.css: type="submit" gets
+ * the accent fill, every other button is neutral. This atom adds explicit
+ * variants, a size scale, aria-disabled and aria-busy states, and lets a
+ * link (<a href>) look like a button while keeping link semantics.
+ * https://html.spec.whatwg.org/multipage/form-elements.html#the-button-element
+ * APG button pattern: https://www.w3.org/WAI/ARIA/apg/patterns/button/
+ *
+ * API
+ *   data-button="[primary | secondary | quiet] [small | large]"
+ *   A space-separated list: at most one variant word and one size word.
+ *   Works on <button>, <input type="submit|button|reset"> and <a href>.
+ *   No variant word keeps the native default: type="submit" is primary,
+ *   other buttons and links are secondary.
+ *
+ * Example
+ *   <button type="submit">Save</button>                         (primary by default)
+ *   <button type="submit" data-button="secondary">Save draft</button>
+ *   <button type="button" data-button="quiet small">Undo</button>
+ *   <a href="/signup" data-button="primary large">Create account</a>
+ *
+ * States
+ *   disabled              Native. Removed from the tab order, not submitted.
+ *   aria-disabled="true"  Looks disabled and is exposed as disabled, but stays
+ *                         focusable so a description can explain why. Your script
+ *                         must ignore activation. https://www.w3.org/WAI/ARIA/apg/practices/keyboard-interface/#focusabilityofdisabledcontrols
+ *                         https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Reference/Attributes/aria-disabled
+ *   aria-busy="true"      Work in progress. Change the visible label too
+ *                         ("Saving…") and announce the result in a role="status"
+ *                         region; nothing here hides the label.
+ *                         https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Reference/Attributes/aria-busy
+ *
+ * Sizes: default and large are at least 44px tall. small is 32px: below the
+ * 44px default but above the 24px minimum of WCAG 2.5.8 Target Size (Minimum).
+ * https://www.w3.org/WAI/WCAG22/Understanding/target-size-minimum.html
+ *
+ * Focus: every variant keeps the base :focus-visible outline. Filled (primary)
+ * buttons add an inner ring in their text color, so the indicator contrasts
+ * with the fill as well as with the surface (WCAG 1.4.11, 2.4.13).
+ * https://www.w3.org/WAI/WCAG22/Understanding/focus-appearance.html
+ */
+
+/* Links that look like buttons: the box that base gives <button>. */
+a[data-button] {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--dui-space-xs);
+  min-block-size: var(--dui-size-target);
+  min-inline-size: var(--dui-size-target);
+  padding: var(--dui-space-xs) var(--dui-space-m);
+  border: var(--dui-border-width) solid;
+  border-radius: var(--dui-radius-control);
+  font-weight: var(--dui-font-weight-strong);
+  line-height: var(--dui-line-height-heading);
+  text-align: center;
+  text-decoration-line: none;
+  transition:
+    background-color var(--dui-duration-fast) var(--dui-easing-standard),
+    border-color var(--dui-duration-fast) var(--dui-easing-standard);
+}
+
+/* Secondary: neutral. The default for links and an opt-out for submit buttons. */
+:where(a)[data-button],
+[data-button~="secondary"] {
+  background-color: var(--dui-color-surface-raised);
+  color: var(--dui-color-text);
+  border-color: var(--dui-color-border-control);
+}
+
+:where(a)[data-button]:hover:not(:disabled, [aria-disabled="true"]),
+[data-button~="secondary"]:hover:not(:disabled, [aria-disabled="true"]) {
+  background-color: var(--dui-color-surface-sunken);
+}
+
+/* Primary: accent fill, same as the base type="submit" default. */
+[data-button~="primary"] {
+  background-color: var(--dui-color-accent);
+  color: var(--dui-color-accent-contrast);
+  border-color: var(--dui-color-accent);
+}
+
+/* Inner ring on filled buttons: the text color contrasts with the fill by design. */
+[data-button~="primary"]:focus-visible,
+:is(button, input)[type="submit"]:not([data-button~="secondary"], [data-button~="quiet"]):focus-visible {
+  box-shadow: inset 0 0 0 var(--dui-focus-width) currentcolor;
+}
+
+[data-button~="primary"]:hover:not(:disabled, [aria-disabled="true"]) {
+  background-color: var(--dui-color-accent-hover);
+  border-color: var(--dui-color-accent-hover);
+}
+
+/* Quiet: no fill or border until hovered. For low-emphasis actions next to others. */
+[data-button~="quiet"] {
+  background-color: transparent;
+  color: var(--dui-color-accent);
+  border-color: transparent;
+}
+
+[data-button~="quiet"]:hover:not(:disabled, [aria-disabled="true"]) {
+  background-color: var(--dui-color-surface-sunken);
+}
+
+/* Sizes */
+[data-button~="small"] {
+  min-block-size: var(--dui-size-target-small);
+  min-inline-size: var(--dui-size-target-small);
+  padding: var(--dui-space-2xs) var(--dui-space-s);
+  font-size: var(--dui-step--1);
+}
+
+[data-button~="large"] {
+  min-block-size: var(--dui-size-target-large);
+  min-inline-size: var(--dui-size-target-large);
+  padding: var(--dui-space-s) var(--dui-space-l);
+  font-size: var(--dui-step-1);
+}
+
+/* aria-disabled: same look as native :disabled (css/base/forms.css), still focusable. */
+:is(button, input, a[data-button])[aria-disabled="true"] {
+  opacity: var(--dui-opacity-disabled);
+  cursor: not-allowed;
+}
+
+/* aria-busy: the label says what is happening; the cursor agrees. */
+:is(button, input, a[data-button])[aria-busy="true"] {
+  cursor: progress;
+}
+
+@media (forced-colors: active) {
+  a[data-button],
+  [data-button~="quiet"] {
+    border-color: buttonborder;
+  }
+}

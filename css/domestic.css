@@ -24,4 +24,10 @@
 @import url("layout/stack.css") layer(layout);
 @import url("layout/cluster.css") layer(layout);
 @import url("layout/grid.css") layer(layout);
+@import url("components/atoms/text.css") layer(components);
+@import url("components/atoms/link.css") layer(components);
+@import url("components/atoms/button.css") layer(components);
+@import url("components/atoms/switch.css") layer(components);
+@import url("components/atoms/field.css") layer(components);
+@import url("components/atoms/badge.css") layer(components);
 @import url("utilities/visually-hidden.css") layer(utilities);

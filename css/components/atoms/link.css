@@ -1,0 +1,24 @@
+/*
+ * Atom: quiet link
+ *
+ * A link that takes the color of the text around it, for dense UI such as
+ * table cells, footers and metadata lines where many accent-colored links
+ * would be noisy. It keeps its underline, so color is never the only cue
+ * (WCAG 1.4.1 Use of Color).
+ * https://www.w3.org/WAI/WCAG22/Understanding/use-of-color.html
+ * https://html.spec.whatwg.org/multipage/text-level-semantics.html#the-a-element
+ *
+ * API
+ *   data-link="quiet"   on <a href>
+ *
+ * Example
+ *   <td><a href="/orders/1042" data-link="quiet">#1042</a></td>
+ *
+ * Visited links keep the surrounding color too. The surrounding text color
+ * already meets 4.5:1, so the link does as well.
+ */
+
+a[data-link~="quiet"],
+a[data-link~="quiet"]:visited {
+  color: inherit;
+}

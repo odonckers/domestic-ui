@@ -1,0 +1,33 @@
+/*
+ * Atom: text helpers (lead, small, muted)
+ *
+ * Presentation helpers for prose. They change size or color only, never
+ * meaning: use <small> for side comments and <strong>/<em> for importance
+ * or stress, as the HTML standard defines them.
+ * https://html.spec.whatwg.org/multipage/text-level-semantics.html#the-small-element
+ * code, kbd and samp are already styled in css/base/typography.css.
+ *
+ * API
+ *   data-text="lead | small | muted"
+ *   Values are a space-separated list, so they combine: data-text="small muted".
+ *
+ * Example
+ *   <p data-text="lead">An opening paragraph, one step larger.</p>
+ *   <p data-text="small muted">Last updated 3 May.</p>
+ *
+ * Muted text uses --dui-color-text-muted, which is tested at 4.5:1 on every
+ * surface (WCAG 1.4.3: https://www.w3.org/WAI/WCAG22/Understanding/contrast-minimum.html).
+ */
+
+[data-text~="lead"] {
+  font-size: var(--dui-step-1);
+  line-height: var(--dui-line-height-body);
+}
+
+[data-text~="small"] {
+  font-size: var(--dui-step--1);
+}
+
+[data-text~="muted"] {
+  color: var(--dui-color-text-muted);
+}

@@ -138,7 +138,7 @@ input:is([type="button"], [type="submit"], [type="reset"]),
   margin-inline-end: var(--dui-space-s);
 }
 
-:is(button, input:is([type="button"], [type="submit"], [type="reset"])):hover:not(:disabled),
+:is(button, input:is([type="button"], [type="submit"], [type="reset"])):hover:not(:disabled, [aria-disabled="true"]),
 ::file-selector-button:hover {
   background-color: var(--dui-color-surface-sunken);
 }
@@ -149,12 +149,12 @@ input:is([type="button"], [type="submit"], [type="reset"]),
   border-color: var(--dui-color-accent);
 }
 
-:is(button, input)[type="submit"]:hover:not(:disabled) {
+:is(button, input)[type="submit"]:hover:not(:disabled, [aria-disabled="true"]) {
   background-color: var(--dui-color-accent-hover);
   border-color: var(--dui-color-accent-hover);
 }
 
-:is(button, input):active:not(:disabled) {
+:is(button, input):active:not(:disabled, [aria-disabled="true"]) {
   translate: 0 1px;
 }
 

@@ -1,0 +1,108 @@
+/*
+ * Atom: switch
+ *
+ * An on/off control built on a native checkbox with role="switch", as in
+ * the APG Switch pattern ("Switch Example Using HTML Checkbox Input").
+ * The checkbox brings focus, Space to toggle, form submission and the
+ * :checked state; role="switch" tells assistive technology to announce
+ * "on/off" instead of "checked/not checked".
+ * APG: https://www.w3.org/WAI/ARIA/apg/patterns/switch/
+ * ARIA in HTML allows role="switch" on input type=checkbox:
+ * https://www.w3.org/TR/html-aria/#el-input-checkbox
+ * MDN: https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Reference/Roles/switch_role
+ *
+ * API
+ *   role="switch"   on <input type="checkbox">; no class needed.
+ *
+ * Example
+ *   <label><input type="checkbox" role="switch" name="alerts"> Email alerts</label>
+ *
+ * Keep the label the same in both states (APG): the state is "on" or "off",
+ * not a different label. Wrapping the input in its <label> also makes the
+ * whole label the click target (44px tall, see css/base/forms.css).
+ *
+ * State does not rely on color alone (WCAG 1.4.1): the thumb moves to the
+ * end and changes from outline color to the contrast color, and the track
+ * fills. Track border and thumb are 3:1 against the surface (WCAG 1.4.11).
+ * Forced colors: system colors are set explicitly so both states stay visible.
+ * https://developer.mozilla.org/en-US/docs/Web/CSS/@media/forced-colors
+ */
+
+input[type="checkbox"][role="switch"] {
+  appearance: none;
+  display: inline-flex;
+  align-items: center;
+  inline-size: calc(var(--dui-size-check) * 2);
+  block-size: var(--dui-size-check);
+  padding: var(--dui-space-3xs);
+  background-color: var(--dui-color-surface);
+  border: var(--dui-border-width) solid var(--dui-color-border-control);
+  border-radius: var(--dui-radius-pill);
+  cursor: pointer;
+  transition:
+    background-color var(--dui-duration-fast) var(--dui-easing-standard),
+    border-color var(--dui-duration-fast) var(--dui-easing-standard);
+}
+
+/* The thumb. Decorative: the checkbox itself carries name and state. */
+input[type="checkbox"][role="switch"]::before {
+  content: "";
+  inline-size: calc(var(--dui-size-check) - var(--dui-space-3xs) * 2 - var(--dui-border-width) * 2);
+  aspect-ratio: 1;
+  border-radius: var(--dui-radius-pill);
+  background-color: var(--dui-color-border-control);
+  transition: translate var(--dui-duration-fast) var(--dui-easing-standard);
+}
+
+input[type="checkbox"][role="switch"]:checked {
+  background-color: var(--dui-color-accent);
+  border-color: var(--dui-color-accent);
+}
+
+input[type="checkbox"][role="switch"]:hover:not(:disabled) {
+  border-color: var(--dui-color-text-muted);
+}
+
+input[type="checkbox"][role="switch"]:checked:hover:not(:disabled) {
+  background-color: var(--dui-color-accent-hover);
+  border-color: var(--dui-color-accent-hover);
+}
+
+/* The thumb travels one check size: track (2 × check) minus thumb, padding and border. */
+input[type="checkbox"][role="switch"]:checked::before {
+  background-color: var(--dui-color-accent-contrast);
+  translate: var(--dui-size-check) 0;
+}
+
+input[type="checkbox"][role="switch"]:checked:dir(rtl)::before {
+  translate: calc(var(--dui-size-check) * -1) 0;
+}
+
+@media (forced-colors: active) {
+  input[type="checkbox"][role="switch"] {
+    forced-color-adjust: none;
+    background-color: canvas;
+    border-color: canvastext;
+  }
+
+  input[type="checkbox"][role="switch"]::before {
+    background-color: canvastext;
+  }
+
+  input[type="checkbox"][role="switch"]:checked {
+    background-color: highlight;
+    border-color: highlight;
+  }
+
+  input[type="checkbox"][role="switch"]:checked::before {
+    background-color: highlighttext;
+  }
+
+  input[type="checkbox"][role="switch"]:disabled {
+    border-color: graytext;
+  }
+
+  input[type="checkbox"][role="switch"]:disabled::before {
+    background-color: graytext;
+  }
+}

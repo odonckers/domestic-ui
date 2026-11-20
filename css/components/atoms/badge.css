@@ -1,0 +1,64 @@
+/*
+ * Atom: badge
+ *
+ * A short inline status label ("Draft", "Paid", "Overdue"). Static text,
+ * not interactive: there is no native badge element and no ARIA role is
+ * needed, the text itself is the content. If a badge must be clickable,
+ * put a real <button> or <a href> around it, not a click handler on it.
+ * Native first: https://www.w3.org/TR/using-aria/#rule1
+ *
+ * API
+ *   data-badge="neutral | accent | success | warning | danger"
+ *   (empty means neutral)
+ *
+ * Example
+ *   <span data-badge="success">Paid</span>
+ *
+ * The tone is a hint, not the message: the words carry the meaning
+ * (WCAG 1.4.1 Use of Color). If a badge sits next to something it labels
+ * only by position, say so in text, for example "Status: Paid" with
+ * .visually-hidden on "Status:".
+ * Text on each tone meets 4.5:1 (WCAG 1.4.3); npm test checks every tone.
+ * https://www.w3.org/WAI/WCAG22/Understanding/contrast-minimum.html
+ */
+
+[data-badge] {
+  display: inline-flex;
+  align-items: center;
+  padding-inline: var(--dui-space-xs);
+  background-color: var(--dui-color-surface-sunken);
+  color: var(--dui-color-text);
+  border: var(--dui-border-width) solid color-mix(in oklab, currentcolor var(--dui-border-tint-amount), transparent);
+  border-radius: var(--dui-radius-pill);
+  font-size: var(--dui-step--1);
+  font-weight: var(--dui-font-weight-strong);
+  line-height: var(--dui-line-height-body);
+  white-space: nowrap;
+  vertical-align: baseline;
+}
+
+[data-badge~="accent"] {
+  background-color: var(--dui-color-accent-surface);
+  color: var(--dui-color-accent);
+}
+
+[data-badge~="success"] {
+  background-color: var(--dui-color-success-surface);
+  color: var(--dui-color-success);
+}
+
+[data-badge~="warning"] {
+  background-color: var(--dui-color-warning-surface);
+  color: var(--dui-color-warning);
+}
+
+[data-badge~="danger"] {
+  background-color: var(--dui-color-danger-surface);
+  color: var(--dui-color-danger);
+}
+
+@media (forced-colors: active) {
+  [data-badge] {
+    border-color: canvastext;
+  }
+}

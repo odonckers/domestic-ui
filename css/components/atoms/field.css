@@ -1,0 +1,81 @@
+/*
+ * Atom: field (label + control + hint + error)
+ *
+ * Groups one control with its label, an optional hint and an optional
+ * error message, and styles the invalid state. The wiring is plain HTML
+ * and ARIA; this file only lays it out.
+ *
+ * - The <label for> names the control (WCAG 1.3.1, 3.3.2).
+ *   https://www.w3.org/WAI/WCAG22/Understanding/info-and-relationships.html
+ *   https://www.w3.org/WAI/WCAG22/Understanding/labels-or-instructions.html
+ * - Hint and error ids go in the control's aria-describedby, so they become
+ *   its accessible description.
+ *   https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Reference/Attributes/aria-describedby
+ * - When the value is wrong, set aria-invalid="true" on the control and show
+ *   the error as text (WCAG 3.3.1 Error Identification).
+ *   https://www.w3.org/WAI/WCAG22/Understanding/error-identification.html
+ *   https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Reference/Attributes/aria-invalid
+ * - Native constraint validation also gets the invalid look, via
+ *   :user-invalid (only after the user has interacted).
+ *   https://developer.mozilla.org/en-US/docs/Web/CSS/:user-invalid
+ *
+ * API
+ *   data-field              on the wrapper (a <div>, or a <fieldset> for groups)
+ *   data-field="hint"       on the hint
+ *   data-field="error"      on the error message
+ *
+ * Example
+ *   <div data-field>
+ *     <label for="email">Email</label>
+ *     <input id="email" name="email" type="email" aria-invalid="true"
+ *            aria-describedby="email-hint email-error">
+ *     <p id="email-hint" data-field="hint">We only use this to reply.</p>
+ *     <p id="email-error" data-field="error">Error: enter an email address like name@example.com.</p>
+ *   </div>
+ *
+ * Not color alone (WCAG 1.4.1): the error text starts with "Error:" (write it
+ * in the markup so every user and screen reader gets it), and an invalid
+ * control gets a thick start border as well as the danger color.
+ * Hide an error that does not apply with the hidden attribute and remove its id
+ * from aria-describedby.
+ */
+
+[data-field]:not([data-field="hint"], [data-field="error"]) {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: var(--dui-space-2xs);
+}
+
+/* The flex gap replaces the base rhythm and label spacing inside a field. */
+[data-field]:not([data-field="hint"], [data-field="error"]) > * {
+  margin-block: 0;
+}
+
+/* Labels that wrap a checkbox, radio or switch stay as wide as their text. */
+[data-field]:not([data-field="hint"], [data-field="error"]) > label:has(> input) {
+  align-self: flex-start;
+}
+
+[data-field="hint"] {
+  color: var(--dui-color-text-muted);
+  font-size: var(--dui-step--1);
+}
+
+[data-field="error"] {
+  color: var(--dui-color-danger);
+  font-size: var(--dui-step--1);
+  font-weight: var(--dui-font-weight-strong);
+}
+
+/* Invalid controls, wherever they are: a color and a shape change. */
+:is(input, select, textarea):is([aria-invalid="true"], :user-invalid) {
+  border-color: var(--dui-color-danger);
+  border-inline-start-width: var(--dui-border-width-emphasis);
+}
+
+@media (forced-colors: active) {
+  :is(input, select, textarea):is([aria-invalid="true"], :user-invalid) {
+    border-color: canvastext;
+  }
+}
