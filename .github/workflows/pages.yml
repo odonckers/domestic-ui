@@ -1,0 +1,66 @@
+# Skeleton GitHub Pages deploy. The Docs Specialist will own the site later;
+# for now it publishes the examples and the CSS they link to.
+name: Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/configure-pages@v6
+
+      # Examples link ../css/, so both folders are staged side by side.
+      - name: Stage site
+        run: |
+          mkdir -p _site
+          cp -R css examples _site/
+          cat > _site/index.html <<'HTML'
+          <!DOCTYPE html>
+          <html lang="en">
+            <head>
+              <meta charset="utf-8">
+              <meta name="viewport" content="width=device-width, initial-scale=1">
+              <title>domestic-ui</title>
+              <link rel="stylesheet" href="css/domestic.css">
+            </head>
+            <body>
+              <main class="stack" style="--stack-gap: var(--dui-space-m)">
+                <h1>domestic-ui</h1>
+                <p>A standards-first design system built on native HTML, CSS custom properties, and cascade layers.</p>
+                <ul>
+                  <li><a href="examples/base.html">Base elements</a></li>
+                  <li><a href="examples/theming.html">Theming</a></li>
+                </ul>
+              </main>
+            </body>
+          </html>
+          HTML
+
+      - uses: actions/upload-pages-artifact@v5
+        with:
+          path: _site
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v5
