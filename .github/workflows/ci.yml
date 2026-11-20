@@ -16,6 +16,14 @@ jobs:
   ci:
     name: ci
     runs-on: ubuntu-latest
+    # Playwright's image ships Chromium, Firefox, WebKit and their system
+    # dependencies, which saves the ~11 minute apt install of
+    # `npx playwright install --with-deps`. Keep the tag equal to the
+    # @playwright/test version in package.json; bump them together.
+    # https://playwright.dev/docs/ci#via-containers
+    container:
+      image: mcr.microsoft.com/playwright:v1.65.1-noble
+      options: --user 1001
     steps:
       - uses: actions/checkout@v7
 
@@ -25,9 +33,6 @@ jobs:
           cache: npm
 
       - run: npm ci
-
-      - name: Install Playwright browsers
-        run: npx playwright install --with-deps chromium firefox webkit
 
       - run: npm test
 
