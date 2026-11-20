@@ -1,0 +1,27 @@
+/*
+ * domestic-ui: single entry point.
+ *
+ *   <link rel="stylesheet" href="css/domestic.css">
+ *
+ * Zero build: plain CSS, imported with cascade layers.
+ * Layer order, lowest to highest priority. Unlayered CSS (yours) beats
+ * all of them. https://developer.mozilla.org/en-US/docs/Web/CSS/@layer
+ *
+ * Paths are relative, so this works from file paths and from subpaths.
+ * File paths are public API: renaming one is a breaking change.
+ */
+@layer reset, tokens, base, layout, components, utilities;
+
+@import url("reset/reset.css") layer(reset);
+@import url("tokens/primitives.css") layer(tokens);
+@import url("tokens/semantic.css") layer(tokens);
+@import url("base/document.css") layer(base);
+@import url("base/typography.css") layer(base);
+@import url("base/media.css") layer(base);
+@import url("base/tables.css") layer(base);
+@import url("base/forms.css") layer(base);
+@import url("base/interactive.css") layer(base);
+@import url("layout/stack.css") layer(layout);
+@import url("layout/cluster.css") layer(layout);
+@import url("layout/grid.css") layer(layout);
+@import url("utilities/visually-hidden.css") layer(utilities);

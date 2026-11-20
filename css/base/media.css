@@ -1,0 +1,22 @@
+/*
+ * Base: embedded content and figures.
+ * https://html.spec.whatwg.org/multipage/embedded-content.html
+ */
+
+img,
+video {
+  border-radius: var(--dui-radius-surface);
+}
+
+svg:not(:root) {
+  overflow: hidden;
+}
+
+figcaption {
+  color: var(--dui-color-text-muted);
+  font-size: var(--dui-step--1);
+}
+
+figure > * + figcaption {
+  margin-block-start: var(--dui-space-xs);
+}

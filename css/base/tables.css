@@ -1,0 +1,41 @@
+/*
+ * Base: tables.
+ * https://html.spec.whatwg.org/multipage/tables.html
+ * Tables with a caption and th[scope]: https://www.w3.org/WAI/tutorials/tables/
+ */
+
+table {
+  inline-size: 100%;
+  font-variant-numeric: tabular-nums;
+}
+
+caption {
+  caption-side: top;
+  text-align: start;
+  font-weight: var(--dui-font-weight-strong);
+  padding-block-end: var(--dui-space-xs);
+}
+
+th,
+td {
+  padding: var(--dui-space-xs) var(--dui-space-s);
+  border-block-end: var(--dui-border-width) solid var(--dui-color-border);
+  text-align: start;
+  vertical-align: top;
+}
+
+thead th {
+  border-block-end-color: var(--dui-color-border-control);
+  font-weight: var(--dui-font-weight-strong);
+  vertical-align: bottom;
+}
+
+tbody tr:nth-child(even) {
+  background-color: var(--dui-color-surface-raised);
+}
+
+tfoot td,
+tfoot th {
+  border-block-end: 0;
+  font-weight: var(--dui-font-weight-strong);
+}

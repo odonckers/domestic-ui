@@ -1,0 +1,180 @@
+/*
+ * Base: forms and buttons.
+ * https://html.spec.whatwg.org/multipage/forms.html
+ * Labels: https://www.w3.org/WAI/tutorials/forms/labels/
+ */
+
+/* Text-like controls: every input except the ones listed below. */
+:where(
+  input:not([type="checkbox"], [type="radio"], [type="range"], [type="color"], [type="file"], [type="button"], [type="submit"], [type="reset"], [type="image"], [type="hidden"]),
+  select,
+  textarea
+) {
+  display: block;
+  inline-size: 100%;
+  min-block-size: var(--dui-size-target);
+  padding: var(--dui-space-xs) var(--dui-space-s);
+  background-color: var(--dui-color-surface);
+  color: var(--dui-color-text);
+  border: var(--dui-border-width) solid var(--dui-color-border-control);
+  border-radius: var(--dui-radius-control);
+  transition: border-color var(--dui-duration-fast) var(--dui-easing-standard);
+}
+
+:where(input, select, textarea):hover:not(:disabled) {
+  border-color: var(--dui-color-text-muted);
+}
+
+textarea {
+  resize: vertical;
+  field-sizing: content;
+  min-block-size: calc(var(--dui-size-target) * 2);
+}
+
+::placeholder {
+  color: var(--dui-color-text-muted);
+  opacity: 1;
+}
+
+/* Invalid only after the user has interacted: https://developer.mozilla.org/en-US/docs/Web/CSS/:user-invalid */
+:where(input, select, textarea):user-invalid {
+  border-color: var(--dui-color-danger);
+}
+
+/*
+ * Checkboxes, radios and range keep native rendering, tinted with
+ * accent-color. https://developer.mozilla.org/en-US/docs/Web/CSS/accent-color
+ */
+input[type="checkbox"],
+input[type="radio"],
+input[type="range"],
+progress {
+  accent-color: var(--dui-color-accent);
+}
+
+input[type="checkbox"],
+input[type="radio"] {
+  inline-size: var(--dui-size-check);
+  block-size: var(--dui-size-check);
+  flex-shrink: 0;
+}
+
+input[type="range"] {
+  inline-size: 100%;
+}
+
+input[type="color"] {
+  inline-size: var(--dui-size-target);
+  block-size: var(--dui-size-target);
+  padding: var(--dui-space-3xs);
+  background-color: var(--dui-color-surface);
+  border: var(--dui-border-width) solid var(--dui-color-border-control);
+  border-radius: var(--dui-radius-control);
+}
+
+/* Labels sit above their control; labels that wrap a check sit beside it. */
+label {
+  display: block;
+  font-weight: var(--dui-font-weight-strong);
+}
+
+label + :where(input, select, textarea) {
+  margin-block-start: var(--dui-space-2xs);
+}
+
+label:has(> input[type="checkbox"], > input[type="radio"]) {
+  display: flex;
+  align-items: center;
+  gap: var(--dui-space-xs);
+  min-block-size: var(--dui-size-target);
+  font-weight: var(--dui-font-weight-body);
+  inline-size: fit-content;
+}
+
+fieldset {
+  border: var(--dui-border-width) solid var(--dui-color-border);
+  border-radius: var(--dui-radius-surface);
+  padding: var(--dui-space-s) var(--dui-space-m) var(--dui-space-m);
+  min-inline-size: 0;
+}
+
+/* Consecutive check/radio labels already meet the target size; no extra gap. */
+fieldset > label:has(> input[type]) + label:has(> input[type]) {
+  margin-block-start: 0;
+}
+
+legend {
+  font-weight: var(--dui-font-weight-strong);
+  padding-inline: var(--dui-space-2xs);
+}
+
+/*
+ * Buttons. Our choice: an explicit type="submit" is the primary action
+ * and gets the accent fill; every other button is neutral.
+ */
+button,
+input:is([type="button"], [type="submit"], [type="reset"]),
+::file-selector-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--dui-space-xs);
+  min-block-size: var(--dui-size-target);
+  min-inline-size: var(--dui-size-target);
+  padding: var(--dui-space-xs) var(--dui-space-m);
+  background-color: var(--dui-color-surface-raised);
+  color: var(--dui-color-text);
+  border: var(--dui-border-width) solid var(--dui-color-border-control);
+  border-radius: var(--dui-radius-control);
+  font-weight: var(--dui-font-weight-strong);
+  line-height: var(--dui-line-height-heading);
+  cursor: pointer;
+  transition:
+    background-color var(--dui-duration-fast) var(--dui-easing-standard),
+    border-color var(--dui-duration-fast) var(--dui-easing-standard);
+}
+
+::file-selector-button {
+  margin-inline-end: var(--dui-space-s);
+}
+
+:is(button, input:is([type="button"], [type="submit"], [type="reset"])):hover:not(:disabled),
+::file-selector-button:hover {
+  background-color: var(--dui-color-surface-sunken);
+}
+
+:is(button, input)[type="submit"] {
+  background-color: var(--dui-color-accent);
+  color: var(--dui-color-accent-contrast);
+  border-color: var(--dui-color-accent);
+}
+
+:is(button, input)[type="submit"]:hover:not(:disabled) {
+  background-color: var(--dui-color-accent-hover);
+  border-color: var(--dui-color-accent-hover);
+}
+
+:is(button, input):active:not(:disabled) {
+  translate: 0 1px;
+}
+
+input[type="file"] {
+  display: block;
+  inline-size: 100%;
+}
+
+:is(button, input, select, textarea):disabled {
+  opacity: var(--dui-opacity-disabled);
+  cursor: not-allowed;
+}
+
+/* Forced colors: keep control boundaries visible with system colors. */
+@media (forced-colors: active) {
+  button,
+  input,
+  select,
+  textarea,
+  ::file-selector-button {
+    border-color: buttonborder;
+  }
+}

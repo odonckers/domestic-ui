@@ -1,0 +1,131 @@
+/*
+ * Semantic tokens (public theming API).
+ *
+ * Named by role. Each points at a primitive (css/tokens/primitives.css)
+ * or at another semantic token. Base, layout, utility and component CSS
+ * use only these. Renaming or removing one is a breaking change.
+ *
+ * A theme is an override of these tokens on :root or on a scoped
+ * element. No rebuild. See PRINCIPLES.md, "Theming".
+ *
+ * Colors use light-dark(), which picks a value from the used
+ * color-scheme of the element where the token is read.
+ * https://developer.mozilla.org/en-US/docs/Web/CSS/color_value/light-dark
+ */
+
+/* 1. Independent tokens: resolve once on :root, inherit everywhere. */
+:root {
+  /* Surfaces and text */
+  --dui-color-surface: light-dark(var(--dui-color-gray-0), var(--dui-color-gray-900));
+  --dui-color-surface-raised: light-dark(var(--dui-color-gray-50), var(--dui-color-gray-850));
+  --dui-color-surface-sunken: light-dark(var(--dui-color-gray-100), var(--dui-color-gray-800));
+  --dui-color-text: light-dark(var(--dui-color-gray-900), var(--dui-color-gray-100));
+  --dui-color-text-muted: light-dark(var(--dui-color-gray-600), var(--dui-color-gray-400));
+
+  /* Borders: decorative hairlines vs. control boundaries (3:1, WCAG 1.4.11) */
+  --dui-color-border: light-dark(var(--dui-color-gray-200), var(--dui-color-gray-700));
+  --dui-color-border-control: light-dark(var(--dui-color-gray-500), var(--dui-color-gray-500));
+
+  /* Accent and status */
+  --dui-color-accent: light-dark(var(--dui-color-blue-600), var(--dui-color-blue-400));
+  --dui-color-accent-contrast: light-dark(var(--dui-color-gray-0), var(--dui-color-gray-900));
+  --dui-color-link-visited: light-dark(var(--dui-color-purple-700), var(--dui-color-purple-300));
+  --dui-color-danger: light-dark(var(--dui-color-red-700), var(--dui-color-red-300));
+  --dui-color-success: light-dark(var(--dui-color-green-700), var(--dui-color-green-300));
+  --dui-color-mark: light-dark(var(--dui-color-yellow-100), var(--dui-color-yellow-300));
+  --dui-color-mark-text: light-dark(var(--dui-color-gray-900), var(--dui-color-gray-900));
+  --dui-color-backdrop: light-dark(var(--dui-color-black-a40), var(--dui-color-black-a60));
+  --dui-color-shadow: light-dark(var(--dui-color-black-a10), var(--dui-color-black-a40));
+
+  /* Type */
+  --dui-font-body: var(--dui-font-stack-system-ui);
+  --dui-font-mono: var(--dui-font-stack-monospace);
+  --dui-font-weight-body: var(--dui-font-weight-400);
+  --dui-font-weight-strong: var(--dui-font-weight-600);
+  --dui-font-weight-heading: var(--dui-font-weight-700);
+  --dui-step--1: var(--dui-font-size-fluid--1);
+  --dui-step-0: var(--dui-font-size-fluid-0);
+  --dui-step-1: var(--dui-font-size-fluid-1);
+  --dui-step-2: var(--dui-font-size-fluid-2);
+  --dui-step-3: var(--dui-font-size-fluid-3);
+  --dui-step-4: var(--dui-font-size-fluid-4);
+  --dui-step-5: var(--dui-font-size-fluid-5);
+  --dui-font-size-code: var(--dui-font-size-relative-90);
+  --dui-line-height-body: var(--dui-leading-160);
+  --dui-line-height-heading: var(--dui-leading-125);
+  --dui-line-height-display: var(--dui-leading-110);
+  --dui-letter-spacing-heading: var(--dui-tracking-tight);
+  --dui-measure: var(--dui-size-65ch);
+
+  /* Space */
+  --dui-space-3xs: var(--dui-space-1);
+  --dui-space-2xs: var(--dui-space-2);
+  --dui-space-xs: var(--dui-space-3);
+  --dui-space-s: var(--dui-space-4);
+  --dui-space-m: var(--dui-space-5);
+  --dui-space-l: var(--dui-space-6);
+  --dui-space-xl: var(--dui-space-7);
+  --dui-space-2xl: var(--dui-space-8);
+  --dui-space-3xl: var(--dui-space-9);
+
+  /* Sizes */
+  --dui-size-target: var(--dui-size-2-75);
+  --dui-size-check: var(--dui-size-1-25);
+  --dui-size-column-min: var(--dui-size-16);
+
+  /* Shape */
+  --dui-radius-control: var(--dui-radius-2);
+  --dui-radius-surface: var(--dui-radius-3);
+  --dui-radius-pill: var(--dui-radius-round);
+  --dui-border-width: var(--dui-border-1);
+  --dui-border-width-emphasis: var(--dui-border-4);
+  --dui-underline-offset: var(--dui-underline-offset-015em);
+  --dui-underline-thickness: var(--dui-underline-1);
+  --dui-underline-thickness-hover: var(--dui-underline-2);
+
+  /* Focus indicator (WCAG 2.4.7, 2.4.11, 2.4.13) */
+  --dui-focus-width: var(--dui-border-2);
+  --dui-focus-offset: var(--dui-border-2);
+
+  /* Motion */
+  --dui-duration-fast: var(--dui-duration-150);
+  --dui-duration-normal: var(--dui-duration-250);
+  --dui-easing-standard: var(--dui-easing-ease-out);
+
+  /* State */
+  --dui-opacity-disabled: var(--dui-opacity-60);
+}
+
+/*
+ * 2. Dependent tokens: defined in terms of other semantic tokens.
+ *
+ * A custom property's var() references are substituted on the element
+ * that declares it, then the result is inherited. If these lived only
+ * on :root, overriding --dui-color-accent on a scoped element would not
+ * update --dui-color-link below it. So they are re-declared on every
+ * theme scope: an element with a data-theme attribute or a theme-* class.
+ * https://drafts.csswg.org/css-variables/#cycles (substitution timing)
+ *
+ * Our choice: themes are scoped with [data-theme] or .theme-*, so one
+ * attribute (or class) is the whole scoping API.
+ */
+:root,
+:where([data-theme], [class^="theme-"], [class*=" theme-"]) {
+  --dui-color-link: var(--dui-color-accent);
+  --dui-color-focus: var(--dui-color-accent);
+  --dui-color-accent-hover: color-mix(in oklab, var(--dui-color-accent) 82%, var(--dui-color-text));
+  --dui-font-heading: var(--dui-font-body);
+  --dui-shadow-raised: 0 var(--dui-border-1) var(--dui-space-2) var(--dui-color-shadow), 0 var(--dui-space-3) var(--dui-space-7) var(--dui-color-shadow);
+}
+
+/*
+ * 3. Reduced motion: durations collapse to zero.
+ * https://developer.mozilla.org/en-US/docs/Web/CSS/@media/prefers-reduced-motion
+ */
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --dui-duration-fast: var(--dui-duration-0);
+    --dui-duration-normal: var(--dui-duration-0);
+    --dui-easing-standard: var(--dui-easing-linear);
+  }
+}

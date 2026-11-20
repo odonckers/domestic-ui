@@ -1,0 +1,82 @@
+/*
+ * Reset layer: a modest modern reset.
+ *
+ * Packages well-known patterns; nothing here is original:
+ * - Andy Bell, "A (more) Modern CSS Reset"
+ *   https://piccalil.li/blog/a-more-modern-css-reset/
+ * - Josh W. Comeau, "A Modern CSS Reset"
+ *   https://www.joshwcomeau.com/css/custom-css-reset/
+ *
+ * It removes inconsistencies only. The look lives in the base layer.
+ */
+
+/* Predictable sizing: https://developer.mozilla.org/en-US/docs/Web/CSS/box-sizing */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+/* Margins come back in the base layer as a consistent rhythm. */
+* {
+  margin: 0;
+}
+
+body {
+  min-block-size: 100%;
+}
+
+/* Media are blocks that never overflow their container. */
+img,
+picture,
+video,
+canvas,
+svg {
+  display: block;
+  max-inline-size: 100%;
+}
+
+img,
+video {
+  block-size: auto;
+}
+
+/* Form controls use the surrounding font instead of the UA default. */
+input,
+button,
+textarea,
+select {
+  font: inherit;
+  letter-spacing: inherit;
+}
+
+/* Long words wrap instead of overflowing. */
+p,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+li,
+dd,
+blockquote,
+figcaption {
+  overflow-wrap: break-word;
+}
+
+/* Sub and sup should not change line height. */
+sub,
+sup {
+  line-height: 0;
+}
+
+/* Tables: no doubled borders. */
+table {
+  border-collapse: collapse;
+}
+
+/* Hidden means hidden, even if a class sets display. */
+[hidden]:not([hidden="until-found"]) {
+  display: none !important;
+}

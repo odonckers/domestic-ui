@@ -1,0 +1,37 @@
+/*
+ * Layout: .stack
+ *
+ * Vertical flow with a consistent gap between children.
+ * Pattern: "The Stack", Every Layout (https://every-layout.dev/layouts/stack/),
+ * built with flexbox gap (https://developer.mozilla.org/en-US/docs/Web/CSS/gap).
+ *
+ * API
+ *   class="stack"
+ *   --stack-gap   space between children (default: var(--dui-space-m))
+ *
+ * Example
+ *   <div class="stack" style="--stack-gap: var(--dui-space-s)">…</div>
+ *
+ * --stack-gap does not inherit, so nested stacks keep their own default.
+ */
+
+@property --stack-gap {
+  syntax: "*";
+  inherits: false;
+}
+
+.stack {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  gap: var(--stack-gap, var(--dui-space-m));
+}
+
+:where(ul, ol).stack {
+  list-style: none;
+  padding-inline-start: 0;
+}
+
+.stack > * {
+  margin-block: 0;
+}

@@ -1,0 +1,95 @@
+/*
+ * Base: document, color scheme, rhythm and focus.
+ */
+
+/*
+ * Follow the user's preferred color scheme.
+ * https://developer.mozilla.org/en-US/docs/Web/CSS/color-scheme
+ */
+:root {
+  color-scheme: light dark;
+
+  /* Keep focused and targeted elements clear of sticky edges (WCAG 2.4.11). */
+  scroll-padding-block: var(--dui-space-2xl);
+}
+
+/*
+ * Force a scheme on the page or on any subtree.
+ * API: data-color-scheme="light" | "dark"
+ */
+[data-color-scheme="light"] {
+  color-scheme: light;
+}
+
+[data-color-scheme="dark"] {
+  color-scheme: dark;
+}
+
+/*
+ * Inherited properties are computed where they are declared. Re-apply
+ * them on every theme or scheme scope so scoped token overrides show up.
+ */
+:root,
+[data-theme],
+[class^="theme-"],
+[class*=" theme-"],
+[data-color-scheme] {
+  background-color: var(--dui-color-surface);
+  color: var(--dui-color-text);
+  font-family: var(--dui-font-body);
+  font-weight: var(--dui-font-weight-body);
+}
+
+body {
+  font-size: var(--dui-step-0);
+  line-height: var(--dui-line-height-body);
+}
+
+/*
+ * Vertical rhythm: siblings inside flow containers get a consistent
+ * top margin ("lobotomized owl", Heydon Pickering:
+ * https://alistapart.com/article/axiomatic-css-and-lobotomized-owls/).
+ * :where() keeps specificity at zero so anything can override it.
+ */
+:where(body, main, article, section, aside, header, footer, nav, blockquote, figure, li, dd, details, dialog, fieldset, form, td, th) > * + * {
+  margin-block-start: var(--dui-space-m);
+}
+
+:where(body, main, article, section, aside, details, dialog, form) > * + :where(h1, h2, h3) {
+  margin-block-start: var(--dui-space-xl);
+}
+
+:where(body, main, article, section, aside, details, dialog, form) > :where(h1, h2, h3, h4, h5, h6) + * {
+  margin-block-start: var(--dui-space-xs);
+}
+
+/* Comfortable measure for prose. */
+:where(p, li, dt, dd, blockquote, figcaption, h1, h2, h3, h4, h5, h6) {
+  max-inline-size: var(--dui-measure);
+}
+
+/*
+ * Visible focus on everything focusable (WCAG 2.4.7, 2.4.13).
+ * https://developer.mozilla.org/en-US/docs/Web/CSS/:focus-visible
+ * Never remove an outline without a replacement.
+ */
+:focus-visible {
+  outline: var(--dui-focus-width) solid var(--dui-color-focus);
+  outline-offset: var(--dui-focus-offset);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  :root:has(:target) {
+    scroll-behavior: smooth;
+  }
+}
+
+/*
+ * Forced colors: let the system palette win, but keep the focus ring.
+ * https://developer.mozilla.org/en-US/docs/Web/CSS/@media/forced-colors
+ */
+@media (forced-colors: active) {
+  :focus-visible {
+    outline-color: highlight;
+  }
+}

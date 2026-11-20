@@ -1,0 +1,70 @@
+/*
+ * Base: interactive elements (dialog, details/summary).
+ * https://html.spec.whatwg.org/multipage/interactive-elements.html
+ */
+
+/*
+ * Dialog. Open with showModal() or a command="show-modal" button so the
+ * browser handles focus, Escape and inertness.
+ * https://developer.mozilla.org/en-US/docs/Web/HTML/Element/dialog
+ * APG modal dialog pattern: https://www.w3.org/WAI/ARIA/apg/patterns/dialog-modal/
+ */
+dialog {
+  margin: auto;
+  inline-size: min(var(--dui-measure), 100% - var(--dui-space-l) * 2);
+  max-block-size: calc(100% - var(--dui-space-l) * 2);
+  padding: var(--dui-space-l);
+  background-color: var(--dui-color-surface);
+  color: var(--dui-color-text);
+  border: var(--dui-border-width) solid var(--dui-color-border);
+  border-radius: var(--dui-radius-surface);
+  box-shadow: var(--dui-shadow-raised);
+}
+
+dialog::backdrop {
+  background-color: var(--dui-color-backdrop);
+}
+
+/*
+ * Details and summary: a native disclosure.
+ * APG disclosure pattern: https://www.w3.org/WAI/ARIA/apg/patterns/disclosure/
+ */
+details {
+  border: var(--dui-border-width) solid var(--dui-color-border);
+  border-radius: var(--dui-radius-surface);
+  padding-inline: var(--dui-space-m);
+  background-color: var(--dui-color-surface);
+}
+
+details[open] {
+  padding-block-end: var(--dui-space-m);
+}
+
+summary {
+  display: list-item;
+  min-block-size: var(--dui-size-target);
+  padding-block: var(--dui-space-xs);
+  font-weight: var(--dui-font-weight-strong);
+  cursor: pointer;
+}
+
+summary::marker {
+  color: var(--dui-color-text-muted);
+}
+
+details[open] > summary {
+  border-block-end: var(--dui-border-width) solid var(--dui-color-border);
+  margin-inline: calc(var(--dui-space-m) * -1);
+  padding-inline: var(--dui-space-m);
+}
+
+details + details {
+  margin-block-start: var(--dui-space-xs);
+}
+
+@media (forced-colors: active) {
+  dialog,
+  details {
+    border-color: canvastext;
+  }
+}

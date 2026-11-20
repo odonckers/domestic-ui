@@ -1,0 +1,45 @@
+/*
+ * Layout: .grid
+ *
+ * A responsive grid: as many columns as fit, each at least --grid-min
+ * wide, never wider than the container. No media queries.
+ * Pattern: "RAM" (repeat, auto-fit, minmax), see
+ * https://developer.mozilla.org/en-US/docs/Web/CSS/repeat#auto-fit
+ * and "The Grid", Every Layout (https://every-layout.dev/layouts/grid/).
+ *
+ * API
+ *   class="grid"
+ *   --grid-min   minimum column width (default: var(--dui-size-column-min))
+ *   --grid-gap   gap between cells    (default: var(--dui-space-l))
+ *
+ * Example
+ *   <div class="grid" style="--grid-min: 12rem">…</div>
+ *
+ * The custom properties do not inherit, so nested grids keep their defaults.
+ */
+
+@property --grid-min {
+  syntax: "*";
+  inherits: false;
+}
+
+@property --grid-gap {
+  syntax: "*";
+  inherits: false;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(var(--grid-min, var(--dui-size-column-min)), 100%), 1fr));
+  gap: var(--grid-gap, var(--dui-space-l));
+}
+
+:where(ul, ol).grid {
+  list-style: none;
+  padding-inline-start: 0;
+}
+
+.grid > * {
+  margin: 0;
+  max-inline-size: none;
+}

@@ -1,0 +1,176 @@
+/*
+ * Base: headings, text-level semantics and prose blocks.
+ * Element reference: https://html.spec.whatwg.org/multipage/text-level-semantics.html
+ */
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: var(--dui-font-heading);
+  font-weight: var(--dui-font-weight-heading);
+  line-height: var(--dui-line-height-heading);
+  text-wrap: balance;
+}
+
+h1 {
+  font-size: var(--dui-step-5);
+  line-height: var(--dui-line-height-display);
+  letter-spacing: var(--dui-letter-spacing-heading);
+}
+
+h2 {
+  font-size: var(--dui-step-4);
+  letter-spacing: var(--dui-letter-spacing-heading);
+}
+
+h3 {
+  font-size: var(--dui-step-3);
+}
+
+h4 {
+  font-size: var(--dui-step-2);
+}
+
+h5 {
+  font-size: var(--dui-step-1);
+}
+
+h6 {
+  font-size: var(--dui-step-0);
+}
+
+p {
+  text-wrap: pretty;
+}
+
+/*
+ * Links keep their underline (WCAG 1.4.1 Use of Color).
+ * https://www.w3.org/WAI/WCAG22/Understanding/use-of-color.html
+ */
+a {
+  color: var(--dui-color-link);
+  text-decoration-line: underline;
+  text-decoration-thickness: var(--dui-underline-thickness);
+  text-underline-offset: var(--dui-underline-offset);
+  transition: text-decoration-thickness var(--dui-duration-fast) var(--dui-easing-standard);
+}
+
+a:visited {
+  color: var(--dui-color-link-visited);
+}
+
+a:hover {
+  text-decoration-thickness: var(--dui-underline-thickness-hover);
+}
+
+strong,
+b {
+  font-weight: var(--dui-font-weight-strong);
+}
+
+small {
+  font-size: var(--dui-step--1);
+}
+
+mark {
+  background-color: var(--dui-color-mark);
+  color: var(--dui-color-mark-text);
+  padding-inline: var(--dui-space-3xs);
+  border-radius: var(--dui-radius-control);
+}
+
+abbr[title] {
+  text-decoration-line: underline;
+  text-decoration-style: dotted;
+  text-underline-offset: var(--dui-underline-offset);
+  cursor: help;
+}
+
+blockquote {
+  border-inline-start: var(--dui-border-width-emphasis) solid var(--dui-color-border);
+  padding-inline-start: var(--dui-space-m);
+  color: var(--dui-color-text-muted);
+}
+
+hr {
+  border: 0;
+  border-block-start: var(--dui-border-width) solid var(--dui-color-border);
+  margin-block: var(--dui-space-xl);
+}
+
+/* Code: https://html.spec.whatwg.org/multipage/text-level-semantics.html#the-code-element */
+code,
+kbd,
+samp,
+pre {
+  font-family: var(--dui-font-mono);
+  font-size: var(--dui-font-size-code);
+}
+
+:not(pre) > code,
+samp {
+  background-color: var(--dui-color-surface-sunken);
+  padding-inline: var(--dui-space-2xs);
+  border-radius: var(--dui-radius-control);
+}
+
+kbd {
+  background-color: var(--dui-color-surface-raised);
+  border: var(--dui-border-width) solid var(--dui-color-border-control);
+  border-block-end-width: var(--dui-focus-width);
+  border-radius: var(--dui-radius-control);
+  padding-inline: var(--dui-space-2xs);
+  white-space: nowrap;
+}
+
+pre {
+  background-color: var(--dui-color-surface-sunken);
+  border: var(--dui-border-width) solid var(--dui-color-border);
+  border-radius: var(--dui-radius-surface);
+  padding: var(--dui-space-m);
+  overflow-x: auto;
+  tab-size: 2;
+  line-height: var(--dui-line-height-heading);
+}
+
+pre code {
+  font-size: inherit;
+}
+
+/* Lists */
+ul,
+ol {
+  padding-inline-start: var(--dui-space-l);
+}
+
+li + li {
+  margin-block-start: var(--dui-space-2xs);
+}
+
+li::marker {
+  color: var(--dui-color-text-muted);
+}
+
+dt {
+  font-weight: var(--dui-font-weight-strong);
+}
+
+dd {
+  margin-inline-start: var(--dui-space-l);
+}
+
+dt + dd {
+  margin-block-start: var(--dui-space-3xs);
+}
+
+dd + dt {
+  margin-block-start: var(--dui-space-s);
+}
+
+::selection {
+  background-color: var(--dui-color-mark);
+  color: var(--dui-color-mark-text);
+}

@@ -1,0 +1,50 @@
+/*
+ * Layout: .cluster
+ *
+ * An inline group that wraps onto new lines (buttons, tags, nav links).
+ * Pattern: "The Cluster", Every Layout (https://every-layout.dev/layouts/cluster/),
+ * built with flex-wrap and gap.
+ *
+ * API
+ *   class="cluster"
+ *   --cluster-gap       space between items   (default: var(--dui-space-s))
+ *   --cluster-justify   justify-content value (default: flex-start)
+ *   --cluster-align     align-items value     (default: center)
+ *
+ * Example
+ *   <ul class="cluster" style="--cluster-justify: space-between">…</ul>
+ *
+ * The custom properties do not inherit, so nested clusters keep their defaults.
+ */
+
+@property --cluster-gap {
+  syntax: "*";
+  inherits: false;
+}
+
+@property --cluster-justify {
+  syntax: "*";
+  inherits: false;
+}
+
+@property --cluster-align {
+  syntax: "*";
+  inherits: false;
+}
+
+.cluster {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--cluster-gap, var(--dui-space-s));
+  justify-content: var(--cluster-justify, flex-start);
+  align-items: var(--cluster-align, center);
+}
+
+:where(ul, ol).cluster {
+  list-style: none;
+  padding-inline-start: 0;
+}
+
+.cluster > * {
+  margin: 0;
+}
