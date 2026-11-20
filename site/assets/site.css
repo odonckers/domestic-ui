@@ -1,0 +1,164 @@
+/*
+ * Docs site layout. Loaded after css/domestic.css, unlayered, so it wins
+ * where it needs to. It uses only semantic --dui-* tokens and the layout
+ * primitives, like any consumer would; the base layer provides the look,
+ * focus styles, color-scheme and forced-colors handling.
+ */
+
+.site-header,
+.site-body,
+.site-footer {
+  max-inline-size: calc(var(--dui-measure) + var(--dui-size-column-min) * 2);
+  margin-inline: auto;
+  padding-inline: var(--dui-space-l);
+}
+
+.site-header {
+  --cluster-justify: space-between;
+
+  padding-block: var(--dui-space-m);
+  border-block-end: var(--dui-border-width) solid var(--dui-color-border);
+}
+
+.site-name {
+  font-weight: var(--dui-font-weight-heading);
+}
+
+/* Skip link: hidden by .visually-hidden until focused, then pinned top-left. */
+.skip-link:focus {
+  position: absolute;
+  inset-block-start: var(--dui-space-s);
+  inset-inline-start: var(--dui-space-s);
+  padding: var(--dui-space-xs) var(--dui-space-s);
+  background-color: var(--dui-color-surface);
+  border: var(--dui-border-width) solid var(--dui-color-border-control);
+  border-radius: var(--dui-radius-control);
+}
+
+/*
+ * Sidebar and content without media queries: the sidebar wraps above the
+ * content when the content would get narrower than half the row.
+ * Pattern: "The Sidebar", Every Layout (https://every-layout.dev/layouts/sidebar/).
+ */
+.site-body {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: var(--dui-space-2xl);
+  padding-block: var(--dui-space-2xl);
+}
+
+.section-nav {
+  flex-basis: var(--dui-size-column-min);
+  flex-grow: 1;
+}
+
+.section-nav ul {
+  --stack-gap: var(--dui-space-2xs);
+}
+
+.site-body > main {
+  flex-basis: 0;
+  flex-grow: 999;
+  min-inline-size: 50%;
+}
+
+.site-footer {
+  padding-block: var(--dui-space-l);
+  border-block-start: var(--dui-border-width) solid var(--dui-color-border);
+  color: var(--dui-color-text-muted);
+}
+
+/*
+ * Code wraps instead of scrolling, so a long line never needs a
+ * focusable scroll region. Copying still gives the exact bytes.
+ */
+main pre {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+main :is(td, th, li) {
+  overflow-wrap: anywhere;
+}
+
+/* Live examples: the real example page, framed. */
+.example-frame {
+  display: block;
+  inline-size: 100%;
+  aspect-ratio: 4 / 3;
+  border: var(--dui-border-width) solid var(--dui-color-border);
+  border-radius: var(--dui-radius-surface);
+}
+
+/*
+ * Token samples. Decorative (aria-hidden): the token name and value in
+ * the same row are the reference. --token-sample holds the token.
+ */
+.token-sample {
+  display: block;
+  forced-color-adjust: none;
+}
+
+.token-sample:is([data-sample="color"], [data-sample="radius"], [data-sample="border-width"], [data-sample="shadow"], [data-sample="opacity"]) {
+  inline-size: var(--dui-size-target);
+  block-size: var(--dui-size-target);
+  border: var(--dui-border-width) solid var(--dui-color-border-control);
+  background-color: var(--dui-color-surface-raised);
+}
+
+.token-sample[data-sample="color"] {
+  background-color: var(--token-sample);
+}
+
+.token-sample[data-sample="radius"] {
+  border-radius: var(--token-sample);
+}
+
+.token-sample[data-sample="border-width"] {
+  border-width: var(--token-sample);
+}
+
+.token-sample[data-sample="shadow"] {
+  box-shadow: var(--token-sample);
+}
+
+.token-sample[data-sample="opacity"] {
+  background-color: var(--dui-color-text);
+  opacity: var(--token-sample);
+}
+
+/*
+ * Length bars are clipped to the cell. inline-size containment keeps a long
+ * bar (such as --dui-measure) from widening the table past a narrow viewport
+ * (WCAG 1.4.10 Reflow). https://developer.mozilla.org/en-US/docs/Web/CSS/contain
+ */
+.token-sample[data-sample="length"] {
+  contain: inline-size;
+}
+
+.token-sample[data-sample="length"]::before {
+  content: "";
+  display: block;
+  inline-size: var(--token-sample);
+  max-inline-size: 100%;
+  block-size: var(--dui-space-s);
+  background-color: var(--dui-color-text-muted);
+}
+
+.token-sample[data-sample="font-size"] {
+  font-size: var(--token-sample);
+  line-height: var(--dui-line-height-heading);
+}
+
+.token-sample[data-sample="font-family"] {
+  font-family: var(--token-sample);
+}
+
+.token-sample[data-sample="font-weight"] {
+  font-weight: var(--token-sample);
+}
+
+.token-sample[data-sample="letter-spacing"] {
+  letter-spacing: var(--token-sample);
+}

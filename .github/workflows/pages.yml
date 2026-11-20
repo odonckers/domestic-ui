@@ -1,5 +1,5 @@
-# Skeleton GitHub Pages deploy. The Docs Specialist will own the site later;
-# for now it publishes the examples and the CSS they link to.
+# Builds the docs site with site/build.mjs and deploys it to GitHub Pages.
+# The build has zero dependencies, so there is no npm install step.
 name: Pages
 
 on:
@@ -22,34 +22,19 @@ jobs:
     steps:
       - uses: actions/checkout@v7
 
-      - uses: actions/configure-pages@v6
+      - uses: actions/setup-node@v7
+        with:
+          node-version: lts/*
 
-      # Examples link ../css/, so both folders are staged side by side.
-      - name: Stage site
-        run: |
-          mkdir -p _site
-          cp -R css examples _site/
-          cat > _site/index.html <<'HTML'
-          <!DOCTYPE html>
-          <html lang="en">
-            <head>
-              <meta charset="utf-8">
-              <meta name="viewport" content="width=device-width, initial-scale=1">
-              <title>domestic-ui</title>
-              <link rel="stylesheet" href="css/domestic.css">
-            </head>
-            <body>
-              <main class="stack" style="--stack-gap: var(--dui-space-m)">
-                <h1>domestic-ui</h1>
-                <p>A standards-first design system built on native HTML, CSS custom properties, and cascade layers.</p>
-                <ul>
-                  <li><a href="examples/base.html">Base elements</a></li>
-                  <li><a href="examples/theming.html">Theming</a></li>
-                </ul>
-              </main>
-            </body>
-          </html>
-          HTML
+      # Fails if README.md, llms.txt or llms-full.txt were not regenerated.
+      - name: Check generated files are up to date
+        run: node site/build.mjs --check
+
+      # Writes _site/ (pages, Markdown twins, copied css/ and examples/, .nojekyll).
+      - name: Build site
+        run: node site/build.mjs
+
+      - uses: actions/configure-pages@v6
 
       - uses: actions/upload-pages-artifact@v5
         with:

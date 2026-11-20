@@ -1,0 +1,53 @@
+# domestic-ui
+
+> domestic-ui is a design system built on native HTML, CSS custom properties and cascade layers. Link one stylesheet and plain semantic HTML gets its look in light and dark, with WCAG 2.2 AA as the accessibility baseline; theme it by overriding semantic tokens. It packages existing web standards and well-known patterns: nothing here is original.
+
+To use it, link `css/domestic.css` (copy the `css/` folder or clone https://github.com/odonckers/domestic-ui). Plain semantic HTML then gets the full look with no classes. Each layout primitive, utility and component has one documented class or attribute API, tuned with custom properties, never with modifier classes. Theme only by overriding semantic `--dui-*` tokens; primitive tokens are internal and may change.
+
+## Principles
+
+- [Principles](https://odonckers.github.io/domestic-ui/principles/index.md): domestic-ui packages existing web standards and well-known patterns.
+- [Native element first](https://odonckers.github.io/domestic-ui/principles/native-element-first.md): Use the HTML element that already has the semantics and behavior you need: <button>, <a href>, <dialog>, <details>, <label>, <fieldset>, <table>.
+- [Agent-friendly by design](https://odonckers.github.io/domestic-ui/principles/agent-friendly-by-design.md): Humans and coding agents should be able to write a whole view from this document alone.
+- [Accessibility baseline: WCAG 2.2 AA](https://odonckers.github.io/domestic-ui/principles/accessibility-baseline-wcag-22-aa.md): Every example must pass, and every token pair is tested against, these criteria.
+- [Cascade layers](https://odonckers.github.io/domestic-ui/principles/cascade-layers.md): css/domestic.css declares the order once, before anything else (@layer on MDN, CSS Cascade 5).
+- [Theming](https://odonckers.github.io/domestic-ui/principles/theming.md): All tokens are custom properties on :root with the --dui- prefix.
+- [Opinions we hold](https://odonckers.github.io/domestic-ui/principles/opinions-we-hold.md): Each of these is a choice between valid options, not a standard.
+- [Layout primitives](https://odonckers.github.io/domestic-ui/principles/layout-primitives.md): Class: .stack, .cluster, .grid.
+- [Tooling](https://odonckers.github.io/domestic-ui/principles/tooling.md): npm test runs, in order, and fails if any step fails.
+
+## Tokens
+
+- [Tokens](https://odonckers.github.io/domestic-ui/tokens/index.md): The two tiers of domestic-ui design tokens and the groups of public semantic tokens.
+- [Surfaces and text tokens](https://odonckers.github.io/domestic-ui/tokens/surfaces-and-text.md): Semantic surfaces and text tokens and their values (5).
+- [Borders tokens](https://odonckers.github.io/domestic-ui/tokens/borders.md): Semantic borders tokens and their values (2).
+- [Accent and status tokens](https://odonckers.github.io/domestic-ui/tokens/accent-and-status.md): Semantic accent and status tokens and their values (9).
+- [Type tokens](https://odonckers.github.io/domestic-ui/tokens/type.md): Semantic type tokens and their values (18).
+- [Space tokens](https://odonckers.github.io/domestic-ui/tokens/space.md): Semantic space tokens and their values (9).
+- [Sizes tokens](https://odonckers.github.io/domestic-ui/tokens/sizes.md): Semantic sizes tokens and their values (3).
+- [Shape tokens](https://odonckers.github.io/domestic-ui/tokens/shape.md): Semantic shape tokens and their values (8).
+- [Focus indicator tokens](https://odonckers.github.io/domestic-ui/tokens/focus-indicator.md): Semantic focus indicator tokens and their values (2).
+- [Motion tokens](https://odonckers.github.io/domestic-ui/tokens/motion.md): Semantic motion tokens and their values (3).
+- [State tokens](https://odonckers.github.io/domestic-ui/tokens/state.md): Semantic state tokens and their values (1).
+- [Dependent tokens](https://odonckers.github.io/domestic-ui/tokens/dependent-tokens.md): Semantic dependent tokens and their values (5).
+
+## Components
+
+- [Components](https://odonckers.github.io/domestic-ui/components/index.md): Base elements, components, layout primitives and utilities of domestic-ui, each with one class or attribute API.
+- [Base elements](https://odonckers.github.io/domestic-ui/components/base.md): Native HTML elements styled by the base layer, with no classes.
+- [Cluster](https://odonckers.github.io/domestic-ui/components/layout/cluster.md): An inline group that wraps onto new lines (buttons, tags, nav links).
+- [Grid](https://odonckers.github.io/domestic-ui/components/layout/grid.md): A responsive grid: as many columns as fit, each at least --grid-min wide, never wider than the container.
+- [Stack](https://odonckers.github.io/domestic-ui/components/layout/stack.md): Vertical flow with a consistent gap between children.
+- [Visually hidden](https://odonckers.github.io/domestic-ui/components/utilities/visually-hidden.md): Hides content visually but keeps it in the accessibility tree.
+
+## Examples
+
+- [Examples](https://odonckers.github.io/domestic-ui/examples.md): Standalone example pages that load the real domestic-ui CSS.
+- [Base elements · domestic-ui](https://odonckers.github.io/domestic-ui/examples/base.html): live example page (HTML)
+- [Theming · domestic-ui](https://odonckers.github.io/domestic-ui/examples/theming.html): live example page (HTML)
+
+## Optional
+
+- [GitHub repository](https://github.com/odonckers/domestic-ui): source, issues and contributing guide
+- [PRINCIPLES.md](https://raw.githubusercontent.com/odonckers/domestic-ui/main/PRINCIPLES.md): the full principles as one Markdown file
+- [llms-full.txt](https://odonckers.github.io/domestic-ui/llms-full.txt): every docs page in one file

@@ -1,0 +1,1 @@
+domestic-ui is a design system built on native HTML, CSS custom properties and cascade layers. Link one stylesheet and plain semantic HTML gets its look in light and dark, with WCAG 2.2 AA as the accessibility baseline; theme it by overriding semantic tokens. It packages existing web standards and well-known patterns: nothing here is original.
