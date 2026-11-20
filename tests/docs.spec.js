@@ -2,7 +2,7 @@
 import { test, expect } from "@playwright/test";
 import AxeBuilder from "@axe-core/playwright";
 import { HtmlValidate } from "html-validate";
-import { cpSync, existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, statSync, writeFileSync } from "node:fs";
+import { cpSync, existsSync, mkdirSync, mkdtempSync, readFileSync, readdirSync, rmSync, statSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { dirname, join, posix } from "node:path";
 import { GENERATED, ROOT, build, extractSnippets, generate } from "../site/build.mjs";
@@ -117,12 +117,96 @@ test.describe("docs build", () => {
       for (const s of snippets) {
         const source = read(join(ROOT, s.source));
         if (s.from !== "css-comment") expect(extractSnippets(source, s.source).map((x) => x.code), s.source).toContain(s.code);
-        const decoration = s.from === "css-comment" ? /^\s*\*?\s*$/ : /^[ \t]*$/;
-        expect(isDedentedSlice(source, s.code, decoration), `${page.path}: snippet is not a slice of ${s.source}`).toBe(true);
+        if (s.from === "pre") {
+          // Rule (b): the example's own <pre><code> content, unescaped, byte for byte.
+          const main = source.slice(source.indexOf("<main"), source.lastIndexOf("</main>"));
+          const examplePre = [...main.matchAll(/<pre><code>([\s\S]*?)<\/code><\/pre>/g)].map((m) => unescapeHtml(m[1]));
+          expect(examplePre, `${page.path}: ${s.name} is a <pre><code> of ${s.source}`).toContain(s.code);
+        } else {
+          const decoration = s.from === "css-comment" ? /^\s*\*?\s*$/ : /^[ \t]*$/;
+          expect(isDedentedSlice(source, s.code, decoration), `${page.path}: snippet is not a slice of ${s.source}`).toBe(true);
+        }
         expect(llmsFences, `llms-full.txt has the ${s.source} snippet`).toContain(s.code);
         expect(htmlFences(read(join(SITE_DIR, page.path.replace(/\.html$/, ".md")))), `${page.path} Markdown twin`).toContain(s.code);
       }
     }
+  });
+});
+
+test.describe("atoms from the group README", () => {
+  test.beforeEach(({ browserName }) => test.skip(browserName !== "chromium", "browser-independent; run once"));
+
+  // Read the index table here, independently of the build's parser.
+  const readme = read(join(ROOT, "css/components/atoms/README.md"));
+  const table = readme.slice(readme.indexOf("## Index"), readme.indexOf("\n## ", readme.indexOf("## Index") + 1));
+  const rows = table
+    .split("\n")
+    .filter((l) => l.startsWith("| ") && !l.startsWith("| Atom ") && !l.startsWith("| ---"))
+    .map((l) => l.slice(2, -2).split(/ (?<!\\)\| /).map((c) => c.replace(/\\\|/g, "|")));
+
+  test("every row of the index table has a complete page, in row order", () => {
+    expect(rows.length).toBeGreaterThan(0);
+    const atomPages = site.pages.filter((p) => p.path.startsWith("components/atoms/"));
+    expect(atomPages.slice(0, rows.length).map((p) => p.title)).toEqual(rows.map((r) => r[0]));
+    for (const [title, , api, example] of rows) {
+      const exampleFile = example.match(/\]\(([^)]+)\)/)?.[1].replace(/^(\.\.\/)+/, "") ?? "";
+      const page = /** @type {any} */ (atomPages.find((p) => p.title === title));
+      const html = read(join(SITE_DIR, page.path));
+      const md = read(join(SITE_DIR, page.path.replace(/\.html$/, ".md")));
+      expect(page.path, title).toBe(`components/atoms/${exampleFile.replace(/^.*\//, "")}`);
+      expect(html, `${title}: live example`).toContain(`src="../../${exampleFile}"`);
+      expect(md, `${title}: API cell as written`).toContain(`\n\n${api}\n\n`);
+      expect(md, `${title}: specs`).toMatch(/## Specs\n\n- \*\*/);
+      // Copy-paste markup: one named block per <pre><code> in the example, byte for byte.
+      const source = read(join(ROOT, exampleFile));
+      const pre = [...source.matchAll(/<pre><code>([\s\S]*?)<\/code><\/pre>/g)].map((m) => unescapeHtml(m[1]));
+      expect(snippetBlocks(html), title).toEqual(pre);
+      expect(page.snippets.every((/** @type {any} */ s) => s.from === "pre" && s.name), `${title}: every snippet is named`).toBe(true);
+      for (const s of page.snippets) expect(html).toMatch(new RegExp(`<h3 id="[^"]*">${s.name.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}</h3>\\n<pre data-snippet=`));
+    }
+    const button = read(join(SITE_DIR, "components/atoms/button.md"));
+    expect(button).not.toContain("# Buttons\n\nPlain <button>");
+    for (const h of ["## States", "## Sizes", "## Focus", "## Our choice"]) expect(button).toContain(`\n${h}\n`);
+    expect(button).toContain("- **Our choice:** small buttons are 32px tall");
+    const controls = read(join(SITE_DIR, "components/atoms/controls.md"));
+    expect(controls).toContain("[`css/base/forms.css`](https://github.com/odonckers/domestic-ui/blob/main/css/base/forms.css) (base layer; no CSS file of its own)");
+  });
+
+  test("the components index has the API convention, every Our choice and the Not shipped table", () => {
+    const index = read(join(SITE_DIR, "components/index.md"));
+    expect(index).toContain("## Component API\n\nEach component exposes one `data-<component>` attribute.");
+    expect(index).toMatch(/\*\*Our choice:\*\* One attribute is one API to learn/);
+    const atoms = index.slice(index.indexOf("\n## Atoms\n"), index.indexOf("\n## Molecules\n"));
+    const choices = [...readme.matchAll(/^- \*\*Our choice:\*\*/gm)].length;
+    expect([...atoms.matchAll(/^- \*\*Our choice:\*\*/gm)].length).toBe(choices);
+    expect(atoms).toContain("### Not shipped, and why\n\n| Candidate | Decision |");
+    expect(read(join(SITE_DIR, "examples.md"))).toContain("[Atoms showcase](https://odonckers.github.io/domestic-ui/examples/atoms/index.html)");
+    expect(site.pages.some((p) => p.path === "components/atoms/index.html"), "the showcase is not a component").toBe(false);
+    for (const name of ["README.md", "llms.txt", "llms-full.txt"]) expect(site.files[name], name).toContain('`data-button="primary small"`');
+    expect(site.files["llms-full.txt"]).toMatch(/\n## Component API\n\n[\s\S]*\n## Components\n\nPage: /);
+  });
+
+  test("demo apps are listed from demos/ with the first line of their README", () => {
+    const names = readdirSync(join(ROOT, "demos"), { withFileTypes: true }).filter((e) => e.isDirectory() && existsSync(join(ROOT, "demos", e.name, "README.md")));
+    expect(names.length).toBeGreaterThan(0);
+    for (const { name } of names) {
+      const first = read(join(ROOT, "demos", name, "README.md")).split("\n")[0].replace(/^#+\s*/, "");
+      const line = `- [\`demos/${name}/\`](https://github.com/odonckers/domestic-ui/tree/main/demos/${name}): ${first}`;
+      expect(site.files["README.md"]).toContain(line);
+      expect(read(join(SITE_DIR, "index.md"))).toContain(line);
+    }
+    expect(existsSync(join(SITE_DIR, "demos")), "demos are not copied into _site/").toBe(false);
+  });
+
+  test("snippet rules apply in priority order", () => {
+    const page = (/** @type {string} */ main) => `<!DOCTYPE html><html lang="en"><body><main>\n${main}\n</main></body></html>`;
+    const pre = '<h2>One &amp; two</h2>\n<pre><code>&lt;p data-text="lead"&gt;A &amp;amp; B&lt;/p&gt;</code></pre>\n<h3>Three</h3><pre><code>&lt;hr&gt;</code></pre>';
+    expect(extractSnippets(page(pre), "x.html")).toEqual([
+      { name: "One & two", code: '<p data-text="lead">A &amp; B</p>', source: "x.html", from: "pre" },
+      { name: "Three", code: "<hr>", source: "x.html", from: "pre" },
+    ]);
+    expect(extractSnippets(page(`<!-- dui:snippet -->\n<p>x</p>\n<!-- /dui:snippet -->\n${pre}`), "x.html").map((s) => s.from)).toEqual(["snippet"]);
+    expect(extractSnippets(page("  <p>only</p>"), "x.html")).toEqual([{ name: "", code: "<p>only</p>", source: "x.html", from: "main" }]);
   });
 });
 
@@ -158,7 +242,7 @@ test.describe("docs pages in the browser", () => {
   });
 
   test("the skip link is the first focusable element and moves focus to main", async ({ page }) => {
-    for (const path of ["index.html", site.pages.find((p) => p.section === "components" && p.snippets?.length)?.path ?? "components/index.html"]) {
+    for (const path of ["index.html", site.pages.find((p) => p.section === "atoms" && p.snippets?.length)?.path ?? "components/index.html"]) {
       await page.goto(`_site/${path}`);
       await page.keyboard.press("Tab");
       const skip = page.locator(":focus");
@@ -327,10 +411,14 @@ test("discovery picks up a new component with no site changes", async ({ browser
     const atoms = index.slice(index.indexOf("## Atoms"), index.indexOf("## Molecules"));
     expect(atoms).toContain("[Demo](https://odonckers.github.io/domestic-ui/components/atoms/demo.md)");
     expect(atoms).not.toMatch(/coming in M2/i);
+    // demo.css is not in the README index table: it still gets a page, after the table's rows.
+    const atomPaths = result.pages.filter((p) => p.path.startsWith("components/atoms/")).map((p) => p.path);
+    expect(atomPaths[atomPaths.length - 1]).toBe("components/atoms/demo.html");
+    expect(out("atoms/index.md")).toContain("[Demo](https://odonckers.github.io/domestic-ui/components/atoms/demo.md)");
     const molecules = index.slice(index.indexOf("## Molecules"), index.indexOf("## Organisms"));
     expect(molecules).toContain("[Tabs](https://odonckers.github.io/domestic-ui/patterns/tabs.md): Sections of content shown one at a time, chosen from a list of tabs. Available.");
     expect(molecules).toContain("Coming in M3.");
-    expect(out("examples.md")).toContain("[Atoms · domestic-ui](https://odonckers.github.io/domestic-ui/examples/atoms/index.html)");
+    expect(out("examples.md")).toContain("[Atoms showcase](https://odonckers.github.io/domestic-ui/examples/atoms/index.html)");
 
     // The tabs pattern page is filled in: demo, byte-identical markup, keyboard notes from the CSS.
     const paths = result.pages.map((p) => p.path);

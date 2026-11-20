@@ -2,7 +2,7 @@
 
 > domestic-ui is a design system built on native HTML, CSS custom properties and cascade layers. Link one stylesheet and plain semantic HTML gets its look in light and dark, with WCAG 2.2 AA as the accessibility baseline; theme it by overriding semantic tokens. It packages existing web standards and well-known patterns: nothing here is original.
 
-To use it, link `css/domestic.css` (copy the `css/` folder or clone https://github.com/odonckers/domestic-ui). Plain semantic HTML then gets the full look with no classes. Each layout primitive, utility and component has one documented class or attribute API, tuned with custom properties, never with modifier classes. Theme only by overriding semantic `--dui-*` tokens; primitive tokens are internal and may change.
+To use it, link `css/domestic.css` (copy the `css/` folder or clone https://github.com/odonckers/domestic-ui). Plain semantic HTML then gets the full look with no classes. Each component exposes one `data-<component>` attribute whose value is space-separated words matched with `~=`, such as `data-button="primary small"`, never classes; state is carried by native attributes and ARIA (`disabled`, `aria-disabled`, `aria-busy`, `aria-invalid`). Layout primitives and utilities are classes (`.cluster`, `.grid`, `.stack`, `.visually-hidden`), tuned with custom properties. Theme only by overriding semantic `--dui-*` tokens; primitive tokens are internal and may change.
 
 ## domestic-ui
 
@@ -54,38 +54,47 @@ Force a color scheme on the page or any subtree with `data-color-scheme="light"`
 
 - [Surfaces and text](https://odonckers.github.io/domestic-ui/tokens/surfaces-and-text.md): 5 tokens
 - [Borders](https://odonckers.github.io/domestic-ui/tokens/borders.md): 2 tokens
-- [Accent and status](https://odonckers.github.io/domestic-ui/tokens/accent-and-status.md): 9 tokens
+- [Accent and status](https://odonckers.github.io/domestic-ui/tokens/accent-and-status.md): 10 tokens
 - [Type](https://odonckers.github.io/domestic-ui/tokens/type.md): 18 tokens
 - [Space](https://odonckers.github.io/domestic-ui/tokens/space.md): 9 tokens
-- [Sizes](https://odonckers.github.io/domestic-ui/tokens/sizes.md): 3 tokens
+- [Sizes](https://odonckers.github.io/domestic-ui/tokens/sizes.md): 5 tokens
 - [Shape](https://odonckers.github.io/domestic-ui/tokens/shape.md): 8 tokens
 - [Focus indicator](https://odonckers.github.io/domestic-ui/tokens/focus-indicator.md): 2 tokens
 - [Motion](https://odonckers.github.io/domestic-ui/tokens/motion.md): 3 tokens
-- [State](https://odonckers.github.io/domestic-ui/tokens/state.md): 1 token
+- [State](https://odonckers.github.io/domestic-ui/tokens/state.md): 3 tokens
 - [Dependent tokens](https://odonckers.github.io/domestic-ui/tokens/dependent-tokens.md): 5 tokens
+- [Tinted surfaces for status badges](https://odonckers.github.io/domestic-ui/tokens/tinted-surfaces-for-status-badges.md): 4 tokens
 
 ### Components by level
+
+Each component exposes one `data-<component>` attribute whose value is space-separated words matched with `~=`, such as `data-button="primary small"`, never classes; state is carried by native attributes and ARIA (`disabled`, `aria-disabled`, `aria-busy`, `aria-invalid`). Layout primitives and utilities are classes (`.cluster`, `.grid`, `.stack`, `.visually-hidden`), tuned with custom properties. See [Components](https://odonckers.github.io/domestic-ui/components/index.md#component-api).
 
 #### Tokens
 
 - [Surfaces and text](https://odonckers.github.io/domestic-ui/tokens/surfaces-and-text.md): 5 tokens
 - [Borders](https://odonckers.github.io/domestic-ui/tokens/borders.md): 2 tokens
-- [Accent and status](https://odonckers.github.io/domestic-ui/tokens/accent-and-status.md): 9 tokens
+- [Accent and status](https://odonckers.github.io/domestic-ui/tokens/accent-and-status.md): 10 tokens
 - [Type](https://odonckers.github.io/domestic-ui/tokens/type.md): 18 tokens
 - [Space](https://odonckers.github.io/domestic-ui/tokens/space.md): 9 tokens
-- [Sizes](https://odonckers.github.io/domestic-ui/tokens/sizes.md): 3 tokens
+- [Sizes](https://odonckers.github.io/domestic-ui/tokens/sizes.md): 5 tokens
 - [Shape](https://odonckers.github.io/domestic-ui/tokens/shape.md): 8 tokens
 - [Focus indicator](https://odonckers.github.io/domestic-ui/tokens/focus-indicator.md): 2 tokens
 - [Motion](https://odonckers.github.io/domestic-ui/tokens/motion.md): 3 tokens
-- [State](https://odonckers.github.io/domestic-ui/tokens/state.md): 1 token
+- [State](https://odonckers.github.io/domestic-ui/tokens/state.md): 3 tokens
 - [Dependent tokens](https://odonckers.github.io/domestic-ui/tokens/dependent-tokens.md): 5 tokens
+- [Tinted surfaces for status badges](https://odonckers.github.io/domestic-ui/tokens/tinted-surfaces-for-status-badges.md): 4 tokens
 - [Compact density](https://odonckers.github.io/domestic-ui/patterns/density.md): A compact density token that tightens spacing for data-heavy screens. Coming in M3b.
 
 #### Atoms
 
 - [Base elements](https://odonckers.github.io/domestic-ui/components/base.md): Native HTML elements styled by the base layer, with no classes.
-
-Components in `css/components/atoms/`: coming in M2; see the [components README](https://github.com/odonckers/domestic-ui/blob/main/css/components/README.md).
+- [Text helpers](https://odonckers.github.io/domestic-ui/components/atoms/text.md): Lead, small and muted text helpers from domestic-ui, with copyable markup.
+- [Quiet link](https://odonckers.github.io/domestic-ui/components/atoms/link.md): A link that takes the surrounding text color and keeps its underline, for dense UI.
+- [Buttons](https://odonckers.github.io/domestic-ui/components/atoms/button.md): Button variants, sizes, link buttons and honest disabled and loading states.
+- [Form controls](https://odonckers.github.io/domestic-ui/components/atoms/controls.md): Native form controls as styled by the domestic-ui base layer, with copyable markup.
+- [Switch](https://odonckers.github.io/domestic-ui/components/atoms/switch.md): An on/off switch built on a native checkbox with role switch, following the APG Switch pattern.
+- [Field](https://odonckers.github.io/domestic-ui/components/atoms/field.md): Label, control, hint and error message wired with aria-describedby and aria-invalid.
+- [Badge](https://odonckers.github.io/domestic-ui/components/atoms/badge.md): Inline status labels with tone variants that meet WCAG AA contrast.
 
 #### Molecules
 
@@ -155,8 +164,24 @@ Where a standard exists, a native HTML element or a [WAI-ARIA APG pattern](https
 
 ### Examples
 
-- [Base elements · domestic-ui](https://odonckers.github.io/domestic-ui/examples/base.html)
-- [Theming · domestic-ui](https://odonckers.github.io/domestic-ui/examples/theming.html)
+- [Base elements](https://odonckers.github.io/domestic-ui/examples/base.html)
+- [Theming](https://odonckers.github.io/domestic-ui/examples/theming.html)
+- [Badge](https://odonckers.github.io/domestic-ui/examples/atoms/badge.html)
+- [Buttons](https://odonckers.github.io/domestic-ui/examples/atoms/button.html)
+- [Form controls](https://odonckers.github.io/domestic-ui/examples/atoms/controls.html)
+- [Field](https://odonckers.github.io/domestic-ui/examples/atoms/field.html)
+- [Atoms showcase](https://odonckers.github.io/domestic-ui/examples/atoms/index.html)
+- [Quiet link](https://odonckers.github.io/domestic-ui/examples/atoms/link.html)
+- [Switch](https://odonckers.github.io/domestic-ui/examples/atoms/switch.html)
+- [Text helpers](https://odonckers.github.io/domestic-ui/examples/atoms/text.html)
+
+### Demos
+
+- [`demos/a11y/`](https://github.com/odonckers/domestic-ui/tree/main/demos/a11y): domestic-ui demos: accessibility checker
+- [`demos/angular/`](https://github.com/odonckers/domestic-ui/tree/main/demos/angular): domestic-ui demo: Angular
+- [`demos/astro/`](https://github.com/odonckers/domestic-ui/tree/main/demos/astro): domestic-ui demo: Astro
+- [`demos/react/`](https://github.com/odonckers/domestic-ui/tree/main/demos/react): domestic-ui demo: React
+- [`demos/vanilla/`](https://github.com/odonckers/domestic-ui/tree/main/demos/vanilla): domestic-ui demo: plain HTML
 
 ### For coding agents
 
@@ -269,7 +294,7 @@ unlayered CSS beats all of them**, so overriding never needs `!important` or spe
 | `tokens` | Primitive and semantic custom properties |
 | `base` | Native elements: typography, lists, tables, forms, buttons, dialog, details, focus |
 | `layout` | `.stack`, `.cluster`, `.grid` |
-| `components` | Molecules and organisms (M2, M3; empty for now) |
+| `components` | Atoms in `css/components/atoms/` (M2); molecules and organisms later. See the [atoms index](https://github.com/odonckers/domestic-ui/blob/main/css/components/atoms/README.md) |
 | `utilities` | Single-purpose helpers such as `.visually-hidden`; last so they always apply |
 
 **Our choice:** this order, because each layer only refines the ones before it, and a
@@ -319,7 +344,8 @@ with a `data-theme` attribute or a `theme-*` class to scope it:
 Check your theme's contrast in both schemes; `tests/tokens.spec.js` shows how.
 
 A few semantic tokens are defined in terms of others (`--dui-color-link`, `--dui-color-focus`
-and `--dui-color-accent-hover` follow `--dui-color-accent`). A custom property's `var()` is
+and `--dui-color-accent-hover` follow `--dui-color-accent`; the badge tints
+`--dui-color-*-surface` mix a tone into `--dui-color-surface`). A custom property's `var()` is
 resolved on the element that declares it ([CSS Variables, "Resolving dependency cycles"](https://www.w3.org/TR/css-variables-1/#cycles)),
 so these, plus `color`, `background-color` and `font-family`, are re-applied on every
 `[data-theme]`, `.theme-*` and `[data-color-scheme]` element.
@@ -348,6 +374,7 @@ may change. Fluid `--dui-step-*` values are `clamp()` expressions; see `primitiv
 | `--dui-color-link-visited` | Visited links | light: `color-purple-700` (#6b2fb3)<br>dark: `color-purple-300` (#d2a8ff) |
 | `--dui-color-danger` | Errors, :user-invalid borders | light: `color-red-700` (#b42318)<br>dark: `color-red-300` (#ff8a80) |
 | `--dui-color-success` | Success messages | light: `color-green-700` (#17773a)<br>dark: `color-green-300` (#5fd38d) |
+| `--dui-color-warning` | Warning badges and messages | light: `color-amber-700` (#8a5a00)<br>dark: `color-amber-300` (#f2c14e) |
 | `--dui-color-mark` | mark and ::selection background | light: `color-yellow-100` (#fff1a8)<br>dark: `color-yellow-300` (#e3c84f) |
 | `--dui-color-mark-text` | Text on mark | light: `color-gray-900` (#12151b)<br>dark: `color-gray-900` (#12151b) |
 | `--dui-color-backdrop` | dialog::backdrop | light: `color-black-a40` (rgb(0 0 0 / 40%))<br>dark: `color-black-a60` (rgb(0 0 0 / 60%)) |
@@ -380,6 +407,8 @@ may change. Fluid `--dui-step-*` values are `clamp()` expressions; see `primitiv
 | `--dui-space-2xl` | Space scale | `space-8` (3rem) |
 | `--dui-space-3xl` | Space scale | `space-9` (4rem) |
 | `--dui-size-target` | Min height of controls and buttons (WCAG 2.5.8 needs 24px; this gives 44px) | `size-2-75` (2.75rem) |
+| `--dui-size-target-small` | Small buttons (32px: under 44px, over the 24px minimum) | `size-2` (2rem) |
+| `--dui-size-target-large` | Large buttons | `size-3-25` (3.25rem) |
 | `--dui-size-check` | Checkbox and radio size | `size-1-25` (1.25rem) |
 | `--dui-size-column-min` | Default .grid min column width | `size-16` (16rem) |
 | `--dui-radius-control` | Controls, buttons, inline code | `radius-2` (0.375rem) |
@@ -395,15 +424,23 @@ may change. Fluid `--dui-step-*` values are `clamp()` expressions; see `primitiv
 | `--dui-duration-fast` | Hover transitions (0s with reduced motion) | `duration-150` (150ms) |
 | `--dui-duration-normal` | Larger transitions (0s with reduced motion) | `duration-250` (250ms) |
 | `--dui-easing-standard` | Easing curve (linear with reduced motion) | `--dui-easing-ease-out` |
-| `--dui-opacity-disabled` | Disabled controls | `opacity-60` (0.6) |
+| `--dui-opacity-disabled` | Disabled controls, `disabled` and `aria-disabled="true"` | `opacity-60` (0.6) |
+| `--dui-tint-amount` | How much of a tone goes into a tinted surface | `mix-8` (8%) |
+| `--dui-border-tint-amount` | How much of the text color goes into a tinted border (badges) | `mix-35` (35%) |
 | `--dui-color-link` | Links | `--dui-color-accent` |
 | `--dui-color-focus` | Focus ring (3:1 against surfaces) | `--dui-color-accent` |
 | `--dui-color-accent-hover` | Primary button hover | `color-mix()` of 82% `--dui-color-accent` with `--dui-color-text` |
 | `--dui-font-heading` | Heading font stack | `--dui-font-body` |
 | `--dui-shadow-raised` | dialog shadow | two-layer shadow using `--dui-color-shadow` |
+| `--dui-color-accent-surface` | Accent badge background | `color-mix()` of `--dui-tint-amount` `--dui-color-accent` into `--dui-color-surface` |
+| `--dui-color-success-surface` | Success badge background | same, with `--dui-color-success` |
+| `--dui-color-warning-surface` | Warning badge background | same, with `--dui-color-warning` |
+| `--dui-color-danger-surface` | Danger badge background | same, with `--dui-color-danger` |
 
 Derived (re-resolved on each theme scope): `--dui-color-link`, `--dui-color-focus`,
-`--dui-color-accent-hover`, `--dui-font-heading`, `--dui-shadow-raised`.
+`--dui-color-accent-hover`, `--dui-font-heading`, `--dui-shadow-raised`,
+`--dui-color-accent-surface`, `--dui-color-success-surface`, `--dui-color-warning-surface`,
+`--dui-color-danger-surface`.
 
 ## Opinions we hold
 
@@ -428,6 +465,10 @@ Each of these is a choice between valid options, not a standard.
 - **Our choice:** checkboxes, radios and range keep native rendering tinted with
   [`accent-color`](https://developer.mozilla.org/en-US/docs/Web/CSS/accent-color), because
   native controls keep their platform accessibility.
+- **Our choice:** each atom has one `data-<atom>` attribute whose value is a space-separated
+  list (`data-button="primary small"`), matched with `~=`, instead of modifier classes. The
+  other atom choices (button variants, focus rings, switch, field errors, badge tints) are
+  listed with their reasons in the [atoms index](https://github.com/odonckers/domestic-ui/blob/main/css/components/atoms/README.md#our-choices).
 - **Our choice:** layout primitives come from [Every Layout](https://every-layout.dev/)'s
   Stack, Cluster and Grid. Their custom properties are registered with
   [`@property`](https://developer.mozilla.org/en-US/docs/Web/CSS/@property) as non-inheriting,
@@ -460,10 +501,10 @@ Page: https://odonckers.github.io/domestic-ui/principles/tooling.html
 | `lint:html` | [html-validate](https://html-validate.org/) | `examples/**/*.html` against `html-validate:recommended` |
 | `lint:css` | [Stylelint](https://stylelint.io/) | `css/**/*.css` against `stylelint-config-standard` |
 | `lint:tokens` | `scripts/check-tokens.mjs` | Semantic-only tokens and no literal colors or sizes outside `css/tokens/` |
-| `test:a11y` | [Playwright](https://playwright.dev/) + [axe-core](https://github.com/dequelabs/axe-core) | Every `examples/*.html` in light and dark with tags `wcag2a`, `wcag2aa`, `wcag21a`, `wcag21aa`, `wcag22aa`, including open dialogs and details; no external requests; token contrast pairs; scoped theming |
+| `test:a11y` | [Playwright](https://playwright.dev/) + [axe-core](https://github.com/dequelabs/axe-core) | Every `examples/**/*.html` (atoms included) in light and dark, in Chromium, Firefox and WebKit, with tags `wcag2a`, `wcag2aa`, `wcag21a`, `wcag21aa`, `wcag22aa`, including open dialogs and details; no external requests; token contrast pairs (atoms included) in the default and forest themes; rendered focus-ring contrast on every button variant; atom states through accessibility APIs; scoped theming of atoms |
 
 Preview locally with `npm run serve` (a zero-dependency static server) and open
-<http://127.0.0.1:4173/examples/base.html>.
+<http://127.0.0.1:4173/examples/base.html>. To run tests from two checkouts at once, give each its own port, e.g. `PORT=4273 npm test`.
 
 Rule relaxations, each with its reason:
 
@@ -471,6 +512,11 @@ Rule relaxations, each with its reason:
   pattern rejects `--dui-step--1` (the double hyphen marks a negative step, a common naming for
   type scales below zero). The replacement still requires kebab-case and only allows names
   starting with `--dui-` or the documented layout properties (`--stack-*`, `--cluster-*`, `--grid-*`).
+- **Engine-specific test**: the field test also reads the `invalid` state from the accessibility
+  tree through the Chrome DevTools Protocol, which only Chromium offers; Firefox and WebKit run the
+  rest of that test (attribute and accessible description). No browser is skipped.
+- **External-request check**: same-origin `blob:` URLs are allowed, because WebKit routes these
+  in-memory objects through the request handler. Any other origin still fails the test.
 - **html-validate**: none. `html-validate:recommended` is used as-is. Inline `style` attributes
   that set only custom properties are already allowed by its
   [`no-inline-style`](https://html-validate.org/rules/no-inline-style.html) default
@@ -493,15 +539,16 @@ The groups follow the section comments in `css/tokens/semantic.css`.
 
 - [Surfaces and text](https://odonckers.github.io/domestic-ui/tokens/surfaces-and-text.md): 5 tokens
 - [Borders](https://odonckers.github.io/domestic-ui/tokens/borders.md): 2 tokens
-- [Accent and status](https://odonckers.github.io/domestic-ui/tokens/accent-and-status.md): 9 tokens
+- [Accent and status](https://odonckers.github.io/domestic-ui/tokens/accent-and-status.md): 10 tokens
 - [Type](https://odonckers.github.io/domestic-ui/tokens/type.md): 18 tokens
 - [Space](https://odonckers.github.io/domestic-ui/tokens/space.md): 9 tokens
-- [Sizes](https://odonckers.github.io/domestic-ui/tokens/sizes.md): 3 tokens
+- [Sizes](https://odonckers.github.io/domestic-ui/tokens/sizes.md): 5 tokens
 - [Shape](https://odonckers.github.io/domestic-ui/tokens/shape.md): 8 tokens
 - [Focus indicator](https://odonckers.github.io/domestic-ui/tokens/focus-indicator.md): 2 tokens
 - [Motion](https://odonckers.github.io/domestic-ui/tokens/motion.md): 3 tokens
-- [State](https://odonckers.github.io/domestic-ui/tokens/state.md): 1 token
+- [State](https://odonckers.github.io/domestic-ui/tokens/state.md): 3 tokens
 - [Dependent tokens](https://odonckers.github.io/domestic-ui/tokens/dependent-tokens.md): 5 tokens
+- [Tinted surfaces for status badges](https://odonckers.github.io/domestic-ui/tokens/tinted-surfaces-for-status-badges.md): 4 tokens
 
 ## Surfaces and text tokens
 
@@ -543,6 +590,7 @@ Defined in [`css/tokens/semantic.css`](https://github.com/odonckers/domestic-ui/
 | `--dui-color-link-visited` | `light-dark(var(--dui-color-purple-700), var(--dui-color-purple-300))` | Visited links |
 | `--dui-color-danger` | `light-dark(var(--dui-color-red-700), var(--dui-color-red-300))` | Errors, :user-invalid borders |
 | `--dui-color-success` | `light-dark(var(--dui-color-green-700), var(--dui-color-green-300))` | Success messages |
+| `--dui-color-warning` | `light-dark(var(--dui-color-amber-700), var(--dui-color-amber-300))` | Warning badges and messages |
 | `--dui-color-mark` | `light-dark(var(--dui-color-yellow-100), var(--dui-color-yellow-300))` | mark and ::selection background |
 | `--dui-color-mark-text` | `light-dark(var(--dui-color-gray-900), var(--dui-color-gray-900))` | Text on mark |
 | `--dui-color-backdrop` | `light-dark(var(--dui-color-black-a40), var(--dui-color-black-a60))` | dialog::backdrop |
@@ -602,6 +650,8 @@ Defined in [`css/tokens/semantic.css`](https://github.com/odonckers/domestic-ui/
 | Token | Value in css/tokens/semantic.css | Purpose (from PRINCIPLES.md) |
 | --- | --- | --- |
 | `--dui-size-target` | `var(--dui-size-2-75)` | Min height of controls and buttons (WCAG 2.5.8 needs 24px; this gives 44px) |
+| `--dui-size-target-small` | `var(--dui-size-2)` | Small buttons (32px: under 44px, over the 24px minimum) |
+| `--dui-size-target-large` | `var(--dui-size-3-25)` | Large buttons |
 | `--dui-size-check` | `var(--dui-size-1-25)` | Checkbox and radio size |
 | `--dui-size-column-min` | `var(--dui-size-16)` | Default .grid min column width |
 
@@ -655,7 +705,9 @@ Defined in [`css/tokens/semantic.css`](https://github.com/odonckers/domestic-ui/
 
 | Token | Value in css/tokens/semantic.css | Purpose (from PRINCIPLES.md) |
 | --- | --- | --- |
-| `--dui-opacity-disabled` | `var(--dui-opacity-60)` | Disabled controls |
+| `--dui-opacity-disabled` | `var(--dui-opacity-60)` | Disabled controls, `disabled` and `aria-disabled="true"` |
+| `--dui-tint-amount` | `var(--dui-mix-8)` | How much of a tone goes into a tinted surface |
+| `--dui-border-tint-amount` | `var(--dui-mix-35)` | How much of the text color goes into a tinted border (badges) |
 
 ## Dependent tokens
 
@@ -673,34 +725,97 @@ Defined in [`css/tokens/semantic.css`](https://github.com/odonckers/domestic-ui/
 | `--dui-font-heading` | `var(--dui-font-body)` | Heading font stack |
 | `--dui-shadow-raised` | `0 var(--dui-border-1) var(--dui-space-2) var(--dui-color-shadow), 0 var(--dui-space-3) var(--dui-space-7) var(--dui-color-shadow)` | dialog shadow |
 
+## Tinted surfaces for status badges tokens
+
+Page: https://odonckers.github.io/domestic-ui/tokens/tinted-surfaces-for-status-badges.html
+
+A little of the tone mixed into the surface.
+
+Defined in [`css/tokens/semantic.css`](https://github.com/odonckers/domestic-ui/blob/main/css/tokens/semantic.css). Values are shown as written there; names inside `var()` that are not semantic tokens are internal primitives (see [Tokens](https://odonckers.github.io/domestic-ui/tokens/index.md)). Samples are decorative; the token name and value are the reference.
+
+| Token | Value in css/tokens/semantic.css | Purpose (from PRINCIPLES.md) |
+| --- | --- | --- |
+| `--dui-color-accent-surface` | `color-mix(in oklab, var(--dui-color-accent) var(--dui-tint-amount), var(--dui-color-surface))` | Accent badge background |
+| `--dui-color-success-surface` | `color-mix(in oklab, var(--dui-color-success) var(--dui-tint-amount), var(--dui-color-surface))` | Success badge background |
+| `--dui-color-warning-surface` | `color-mix(in oklab, var(--dui-color-warning) var(--dui-tint-amount), var(--dui-color-surface))` | Warning badge background |
+| `--dui-color-danger-surface` | `color-mix(in oklab, var(--dui-color-danger) var(--dui-tint-amount), var(--dui-color-surface))` | Danger badge background |
+
+## Component API
+
+Each component exposes one `data-<component>` attribute. Its value is a list of space-separated words matched with the [`~=` attribute selector](https://developer.mozilla.org/en-US/docs/Web/CSS/Attribute_selectors), like [`rel`](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Attributes/rel): `data-button="primary small"`. Component APIs use no classes. State is carried by native attributes and ARIA: `disabled`, `aria-disabled`, `aria-busy`, `aria-invalid`.
+
+**Our choice:** One attribute is one API to learn, it reads as a sentence (`data-button="primary small"`), and it cannot pile up like modifier classes.
+
+Layout primitives and utilities from M1 are classes: `.cluster`, `.grid`, `.stack`, `.visually-hidden`. Base elements need no API: write semantic HTML.
+
 ## Components
 
 Page: https://odonckers.github.io/domestic-ui/components/index.html
 
-Each layout primitive, utility and component has one documented class or attribute API, written in the header comment of its CSS file and tuned with custom properties ([Agent-friendly by design](https://odonckers.github.io/domestic-ui/principles/agent-friendly-by-design.md)). Base elements need no API at all: write semantic HTML.
+Each layout primitive, utility and component has one documented API, written in the header comment of its CSS file and tuned with custom properties ([Agent-friendly by design](https://odonckers.github.io/domestic-ui/principles/agent-friendly-by-design.md)).
 
 The levels follow [atomic design](https://atomicdesign.bradfrost.com/chapter-2/). Planned [patterns](https://odonckers.github.io/domestic-ui/patterns/index.md) are listed at their level with their status.
+
+### Component API
+
+Each component exposes one `data-<component>` attribute. Its value is a list of space-separated words matched with the [`~=` attribute selector](https://developer.mozilla.org/en-US/docs/Web/CSS/Attribute_selectors), like [`rel`](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Attributes/rel): `data-button="primary small"`. Component APIs use no classes. State is carried by native attributes and ARIA: `disabled`, `aria-disabled`, `aria-busy`, `aria-invalid`.
+
+**Our choice:** One attribute is one API to learn, it reads as a sentence (`data-button="primary small"`), and it cannot pile up like modifier classes.
+
+Layout primitives and utilities from M1 are classes: `.cluster`, `.grid`, `.stack`, `.visually-hidden`. Base elements need no API: write semantic HTML.
 
 ### Tokens
 
 - [Surfaces and text](https://odonckers.github.io/domestic-ui/tokens/surfaces-and-text.md): 5 tokens
 - [Borders](https://odonckers.github.io/domestic-ui/tokens/borders.md): 2 tokens
-- [Accent and status](https://odonckers.github.io/domestic-ui/tokens/accent-and-status.md): 9 tokens
+- [Accent and status](https://odonckers.github.io/domestic-ui/tokens/accent-and-status.md): 10 tokens
 - [Type](https://odonckers.github.io/domestic-ui/tokens/type.md): 18 tokens
 - [Space](https://odonckers.github.io/domestic-ui/tokens/space.md): 9 tokens
-- [Sizes](https://odonckers.github.io/domestic-ui/tokens/sizes.md): 3 tokens
+- [Sizes](https://odonckers.github.io/domestic-ui/tokens/sizes.md): 5 tokens
 - [Shape](https://odonckers.github.io/domestic-ui/tokens/shape.md): 8 tokens
 - [Focus indicator](https://odonckers.github.io/domestic-ui/tokens/focus-indicator.md): 2 tokens
 - [Motion](https://odonckers.github.io/domestic-ui/tokens/motion.md): 3 tokens
-- [State](https://odonckers.github.io/domestic-ui/tokens/state.md): 1 token
+- [State](https://odonckers.github.io/domestic-ui/tokens/state.md): 3 tokens
 - [Dependent tokens](https://odonckers.github.io/domestic-ui/tokens/dependent-tokens.md): 5 tokens
+- [Tinted surfaces for status badges](https://odonckers.github.io/domestic-ui/tokens/tinted-surfaces-for-status-badges.md): 4 tokens
 - [Compact density](https://odonckers.github.io/domestic-ui/patterns/density.md): A compact density token that tightens spacing for data-heavy screens. Coming in M3b.
 
 ### Atoms
 
 - [Base elements](https://odonckers.github.io/domestic-ui/components/base.md): Native HTML elements styled by the base layer, with no classes.
+- [Text helpers](https://odonckers.github.io/domestic-ui/components/atoms/text.md): Lead, small and muted text helpers from domestic-ui, with copyable markup.
+- [Quiet link](https://odonckers.github.io/domestic-ui/components/atoms/link.md): A link that takes the surrounding text color and keeps its underline, for dense UI.
+- [Buttons](https://odonckers.github.io/domestic-ui/components/atoms/button.md): Button variants, sizes, link buttons and honest disabled and loading states.
+- [Form controls](https://odonckers.github.io/domestic-ui/components/atoms/controls.md): Native form controls as styled by the domestic-ui base layer, with copyable markup.
+- [Switch](https://odonckers.github.io/domestic-ui/components/atoms/switch.md): An on/off switch built on a native checkbox with role switch, following the APG Switch pattern.
+- [Field](https://odonckers.github.io/domestic-ui/components/atoms/field.md): Label, control, hint and error message wired with aria-describedby and aria-invalid.
+- [Badge](https://odonckers.github.io/domestic-ui/components/atoms/badge.md): Inline status labels with tone variants that meet WCAG AA contrast.
 
-Components in `css/components/atoms/`: coming in M2; see the [components README](https://github.com/odonckers/domestic-ui/blob/main/css/components/README.md).
+#### Our choices
+
+From [`css/components/atoms/README.md`](https://github.com/odonckers/domestic-ui/blob/main/css/components/atoms/README.md). Each is a choice between valid options, not a standard.
+
+- **Our choice:** one `data-<atom>` attribute per atom, whose value is a space-separated list matched with [`~=`](https://developer.mozilla.org/en-US/docs/Web/CSS/Attribute_selectors). One attribute is one API to learn, it reads as a sentence (`data-button="primary small"`), and it cannot pile up like modifier classes.
+- **Our choice:** `data-button` with no variant word keeps the native default (a submit button is primary, everything else is secondary), so M1 markup keeps working and the attribute is only needed when the native type does not match the emphasis you want.
+- **Our choice:** the quiet button uses the accent color for its text, so it still reads as interactive without a border. Use it next to other buttons, not inside running text, where a real link belongs.
+- **Our choice:** primary buttons add an inner focus ring in their text color on top of the shared outline, so the indicator contrasts with the fill as well as the surface. This is the double-ring technique described in [WCAG technique C40](https://www.w3.org/WAI/WCAG22/Techniques/css/C40).
+- **Our choice:** small buttons are 32px tall: below the 44px default, above the [24px minimum](https://www.w3.org/WAI/WCAG22/Understanding/target-size-minimum.html).
+- **Our choice:** `aria-disabled="true"` looks exactly like `disabled`. Prefer native `disabled`; use `aria-disabled` when users should be able to reach the control and read why it is unavailable.
+- **Our choice:** the field's error text starts with the word "Error:" in the markup, rather than a CSS icon, so every user and every screen reader gets it with no extra API. Invalid controls also get a thick start border, a shape change as well as a color change.
+- **Our choice:** errors are tied to controls with `aria-describedby`, not `aria-errormessage`, because `aria-describedby` has broader screen reader support today (see the support notes on [MDN `aria-errormessage`](https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Reference/Attributes/aria-errormessage)).
+- **Our choice:** the switch is the native checkbox with `role="switch"`, drawn with `appearance: none` and one pseudo-element. The thumb moves and changes color, and forced-colors mode gets explicit system colors.
+- **Our choice:** badge tones are 8% of the tone mixed into the surface, with the tone as text. The tinted surfaces are derived tokens (`--dui-color-*-surface`), so a theme that changes the surface or a tone re-tints badges with no extra overrides.
+- **Our choice:** a field is an atom here, not a molecule, because a control is not usable without its label, hint and error. Larger compositions (forms, cards, headers) are molecules and organisms for later milestones.
+
+#### Not shipped, and why
+
+| Candidate | Decision |
+| --- | --- |
+| Divider | Cut. `<hr>` is the native thematic break and is already styled in the base layer. A class would duplicate it. |
+| Avatar | Cut. There is no standard or APG pattern for it; it is an `<img alt>` with a radius and a size, which the base layer and one line of your CSS already give. Revisit with a real use case (initials fallback, image loading). |
+| Icon sizing | Cut. domestic-ui ships no icon set, so there is nothing to size consistently yet. Inside buttons, icons already line up through the button's `inline-flex` and `gap`. |
+| Danger button variant | Not added. Not requested, and a destructive action is better marked by its label and a confirmation `<dialog>` than by color. Easy to add later as one more variant word. |
+| Spinner for loading | Not added. The honest state is the changed label plus `aria-busy`; a spinner that replaces the label hides it from everyone. |
 
 ### Molecules
 
@@ -738,6 +853,56 @@ Components in `css/components/atoms/`: coming in M2; see the [components README]
 
 - [Visually hidden](https://odonckers.github.io/domestic-ui/components/utilities/visually-hidden.md): Hides content visually but keeps it in the accessibility tree.
 
+## Atoms
+
+Page: https://odonckers.github.io/domestic-ui/atoms/index.html
+
+Atoms add the minimum on top of the base layer: plain HTML already looks right, and an atom covers what a native element cannot say on its own. Components use one `data-<component>` attribute each; see the [component API convention](https://odonckers.github.io/domestic-ui/components/index.md#component-api) and [every level](https://odonckers.github.io/domestic-ui/components/index.md).
+
+### Base elements
+
+- [Base elements](https://odonckers.github.io/domestic-ui/components/base.md): Native HTML elements styled by the base layer, with no classes.
+
+### Atoms
+
+- [Text helpers](https://odonckers.github.io/domestic-ui/components/atoms/text.md): Lead, small and muted text helpers from domestic-ui, with copyable markup. API: `data-text="lead | small | muted"` (combinable).
+- [Quiet link](https://odonckers.github.io/domestic-ui/components/atoms/link.md): A link that takes the surrounding text color and keeps its underline, for dense UI. API: `data-link="quiet"` on `<a href>`.
+- [Buttons](https://odonckers.github.io/domestic-ui/components/atoms/button.md): Button variants, sizes, link buttons and honest disabled and loading states. API: `data-button="[primary | secondary | quiet] [small | large]"` on `<button>`, `<input type=submit|button|reset>`, `<a href>`; states `disabled`, `aria-disabled="true"`, `aria-busy="true"`.
+- [Form controls](https://odonckers.github.io/domestic-ui/components/atoms/controls.md): Native form controls as styled by the domestic-ui base layer, with copyable markup. API: No API; native elements.
+- [Switch](https://odonckers.github.io/domestic-ui/components/atoms/switch.md): An on/off switch built on a native checkbox with role switch, following the APG Switch pattern. API: `role="switch"` on `<input type="checkbox">`.
+- [Field](https://odonckers.github.io/domestic-ui/components/atoms/field.md): Label, control, hint and error message wired with aria-describedby and aria-invalid. API: `data-field` on the wrapper, `data-field="hint"` and `data-field="error"` on the messages.
+- [Badge](https://odonckers.github.io/domestic-ui/components/atoms/badge.md): Inline status labels with tone variants that meet WCAG AA contrast. API: `data-badge="neutral | accent | success | warning | danger"`.
+
+### Utilities
+
+- [Visually hidden](https://odonckers.github.io/domestic-ui/components/utilities/visually-hidden.md): Hides content visually but keeps it in the accessibility tree.
+
+### Our choices
+
+From [`css/components/atoms/README.md`](https://github.com/odonckers/domestic-ui/blob/main/css/components/atoms/README.md). Each is a choice between valid options, not a standard.
+
+- **Our choice:** one `data-<atom>` attribute per atom, whose value is a space-separated list matched with [`~=`](https://developer.mozilla.org/en-US/docs/Web/CSS/Attribute_selectors). One attribute is one API to learn, it reads as a sentence (`data-button="primary small"`), and it cannot pile up like modifier classes.
+- **Our choice:** `data-button` with no variant word keeps the native default (a submit button is primary, everything else is secondary), so M1 markup keeps working and the attribute is only needed when the native type does not match the emphasis you want.
+- **Our choice:** the quiet button uses the accent color for its text, so it still reads as interactive without a border. Use it next to other buttons, not inside running text, where a real link belongs.
+- **Our choice:** primary buttons add an inner focus ring in their text color on top of the shared outline, so the indicator contrasts with the fill as well as the surface. This is the double-ring technique described in [WCAG technique C40](https://www.w3.org/WAI/WCAG22/Techniques/css/C40).
+- **Our choice:** small buttons are 32px tall: below the 44px default, above the [24px minimum](https://www.w3.org/WAI/WCAG22/Understanding/target-size-minimum.html).
+- **Our choice:** `aria-disabled="true"` looks exactly like `disabled`. Prefer native `disabled`; use `aria-disabled` when users should be able to reach the control and read why it is unavailable.
+- **Our choice:** the field's error text starts with the word "Error:" in the markup, rather than a CSS icon, so every user and every screen reader gets it with no extra API. Invalid controls also get a thick start border, a shape change as well as a color change.
+- **Our choice:** errors are tied to controls with `aria-describedby`, not `aria-errormessage`, because `aria-describedby` has broader screen reader support today (see the support notes on [MDN `aria-errormessage`](https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Reference/Attributes/aria-errormessage)).
+- **Our choice:** the switch is the native checkbox with `role="switch"`, drawn with `appearance: none` and one pseudo-element. The thumb moves and changes color, and forced-colors mode gets explicit system colors.
+- **Our choice:** badge tones are 8% of the tone mixed into the surface, with the tone as text. The tinted surfaces are derived tokens (`--dui-color-*-surface`), so a theme that changes the surface or a tone re-tints badges with no extra overrides.
+- **Our choice:** a field is an atom here, not a molecule, because a control is not usable without its label, hint and error. Larger compositions (forms, cards, headers) are molecules and organisms for later milestones.
+
+### Not shipped, and why
+
+| Candidate | Decision |
+| --- | --- |
+| Divider | Cut. `<hr>` is the native thematic break and is already styled in the base layer. A class would duplicate it. |
+| Avatar | Cut. There is no standard or APG pattern for it; it is an `<img alt>` with a radius and a size, which the base layer and one line of your CSS already give. Revisit with a real use case (initials fallback, image loading). |
+| Icon sizing | Cut. domestic-ui ships no icon set, so there is nothing to size consistently yet. Inside buttons, icons already line up through the button's `inline-flex` and `gap`. |
+| Danger button variant | Not added. Not requested, and a destructive action is better marked by its label and a confirmation `<dialog>` than by color. Easy to add later as one more variant word. |
+| Spinner for loading | Not added. The honest state is the changed label plus `aria-busy`; a spinner that replaces the label hides it from everyone. |
+
 ## Base elements
 
 Page: https://odonckers.github.io/domestic-ui/components/base.html
@@ -755,11 +920,11 @@ No classes: write semantic HTML and the base layer styles it.
 | File | Covers |
 | --- | --- |
 | [`css/base/document.css`](https://github.com/odonckers/domestic-ui/blob/main/css/base/document.css) | Document, color scheme, rhythm and focus. |
-| [`css/base/forms.css`](https://github.com/odonckers/domestic-ui/blob/main/css/base/forms.css) | Forms and buttons. |
-| [`css/base/interactive.css`](https://github.com/odonckers/domestic-ui/blob/main/css/base/interactive.css) | Interactive elements (dialog, details/summary). |
-| [`css/base/media.css`](https://github.com/odonckers/domestic-ui/blob/main/css/base/media.css) | Embedded content and figures. |
-| [`css/base/tables.css`](https://github.com/odonckers/domestic-ui/blob/main/css/base/tables.css) | Tables. |
-| [`css/base/typography.css`](https://github.com/odonckers/domestic-ui/blob/main/css/base/typography.css) | Headings, text-level semantics and prose blocks. |
+| [`css/base/forms.css`](https://github.com/odonckers/domestic-ui/blob/main/css/base/forms.css) |  |
+| [`css/base/interactive.css`](https://github.com/odonckers/domestic-ui/blob/main/css/base/interactive.css) |  |
+| [`css/base/media.css`](https://github.com/odonckers/domestic-ui/blob/main/css/base/media.css) |  |
+| [`css/base/tables.css`](https://github.com/odonckers/domestic-ui/blob/main/css/base/tables.css) |  |
+| [`css/base/typography.css`](https://github.com/odonckers/domestic-ui/blob/main/css/base/typography.css) |  |
 
 ### Live example
 
@@ -767,320 +932,16 @@ No classes: write semantic HTML and the base layer styles it.
 
 ### Markup
 
-The content of `<main>` in [`examples/base.html`](https://github.com/odonckers/domestic-ui/blob/main/examples/base.html), unchanged except for removing the common indentation:
+The `<pre><code>` blocks in [`examples/base.html`](https://github.com/odonckers/domestic-ui/blob/main/examples/base.html), HTML-unescaped and otherwise unchanged, each named by the heading of its section:
+
+#### Preformatted code
 
 ```html
-      <h1>Base elements</h1>
-      <p>
-        Every element on this page is plain HTML styled by the <code>base</code> layer.
-        There are no component classes. Read the <a href="https://html.spec.whatwg.org/multipage/">WHATWG HTML Living Standard</a>
-        for what each element means; this page only shows how it looks.
-      </p>
-
-      <section aria-labelledby="text-title">
-        <h2 id="text-title">Text</h2>
-        <h1>Heading level 1</h1>
-        <h2>Heading level 2</h2>
-        <h3>Heading level 3</h3>
-        <h4>Heading level 4</h4>
-        <h5>Heading level 5</h5>
-        <h6>Heading level 6</h6>
-        <p>
-          A paragraph with a <a href="#text-title">link to this section</a>, some <strong>strong importance</strong>,
-          <em>stress emphasis</em>, a <mark>highlighted run</mark>, an abbreviation like
-          <abbr title="Web Content Accessibility Guidelines">WCAG</abbr>, inline <code>&lt;code&gt;</code>,
-          sample output <samp>Saved.</samp>, and keyboard input <kbd>Ctrl</kbd> + <kbd>K</kbd>.
-          Prose is capped at a comfortable measure so lines stay readable on wide screens.
-        </p>
-        <p><small>Small print: side comments such as legal text use <code>&lt;small&gt;</code>.</small></p>
-        <p>H<sub>2</sub>O and E = mc<sup>2</sup> keep their line height.</p>
-        <hr>
-        <blockquote cite="https://www.w3.org/TR/using-aria/#rule1">
-          <p>If you can use a native HTML element or attribute with the semantics and behavior you require already built in, instead of re-purposing an element and adding an ARIA role, state or property to make it accessible, then do so.</p>
-          <footer>From <cite><a href="https://www.w3.org/TR/using-aria/#rule1">Using ARIA, first rule</a></cite></footer>
-        </blockquote>
-      </section>
-
-      <section aria-labelledby="lists-title">
-        <h2 id="lists-title">Lists</h2>
-        <div class="grid">
-          <div>
-            <h3>Unordered</h3>
-            <ul>
-              <li>Native elements first</li>
-              <li>Tokens as custom properties
-                <ul>
-                  <li>Primitive</li>
-                  <li>Semantic</li>
-                </ul>
-              </li>
-              <li>Cascade layers</li>
-            </ul>
-          </div>
-          <div>
-            <h3>Ordered</h3>
-            <ol>
-              <li>Link the stylesheet</li>
-              <li>Write semantic HTML</li>
-              <li>Override tokens to theme</li>
-            </ol>
-          </div>
-          <div>
-            <h3>Description</h3>
-            <dl>
-              <dt>Primitive token</dt>
-              <dd>A raw value, named by what it is.</dd>
-              <dt>Semantic token</dt>
-              <dd>A role, pointing at a primitive.</dd>
-            </dl>
-          </div>
-        </div>
-      </section>
-
-      <section aria-labelledby="code-title">
-        <h2 id="code-title">Preformatted code</h2>
-        <pre><code>&lt;link rel="stylesheet" href="css/domestic.css"&gt;
+<link rel="stylesheet" href="css/domestic.css">
 
 :root {
   --dui-color-accent: light-dark(#7a2e8c, #e2a8f0);
-}</code></pre>
-      </section>
-
-      <section aria-labelledby="media-title">
-        <h2 id="media-title">Media</h2>
-        <div class="grid">
-          <figure>
-            <svg role="img" aria-labelledby="svg-title" viewBox="0 0 160 90" width="320" height="180">
-              <title id="svg-title">Three stacked layers: reset, tokens, base</title>
-              <rect x="20" y="58" width="120" height="20" rx="4" fill="none" stroke="currentColor" stroke-width="2"/>
-              <rect x="30" y="35" width="100" height="20" rx="4" fill="none" stroke="currentColor" stroke-width="2"/>
-              <rect x="40" y="12" width="80" height="20" rx="4" fill="currentColor"/>
-            </svg>
-            <figcaption>An inline <code>&lt;svg&gt;</code> drawn with <code>currentColor</code>.</figcaption>
-          </figure>
-          <figure>
-            <picture>
-              <source type="image/svg+xml" srcset="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20320%20180'%3E%3Crect%20width='320'%20height='180'%20fill='%233451d1'/%3E%3Ccircle%20cx='250'%20cy='60'%20r='28'%20fill='%23fff1a8'/%3E%3Cpath%20d='M0%20180%20L110%2070%20L190%20150%20L240%20110%20L320%20180%20Z'%20fill='%2312151b'/%3E%3C/svg%3E">
-              <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 320 180'%3E%3Crect width='320' height='180' fill='%233451d1'/%3E%3C/svg%3E" alt="A flat illustration of dark mountains under a pale sun on a blue sky." width="320" height="180">
-            </picture>
-            <figcaption>A <code>&lt;picture&gt;</code> with an <code>&lt;img&gt;</code> fallback and alt text.</figcaption>
-          </figure>
-          <figure>
-            <video controls preload="none" width="320" height="180" aria-describedby="video-caption" poster="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 320 180'%3E%3Crect width='320' height='180' fill='%23252a34'/%3E%3Cpath d='M140 65 L190 90 L140 115 Z' fill='%23f6f7f9'/%3E%3C/svg%3E">
-              <track kind="captions" src="data:text/vtt,WEBVTT" srclang="en" label="English" default>
-              Your browser does not support the video element.
-            </video>
-            <figcaption id="video-caption">A <code>&lt;video&gt;</code> with controls and a captions track (no source loaded, so no network requests).</figcaption>
-          </figure>
-        </div>
-      </section>
-
-      <section aria-labelledby="table-title">
-        <h2 id="table-title">Tables</h2>
-        <table>
-          <caption>Contrast minimums in WCAG 2.2 AA</caption>
-          <thead>
-            <tr>
-              <th scope="col">Content</th>
-              <th scope="col">Success criterion</th>
-              <th scope="col">Minimum ratio</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <th scope="row">Body text</th>
-              <td>1.4.3 Contrast (Minimum)</td>
-              <td>4.5:1</td>
-            </tr>
-            <tr>
-              <th scope="row">Large text</th>
-              <td>1.4.3 Contrast (Minimum)</td>
-              <td>3:1</td>
-            </tr>
-            <tr>
-              <th scope="row">Control boundaries</th>
-              <td>1.4.11 Non-text Contrast</td>
-              <td>3:1</td>
-            </tr>
-            <tr>
-              <th scope="row">Focus indicator</th>
-              <td>1.4.11 Non-text Contrast</td>
-              <td>3:1</td>
-            </tr>
-          </tbody>
-          <tfoot>
-            <tr>
-              <th scope="row">Source</th>
-              <td colspan="2"><a href="https://www.w3.org/TR/WCAG22/">WCAG 2.2</a></td>
-            </tr>
-          </tfoot>
-        </table>
-      </section>
-
-      <section id="forms" aria-labelledby="forms-title">
-        <h2 id="forms-title">Forms</h2>
-        <form action="#forms" method="get" class="stack" style="--stack-gap: var(--dui-space-l)">
-          <div class="grid" style="--grid-min: 14rem">
-            <div>
-              <label for="name">Full name</label>
-              <input id="name" name="name" type="text" autocomplete="name" required>
-            </div>
-            <div>
-              <label for="email">Email</label>
-              <input id="email" name="email" type="email" autocomplete="email" aria-describedby="email-hint">
-              <small id="email-hint">We only use this to reply.</small>
-            </div>
-            <div>
-              <label for="password">Password</label>
-              <input id="password" name="password" type="password" autocomplete="new-password" minlength="12">
-            </div>
-            <div>
-              <label for="phone">Phone</label>
-              <input id="phone" name="phone" type="tel" autocomplete="tel">
-            </div>
-            <div>
-              <label for="website">Website</label>
-              <input id="website" name="website" type="url" placeholder="https://example.com">
-            </div>
-            <div>
-              <label for="search">Search</label>
-              <input id="search" name="q" type="search">
-            </div>
-            <div>
-              <label for="quantity">Quantity</label>
-              <input id="quantity" name="quantity" type="number" min="1" max="10" value="1">
-            </div>
-            <div>
-              <label for="date">Date</label>
-              <input id="date" name="date" type="date">
-            </div>
-            <div>
-              <label for="time">Time</label>
-              <input id="time" name="time" type="time">
-            </div>
-            <div>
-              <label for="plan">Plan</label>
-              <select id="plan" name="plan">
-                <option value="free">Free</option>
-                <option value="team" selected>Team</option>
-                <option value="enterprise">Enterprise</option>
-              </select>
-            </div>
-            <div>
-              <label for="volume">Volume</label>
-              <input id="volume" name="volume" type="range" min="0" max="100" value="60">
-            </div>
-            <div>
-              <label for="color">Favorite color</label>
-              <input id="color" name="color" type="color" value="#3451d1">
-            </div>
-            <div>
-              <label for="avatar">Avatar</label>
-              <input id="avatar" name="avatar" type="file" accept="image/*">
-            </div>
-            <div>
-              <label for="disabled-field">Disabled field</label>
-              <input id="disabled-field" name="disabled-field" type="text" value="Read only for now" disabled>
-            </div>
-          </div>
-
-          <div>
-            <label for="message">Message</label>
-            <textarea id="message" name="message" rows="4"></textarea>
-          </div>
-
-          <div class="grid" style="--grid-min: 14rem">
-            <fieldset>
-              <legend>Notifications</legend>
-              <label><input type="checkbox" name="notify-email" checked> Email</label>
-              <label><input type="checkbox" name="notify-sms"> Text message</label>
-            </fieldset>
-            <fieldset>
-              <legend>Theme</legend>
-              <label><input type="radio" name="scheme" value="system" checked> Match system</label>
-              <label><input type="radio" name="scheme" value="light"> Light</label>
-              <label><input type="radio" name="scheme" value="dark"> Dark</label>
-            </fieldset>
-          </div>
-
-          <div class="cluster">
-            <button type="submit">Send message</button>
-            <button type="reset">Reset</button>
-            <button type="button" disabled>Disabled</button>
-          </div>
-        </form>
-      </section>
-
-      <section aria-labelledby="interactive-title">
-        <h2 id="interactive-title">Dialog and details</h2>
-        <p>
-          The button below opens a modal <code>&lt;dialog&gt;</code> with
-          <a href="https://developer.mozilla.org/en-US/docs/Web/API/Invoker_Commands_API">invoker commands</a>
-          (<code>commandfor</code> and <code>command</code>). The browser moves focus into the dialog,
-          closes it on <kbd>Esc</kbd>, and returns focus to the button.
-        </p>
-        <div class="cluster">
-          <button type="button" commandfor="demo-dialog" command="show-modal">Open dialog</button>
-        </div>
-        <dialog id="demo-dialog" aria-labelledby="demo-dialog-title">
-          <h2 id="demo-dialog-title">Delete draft?</h2>
-          <p>This removes the draft from this device. You cannot undo it.</p>
-          <form method="dialog" class="cluster" style="--cluster-justify: flex-end">
-            <button type="button" commandfor="demo-dialog" command="close">Cancel</button>
-            <button type="submit" value="confirm">Delete draft</button>
-          </form>
-        </dialog>
-
-        <details>
-          <summary>What is a cascade layer?</summary>
-          <p>
-            A named bucket of styles. Layers declared earlier lose to layers declared later,
-            regardless of selector specificity. See <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/@layer">@layer on MDN</a>.
-          </p>
-        </details>
-        <details>
-          <summary>Why keep link underlines?</summary>
-          <p>Color alone must not be the only way to identify a link (WCAG 1.4.1).</p>
-        </details>
-      </section>
-
-      <section id="layout" aria-labelledby="layout-title">
-        <h2 id="layout-title">Layout primitives</h2>
-        <p>Each primitive is one class, tuned with one or two custom properties.</p>
-
-        <h3><code>.stack</code></h3>
-        <div class="stack card" style="--stack-gap: var(--dui-space-xs)">
-          <p>Stack item one</p>
-          <p>Stack item two, with <code>--stack-gap: var(--dui-space-xs)</code></p>
-          <p>Stack item three</p>
-        </div>
-
-        <h3><code>.cluster</code></h3>
-        <ul class="cluster card">
-          <li><code>reset</code></li>
-          <li><code>tokens</code></li>
-          <li><code>base</code></li>
-          <li><code>layout</code></li>
-          <li><code>components</code></li>
-          <li><code>utilities</code></li>
-        </ul>
-
-        <h3><code>.grid</code></h3>
-        <div class="grid" style="--grid-min: 12rem">
-          <article class="card">
-            <h4>Atoms</h4>
-            <p>Native elements styled by the base layer.</p>
-          </article>
-          <article class="card">
-            <h4>Molecules</h4>
-            <p>Small groups of atoms. Coming in M2.</p>
-          </article>
-          <article class="card">
-            <h4>Organisms</h4>
-            <p>Larger sections built from molecules. Coming in M3.</p>
-          </article>
-        </div>
-      </section>
+}
 ```
 
 ### Accessibility
@@ -1123,6 +984,734 @@ Each point below is stated in a `css/base/` comment or in [PRINCIPLES.md](https:
 - [`examples/base.html`](https://github.com/odonckers/domestic-ui/blob/main/examples/base.html)
 - [`site/content/components/base.md`](https://github.com/odonckers/domestic-ui/blob/main/site/content/components/base.md)
 
+## Text helpers
+
+Page: https://odonckers.github.io/domestic-ui/components/atoms/text.html
+
+Lead, small and muted text helpers from domestic-ui, with copyable markup.
+
+### API
+
+From the index in [`css/components/atoms/README.md`](https://github.com/odonckers/domestic-ui/blob/main/css/components/atoms/README.md):
+
+`data-text="lead | small | muted"` (combinable)
+
+The `API` block in [`css/components/atoms/text.css`](https://github.com/odonckers/domestic-ui/blob/main/css/components/atoms/text.css):
+
+```text
+data-text="lead | small | muted"
+Values are a space-separated list, so they combine: data-text="small muted".
+```
+
+`data-text` follows the [component API convention](https://odonckers.github.io/domestic-ui/components/index.md#component-api): one attribute, its value space-separated words matched with `~=`; state is carried by native attributes and ARIA.
+
+### Live example
+
+- [Open the example on its own](https://odonckers.github.io/domestic-ui/examples/atoms/text.html)
+
+### Markup
+
+The `<pre><code>` blocks in [`examples/atoms/text.html`](https://github.com/odonckers/domestic-ui/blob/main/examples/atoms/text.html), HTML-unescaped and otherwise unchanged, each named by the heading of its section:
+
+#### Lead paragraph
+
+```html
+<p data-text="lead">Plan your week in five minutes. Everything else stays out of the way.</p>
+<p>Regular body text follows at the normal size.</p>
+```
+
+#### Small and muted
+
+```html
+<p data-text="small">Prices include tax.</p>
+<p data-text="muted">Shared with 3 people.</p>
+<p data-text="small muted">Last updated <time datetime="2026-05-03">3 May 2026</time>.</p>
+```
+
+### Notes
+
+Presentation helpers for prose. They change size or color only, never meaning: use \<small> for side comments and \<strong>/\<em> for importance or stress, as the HTML standard defines them. <https://html.spec.whatwg.org/multipage/text-level-semantics.html#the-small-element> code, kbd and samp are already styled in css/base/typography.css.
+
+Muted text uses --dui-color-text-muted, which is tested at 4.5:1 on every surface (WCAG 1.4.3: <https://www.w3.org/WAI/WCAG22/Understanding/contrast-minimum.html>).
+
+### Accessibility
+
+From the CSS header comment: Muted text uses --dui-color-text-muted, which is tested at 4.5:1 on every surface (WCAG 1.4.3: <https://www.w3.org/WAI/WCAG22/Understanding/contrast-minimum.html>).
+
+See also the spec links below and the [Accessibility baseline](https://odonckers.github.io/domestic-ui/principles/accessibility-baseline-wcag-22-aa.md) principle.
+
+### Specs
+
+- **WHATWG text-level semantics**: [html.spec.whatwg.org/multipage/text-level-semantics.html](https://html.spec.whatwg.org/multipage/text-level-semantics.html)
+- **WCAG 1.4.3**: [www.w3.org/WAI/WCAG22/Understanding/contrast-minimum.html](https://www.w3.org/WAI/WCAG22/Understanding/contrast-minimum.html)
+- **WHATWG**: [html.spec.whatwg.org/multipage/text-level-semantics.html#the-small-element](https://html.spec.whatwg.org/multipage/text-level-semantics.html#the-small-element)
+
+### Source
+
+- [`css/components/atoms/text.css`](https://github.com/odonckers/domestic-ui/blob/main/css/components/atoms/text.css)
+- [`examples/atoms/text.html`](https://github.com/odonckers/domestic-ui/blob/main/examples/atoms/text.html)
+- [`css/components/atoms/README.md`](https://github.com/odonckers/domestic-ui/blob/main/css/components/atoms/README.md)
+
+## Quiet link
+
+Page: https://odonckers.github.io/domestic-ui/components/atoms/link.html
+
+A link that takes the surrounding text color and keeps its underline, for dense UI.
+
+### API
+
+From the index in [`css/components/atoms/README.md`](https://github.com/odonckers/domestic-ui/blob/main/css/components/atoms/README.md):
+
+`data-link="quiet"` on `<a href>`
+
+The `API` block in [`css/components/atoms/link.css`](https://github.com/odonckers/domestic-ui/blob/main/css/components/atoms/link.css):
+
+```text
+data-link="quiet"   on <a href>
+```
+
+`data-link` follows the [component API convention](https://odonckers.github.io/domestic-ui/components/index.md#component-api): one attribute, its value space-separated words matched with `~=`; state is carried by native attributes and ARIA.
+
+### Live example
+
+- [Open the example on its own](https://odonckers.github.io/domestic-ui/examples/atoms/link.html)
+
+### Markup
+
+The `<pre><code>` blocks in [`examples/atoms/link.html`](https://github.com/odonckers/domestic-ui/blob/main/examples/atoms/link.html), HTML-unescaped and otherwise unchanged, each named by the heading of its section:
+
+#### In a table
+
+```html
+<table>
+  <caption>Recent orders</caption>
+  <thead>
+    <tr><th scope="col">Order</th><th scope="col">Customer</th><th scope="col">Total</th></tr>
+  </thead>
+  <tbody>
+    <tr><td><a href="#table-title" data-link="quiet">#1042</a></td><td>Ada Lovelace</td><td>€120.00</td></tr>
+    <tr><td><a href="#table-title" data-link="quiet">#1041</a></td><td>Alan Turing</td><td>€48.50</td></tr>
+  </tbody>
+</table>
+```
+
+#### In muted metadata
+
+```html
+<p data-text="small muted">Posted by <a href="#meta-title" data-link="quiet">Grace Hopper</a> in <a href="#meta-title" data-link="quiet">Compilers</a>.</p>
+```
+
+### Notes
+
+A link that takes the color of the text around it, for dense UI such as table cells, footers and metadata lines where many accent-colored links would be noisy. It keeps its underline, so color is never the only cue (WCAG 1.4.1 Use of Color). <https://www.w3.org/WAI/WCAG22/Understanding/use-of-color.html> <https://html.spec.whatwg.org/multipage/text-level-semantics.html#the-a-element>
+
+Visited links keep the surrounding color too. The surrounding text color already meets 4.5:1, so the link does as well.
+
+### Accessibility
+
+From the CSS header comment: It keeps its underline, so color is never the only cue (WCAG 1.4.1 Use of Color). <https://www.w3.org/WAI/WCAG22/Understanding/use-of-color.html> <https://html.spec.whatwg.org/multipage/text-level-semantics.html#the-a-element>
+
+See also the spec links below and the [Accessibility baseline](https://odonckers.github.io/domestic-ui/principles/accessibility-baseline-wcag-22-aa.md) principle.
+
+### Specs
+
+- **WHATWG `a`**: [html.spec.whatwg.org/multipage/text-level-semantics.html#the-a-element](https://html.spec.whatwg.org/multipage/text-level-semantics.html#the-a-element)
+- **WCAG 1.4.1**: [www.w3.org/WAI/WCAG22/Understanding/use-of-color.html](https://www.w3.org/WAI/WCAG22/Understanding/use-of-color.html)
+
+### Source
+
+- [`css/components/atoms/link.css`](https://github.com/odonckers/domestic-ui/blob/main/css/components/atoms/link.css)
+- [`examples/atoms/link.html`](https://github.com/odonckers/domestic-ui/blob/main/examples/atoms/link.html)
+- [`css/components/atoms/README.md`](https://github.com/odonckers/domestic-ui/blob/main/css/components/atoms/README.md)
+
+## Buttons
+
+Page: https://odonckers.github.io/domestic-ui/components/atoms/button.html
+
+Button variants, sizes, link buttons and honest disabled and loading states.
+
+### API
+
+From the index in [`css/components/atoms/README.md`](https://github.com/odonckers/domestic-ui/blob/main/css/components/atoms/README.md):
+
+`data-button="[primary | secondary | quiet] [small | large]"` on `<button>`, `<input type=submit|button|reset>`, `<a href>`; states `disabled`, `aria-disabled="true"`, `aria-busy="true"`
+
+The `API` block in [`css/components/atoms/button.css`](https://github.com/odonckers/domestic-ui/blob/main/css/components/atoms/button.css):
+
+```text
+data-button="[primary | secondary | quiet] [small | large]"
+A space-separated list: at most one variant word and one size word.
+Works on <button>, <input type="submit|button|reset"> and <a href>.
+No variant word keeps the native default: type="submit" is primary,
+other buttons and links are secondary.
+```
+
+`data-button` follows the [component API convention](https://odonckers.github.io/domestic-ui/components/index.md#component-api): one attribute, its value space-separated words matched with `~=`; state is carried by native attributes and ARIA.
+
+### States
+
+From the `States` block in [`css/components/atoms/button.css`](https://github.com/odonckers/domestic-ui/blob/main/css/components/atoms/button.css):
+
+```text
+disabled              Native. Removed from the tab order, not submitted.
+aria-disabled="true"  Looks disabled and is exposed as disabled, but stays
+                      focusable so a description can explain why. Your script
+                      must ignore activation. https://www.w3.org/WAI/ARIA/apg/practices/keyboard-interface/#focusabilityofdisabledcontrols
+                      https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Reference/Attributes/aria-disabled
+aria-busy="true"      Work in progress. Change the visible label too
+                      ("Saving…") and announce the result in a role="status"
+                      region; nothing here hides the label.
+                      https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Reference/Attributes/aria-busy
+```
+
+### Sizes
+
+From the `Sizes` block in [`css/components/atoms/button.css`](https://github.com/odonckers/domestic-ui/blob/main/css/components/atoms/button.css):
+
+```text
+default and large are at least 44px tall. small is 32px: below the
+44px default but above the 24px minimum of WCAG 2.5.8 Target Size (Minimum).
+https://www.w3.org/WAI/WCAG22/Understanding/target-size-minimum.html
+```
+
+### Focus
+
+From the `Focus` block in [`css/components/atoms/button.css`](https://github.com/odonckers/domestic-ui/blob/main/css/components/atoms/button.css):
+
+```text
+every variant keeps the base :focus-visible outline. Filled (primary)
+buttons add an inner ring in their text color, so the indicator contrasts
+with the fill as well as with the surface (WCAG 1.4.11, 2.4.13).
+https://www.w3.org/WAI/WCAG22/Understanding/focus-appearance.html
+```
+
+### Our choice
+
+From [`css/components/atoms/README.md`](https://github.com/odonckers/domestic-ui/blob/main/css/components/atoms/README.md). Each is a choice between valid options, not a standard.
+
+- **Our choice:** `data-button` with no variant word keeps the native default (a submit button is primary, everything else is secondary), so M1 markup keeps working and the attribute is only needed when the native type does not match the emphasis you want.
+- **Our choice:** the quiet button uses the accent color for its text, so it still reads as interactive without a border. Use it next to other buttons, not inside running text, where a real link belongs.
+- **Our choice:** primary buttons add an inner focus ring in their text color on top of the shared outline, so the indicator contrasts with the fill as well as the surface. This is the double-ring technique described in [WCAG technique C40](https://www.w3.org/WAI/WCAG22/Techniques/css/C40).
+- **Our choice:** small buttons are 32px tall: below the 44px default, above the [24px minimum](https://www.w3.org/WAI/WCAG22/Understanding/target-size-minimum.html).
+- **Our choice:** `aria-disabled="true"` looks exactly like `disabled`. Prefer native `disabled`; use `aria-disabled` when users should be able to reach the control and read why it is unavailable.
+
+### Live example
+
+- [Open the example on its own](https://odonckers.github.io/domestic-ui/examples/atoms/button.html)
+
+### Markup
+
+The `<pre><code>` blocks in [`examples/atoms/button.html`](https://github.com/odonckers/domestic-ui/blob/main/examples/atoms/button.html), HTML-unescaped and otherwise unchanged, each named by the heading of its section:
+
+#### Variants
+
+```html
+<div class="cluster">
+  <button type="button" data-button="primary">Primary</button>
+  <button type="button" data-button="secondary">Secondary</button>
+  <button type="button" data-button="quiet">Quiet</button>
+</div>
+```
+
+#### Native default
+
+```html
+<form action="#native-title" class="cluster">
+  <button type="submit">Publish</button>
+  <button type="submit" name="draft" value="1" data-button="secondary">Save draft</button>
+  <button type="reset" data-button="quiet">Clear</button>
+</form>
+```
+
+#### Sizes
+
+```html
+<div class="cluster">
+  <button type="button" data-button="primary small">Small</button>
+  <button type="button" data-button="primary">Default</button>
+  <button type="button" data-button="primary large">Large</button>
+</div>
+```
+
+#### Links that look like buttons
+
+```html
+<div class="cluster">
+  <a href="#links-title" data-button="primary">Create account</a>
+  <a href="#links-title" data-button="secondary">Read the guide</a>
+  <a href="#links-title" data-button="quiet">Skip for now</a>
+</div>
+```
+
+#### Disabled
+
+```html
+<div class="cluster">
+  <button type="button" data-button="primary" disabled>Delete</button>
+  <button type="button" disabled>Archive</button>
+</div>
+```
+
+#### Disabled but focusable
+
+```html
+<div class="cluster">
+  <button type="button" data-button="primary" aria-disabled="true" aria-describedby="publish-why">Publish</button>
+  <p id="publish-why" data-text="small muted">Add a title before publishing.</p>
+</div>
+```
+
+#### Loading
+
+```html
+<div class="cluster">
+  <button type="button" id="save-demo" data-button="primary">Save changes</button>
+  <p id="save-status" role="status" data-text="small muted"></p>
+</div>
+```
+
+### Notes
+
+Plain \<button> is already styled in css/base/forms.css: type="submit" gets the accent fill, every other button is neutral. This atom adds explicit variants, a size scale, aria-disabled and aria-busy states, and lets a link (\<a href>) look like a button while keeping link semantics. <https://html.spec.whatwg.org/multipage/form-elements.html#the-button-element> APG button pattern: <https://www.w3.org/WAI/ARIA/apg/patterns/button/>
+
+### Accessibility
+
+From the CSS header comment: This atom adds explicit variants, a size scale, aria-disabled and aria-busy states, and lets a link (\<a href>) look like a button while keeping link semantics. <https://html.spec.whatwg.org/multipage/form-elements.html#the-button-element> APG button pattern: <https://www.w3.org/WAI/ARIA/apg/patterns/button/>
+
+See also the spec links below and the [Accessibility baseline](https://odonckers.github.io/domestic-ui/principles/accessibility-baseline-wcag-22-aa.md) principle.
+
+The header comment's `States`, `Sizes`, `Focus` blocks are shown above under their own headings.
+
+### Specs
+
+- **WHATWG `button`**: [html.spec.whatwg.org/multipage/form-elements.html#the-button-element](https://html.spec.whatwg.org/multipage/form-elements.html#the-button-element)
+- **APG Button**: [www.w3.org/WAI/ARIA/apg/patterns/button/](https://www.w3.org/WAI/ARIA/apg/patterns/button/)
+- **APG focusability of disabled controls**: [www.w3.org/WAI/ARIA/apg/practices/keyboard-interface/#focusabilityofdisabledcontrols](https://www.w3.org/WAI/ARIA/apg/practices/keyboard-interface/#focusabilityofdisabledcontrols)
+- **MDN `aria-disabled`**: [developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Reference/Attributes/aria-disabled](https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Reference/Attributes/aria-disabled)
+- **MDN `aria-busy`**: [developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Reference/Attributes/aria-busy](https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Reference/Attributes/aria-busy)
+- **WCAG 2.5.8**: [www.w3.org/WAI/WCAG22/Understanding/target-size-minimum.html](https://www.w3.org/WAI/WCAG22/Understanding/target-size-minimum.html)
+- **WCAG**: [www.w3.org/WAI/WCAG22/Understanding/focus-appearance.html](https://www.w3.org/WAI/WCAG22/Understanding/focus-appearance.html)
+
+### Source
+
+- [`css/components/atoms/button.css`](https://github.com/odonckers/domestic-ui/blob/main/css/components/atoms/button.css)
+- [`examples/atoms/button.html`](https://github.com/odonckers/domestic-ui/blob/main/examples/atoms/button.html)
+- [`css/components/atoms/README.md`](https://github.com/odonckers/domestic-ui/blob/main/css/components/atoms/README.md)
+
+## Form controls
+
+Page: https://odonckers.github.io/domestic-ui/components/atoms/controls.html
+
+Native form controls as styled by the domestic-ui base layer, with copyable markup.
+
+### API
+
+From the index in [`css/components/atoms/README.md`](https://github.com/odonckers/domestic-ui/blob/main/css/components/atoms/README.md):
+
+No API; native elements
+
+No `data-*` attribute: the API is native HTML and ARIA. See the [component API convention](https://odonckers.github.io/domestic-ui/components/index.md#component-api).
+
+### Live example
+
+- [Open the example on its own](https://odonckers.github.io/domestic-ui/examples/atoms/controls.html)
+
+### Markup
+
+The `<pre><code>` blocks in [`examples/atoms/controls.html`](https://github.com/odonckers/domestic-ui/blob/main/examples/atoms/controls.html), HTML-unescaped and otherwise unchanged, each named by the heading of its section:
+
+#### Text-like inputs
+
+```html
+<div class="grid" style="--grid-min: 14rem">
+  <div>
+    <label for="c-name">Name</label>
+    <input id="c-name" name="name" type="text" autocomplete="name">
+  </div>
+  <div>
+    <label for="c-email">Email</label>
+    <input id="c-email" name="email" type="email" autocomplete="email">
+  </div>
+  <div>
+    <label for="c-password">Password</label>
+    <input id="c-password" name="password" type="password" autocomplete="new-password">
+  </div>
+  <div>
+    <label for="c-search">Search</label>
+    <input id="c-search" name="q" type="search">
+  </div>
+  <div>
+    <label for="c-url">Website</label>
+    <input id="c-url" name="url" type="url" placeholder="https://example.com">
+  </div>
+  <div>
+    <label for="c-tel">Phone</label>
+    <input id="c-tel" name="tel" type="tel" autocomplete="tel">
+  </div>
+  <div>
+    <label for="c-number">Guests</label>
+    <input id="c-number" name="guests" type="number" min="1" max="12" value="2">
+  </div>
+  <div>
+    <label for="c-date">Date</label>
+    <input id="c-date" name="date" type="date">
+  </div>
+  <div>
+    <label for="c-time">Time</label>
+    <input id="c-time" name="time" type="time">
+  </div>
+</div>
+```
+
+#### Textarea and select
+
+```html
+<div class="grid" style="--grid-min: 14rem">
+  <div>
+    <label for="c-notes">Notes</label>
+    <textarea id="c-notes" name="notes" rows="3"></textarea>
+  </div>
+  <div>
+    <label for="c-plan">Plan</label>
+    <select id="c-plan" name="plan">
+      <option value="free">Free</option>
+      <option value="team" selected>Team</option>
+    </select>
+  </div>
+</div>
+```
+
+#### Checkboxes and radios in a fieldset
+
+```html
+<div class="grid" style="--grid-min: 14rem">
+  <fieldset>
+    <legend>Notify me by</legend>
+    <label><input type="checkbox" name="notify-email" checked> Email</label>
+    <label><input type="checkbox" name="notify-sms"> Text message</label>
+  </fieldset>
+  <fieldset>
+    <legend>Delivery</legend>
+    <label><input type="radio" name="delivery" value="standard" checked> Standard</label>
+    <label><input type="radio" name="delivery" value="express"> Express</label>
+  </fieldset>
+</div>
+```
+
+#### Range and file
+
+```html
+<div class="grid" style="--grid-min: 14rem">
+  <div>
+    <label for="c-volume">Volume</label>
+    <input id="c-volume" name="volume" type="range" min="0" max="100" value="40">
+  </div>
+  <div>
+    <label for="c-file">Attachment</label>
+    <input id="c-file" name="file" type="file">
+  </div>
+</div>
+```
+
+### Notes
+
+
+
+### Accessibility
+
+There is no CSS file of its own: [`css/base/forms.css`](https://github.com/odonckers/domestic-ui/blob/main/css/base/forms.css) styles these elements in the base layer. See [Base elements](https://odonckers.github.io/domestic-ui/components/base.md) for their accessibility notes, the spec links below and the [Accessibility baseline](https://odonckers.github.io/domestic-ui/principles/accessibility-baseline-wcag-22-aa.md) principle.
+
+### Specs
+
+- **WHATWG forms**: [html.spec.whatwg.org/multipage/forms.html](https://html.spec.whatwg.org/multipage/forms.html)
+- **W3C forms tutorial**: [www.w3.org/WAI/tutorials/forms/](https://www.w3.org/WAI/tutorials/forms/)
+
+### Source
+
+- [`css/base/forms.css`](https://github.com/odonckers/domestic-ui/blob/main/css/base/forms.css) (base layer; no CSS file of its own)
+- [`examples/atoms/controls.html`](https://github.com/odonckers/domestic-ui/blob/main/examples/atoms/controls.html)
+- [`css/components/atoms/README.md`](https://github.com/odonckers/domestic-ui/blob/main/css/components/atoms/README.md)
+
+## Switch
+
+Page: https://odonckers.github.io/domestic-ui/components/atoms/switch.html
+
+An on/off switch built on a native checkbox with role switch, following the APG Switch pattern.
+
+### API
+
+From the index in [`css/components/atoms/README.md`](https://github.com/odonckers/domestic-ui/blob/main/css/components/atoms/README.md):
+
+`role="switch"` on `<input type="checkbox">`
+
+The `API` block in [`css/components/atoms/switch.css`](https://github.com/odonckers/domestic-ui/blob/main/css/components/atoms/switch.css):
+
+```text
+role="switch"   on <input type="checkbox">; no class needed.
+```
+
+No `data-*` attribute: the API is native HTML and ARIA. See the [component API convention](https://odonckers.github.io/domestic-ui/components/index.md#component-api).
+
+### Our choice
+
+From [`css/components/atoms/README.md`](https://github.com/odonckers/domestic-ui/blob/main/css/components/atoms/README.md). Each is a choice between valid options, not a standard.
+
+- **Our choice:** the switch is the native checkbox with `role="switch"`, drawn with `appearance: none` and one pseudo-element. The thumb moves and changes color, and forced-colors mode gets explicit system colors.
+
+### Live example
+
+- [Open the example on its own](https://odonckers.github.io/domestic-ui/examples/atoms/switch.html)
+
+### Markup
+
+The `<pre><code>` blocks in [`examples/atoms/switch.html`](https://github.com/odonckers/domestic-ui/blob/main/examples/atoms/switch.html), HTML-unescaped and otherwise unchanged, each named by the heading of its section:
+
+#### Off, on and disabled
+
+```html
+<div class="stack" style="--stack-gap: 0">
+  <label><input type="checkbox" role="switch" name="alerts"> Email alerts</label>
+  <label><input type="checkbox" role="switch" name="digest" checked> Weekly digest</label>
+  <label><input type="checkbox" role="switch" name="beta" disabled> Beta features</label>
+</div>
+```
+
+#### In a fieldset
+
+```html
+<fieldset>
+  <legend>Privacy</legend>
+  <label><input type="checkbox" role="switch" name="profile-public" checked> Public profile</label>
+  <label><input type="checkbox" role="switch" name="show-email"> Show email address</label>
+</fieldset>
+```
+
+### Notes
+
+An on/off control built on a native checkbox with role="switch", as in the APG Switch pattern ("Switch Example Using HTML Checkbox Input"). The checkbox brings focus, Space to toggle, form submission and the :checked state; role="switch" tells assistive technology to announce "on/off" instead of "checked/not checked". APG: <https://www.w3.org/WAI/ARIA/apg/patterns/switch/> ARIA in HTML allows role="switch" on input type=checkbox: <https://www.w3.org/TR/html-aria/#el-input-checkbox> MDN: <https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Reference/Roles/switch_role>
+
+Keep the label the same in both states (APG): the state is "on" or "off", not a different label. Wrapping the input in its \<label> also makes the whole label the click target (44px tall, see css/base/forms.css).
+
+State does not rely on color alone (WCAG 1.4.1): the thumb moves to the end and changes from outline color to the contrast color, and the track fills. Track border and thumb are 3:1 against the surface (WCAG 1.4.11). Forced colors: system colors are set explicitly so both states stay visible. <https://developer.mozilla.org/en-US/docs/Web/CSS/@media/forced-colors>
+
+### Accessibility
+
+From the CSS header comment: An on/off control built on a native checkbox with role="switch", as in the APG Switch pattern ("Switch Example Using HTML Checkbox Input"). The checkbox brings focus, Space to toggle, form submission and the :checked state; role="switch" tells assistive technology to announce "on/off" instead of "checked/not checked". APG: <https://www.w3.org/WAI/ARIA/apg/patterns/switch/> ARIA in HTML allows role="switch" on input type=checkbox: <https://www.w3.org/TR/html-aria/#el-input-checkbox> MDN: <https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Reference/Roles/switch_role> Keep the label the same in both states (APG): the state is "on" or "off", not a different label. State does not rely on color alone (WCAG 1.4.1): the thumb moves to the end and changes from outline color to the contrast color, and the track fills. Track border and thumb are 3:1 against the surface (WCAG 1.4.11). Forced colors: system colors are set explicitly so both states stay visible. <https://developer.mozilla.org/en-US/docs/Web/CSS/@media/forced-colors>
+
+See also the spec links below and the [Accessibility baseline](https://odonckers.github.io/domestic-ui/principles/accessibility-baseline-wcag-22-aa.md) principle.
+
+### Specs
+
+- **APG Switch**: [www.w3.org/WAI/ARIA/apg/patterns/switch/](https://www.w3.org/WAI/ARIA/apg/patterns/switch/)
+- **ARIA in HTML**: [www.w3.org/TR/html-aria/#el-input-checkbox](https://www.w3.org/TR/html-aria/#el-input-checkbox)
+- **MDN `switch` role**: [developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Reference/Roles/switch_role](https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Reference/Roles/switch_role)
+- **MDN**: [developer.mozilla.org/en-US/docs/Web/CSS/@media/forced-colors](https://developer.mozilla.org/en-US/docs/Web/CSS/@media/forced-colors)
+
+### Source
+
+- [`css/components/atoms/switch.css`](https://github.com/odonckers/domestic-ui/blob/main/css/components/atoms/switch.css)
+- [`examples/atoms/switch.html`](https://github.com/odonckers/domestic-ui/blob/main/examples/atoms/switch.html)
+- [`css/components/atoms/README.md`](https://github.com/odonckers/domestic-ui/blob/main/css/components/atoms/README.md)
+
+## Field
+
+Page: https://odonckers.github.io/domestic-ui/components/atoms/field.html
+
+Label, control, hint and error message wired with aria-describedby and aria-invalid.
+
+### API
+
+From the index in [`css/components/atoms/README.md`](https://github.com/odonckers/domestic-ui/blob/main/css/components/atoms/README.md):
+
+`data-field` on the wrapper, `data-field="hint"` and `data-field="error"` on the messages
+
+The `API` block in [`css/components/atoms/field.css`](https://github.com/odonckers/domestic-ui/blob/main/css/components/atoms/field.css):
+
+```text
+data-field              on the wrapper (a <div>, or a <fieldset> for groups)
+data-field="hint"       on the hint
+data-field="error"      on the error message
+```
+
+`data-field` follows the [component API convention](https://odonckers.github.io/domestic-ui/components/index.md#component-api): one attribute, its value space-separated words matched with `~=`; state is carried by native attributes and ARIA.
+
+### Our choice
+
+From [`css/components/atoms/README.md`](https://github.com/odonckers/domestic-ui/blob/main/css/components/atoms/README.md). Each is a choice between valid options, not a standard.
+
+- **Our choice:** the field's error text starts with the word "Error:" in the markup, rather than a CSS icon, so every user and every screen reader gets it with no extra API. Invalid controls also get a thick start border, a shape change as well as a color change.
+- **Our choice:** a field is an atom here, not a molecule, because a control is not usable without its label, hint and error. Larger compositions (forms, cards, headers) are molecules and organisms for later milestones.
+
+### Live example
+
+- [Open the example on its own](https://odonckers.github.io/domestic-ui/examples/atoms/field.html)
+
+### Markup
+
+The `<pre><code>` blocks in [`examples/atoms/field.html`](https://github.com/odonckers/domestic-ui/blob/main/examples/atoms/field.html), HTML-unescaped and otherwise unchanged, each named by the heading of its section:
+
+#### With a hint
+
+```html
+<div data-field>
+  <label for="f-name">Display name</label>
+  <input id="f-name" name="display-name" type="text" autocomplete="nickname" aria-describedby="f-name-hint">
+  <p id="f-name-hint" data-field="hint">Shown next to your comments.</p>
+</div>
+```
+
+#### With a hint and an error
+
+```html
+<div data-field>
+  <label for="f-email">Email</label>
+  <input id="f-email" name="email" type="email" autocomplete="email" value="ada@" aria-invalid="true" aria-describedby="f-email-hint f-email-error">
+  <p id="f-email-hint" data-field="hint">We only use this to reply.</p>
+  <p id="f-email-error" data-field="error">Error: enter an email address like name@example.com.</p>
+</div>
+```
+
+#### Native validation
+
+```html
+<form action="#native-title" class="stack">
+  <div data-field>
+    <label for="f-code">Invite code</label>
+    <input id="f-code" name="code" type="text" required minlength="6" aria-describedby="f-code-hint">
+    <p id="f-code-hint" data-field="hint">Six characters or more.</p>
+  </div>
+  <div class="cluster">
+    <button type="submit">Join</button>
+  </div>
+</form>
+```
+
+#### A group with an error
+
+```html
+<fieldset data-field aria-describedby="f-size-error">
+  <legend>Size</legend>
+  <label><input type="radio" name="size" value="s"> Small</label>
+  <label><input type="radio" name="size" value="m"> Medium</label>
+  <p id="f-size-error" data-field="error">Error: choose a size.</p>
+</fieldset>
+```
+
+### Notes
+
+Groups one control with its label, an optional hint and an optional error message, and styles the invalid state. The wiring is plain HTML and ARIA; this file only lays it out.
+
+- The \<label for> names the control (WCAG 1.3.1, 3.3.2). <https://www.w3.org/WAI/WCAG22/Understanding/info-and-relationships.html> <https://www.w3.org/WAI/WCAG22/Understanding/labels-or-instructions.html> - Hint and error ids go in the control's aria-describedby, so they become its accessible description. <https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Reference/Attributes/aria-describedby> - When the value is wrong, set aria-invalid="true" on the control and show the error as text (WCAG 3.3.1 Error Identification). <https://www.w3.org/WAI/WCAG22/Understanding/error-identification.html> <https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Reference/Attributes/aria-invalid> - Native constraint validation also gets the invalid look, via :user-invalid (only after the user has interacted). <https://developer.mozilla.org/en-US/docs/Web/CSS/:user-invalid>
+
+Not color alone (WCAG 1.4.1): the error text starts with "Error:" (write it in the markup so every user and screen reader gets it), and an invalid control gets a thick start border as well as the danger color. Hide an error that does not apply with the hidden attribute and remove its id from aria-describedby.
+
+### Accessibility
+
+From the CSS header comment: The wiring is plain HTML and ARIA; this file only lays it out. - The \<label for> names the control (WCAG 1.3.1, 3.3.2). <https://www.w3.org/WAI/WCAG22/Understanding/info-and-relationships.html> <https://www.w3.org/WAI/WCAG22/Understanding/labels-or-instructions.html> - Hint and error ids go in the control's aria-describedby, so they become its accessible description. <https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Reference/Attributes/aria-describedby> - When the value is wrong, set aria-invalid="true" on the control and show the error as text (WCAG 3.3.1 Error Identification). <https://www.w3.org/WAI/WCAG22/Understanding/error-identification.html> <https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Reference/Attributes/aria-invalid> - Native constraint validation also gets the invalid look, via :user-invalid (only after the user has interacted). <https://developer.mozilla.org/en-US/docs/Web/CSS/:user-invalid> Not color alone (WCAG 1.4.1): the error text starts with "Error:" (write it in the markup so every user and screen reader gets it), and an invalid control gets a thick start border as well as the danger color. Hide an error that does not apply with the hidden attribute and remove its id from aria-describedby.
+
+See also the spec links below and the [Accessibility baseline](https://odonckers.github.io/domestic-ui/principles/accessibility-baseline-wcag-22-aa.md) principle.
+
+### Specs
+
+- **WCAG 3.3.1**: [www.w3.org/WAI/WCAG22/Understanding/error-identification.html](https://www.w3.org/WAI/WCAG22/Understanding/error-identification.html)
+- **WCAG 3.3.2**: [www.w3.org/WAI/WCAG22/Understanding/labels-or-instructions.html](https://www.w3.org/WAI/WCAG22/Understanding/labels-or-instructions.html)
+- **WCAG 1.3.1**: [www.w3.org/WAI/WCAG22/Understanding/info-and-relationships.html](https://www.w3.org/WAI/WCAG22/Understanding/info-and-relationships.html)
+- **MDN `aria-describedby`**: [developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Reference/Attributes/aria-describedby](https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Reference/Attributes/aria-describedby)
+- **MDN `aria-invalid`**: [developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Reference/Attributes/aria-invalid](https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Reference/Attributes/aria-invalid)
+- **MDN `:user-invalid`**: [developer.mozilla.org/en-US/docs/Web/CSS/:user-invalid](https://developer.mozilla.org/en-US/docs/Web/CSS/:user-invalid)
+
+### Source
+
+- [`css/components/atoms/field.css`](https://github.com/odonckers/domestic-ui/blob/main/css/components/atoms/field.css)
+- [`examples/atoms/field.html`](https://github.com/odonckers/domestic-ui/blob/main/examples/atoms/field.html)
+- [`css/components/atoms/README.md`](https://github.com/odonckers/domestic-ui/blob/main/css/components/atoms/README.md)
+
+## Badge
+
+Page: https://odonckers.github.io/domestic-ui/components/atoms/badge.html
+
+Inline status labels with tone variants that meet WCAG AA contrast.
+
+### API
+
+From the index in [`css/components/atoms/README.md`](https://github.com/odonckers/domestic-ui/blob/main/css/components/atoms/README.md):
+
+`data-badge="neutral | accent | success | warning | danger"`
+
+The `API` block in [`css/components/atoms/badge.css`](https://github.com/odonckers/domestic-ui/blob/main/css/components/atoms/badge.css):
+
+```text
+data-badge="neutral | accent | success | warning | danger"
+(empty means neutral)
+```
+
+`data-badge` follows the [component API convention](https://odonckers.github.io/domestic-ui/components/index.md#component-api): one attribute, its value space-separated words matched with `~=`; state is carried by native attributes and ARIA.
+
+### Our choice
+
+From [`css/components/atoms/README.md`](https://github.com/odonckers/domestic-ui/blob/main/css/components/atoms/README.md). Each is a choice between valid options, not a standard.
+
+- **Our choice:** badge tones are 8% of the tone mixed into the surface, with the tone as text. The tinted surfaces are derived tokens (`--dui-color-*-surface`), so a theme that changes the surface or a tone re-tints badges with no extra overrides.
+
+### Live example
+
+- [Open the example on its own](https://odonckers.github.io/domestic-ui/examples/atoms/badge.html)
+
+### Markup
+
+The `<pre><code>` blocks in [`examples/atoms/badge.html`](https://github.com/odonckers/domestic-ui/blob/main/examples/atoms/badge.html), HTML-unescaped and otherwise unchanged, each named by the heading of its section:
+
+#### Tones
+
+```html
+<p class="cluster">
+  <span data-badge>Draft</span>
+  <span data-badge="accent">New</span>
+  <span data-badge="success">Paid</span>
+  <span data-badge="warning">Due soon</span>
+  <span data-badge="danger">Overdue</span>
+</p>
+```
+
+#### In context
+
+```html
+<table>
+  <caption>Invoices</caption>
+  <thead>
+    <tr><th scope="col">Invoice</th><th scope="col">Status</th></tr>
+  </thead>
+  <tbody>
+    <tr><td>INV-031</td><td><span data-badge="success">Paid</span></td></tr>
+    <tr><td>INV-032</td><td><span data-badge="danger">Overdue</span></td></tr>
+  </tbody>
+</table>
+```
+
+### Notes
+
+A short inline status label ("Draft", "Paid", "Overdue"). Static text, not interactive: there is no native badge element and no ARIA role is needed, the text itself is the content. If a badge must be clickable, put a real \<button> or \<a href> around it, not a click handler on it. Native first: <https://www.w3.org/TR/using-aria/#rule1>
+
+The tone is a hint, not the message: the words carry the meaning (WCAG 1.4.1 Use of Color). If a badge sits next to something it labels only by position, say so in text, for example "Status: Paid" with .visually-hidden on "Status:". Text on each tone meets 4.5:1 (WCAG 1.4.3); npm test checks every tone. <https://www.w3.org/WAI/WCAG22/Understanding/contrast-minimum.html>
+
+### Accessibility
+
+From the CSS header comment: Static text, not interactive: there is no native badge element and no ARIA role is needed, the text itself is the content. Native first: <https://www.w3.org/TR/using-aria/#rule1> The tone is a hint, not the message: the words carry the meaning (WCAG 1.4.1 Use of Color). Text on each tone meets 4.5:1 (WCAG 1.4.3); npm test checks every tone. <https://www.w3.org/WAI/WCAG22/Understanding/contrast-minimum.html>
+
+See also the spec links below and the [Accessibility baseline](https://odonckers.github.io/domestic-ui/principles/accessibility-baseline-wcag-22-aa.md) principle.
+
+### Specs
+
+- **WCAG 1.4.3**: [www.w3.org/WAI/WCAG22/Understanding/contrast-minimum.html](https://www.w3.org/WAI/WCAG22/Understanding/contrast-minimum.html)
+- **WCAG 1.4.1**: [www.w3.org/WAI/WCAG22/Understanding/use-of-color.html](https://www.w3.org/WAI/WCAG22/Understanding/use-of-color.html)
+- **Using ARIA rule 1**: [www.w3.org/TR/using-aria/#rule1](https://www.w3.org/TR/using-aria/#rule1)
+
+### Source
+
+- [`css/components/atoms/badge.css`](https://github.com/odonckers/domestic-ui/blob/main/css/components/atoms/badge.css)
+- [`examples/atoms/badge.html`](https://github.com/odonckers/domestic-ui/blob/main/examples/atoms/badge.html)
+- [`css/components/atoms/README.md`](https://github.com/odonckers/domestic-ui/blob/main/css/components/atoms/README.md)
+
 ## Visually hidden
 
 Page: https://odonckers.github.io/domestic-ui/components/utilities/visually-hidden.html
@@ -1135,9 +1724,11 @@ Hides content visually but keeps it in the accessibility tree.
 class="visually-hidden"
 ```
 
+Layout primitives and utilities are classes, not `data-*` attributes; see the [component API convention](https://odonckers.github.io/domestic-ui/components/index.md#component-api).
+
 ### Live example
 
-There is no standalone example page for visually hidden yet. These example pages use it: [Base elements · domestic-ui](https://odonckers.github.io/domestic-ui/examples/base.html), [Theming · domestic-ui](https://odonckers.github.io/domestic-ui/examples/theming.html).
+There is no standalone example page for visually hidden yet. These example pages use it: [Base elements](https://odonckers.github.io/domestic-ui/examples/base.html), [Theming](https://odonckers.github.io/domestic-ui/examples/theming.html), [Badge](https://odonckers.github.io/domestic-ui/examples/atoms/badge.html), [Buttons](https://odonckers.github.io/domestic-ui/examples/atoms/button.html), [Form controls](https://odonckers.github.io/domestic-ui/examples/atoms/controls.html), [Field](https://odonckers.github.io/domestic-ui/examples/atoms/field.html), [Atoms showcase](https://odonckers.github.io/domestic-ui/examples/atoms/index.html), [Quiet link](https://odonckers.github.io/domestic-ui/examples/atoms/link.html), [Switch](https://odonckers.github.io/domestic-ui/examples/atoms/switch.html), [Text helpers](https://odonckers.github.io/domestic-ui/examples/atoms/text.html).
 
 ### Markup
 
@@ -1160,6 +1751,40 @@ See also the spec links below and the [Accessibility baseline](https://odonckers
 ### Source
 
 - [`css/utilities/visually-hidden.css`](https://github.com/odonckers/domestic-ui/blob/main/css/utilities/visually-hidden.css)
+
+## Molecules
+
+Page: https://odonckers.github.io/domestic-ui/molecules/index.html
+
+Components use one `data-<component>` attribute each; see the [component API convention](https://odonckers.github.io/domestic-ui/components/index.md#component-api) and [every level](https://odonckers.github.io/domestic-ui/components/index.md).
+
+### Molecules
+
+- [Alerts](https://odonckers.github.io/domestic-ui/patterns/alerts.md): Messages about status, from notices in the page to live alerts for important, time-sensitive changes. Coming in M3.
+- [Breadcrumb](https://odonckers.github.io/domestic-ui/patterns/breadcrumb.md): The path to the current page as an ordered list of links in a labelled `<nav>`. Coming in M3.
+- [Card](https://odonckers.github.io/domestic-ui/patterns/card.md): A self-contained item, such as a product or an article teaser, on a raised surface. Coming in M3.
+- [Disclosure](https://odonckers.github.io/domestic-ui/patterns/disclosure.md): A summary that shows or hides more content, built on `<details>` and `<summary>`. Coming in M3.
+- [Menu button](https://odonckers.github.io/domestic-ui/patterns/menu-button.md): A button that opens a menu of actions. Coming in M3.
+- [Pagination](https://odonckers.github.io/domestic-ui/patterns/pagination.md): Links to the pages of a long list of results. Coming in M3.
+- [Popover](https://odonckers.github.io/domestic-ui/patterns/popover.md): Content shown on top of the page from a button, with the `popover` attribute. Coming in M3.
+- [Search](https://odonckers.github.io/domestic-ui/patterns/search.md): A search form in a `<search>` landmark with an `<input type="search">`. Coming in M3.
+- [Tabs](https://odonckers.github.io/domestic-ui/patterns/tabs.md): Sections of content shown one at a time, chosen from a list of tabs. Coming in M3.
+- [Toolbar](https://odonckers.github.io/domestic-ui/patterns/toolbar.md): A row of related controls that is one stop in the tab order. Coming in M3.
+- [Typeahead](https://odonckers.github.io/domestic-ui/patterns/typeahead.md): A text field that suggests values as you type, with `<datalist>` first and an APG combobox only where `<datalist>` falls short. Coming in M3.
+
+## Organisms
+
+Page: https://odonckers.github.io/domestic-ui/organisms/index.html
+
+Components use one `data-<component>` attribute each; see the [component API convention](https://odonckers.github.io/domestic-ui/components/index.md#component-api) and [every level](https://odonckers.github.io/domestic-ui/components/index.md).
+
+### Organisms
+
+- [Dialog and drawer](https://odonckers.github.io/domestic-ui/patterns/dialog.md): A modal `<dialog>`, either centered or as a drawer along one edge of the viewport. Coming in M3.
+- [Site navigation](https://odonckers.github.io/domestic-ui/patterns/nav.md): The main links of a site in a `<nav>` landmark, with the current page marked. Coming in M3.
+- [Data table](https://odonckers.github.io/domestic-ui/patterns/data-table.md): Rows of records in a native `<table>` with a caption, header cells and optional sorting. Coming in M3b.
+- [Filter bar](https://odonckers.github.io/domestic-ui/patterns/filter-bar.md): A row of native form controls that narrows a list or table. Coming in M3b.
+- [Large forms](https://odonckers.github.io/domestic-ui/patterns/large-forms.md): Long forms split into labelled groups, in one or more columns. Coming in M3b.
 
 ## Layouts
 
@@ -1192,9 +1817,11 @@ class="cluster"
 --cluster-align     align-items value     (default: center)
 ```
 
+Layout primitives and utilities are classes, not `data-*` attributes; see the [component API convention](https://odonckers.github.io/domestic-ui/components/index.md#component-api).
+
 ### Live example
 
-There is no standalone example page for cluster yet. These example pages use it: [Base elements · domestic-ui](https://odonckers.github.io/domestic-ui/examples/base.html), [Theming · domestic-ui](https://odonckers.github.io/domestic-ui/examples/theming.html).
+There is no standalone example page for cluster yet. These example pages use it: [Base elements](https://odonckers.github.io/domestic-ui/examples/base.html), [Theming](https://odonckers.github.io/domestic-ui/examples/theming.html), [Badge](https://odonckers.github.io/domestic-ui/examples/atoms/badge.html), [Buttons](https://odonckers.github.io/domestic-ui/examples/atoms/button.html), [Form controls](https://odonckers.github.io/domestic-ui/examples/atoms/controls.html), [Field](https://odonckers.github.io/domestic-ui/examples/atoms/field.html), [Atoms showcase](https://odonckers.github.io/domestic-ui/examples/atoms/index.html), [Quiet link](https://odonckers.github.io/domestic-ui/examples/atoms/link.html), [Switch](https://odonckers.github.io/domestic-ui/examples/atoms/switch.html), [Text helpers](https://odonckers.github.io/domestic-ui/examples/atoms/text.html).
 
 ### Markup
 
@@ -1236,9 +1863,11 @@ class="grid"
 --grid-gap   gap between cells    (default: var(--dui-space-l))
 ```
 
+Layout primitives and utilities are classes, not `data-*` attributes; see the [component API convention](https://odonckers.github.io/domestic-ui/components/index.md#component-api).
+
 ### Live example
 
-There is no standalone example page for grid yet. These example pages use it: [Base elements · domestic-ui](https://odonckers.github.io/domestic-ui/examples/base.html), [Theming · domestic-ui](https://odonckers.github.io/domestic-ui/examples/theming.html).
+There is no standalone example page for grid yet. These example pages use it: [Base elements](https://odonckers.github.io/domestic-ui/examples/base.html), [Theming](https://odonckers.github.io/domestic-ui/examples/theming.html), [Form controls](https://odonckers.github.io/domestic-ui/examples/atoms/controls.html), [Atoms showcase](https://odonckers.github.io/domestic-ui/examples/atoms/index.html).
 
 ### Markup
 
@@ -1280,9 +1909,11 @@ class="stack"
 --stack-gap   space between children (default: var(--dui-space-m))
 ```
 
+Layout primitives and utilities are classes, not `data-*` attributes; see the [component API convention](https://odonckers.github.io/domestic-ui/components/index.md#component-api).
+
 ### Live example
 
-There is no standalone example page for stack yet. These example pages use it: [Base elements · domestic-ui](https://odonckers.github.io/domestic-ui/examples/base.html), [Theming · domestic-ui](https://odonckers.github.io/domestic-ui/examples/theming.html).
+There is no standalone example page for stack yet. These example pages use it: [Base elements](https://odonckers.github.io/domestic-ui/examples/base.html), [Theming](https://odonckers.github.io/domestic-ui/examples/theming.html), [Field](https://odonckers.github.io/domestic-ui/examples/atoms/field.html), [Switch](https://odonckers.github.io/domestic-ui/examples/atoms/switch.html).
 
 ### Markup
 
@@ -1774,5 +2405,16 @@ Standalone HTML pages that load `css/domestic.css`, nothing else. Open one, or r
 
 ### Pages (`examples/`)
 
-- [Base elements · domestic-ui](https://odonckers.github.io/domestic-ui/examples/base.html) ([source](https://github.com/odonckers/domestic-ui/blob/main/examples/base.html))
-- [Theming · domestic-ui](https://odonckers.github.io/domestic-ui/examples/theming.html) ([source](https://github.com/odonckers/domestic-ui/blob/main/examples/theming.html))
+- [Base elements](https://odonckers.github.io/domestic-ui/examples/base.html) ([source](https://github.com/odonckers/domestic-ui/blob/main/examples/base.html))
+- [Theming](https://odonckers.github.io/domestic-ui/examples/theming.html) ([source](https://github.com/odonckers/domestic-ui/blob/main/examples/theming.html))
+
+### Atoms (`examples/atoms/`)
+
+- [Atoms showcase](https://odonckers.github.io/domestic-ui/examples/atoms/index.html) ([source](https://github.com/odonckers/domestic-ui/blob/main/examples/atoms/index.html))
+- [Badge](https://odonckers.github.io/domestic-ui/examples/atoms/badge.html) ([source](https://github.com/odonckers/domestic-ui/blob/main/examples/atoms/badge.html))
+- [Buttons](https://odonckers.github.io/domestic-ui/examples/atoms/button.html) ([source](https://github.com/odonckers/domestic-ui/blob/main/examples/atoms/button.html))
+- [Form controls](https://odonckers.github.io/domestic-ui/examples/atoms/controls.html) ([source](https://github.com/odonckers/domestic-ui/blob/main/examples/atoms/controls.html))
+- [Field](https://odonckers.github.io/domestic-ui/examples/atoms/field.html) ([source](https://github.com/odonckers/domestic-ui/blob/main/examples/atoms/field.html))
+- [Quiet link](https://odonckers.github.io/domestic-ui/examples/atoms/link.html) ([source](https://github.com/odonckers/domestic-ui/blob/main/examples/atoms/link.html))
+- [Switch](https://odonckers.github.io/domestic-ui/examples/atoms/switch.html) ([source](https://github.com/odonckers/domestic-ui/blob/main/examples/atoms/switch.html))
+- [Text helpers](https://odonckers.github.io/domestic-ui/examples/atoms/text.html) ([source](https://github.com/odonckers/domestic-ui/blob/main/examples/atoms/text.html))

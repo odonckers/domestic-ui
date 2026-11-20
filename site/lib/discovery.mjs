@@ -6,10 +6,10 @@
  * examples/ is enough for it to appear (see site/README.md).
  */
 import { existsSync, readFileSync, readdirSync } from "node:fs";
-import { join } from "node:path";
+import { join, posix } from "node:path";
 import { comments, dedent, headerComment, htmlKeyboard, parseHeader, parseKeyboard, parseLayerOrder, parseTokenGroups, specLabel } from "./css-comments.mjs";
 import { splitSections, tokenize, plainText } from "./markdown.mjs";
-import { byString, readTitle, slugify } from "./util.mjs";
+import { byString, readTitle, slugify, unescapeHtml } from "./util.mjs";
 
 /** Component groups under css/components/, and the milestone each lands in. */
 export const COMPONENT_GROUPS = /** @type {const} */ ([
@@ -38,18 +38,25 @@ export const LAYOUT_EXAMPLE_DIRS = /** @type {const} */ (["examples/layout", "ex
 export const PATTERN_EXAMPLE_DIRS = /** @type {const} */ (["molecules", "organisms", "layouts", "layout", "patterns"]);
 
 /**
- * @typedef {{ name: string, code: string, source: string, from: "snippet" | "main" | "css-comment" }} Snippet
+ * @typedef {{ name: string, code: string, source: string, from: "snippet" | "pre" | "main" | "css-comment" }} Snippet
  * @typedef {{ label: string, url: string }} Spec
  * @typedef {{ key: string, action: string }} Key
  * @typedef {object} Component
  * @property {string} group      atoms | molecules | organisms | layouts | utilities | base
- * @property {string} name       file name without extension
- * @property {string} title
- * @property {string} summary
- * @property {string} cssPath    repo path of the CSS file (first file for base)
+ * @property {string} name       slug: CSS file name, or the example file name for an index row with no CSS file
+ * @property {string} title      front matter, else the index row's name, else from the file name
+ * @property {string} summary    front matter, else the example's meta description, else the header's first sentence
+ * @property {string} subtitle   the header's label line after its colon ("button variants, sizes and states")
+ * @property {string} cssPath    repo path of the CSS file (first file for base; the linked base file for a row with no CSS of its own)
+ * @property {boolean} ownCss    false for an index row such as "Form controls | none: css/base/forms.css"
  * @property {string | null} examplePath repo path of the standalone example page
  * @property {string | null} api API block, as written
  * @property {string[]} apiInline "API: …" one-liners
+ * @property {string | null} indexApi the group README index row's API cell, inline Markdown
+ * @property {string | null} indexPath repo path of that README
+ * @property {{ label: string, text: string }[]} blocks labelled header blocks (States, Sizes, Focus, …)
+ * @property {Key[]} keyboard    the header's Keyboard block
+ * @property {string[]} choices  the group README's Our choices bullets about this component
  * @property {string[]} notes    prose paragraphs after the summary
  * @property {string} a11y       accessibility notes, Markdown
  * @property {boolean} a11yFromOverride
@@ -118,11 +125,18 @@ export function parseFrontMatter(text) {
 }
 
 /**
- * Snippets of an example page, per the snippet convention in site/README.md.
- * Regions between <!-- dui:snippet --> and <!-- /dui:snippet --> (optionally
- * name="…") are used verbatim; otherwise the inner content of <main>. Either
- * way the line break after the opening marker and the indentation before the
- * closing marker are dropped, then the lines are dedented. Never reformatted.
+ * Snippets of an example page, per the snippet convention in site/README.md,
+ * in this order of priority:
+ *
+ * 1. Regions between <!-- dui:snippet --> and <!-- /dui:snippet -->
+ *    (optionally name="…"): the line break after the opening marker and the
+ *    indentation before the closing marker are dropped, then the lines are
+ *    dedented.
+ * 2. Every <pre><code>…</code></pre> inside <main>: the code content,
+ *    HTML-unescaped, named by the nearest <h2> or <h3> before it.
+ * 3. The inner content of <main>, trimmed and dedented like a region.
+ *
+ * Never reformatted.
  * @param {string} html
  * @param {string} source repo path, recorded on each snippet
  * @returns {Snippet[]}
@@ -131,7 +145,21 @@ export function extractSnippets(html, source) {
   const regions = [...html.matchAll(/<!--\s*dui:snippet(?:\s+name="([^"]*)")?\s*-->([\s\S]*?)<!--\s*\/dui:snippet\s*-->/g)];
   if (regions.length) return regions.map((m) => ({ name: m[1] ?? "", code: trimRegion(m[2]), source, from: "snippet" }));
   const main = html.match(/<main\b[^>]*>([\s\S]*)<\/main>/i);
-  return main ? [{ name: "", code: trimRegion(main[1]), source, from: "main" }] : [];
+  if (!main) return [];
+  const blocks = [...main[1].matchAll(/<pre\b[^>]*><code\b[^>]*>([\s\S]*?)<\/code><\/pre>/g)];
+  if (blocks.length) {
+    /** @type {Map<string, number>} */
+    const seen = new Map();
+    return blocks.map((m) => {
+      const headings = [...main[1].slice(0, m.index).matchAll(/<h([23])\b[^>]*>([\s\S]*?)<\/h\1>/g)];
+      const last = headings[headings.length - 1];
+      const base = last ? unescapeHtml(last[2].replace(/<[^>]*>/g, "")).replace(/\s+/g, " ").trim() : "";
+      const n = (seen.get(base) ?? 0) + 1;
+      seen.set(base, n);
+      return { name: n > 1 ? `${base} (${n})` : base, code: unescapeHtml(m[1]), source, from: /** @type {const} */ ("pre") };
+    });
+  }
+  return [{ name: "", code: trimRegion(main[1]), source, from: "main" }];
 }
 
 /** @param {string} region */
@@ -141,6 +169,102 @@ function trimRegion(region) {
   if (lines.length > 1 && !lines[lines.length - 1].trim()) lines.pop();
   return dedent(lines).text;
 }
+
+/** Inline Markdown links: [label](href). */
+const MD_LINK_RE = /\[([^\]]*)\]\(([^()\s]+)\)/g;
+
+/**
+ * Rewrite relative Markdown links in a file under `dir` to repo-root paths.
+ * @param {string} md
+ * @param {string} dir repo path of the file's directory
+ */
+const rootLinks = (md, dir) =>
+  md.replace(MD_LINK_RE, (m, label, href) => (/^(?:[a-z]+:|#)/i.test(href) ? m : `[${label}](${posix.normalize(posix.join(dir, href))})`));
+
+/**
+ * @typedef {object} IndexRow
+ * @property {string} title   the row's name cell, plain text
+ * @property {string | null} cssPath the File cell's link, as a repo path
+ * @property {boolean} ownCss  false when the File cell starts with "none" (a row with no CSS file of its own)
+ * @property {string} api      the API cell, inline Markdown, `\|` unescaped
+ * @property {string | null} examplePath
+ * @property {Spec[]} specs    the Specs cell's links (label is inline Markdown)
+ * @property {string[]} terms  attribute names in the API cell's code spans, for matching Our choices bullets
+ *
+ * @typedef {object} GroupReadme
+ * @property {string} path
+ * @property {IndexRow[]} rows        the index table, in row order
+ * @property {string[]} choices       "Our choices" bullets, inline Markdown with the label kept
+ * @property {string} convention      the bullet about the data-<component> attribute, or ""
+ * @property {string} notShipped      the "Not shipped, and why" table, Markdown, or ""
+ */
+
+/**
+ * Read css/components/<group>/README.md: the index table (columns
+ * Name | File | API | Example | Specs), the "Our choices" bullets and the
+ * "Not shipped, and why" table. Relative links become repo-root paths.
+ * @param {string} md
+ * @param {string} path
+ * @returns {GroupReadme}
+ */
+export function parseGroupReadme(md, path) {
+  const dir = posix.dirname(path);
+  const text = rootLinks(md, dir);
+  const links = (/** @type {string} */ cell) => [...cell.matchAll(MD_LINK_RE)].map((m) => ({ label: m[1], url: m[2] }));
+  /** @type {IndexRow[]} */
+  const rows = [];
+  for (const block of tokenize(text)) {
+    if (block.type !== "table" || block.rows[0][1] !== "File" || block.rows[0][2] !== "API") continue;
+    for (const [name, file, api, example, specs = ""] of block.rows.slice(1)) {
+      const css = links(file)[0]?.url ?? null;
+      const terms = [...api.matchAll(/`([^`]+)`/g)].flatMap((m) => m[1].match(/^([a-z][\w-]*)(?:=|$)/)?.[1] ?? []);
+      rows.push({
+        title: plainText(name),
+        cssPath: css,
+        ownCss: Boolean(css) && !/^none\b/i.test(file),
+        api,
+        examplePath: links(example)[0]?.url ?? null,
+        specs: links(specs).map((s) => ({ label: /^\d/.test(s.label) ? `${specLabel(s.url)} ${s.label}` : s.label, url: s.url })),
+        terms: [...new Set(terms)],
+      });
+    }
+    break;
+  }
+  const { sections } = splitSections(text, 2);
+  const body = (/** @type {RegExp} */ re) => sections.find((s) => re.test(s.heading))?.body ?? "";
+  const list = tokenize(body(/^Our choices$/i)).find((b) => b.type === "list");
+  const all = list?.type === "list" ? list.items.map((i) => i.text.replace(/\s*\n\s*/g, " ")) : [];
+  const convention = all.find((c) => c.includes("`data-<")) ?? "";
+  const table = tokenize(body(/^Not shipped/i)).find((b) => b.type === "table");
+  return { path, rows, choices: all, convention, notShipped: table?.raw ?? "" };
+}
+
+/**
+ * The Our choices bullets about one component: a bullet matches when one of
+ * its code spans uses an attribute from the component's API, or its text
+ * names the component's title (singular or plural). The general convention
+ * bullet is left out; it is shown with the component API convention.
+ * @param {GroupReadme | null} readme
+ * @param {string} title
+ * @param {string[]} terms
+ */
+function choicesFor(readme, title, terms) {
+  if (!readme) return [];
+  const phrase = title.toLowerCase().replace(/s\b/g, "").replace(/[^\w\s-]/g, "");
+  const titleRe = new RegExp(`\\b${phrase.replace(/\s+/g, "\\s+")}s?\\b`, "i");
+  const termRes = terms.map((t) => new RegExp(`(?:^|[\\s<])${t}(?:=|$|[\\s>])`));
+  return readme.choices.filter((c) => {
+    if (c === readme.convention) return false;
+    const codes = [...c.matchAll(/`([^`]+)`/g)].map((m) => m[1]);
+    return codes.some((code) => termRes.some((re) => re.test(code))) || titleRe.test(plainText(c));
+  });
+}
+
+/** The content of <meta name="description">, or "". @param {string} html */
+const metaDescription = (html) => {
+  const m = html.match(/<meta\s+name="description"\s+content="([^"]*)"/i);
+  return m ? unescapeHtml(m[1]).trim() : "";
+};
 
 /** "visually-hidden" → "Visually hidden". @param {string} name */
 const titleFromName = (name) => {
@@ -192,8 +316,16 @@ export function loadModel(root) {
     ...dirs("examples").flatMap((d) => list(`examples/${d}`, ".html").map((f) => ({ path: `examples/${d}/${f}`, group: d }))),
   ].map((e) => {
     const html = read(e.path);
-    return { ...e, html, title: readTitle(html) || e.path };
+    // examples/<group>/index.html is the group's showcase, never a component.
+    const showcase = Boolean(e.group) && e.path.endsWith("/index.html");
+    const title = showcase ? `${groupTitle(e.group)} showcase` : readTitle(html).replace(/\s+·\s+domestic-ui$/, "") || e.path;
+    return { ...e, html, title, showcase };
   });
+
+  // Demo apps: every demos/<name>/ with a README.md, described by its first line.
+  const demos = dirs("demos")
+    .filter((d) => exists(`demos/${d}/README.md`))
+    .map((d) => ({ name: d, path: `demos/${d}/`, description: read(`demos/${d}/README.md`).split("\n")[0].replace(/^#+\s*/, "").trim() }));
 
   // Principles: one section per "## " heading.
   const principlesMd = read("PRINCIPLES.md");
@@ -232,36 +364,54 @@ export function loadModel(root) {
    * @param {string} group
    * @param {string} cssPath
    * @param {string | null} examplePath
+   * @param {{ row: IndexRow, readme: GroupReadme } | null} [indexed] the group README's index row, when it has one
    * @returns {Component}
    */
-  const component = (group, cssPath, examplePath) => {
-    const name = cssPath.replace(/^.*\//, "").replace(/\.css$/, "");
-    const css = read(cssPath);
+  const component = (group, cssPath, examplePath, indexed = null) => {
+    const row = indexed?.row ?? null;
+    const ownCss = row ? row.ownCss : true;
+    const name = (ownCss ? cssPath : (examplePath ?? cssPath)).replace(/^.*\//, "").replace(/\.(?:css|html)$/, "");
+    const css = ownCss ? read(cssPath) : "";
     const doc = parseHeader(headerComment(css), comments(css));
     const over = override(`${group}/${name}`);
+    const exampleHtml = examplePath ? read(examplePath) : "";
     const snippets = examplePath
-      ? extractSnippets(read(examplePath), examplePath)
+      ? extractSnippets(exampleHtml, examplePath)
       : doc.example
         ? [{ name: "", code: doc.example, source: cssPath, from: /** @type {const} */ ("css-comment") }]
         : [];
+    const description = metaDescription(exampleHtml);
+    const summary = str(over?.data.summary) || description || doc.summary;
+    const title = str(over?.data.title) || row?.title || titleFromName(name);
+    // Index specs first, then header URLs the index does not list, labelled by host.
+    const indexSpecs = row?.specs ?? [];
+    const known = new Set(indexSpecs.map((s) => s.url));
+    const headerSpecs = specsFrom(over?.data.specs, doc.urls).filter((s) => !known.has(s.url));
     return {
       group,
       name,
-      title: str(over?.data.title) || titleFromName(name),
-      summary: str(over?.data.summary) || doc.summary,
+      title,
+      summary,
+      subtitle: doc.label.replace(/^[^:]+:\s*/, ""),
       cssPath,
+      ownCss,
       examplePath,
       api: doc.api,
       apiInline: doc.apiInline,
-      notes: [...restOfFirst(doc.prose[0] ?? "", doc.summary), ...doc.prose.slice(1)],
+      indexApi: row?.api ?? null,
+      indexPath: indexed?.readme.path ?? null,
+      blocks: doc.blocks,
+      keyboard: doc.keyboard,
+      notes: description ? doc.prose : [...restOfFirst(doc.prose[0] ?? "", doc.summary), ...doc.prose.slice(1)],
       a11y: over?.body || doc.a11y.join(" "),
       a11yFromOverride: Boolean(over?.body),
-      specs: specsFrom(over?.data.specs, doc.urls),
+      specs: [...indexSpecs, ...headerSpecs],
       snippets,
       usedIn: examplePath ? [] : findUsage(doc.api, examples),
       files: [],
       overridePath: over?.path ?? null,
       ourChoice: str(over?.data["our-choice"]),
+      choices: choicesFor(indexed?.readme ?? null, title, row?.terms ?? []),
       sitePath: group === "layouts" ? `layouts/${name}.html` : `components/${group}/${name}.html`,
     };
   };
@@ -279,15 +429,38 @@ export function loadModel(root) {
   const owned = new Set(patternFiles.flatMap((p) => p.names));
   const unowned = (/** @type {string} */ f) => !owned.has(f.replace(/\.css$/, ""));
 
+  // Components: the group README's index table is the source of truth for
+  // its rows, in row order; CSS files it does not list follow, sorted, so
+  // nothing is dropped silently.
   /** @type {Record<string, Component[]>} */
   const components = {};
+  /** @type {Record<string, GroupReadme | null>} */
+  const readmes = {};
   for (const { group } of COMPONENT_GROUPS) {
-    components[group] = list(`css/components/${group}`, ".css")
+    const dir = `css/components/${group}`;
+    const readme = exists(`${dir}/README.md`) ? parseGroupReadme(read(`${dir}/README.md`), `${dir}/README.md`) : null;
+    readmes[group] = readme;
+    const rows = readme?.rows ?? [];
+    for (const r of rows) {
+      const file = r.ownCss ? r.cssPath : r.examplePath;
+      if (!file || !exists(file)) throw new Error(`${readme?.path}: the "${r.title}" row links ${file ?? "no file"}, which does not exist`);
+    }
+    const fromIndex = rows
+      .map((row) => {
+        const cssPath = /** @type {string} */ (row.cssPath ?? row.examplePath);
+        const examplePath = row.examplePath && exists(row.examplePath) ? row.examplePath : null;
+        return component(group, cssPath, examplePath, { row, readme: /** @type {GroupReadme} */ (readme) });
+      })
+      .filter((c) => !owned.has(c.name));
+    const listed = new Set(rows.filter((r) => r.ownCss).map((r) => r.cssPath));
+    const rest = list(dir, ".css")
       .filter(unowned)
+      .filter((f) => !listed.has(`${dir}/${f}`))
       .map((f) => {
         const example = `examples/${group}/${f.replace(/\.css$/, ".html")}`;
-        return component(group, `css/components/${group}/${f}`, exists(example) ? example : null);
+        return component(group, `${dir}/${f}`, exists(example) ? example : null);
       });
+    components[group] = [...fromIndex, ...rest];
   }
 
   /** @type {Map<string, string>} name → CSS path, first directory wins */
@@ -395,10 +568,17 @@ export function loadModel(root) {
     name: "base",
     title: str(baseOver?.data.title) || "Base elements",
     summary: str(baseOver?.data.summary) || "Native HTML elements styled by the base layer.",
+    subtitle: "",
     cssPath: "css/base/",
+    ownCss: true,
     examplePath: baseExample,
     api: null,
     apiInline: [...new Set(baseFiles.flatMap((f) => f.doc.apiInline))],
+    indexApi: null,
+    indexPath: null,
+    blocks: [],
+    keyboard: [],
+    choices: [],
     notes: [],
     a11y: baseOver?.body || baseFiles.flatMap((f) => f.doc.a11y).join(" "),
     a11yFromOverride: Boolean(baseOver?.body),
@@ -426,9 +606,14 @@ export function loadModel(root) {
     base,
     patterns,
     guides,
-    examples: examples.map(({ path, group, title }) => ({ path, group, title })),
+    readmes,
+    demos,
+    examples: examples.map(({ path, group, title, showcase }) => ({ path, group, title, showcase })),
   };
 }
+
+/** "atoms" → "Atoms", from COMPONENT_GROUPS where listed. @param {string} group */
+const groupTitle = (group) => COMPONENT_GROUPS.find((g) => g.group === group)?.title ?? titleFromName(group);
 
 /** @param {unknown} v */
 const str = (v) => (typeof v === "string" ? v : "");

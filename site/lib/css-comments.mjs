@@ -20,6 +20,11 @@
  *   Keyboard                        indented block = keyboard notes
  *     Tab: moves focus into the widget
  *
+ *   States                          any other one-word heading over an
+ *     disabled   Native. …          indented block, or a paragraph that
+ *                                   opens with "Word: ", is a labelled
+ *   Sizes: default is 44px tall.    block, kept verbatim without its label
+ *
  *   https://…                       every URL = a spec link
  */
 import { firstSentence } from "./util.mjs";
@@ -33,6 +38,7 @@ import { firstSentence } from "./util.mjs";
  * @property {string[]} apiInline "API: …" one-liners found in any comment
  * @property {string | null} example dedented Example block
  * @property {{ key: string, action: string }[]} keyboard lines of the Keyboard block
+ * @property {{ label: string, text: string }[]} blocks other labelled blocks (States, Sizes, Focus, …), verbatim
  * @property {string[]} urls      every URL, in order, without duplicates
  * @property {string[]} a11y      prose sentences about accessibility
  */
@@ -40,6 +46,9 @@ import { firstSentence } from "./util.mjs";
 const URL_RE = /https?:\/\/[^\s<>"'`]+/g;
 const A11Y_RE = /\b(?:WCAG|ARIA|APG|focus\w*|contrast|accessib\w*|screen reader\w*|forced[- ]colors|reduced motion)\b/i;
 const LABEL_RE = /^[A-Z][\w-]*(?: [\w-]+)?: \S.*$/;
+/** A labelled block: "States" alone over indented lines, or a paragraph opening with "Sizes: ". */
+const BLOCK_HEAD_RE = /^([A-Z][a-z]+):?$/;
+const BLOCK_INLINE_RE = /^([A-Z][a-z]+): (\S.*)$/;
 
 /** All comments in a CSS file, with the leading " * " decoration removed. @param {string} css */
 export function comments(css) {
@@ -98,12 +107,18 @@ export function parseHeader(text, others = []) {
   let example = null;
   /** @type {{ key: string, action: string }[]} */
   let keyboard = [];
+  /** @type {{ label: string, text: string }[]} */
+  const blocks = [];
   const prose = [];
   for (const lines of paragraphs) {
     const head = lines[0].trim();
+    const block = head.match(BLOCK_HEAD_RE);
+    const inlineBlock = lines[0].match(BLOCK_INLINE_RE);
     if (/^API:?$/.test(head)) api = dedent(lines.slice(1)).text;
     else if (/^Examples?:?$/.test(head)) example = dedent(lines.slice(1)).text;
     else if (/^Keyboard:?$/.test(head)) keyboard = parseKeyboard(lines.slice(1));
+    else if (block && lines.length > 1 && lines.slice(1).every((l) => !l.trim() || /^\s/.test(l))) blocks.push({ label: block[1], text: dedent(lines.slice(1)).text });
+    else if (inlineBlock && lines[0] !== label) blocks.push({ label: inlineBlock[1], text: [inlineBlock[2], ...lines.slice(1)].join("\n") });
     else if (!/^API:\s/.test(head) && !(label && lines.length === 1 && lines[0] === label)) prose.push(lines.map((l) => l.trim()).join(" "));
   }
   const apiInline = [text, ...others].flatMap((c) => [...c.matchAll(/^\s*API:\s+(.+)$/gm)].map((m) => m[1].trim()));
@@ -116,6 +131,7 @@ export function parseHeader(text, others = []) {
     apiInline,
     example,
     keyboard,
+    blocks,
     urls: findUrls(text),
     a11y,
   };

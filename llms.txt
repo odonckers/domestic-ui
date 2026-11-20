@@ -2,7 +2,7 @@
 
 > domestic-ui is a design system built on native HTML, CSS custom properties and cascade layers. Link one stylesheet and plain semantic HTML gets its look in light and dark, with WCAG 2.2 AA as the accessibility baseline; theme it by overriding semantic tokens. It packages existing web standards and well-known patterns: nothing here is original.
 
-To use it, link `css/domestic.css` (copy the `css/` folder or clone https://github.com/odonckers/domestic-ui). Plain semantic HTML then gets the full look with no classes. Each layout primitive, utility and component has one documented class or attribute API, tuned with custom properties, never with modifier classes. Theme only by overriding semantic `--dui-*` tokens; primitive tokens are internal and may change.
+To use it, link `css/domestic.css` (copy the `css/` folder or clone https://github.com/odonckers/domestic-ui). Plain semantic HTML then gets the full look with no classes. Each component exposes one `data-<component>` attribute whose value is space-separated words matched with `~=`, such as `data-button="primary small"`, never classes; state is carried by native attributes and ARIA (`disabled`, `aria-disabled`, `aria-busy`, `aria-invalid`). Layout primitives and utilities are classes (`.cluster`, `.grid`, `.stack`, `.visually-hidden`), tuned with custom properties. Theme only by overriding semantic `--dui-*` tokens; primitive tokens are internal and may change.
 
 ## Principles
 
@@ -21,21 +21,32 @@ To use it, link `css/domestic.css` (copy the `css/` folder or clone https://gith
 - [Tokens](https://odonckers.github.io/domestic-ui/tokens/index.md): The two tiers of domestic-ui design tokens and the groups of public semantic tokens.
 - [Surfaces and text tokens](https://odonckers.github.io/domestic-ui/tokens/surfaces-and-text.md): Semantic surfaces and text tokens and their values (5).
 - [Borders tokens](https://odonckers.github.io/domestic-ui/tokens/borders.md): Semantic borders tokens and their values (2).
-- [Accent and status tokens](https://odonckers.github.io/domestic-ui/tokens/accent-and-status.md): Semantic accent and status tokens and their values (9).
+- [Accent and status tokens](https://odonckers.github.io/domestic-ui/tokens/accent-and-status.md): Semantic accent and status tokens and their values (10).
 - [Type tokens](https://odonckers.github.io/domestic-ui/tokens/type.md): Semantic type tokens and their values (18).
 - [Space tokens](https://odonckers.github.io/domestic-ui/tokens/space.md): Semantic space tokens and their values (9).
-- [Sizes tokens](https://odonckers.github.io/domestic-ui/tokens/sizes.md): Semantic sizes tokens and their values (3).
+- [Sizes tokens](https://odonckers.github.io/domestic-ui/tokens/sizes.md): Semantic sizes tokens and their values (5).
 - [Shape tokens](https://odonckers.github.io/domestic-ui/tokens/shape.md): Semantic shape tokens and their values (8).
 - [Focus indicator tokens](https://odonckers.github.io/domestic-ui/tokens/focus-indicator.md): Semantic focus indicator tokens and their values (2).
 - [Motion tokens](https://odonckers.github.io/domestic-ui/tokens/motion.md): Semantic motion tokens and their values (3).
-- [State tokens](https://odonckers.github.io/domestic-ui/tokens/state.md): Semantic state tokens and their values (1).
+- [State tokens](https://odonckers.github.io/domestic-ui/tokens/state.md): Semantic state tokens and their values (3).
 - [Dependent tokens](https://odonckers.github.io/domestic-ui/tokens/dependent-tokens.md): Semantic dependent tokens and their values (5).
+- [Tinted surfaces for status badges tokens](https://odonckers.github.io/domestic-ui/tokens/tinted-surfaces-for-status-badges.md): Semantic tinted surfaces for status badges tokens and their values (4).
 
 ## Components
 
 - [Components](https://odonckers.github.io/domestic-ui/components/index.md): Everything in domestic-ui by level: tokens, atoms, molecules, organisms and layouts, plus utilities.
+- [Atoms](https://odonckers.github.io/domestic-ui/atoms/index.md): Every atom in domestic-ui.
 - [Base elements](https://odonckers.github.io/domestic-ui/components/base.md): Native HTML elements styled by the base layer, with no classes.
+- [Text helpers](https://odonckers.github.io/domestic-ui/components/atoms/text.md): Lead, small and muted text helpers from domestic-ui, with copyable markup.
+- [Quiet link](https://odonckers.github.io/domestic-ui/components/atoms/link.md): A link that takes the surrounding text color and keeps its underline, for dense UI.
+- [Buttons](https://odonckers.github.io/domestic-ui/components/atoms/button.md): Button variants, sizes, link buttons and honest disabled and loading states.
+- [Form controls](https://odonckers.github.io/domestic-ui/components/atoms/controls.md): Native form controls as styled by the domestic-ui base layer, with copyable markup.
+- [Switch](https://odonckers.github.io/domestic-ui/components/atoms/switch.md): An on/off switch built on a native checkbox with role switch, following the APG Switch pattern.
+- [Field](https://odonckers.github.io/domestic-ui/components/atoms/field.md): Label, control, hint and error message wired with aria-describedby and aria-invalid.
+- [Badge](https://odonckers.github.io/domestic-ui/components/atoms/badge.md): Inline status labels with tone variants that meet WCAG AA contrast.
 - [Visually hidden](https://odonckers.github.io/domestic-ui/components/utilities/visually-hidden.md): Hides content visually but keeps it in the accessibility tree.
+- [Molecules](https://odonckers.github.io/domestic-ui/molecules/index.md): Every molecule in domestic-ui, with the patterns planned at this level.
+- [Organisms](https://odonckers.github.io/domestic-ui/organisms/index.md): Every organism in domestic-ui, with the patterns planned at this level.
 
 ## Layouts
 
@@ -77,8 +88,16 @@ To use it, link `css/domestic.css` (copy the `css/` folder or clone https://gith
 ## Examples
 
 - [Examples](https://odonckers.github.io/domestic-ui/examples.md): Standalone example pages that load the real domestic-ui CSS.
-- [Base elements · domestic-ui](https://odonckers.github.io/domestic-ui/examples/base.html): live example page (HTML)
-- [Theming · domestic-ui](https://odonckers.github.io/domestic-ui/examples/theming.html): live example page (HTML)
+- [Base elements](https://odonckers.github.io/domestic-ui/examples/base.html): live example page (HTML)
+- [Theming](https://odonckers.github.io/domestic-ui/examples/theming.html): live example page (HTML)
+- [Badge](https://odonckers.github.io/domestic-ui/examples/atoms/badge.html): live example page (HTML)
+- [Buttons](https://odonckers.github.io/domestic-ui/examples/atoms/button.html): live example page (HTML)
+- [Form controls](https://odonckers.github.io/domestic-ui/examples/atoms/controls.html): live example page (HTML)
+- [Field](https://odonckers.github.io/domestic-ui/examples/atoms/field.html): live example page (HTML)
+- [Atoms showcase](https://odonckers.github.io/domestic-ui/examples/atoms/index.html): live example page (HTML)
+- [Quiet link](https://odonckers.github.io/domestic-ui/examples/atoms/link.html): live example page (HTML)
+- [Switch](https://odonckers.github.io/domestic-ui/examples/atoms/switch.html): live example page (HTML)
+- [Text helpers](https://odonckers.github.io/domestic-ui/examples/atoms/text.html): live example page (HTML)
 
 ## Optional
 

@@ -6,7 +6,7 @@
  */
 import { COMPONENT_GROUPS } from "./discovery.mjs";
 import { shiftHeadings, tokenize } from "./markdown.mjs";
-import { apiSummary, followsMd, installMd, layersMd, patternStatus, rewriteRepoLinks, sortedPatterns, themingMd } from "./pages.mjs";
+import { apiSummary, conventionMd, conventionShortMd, demoListMd, followsMd, installMd, layersMd, patternStatus, rewriteRepoLinks, sortedPatterns, themingMd } from "./pages.mjs";
 import { resolveSiteLinks, renderMarkdown } from "./templates.mjs";
 import { BLOB_URL, RAW_URL, REPO_URL, SITE_URL, escapeMdCell, mdCode } from "./util.mjs";
 
@@ -40,8 +40,9 @@ export function generateReadme(model) {
     .map((s, i) => `### ${i + 1}. [${s.title}](site:${s.sitePath})\n\n${rewriteRepoLinks(principleSummary(s.body), model)}`)
     .join("\n\n");
 
+  // The API column is the group README's index cell where there is one, else the first word of each API line.
   const row = (/** @type {string} */ group, /** @type {import("./discovery.mjs").Component} */ c) => {
-    const api = apiSummary(c).map(mdCode);
+    const api = c.indexApi ? [c.indexApi] : apiSummary(c).map(mdCode);
     if (c.group === "base") api.unshift("none: semantic HTML");
     return `| ${group} | ${escapeMdCell(c.title)} | ${escapeMdCell(api.join(", ") || "not documented yet")} | [${c.title}](site:${c.sitePath}) |`;
   };
@@ -95,6 +96,8 @@ ${themingMd(model)}
 
 ## Components
 
+${conventionMd(model)}
+
 By level ([Components](site:components/index.html), [Layouts](site:layouts/index.html)):
 
 | Level | Name | API | Docs |
@@ -121,7 +124,7 @@ ${tokens}
 
 ## Demos
 
-Demo projects in plain HTML/CSS/JS, Angular, React and Astro are planned; links will appear here.
+${demoListMd(model)}
 
 ## Contributing
 
@@ -141,7 +144,7 @@ function llmsHeader(model) {
 
 > ${summary}
 
-To use it, link \`css/domestic.css\` (copy the \`css/\` folder or clone ${REPO_URL}). Plain semantic HTML then gets the full look with no classes. Each layout primitive, utility and component has one documented class or attribute API, tuned with custom properties, never with modifier classes. Theme only by overriding semantic \`--dui-*\` tokens; primitive tokens are internal and may change.`;
+To use it, link \`css/domestic.css\` (copy the \`css/\` folder or clone ${REPO_URL}). Plain semantic HTML then gets the full look with no classes. ${conventionShortMd(model)} Theme only by overriding semantic \`--dui-*\` tokens; primitive tokens are internal and may change.`;
 }
 
 /**
@@ -169,7 +172,7 @@ ${section("tokens").join("\n")}
 
 ## Components
 
-${section("components").join("\n")}
+${[...section("components"), ...section("atoms"), ...section("molecules"), ...section("organisms")].join("\n")}
 
 ## Layouts
 
@@ -206,7 +209,9 @@ export function generateLlmsFull(model, pages, twins) {
   const body = pages.map((p) => {
     const md = renderMarkdown(p, twins).trimEnd();
     const [first, ...rest] = shiftHeadings(md, 1).split("\n");
-    return [first, "", `Page: ${SITE_URL}${p.path}`, ...rest].join("\n");
+    const page = [first, "", `Page: ${SITE_URL}${p.path}`, ...rest].join("\n");
+    // The component API convention, once, before the components.
+    return p.path === "components/index.html" ? `## Component API\n\n${resolveSiteLinks(conventionMd(model), twins)}\n\n${page}` : page;
   });
   return `${llmsHeader(model)}\n\n${body.join("\n\n")}\n`;
 }

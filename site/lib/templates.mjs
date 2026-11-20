@@ -14,7 +14,7 @@
  * - Visible focus, color-scheme and forced colors come from the base CSS.
  */
 import { markdownToHtml, uniqueId } from "./markdown.mjs";
-import { SECTIONS } from "./pages.mjs";
+import { COMPONENTS_INDEX, LEVEL_SECTIONS, SECTIONS } from "./pages.mjs";
 import { REPO_URL, SITE_URL, BLOB_URL, escapeHtml, relativeUrl } from "./util.mjs";
 
 /** @typedef {import("./pages.mjs").Page} Page */
@@ -38,10 +38,24 @@ export function renderHtml(page, pages) {
     return `          <li><a href="${link(path)}"${current}>${escapeHtml(title)}</a></li>`;
   }).join("\n");
 
-  const siblings = page.section === "home" || page.section === "examples" ? [] : pages.filter((p) => p.section === page.section);
-  const sectionTitle = SECTIONS.find((s) => s.section === page.section)?.title ?? "";
+  // Level sections start with a link to the overview of every level; the
+  // overview's own section nav lists the level pages.
+  const overview = pages.find((p) => p.path === COMPONENTS_INDEX);
+  const isLevel = /** @type {readonly string[]} */ (LEVEL_SECTIONS).includes(page.section);
+  const siblings =
+    page.section === "home" || page.section === "examples"
+      ? []
+      : page.section === "components"
+        ? [page, ...LEVEL_SECTIONS.flatMap((s) => pages.filter((p) => p.section === s && p.path.endsWith("/index.html")))]
+        : [...(isLevel && overview ? [overview] : []), ...pages.filter((p) => p.section === page.section)];
+  const sectionTitle = page.section === "components" ? "Components" : (SECTIONS.find((s) => s.section === page.section)?.title ?? "");
+  const label = (/** @type {Page} */ p) => {
+    if (p.path === COMPONENTS_INDEX) return "All levels";
+    if (page.section === "components") return p.title;
+    return p.path.endsWith("index.html") ? `All ${sectionTitle.toLowerCase()}` : p.title;
+  };
   const item = (/** @type {Page} */ p, /** @type {string} */ indent) =>
-    `${indent}<li><a href="${link(p.path)}"${p.path === page.path ? ' aria-current="page"' : ""}>${escapeHtml(p.path.endsWith("index.html") ? `All ${sectionTitle.toLowerCase()}` : p.title)}</a></li>`;
+    `${indent}<li><a href="${link(p.path)}"${p.path === page.path ? ' aria-current="page"' : ""}>${escapeHtml(label(p))}</a></li>`;
   // Pages with a `group` are listed under that label as a nested list, in page order.
   /** @type {string[]} */
   const items = [];

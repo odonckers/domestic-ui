@@ -5,7 +5,7 @@
 domestic-ui is a design system built on native HTML, CSS custom properties and cascade layers. Link one stylesheet and plain semantic HTML gets its look in light and dark, with WCAG 2.2 AA as the accessibility baseline; theme it by overriding semantic tokens. It packages existing web standards and well-known patterns: nothing here is original.
 
 - Docs: <https://odonckers.github.io/domestic-ui/>
-- Live examples: [Base elements · domestic-ui](https://odonckers.github.io/domestic-ui/examples/base.html), [Theming · domestic-ui](https://odonckers.github.io/domestic-ui/examples/theming.html)
+- Live examples: [Base elements](https://odonckers.github.io/domestic-ui/examples/base.html), [Theming](https://odonckers.github.io/domestic-ui/examples/theming.html), [Badge](https://odonckers.github.io/domestic-ui/examples/atoms/badge.html), [Buttons](https://odonckers.github.io/domestic-ui/examples/atoms/button.html), [Form controls](https://odonckers.github.io/domestic-ui/examples/atoms/controls.html), [Field](https://odonckers.github.io/domestic-ui/examples/atoms/field.html), [Atoms showcase](https://odonckers.github.io/domestic-ui/examples/atoms/index.html), [Quiet link](https://odonckers.github.io/domestic-ui/examples/atoms/link.html), [Switch](https://odonckers.github.io/domestic-ui/examples/atoms/switch.html), [Text helpers](https://odonckers.github.io/domestic-ui/examples/atoms/text.html)
 - For coding agents: [llms.txt](https://odonckers.github.io/domestic-ui/llms.txt) and [llms-full.txt](https://odonckers.github.io/domestic-ui/llms-full.txt)
 
 ## Principles
@@ -90,7 +90,7 @@ Each of these is a choice between valid options, not a standard.
 | `lint:html` | [html-validate](https://html-validate.org/) | `examples/**/*.html` against `html-validate:recommended` |
 | `lint:css` | [Stylelint](https://stylelint.io/) | `css/**/*.css` against `stylelint-config-standard` |
 | `lint:tokens` | `scripts/check-tokens.mjs` | Semantic-only tokens and no literal colors or sizes outside `css/tokens/` |
-| `test:a11y` | [Playwright](https://playwright.dev/) + [axe-core](https://github.com/dequelabs/axe-core) | Every `examples/*.html` in light and dark with tags `wcag2a`, `wcag2aa`, `wcag21a`, `wcag21aa`, `wcag22aa`, including open dialogs and details; no external requests; token contrast pairs; scoped theming |
+| `test:a11y` | [Playwright](https://playwright.dev/) + [axe-core](https://github.com/dequelabs/axe-core) | Every `examples/**/*.html` (atoms included) in light and dark, in Chromium, Firefox and WebKit, with tags `wcag2a`, `wcag2aa`, `wcag21a`, `wcag21aa`, `wcag22aa`, including open dialogs and details; no external requests; token contrast pairs (atoms included) in the default and forest themes; rendered focus-ring contrast on every button variant; atom states through accessibility APIs; scoped theming of atoms |
 
 ## Install and use
 
@@ -123,12 +123,24 @@ Force a color scheme on the page or any subtree with `data-color-scheme="light"`
 
 ## Components
 
+Each component exposes one `data-<component>` attribute. Its value is a list of space-separated words matched with the [`~=` attribute selector](https://developer.mozilla.org/en-US/docs/Web/CSS/Attribute_selectors), like [`rel`](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Attributes/rel): `data-button="primary small"`. Component APIs use no classes. State is carried by native attributes and ARIA: `disabled`, `aria-disabled`, `aria-busy`, `aria-invalid`.
+
+**Our choice:** One attribute is one API to learn, it reads as a sentence (`data-button="primary small"`), and it cannot pile up like modifier classes.
+
+Layout primitives and utilities from M1 are classes: `.cluster`, `.grid`, `.stack`, `.visually-hidden`. Base elements need no API: write semantic HTML.
+
 By level ([Components](https://odonckers.github.io/domestic-ui/components/index.html), [Layouts](https://odonckers.github.io/domestic-ui/layouts/index.html)):
 
 | Level | Name | API | Docs |
 | --- | --- | --- | --- |
 | Atoms | Base elements | none: semantic HTML, `data-color-scheme="light" \| "dark"` | [Base elements](https://odonckers.github.io/domestic-ui/components/base.html) |
-| Atoms | Coming in M2 | | [components README](https://github.com/odonckers/domestic-ui/blob/main/css/components/README.md) |
+| Atoms | Text helpers | `data-text="lead \| small \| muted"` (combinable) | [Text helpers](https://odonckers.github.io/domestic-ui/components/atoms/text.html) |
+| Atoms | Quiet link | `data-link="quiet"` on `<a href>` | [Quiet link](https://odonckers.github.io/domestic-ui/components/atoms/link.html) |
+| Atoms | Buttons | `data-button="[primary \| secondary \| quiet] [small \| large]"` on `<button>`, `<input type=submit\|button\|reset>`, `<a href>`; states `disabled`, `aria-disabled="true"`, `aria-busy="true"` | [Buttons](https://odonckers.github.io/domestic-ui/components/atoms/button.html) |
+| Atoms | Form controls | No API; native elements | [Form controls](https://odonckers.github.io/domestic-ui/components/atoms/controls.html) |
+| Atoms | Switch | `role="switch"` on `<input type="checkbox">` | [Switch](https://odonckers.github.io/domestic-ui/components/atoms/switch.html) |
+| Atoms | Field | `data-field` on the wrapper, `data-field="hint"` and `data-field="error"` on the messages | [Field](https://odonckers.github.io/domestic-ui/components/atoms/field.html) |
+| Atoms | Badge | `data-badge="neutral \| accent \| success \| warning \| danger"` | [Badge](https://odonckers.github.io/domestic-ui/components/atoms/badge.html) |
 | Molecules | Coming in M3 | | [components README](https://github.com/odonckers/domestic-ui/blob/main/css/components/README.md) |
 | Organisms | Coming in M3b | | [components README](https://github.com/odonckers/domestic-ui/blob/main/css/components/README.md) |
 | Layouts | Cluster | `class="cluster"`, `--cluster-gap`, `--cluster-justify`, `--cluster-align` | [Cluster](https://odonckers.github.io/domestic-ui/layouts/cluster.html) |
@@ -174,19 +186,24 @@ Semantic tokens are the public theming API, in these groups ([Tokens](https://od
 
 - [Surfaces and text](https://odonckers.github.io/domestic-ui/tokens/surfaces-and-text.html): `--dui-color-surface`, `--dui-color-surface-raised`, `--dui-color-surface-sunken`, `--dui-color-text`, `--dui-color-text-muted`
 - [Borders](https://odonckers.github.io/domestic-ui/tokens/borders.html): `--dui-color-border`, `--dui-color-border-control`
-- [Accent and status](https://odonckers.github.io/domestic-ui/tokens/accent-and-status.html): `--dui-color-accent`, `--dui-color-accent-contrast`, `--dui-color-link-visited`, `--dui-color-danger`, `--dui-color-success`, `--dui-color-mark`, `--dui-color-mark-text`, `--dui-color-backdrop`, `--dui-color-shadow`
+- [Accent and status](https://odonckers.github.io/domestic-ui/tokens/accent-and-status.html): `--dui-color-accent`, `--dui-color-accent-contrast`, `--dui-color-link-visited`, `--dui-color-danger`, `--dui-color-success`, `--dui-color-warning`, `--dui-color-mark`, `--dui-color-mark-text`, `--dui-color-backdrop`, `--dui-color-shadow`
 - [Type](https://odonckers.github.io/domestic-ui/tokens/type.html): `--dui-font-body`, `--dui-font-mono`, `--dui-font-weight-body`, `--dui-font-weight-strong`, `--dui-font-weight-heading`, `--dui-step--1`, `--dui-step-0`, `--dui-step-1`, `--dui-step-2`, `--dui-step-3`, `--dui-step-4`, `--dui-step-5`, `--dui-font-size-code`, `--dui-line-height-body`, `--dui-line-height-heading`, `--dui-line-height-display`, `--dui-letter-spacing-heading`, `--dui-measure`
 - [Space](https://odonckers.github.io/domestic-ui/tokens/space.html): `--dui-space-3xs`, `--dui-space-2xs`, `--dui-space-xs`, `--dui-space-s`, `--dui-space-m`, `--dui-space-l`, `--dui-space-xl`, `--dui-space-2xl`, `--dui-space-3xl`
-- [Sizes](https://odonckers.github.io/domestic-ui/tokens/sizes.html): `--dui-size-target`, `--dui-size-check`, `--dui-size-column-min`
+- [Sizes](https://odonckers.github.io/domestic-ui/tokens/sizes.html): `--dui-size-target`, `--dui-size-target-small`, `--dui-size-target-large`, `--dui-size-check`, `--dui-size-column-min`
 - [Shape](https://odonckers.github.io/domestic-ui/tokens/shape.html): `--dui-radius-control`, `--dui-radius-surface`, `--dui-radius-pill`, `--dui-border-width`, `--dui-border-width-emphasis`, `--dui-underline-offset`, `--dui-underline-thickness`, `--dui-underline-thickness-hover`
 - [Focus indicator](https://odonckers.github.io/domestic-ui/tokens/focus-indicator.html): `--dui-focus-width`, `--dui-focus-offset`
 - [Motion](https://odonckers.github.io/domestic-ui/tokens/motion.html): `--dui-duration-fast`, `--dui-duration-normal`, `--dui-easing-standard`
-- [State](https://odonckers.github.io/domestic-ui/tokens/state.html): `--dui-opacity-disabled`
+- [State](https://odonckers.github.io/domestic-ui/tokens/state.html): `--dui-opacity-disabled`, `--dui-tint-amount`, `--dui-border-tint-amount`
 - [Dependent tokens](https://odonckers.github.io/domestic-ui/tokens/dependent-tokens.html): `--dui-color-link`, `--dui-color-focus`, `--dui-color-accent-hover`, `--dui-font-heading`, `--dui-shadow-raised`
+- [Tinted surfaces for status badges](https://odonckers.github.io/domestic-ui/tokens/tinted-surfaces-for-status-badges.html): `--dui-color-accent-surface`, `--dui-color-success-surface`, `--dui-color-warning-surface`, `--dui-color-danger-surface`
 
 ## Demos
 
-Demo projects in plain HTML/CSS/JS, Angular, React and Astro are planned; links will appear here.
+- [`demos/a11y/`](https://github.com/odonckers/domestic-ui/tree/main/demos/a11y): domestic-ui demos: accessibility checker
+- [`demos/angular/`](https://github.com/odonckers/domestic-ui/tree/main/demos/angular): domestic-ui demo: Angular
+- [`demos/astro/`](https://github.com/odonckers/domestic-ui/tree/main/demos/astro): domestic-ui demo: Astro
+- [`demos/react/`](https://github.com/odonckers/domestic-ui/tree/main/demos/react): domestic-ui demo: React
+- [`demos/vanilla/`](https://github.com/odonckers/domestic-ui/tree/main/demos/vanilla): domestic-ui demo: plain HTML
 
 ## Contributing
 

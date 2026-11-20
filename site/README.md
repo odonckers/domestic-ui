@@ -49,15 +49,32 @@ compare bytes.
 | `css/base/*.css` and `examples/base.html` | `components/base.html` (an atom) |
 | `css/layout/<name>.css`, `css/layouts/<name>.css` or `css/components/layouts/<name>.css`, with `examples/layout/<name>.html` or `examples/layouts/<name>.html` | `layouts/<name>.html` |
 | `css/utilities/<name>.css` | `components/utilities/<name>.html` |
-| `css/components/<group>/<name>.css` and `examples/<group>/<name>.html` | `components/<group>/<name>.html`, for `atoms`, `molecules`, `organisms` |
+| `css/components/<group>/README.md`, each row of its index table | `components/<group>/<name>.html`, for `atoms`, `molecules`, `organisms` (see [Group README](#group-readme)) |
+| `css/components/<group>/<name>.css` not in that table, and `examples/<group>/<name>.html` | `components/<group>/<name>.html`, after the table's rows |
+| `css/components/<group>/README.md`, "Our choices" and "Not shipped, and why" | `<group>/index.html` and `components/index.html` |
 | `site/content/patterns/<slug>.md`, filled in by matching example and CSS files | `patterns/<slug>.html`, listed on `patterns/index.html` |
 | `site/content/guides/<slug>.md` | `guides/<slug>.html`, listed on `guides/index.html` |
-| `examples/*.html`, `examples/*/*.html` | Listed on `examples.html` by their `<title>` |
+| `examples/*.html`, `examples/*/*.html` | Listed on `examples.html` by their `<title>`; `examples/<group>/index.html` as "<Group> showcase" |
+| `demos/<name>/README.md` | A link to `demos/<name>` on GitHub on `index.html` and in `README.md`, described by the README's first line. Demos are not copied into `_site/`. |
 
-The docs are organized by level: Tokens, Atoms, Molecules, Organisms and Layouts, plus Utilities.
-`components/index.html` lists every level, including planned patterns at their level with their
-status; `layouts/index.html` lists the Layouts level. In the Components section nav, pages are
-grouped under Atoms, Molecules, Organisms and Utilities.
+The docs are organized by level. The Docs nav reads Overview, Principles, Tokens, Atoms, Molecules,
+Organisms, Layouts, Patterns, Guides, Examples, and wraps as a cluster on narrow screens. Each level
+has an index page (`atoms/index.html`, `molecules/index.html`, `organisms/index.html`,
+`layouts/index.html`); base elements and utilities are under Atoms, utilities as their own group in
+the section nav. `components/index.html` is the overview of every level, with the component API
+convention, planned patterns at their level with their status, and each group's Our choices and Not
+shipped table. Every level's section nav links it as "All levels", and its own section nav lists
+the level pages.
+
+## Component API convention
+
+Each component exposes one `data-<component>` attribute whose value is space-separated words
+matched with `~=` (like `rel`), for example `data-button="primary small"`. Component APIs use no
+classes; state is carried by native attributes and ARIA (`disabled`, `aria-disabled`, `aria-busy`,
+`aria-invalid`). Layout primitives and utilities from M1 are classes (`.stack`, `.cluster`, `.grid`,
+`.visually-hidden`). The build states this on `components/index.html` (with the **Our choice:** why,
+taken from the group README's bullet about `data-<…>`), next to the API on each component
+page, in `README.md` and in `llms.txt` and `llms-full.txt`.
 
 Layout directories are all read, in the order above; when two hold a file of the same name, the
 first wins. Missing directories are skipped.
@@ -69,12 +86,34 @@ otherwise.
 
 ## Adding a component (M2, M3)
 
-No site change is needed. Add the two files below and run `node site/build.mjs`:
+No site change is needed. Add the files below and run `node site/build.mjs`:
 
 - `css/components/<group>/<name>.css`, with `<group>` one of `atoms`, `molecules`, `organisms`.
 - `examples/<group>/<name>.html`, a standalone valid page, joined to the CSS by file name. Optional:
   without it the page says there is no example yet. `examples/<group>/index.html` is a showcase,
-  not a component; it is listed on `examples.html` only.
+  not a component; it is listed on `examples.html` only, as "<Group> showcase".
+- A row in the index table of `css/components/<group>/README.md`, if the group has one. A CSS file
+  missing from the table still gets a page (from its header comment alone), so nothing is dropped.
+
+### Group README
+
+When `css/components/<group>/README.md` has a table whose second and third columns are `File` and
+`API`, it is the source of truth for that group: one page per row, in row order.
+
+| Column | Used as |
+| --- | --- |
+| 1, name | The page title ("Buttons"). |
+| `File` | The CSS file, a link relative to the README. A cell starting with `none`, such as ``none: [`css/base/forms.css`](../../base/forms.css)``, means the row has no CSS file of its own: it still gets a page, named after its example file, and the linked file is shown as its source. |
+| `API` | Shown as written (inline Markdown, `\|` unescaped) above the header's `API` block, and in the `README.md` index's API column. Its attribute names (`data-button`, `aria-disabled`, `role`) select the Our choices bullets for the page. |
+| `Example` | The example page: live example and copy-paste markup. |
+| `Specs` | Spec links, before any header-comment URL they do not repeat. A label that is only a number ("3.3.2") gets its host label ("WCAG 3.3.2"). |
+
+The "Our choices" bullets appear, labels intact, on `<group>/index.html` and `components/index.html`.
+A bullet also appears on a component page under "Our choice" when one of its code spans uses an
+attribute from the row's API cell, or its text names the row's title (singular or plural). The
+bullet about `data-<…>` is the convention itself and is shown with the component API convention
+instead. The "Not shipped, and why" table appears as a table on both index pages. A row whose file
+does not exist fails the build.
 
 If the name matches a registered pattern (see [Patterns](#patterns)), the files fill in that
 pattern page instead. The "coming in …" note for a group disappears from `components/index.html`
@@ -110,11 +149,13 @@ The parser reads the comment that opens the CSS file:
 
 | Field | Rule |
 | --- | --- |
-| Label | An optional first paragraph of one line in the form `Word: text`; skipped. |
-| Summary | The first sentence of the first prose paragraph. Plain text: it is also the meta description. |
-| Notes | The rest of the prose paragraphs. |
+| Label | An optional first paragraph of one line in the form `Word: text` (`Atom: button variants, sizes and states`); never the summary. |
+| Summary | The example page's `<meta name="description">`, else the first sentence of the first prose paragraph. Plain text: it is also the meta description. |
+| Notes | The prose paragraphs, less the summary sentence when the summary came from the comment. |
 | `API` | A paragraph whose first line is `API`; the indented lines below it, dedented. `API: …` one-liners in any comment are collected too. |
 | `Example` | A paragraph whose first line is `Example`; used as the markup only when there is no example page. |
+| `Keyboard` | A paragraph whose first line is `Keyboard`; `Key: action` lines, shown as a Keyboard table. |
+| Other labelled blocks | A paragraph whose first line is one capitalized word (`States`) over indented lines, or that opens with `Word: ` (`Sizes: default and large are …`). Shown verbatim as preformatted text under a heading of that word, without the label. |
 | Accessibility | Prose sentences that mention WCAG, ARIA, APG, focus, contrast, accessibility, screen readers, forced colors or reduced motion. If there are none, the page says so and links the spec list and the accessibility principle. |
 | Specs | Every URL in the comment, labelled by host: MDN, WHATWG, WCAG (`/WAI/WCAG22/Understanding/`, `/TR/WCAG…`), APG (`/WAI/ARIA/apg`), W3C (other `w3.org`, `csswg.org`), else Other. |
 
@@ -217,22 +258,28 @@ guide never claims something is available when it is not:
 ## Snippet convention
 
 The copy-paste markup on a component page, and the ```` ```html ```` blocks in its Markdown twin
-and `llms-full.txt`, come from its example page:
+and `llms-full.txt`, come from its example page. The first rule that matches wins:
 
-1. If the page has regions between `<!-- dui:snippet -->` and `<!-- /dui:snippet -->`, each region is
-   one snippet. Name one with `<!-- dui:snippet name="Primary" -->`; the name becomes a heading.
-2. Otherwise the inner content of the page's `<main>` element is the single snippet.
+1. **Snippet regions.** Each region between `<!-- dui:snippet -->` and `<!-- /dui:snippet -->` is one
+   snippet. Name one with `<!-- dui:snippet name="Primary" -->`; the name becomes a heading.
+2. **Code blocks.** Otherwise every `<pre><code>…</code></pre>` inside `<main>` is one snippet, named
+   by the nearest `<h2>` or `<h3>` before it (a repeated name gets " (2)"). The M2 atom examples
+   work this way: each `<section>` has a rendered `.demo` and a `<pre><code>` with the markup to copy.
+   The code content is HTML-unescaped; the docs page escapes it again, so unescaping the page's
+   `<pre><code>` gives the example's unescaped `<pre><code>` content byte for byte.
+3. **Main.** Otherwise the inner content of the page's `<main>` element is the single snippet.
 
-The text is used verbatim, never reformatted. Two things are removed:
+The text is used verbatim, never reformatted. For rules 1 and 3, two things are removed:
 
 - the line break right after the opening marker (or `<main …>`) and the whitespace-only last line
   before the closing marker (or `</main>`);
 - the common leading whitespace: the smallest indentation of the non-blank lines is removed from
   every line; whitespace-only lines lose up to that many characters.
 
-So the snippet is always the source slice with that indentation removed line by line.
-`tests/docs.spec.js` checks this for every page, along with the HTML and Markdown copies. Code
-blocks use a fence longer than any backtick run inside the snippet.
+So a rule 1 or 3 snippet is always the source slice with that indentation removed line by line, and
+a rule 2 snippet is always the unescaped code block. `tests/docs.spec.js` checks whichever rule
+applied for every page, along with the HTML, Markdown and `llms-full.txt` copies. Code blocks use a
+fence longer than any backtick run inside the snippet.
 
 ```html
 <main>
