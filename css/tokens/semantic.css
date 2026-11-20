@@ -32,6 +32,7 @@
   --dui-color-link-visited: light-dark(var(--dui-color-purple-700), var(--dui-color-purple-300));
   --dui-color-danger: light-dark(var(--dui-color-red-700), var(--dui-color-red-300));
   --dui-color-success: light-dark(var(--dui-color-green-700), var(--dui-color-green-300));
+  --dui-color-warning: light-dark(var(--dui-color-amber-700), var(--dui-color-amber-300));
   --dui-color-mark: light-dark(var(--dui-color-yellow-100), var(--dui-color-yellow-300));
   --dui-color-mark-text: light-dark(var(--dui-color-gray-900), var(--dui-color-gray-900));
   --dui-color-backdrop: light-dark(var(--dui-color-black-a40), var(--dui-color-black-a60));
@@ -70,6 +71,8 @@
 
   /* Sizes */
   --dui-size-target: var(--dui-size-2-75);
+  --dui-size-target-small: var(--dui-size-2);
+  --dui-size-target-large: var(--dui-size-3-25);
   --dui-size-check: var(--dui-size-1-25);
   --dui-size-column-min: var(--dui-size-16);
 
@@ -94,6 +97,8 @@
 
   /* State */
   --dui-opacity-disabled: var(--dui-opacity-60);
+  --dui-tint-amount: var(--dui-mix-8);
+  --dui-border-tint-amount: var(--dui-mix-35);
 }
 
 /*
@@ -116,6 +121,12 @@
   --dui-color-accent-hover: color-mix(in oklab, var(--dui-color-accent) 82%, var(--dui-color-text));
   --dui-font-heading: var(--dui-font-body);
   --dui-shadow-raised: 0 var(--dui-border-1) var(--dui-space-2) var(--dui-color-shadow), 0 var(--dui-space-3) var(--dui-space-7) var(--dui-color-shadow);
+
+  /* Tinted surfaces for status badges: a little of the tone mixed into the surface. */
+  --dui-color-accent-surface: color-mix(in oklab, var(--dui-color-accent) var(--dui-tint-amount), var(--dui-color-surface));
+  --dui-color-success-surface: color-mix(in oklab, var(--dui-color-success) var(--dui-tint-amount), var(--dui-color-surface));
+  --dui-color-warning-surface: color-mix(in oklab, var(--dui-color-warning) var(--dui-tint-amount), var(--dui-color-surface));
+  --dui-color-danger-surface: color-mix(in oklab, var(--dui-color-danger) var(--dui-tint-amount), var(--dui-color-surface));
 }
 
 /*

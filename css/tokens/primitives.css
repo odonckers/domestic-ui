@@ -41,6 +41,8 @@
   --dui-color-green-700: #17773a;
   --dui-color-yellow-100: #fff1a8;
   --dui-color-yellow-300: #e3c84f;
+  --dui-color-amber-300: #f2c14e;
+  --dui-color-amber-700: #8a5a00;
 
   /* Translucent black, for overlays and shadows */
   --dui-color-black-a10: rgb(0 0 0 / 10%);
@@ -96,7 +98,9 @@
 
   /* Sizes */
   --dui-size-1-25: 1.25rem;
+  --dui-size-2: 2rem;
   --dui-size-2-75: 2.75rem;
+  --dui-size-3-25: 3.25rem;
   --dui-size-16: 16rem;
   --dui-size-65ch: 65ch;
 
@@ -124,6 +128,8 @@
   --dui-easing-ease-out: cubic-bezier(0.2, 0, 0, 1);
   --dui-easing-linear: linear;
 
-  /* Opacity */
+  /* Opacity and mix amounts */
   --dui-opacity-60: 0.6;
+  --dui-mix-8: 8%;
+  --dui-mix-35: 35%;
 }
