@@ -30,7 +30,7 @@ export default function Layout({ current, children }: { current: View; children:
       <main id="main">{children}</main>
 
       <footer>
-        <p><small>Homebase is a domestic-ui demo app. MIT licensed.</small></p>
+        <p data-text="small muted">Homebase is a domestic-ui demo app. MIT licensed.</p>
       </footer>
     </>
   )

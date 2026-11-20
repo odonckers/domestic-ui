@@ -30,7 +30,7 @@ async function blockExternalRequests(page, baseURL) {
 }
 
 for (const name of selectedApps()) {
-  for (const { path, title } of apps[name].views) {
+  for (const { path, view, title } of apps[name].views) {
     test.describe(`[${name}] ${path}`, () => {
       for (const colorScheme of schemes) {
         test(`has no axe violations (${colorScheme})`, async ({ page, baseURL }) => {
@@ -95,6 +95,36 @@ for (const name of selectedApps()) {
         expect(applied.clusterDisplay).toEqual("flex");
         // .visually-hidden (utilities layer) hides the skip link until it is focused.
         expect(applied.skipLinkPosition).toEqual("absolute");
+      });
+
+      test("applies the atoms the view uses", async ({ page }) => {
+        await page.goto(path, { waitUntil: "networkidle" });
+        await expect(page.locator('[data-text~="lead"]')).toHaveCount(1);
+        await expect(page.locator('footer [data-text~="muted"]')).toHaveCount(1);
+
+        if (view === "dashboard") {
+          // A badge gets its tinted surface: not the page background, not transparent.
+          const badge = page.locator("[data-badge]").first();
+          await expect(badge).toBeVisible();
+          const colors = await badge.evaluate((el) => ({
+            badge: getComputedStyle(el).backgroundColor,
+            page: getComputedStyle(document.documentElement).backgroundColor,
+          }));
+          expect(colors.badge).not.toEqual("rgba(0, 0, 0, 0)");
+          expect(colors.badge).not.toEqual(colors.page);
+        }
+
+        if (view === "settings") {
+          // The switch atom draws the checkbox itself.
+          const toggle = page.locator('input[type="checkbox"][role="switch"]').first();
+          await expect(toggle).toBeVisible();
+          const appearance = await toggle.evaluate((el) => {
+            const style = getComputedStyle(el);
+            return style.appearance || style.getPropertyValue("-webkit-appearance");
+          });
+          expect(appearance).toEqual("none");
+          await expect(page.getByRole("switch")).toHaveCount(3);
+        }
       });
     });
   }

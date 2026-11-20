@@ -5,7 +5,8 @@ The dashboard and account settings views in Angular 22: standalone components, t
 `ariaCurrentWhenActive="page"` for the current link.
 
 The shipped stylesheet is listed in `angular.json` `styles` as `../../css/domestic.css`, so the
-build bundles it with its cascade layers. `src/styles.css` holds only the page container.
+build bundles it with its cascade layers. `src/styles.css` holds only the page container
+and `app-root { display: block; }` (custom elements are inline by default).
 
 Two choices worth knowing:
 

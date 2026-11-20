@@ -1,11 +1,14 @@
 <h1>Chores dashboard</h1>
-<p>What needs doing around the house this week, and who is on it.</p>
+<p data-text="lead">What needs doing around the house this week, and who is on it.</p>
 
 <div class="grid" style="--grid-min: 12rem">
   @for (item of summary; track item.title) {
     <article>
       <h2>{{ item.title }}</h2>
       <p>{{ item.count }}</p>
+      @if (item.note) {
+        <p data-text="small muted">{{ item.note }}</p>
+      }
     </article>
   }
 </div>
@@ -16,7 +19,7 @@
   <details>
     <summary>Filter</summary>
     <form class="stack" method="get">
-      <div>
+      <div data-field>
         <label for="filter-room">Room</label>
         <select id="filter-room" name="room">
           <option value="all" selected>All rooms</option>
@@ -32,19 +35,20 @@
         <label><input type="checkbox" name="completed"> Completed chores</label>
       </fieldset>
       <div class="cluster">
-        <button type="submit">Apply filter</button>
+        <button type="submit" data-button="small">Apply filter</button>
       </div>
     </form>
   </details>
 
   <table>
-    <caption>Chores due in the next seven days</caption>
+    <caption>Chores this week</caption>
     <thead>
       <tr>
         <th scope="col">Chore</th>
         <th scope="col">Room</th>
         <th scope="col">Assigned to</th>
         <th scope="col">Due</th>
+        <th scope="col">Status</th>
       </tr>
     </thead>
     <tbody>
@@ -54,14 +58,15 @@
           <td>{{ row.room }}</td>
           <td>{{ row.assignee }}</td>
           <td><time [attr.datetime]="row.date">{{ row.due }}</time></td>
+          <td><span [attr.data-badge]="row.tone">{{ row.status }}</span></td>
         </tr>
       }
     </tbody>
   </table>
 
   <div class="cluster">
-    <button type="button">Add chore</button>
-    <button type="button">Swap a chore</button>
-    <button type="button">Print this week</button>
+    <button type="button" data-button="primary">Add chore</button>
+    <button type="button" data-button="secondary">Swap a chore</button>
+    <button type="button" data-button="quiet">Print this week</button>
   </div>
 </section>

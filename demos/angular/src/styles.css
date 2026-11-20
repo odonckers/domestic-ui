@@ -17,5 +17,9 @@
 :has(> #main) > footer {
   padding-block: var(--dui-space-l);
   border-block-start: var(--dui-border-width) solid var(--dui-color-border);
-  color: var(--dui-color-text-muted);
+}
+
+/* Angular only: <app-root> sits between <body> and the page landmarks, and custom elements are inline by default. */
+app-root {
+  display: block;
 }

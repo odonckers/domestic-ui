@@ -5,25 +5,25 @@ export default function SettingsPage() {
   return (
     <Layout current="settings">
       <h1>Account settings</h1>
-      <p>Update your profile and choose how Homebase keeps you in the loop.</p>
+      <p data-text="lead">Update your profile and choose how Homebase keeps you in the loop.</p>
 
       <form className="stack" style={{ '--stack-gap': 'var(--dui-space-l)' } as CSSProperties} method="get">
         <fieldset>
           <legend>Profile</legend>
           <div className="grid" style={{ '--grid-min': '14rem' } as CSSProperties}>
-            <div>
+            <div data-field="">
               <label htmlFor="given-name">First name</label>
               <input id="given-name" name="given-name" type="text" autoComplete="given-name" />
             </div>
-            <div>
+            <div data-field="">
               <label htmlFor="family-name">Last name</label>
               <input id="family-name" name="family-name" type="text" autoComplete="family-name" />
             </div>
-            <div>
+            <div data-field="">
               <label htmlFor="email">Email</label>
               <input id="email" name="email" type="email" autoComplete="email" />
             </div>
-            <div>
+            <div data-field="">
               <label htmlFor="tel">Phone</label>
               <input id="tel" name="tel" type="tel" autoComplete="tel" />
             </div>
@@ -33,7 +33,7 @@ export default function SettingsPage() {
         <fieldset>
           <legend>Region</legend>
           <div className="grid" style={{ '--grid-min': '14rem' } as CSSProperties}>
-            <div>
+            <div data-field="">
               <label htmlFor="language">Language</label>
               <select id="language" name="language" autoComplete="language" defaultValue="en">
                 <option value="en">English</option>
@@ -42,7 +42,7 @@ export default function SettingsPage() {
                 <option value="nl">Nederlands</option>
               </select>
             </div>
-            <div>
+            <div data-field="">
               <label htmlFor="time-zone">Time zone</label>
               <select id="time-zone" name="time-zone" defaultValue="America/Chicago">
                 <option value="America/Los_Angeles">Pacific Time</option>
@@ -64,22 +64,24 @@ export default function SettingsPage() {
           </fieldset>
           <fieldset>
             <legend>Notify me about</legend>
-            <label><input type="checkbox" name="notify-assigned" defaultChecked /> Chores assigned to me</label>
-            <label><input type="checkbox" name="notify-overdue" defaultChecked /> Overdue chores</label>
-            <label><input type="checkbox" name="notify-members" /> New household members</label>
+            <label><input type="checkbox" role="switch" name="notify-assigned" defaultChecked /> Chores assigned to me</label>
+            <label><input type="checkbox" role="switch" name="notify-overdue" defaultChecked /> Overdue chores</label>
+            <label><input type="checkbox" role="switch" name="notify-members" /> New household members</label>
           </fieldset>
         </div>
 
         <fieldset>
           <legend>About you</legend>
-          <label htmlFor="bio">Note for your household</label>
-          <textarea id="bio" name="bio" rows={3} maxLength={200} aria-describedby="bio-hint" />
-          <small id="bio-hint">Shown on the household page. Up to 200 characters.</small>
+          <div data-field="">
+            <label htmlFor="bio">Note for your household</label>
+            <textarea id="bio" name="bio" rows={3} maxLength={200} aria-describedby="bio-hint" />
+            <p id="bio-hint" data-field="hint">Shown on the household page. Up to 200 characters.</p>
+          </div>
         </fieldset>
 
         <div className="cluster">
-          <button type="submit">Save changes</button>
-          <button type="reset">Reset</button>
+          <button type="submit" data-button="primary">Save changes</button>
+          <button type="reset" data-button="quiet">Reset</button>
         </div>
       </form>
     </Layout>

@@ -17,5 +17,4 @@
 :has(> #main) > footer {
   padding-block: var(--dui-space-l);
   border-block-start: var(--dui-border-width) solid var(--dui-color-border);
-  color: var(--dui-color-text-muted);
 }
