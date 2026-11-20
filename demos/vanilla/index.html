@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Dashboard · Homebase</title>
+    <meta name="description" content="Household chores dashboard: a domestic-ui demo in plain HTML.">
+    <link rel="stylesheet" href="../../css/domestic.css">
+    <style>
+      /* Page-only layout, written with semantic tokens like any consumer would. */
+      :has(> #main) > :is(header, main, footer) {
+        max-inline-size: 72rem;
+        margin-inline: auto;
+        padding-inline: var(--dui-space-l);
+      }
+
+      :has(> #main) > header {
+        padding-block: var(--dui-space-m);
+        border-block-end: var(--dui-border-width) solid var(--dui-color-border);
+      }
+
+      #main {
+        padding-block: var(--dui-space-2xl);
+      }
+
+      :has(> #main) > footer {
+        padding-block: var(--dui-space-l);
+        border-block-start: var(--dui-border-width) solid var(--dui-color-border);
+        color: var(--dui-color-text-muted);
+      }
+    </style>
+  </head>
+  <body>
+    <a class="visually-hidden" href="#main">Skip to main content</a>
+
+    <header class="cluster" style="--cluster-justify: space-between">
+      <p><strong>Homebase</strong></p>
+      <nav aria-label="Primary">
+        <ul class="cluster">
+          <li><a href="index.html" aria-current="page">Dashboard</a></li>
+          <li><a href="settings.html">Account settings</a></li>
+        </ul>
+      </nav>
+    </header>
+
+    <main id="main">
+      <h1>Chores dashboard</h1>
+      <p>What needs doing around the house this week, and who is on it.</p>
+
+      <div class="grid" style="--grid-min: 12rem">
+        <article>
+          <h2>Due today</h2>
+          <p>3</p>
+        </article>
+        <article>
+          <h2>Overdue</h2>
+          <p>1</p>
+        </article>
+        <article>
+          <h2>Done this week</h2>
+          <p>12</p>
+        </article>
+        <article>
+          <h2>Household members</h2>
+          <p>4</p>
+        </article>
+      </div>
+
+      <section aria-labelledby="upcoming-title">
+        <h2 id="upcoming-title">Upcoming chores</h2>
+
+        <details>
+          <summary>Filter</summary>
+          <form class="stack" method="get">
+            <div>
+              <label for="filter-room">Room</label>
+              <select id="filter-room" name="room">
+                <option value="all" selected>All rooms</option>
+                <option value="kitchen">Kitchen</option>
+                <option value="bathroom">Bathroom</option>
+                <option value="living-room">Living room</option>
+                <option value="garden">Garden</option>
+              </select>
+            </div>
+            <fieldset>
+              <legend>Show</legend>
+              <label><input type="checkbox" name="mine"> Only chores assigned to me</label>
+              <label><input type="checkbox" name="completed"> Completed chores</label>
+            </fieldset>
+            <div class="cluster">
+              <button type="submit">Apply filter</button>
+            </div>
+          </form>
+        </details>
+
+        <table>
+          <caption>Chores due in the next seven days</caption>
+          <thead>
+            <tr>
+              <th scope="col">Chore</th>
+              <th scope="col">Room</th>
+              <th scope="col">Assigned to</th>
+              <th scope="col">Due</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <th scope="row">Empty the dishwasher</th>
+              <td>Kitchen</td>
+              <td>Sam</td>
+              <td><time datetime="2026-11-20">Today</time></td>
+            </tr>
+            <tr>
+              <th scope="row">Water the plants</th>
+              <td>Living room</td>
+              <td>Alex</td>
+              <td><time datetime="2026-11-20">Today</time></td>
+            </tr>
+            <tr>
+              <th scope="row">Take out recycling</th>
+              <td>Garden</td>
+              <td>Jordan</td>
+              <td><time datetime="2026-11-20">Today</time></td>
+            </tr>
+            <tr>
+              <th scope="row">Clean the bathroom</th>
+              <td>Bathroom</td>
+              <td>Riley</td>
+              <td><time datetime="2026-11-22">Sunday 22 November</time></td>
+            </tr>
+            <tr>
+              <th scope="row">Vacuum the stairs</th>
+              <td>Living room</td>
+              <td>Sam</td>
+              <td><time datetime="2026-11-24">Tuesday 24 November</time></td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div class="cluster">
+          <button type="button">Add chore</button>
+          <button type="button">Swap a chore</button>
+          <button type="button">Print this week</button>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <p><small>Homebase is a domestic-ui demo app. MIT licensed.</small></p>
+    </footer>
+  </body>
+</html>

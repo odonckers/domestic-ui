@@ -1,0 +1,69 @@
+name: Demos
+
+on:
+  pull_request:
+    paths: ["demos/**", "css/**", ".github/workflows/demos.yml"]
+  push:
+    branches: [main]
+    paths: ["demos/**", "css/**", ".github/workflows/demos.yml"]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: demos-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  demos:
+    name: demos (${{ matrix.app }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        app: [vanilla, react, angular, astro]
+    env:
+      NG_CLI_ANALYTICS: "false"
+      ASTRO_TELEMETRY_DISABLED: "1"
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version: lts/*
+          cache: npm
+          cache-dependency-path: demos/*/package-lock.json
+
+      - name: Install and build ${{ matrix.app }}
+        if: matrix.app != 'vanilla'
+        working-directory: demos/${{ matrix.app }}
+        run: |
+          npm ci
+          npm run build
+
+      - name: Install the checker
+        working-directory: demos/a11y
+        run: npm ci
+
+      - name: Install Chromium for Playwright
+        working-directory: demos/a11y
+        run: npx playwright install --with-deps chromium
+
+      - name: Accessibility (axe, light and dark)
+        working-directory: demos/a11y
+        env:
+          DEMO_APP: ${{ matrix.app }}
+        run: npm test
+
+      - name: Validate HTML
+        if: matrix.app == 'vanilla' || matrix.app == 'astro'
+        working-directory: demos/a11y
+        run: npm run lint:html:${{ matrix.app }}
+
+      - name: Upload Playwright report
+        if: failure()
+        uses: actions/upload-artifact@v7
+        with:
+          name: playwright-report-${{ matrix.app }}
+          path: demos/a11y/playwright-report/
+          retention-days: 7

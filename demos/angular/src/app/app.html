@@ -1,0 +1,18 @@
+<a class="visually-hidden" href="#main">Skip to main content</a>
+
+<header class="cluster" style="--cluster-justify: space-between">
+  <p><strong>Homebase</strong></p>
+  <nav aria-label="Primary">
+    <ul class="cluster">
+      <li><a routerLink="/" routerLinkActive [routerLinkActiveOptions]="{ exact: true }" ariaCurrentWhenActive="page">Dashboard</a></li>
+      <li><a routerLink="/settings" routerLinkActive ariaCurrentWhenActive="page">Account settings</a></li>
+    </ul>
+  </nav>
+</header>
+
+<!-- Each routed page renders as <main id="main"> right after the outlet. -->
+<router-outlet />
+
+<footer>
+  <p><small>Homebase is a domestic-ui demo app. MIT licensed.</small></p>
+</footer>

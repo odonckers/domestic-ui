@@ -1,0 +1,67 @@
+<h1>Chores dashboard</h1>
+<p>What needs doing around the house this week, and who is on it.</p>
+
+<div class="grid" style="--grid-min: 12rem">
+  @for (item of summary; track item.title) {
+    <article>
+      <h2>{{ item.title }}</h2>
+      <p>{{ item.count }}</p>
+    </article>
+  }
+</div>
+
+<section aria-labelledby="upcoming-title">
+  <h2 id="upcoming-title">Upcoming chores</h2>
+
+  <details>
+    <summary>Filter</summary>
+    <form class="stack" method="get">
+      <div>
+        <label for="filter-room">Room</label>
+        <select id="filter-room" name="room">
+          <option value="all" selected>All rooms</option>
+          <option value="kitchen">Kitchen</option>
+          <option value="bathroom">Bathroom</option>
+          <option value="living-room">Living room</option>
+          <option value="garden">Garden</option>
+        </select>
+      </div>
+      <fieldset>
+        <legend>Show</legend>
+        <label><input type="checkbox" name="mine"> Only chores assigned to me</label>
+        <label><input type="checkbox" name="completed"> Completed chores</label>
+      </fieldset>
+      <div class="cluster">
+        <button type="submit">Apply filter</button>
+      </div>
+    </form>
+  </details>
+
+  <table>
+    <caption>Chores due in the next seven days</caption>
+    <thead>
+      <tr>
+        <th scope="col">Chore</th>
+        <th scope="col">Room</th>
+        <th scope="col">Assigned to</th>
+        <th scope="col">Due</th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (row of chores; track row.chore) {
+        <tr>
+          <th scope="row">{{ row.chore }}</th>
+          <td>{{ row.room }}</td>
+          <td>{{ row.assignee }}</td>
+          <td><time [attr.datetime]="row.date">{{ row.due }}</time></td>
+        </tr>
+      }
+    </tbody>
+  </table>
+
+  <div class="cluster">
+    <button type="button">Add chore</button>
+    <button type="button">Swap a chore</button>
+    <button type="button">Print this week</button>
+  </div>
+</section>

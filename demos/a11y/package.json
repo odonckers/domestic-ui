@@ -1,0 +1,23 @@
+{
+  "name": "domestic-ui-demos-a11y",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Accessibility and HTML checks for the domestic-ui demo apps.",
+  "license": "MIT",
+  "type": "module",
+  "engines": {
+    "node": ">=24.8.0"
+  },
+  "scripts": {
+    "serve": "node serve.mjs",
+    "test": "playwright test",
+    "lint:html": "npm run lint:html:vanilla && npm run lint:html:astro",
+    "lint:html:vanilla": "html-validate \"../vanilla/*.html\"",
+    "lint:html:astro": "html-validate \"../astro/dist/**/*.html\""
+  },
+  "devDependencies": {
+    "@axe-core/playwright": "4.14.0",
+    "@playwright/test": "1.65.1",
+    "html-validate": "11.21.1"
+  }
+}

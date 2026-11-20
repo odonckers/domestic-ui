@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Account settings · Homebase</title>
+    <meta name="description" content="Account settings form: a domestic-ui demo in plain HTML.">
+    <link rel="stylesheet" href="../../css/domestic.css">
+    <style>
+      /* Page-only layout, written with semantic tokens like any consumer would. */
+      :has(> #main) > :is(header, main, footer) {
+        max-inline-size: 72rem;
+        margin-inline: auto;
+        padding-inline: var(--dui-space-l);
+      }
+
+      :has(> #main) > header {
+        padding-block: var(--dui-space-m);
+        border-block-end: var(--dui-border-width) solid var(--dui-color-border);
+      }
+
+      #main {
+        padding-block: var(--dui-space-2xl);
+      }
+
+      :has(> #main) > footer {
+        padding-block: var(--dui-space-l);
+        border-block-start: var(--dui-border-width) solid var(--dui-color-border);
+        color: var(--dui-color-text-muted);
+      }
+    </style>
+  </head>
+  <body>
+    <a class="visually-hidden" href="#main">Skip to main content</a>
+
+    <header class="cluster" style="--cluster-justify: space-between">
+      <p><strong>Homebase</strong></p>
+      <nav aria-label="Primary">
+        <ul class="cluster">
+          <li><a href="index.html">Dashboard</a></li>
+          <li><a href="settings.html" aria-current="page">Account settings</a></li>
+        </ul>
+      </nav>
+    </header>
+
+    <main id="main">
+      <h1>Account settings</h1>
+      <p>Update your profile and choose how Homebase keeps you in the loop.</p>
+
+      <form class="stack" style="--stack-gap: var(--dui-space-l)" method="get">
+        <fieldset>
+          <legend>Profile</legend>
+          <div class="grid" style="--grid-min: 14rem">
+            <div>
+              <label for="given-name">First name</label>
+              <input id="given-name" name="given-name" type="text" autocomplete="given-name">
+            </div>
+            <div>
+              <label for="family-name">Last name</label>
+              <input id="family-name" name="family-name" type="text" autocomplete="family-name">
+            </div>
+            <div>
+              <label for="email">Email</label>
+              <input id="email" name="email" type="email" autocomplete="email">
+            </div>
+            <div>
+              <label for="tel">Phone</label>
+              <input id="tel" name="tel" type="tel" autocomplete="tel">
+            </div>
+          </div>
+        </fieldset>
+
+        <fieldset>
+          <legend>Region</legend>
+          <div class="grid" style="--grid-min: 14rem">
+            <div>
+              <label for="language">Language</label>
+              <select id="language" name="language" autocomplete="language">
+                <option value="en" selected>English</option>
+                <option value="es">Español</option>
+                <option value="fr">Français</option>
+                <option value="nl">Nederlands</option>
+              </select>
+            </div>
+            <div>
+              <label for="time-zone">Time zone</label>
+              <select id="time-zone" name="time-zone">
+                <option value="America/Los_Angeles">Pacific Time</option>
+                <option value="America/Denver">Mountain Time</option>
+                <option value="America/Chicago" selected>Central Time</option>
+                <option value="America/New_York">Eastern Time</option>
+              </select>
+            </div>
+          </div>
+        </fieldset>
+
+        <div class="grid" style="--grid-min: 14rem">
+          <fieldset>
+            <legend>Email me</legend>
+            <label><input type="radio" name="frequency" value="immediately"> Right away</label>
+            <label><input type="radio" name="frequency" value="daily" checked> Once a day</label>
+            <label><input type="radio" name="frequency" value="weekly"> Once a week</label>
+            <label><input type="radio" name="frequency" value="never"> Never</label>
+          </fieldset>
+          <fieldset>
+            <legend>Notify me about</legend>
+            <label><input type="checkbox" name="notify-assigned" checked> Chores assigned to me</label>
+            <label><input type="checkbox" name="notify-overdue" checked> Overdue chores</label>
+            <label><input type="checkbox" name="notify-members"> New household members</label>
+          </fieldset>
+        </div>
+
+        <fieldset>
+          <legend>About you</legend>
+          <label for="bio">Note for your household</label>
+          <textarea id="bio" name="bio" rows="3" maxlength="200" aria-describedby="bio-hint"></textarea>
+          <small id="bio-hint">Shown on the household page. Up to 200 characters.</small>
+        </fieldset>
+
+        <div class="cluster">
+          <button type="submit">Save changes</button>
+          <button type="reset">Reset</button>
+        </div>
+      </form>
+    </main>
+
+    <footer>
+      <p><small>Homebase is a domestic-ui demo app. MIT licensed.</small></p>
+    </footer>
+  </body>
+</html>

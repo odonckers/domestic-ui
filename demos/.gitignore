@@ -1,0 +1,11 @@
+# Dependencies and build output for every demo app. Each app keeps its own
+# package.json and package-lock.json; none of this is committed.
+node_modules/
+dist/
+.angular/
+.astro/
+
+# Playwright output from demos/a11y.
+test-results/
+playwright-report/
+blob-report/

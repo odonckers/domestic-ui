@@ -1,0 +1,52 @@
+---
+import "../../../../css/domestic.css";
+import "../styles/page.css";
+
+interface Props {
+	title: string;
+	description: string;
+	current: "dashboard" | "settings";
+}
+
+const { title, description, current } = Astro.props;
+
+const links = [
+	{ view: "dashboard", href: "/", label: "Dashboard" },
+	{ view: "settings", href: "/settings/", label: "Account settings" },
+];
+---
+
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+		<link rel="icon" href="/favicon.ico" />
+		<meta name="generator" content={Astro.generator} />
+		<title>{title} · Homebase</title>
+		<meta name="description" content={description} />
+	</head>
+	<body>
+		<a class="visually-hidden" href="#main">Skip to main content</a>
+
+		<header class="cluster" style="--cluster-justify: space-between">
+			<p><strong>Homebase</strong></p>
+			<nav aria-label="Primary">
+				<ul class="cluster">
+					{links.map(({ view, href, label }) => (
+						<li><a href={href} aria-current={view === current ? "page" : undefined}>{label}</a></li>
+					))}
+				</ul>
+			</nav>
+		</header>
+
+		<main id="main">
+			<slot />
+		</main>
+
+		<footer>
+			<p><small>Homebase is a domestic-ui demo app. MIT licensed.</small></p>
+		</footer>
+	</body>
+</html>

@@ -1,0 +1,84 @@
+---
+import Base from "../layouts/Base.astro";
+---
+
+<Base title="Account settings" description="Account settings form: a domestic-ui demo in Astro." current="settings">
+	<h1>Account settings</h1>
+	<p>Update your profile and choose how Homebase keeps you in the loop.</p>
+
+	<form class="stack" style="--stack-gap: var(--dui-space-l)" method="get">
+		<fieldset>
+			<legend>Profile</legend>
+			<div class="grid" style="--grid-min: 14rem">
+				<div>
+					<label for="given-name">First name</label>
+					<input id="given-name" name="given-name" type="text" autocomplete="given-name" />
+				</div>
+				<div>
+					<label for="family-name">Last name</label>
+					<input id="family-name" name="family-name" type="text" autocomplete="family-name" />
+				</div>
+				<div>
+					<label for="email">Email</label>
+					<input id="email" name="email" type="email" autocomplete="email" />
+				</div>
+				<div>
+					<label for="tel">Phone</label>
+					<input id="tel" name="tel" type="tel" autocomplete="tel" />
+				</div>
+			</div>
+		</fieldset>
+
+		<fieldset>
+			<legend>Region</legend>
+			<div class="grid" style="--grid-min: 14rem">
+				<div>
+					<label for="language">Language</label>
+					<select id="language" name="language" autocomplete="language">
+						<option value="en" selected>English</option>
+						<option value="es">Español</option>
+						<option value="fr">Français</option>
+						<option value="nl">Nederlands</option>
+					</select>
+				</div>
+				<div>
+					<label for="time-zone">Time zone</label>
+					<select id="time-zone" name="time-zone">
+						<option value="America/Los_Angeles">Pacific Time</option>
+						<option value="America/Denver">Mountain Time</option>
+						<option value="America/Chicago" selected>Central Time</option>
+						<option value="America/New_York">Eastern Time</option>
+					</select>
+				</div>
+			</div>
+		</fieldset>
+
+		<div class="grid" style="--grid-min: 14rem">
+			<fieldset>
+				<legend>Email me</legend>
+				<label><input type="radio" name="frequency" value="immediately" /> Right away</label>
+				<label><input type="radio" name="frequency" value="daily" checked /> Once a day</label>
+				<label><input type="radio" name="frequency" value="weekly" /> Once a week</label>
+				<label><input type="radio" name="frequency" value="never" /> Never</label>
+			</fieldset>
+			<fieldset>
+				<legend>Notify me about</legend>
+				<label><input type="checkbox" name="notify-assigned" checked /> Chores assigned to me</label>
+				<label><input type="checkbox" name="notify-overdue" checked /> Overdue chores</label>
+				<label><input type="checkbox" name="notify-members" /> New household members</label>
+			</fieldset>
+		</div>
+
+		<fieldset>
+			<legend>About you</legend>
+			<label for="bio">Note for your household</label>
+			<textarea id="bio" name="bio" rows="3" maxlength="200" aria-describedby="bio-hint"></textarea>
+			<small id="bio-hint">Shown on the household page. Up to 200 characters.</small>
+		</fieldset>
+
+		<div class="cluster">
+			<button type="submit">Save changes</button>
+			<button type="reset">Reset</button>
+		</div>
+	</form>
+</Base>
