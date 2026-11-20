@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Theming · domestic-ui</title>
+    <meta name="description" content="The default domestic-ui theme next to a scoped alternate theme made only of semantic token overrides.">
+    <link rel="stylesheet" href="../css/domestic.css">
+    <style>
+      /* Page-only layout, written with semantic tokens like any consumer would. */
+      body > :is(header, main, footer) {
+        max-inline-size: 72rem;
+        margin-inline: auto;
+        padding-inline: var(--dui-space-l);
+      }
+
+      body > header {
+        padding-block: var(--dui-space-m);
+        border-block-end: var(--dui-border-width) solid var(--dui-color-border);
+      }
+
+      body > main {
+        padding-block: var(--dui-space-2xl);
+      }
+
+      body > footer {
+        padding-block: var(--dui-space-l);
+        border-block-start: var(--dui-border-width) solid var(--dui-color-border);
+        color: var(--dui-color-text-muted);
+      }
+
+      .panel {
+        padding: var(--dui-space-l);
+        border: var(--dui-border-width) solid var(--dui-color-border);
+        border-radius: var(--dui-radius-surface);
+      }
+    </style>
+    <style id="forest-theme">
+      [data-theme="forest"] {
+        --dui-color-surface: light-dark(#f7f5ef, #141a16);
+        --dui-color-surface-raised: light-dark(#eeeadf, #1d2620);
+        --dui-color-text: light-dark(#1d2a22, #e4ebe3);
+        --dui-color-border: light-dark(#d8d1bf, #34433a);
+        --dui-color-accent: light-dark(#2f6b3f, #7fcf95);
+        --dui-color-accent-contrast: light-dark(#fff, #0f1a13);
+        --dui-font-heading: charter, "Bitstream Charter", "Sitka Text", cambria, serif;
+        --dui-radius-control: 0.125rem;
+        --dui-radius-surface: 0.25rem;
+      }
+    </style>
+  </head>
+  <body>
+    <a class="visually-hidden" href="#main">Skip to main content</a>
+
+    <header class="cluster" style="--cluster-justify: space-between">
+      <p><strong>domestic-ui</strong></p>
+      <nav aria-label="Examples">
+        <ul class="cluster">
+          <li><a href="base.html">Base elements</a></li>
+          <li><a href="theming.html" aria-current="page">Theming</a></li>
+        </ul>
+      </nav>
+    </header>
+
+    <main id="main">
+      <h1>Theming</h1>
+      <p>
+        A theme is an override of <strong>semantic tokens</strong> on <code>:root</code> or on a scoped element.
+        No build step, no extra classes on the content. The right-hand panel below uses
+        <code>data-theme="forest"</code> and this CSS, which is the only difference between the two panels:
+      </p>
+      <pre><code>[data-theme="forest"] {
+  --dui-color-surface: light-dark(#f7f5ef, #141a16);
+  --dui-color-surface-raised: light-dark(#eeeadf, #1d2620);
+  --dui-color-text: light-dark(#1d2a22, #e4ebe3);
+  --dui-color-border: light-dark(#d8d1bf, #34433a);
+  --dui-color-accent: light-dark(#2f6b3f, #7fcf95);
+  --dui-color-accent-contrast: light-dark(#fff, #0f1a13);
+  --dui-font-heading: charter, "Bitstream Charter", "Sitka Text", cambria, serif;
+  --dui-radius-control: 0.125rem;
+  --dui-radius-surface: 0.25rem;
+}</code></pre>
+      <p>
+        Links, focus rings and button hover colors follow <code>--dui-color-accent</code> automatically,
+        because those tokens are re-derived on every <code>[data-theme]</code> scope.
+        Both themes follow your system light or dark preference through
+        <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/color_value/light-dark"><code>light-dark()</code></a>.
+      </p>
+
+      <div class="grid" style="--grid-min: 20rem">
+        <section class="panel stack" aria-labelledby="default-title">
+          <h2 id="default-title">Default theme</h2>
+          <p>Release notes are ready for review. <a href="#default-title">Read the summary</a> before the meeting.</p>
+          <form action="#default-title" class="stack">
+            <div>
+              <label for="default-email">Email</label>
+              <input id="default-email" name="email" type="email" autocomplete="email">
+            </div>
+            <div class="cluster">
+              <button type="submit">Publish</button>
+              <button type="button">Save draft</button>
+            </div>
+          </form>
+          <details>
+            <summary>What changed?</summary>
+            <p>Two bug fixes and a new <code>--dui-color-success</code> token.</p>
+          </details>
+        </section>
+
+        <section class="panel stack" data-theme="forest" aria-labelledby="forest-title">
+          <h2 id="forest-title">Forest theme</h2>
+          <p>Release notes are ready for review. <a href="#forest-title">Read the summary</a> before the meeting.</p>
+          <form action="#forest-title" class="stack">
+            <div>
+              <label for="forest-email">Email</label>
+              <input id="forest-email" name="email" type="email" autocomplete="email">
+            </div>
+            <div class="cluster">
+              <button type="submit">Publish</button>
+              <button type="button">Save draft</button>
+            </div>
+          </form>
+          <details>
+            <summary>What changed?</summary>
+            <p>Two bug fixes and a new <code>--dui-color-success</code> token.</p>
+          </details>
+        </section>
+      </div>
+    </main>
+
+    <footer>
+      <p><small>Every color pair in both themes meets WCAG 2.2 AA in light and dark. <code>npm test</code> checks it.</small></p>
+    </footer>
+  </body>
+</html>

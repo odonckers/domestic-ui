@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Base elements · domestic-ui</title>
+    <meta name="description" content="Every native element styled by the domestic-ui base layer, plus the stack, cluster and grid layout primitives.">
+    <link rel="stylesheet" href="../css/domestic.css">
+    <style>
+      /* Page-only layout, written with semantic tokens like any consumer would. */
+      body > :is(header, main, footer) {
+        max-inline-size: 72rem;
+        margin-inline: auto;
+        padding-inline: var(--dui-space-l);
+      }
+
+      body > header {
+        padding-block: var(--dui-space-m);
+        border-block-end: var(--dui-border-width) solid var(--dui-color-border);
+      }
+
+      body > main {
+        padding-block: var(--dui-space-2xl);
+      }
+
+      body > footer {
+        padding-block: var(--dui-space-l);
+        border-block-start: var(--dui-border-width) solid var(--dui-color-border);
+        color: var(--dui-color-text-muted);
+      }
+
+      .card {
+        padding: var(--dui-space-m);
+        border: var(--dui-border-width) solid var(--dui-color-border);
+        border-radius: var(--dui-radius-surface);
+        background-color: var(--dui-color-surface-raised);
+      }
+    </style>
+  </head>
+  <body>
+    <a class="visually-hidden" href="#main">Skip to main content</a>
+
+    <header class="cluster" style="--cluster-justify: space-between">
+      <p><strong>domestic-ui</strong></p>
+      <nav aria-label="Examples">
+        <ul class="cluster">
+          <li><a href="base.html" aria-current="page">Base elements</a></li>
+          <li><a href="theming.html">Theming</a></li>
+          <li><a href="#forms">Forms</a></li>
+          <li><a href="#layout">Layout</a></li>
+        </ul>
+      </nav>
+    </header>
+
+    <main id="main">
+      <h1>Base elements</h1>
+      <p>
+        Every element on this page is plain HTML styled by the <code>base</code> layer.
+        There are no component classes. Read the <a href="https://html.spec.whatwg.org/multipage/">WHATWG HTML Living Standard</a>
+        for what each element means; this page only shows how it looks.
+      </p>
+
+      <section aria-labelledby="text-title">
+        <h2 id="text-title">Text</h2>
+        <h1>Heading level 1</h1>
+        <h2>Heading level 2</h2>
+        <h3>Heading level 3</h3>
+        <h4>Heading level 4</h4>
+        <h5>Heading level 5</h5>
+        <h6>Heading level 6</h6>
+        <p>
+          A paragraph with a <a href="#text-title">link to this section</a>, some <strong>strong importance</strong>,
+          <em>stress emphasis</em>, a <mark>highlighted run</mark>, an abbreviation like
+          <abbr title="Web Content Accessibility Guidelines">WCAG</abbr>, inline <code>&lt;code&gt;</code>,
+          sample output <samp>Saved.</samp>, and keyboard input <kbd>Ctrl</kbd> + <kbd>K</kbd>.
+          Prose is capped at a comfortable measure so lines stay readable on wide screens.
+        </p>
+        <p><small>Small print: side comments such as legal text use <code>&lt;small&gt;</code>.</small></p>
+        <p>H<sub>2</sub>O and E = mc<sup>2</sup> keep their line height.</p>
+        <hr>
+        <blockquote cite="https://www.w3.org/TR/using-aria/#rule1">
+          <p>If you can use a native HTML element or attribute with the semantics and behavior you require already built in, instead of re-purposing an element and adding an ARIA role, state or property to make it accessible, then do so.</p>
+          <footer>From <cite><a href="https://www.w3.org/TR/using-aria/#rule1">Using ARIA, first rule</a></cite></footer>
+        </blockquote>
+      </section>
+
+      <section aria-labelledby="lists-title">
+        <h2 id="lists-title">Lists</h2>
+        <div class="grid">
+          <div>
+            <h3>Unordered</h3>
+            <ul>
+              <li>Native elements first</li>
+              <li>Tokens as custom properties
+                <ul>
+                  <li>Primitive</li>
+                  <li>Semantic</li>
+                </ul>
+              </li>
+              <li>Cascade layers</li>
+            </ul>
+          </div>
+          <div>
+            <h3>Ordered</h3>
+            <ol>
+              <li>Link the stylesheet</li>
+              <li>Write semantic HTML</li>
+              <li>Override tokens to theme</li>
+            </ol>
+          </div>
+          <div>
+            <h3>Description</h3>
+            <dl>
+              <dt>Primitive token</dt>
+              <dd>A raw value, named by what it is.</dd>
+              <dt>Semantic token</dt>
+              <dd>A role, pointing at a primitive.</dd>
+            </dl>
+          </div>
+        </div>
+      </section>
+
+      <section aria-labelledby="code-title">
+        <h2 id="code-title">Preformatted code</h2>
+        <pre><code>&lt;link rel="stylesheet" href="css/domestic.css"&gt;
+
+:root {
+  --dui-color-accent: light-dark(#7a2e8c, #e2a8f0);
+}</code></pre>
+      </section>
+
+      <section aria-labelledby="media-title">
+        <h2 id="media-title">Media</h2>
+        <div class="grid">
+          <figure>
+            <svg role="img" aria-labelledby="svg-title" viewBox="0 0 160 90" width="320" height="180">
+              <title id="svg-title">Three stacked layers: reset, tokens, base</title>
+              <rect x="20" y="58" width="120" height="20" rx="4" fill="none" stroke="currentColor" stroke-width="2"/>
+              <rect x="30" y="35" width="100" height="20" rx="4" fill="none" stroke="currentColor" stroke-width="2"/>
+              <rect x="40" y="12" width="80" height="20" rx="4" fill="currentColor"/>
+            </svg>
+            <figcaption>An inline <code>&lt;svg&gt;</code> drawn with <code>currentColor</code>.</figcaption>
+          </figure>
+          <figure>
+            <picture>
+              <source type="image/svg+xml" srcset="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20320%20180'%3E%3Crect%20width='320'%20height='180'%20fill='%233451d1'/%3E%3Ccircle%20cx='250'%20cy='60'%20r='28'%20fill='%23fff1a8'/%3E%3Cpath%20d='M0%20180%20L110%2070%20L190%20150%20L240%20110%20L320%20180%20Z'%20fill='%2312151b'/%3E%3C/svg%3E">
+              <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 320 180'%3E%3Crect width='320' height='180' fill='%233451d1'/%3E%3C/svg%3E" alt="A flat illustration of dark mountains under a pale sun on a blue sky." width="320" height="180">
+            </picture>
+            <figcaption>A <code>&lt;picture&gt;</code> with an <code>&lt;img&gt;</code> fallback and alt text.</figcaption>
+          </figure>
+          <figure>
+            <video controls preload="none" width="320" height="180" aria-describedby="video-caption" poster="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 320 180'%3E%3Crect width='320' height='180' fill='%23252a34'/%3E%3Cpath d='M140 65 L190 90 L140 115 Z' fill='%23f6f7f9'/%3E%3C/svg%3E">
+              <track kind="captions" src="data:text/vtt,WEBVTT" srclang="en" label="English" default>
+              Your browser does not support the video element.
+            </video>
+            <figcaption id="video-caption">A <code>&lt;video&gt;</code> with controls and a captions track (no source loaded, so no network requests).</figcaption>
+          </figure>
+        </div>
+      </section>
+
+      <section aria-labelledby="table-title">
+        <h2 id="table-title">Tables</h2>
+        <table>
+          <caption>Contrast minimums in WCAG 2.2 AA</caption>
+          <thead>
+            <tr>
+              <th scope="col">Content</th>
+              <th scope="col">Success criterion</th>
+              <th scope="col">Minimum ratio</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <th scope="row">Body text</th>
+              <td>1.4.3 Contrast (Minimum)</td>
+              <td>4.5:1</td>
+            </tr>
+            <tr>
+              <th scope="row">Large text</th>
+              <td>1.4.3 Contrast (Minimum)</td>
+              <td>3:1</td>
+            </tr>
+            <tr>
+              <th scope="row">Control boundaries</th>
+              <td>1.4.11 Non-text Contrast</td>
+              <td>3:1</td>
+            </tr>
+            <tr>
+              <th scope="row">Focus indicator</th>
+              <td>1.4.11 Non-text Contrast</td>
+              <td>3:1</td>
+            </tr>
+          </tbody>
+          <tfoot>
+            <tr>
+              <th scope="row">Source</th>
+              <td colspan="2"><a href="https://www.w3.org/TR/WCAG22/">WCAG 2.2</a></td>
+            </tr>
+          </tfoot>
+        </table>
+      </section>
+
+      <section id="forms" aria-labelledby="forms-title">
+        <h2 id="forms-title">Forms</h2>
+        <form action="#forms" method="get" class="stack" style="--stack-gap: var(--dui-space-l)">
+          <div class="grid" style="--grid-min: 14rem">
+            <div>
+              <label for="name">Full name</label>
+              <input id="name" name="name" type="text" autocomplete="name" required>
+            </div>
+            <div>
+              <label for="email">Email</label>
+              <input id="email" name="email" type="email" autocomplete="email" aria-describedby="email-hint">
+              <small id="email-hint">We only use this to reply.</small>
+            </div>
+            <div>
+              <label for="password">Password</label>
+              <input id="password" name="password" type="password" autocomplete="new-password" minlength="12">
+            </div>
+            <div>
+              <label for="phone">Phone</label>
+              <input id="phone" name="phone" type="tel" autocomplete="tel">
+            </div>
+            <div>
+              <label for="website">Website</label>
+              <input id="website" name="website" type="url" placeholder="https://example.com">
+            </div>
+            <div>
+              <label for="search">Search</label>
+              <input id="search" name="q" type="search">
+            </div>
+            <div>
+              <label for="quantity">Quantity</label>
+              <input id="quantity" name="quantity" type="number" min="1" max="10" value="1">
+            </div>
+            <div>
+              <label for="date">Date</label>
+              <input id="date" name="date" type="date">
+            </div>
+            <div>
+              <label for="time">Time</label>
+              <input id="time" name="time" type="time">
+            </div>
+            <div>
+              <label for="plan">Plan</label>
+              <select id="plan" name="plan">
+                <option value="free">Free</option>
+                <option value="team" selected>Team</option>
+                <option value="enterprise">Enterprise</option>
+              </select>
+            </div>
+            <div>
+              <label for="volume">Volume</label>
+              <input id="volume" name="volume" type="range" min="0" max="100" value="60">
+            </div>
+            <div>
+              <label for="color">Favorite color</label>
+              <input id="color" name="color" type="color" value="#3451d1">
+            </div>
+            <div>
+              <label for="avatar">Avatar</label>
+              <input id="avatar" name="avatar" type="file" accept="image/*">
+            </div>
+            <div>
+              <label for="disabled-field">Disabled field</label>
+              <input id="disabled-field" name="disabled-field" type="text" value="Read only for now" disabled>
+            </div>
+          </div>
+
+          <div>
+            <label for="message">Message</label>
+            <textarea id="message" name="message" rows="4"></textarea>
+          </div>
+
+          <div class="grid" style="--grid-min: 14rem">
+            <fieldset>
+              <legend>Notifications</legend>
+              <label><input type="checkbox" name="notify-email" checked> Email</label>
+              <label><input type="checkbox" name="notify-sms"> Text message</label>
+            </fieldset>
+            <fieldset>
+              <legend>Theme</legend>
+              <label><input type="radio" name="scheme" value="system" checked> Match system</label>
+              <label><input type="radio" name="scheme" value="light"> Light</label>
+              <label><input type="radio" name="scheme" value="dark"> Dark</label>
+            </fieldset>
+          </div>
+
+          <div class="cluster">
+            <button type="submit">Send message</button>
+            <button type="reset">Reset</button>
+            <button type="button" disabled>Disabled</button>
+          </div>
+        </form>
+      </section>
+
+      <section aria-labelledby="interactive-title">
+        <h2 id="interactive-title">Dialog and details</h2>
+        <p>
+          The button below opens a modal <code>&lt;dialog&gt;</code> with
+          <a href="https://developer.mozilla.org/en-US/docs/Web/API/Invoker_Commands_API">invoker commands</a>
+          (<code>commandfor</code> and <code>command</code>). The browser moves focus into the dialog,
+          closes it on <kbd>Esc</kbd>, and returns focus to the button.
+        </p>
+        <div class="cluster">
+          <button type="button" commandfor="demo-dialog" command="show-modal">Open dialog</button>
+        </div>
+        <dialog id="demo-dialog" aria-labelledby="demo-dialog-title">
+          <h2 id="demo-dialog-title">Delete draft?</h2>
+          <p>This removes the draft from this device. You cannot undo it.</p>
+          <form method="dialog" class="cluster" style="--cluster-justify: flex-end">
+            <button type="button" commandfor="demo-dialog" command="close">Cancel</button>
+            <button type="submit" value="confirm">Delete draft</button>
+          </form>
+        </dialog>
+
+        <details>
+          <summary>What is a cascade layer?</summary>
+          <p>
+            A named bucket of styles. Layers declared earlier lose to layers declared later,
+            regardless of selector specificity. See <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/@layer">@layer on MDN</a>.
+          </p>
+        </details>
+        <details>
+          <summary>Why keep link underlines?</summary>
+          <p>Color alone must not be the only way to identify a link (WCAG 1.4.1).</p>
+        </details>
+      </section>
+
+      <section id="layout" aria-labelledby="layout-title">
+        <h2 id="layout-title">Layout primitives</h2>
+        <p>Each primitive is one class, tuned with one or two custom properties.</p>
+
+        <h3><code>.stack</code></h3>
+        <div class="stack card" style="--stack-gap: var(--dui-space-xs)">
+          <p>Stack item one</p>
+          <p>Stack item two, with <code>--stack-gap: var(--dui-space-xs)</code></p>
+          <p>Stack item three</p>
+        </div>
+
+        <h3><code>.cluster</code></h3>
+        <ul class="cluster card">
+          <li><code>reset</code></li>
+          <li><code>tokens</code></li>
+          <li><code>base</code></li>
+          <li><code>layout</code></li>
+          <li><code>components</code></li>
+          <li><code>utilities</code></li>
+        </ul>
+
+        <h3><code>.grid</code></h3>
+        <div class="grid" style="--grid-min: 12rem">
+          <article class="card">
+            <h4>Atoms</h4>
+            <p>Native elements styled by the base layer.</p>
+          </article>
+          <article class="card">
+            <h4>Molecules</h4>
+            <p>Small groups of atoms. Coming in M2.</p>
+          </article>
+          <article class="card">
+            <h4>Organisms</h4>
+            <p>Larger sections built from molecules. Coming in M3.</p>
+          </article>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <p><small>domestic-ui packages existing standards and well-known patterns. MIT licensed.</small></p>
+    </footer>
+
+    <script>
+      // Fallback for browsers without invoker commands (commandfor/command).
+      // https://developer.mozilla.org/en-US/docs/Web/API/Invoker_Commands_API
+      if (!("command" in HTMLButtonElement.prototype)) {
+        document.addEventListener("click", (event) => {
+          const button = event.target.closest("button[commandfor]");
+          const dialog = button && document.getElementById(button.getAttribute("commandfor"));
+          if (!(dialog instanceof HTMLDialogElement)) return;
+          const command = button.getAttribute("command");
+          if (command === "show-modal") dialog.showModal();
+          if (command === "close") dialog.close();
+        });
+      }
+    </script>
+  </body>
+</html>
