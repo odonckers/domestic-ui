@@ -7,22 +7,42 @@
  */
 import { existsSync, readFileSync, readdirSync } from "node:fs";
 import { join } from "node:path";
-import { comments, dedent, headerComment, parseHeader, parseLayerOrder, parseTokenGroups, specLabel } from "./css-comments.mjs";
+import { comments, dedent, headerComment, htmlKeyboard, parseHeader, parseKeyboard, parseLayerOrder, parseTokenGroups, specLabel } from "./css-comments.mjs";
 import { splitSections, tokenize, plainText } from "./markdown.mjs";
 import { byString, readTitle, slugify } from "./util.mjs";
 
 /** Component groups under css/components/, and the milestone each lands in. */
 export const COMPONENT_GROUPS = /** @type {const} */ ([
   { group: "atoms", title: "Atoms", milestone: "M2" },
-  { group: "molecules", title: "Molecules", milestone: "M2" },
-  { group: "organisms", title: "Organisms", milestone: "M3" },
+  { group: "molecules", title: "Molecules", milestone: "M3" },
+  { group: "organisms", title: "Organisms", milestone: "M3b" },
 ]);
+
+/**
+ * The levels the docs are organized by, in order. A pattern's `level`
+ * front matter (molecule, organism, layout, token) maps to one of these.
+ */
+export const LEVELS = /** @type {const} */ ([
+  { level: "tokens", title: "Tokens", singular: "token" },
+  { level: "atoms", title: "Atoms", singular: "atom" },
+  { level: "molecules", title: "Molecules", singular: "molecule" },
+  { level: "organisms", title: "Organisms", singular: "organism" },
+  { level: "layouts", title: "Layouts", singular: "layout" },
+]);
+
+/** Layout primitives may live in any of these; the first file of a name wins. */
+export const LAYOUT_CSS_DIRS = /** @type {const} */ (["css/layout", "css/layouts", "css/components/layouts"]);
+/** Standalone layout examples, joined to the CSS by file name. */
+export const LAYOUT_EXAMPLE_DIRS = /** @type {const} */ (["examples/layout", "examples/layouts"]);
+/** Where a pattern's example page is looked for, in order. */
+export const PATTERN_EXAMPLE_DIRS = /** @type {const} */ (["molecules", "organisms", "layouts", "layout", "patterns"]);
 
 /**
  * @typedef {{ name: string, code: string, source: string, from: "snippet" | "main" | "css-comment" }} Snippet
  * @typedef {{ label: string, url: string }} Spec
+ * @typedef {{ key: string, action: string }} Key
  * @typedef {object} Component
- * @property {string} group      atoms | molecules | organisms | layout | utilities | base
+ * @property {string} group      atoms | molecules | organisms | layouts | utilities | base
  * @property {string} name       file name without extension
  * @property {string} title
  * @property {string} summary
@@ -38,6 +58,37 @@ export const COMPONENT_GROUPS = /** @type {const} */ ([
  * @property {string[]} usedIn   examples whose markup uses the API
  * @property {{ path: string, summary: string }[]} files  (base only) every file in css/base/
  * @property {string | null} overridePath
+ * @property {string} ourChoice  why, when no native element or APG pattern covers it ("" otherwise)
+ * @property {string} sitePath
+ *
+ * @typedef {object} Pattern
+ * @property {string} slug
+ * @property {string} title
+ * @property {string} summary     Markdown
+ * @property {string} milestone   M3 | M3b
+ * @property {string} level       one of LEVELS[].level
+ * @property {Spec[]} standards   the standards it follows (label is Markdown)
+ * @property {string} ourChoice   Markdown, only when no standard exists
+ * @property {Spec[]} specs       further reading
+ * @property {Key[]} keyboard     resolved: example comment, else CSS header, else front matter
+ * @property {"example" | "css" | "front matter" | ""} keyboardFrom
+ * @property {string} keyboardSource repo path the keyboard notes came from
+ * @property {string[]} names     file names (without extension) that fill it in
+ * @property {string[]} examplePaths matching example pages
+ * @property {string[]} cssPaths  matching CSS files
+ * @property {import("./css-comments.mjs").HeaderDoc | null} doc header comment of the first CSS file
+ * @property {Snippet[]} snippets
+ * @property {boolean} available  true once an example page or CSS file exists
+ * @property {string} body        Markdown after the front matter
+ * @property {string} contentPath
+ * @property {string} sitePath
+ *
+ * @typedef {object} Guide
+ * @property {string} slug
+ * @property {string} title
+ * @property {string} summary
+ * @property {string} body       Markdown, with {{patterns: …}} and {{layouts}} lines
+ * @property {string} contentPath
  * @property {string} sitePath
  */
 
@@ -210,20 +261,125 @@ export function loadModel(root) {
       usedIn: examplePath ? [] : findUsage(doc.api, examples),
       files: [],
       overridePath: over?.path ?? null,
-      sitePath: `components/${group}/${name}.html`,
+      ourChoice: str(over?.data["our-choice"]),
+      sitePath: group === "layouts" ? `layouts/${name}.html` : `components/${group}/${name}.html`,
     };
   };
+
+  // Patterns: the handwritten registry. A pattern owns its file names, so a
+  // matching component or layout file fills in the pattern page instead of
+  // getting a page of its own.
+  const patternFiles = list("site/content/patterns", ".md").map((f) => {
+    const path = `site/content/patterns/${f}`;
+    const slug = f.replace(/\.md$/, "");
+    const { data, body } = parseFrontMatter(read(path));
+    const names = [slug, ...strList(data.sources).map((s) => s.replace(/\.(?:html|css)$/, ""))];
+    return { path, slug, data, body, names: [...new Set(names)] };
+  });
+  const owned = new Set(patternFiles.flatMap((p) => p.names));
+  const unowned = (/** @type {string} */ f) => !owned.has(f.replace(/\.css$/, ""));
 
   /** @type {Record<string, Component[]>} */
   const components = {};
   for (const { group } of COMPONENT_GROUPS) {
-    components[group] = list(`css/components/${group}`, ".css").map((f) => {
-      const example = `examples/${group}/${f.replace(/\.css$/, ".html")}`;
-      return component(group, `css/components/${group}/${f}`, exists(example) ? example : null);
-    });
+    components[group] = list(`css/components/${group}`, ".css")
+      .filter(unowned)
+      .map((f) => {
+        const example = `examples/${group}/${f.replace(/\.css$/, ".html")}`;
+        return component(group, `css/components/${group}/${f}`, exists(example) ? example : null);
+      });
   }
-  const layout = list("css/layout", ".css").map((f) => component("layout", `css/layout/${f}`, null));
+
+  /** @type {Map<string, string>} name → CSS path, first directory wins */
+  const layoutCss = new Map();
+  for (const dir of LAYOUT_CSS_DIRS) for (const f of list(dir, ".css").filter(unowned)) if (!layoutCss.has(f)) layoutCss.set(f, `${dir}/${f}`);
+  const layouts = [...layoutCss.keys()].sort(byString).map((f) => {
+    const example = LAYOUT_EXAMPLE_DIRS.map((d) => `${d}/${f.replace(/\.css$/, ".html")}`).find(exists) ?? null;
+    return component("layouts", /** @type {string} */ (layoutCss.get(f)), example);
+  });
   const utilities = list("css/utilities", ".css").map((f) => component("utilities", `css/utilities/${f}`, null));
+
+  /** Every CSS file under css/ except base and reset, recursively. @param {string} dir @returns {string[]} */
+  const walkCss = (dir) => [
+    ...list(dir, ".css").map((f) => `${dir}/${f}`),
+    ...dirs(dir)
+      .filter((d) => !(dir === "css" && (d === "base" || d === "reset")))
+      .flatMap((d) => walkCss(`${dir}/${d}`)),
+  ];
+  const allCss = walkCss("css");
+
+  /** @type {Pattern[]} */
+  const patterns = patternFiles.map(({ path, slug, data, body, names }) => {
+    const examplePaths = names.flatMap((n) => PATTERN_EXAMPLE_DIRS.map((d) => `examples/${d}/${n}.html`)).filter(exists);
+    const cssPaths = names.flatMap((n) => allCss.filter((p) => p.endsWith(`/${n}.css`)));
+    const css = cssPaths[0] ? read(cssPaths[0]) : "";
+    const doc = cssPaths[0] ? parseHeader(headerComment(css), comments(css)) : null;
+    const snippets = examplePaths.length
+      ? examplePaths.flatMap((p) => extractSnippets(read(p), p))
+      : doc?.example
+        ? [{ name: "", code: doc.example, source: cssPaths[0], from: /** @type {const} */ ("css-comment") }]
+        : [];
+
+    /** @type {Pattern["keyboardFrom"]} */
+    let keyboardFrom = "";
+    let keyboardSource = "";
+    /** @type {Key[]} */
+    let keyboard = [];
+    for (const p of examplePaths) {
+      if (keyboard.length) break;
+      keyboard = htmlKeyboard(read(p));
+      if (keyboard.length) [keyboardFrom, keyboardSource] = ["example", p];
+    }
+    for (const p of cssPaths) {
+      if (keyboard.length) break;
+      const c = read(p);
+      keyboard = parseHeader(headerComment(c)).keyboard;
+      if (keyboard.length) [keyboardFrom, keyboardSource] = ["css", p];
+    }
+    if (!keyboard.length) {
+      keyboard = parseKeyboard(strList(data.keyboard));
+      if (keyboard.length) [keyboardFrom, keyboardSource] = ["front matter", path];
+    }
+
+    const level = LEVELS.find((l) => l.singular === str(data.level) || l.level === str(data.level))?.level;
+    if (!level) throw new Error(`${path}: level must be one of ${LEVELS.map((l) => l.singular).join(", ")}`);
+    const milestone = str(data.milestone);
+    if (!/^M\d+b?$/.test(milestone)) throw new Error(`${path}: milestone must look like M3 or M3b`);
+    const standards = specsFrom(strList(data.standard), []);
+    const ourChoice = str(data["our-choice"]);
+    if (!standards.length && !ourChoice) throw new Error(`${path}: needs a standard or an our-choice line`);
+
+    return {
+      slug,
+      title: str(data.title) || titleFromName(slug),
+      summary: str(data.summary),
+      milestone,
+      level,
+      standards,
+      ourChoice,
+      specs: specsFrom(strList(data.specs), []),
+      keyboard,
+      keyboardFrom,
+      keyboardSource,
+      names,
+      examplePaths,
+      cssPaths,
+      doc,
+      snippets,
+      available: examplePaths.length > 0 || cssPaths.length > 0,
+      body,
+      contentPath: path,
+      sitePath: `patterns/${slug}.html`,
+    };
+  });
+
+  /** @type {Guide[]} */
+  const guides = list("site/content/guides", ".md").map((f) => {
+    const path = `site/content/guides/${f}`;
+    const slug = f.replace(/\.md$/, "");
+    const { data, body } = parseFrontMatter(read(path));
+    return { slug, title: str(data.title) || titleFromName(slug), summary: str(data.summary), body, contentPath: path, sitePath: `guides/${slug}.html` };
+  });
 
   // Base elements: one page for every file in css/base/, live example examples/base.html.
   const baseFiles = list("css/base", ".css").map((f) => {
@@ -254,6 +410,7 @@ export function loadModel(root) {
       return { path: f.path, summary: text.charAt(0).toUpperCase() + text.slice(1) };
     }),
     overridePath: baseOver?.path ?? null,
+    ourChoice: str(baseOver?.data["our-choice"]),
     sitePath: "components/base.html",
   };
 
@@ -264,15 +421,20 @@ export function loadModel(root) {
     principles,
     tokenGroups,
     components,
-    layout,
+    layouts,
     utilities,
     base,
+    patterns,
+    guides,
     examples: examples.map(({ path, group, title }) => ({ path, group, title })),
   };
 }
 
 /** @param {unknown} v */
 const str = (v) => (typeof v === "string" ? v : "");
+
+/** A front matter value as a list: a list as-is, one string as one item. @param {unknown} v @returns {string[]} */
+const strList = (v) => (Array.isArray(v) ? v.map(String) : typeof v === "string" && v ? [v] : []);
 
 /** Prose left in the first paragraph after its first sentence. @param {string} first @param {string} summary */
 const restOfFirst = (first, summary) => {

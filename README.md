@@ -123,16 +123,50 @@ Force a color scheme on the page or any subtree with `data-color-scheme="light"`
 
 ## Components
 
-| Group | Name | API | Docs |
+By level ([Components](https://odonckers.github.io/domestic-ui/components/index.html), [Layouts](https://odonckers.github.io/domestic-ui/layouts/index.html)):
+
+| Level | Name | API | Docs |
 | --- | --- | --- | --- |
-| Base | Base elements | none: semantic HTML, `data-color-scheme="light" \| "dark"` | [Base elements](https://odonckers.github.io/domestic-ui/components/base.html) |
+| Atoms | Base elements | none: semantic HTML, `data-color-scheme="light" \| "dark"` | [Base elements](https://odonckers.github.io/domestic-ui/components/base.html) |
 | Atoms | Coming in M2 | | [components README](https://github.com/odonckers/domestic-ui/blob/main/css/components/README.md) |
-| Molecules | Coming in M2 | | [components README](https://github.com/odonckers/domestic-ui/blob/main/css/components/README.md) |
-| Organisms | Coming in M3 | | [components README](https://github.com/odonckers/domestic-ui/blob/main/css/components/README.md) |
-| Layout | Cluster | `class="cluster"`, `--cluster-gap`, `--cluster-justify`, `--cluster-align` | [Cluster](https://odonckers.github.io/domestic-ui/components/layout/cluster.html) |
-| Layout | Grid | `class="grid"`, `--grid-min`, `--grid-gap` | [Grid](https://odonckers.github.io/domestic-ui/components/layout/grid.html) |
-| Layout | Stack | `class="stack"`, `--stack-gap` | [Stack](https://odonckers.github.io/domestic-ui/components/layout/stack.html) |
+| Molecules | Coming in M3 | | [components README](https://github.com/odonckers/domestic-ui/blob/main/css/components/README.md) |
+| Organisms | Coming in M3b | | [components README](https://github.com/odonckers/domestic-ui/blob/main/css/components/README.md) |
+| Layouts | Cluster | `class="cluster"`, `--cluster-gap`, `--cluster-justify`, `--cluster-align` | [Cluster](https://odonckers.github.io/domestic-ui/layouts/cluster.html) |
+| Layouts | Grid | `class="grid"`, `--grid-min`, `--grid-gap` | [Grid](https://odonckers.github.io/domestic-ui/layouts/grid.html) |
+| Layouts | Stack | `class="stack"`, `--stack-gap` | [Stack](https://odonckers.github.io/domestic-ui/layouts/stack.html) |
 | Utilities | Visually hidden | `class="visually-hidden"` | [Visually hidden](https://odonckers.github.io/domestic-ui/components/utilities/visually-hidden.html) |
+
+## Patterns
+
+Where a standard exists (a native HTML element or a WAI-ARIA APG pattern), the pattern follows it and links to it. Where none exists, it is labeled **Our choice:** with one line on why ([Patterns](https://odonckers.github.io/domestic-ui/patterns/index.html)).
+
+| Pattern | Milestone | Status | Follows |
+| --- | --- | --- | --- |
+| [Alerts](https://odonckers.github.io/domestic-ui/patterns/alerts.html) | M3 | Coming in M3 | [APG Alert pattern](https://www.w3.org/WAI/ARIA/apg/patterns/alert/) |
+| [Breadcrumb](https://odonckers.github.io/domestic-ui/patterns/breadcrumb.html) | M3 | Coming in M3 | [APG Breadcrumb pattern](https://www.w3.org/WAI/ARIA/apg/patterns/breadcrumb/) |
+| [Card](https://odonckers.github.io/domestic-ui/patterns/card.html) | M3 | Coming in M3 | **Our choice:** No native element or APG pattern exists; an `<article>` with a heading, where the heading holds the one link, so the whole card is not one long link name. |
+| [Dialog and drawer](https://odonckers.github.io/domestic-ui/patterns/dialog.html) | M3 | Coming in M3 | [HTML `<dialog>` element](https://html.spec.whatwg.org/multipage/interactive-elements.html#the-dialog-element), [APG Dialog (Modal) pattern](https://www.w3.org/WAI/ARIA/apg/patterns/dialog-modal/) |
+| [Disclosure](https://odonckers.github.io/domestic-ui/patterns/disclosure.html) | M3 | Coming in M3 | [HTML `<details>` element](https://html.spec.whatwg.org/multipage/interactive-elements.html#the-details-element), [APG Disclosure pattern](https://www.w3.org/WAI/ARIA/apg/patterns/disclosure/) |
+| [Menu button](https://odonckers.github.io/domestic-ui/patterns/menu-button.html) | M3 | Coming in M3 | [APG Menu Button pattern](https://www.w3.org/WAI/ARIA/apg/patterns/menu-button/) |
+| [Pagination](https://odonckers.github.io/domestic-ui/patterns/pagination.html) | M3 | Coming in M3 | **Our choice:** No native element or APG pattern exists; a labelled `<nav>` with a list of links and `aria-current="page"` on the current one, as for breadcrumbs. |
+| [Popover](https://odonckers.github.io/domestic-ui/patterns/popover.html) | M3 | Coming in M3 | [HTML `popover` attribute](https://html.spec.whatwg.org/multipage/popover.html#the-popover-attribute), [MDN Popover API](https://developer.mozilla.org/en-US/docs/Web/API/Popover_API) |
+| [Search](https://odonckers.github.io/domestic-ui/patterns/search.html) | M3 | Coming in M3 | [HTML `<search>` element](https://html.spec.whatwg.org/multipage/grouping-content.html#the-search-element), [MDN `<input type="search">`](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/input/search) |
+| [Site navigation](https://odonckers.github.io/domestic-ui/patterns/nav.html) | M3 | Coming in M3 | [HTML `<nav>` element](https://html.spec.whatwg.org/multipage/sections.html#the-nav-element), [APG Landmark regions](https://www.w3.org/WAI/ARIA/apg/practices/landmark-regions/), [APG Disclosure navigation example](https://www.w3.org/WAI/ARIA/apg/patterns/disclosure/examples/disclosure-navigation/) |
+| [Tabs](https://odonckers.github.io/domestic-ui/patterns/tabs.html) | M3 | Coming in M3 | [APG Tabs pattern](https://www.w3.org/WAI/ARIA/apg/patterns/tabs/) |
+| [Toolbar](https://odonckers.github.io/domestic-ui/patterns/toolbar.html) | M3 | Coming in M3 | [APG Toolbar pattern](https://www.w3.org/WAI/ARIA/apg/patterns/toolbar/) |
+| [Typeahead](https://odonckers.github.io/domestic-ui/patterns/typeahead.html) | M3 | Coming in M3 | [HTML `<datalist>` element](https://html.spec.whatwg.org/multipage/form-elements.html#the-datalist-element), [APG Combobox pattern](https://www.w3.org/WAI/ARIA/apg/patterns/combobox/) |
+| [App shell](https://odonckers.github.io/domestic-ui/patterns/app-shell.html) | M3b | Coming in M3b | **Our choice:** No standard defines an app shell; it is the HTML landmarks `<header>`, `<nav>`, `<main>` and `<aside>` placed with CSS grid, with no wrapper elements of our own. |
+| [Compact density](https://odonckers.github.io/domestic-ui/patterns/density.html) | M3b | Coming in M3b | **Our choice:** No standard exists for density; one semantic token override that tightens space while targets stay at least 24 by 24 CSS pixels. |
+| [Dashboard](https://odonckers.github.io/domestic-ui/patterns/dashboard.html) | M3b | Coming in M3b | **Our choice:** No standard exists; a CSS grid of `<section>` elements, each with a heading, that reflows without media queries. |
+| [Data table](https://odonckers.github.io/domestic-ui/patterns/data-table.html) | M3b | Coming in M3b | [HTML `<table>` element](https://html.spec.whatwg.org/multipage/tables.html#the-table-element), [APG Table pattern](https://www.w3.org/WAI/ARIA/apg/patterns/table/) |
+| [Filter bar](https://odonckers.github.io/domestic-ui/patterns/filter-bar.html) | M3b | Coming in M3b | **Our choice:** No standard exists; a `<form>` inside `<search>` with labelled native controls in a row that wraps, and the result count announced as a status message. |
+| [Large forms](https://odonckers.github.io/domestic-ui/patterns/large-forms.html) | M3b | Coming in M3b | [HTML `<form>` element](https://html.spec.whatwg.org/multipage/forms.html#the-form-element), [HTML `<fieldset>` element](https://html.spec.whatwg.org/multipage/form-elements.html#the-fieldset-element) |
+| [List-detail](https://odonckers.github.io/domestic-ui/patterns/list-detail.html) | M3b | Coming in M3b | **Our choice:** No standard exists; a list of links beside the detail region, placed with CSS grid, where each item is a real link so the browser's history and the URL keep working. |
+| [Split](https://odonckers.github.io/domestic-ui/patterns/split.html) | M3b | Coming in M3b | **Our choice:** No standard exists for a fixed split; two regions placed with CSS grid. A divider users can drag would follow the APG Window Splitter pattern. |
+
+## Guides
+
+- [From a simple site to an ERP app](https://odonckers.github.io/domestic-ui/guides/simple-site-to-erp-app.html): Five steps from a plain content page to a dense business application, and which parts of each step are available today.
 
 ## Tokens
 

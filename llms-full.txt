@@ -64,33 +64,94 @@ Force a color scheme on the page or any subtree with `data-color-scheme="light"`
 - [State](https://odonckers.github.io/domestic-ui/tokens/state.md): 1 token
 - [Dependent tokens](https://odonckers.github.io/domestic-ui/tokens/dependent-tokens.md): 5 tokens
 
-### Components
+### Components by level
 
-#### Base elements
+#### Tokens
 
-- [Base elements](https://odonckers.github.io/domestic-ui/components/base.md): Native HTML elements styled by the base layer, with no classes.
+- [Surfaces and text](https://odonckers.github.io/domestic-ui/tokens/surfaces-and-text.md): 5 tokens
+- [Borders](https://odonckers.github.io/domestic-ui/tokens/borders.md): 2 tokens
+- [Accent and status](https://odonckers.github.io/domestic-ui/tokens/accent-and-status.md): 9 tokens
+- [Type](https://odonckers.github.io/domestic-ui/tokens/type.md): 18 tokens
+- [Space](https://odonckers.github.io/domestic-ui/tokens/space.md): 9 tokens
+- [Sizes](https://odonckers.github.io/domestic-ui/tokens/sizes.md): 3 tokens
+- [Shape](https://odonckers.github.io/domestic-ui/tokens/shape.md): 8 tokens
+- [Focus indicator](https://odonckers.github.io/domestic-ui/tokens/focus-indicator.md): 2 tokens
+- [Motion](https://odonckers.github.io/domestic-ui/tokens/motion.md): 3 tokens
+- [State](https://odonckers.github.io/domestic-ui/tokens/state.md): 1 token
+- [Dependent tokens](https://odonckers.github.io/domestic-ui/tokens/dependent-tokens.md): 5 tokens
+- [Compact density](https://odonckers.github.io/domestic-ui/patterns/density.md): A compact density token that tightens spacing for data-heavy screens. Coming in M3b.
 
 #### Atoms
 
-Coming in M2; see the [components README](https://github.com/odonckers/domestic-ui/blob/main/css/components/README.md).
+- [Base elements](https://odonckers.github.io/domestic-ui/components/base.md): Native HTML elements styled by the base layer, with no classes.
+
+Components in `css/components/atoms/`: coming in M2; see the [components README](https://github.com/odonckers/domestic-ui/blob/main/css/components/README.md).
 
 #### Molecules
 
-Coming in M2; see the [components README](https://github.com/odonckers/domestic-ui/blob/main/css/components/README.md).
+- [Alerts](https://odonckers.github.io/domestic-ui/patterns/alerts.md): Messages about status, from notices in the page to live alerts for important, time-sensitive changes. Coming in M3.
+- [Breadcrumb](https://odonckers.github.io/domestic-ui/patterns/breadcrumb.md): The path to the current page as an ordered list of links in a labelled `<nav>`. Coming in M3.
+- [Card](https://odonckers.github.io/domestic-ui/patterns/card.md): A self-contained item, such as a product or an article teaser, on a raised surface. Coming in M3.
+- [Disclosure](https://odonckers.github.io/domestic-ui/patterns/disclosure.md): A summary that shows or hides more content, built on `<details>` and `<summary>`. Coming in M3.
+- [Menu button](https://odonckers.github.io/domestic-ui/patterns/menu-button.md): A button that opens a menu of actions. Coming in M3.
+- [Pagination](https://odonckers.github.io/domestic-ui/patterns/pagination.md): Links to the pages of a long list of results. Coming in M3.
+- [Popover](https://odonckers.github.io/domestic-ui/patterns/popover.md): Content shown on top of the page from a button, with the `popover` attribute. Coming in M3.
+- [Search](https://odonckers.github.io/domestic-ui/patterns/search.md): A search form in a `<search>` landmark with an `<input type="search">`. Coming in M3.
+- [Tabs](https://odonckers.github.io/domestic-ui/patterns/tabs.md): Sections of content shown one at a time, chosen from a list of tabs. Coming in M3.
+- [Toolbar](https://odonckers.github.io/domestic-ui/patterns/toolbar.md): A row of related controls that is one stop in the tab order. Coming in M3.
+- [Typeahead](https://odonckers.github.io/domestic-ui/patterns/typeahead.md): A text field that suggests values as you type, with `<datalist>` first and an APG combobox only where `<datalist>` falls short. Coming in M3.
 
 #### Organisms
 
-Coming in M3; see the [components README](https://github.com/odonckers/domestic-ui/blob/main/css/components/README.md).
+- [Dialog and drawer](https://odonckers.github.io/domestic-ui/patterns/dialog.md): A modal `<dialog>`, either centered or as a drawer along one edge of the viewport. Coming in M3.
+- [Site navigation](https://odonckers.github.io/domestic-ui/patterns/nav.md): The main links of a site in a `<nav>` landmark, with the current page marked. Coming in M3.
+- [Data table](https://odonckers.github.io/domestic-ui/patterns/data-table.md): Rows of records in a native `<table>` with a caption, header cells and optional sorting. Coming in M3b.
+- [Filter bar](https://odonckers.github.io/domestic-ui/patterns/filter-bar.md): A row of native form controls that narrows a list or table. Coming in M3b.
+- [Large forms](https://odonckers.github.io/domestic-ui/patterns/large-forms.md): Long forms split into labelled groups, in one or more columns. Coming in M3b.
 
-#### Layout primitives
+#### Layouts
 
-- [Cluster](https://odonckers.github.io/domestic-ui/components/layout/cluster.md): An inline group that wraps onto new lines (buttons, tags, nav links).
-- [Grid](https://odonckers.github.io/domestic-ui/components/layout/grid.md): A responsive grid: as many columns as fit, each at least --grid-min wide, never wider than the container.
-- [Stack](https://odonckers.github.io/domestic-ui/components/layout/stack.md): Vertical flow with a consistent gap between children.
+- [Cluster](https://odonckers.github.io/domestic-ui/layouts/cluster.md): An inline group that wraps onto new lines (buttons, tags, nav links).
+- [Grid](https://odonckers.github.io/domestic-ui/layouts/grid.md): A responsive grid: as many columns as fit, each at least --grid-min wide, never wider than the container.
+- [Stack](https://odonckers.github.io/domestic-ui/layouts/stack.md): Vertical flow with a consistent gap between children.
+- [App shell](https://odonckers.github.io/domestic-ui/patterns/app-shell.md): The frame of an application: header, primary sidebar, main content and an optional auxiliary sidebar. Coming in M3b.
+- [Dashboard](https://odonckers.github.io/domestic-ui/patterns/dashboard.md): A grid of summary sections, each with a heading, that reflows to fit the screen. Coming in M3b.
+- [List-detail](https://odonckers.github.io/domestic-ui/patterns/list-detail.md): A list of items beside the details of the selected one, stacked on narrow screens. Coming in M3b.
+- [Split](https://odonckers.github.io/domestic-ui/patterns/split.md): Two regions side by side at a set ratio, stacked on narrow screens. Coming in M3b.
 
 #### Utilities
 
 - [Visually hidden](https://odonckers.github.io/domestic-ui/components/utilities/visually-hidden.md): Hides content visually but keeps it in the accessibility tree.
+
+### Patterns
+
+Where a standard exists, a native HTML element or a [WAI-ARIA APG pattern](https://www.w3.org/WAI/ARIA/apg/patterns/), the pattern follows it and links to it. Where none exists, the pattern is written as close to plain HTML as possible and labeled **Our choice:** with one line on why.
+
+- [Alerts](https://odonckers.github.io/domestic-ui/patterns/alerts.md): Messages about status, from notices in the page to live alerts for important, time-sensitive changes. Coming in M3.
+- [Breadcrumb](https://odonckers.github.io/domestic-ui/patterns/breadcrumb.md): The path to the current page as an ordered list of links in a labelled `<nav>`. Coming in M3.
+- [Card](https://odonckers.github.io/domestic-ui/patterns/card.md): A self-contained item, such as a product or an article teaser, on a raised surface. Coming in M3.
+- [Dialog and drawer](https://odonckers.github.io/domestic-ui/patterns/dialog.md): A modal `<dialog>`, either centered or as a drawer along one edge of the viewport. Coming in M3.
+- [Disclosure](https://odonckers.github.io/domestic-ui/patterns/disclosure.md): A summary that shows or hides more content, built on `<details>` and `<summary>`. Coming in M3.
+- [Menu button](https://odonckers.github.io/domestic-ui/patterns/menu-button.md): A button that opens a menu of actions. Coming in M3.
+- [Pagination](https://odonckers.github.io/domestic-ui/patterns/pagination.md): Links to the pages of a long list of results. Coming in M3.
+- [Popover](https://odonckers.github.io/domestic-ui/patterns/popover.md): Content shown on top of the page from a button, with the `popover` attribute. Coming in M3.
+- [Search](https://odonckers.github.io/domestic-ui/patterns/search.md): A search form in a `<search>` landmark with an `<input type="search">`. Coming in M3.
+- [Site navigation](https://odonckers.github.io/domestic-ui/patterns/nav.md): The main links of a site in a `<nav>` landmark, with the current page marked. Coming in M3.
+- [Tabs](https://odonckers.github.io/domestic-ui/patterns/tabs.md): Sections of content shown one at a time, chosen from a list of tabs. Coming in M3.
+- [Toolbar](https://odonckers.github.io/domestic-ui/patterns/toolbar.md): A row of related controls that is one stop in the tab order. Coming in M3.
+- [Typeahead](https://odonckers.github.io/domestic-ui/patterns/typeahead.md): A text field that suggests values as you type, with `<datalist>` first and an APG combobox only where `<datalist>` falls short. Coming in M3.
+- [App shell](https://odonckers.github.io/domestic-ui/patterns/app-shell.md): The frame of an application: header, primary sidebar, main content and an optional auxiliary sidebar. Coming in M3b.
+- [Compact density](https://odonckers.github.io/domestic-ui/patterns/density.md): A compact density token that tightens spacing for data-heavy screens. Coming in M3b.
+- [Dashboard](https://odonckers.github.io/domestic-ui/patterns/dashboard.md): A grid of summary sections, each with a heading, that reflows to fit the screen. Coming in M3b.
+- [Data table](https://odonckers.github.io/domestic-ui/patterns/data-table.md): Rows of records in a native `<table>` with a caption, header cells and optional sorting. Coming in M3b.
+- [Filter bar](https://odonckers.github.io/domestic-ui/patterns/filter-bar.md): A row of native form controls that narrows a list or table. Coming in M3b.
+- [Large forms](https://odonckers.github.io/domestic-ui/patterns/large-forms.md): Long forms split into labelled groups, in one or more columns. Coming in M3b.
+- [List-detail](https://odonckers.github.io/domestic-ui/patterns/list-detail.md): A list of items beside the details of the selected one, stacked on narrow screens. Coming in M3b.
+- [Split](https://odonckers.github.io/domestic-ui/patterns/split.md): Two regions side by side at a set ratio, stacked on narrow screens. Coming in M3b.
+
+### Guides
+
+- [From a simple site to an ERP app](https://odonckers.github.io/domestic-ui/guides/simple-site-to-erp-app.md): Five steps from a plain content page to a dense business application, and which parts of each step are available today.
 
 ### Examples
 
@@ -618,27 +679,60 @@ Page: https://odonckers.github.io/domestic-ui/components/index.html
 
 Each layout primitive, utility and component has one documented class or attribute API, written in the header comment of its CSS file and tuned with custom properties ([Agent-friendly by design](https://odonckers.github.io/domestic-ui/principles/agent-friendly-by-design.md)). Base elements need no API at all: write semantic HTML.
 
-### Base elements
+The levels follow [atomic design](https://atomicdesign.bradfrost.com/chapter-2/). Planned [patterns](https://odonckers.github.io/domestic-ui/patterns/index.md) are listed at their level with their status.
 
-- [Base elements](https://odonckers.github.io/domestic-ui/components/base.md): Native HTML elements styled by the base layer, with no classes.
+### Tokens
+
+- [Surfaces and text](https://odonckers.github.io/domestic-ui/tokens/surfaces-and-text.md): 5 tokens
+- [Borders](https://odonckers.github.io/domestic-ui/tokens/borders.md): 2 tokens
+- [Accent and status](https://odonckers.github.io/domestic-ui/tokens/accent-and-status.md): 9 tokens
+- [Type](https://odonckers.github.io/domestic-ui/tokens/type.md): 18 tokens
+- [Space](https://odonckers.github.io/domestic-ui/tokens/space.md): 9 tokens
+- [Sizes](https://odonckers.github.io/domestic-ui/tokens/sizes.md): 3 tokens
+- [Shape](https://odonckers.github.io/domestic-ui/tokens/shape.md): 8 tokens
+- [Focus indicator](https://odonckers.github.io/domestic-ui/tokens/focus-indicator.md): 2 tokens
+- [Motion](https://odonckers.github.io/domestic-ui/tokens/motion.md): 3 tokens
+- [State](https://odonckers.github.io/domestic-ui/tokens/state.md): 1 token
+- [Dependent tokens](https://odonckers.github.io/domestic-ui/tokens/dependent-tokens.md): 5 tokens
+- [Compact density](https://odonckers.github.io/domestic-ui/patterns/density.md): A compact density token that tightens spacing for data-heavy screens. Coming in M3b.
 
 ### Atoms
 
-Coming in M2; see the [components README](https://github.com/odonckers/domestic-ui/blob/main/css/components/README.md).
+- [Base elements](https://odonckers.github.io/domestic-ui/components/base.md): Native HTML elements styled by the base layer, with no classes.
+
+Components in `css/components/atoms/`: coming in M2; see the [components README](https://github.com/odonckers/domestic-ui/blob/main/css/components/README.md).
 
 ### Molecules
 
-Coming in M2; see the [components README](https://github.com/odonckers/domestic-ui/blob/main/css/components/README.md).
+- [Alerts](https://odonckers.github.io/domestic-ui/patterns/alerts.md): Messages about status, from notices in the page to live alerts for important, time-sensitive changes. Coming in M3.
+- [Breadcrumb](https://odonckers.github.io/domestic-ui/patterns/breadcrumb.md): The path to the current page as an ordered list of links in a labelled `<nav>`. Coming in M3.
+- [Card](https://odonckers.github.io/domestic-ui/patterns/card.md): A self-contained item, such as a product or an article teaser, on a raised surface. Coming in M3.
+- [Disclosure](https://odonckers.github.io/domestic-ui/patterns/disclosure.md): A summary that shows or hides more content, built on `<details>` and `<summary>`. Coming in M3.
+- [Menu button](https://odonckers.github.io/domestic-ui/patterns/menu-button.md): A button that opens a menu of actions. Coming in M3.
+- [Pagination](https://odonckers.github.io/domestic-ui/patterns/pagination.md): Links to the pages of a long list of results. Coming in M3.
+- [Popover](https://odonckers.github.io/domestic-ui/patterns/popover.md): Content shown on top of the page from a button, with the `popover` attribute. Coming in M3.
+- [Search](https://odonckers.github.io/domestic-ui/patterns/search.md): A search form in a `<search>` landmark with an `<input type="search">`. Coming in M3.
+- [Tabs](https://odonckers.github.io/domestic-ui/patterns/tabs.md): Sections of content shown one at a time, chosen from a list of tabs. Coming in M3.
+- [Toolbar](https://odonckers.github.io/domestic-ui/patterns/toolbar.md): A row of related controls that is one stop in the tab order. Coming in M3.
+- [Typeahead](https://odonckers.github.io/domestic-ui/patterns/typeahead.md): A text field that suggests values as you type, with `<datalist>` first and an APG combobox only where `<datalist>` falls short. Coming in M3.
 
 ### Organisms
 
-Coming in M3; see the [components README](https://github.com/odonckers/domestic-ui/blob/main/css/components/README.md).
+- [Dialog and drawer](https://odonckers.github.io/domestic-ui/patterns/dialog.md): A modal `<dialog>`, either centered or as a drawer along one edge of the viewport. Coming in M3.
+- [Site navigation](https://odonckers.github.io/domestic-ui/patterns/nav.md): The main links of a site in a `<nav>` landmark, with the current page marked. Coming in M3.
+- [Data table](https://odonckers.github.io/domestic-ui/patterns/data-table.md): Rows of records in a native `<table>` with a caption, header cells and optional sorting. Coming in M3b.
+- [Filter bar](https://odonckers.github.io/domestic-ui/patterns/filter-bar.md): A row of native form controls that narrows a list or table. Coming in M3b.
+- [Large forms](https://odonckers.github.io/domestic-ui/patterns/large-forms.md): Long forms split into labelled groups, in one or more columns. Coming in M3b.
 
-### Layout primitives
+### Layouts
 
-- [Cluster](https://odonckers.github.io/domestic-ui/components/layout/cluster.md): An inline group that wraps onto new lines (buttons, tags, nav links).
-- [Grid](https://odonckers.github.io/domestic-ui/components/layout/grid.md): A responsive grid: as many columns as fit, each at least --grid-min wide, never wider than the container.
-- [Stack](https://odonckers.github.io/domestic-ui/components/layout/stack.md): Vertical flow with a consistent gap between children.
+- [Cluster](https://odonckers.github.io/domestic-ui/layouts/cluster.md): An inline group that wraps onto new lines (buttons, tags, nav links).
+- [Grid](https://odonckers.github.io/domestic-ui/layouts/grid.md): A responsive grid: as many columns as fit, each at least --grid-min wide, never wider than the container.
+- [Stack](https://odonckers.github.io/domestic-ui/layouts/stack.md): Vertical flow with a consistent gap between children.
+- [App shell](https://odonckers.github.io/domestic-ui/patterns/app-shell.md): The frame of an application: header, primary sidebar, main content and an optional auxiliary sidebar. Coming in M3b.
+- [Dashboard](https://odonckers.github.io/domestic-ui/patterns/dashboard.md): A grid of summary sections, each with a heading, that reflows to fit the screen. Coming in M3b.
+- [List-detail](https://odonckers.github.io/domestic-ui/patterns/list-detail.md): A list of items beside the details of the selected one, stacked on narrow screens. Coming in M3b.
+- [Split](https://odonckers.github.io/domestic-ui/patterns/split.md): Two regions side by side at a set ratio, stacked on narrow screens. Coming in M3b.
 
 ### Utilities
 
@@ -669,7 +763,7 @@ No classes: write semantic HTML and the base layer styles it.
 
 ### Live example
 
-[Open the example on its own](https://odonckers.github.io/domestic-ui/examples/base.html)
+- [Open the example on its own](https://odonckers.github.io/domestic-ui/examples/base.html)
 
 ### Markup
 
@@ -1029,9 +1123,63 @@ Each point below is stated in a `css/base/` comment or in [PRINCIPLES.md](https:
 - [`examples/base.html`](https://github.com/odonckers/domestic-ui/blob/main/examples/base.html)
 - [`site/content/components/base.md`](https://github.com/odonckers/domestic-ui/blob/main/site/content/components/base.md)
 
+## Visually hidden
+
+Page: https://odonckers.github.io/domestic-ui/components/utilities/visually-hidden.html
+
+Hides content visually but keeps it in the accessibility tree.
+
+### API
+
+```text
+class="visually-hidden"
+```
+
+### Live example
+
+There is no standalone example page for visually hidden yet. These example pages use it: [Base elements · domestic-ui](https://odonckers.github.io/domestic-ui/examples/base.html), [Theming · domestic-ui](https://odonckers.github.io/domestic-ui/examples/theming.html).
+
+### Markup
+
+No markup snippet yet: there is no example page and no `Example` block in the CSS header comment.
+
+### Notes
+
+The well-known pattern from The A11Y Project: <https://www.a11yproject.com/posts/how-to-hide-content/>
+
+### Accessibility
+
+From the CSS header comment: Hides content visually but keeps it in the accessibility tree.
+
+See also the spec links below and the [Accessibility baseline](https://odonckers.github.io/domestic-ui/principles/accessibility-baseline-wcag-22-aa.md) principle.
+
+### Specs
+
+- **Other**: [www.a11yproject.com/posts/how-to-hide-content/](https://www.a11yproject.com/posts/how-to-hide-content/)
+
+### Source
+
+- [`css/utilities/visually-hidden.css`](https://github.com/odonckers/domestic-ui/blob/main/css/utilities/visually-hidden.css)
+
+## Layouts
+
+Page: https://odonckers.github.io/domestic-ui/layouts/index.html
+
+Layout primitives arrange their children and nothing else; see [Layout primitives](https://odonckers.github.io/domestic-ui/principles/layout-primitives.md). Each has one class and is tuned with custom properties. Page layouts such as the app shell are listed with their status.
+
+### All layouts
+
+- [Cluster](https://odonckers.github.io/domestic-ui/layouts/cluster.md): An inline group that wraps onto new lines (buttons, tags, nav links).
+- [Grid](https://odonckers.github.io/domestic-ui/layouts/grid.md): A responsive grid: as many columns as fit, each at least --grid-min wide, never wider than the container.
+- [Stack](https://odonckers.github.io/domestic-ui/layouts/stack.md): Vertical flow with a consistent gap between children.
+- [App shell](https://odonckers.github.io/domestic-ui/patterns/app-shell.md): The frame of an application: header, primary sidebar, main content and an optional auxiliary sidebar. Coming in M3b.
+- [Dashboard](https://odonckers.github.io/domestic-ui/patterns/dashboard.md): A grid of summary sections, each with a heading, that reflows to fit the screen. Coming in M3b.
+- [List-detail](https://odonckers.github.io/domestic-ui/patterns/list-detail.md): A list of items beside the details of the selected one, stacked on narrow screens. Coming in M3b.
+- [Split](https://odonckers.github.io/domestic-ui/patterns/split.md): Two regions side by side at a set ratio, stacked on narrow screens. Coming in M3b.
+
 ## Cluster
 
-Page: https://odonckers.github.io/domestic-ui/components/layout/cluster.html
+Page: https://odonckers.github.io/domestic-ui/layouts/cluster.html
 
 An inline group that wraps onto new lines (buttons, tags, nav links).
 
@@ -1076,7 +1224,7 @@ The CSS header comment has no accessibility notes. See the spec links below and 
 
 ## Grid
 
-Page: https://odonckers.github.io/domestic-ui/components/layout/grid.html
+Page: https://odonckers.github.io/domestic-ui/layouts/grid.html
 
 A responsive grid: as many columns as fit, each at least --grid-min wide, never wider than the container.
 
@@ -1121,7 +1269,7 @@ The CSS header comment has no accessibility notes. See the spec links below and 
 
 ## Stack
 
-Page: https://odonckers.github.io/domestic-ui/components/layout/stack.html
+Page: https://odonckers.github.io/domestic-ui/layouts/stack.html
 
 Vertical flow with a consistent gap between children.
 
@@ -1163,43 +1311,460 @@ The CSS header comment has no accessibility notes. See the spec links below and 
 
 - [`css/layout/stack.css`](https://github.com/odonckers/domestic-ui/blob/main/css/layout/stack.css)
 
-## Visually hidden
+## Patterns
 
-Page: https://odonckers.github.io/domestic-ui/components/utilities/visually-hidden.html
+Page: https://odonckers.github.io/domestic-ui/patterns/index.html
 
-Hides content visually but keeps it in the accessibility tree.
+Where a standard exists, a native HTML element or a [WAI-ARIA APG pattern](https://www.w3.org/WAI/ARIA/apg/patterns/), the pattern follows it and links to it. Where none exists, the pattern is written as close to plain HTML as possible and labeled **Our choice:** with one line on why.
 
-### API
+A pattern page fills in on its own when its example page or CSS file lands. Until then it says which milestone it is planned for. To go from a plain page to a full app step by step, read [From a simple site to an ERP app](https://odonckers.github.io/domestic-ui/guides/simple-site-to-erp-app.md).
 
-```text
-class="visually-hidden"
-```
+### M3: Molecules and navigation patterns
 
-### Live example
+| Pattern | Level | Status | Follows |
+| --- | --- | --- | --- |
+| [Alerts](https://odonckers.github.io/domestic-ui/patterns/alerts.md) | molecule | Coming in M3 | [APG Alert pattern](https://www.w3.org/WAI/ARIA/apg/patterns/alert/) |
+| [Breadcrumb](https://odonckers.github.io/domestic-ui/patterns/breadcrumb.md) | molecule | Coming in M3 | [APG Breadcrumb pattern](https://www.w3.org/WAI/ARIA/apg/patterns/breadcrumb/) |
+| [Card](https://odonckers.github.io/domestic-ui/patterns/card.md) | molecule | Coming in M3 | **Our choice:** No native element or APG pattern exists; an `<article>` with a heading, where the heading holds the one link, so the whole card is not one long link name. |
+| [Dialog and drawer](https://odonckers.github.io/domestic-ui/patterns/dialog.md) | organism | Coming in M3 | [HTML `<dialog>` element](https://html.spec.whatwg.org/multipage/interactive-elements.html#the-dialog-element), [APG Dialog (Modal) pattern](https://www.w3.org/WAI/ARIA/apg/patterns/dialog-modal/) |
+| [Disclosure](https://odonckers.github.io/domestic-ui/patterns/disclosure.md) | molecule | Coming in M3 | [HTML `<details>` element](https://html.spec.whatwg.org/multipage/interactive-elements.html#the-details-element), [APG Disclosure pattern](https://www.w3.org/WAI/ARIA/apg/patterns/disclosure/) |
+| [Menu button](https://odonckers.github.io/domestic-ui/patterns/menu-button.md) | molecule | Coming in M3 | [APG Menu Button pattern](https://www.w3.org/WAI/ARIA/apg/patterns/menu-button/) |
+| [Pagination](https://odonckers.github.io/domestic-ui/patterns/pagination.md) | molecule | Coming in M3 | **Our choice:** No native element or APG pattern exists; a labelled `<nav>` with a list of links and `aria-current="page"` on the current one, as for breadcrumbs. |
+| [Popover](https://odonckers.github.io/domestic-ui/patterns/popover.md) | molecule | Coming in M3 | [HTML `popover` attribute](https://html.spec.whatwg.org/multipage/popover.html#the-popover-attribute), [MDN Popover API](https://developer.mozilla.org/en-US/docs/Web/API/Popover_API) |
+| [Search](https://odonckers.github.io/domestic-ui/patterns/search.md) | molecule | Coming in M3 | [HTML `<search>` element](https://html.spec.whatwg.org/multipage/grouping-content.html#the-search-element), [MDN `<input type="search">`](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/input/search) |
+| [Site navigation](https://odonckers.github.io/domestic-ui/patterns/nav.md) | organism | Coming in M3 | [HTML `<nav>` element](https://html.spec.whatwg.org/multipage/sections.html#the-nav-element), [APG Landmark regions](https://www.w3.org/WAI/ARIA/apg/practices/landmark-regions/), [APG Disclosure navigation example](https://www.w3.org/WAI/ARIA/apg/patterns/disclosure/examples/disclosure-navigation/) |
+| [Tabs](https://odonckers.github.io/domestic-ui/patterns/tabs.md) | molecule | Coming in M3 | [APG Tabs pattern](https://www.w3.org/WAI/ARIA/apg/patterns/tabs/) |
+| [Toolbar](https://odonckers.github.io/domestic-ui/patterns/toolbar.md) | molecule | Coming in M3 | [APG Toolbar pattern](https://www.w3.org/WAI/ARIA/apg/patterns/toolbar/) |
+| [Typeahead](https://odonckers.github.io/domestic-ui/patterns/typeahead.md) | molecule | Coming in M3 | [HTML `<datalist>` element](https://html.spec.whatwg.org/multipage/form-elements.html#the-datalist-element), [APG Combobox pattern](https://www.w3.org/WAI/ARIA/apg/patterns/combobox/) |
 
-There is no standalone example page for visually hidden yet. These example pages use it: [Base elements · domestic-ui](https://odonckers.github.io/domestic-ui/examples/base.html), [Theming · domestic-ui](https://odonckers.github.io/domestic-ui/examples/theming.html).
+### M3b: App shell, complex layouts and organisms
 
-### Markup
+| Pattern | Level | Status | Follows |
+| --- | --- | --- | --- |
+| [App shell](https://odonckers.github.io/domestic-ui/patterns/app-shell.md) | layout | Coming in M3b | **Our choice:** No standard defines an app shell; it is the HTML landmarks `<header>`, `<nav>`, `<main>` and `<aside>` placed with CSS grid, with no wrapper elements of our own. |
+| [Compact density](https://odonckers.github.io/domestic-ui/patterns/density.md) | token | Coming in M3b | **Our choice:** No standard exists for density; one semantic token override that tightens space while targets stay at least 24 by 24 CSS pixels. |
+| [Dashboard](https://odonckers.github.io/domestic-ui/patterns/dashboard.md) | layout | Coming in M3b | **Our choice:** No standard exists; a CSS grid of `<section>` elements, each with a heading, that reflows without media queries. |
+| [Data table](https://odonckers.github.io/domestic-ui/patterns/data-table.md) | organism | Coming in M3b | [HTML `<table>` element](https://html.spec.whatwg.org/multipage/tables.html#the-table-element), [APG Table pattern](https://www.w3.org/WAI/ARIA/apg/patterns/table/) |
+| [Filter bar](https://odonckers.github.io/domestic-ui/patterns/filter-bar.md) | organism | Coming in M3b | **Our choice:** No standard exists; a `<form>` inside `<search>` with labelled native controls in a row that wraps, and the result count announced as a status message. |
+| [Large forms](https://odonckers.github.io/domestic-ui/patterns/large-forms.md) | organism | Coming in M3b | [HTML `<form>` element](https://html.spec.whatwg.org/multipage/forms.html#the-form-element), [HTML `<fieldset>` element](https://html.spec.whatwg.org/multipage/form-elements.html#the-fieldset-element) |
+| [List-detail](https://odonckers.github.io/domestic-ui/patterns/list-detail.md) | layout | Coming in M3b | **Our choice:** No standard exists; a list of links beside the detail region, placed with CSS grid, where each item is a real link so the browser's history and the URL keep working. |
+| [Split](https://odonckers.github.io/domestic-ui/patterns/split.md) | layout | Coming in M3b | **Our choice:** No standard exists for a fixed split; two regions placed with CSS grid. A divider users can drag would follow the APG Window Splitter pattern. |
 
-No markup snippet yet: there is no example page and no `Example` block in the CSS header comment.
+## Alerts
 
-### Notes
+Page: https://odonckers.github.io/domestic-ui/patterns/alerts.html
 
-The well-known pattern from The A11Y Project: <https://www.a11yproject.com/posts/how-to-hide-content/>
+Messages about status, from notices in the page to live alerts for important, time-sensitive changes.
 
-### Accessibility
+Coming in M3.
 
-From the CSS header comment: Hides content visually but keeps it in the accessibility tree.
+### Standard
 
-See also the spec links below and the [Accessibility baseline](https://odonckers.github.io/domestic-ui/principles/accessibility-baseline-wcag-22-aa.md) principle.
+This pattern follows:
 
-### Specs
+- [APG Alert pattern](https://www.w3.org/WAI/ARIA/apg/patterns/alert/)
 
-- **Other**: [www.a11yproject.com/posts/how-to-hide-content/](https://www.a11yproject.com/posts/how-to-hide-content/)
+Level: molecule. Milestone: M3: Molecules and navigation patterns.
 
-### Source
+## Breadcrumb
 
-- [`css/utilities/visually-hidden.css`](https://github.com/odonckers/domestic-ui/blob/main/css/utilities/visually-hidden.css)
+Page: https://odonckers.github.io/domestic-ui/patterns/breadcrumb.html
+
+The path to the current page as an ordered list of links in a labelled `<nav>`.
+
+Coming in M3.
+
+### Standard
+
+This pattern follows:
+
+- [APG Breadcrumb pattern](https://www.w3.org/WAI/ARIA/apg/patterns/breadcrumb/)
+
+Level: molecule. Milestone: M3: Molecules and navigation patterns.
+
+## Card
+
+Page: https://odonckers.github.io/domestic-ui/patterns/card.html
+
+A self-contained item, such as a product or an article teaser, on a raised surface.
+
+**Our choice:** No native element or APG pattern exists; an `<article>` with a heading, where the heading holds the one link, so the whole card is not one long link name.
+
+Coming in M3.
+
+### Standard
+
+No native element or WAI-ARIA APG pattern covers this.
+
+Level: molecule. Milestone: M3: Molecules and navigation patterns.
+
+## Dialog and drawer
+
+Page: https://odonckers.github.io/domestic-ui/patterns/dialog.html
+
+A modal `<dialog>`, either centered or as a drawer along one edge of the viewport.
+
+Coming in M3.
+
+### Standard
+
+This pattern follows:
+
+- [HTML `<dialog>` element](https://html.spec.whatwg.org/multipage/interactive-elements.html#the-dialog-element)
+- [APG Dialog (Modal) pattern](https://www.w3.org/WAI/ARIA/apg/patterns/dialog-modal/)
+
+Level: organism. Milestone: M3: Molecules and navigation patterns.
+
+## Disclosure
+
+Page: https://odonckers.github.io/domestic-ui/patterns/disclosure.html
+
+A summary that shows or hides more content, built on `<details>` and `<summary>`.
+
+Coming in M3.
+
+### Standard
+
+This pattern follows:
+
+- [HTML `<details>` element](https://html.spec.whatwg.org/multipage/interactive-elements.html#the-details-element)
+- [APG Disclosure pattern](https://www.w3.org/WAI/ARIA/apg/patterns/disclosure/)
+
+Level: molecule. Milestone: M3: Molecules and navigation patterns.
+
+## Menu button
+
+Page: https://odonckers.github.io/domestic-ui/patterns/menu-button.html
+
+A button that opens a menu of actions.
+
+Coming in M3.
+
+### Standard
+
+This pattern follows:
+
+- [APG Menu Button pattern](https://www.w3.org/WAI/ARIA/apg/patterns/menu-button/)
+
+Level: molecule. Milestone: M3: Molecules and navigation patterns.
+
+## Pagination
+
+Page: https://odonckers.github.io/domestic-ui/patterns/pagination.html
+
+Links to the pages of a long list of results.
+
+**Our choice:** No native element or APG pattern exists; a labelled `<nav>` with a list of links and `aria-current="page"` on the current one, as for breadcrumbs.
+
+Coming in M3.
+
+### Standard
+
+No native element or WAI-ARIA APG pattern covers this.
+
+Level: molecule. Milestone: M3: Molecules and navigation patterns.
+
+## Popover
+
+Page: https://odonckers.github.io/domestic-ui/patterns/popover.html
+
+Content shown on top of the page from a button, with the `popover` attribute.
+
+Coming in M3.
+
+### Standard
+
+This pattern follows:
+
+- [HTML `popover` attribute](https://html.spec.whatwg.org/multipage/popover.html#the-popover-attribute)
+- [MDN Popover API](https://developer.mozilla.org/en-US/docs/Web/API/Popover_API)
+
+Level: molecule. Milestone: M3: Molecules and navigation patterns.
+
+## Search
+
+Page: https://odonckers.github.io/domestic-ui/patterns/search.html
+
+A search form in a `<search>` landmark with an `<input type="search">`.
+
+Coming in M3.
+
+### Standard
+
+This pattern follows:
+
+- [HTML `<search>` element](https://html.spec.whatwg.org/multipage/grouping-content.html#the-search-element)
+- [MDN `<input type="search">`](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/input/search)
+
+Level: molecule. Milestone: M3: Molecules and navigation patterns.
+
+## Site navigation
+
+Page: https://odonckers.github.io/domestic-ui/patterns/nav.html
+
+The main links of a site in a `<nav>` landmark, with the current page marked.
+
+Coming in M3.
+
+### Standard
+
+This pattern follows:
+
+- [HTML `<nav>` element](https://html.spec.whatwg.org/multipage/sections.html#the-nav-element)
+- [APG Landmark regions](https://www.w3.org/WAI/ARIA/apg/practices/landmark-regions/)
+- [APG Disclosure navigation example](https://www.w3.org/WAI/ARIA/apg/patterns/disclosure/examples/disclosure-navigation/)
+
+Level: organism. Milestone: M3: Molecules and navigation patterns.
+
+## Tabs
+
+Page: https://odonckers.github.io/domestic-ui/patterns/tabs.html
+
+Sections of content shown one at a time, chosen from a list of tabs.
+
+Coming in M3.
+
+### Standard
+
+This pattern follows:
+
+- [APG Tabs pattern](https://www.w3.org/WAI/ARIA/apg/patterns/tabs/)
+
+Level: molecule. Milestone: M3: Molecules and navigation patterns.
+
+## Toolbar
+
+Page: https://odonckers.github.io/domestic-ui/patterns/toolbar.html
+
+A row of related controls that is one stop in the tab order.
+
+Coming in M3.
+
+### Standard
+
+This pattern follows:
+
+- [APG Toolbar pattern](https://www.w3.org/WAI/ARIA/apg/patterns/toolbar/)
+
+Level: molecule. Milestone: M3: Molecules and navigation patterns.
+
+## Typeahead
+
+Page: https://odonckers.github.io/domestic-ui/patterns/typeahead.html
+
+A text field that suggests values as you type, with `<datalist>` first and an APG combobox only where `<datalist>` falls short.
+
+Coming in M3.
+
+### Standard
+
+This pattern follows:
+
+- [HTML `<datalist>` element](https://html.spec.whatwg.org/multipage/form-elements.html#the-datalist-element)
+- [APG Combobox pattern](https://www.w3.org/WAI/ARIA/apg/patterns/combobox/)
+
+Level: molecule. Milestone: M3: Molecules and navigation patterns.
+
+## App shell
+
+Page: https://odonckers.github.io/domestic-ui/patterns/app-shell.html
+
+The frame of an application: header, primary sidebar, main content and an optional auxiliary sidebar.
+
+**Our choice:** No standard defines an app shell; it is the HTML landmarks `<header>`, `<nav>`, `<main>` and `<aside>` placed with CSS grid, with no wrapper elements of our own.
+
+Coming in M3b.
+
+### Standard
+
+No native element or WAI-ARIA APG pattern covers this.
+
+Level: layout. Milestone: M3b: App shell, complex layouts and organisms.
+
+## Compact density
+
+Page: https://odonckers.github.io/domestic-ui/patterns/density.html
+
+A compact density token that tightens spacing for data-heavy screens.
+
+**Our choice:** No standard exists for density; one semantic token override that tightens space while targets stay at least 24 by 24 CSS pixels.
+
+Coming in M3b.
+
+### Standard
+
+No native element or WAI-ARIA APG pattern covers this.
+
+Level: token. Milestone: M3b: App shell, complex layouts and organisms.
+
+## Dashboard
+
+Page: https://odonckers.github.io/domestic-ui/patterns/dashboard.html
+
+A grid of summary sections, each with a heading, that reflows to fit the screen.
+
+**Our choice:** No standard exists; a CSS grid of `<section>` elements, each with a heading, that reflows without media queries.
+
+Coming in M3b.
+
+### Standard
+
+No native element or WAI-ARIA APG pattern covers this.
+
+Level: layout. Milestone: M3b: App shell, complex layouts and organisms.
+
+## Data table
+
+Page: https://odonckers.github.io/domestic-ui/patterns/data-table.html
+
+Rows of records in a native `<table>` with a caption, header cells and optional sorting.
+
+Coming in M3b.
+
+### Standard
+
+This pattern follows:
+
+- [HTML `<table>` element](https://html.spec.whatwg.org/multipage/tables.html#the-table-element)
+- [APG Table pattern](https://www.w3.org/WAI/ARIA/apg/patterns/table/)
+
+Level: organism. Milestone: M3b: App shell, complex layouts and organisms.
+
+## Filter bar
+
+Page: https://odonckers.github.io/domestic-ui/patterns/filter-bar.html
+
+A row of native form controls that narrows a list or table.
+
+**Our choice:** No standard exists; a `<form>` inside `<search>` with labelled native controls in a row that wraps, and the result count announced as a status message.
+
+Coming in M3b.
+
+### Standard
+
+No native element or WAI-ARIA APG pattern covers this.
+
+Level: organism. Milestone: M3b: App shell, complex layouts and organisms.
+
+## Large forms
+
+Page: https://odonckers.github.io/domestic-ui/patterns/large-forms.html
+
+Long forms split into labelled groups, in one or more columns.
+
+Coming in M3b.
+
+### Standard
+
+This pattern follows:
+
+- [HTML `<form>` element](https://html.spec.whatwg.org/multipage/forms.html#the-form-element)
+- [HTML `<fieldset>` element](https://html.spec.whatwg.org/multipage/form-elements.html#the-fieldset-element)
+
+Level: organism. Milestone: M3b: App shell, complex layouts and organisms.
+
+## List-detail
+
+Page: https://odonckers.github.io/domestic-ui/patterns/list-detail.html
+
+A list of items beside the details of the selected one, stacked on narrow screens.
+
+**Our choice:** No standard exists; a list of links beside the detail region, placed with CSS grid, where each item is a real link so the browser's history and the URL keep working.
+
+Coming in M3b.
+
+### Standard
+
+No native element or WAI-ARIA APG pattern covers this.
+
+Level: layout. Milestone: M3b: App shell, complex layouts and organisms.
+
+## Split
+
+Page: https://odonckers.github.io/domestic-ui/patterns/split.html
+
+Two regions side by side at a set ratio, stacked on narrow screens.
+
+**Our choice:** No standard exists for a fixed split; two regions placed with CSS grid. A divider users can drag would follow the APG Window Splitter pattern.
+
+Coming in M3b.
+
+### Standard
+
+No native element or WAI-ARIA APG pattern covers this.
+
+Level: layout. Milestone: M3b: App shell, complex layouts and organisms.
+
+## Guides
+
+Page: https://odonckers.github.io/domestic-ui/guides/index.html
+
+- [From a simple site to an ERP app](https://odonckers.github.io/domestic-ui/guides/simple-site-to-erp-app.md): Five steps from a plain content page to a dense business application, and which parts of each step are available today.
+
+## From a simple site to an ERP app
+
+Page: https://odonckers.github.io/domestic-ui/guides/simple-site-to-erp-app.html
+
+Each step adds to the one before it, so a site can stop at any step. The lists below come from the [pattern registry](https://odonckers.github.io/domestic-ui/patterns/index.md) and show each pattern's status as of this build.
+
+### Step 1: a plain content page
+
+Write semantic HTML and link `css/domestic.css`. Headings, paragraphs, lists, links, tables, forms and `<dialog>` get their look from the base layer with no classes; see [Base elements](https://odonckers.github.io/domestic-ui/components/base.md). Arrange content with the layout primitives:
+
+- [Cluster](https://odonckers.github.io/domestic-ui/layouts/cluster.md): An inline group that wraps onto new lines (buttons, tags, nav links).
+- [Grid](https://odonckers.github.io/domestic-ui/layouts/grid.md): A responsive grid: as many columns as fit, each at least --grid-min wide, never wider than the container.
+- [Stack](https://odonckers.github.io/domestic-ui/layouts/stack.md): Vertical flow with a consistent gap between children.
+
+Theme by overriding semantic tokens; see [Tokens](https://odonckers.github.io/domestic-ui/tokens/index.md) and the [theming example](https://odonckers.github.io/domestic-ui/examples/theming.html).
+
+### Step 2: site navigation
+
+Add the main navigation, a breadcrumb trail and a search form:
+
+- [Site navigation](https://odonckers.github.io/domestic-ui/patterns/nav.md): The main links of a site in a `<nav>` landmark, with the current page marked. Coming in M3.
+- [Breadcrumb](https://odonckers.github.io/domestic-ui/patterns/breadcrumb.md): The path to the current page as an ordered list of links in a labelled `<nav>`. Coming in M3.
+- [Search](https://odonckers.github.io/domestic-ui/patterns/search.md): A search form in a `<search>` landmark with an `<input type="search">`. Coming in M3.
+- [Pagination](https://odonckers.github.io/domestic-ui/patterns/pagination.md): Links to the pages of a long list of results. Coming in M3.
+
+None of these are available yet: Site navigation (M3), Breadcrumb (M3), Search (M3), Pagination (M3).
+
+### Step 3: interactive widgets
+
+Use a native element where one exists (`<details>`, `<dialog>`, `popover`, `<datalist>`), and an APG pattern where one does not:
+
+- [Disclosure](https://odonckers.github.io/domestic-ui/patterns/disclosure.md): A summary that shows or hides more content, built on `<details>` and `<summary>`. Coming in M3.
+- [Tabs](https://odonckers.github.io/domestic-ui/patterns/tabs.md): Sections of content shown one at a time, chosen from a list of tabs. Coming in M3.
+- [Dialog and drawer](https://odonckers.github.io/domestic-ui/patterns/dialog.md): A modal `<dialog>`, either centered or as a drawer along one edge of the viewport. Coming in M3.
+- [Popover](https://odonckers.github.io/domestic-ui/patterns/popover.md): Content shown on top of the page from a button, with the `popover` attribute. Coming in M3.
+- [Menu button](https://odonckers.github.io/domestic-ui/patterns/menu-button.md): A button that opens a menu of actions. Coming in M3.
+- [Toolbar](https://odonckers.github.io/domestic-ui/patterns/toolbar.md): A row of related controls that is one stop in the tab order. Coming in M3.
+- [Typeahead](https://odonckers.github.io/domestic-ui/patterns/typeahead.md): A text field that suggests values as you type, with `<datalist>` first and an APG combobox only where `<datalist>` falls short. Coming in M3.
+- [Alerts](https://odonckers.github.io/domestic-ui/patterns/alerts.md): Messages about status, from notices in the page to live alerts for important, time-sensitive changes. Coming in M3.
+- [Card](https://odonckers.github.io/domestic-ui/patterns/card.md): A self-contained item, such as a product or an article teaser, on a raised surface. Coming in M3.
+
+None of these are available yet: Disclosure (M3), Tabs (M3), Dialog and drawer (M3), Popover (M3), Menu button (M3), Toolbar (M3), Typeahead (M3), Alerts (M3), Card (M3).
+
+### Step 4: the app shell
+
+Frame the application with a primary sidebar for navigation and an auxiliary sidebar for context, then lay out each screen as a list with details, a split view or a dashboard:
+
+- [App shell](https://odonckers.github.io/domestic-ui/patterns/app-shell.md): The frame of an application: header, primary sidebar, main content and an optional auxiliary sidebar. Coming in M3b.
+- [List-detail](https://odonckers.github.io/domestic-ui/patterns/list-detail.md): A list of items beside the details of the selected one, stacked on narrow screens. Coming in M3b.
+- [Split](https://odonckers.github.io/domestic-ui/patterns/split.md): Two regions side by side at a set ratio, stacked on narrow screens. Coming in M3b.
+- [Dashboard](https://odonckers.github.io/domestic-ui/patterns/dashboard.md): A grid of summary sections, each with a heading, that reflows to fit the screen. Coming in M3b.
+
+None of these are available yet: App shell (M3b), List-detail (M3b), Split (M3b), Dashboard (M3b).
+
+### Step 5: data-heavy screens
+
+Show records in a native `<table>`, narrow them with a filter bar, group long forms with `<fieldset>`, and switch to the compact density token where users scan a lot of data:
+
+- [Data table](https://odonckers.github.io/domestic-ui/patterns/data-table.md): Rows of records in a native `<table>` with a caption, header cells and optional sorting. Coming in M3b.
+- [Filter bar](https://odonckers.github.io/domestic-ui/patterns/filter-bar.md): A row of native form controls that narrows a list or table. Coming in M3b.
+- [Large forms](https://odonckers.github.io/domestic-ui/patterns/large-forms.md): Long forms split into labelled groups, in one or more columns. Coming in M3b.
+- [Compact density](https://odonckers.github.io/domestic-ui/patterns/density.md): A compact density token that tightens spacing for data-heavy screens. Coming in M3b.
+
+None of these are available yet: Data table (M3b), Filter bar (M3b), Large forms (M3b), Compact density (M3b).
 
 ## Examples
 
@@ -1207,7 +1772,7 @@ Page: https://odonckers.github.io/domestic-ui/examples.html
 
 Standalone HTML pages that load `css/domestic.css`, nothing else. Open one, or read its source on GitHub.
 
-### Pages
+### Pages (`examples/`)
 
 - [Base elements · domestic-ui](https://odonckers.github.io/domestic-ui/examples/base.html) ([source](https://github.com/odonckers/domestic-ui/blob/main/examples/base.html))
 - [Theming · domestic-ui](https://odonckers.github.io/domestic-ui/examples/theming.html) ([source](https://github.com/odonckers/domestic-ui/blob/main/examples/theming.html))

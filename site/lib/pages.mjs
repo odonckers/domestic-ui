@@ -8,20 +8,24 @@
  * Links between pages are written as "site:<path>" and resolved per output:
  * relative in HTML, absolute in Markdown (see ./templates.mjs).
  */
-import { COMPONENT_GROUPS } from "./discovery.mjs";
+import { specLabel } from "./css-comments.mjs";
+import { COMPONENT_GROUPS, LEVELS } from "./discovery.mjs";
 import { inline, plainText, shiftHeadings, tokenize } from "./markdown.mjs";
-import { BLOB_URL, REPO_URL, escapeHtml, escapeMdCell, fence, firstSentence, mdCode, slugify } from "./util.mjs";
+import { BLOB_URL, REPO_URL, byString, escapeHtml, escapeMdCell, fence, firstSentence, mdCode, slugify } from "./util.mjs";
 
 /**
  * @typedef {import("./discovery.mjs").Model} Model
  * @typedef {import("./discovery.mjs").Component} Component
+ * @typedef {import("./discovery.mjs").Pattern} Pattern
+ * @typedef {import("./discovery.mjs").Guide} Guide
  * @typedef {import("./discovery.mjs").Snippet} Snippet
  * @typedef {{ link: (target: string) => string, heading: (level: number, text: string) => string }} HtmlContext
  * @typedef {{ md: string, html?: (ctx: HtmlContext) => string }} Block
- * @typedef {"home" | "principles" | "tokens" | "components" | "examples"} Section
+ * @typedef {"home" | "principles" | "tokens" | "components" | "layouts" | "patterns" | "guides" | "examples"} Section
  * @typedef {object} Page
  * @property {string} path         site path of the HTML page, e.g. "tokens/space.html"
  * @property {Section} section
+ * @property {string} [group]      sub-heading in the section nav, e.g. "Atoms"
  * @property {string} title        used in <title>, nav and llms.txt
  * @property {string} heading      the page's h1
  * @property {string} description  meta description and llms.txt note
@@ -35,8 +39,17 @@ export const SECTIONS = /** @type {const} */ ([
   { section: "principles", path: "principles/index.html", title: "Principles" },
   { section: "tokens", path: "tokens/index.html", title: "Tokens" },
   { section: "components", path: "components/index.html", title: "Components" },
+  { section: "layouts", path: "layouts/index.html", title: "Layouts" },
+  { section: "patterns", path: "patterns/index.html", title: "Patterns" },
+  { section: "guides", path: "guides/index.html", title: "Guides" },
   { section: "examples", path: "examples.html", title: "Examples" },
 ]);
+
+/** Roadmap milestones that patterns are planned in. */
+export const MILESTONES = /** @type {Record<string, string>} */ ({
+  M3: "Molecules and navigation patterns",
+  M3b: "App shell, complex layouts and organisms",
+});
 
 const md = (/** @type {string} */ text) => ({ md: text });
 const edit = (/** @type {string} */ path) => ({ href: `${REPO_URL}/edit/main/${path}`, label: "Edit this page on GitHub" });
@@ -72,12 +85,8 @@ export function repoTarget(href, model) {
   }
   if (path === "css/tokens/semantic.css") return "site:tokens/index.html";
   if (path.startsWith("css/base/")) return "site:components/base.html";
-  const m = path.match(/^css\/(?:components\/)?([\w-]+)\/([\w-]+)\.css$/);
-  if (m) {
-    const all = [...Object.values(model.components).flat(), ...model.layout, ...model.utilities];
-    const hit = all.find((c) => c.group === m[1] && c.name === m[2]);
-    if (hit) return `site:${hit.sitePath}${hash}`;
-  }
+  const hit = allComponents(model).find((c) => c.cssPath === path) ?? model.patterns.find((p) => p.cssPaths.includes(path));
+  if (hit) return `site:${hit.sitePath}${hash}`;
   return `${BLOB_URL}${path}${hash}`;
 }
 
@@ -151,7 +160,30 @@ export function apiSummary(c) {
 }
 
 /** Every component-like page, in docs order. @param {Model} model */
-export const allComponents = (model) => [model.base, ...COMPONENT_GROUPS.flatMap(({ group }) => model.components[group]), ...model.layout, ...model.utilities];
+export const allComponents = (model) => [model.base, ...COMPONENT_GROUPS.flatMap(({ group }) => model.components[group]), ...model.layouts, ...model.utilities];
+
+/** "Available" or "Coming in M3". @param {Pattern} p */
+export const patternStatus = (p) => (p.available ? "Available" : `Coming in ${p.milestone}`);
+
+/** Patterns in docs order: by milestone, then by title. @param {Model} model */
+export const sortedPatterns = (model) => {
+  const byTitle = [...model.patterns].sort((a, b) => byString(a.title, b.title));
+  return Object.keys(MILESTONES)
+    .flatMap((m) => byTitle.filter((p) => p.milestone === m))
+    .concat(byTitle.filter((p) => !(p.milestone in MILESTONES)));
+};
+
+/** A spec as a Markdown link; its label may contain inline Markdown. @param {{ label: string, url: string }} s */
+const specLink = (s) => `[${s.label}](${s.url})`;
+
+/** What a pattern follows: its standards, or its Our choice line. @param {Pattern} p */
+export const followsMd = (p) => (p.standards.length ? p.standards.map(specLink).join(", ") : `**Our choice:** ${p.ourChoice}`);
+
+/** @param {Pattern} p */
+const patternLine = (p) => `- [${p.title}](site:${p.sitePath}): ${p.summary} ${patternStatus(p)}.`;
+
+/** The section-nav group of a pattern page. @param {string} milestone */
+const milestoneLabel = (milestone) => (MILESTONES[milestone] ? `${milestone}: ${MILESTONES[milestone]}` : milestone);
 
 /* ------------------------------------------------------------------ */
 /* Pages                                                               */
@@ -159,6 +191,7 @@ export const allComponents = (model) => [model.base, ...COMPONENT_GROUPS.flatMap
 
 /** @param {Model} model @returns {Page[]} */
 export function buildPages(model) {
+  const levelTitle = (/** @type {string} */ group) => (group === "base" ? "Atoms" : (COMPONENT_GROUPS.find((g) => g.group === group)?.title ?? "Utilities"));
   return [
     homePage(model),
     principlesIndex(model),
@@ -166,7 +199,16 @@ export function buildPages(model) {
     tokensIndex(model),
     ...model.tokenGroups.map((g) => tokenPage(g)),
     componentsIndex(model),
-    ...allComponents(model).map((c) => componentPage(model, c)),
+    ...[model.base, ...COMPONENT_GROUPS.flatMap(({ group }) => model.components[group]), ...model.utilities].map((c) => ({
+      ...componentPage(model, c),
+      group: levelTitle(c.group),
+    })),
+    layoutsIndex(model),
+    ...model.layouts.map((c) => ({ ...componentPage(model, c), section: /** @type {Section} */ ("layouts") })),
+    patternsIndex(model),
+    ...sortedPatterns(model).map((p) => ({ ...patternPage(model, p), group: milestoneLabel(p.milestone) })),
+    guidesIndex(model),
+    ...model.guides.map((g) => guidePage(model, g)),
     examplesPage(model),
   ];
 }
@@ -188,7 +230,9 @@ function homePage(model) {
       md(`## Theming\n\n${themingMd(model)}`),
       md(`## Principles\n\n${principleListMd(model)}`),
       md(`## Tokens\n\n${tokenListMd(model)}`),
-      md(`## Components\n\n${groups}`),
+      md(`## Components by level\n\n${groups}`),
+      md(`## Patterns\n\n${patternIntroMd}\n\n${sortedPatterns(model).map(patternLine).join("\n")}`),
+      md(`## Guides\n\n${guideListMd(model)}`),
       md(`## Examples\n\n${model.examples.map((e) => `- [${e.title}](site:${e.path})`).join("\n")}`),
       md(`## For coding agents
 
@@ -206,23 +250,42 @@ const principleListMd = (model) => model.principles.sections.map((s, i) => `${i 
 const tokenListMd = (model) =>
   model.tokenGroups.map((g) => `- [${g.name}](site:${g.sitePath}): ${g.tokens.length} token${g.tokens.length === 1 ? "" : "s"}`).join("\n");
 
-/** @param {Model} model */
+/** @param {Component} c */
+const componentLine = (c) => `- [${c.title}](site:${c.sitePath}): ${commentMd(c.summary)}`;
+
+/** Every level (Tokens, Atoms, Molecules, Organisms, Layouts), then Utilities, as H3 sections. @param {Model} model */
 function componentListMd(model) {
-  const line = (/** @type {Component} */ c) => `- [${c.title}](site:${c.sitePath}): ${commentMd(c.summary)}`;
-  const out = [`### Base elements\n\n${line(model.base)}`];
-  for (const { group, title } of COMPONENT_GROUPS) out.push(`### ${title}\n\n${groupMd(model, group)}`);
-  out.push(`### Layout primitives\n\n${model.layout.map(line).join("\n")}`);
-  out.push(`### Utilities\n\n${model.utilities.map(line).join("\n")}`);
+  const out = LEVELS.map(({ level, title }) => `### ${title}\n\n${levelMd(model, level)}`);
+  out.push(`### Utilities\n\n${model.utilities.map(componentLine).join("\n")}`);
   return out.join("\n\n");
 }
 
-/** A group's list, or one honest sentence when it is empty. @param {Model} model @param {string} group */
-export function groupMd(model, group) {
-  const items = model.components[group];
-  if (items.length) return items.map((c) => `- [${c.title}](site:${c.sitePath}): ${commentMd(c.summary)}`).join("\n");
-  const milestone = COMPONENT_GROUPS.find((g) => g.group === group)?.milestone;
-  return `Coming in ${milestone}; see the [components README](${BLOB_URL}css/components/README.md).`;
+/**
+ * What exists or is planned at one level: its components (tokens: token
+ * groups; atoms: base elements first), then the registered patterns at that
+ * level with their status. When a component group has neither components
+ * nor patterns, one honest sentence says when it lands.
+ * @param {Model} model
+ * @param {string} level
+ */
+export function levelMd(model, level) {
+  const patterns = sortedPatterns(model).filter((p) => p.level === level);
+  /** @type {string[]} */
+  let items = [];
+  if (level === "tokens") items = tokenListMd(model).split("\n");
+  else if (level === "layouts") items = model.layouts.map(componentLine);
+  else items = [...(level === "atoms" ? [componentLine(model.base)] : []), ...(model.components[level] ?? []).map(componentLine)];
+  const lines = [...items, ...patterns.map(patternLine)].join("\n");
+  const group = COMPONENT_GROUPS.find((g) => g.group === level);
+  const empty = group && !model.components[level].length && !patterns.length;
+  const note = empty ? `Components in \`css/components/${level}/\`: coming in ${group.milestone}; see the [components README](${BLOB_URL}css/components/README.md).` : "";
+  return [lines, note].filter(Boolean).join("\n\n");
 }
+
+/** @param {Model} model */
+const guideListMd = (model) => model.guides.map((g) => `- [${g.title}](site:${g.sitePath}): ${g.summary}`).join("\n") || "No guides yet.";
+
+const patternIntroMd = `Where a standard exists, a native HTML element or a [WAI-ARIA APG pattern](https://www.w3.org/WAI/ARIA/apg/patterns/), the pattern follows it and links to it. Where none exists, the pattern is written as close to plain HTML as possible and labeled **Our choice:** with one line on why.`;
 
 /** @param {Model} model @returns {Page} */
 function principlesIndex(model) {
@@ -346,12 +409,86 @@ function componentsIndex(model) {
     section: "components",
     title: "Components",
     heading: "Components",
-    description: "Base elements, components, layout primitives and utilities of domestic-ui, each with one class or attribute API.",
+    description: "Everything in domestic-ui by level: tokens, atoms, molecules, organisms and layouts, plus utilities.",
     source: edit("css/components/README.md"),
     blocks: [
-      md(`Each layout primitive, utility and component has one documented class or attribute API, written in the header comment of its CSS file and tuned with custom properties ([Agent-friendly by design](site:${principleLink(model, "agent-friendly-by-design")})). Base elements need no API at all: write semantic HTML.`),
+      md(`Each layout primitive, utility and component has one documented class or attribute API, written in the header comment of its CSS file and tuned with custom properties ([Agent-friendly by design](site:${principleLink(model, "agent-friendly-by-design")})). Base elements need no API at all: write semantic HTML.
+
+The levels follow [atomic design](https://atomicdesign.bradfrost.com/chapter-2/). Planned [patterns](site:patterns/index.html) are listed at their level with their status.`),
       md(componentListMd(model).replace(/^### /gm, "## ")),
     ],
+  };
+}
+
+/** @param {Model} model @returns {Page} */
+function layoutsIndex(model) {
+  return {
+    path: "layouts/index.html",
+    section: "layouts",
+    title: "Layouts",
+    heading: "Layouts",
+    description: "Layout primitives and planned page layouts of domestic-ui.",
+    source: edit(model.layouts[0]?.cssPath ?? "PRINCIPLES.md"),
+    blocks: [
+      md(`Layout primitives arrange their children and nothing else; see [Layout primitives](site:${principleLink(model, "layout-primitives")}). Each has one class and is tuned with custom properties. Page layouts such as the app shell are listed with their status.`),
+      md(`## All layouts\n\n${levelMd(model, "layouts")}`),
+    ],
+  };
+}
+
+/**
+ * The "Our choice" line, for things no native element or APG pattern covers.
+ * @param {string} why Markdown
+ */
+const ourChoiceMd = (why) => `**Our choice:** ${why}`;
+
+/**
+ * Copy-paste markup blocks: an intro naming the source, then one code block
+ * per snippet (HTML: <pre data-snippet>; Markdown: a long-enough fence).
+ * @param {Snippet[]} snippets
+ * @returns {Block[]}
+ */
+function markupBlocks(snippets) {
+  const n = snippets.length;
+  const first = snippets[0];
+  const sources = [...new Set(snippets.map((s) => s.source))].map((s) => `[\`${s}\`](${BLOB_URL}${s})`).join(" and ");
+  const intro =
+    first.from === "css-comment"
+      ? `From the \`Example\` block in ${sources}:`
+      : first.from === "main" && n === 1
+        ? `The content of \`<main>\` in ${sources}, unchanged except for removing the common indentation:`
+        : `From ${sources}, unchanged except for removing the common indentation:`;
+  return [
+    md(`## Markup\n\n${intro}`),
+    ...snippets.map((s, i) => {
+      const name = snippetName(s, i, n);
+      return {
+        md: `${name ? `### ${name}\n\n` : ""}${fence(s.code, "html")}`,
+        html: (/** @type {HtmlContext} */ ctx) => `${name ? `${ctx.heading(3, name)}\n` : ""}<pre data-snippet="${escapeHtml(s.source)}"><code>${escapeHtml(s.code)}</code></pre>`,
+      };
+    }),
+  ];
+}
+
+/**
+ * Live example blocks: one framed example page per path.
+ * @param {Model} model
+ * @param {string[]} paths
+ * @param {string} title
+ * @returns {Block}
+ */
+function liveExampleBlock(model, paths, title) {
+  const name = (/** @type {string} */ p) => (paths.length > 1 ? (model.examples.find((e) => e.path === p)?.title ?? p) : title);
+  return {
+    md: `## Live example\n\n${paths.map((p) => `- [Open ${paths.length > 1 ? name(p) : "the example"} on its own](site:${p})`).join("\n")}`,
+    html: (ctx) =>
+      [
+        ctx.heading(2, "Live example"),
+        ...paths.map(
+          (p) =>
+            `<iframe class="example-frame" src="${escapeHtml(ctx.link(p))}" title="Live example: ${escapeHtml(name(p))}" loading="lazy"></iframe>\n<p><a href="${escapeHtml(ctx.link(p))}">Open ${escapeHtml(paths.length > 1 ? name(p) : "the example")} on its own</a></p>`,
+        ),
+      ].join("\n"),
   };
 }
 
@@ -366,6 +503,7 @@ const snippetName = (s, i, n) => s.name || (n > 1 ? `Snippet ${i + 1}` : "");
 function componentPage(model, c) {
   /** @type {Block[]} */
   const blocks = [md(commentMd(c.summary))];
+  if (c.ourChoice) blocks.push(md(ourChoiceMd(c.ourChoice)));
 
   // API
   const api = [];
@@ -382,12 +520,7 @@ function componentPage(model, c) {
 
   // Live example
   if (c.examplePath) {
-    const ex = /** @type {string} */ (c.examplePath);
-    blocks.push({
-      md: `## Live example\n\n[Open the example on its own](site:${ex})`,
-      html: (ctx) =>
-        `${ctx.heading(2, "Live example")}\n<iframe class="example-frame" src="${escapeHtml(ctx.link(ex))}" title="Live example: ${escapeHtml(c.title)}" loading="lazy"></iframe>\n<p><a href="${escapeHtml(ctx.link(ex))}">Open the example on its own</a></p>`,
-    });
+    blocks.push(liveExampleBlock(model, [c.examplePath], c.title));
   } else {
     const used = c.usedIn.map((p) => `[${model.examples.find((e) => e.path === p)?.title ?? p}](site:${p})`);
     const usedMd = used.length ? ` These example pages use it: ${used.join(", ")}.` : "";
@@ -395,23 +528,8 @@ function componentPage(model, c) {
   }
 
   // Copy-paste markup
-  const n = c.snippets.length;
-  if (n) {
-    const from = c.snippets[0].from;
-    const intro =
-      from === "css-comment"
-        ? `From the \`Example\` block in [\`${c.cssPath}\`](${BLOB_URL}${c.cssPath}):`
-        : from === "main"
-          ? `The content of \`<main>\` in [\`${c.snippets[0].source}\`](${BLOB_URL}${c.snippets[0].source}), unchanged except for removing the common indentation:`
-          : `From [\`${c.snippets[0].source}\`](${BLOB_URL}${c.snippets[0].source}), unchanged except for removing the common indentation:`;
-    blocks.push(md(`## Markup\n\n${intro}`));
-    c.snippets.forEach((s, i) => {
-      const name = snippetName(s, i, n);
-      blocks.push({
-        md: `${name ? `### ${name}\n\n` : ""}${fence(s.code, "html")}`,
-        html: (ctx) => `${name ? `${ctx.heading(3, name)}\n` : ""}<pre data-snippet="${escapeHtml(s.source)}"><code>${escapeHtml(s.code)}</code></pre>`,
-      });
-    });
+  if (c.snippets.length) {
+    blocks.push(...markupBlocks(c.snippets));
   } else {
     blocks.push(md("## Markup\n\nNo markup snippet yet: there is no example page and no `Example` block in the CSS header comment."));
   }
@@ -451,10 +569,11 @@ function componentPage(model, c) {
 /** @param {Model} model @returns {Page} */
 function examplesPage(model) {
   const groups = [...new Set(model.examples.map((e) => e.group))];
+  const titles = /** @type {Record<string, string>} */ ({ layout: "Layouts", layouts: "Layouts", patterns: "Patterns" });
   const sections = groups.map((g) => {
     const items = model.examples.filter((e) => e.group === g).map((e) => `- [${e.title}](site:${e.path}) ([source](${BLOB_URL}${e.path}))`);
-    const title = g ? (COMPONENT_GROUPS.find((x) => x.group === g)?.title ?? g) : "Pages";
-    return `## ${title}\n\n${items.join("\n")}`;
+    const title = g ? (COMPONENT_GROUPS.find((x) => x.group === g)?.title ?? titles[g] ?? g) : "Pages";
+    return `## ${title} (\`examples/${g ? `${g}/` : ""}\`)\n\n${items.join("\n")}`;
   });
   return {
     path: "examples.html",
@@ -464,5 +583,167 @@ function examplesPage(model) {
     description: "Standalone example pages that load the real domestic-ui CSS.",
     source: { href: `${REPO_URL}/tree/main/examples`, label: "Browse the examples source on GitHub" },
     blocks: [md("Standalone HTML pages that load `css/domestic.css`, nothing else. Open one, or read its source on GitHub."), ...sections.map(md)],
+  };
+}
+
+/** @param {Model} model @returns {Page} */
+function patternsIndex(model) {
+  const row = (/** @type {Pattern} */ p) => {
+    const level = LEVELS.find((l) => l.level === p.level)?.singular ?? p.level;
+    return `| [${p.title}](site:${p.sitePath}) | ${level} | ${patternStatus(p)} | ${escapeMdCell(followsMd(p))} |`;
+  };
+  const milestones = [...new Set(sortedPatterns(model).map((p) => p.milestone))];
+  const guide = model.guides[0];
+  const guideMd = guide ? ` To go from a plain page to a full app step by step, read [${guide.title}](site:${guide.sitePath}).` : "";
+  return {
+    path: "patterns/index.html",
+    section: "patterns",
+    title: "Patterns",
+    heading: "Patterns",
+    description: "Planned and available interface patterns, from site navigation to app shells, with the standard each one follows.",
+    source: { href: `${REPO_URL}/tree/main/site/content/patterns`, label: "Browse the pattern registry on GitHub" },
+    blocks: [
+      md(`${patternIntroMd}\n\nA pattern page fills in on its own when its example page or CSS file lands. Until then it says which milestone it is planned for.${guideMd}`),
+      ...milestones.map((m) => {
+        const rows = sortedPatterns(model).filter((p) => p.milestone === m).map(row);
+        return md(`## ${milestoneLabel(m)}\n\n| Pattern | Level | Status | Follows |\n| --- | --- | --- | --- |\n${rows.join("\n")}`);
+      }),
+    ],
+  };
+}
+
+/** Keys as <kbd>, one per alternative ("Left Arrow / Right Arrow"). @param {string} key @param {boolean} markdown */
+const kbdMd = (key, markdown) =>
+  key
+    .split(/\s+\/\s+/)
+    .map((k) => `<kbd>${markdown ? k : commentMd(k)}</kbd>`)
+    .join(" / ");
+
+/**
+ * Keyboard notes: the Keyboard block of the example page or CSS header,
+ * else the registry's list, else one line pointing at the standard.
+ * @param {Model} model
+ * @param {Pattern} p
+ * @returns {Block}
+ */
+function keyboardBlock(model, p) {
+  if (p.keyboard.length) {
+    const markdown = p.keyboardFrom === "front matter";
+    const src = `[\`${p.keyboardSource}\`](${BLOB_URL}${p.keyboardSource})`;
+    const intro = markdown ? `From the pattern registry, ${src}; the example page and CSS have no \`Keyboard\` block yet.` : `From the \`Keyboard\` block in ${src}.`;
+    const rows = p.keyboard.map((k) => `| ${escapeMdCell(kbdMd(k.key, markdown))} | ${escapeMdCell(markdown ? k.action : commentMd(k.action))} |`);
+    return md(`## Keyboard\n\n${intro}\n\n| Key | Action |\n| --- | --- |\n${rows.join("\n")}`);
+  }
+  const apg = p.standards.find((s) => s.url.startsWith("https://www.w3.org/WAI/ARIA/apg/"));
+  if (apg) return md(`## Keyboard\n\nNo keyboard notes yet. Follow the keyboard interaction section of the ${specLink(apg)}.`);
+  if (p.standards.length) return md(`## Keyboard\n\nNo keyboard notes yet. Native elements keep their built-in keyboard behavior; see ${specLink(p.standards[0])}.`);
+  return md(`## Keyboard\n\nNo keyboard notes yet. See the [Accessibility baseline](site:${principleLink(model, "accessibility-baseline-wcag-22-aa")}) principle.`);
+}
+
+/**
+ * A pattern page. Until an example page or CSS file exists it shows only
+ * the summary, the standard (or Our choice line) and when it is planned.
+ * @param {Model} model
+ * @param {Pattern} p
+ * @returns {Page}
+ */
+function patternPage(model, p) {
+  const level = LEVELS.find((l) => l.level === p.level)?.singular ?? p.level;
+  const standard = p.standards.length
+    ? `This pattern follows:\n\n${p.standards.map((s) => `- ${specLink(s)}`).join("\n")}`
+    : "No native element or WAI-ARIA APG pattern covers this.";
+  /** @type {Block[]} */
+  const blocks = [md(p.summary)];
+  if (p.ourChoice) blocks.push(md(ourChoiceMd(p.ourChoice)));
+  if (!p.available) blocks.push(md(`Coming in ${p.milestone}.`));
+  blocks.push(md(`## Standard\n\n${standard}\n\nLevel: ${level}. Milestone: ${milestoneLabel(p.milestone)}.`));
+
+  if (p.available) {
+    const doc = p.doc;
+    if (doc && (doc.api || doc.apiInline.length)) {
+      const api = [...(doc.api ? [fence(doc.api, "text")] : []), ...doc.apiInline.map((l) => `- ${mdCode(l)}`)];
+      blocks.push(md(`## API\n\n${api.join("\n\n")}`));
+    }
+    blocks.push(
+      p.examplePaths.length
+        ? liveExampleBlock(model, p.examplePaths, p.title)
+        : md(`## Live example\n\nThere is no standalone example page for ${p.title.toLowerCase()} yet.`),
+    );
+    blocks.push(...(p.snippets.length ? markupBlocks(p.snippets) : [md("## Markup\n\nNo markup snippet yet: there is no example page and no `Example` block in the CSS header comment.")]));
+    blocks.push(keyboardBlock(model, p));
+    if (p.body) blocks.push(md(`## Notes\n\n${rewriteRepoLinks(p.body, model)}`));
+    if (doc?.a11y.length) blocks.push(md(`## Accessibility\n\nFrom the CSS header comment: ${commentMd(doc.a11y.join(" "))}`));
+    const known = new Set([...p.standards, ...p.specs].map((s) => s.url));
+    const fromCss = (doc?.urls ?? []).filter((u) => !known.has(u)).map((url) => ({ label: specLabel(url), url }));
+    const specs = [...p.standards, ...p.specs, ...fromCss];
+    blocks.push(md(`## Specs\n\n${specs.map((s) => `- **${escapeMdCell(s.label)}**: [${s.url.replace(/^https?:\/\//, "")}](${s.url})`).join("\n")}`));
+    const sources = [...p.cssPaths, ...p.examplePaths, p.contentPath].map((s) => `- [\`${s}\`](${BLOB_URL}${s})`);
+    blocks.push(md(`## Source\n\n${sources.join("\n")}`));
+  }
+
+  return {
+    path: p.sitePath,
+    section: "patterns",
+    title: p.title,
+    heading: p.title,
+    description: plainMd(p.summary),
+    source: edit(p.contentPath),
+    blocks,
+    snippets: p.available ? p.snippets : [],
+  };
+}
+
+/** @param {Model} model @returns {Page} */
+function guidesIndex(model) {
+  return {
+    path: "guides/index.html",
+    section: "guides",
+    title: "Guides",
+    heading: "Guides",
+    description: "Step-by-step guides for building with domestic-ui.",
+    source: { href: `${REPO_URL}/tree/main/site/content/guides`, label: "Browse the guides source on GitHub" },
+    blocks: [md(guideListMd(model))],
+  };
+}
+
+/**
+ * Expand the generated lines of a guide, so its status never goes stale:
+ *   {{patterns: tabs, disclosure}}  those patterns with their status, then which are not available yet
+ *   {{layouts}}                     the layout primitives
+ * @param {Model} model
+ * @param {Guide} g
+ */
+function expandGuide(model, g) {
+  return g.body.replace(/^\{\{\s*(patterns|layouts)\s*(?::\s*([^}]*))?\}\}[ \t]*$/gm, (_, kind, args = "") => {
+    if (kind === "layouts") return model.layouts.map(componentLine).join("\n");
+    const list = args
+      .split(",")
+      .map((/** @type {string} */ s) => s.trim())
+      .filter(Boolean)
+      .map((/** @type {string} */ slug) => {
+        const p = model.patterns.find((x) => x.slug === slug);
+        if (!p) throw new Error(`${g.contentPath}: no pattern "${slug}" in site/content/patterns/`);
+        return p;
+      });
+    const coming = list.filter((p) => !p.available).map((p) => `${p.title} (${p.milestone})`);
+    const status = !coming.length
+      ? "All of these are available."
+      : coming.length === list.length
+        ? `None of these are available yet: ${coming.join(", ")}.`
+        : `Not available yet: ${coming.join(", ")}.`;
+    return `${list.map(patternLine).join("\n")}\n\n${status}`;
+  });
+}
+
+/** @param {Model} model @param {Guide} g @returns {Page} */
+function guidePage(model, g) {
+  return {
+    path: g.sitePath,
+    section: "guides",
+    title: g.title,
+    heading: g.title,
+    description: plainMd(g.summary),
+    source: edit(g.contentPath),
+    blocks: [md(rewriteRepoLinks(expandGuide(model, g), model))],
   };
 }

@@ -57,6 +57,17 @@
   --stack-gap: var(--dui-space-2xs);
 }
 
+/* Group labels (Atoms, Molecules, …) with their pages indented below. */
+.section-nav-group {
+  display: block;
+  margin-block-start: var(--dui-space-s);
+  font-weight: var(--dui-font-weight-strong);
+}
+
+.section-nav ul ul {
+  padding-inline-start: var(--dui-space-m);
+}
+
 .site-body > main {
   flex-basis: 0;
   flex-grow: 999;

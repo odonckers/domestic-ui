@@ -6,7 +6,7 @@
  */
 import { COMPONENT_GROUPS } from "./discovery.mjs";
 import { shiftHeadings, tokenize } from "./markdown.mjs";
-import { allComponents, apiSummary, groupMd, installMd, layersMd, rewriteRepoLinks, themingMd } from "./pages.mjs";
+import { apiSummary, followsMd, installMd, layersMd, patternStatus, rewriteRepoLinks, sortedPatterns, themingMd } from "./pages.mjs";
 import { resolveSiteLinks, renderMarkdown } from "./templates.mjs";
 import { BLOB_URL, RAW_URL, REPO_URL, SITE_URL, escapeMdCell, mdCode } from "./util.mjs";
 
@@ -45,13 +45,25 @@ export function generateReadme(model) {
     if (c.group === "base") api.unshift("none: semantic HTML");
     return `| ${group} | ${escapeMdCell(c.title)} | ${escapeMdCell(api.join(", ") || "not documented yet")} | [${c.title}](site:${c.sitePath}) |`;
   };
-  const rows = [row("Base", model.base)];
+  // Available patterns are listed at their level; planned ones only under Patterns.
+  const patternRow = (/** @type {string} */ level, /** @type {import("./discovery.mjs").Pattern} */ p) => {
+    const api = p.doc ? [...(p.doc.api ? p.doc.api.split("\n").map((l) => l.trim().split(/\s{2,}/)[0]).filter(Boolean) : []), ...p.doc.apiInline] : [];
+    return `| ${level} | ${escapeMdCell(p.title)} | ${escapeMdCell(api.map(mdCode).join(", ") || "see the pattern page")} | [${p.title}](site:${p.sitePath}) |`;
+  };
+  const available = (/** @type {string} */ level) => sortedPatterns(model).filter((p) => p.available && p.level === level);
+  const rows = [row("Atoms", model.base)];
   for (const { group, title, milestone } of COMPONENT_GROUPS) {
-    const items = model.components[group];
-    if (items.length) rows.push(...items.map((c) => row(title, c)));
+    const items = [...model.components[group].map((c) => row(title, c)), ...available(group).map((p) => patternRow(title, p))];
+    if (items.length) rows.push(...items);
     else rows.push(`| ${title} | Coming in ${milestone} | | [components README](${BLOB_URL}css/components/README.md) |`);
   }
-  rows.push(...model.layout.map((c) => row("Layout", c)), ...model.utilities.map((c) => row("Utilities", c)));
+  rows.push(...model.layouts.map((c) => row("Layouts", c)), ...available("layouts").map((p) => patternRow("Layouts", p)));
+  rows.push(...available("tokens").map((p) => patternRow("Tokens", p)), ...model.utilities.map((c) => row("Utilities", c)));
+
+  const patternRows = sortedPatterns(model).map(
+    (p) => `| [${p.title}](site:${p.sitePath}) | ${p.milestone} | ${patternStatus(p)} | ${escapeMdCell(followsMd(p))} |`,
+  );
+  const guides = model.guides.map((g) => `- [${g.title}](site:${g.sitePath}): ${g.summary}`).join("\n");
 
   const tokens = model.tokenGroups.map((g) => `- [${g.name}](site:${g.sitePath}): ${g.tokens.map((t) => mdCode(t.name)).join(", ")}`).join("\n");
 
@@ -83,9 +95,23 @@ ${themingMd(model)}
 
 ## Components
 
-| Group | Name | API | Docs |
+By level ([Components](site:components/index.html), [Layouts](site:layouts/index.html)):
+
+| Level | Name | API | Docs |
 | --- | --- | --- | --- |
 ${rows.join("\n")}
+
+## Patterns
+
+Where a standard exists (a native HTML element or a WAI-ARIA APG pattern), the pattern follows it and links to it. Where none exists, it is labeled **Our choice:** with one line on why ([Patterns](site:patterns/index.html)).
+
+| Pattern | Milestone | Status | Follows |
+| --- | --- | --- | --- |
+${patternRows.join("\n")}
+
+## Guides
+
+${guides || "No guides yet."}
 
 ## Tokens
 
@@ -126,6 +152,11 @@ export function generateLlms(model, pages) {
   const entry = (/** @type {Page} */ p) => `- [${p.title}](${SITE_URL}${p.path.replace(/\.html$/, ".md")}): ${p.description}`;
   const section = (/** @type {Page["section"]} */ s) => pages.filter((p) => p.section === s).map(entry);
   const examples = model.examples.map((e) => `- [${e.title}](${SITE_URL}${e.path}): live example page (HTML)`);
+  // Available patterns link to their Markdown twin; planned ones are named with their milestone only.
+  const patterns = sortedPatterns(model).map((p) => {
+    const note = `${p.summary} ${p.standards.length ? `Follows ${followsMd(p)}.` : followsMd(p)}`;
+    return p.available ? `- [${p.title}](${SITE_URL}${p.sitePath.replace(/\.html$/, ".md")}): Available. ${note}` : `- ${p.title}: ${patternStatus(p)}. ${note}`;
+  });
   return `${llmsHeader(model)}
 
 ## Principles
@@ -139,6 +170,18 @@ ${section("tokens").join("\n")}
 ## Components
 
 ${section("components").join("\n")}
+
+## Layouts
+
+${section("layouts").join("\n")}
+
+## Patterns
+
+${[...pages.filter((p) => p.path === "patterns/index.html").map(entry), ...patterns].join("\n")}
+
+## Guides
+
+${section("guides").join("\n")}
 
 ## Examples
 

@@ -6,6 +6,7 @@ import { cpSync, existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, statS
 import { tmpdir } from "node:os";
 import { dirname, join, posix } from "node:path";
 import { GENERATED, ROOT, build, extractSnippets, generate } from "../site/build.mjs";
+import { SECTIONS } from "../site/lib/pages.mjs";
 import { unescapeHtml } from "../site/lib/util.mjs";
 import { blockExternalRequests, schemes } from "./helpers.js";
 
@@ -176,7 +177,7 @@ test.describe("docs pages in the browser", () => {
       const hrefs = await page.locator('a[aria-current="page"]').evaluateAll((all) => all.map((a) => /** @type {HTMLAnchorElement} */ (a).href));
       expect(hrefs.length, p.path).toBeGreaterThan(0);
       for (const href of hrefs) expect(href, p.path).toBe(page.url());
-      if (["index.html", "principles/index.html", "tokens/index.html", "components/index.html", "examples.html"].includes(p.path)) {
+      if (SECTIONS.some((s) => s.path === p.path)) {
         await expect(page.locator('nav[aria-label="Docs"] a[aria-current="page"]'), p.path).toHaveCount(1);
       }
     }
@@ -235,6 +236,78 @@ test("discovery picks up a new component with no site changes", async ({ browser
     put("examples/atoms/demo.html", demo);
     put("examples/atoms/index.html", demo.replace("Demo · domestic-ui", "Atoms · domestic-ui"));
 
+    // Before its files land, the tabs pattern page is a short "coming" page.
+    const before = generate(fixture);
+    const tabsBefore = before.pages.find((p) => p.path === "patterns/tabs.html");
+    expect(tabsBefore).toBeDefined();
+    const tabsBeforeMd = before.markdown(/** @type {any} */ (tabsBefore));
+    expect(tabsBeforeMd).toContain("\n\nComing in M3.\n\n");
+    expect(tabsBeforeMd).toContain("[APG Tabs pattern](https://www.w3.org/WAI/ARIA/apg/patterns/tabs/)");
+    for (const absent of ["## Live example", "## Markup", "## Keyboard", "```"]) expect(tabsBeforeMd).not.toContain(absent);
+    expect(tabsBefore?.snippets ?? []).toEqual([]);
+    expect(before.files["llms.txt"]).toContain("- Tabs: Coming in M3.");
+
+    // Then a molecule CSS file (with a Keyboard block) and its example page fill it in.
+    put(
+      "css/components/molecules/tabs.css",
+      `/*
+ * Molecule: tabs
+ *
+ * Tabs for the docs discovery test, following the APG Tabs pattern.
+ *
+ * API
+ *   class="tabs"
+ *
+ * Keyboard
+ *   Left Arrow / Right Arrow: moves focus between tabs (fixture)
+ *   Home  moves focus to the first tab (fixture)
+ *
+ * https://www.w3.org/WAI/ARIA/apg/patterns/tabs/
+ */
+.tabs {
+  display: block;
+}
+`,
+    );
+    const tabs = `<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Tabs · domestic-ui</title>
+    <link rel="stylesheet" href="../../css/domestic.css">
+  </head>
+  <body>
+    <main>
+      <h1>Tabs</h1>
+      <!-- dui:snippet -->
+      <div class="tabs">
+        <p>Fixture tabs.</p>
+      </div>
+      <!-- /dui:snippet -->
+    </main>
+  </body>
+</html>
+`;
+    put("examples/molecules/tabs.html", tabs);
+
+    // A layout primitive in css/layouts/ (plural) with an example in examples/layouts/.
+    put(
+      "css/layouts/demo-layout.css",
+      `/*
+ * Layout: .demo-layout
+ *
+ * A demo layout used by the docs discovery test.
+ *
+ * API
+ *   class="demo-layout"
+ */
+.demo-layout {
+  display: grid;
+}
+`,
+    );
+    put("examples/layouts/demo-layout.html", demo.replace("Demo · domestic-ui", "Demo layout · domestic-ui"));
+
     const result = build({ root: fixture });
     const out = (/** @type {string} */ path) => read(join(fixture, "_site", path));
 
@@ -253,19 +326,59 @@ test("discovery picks up a new component with no site changes", async ({ browser
     const index = out("components/index.md");
     const atoms = index.slice(index.indexOf("## Atoms"), index.indexOf("## Molecules"));
     expect(atoms).toContain("[Demo](https://odonckers.github.io/domestic-ui/components/atoms/demo.md)");
-    expect(atoms).not.toContain("Coming in M2");
-    expect(index.slice(index.indexOf("## Molecules"))).toContain("Coming in M2");
+    expect(atoms).not.toMatch(/coming in M2/i);
+    const molecules = index.slice(index.indexOf("## Molecules"), index.indexOf("## Organisms"));
+    expect(molecules).toContain("[Tabs](https://odonckers.github.io/domestic-ui/patterns/tabs.md): Sections of content shown one at a time, chosen from a list of tabs. Available.");
+    expect(molecules).toContain("Coming in M3.");
     expect(out("examples.md")).toContain("[Atoms · domestic-ui](https://odonckers.github.io/domestic-ui/examples/atoms/index.html)");
+
+    // The tabs pattern page is filled in: demo, byte-identical markup, keyboard notes from the CSS.
+    const paths = result.pages.map((p) => p.path);
+    expect(paths, "a pattern owns its file names").not.toContain("components/molecules/tabs.html");
+    const tabsPage = out("patterns/tabs.html");
+    expect(tabsPage).not.toContain("Coming in M3.");
+    expect(tabsPage).toContain('src="../examples/molecules/tabs.html"');
+    const tabsCode = ['<div class="tabs">\n  <p>Fixture tabs.</p>\n</div>'];
+    expect(snippetBlocks(tabsPage)).toEqual(tabsCode);
+    expect(result.pages.find((p) => p.path === "patterns/tabs.html")?.snippets?.map((s) => s.code)).toEqual(tabsCode);
+    expect(isDedentedSlice(tabs, tabsCode[0], /^[ \t]*$/)).toBe(true);
+    expect(htmlFences(out("patterns/tabs.md"))).toEqual(tabsCode);
+    expect(tabsPage).toContain("From the <code>Keyboard</code> block in");
+    expect(tabsPage).toContain('<th scope="row"><kbd>Left Arrow</kbd> / <kbd>Right Arrow</kbd></th><td>moves focus between tabs (fixture)</td>');
+    expect(tabsPage).toContain('<th scope="row"><kbd>Home</kbd></th><td>moves focus to the first tab (fixture)</td>');
+    expect(tabsPage, "the CSS Keyboard block wins over the registry list").not.toContain("moves focus into the tab list");
+    expect(tabsPage).toContain('<a href="https://www.w3.org/WAI/ARIA/apg/patterns/tabs/">APG Tabs pattern</a>');
+    const tabsReport = await htmlValidate.validateString(tabsPage, join(fixture, "_site/patterns/tabs.html"));
+    expect(tabsReport.valid, JSON.stringify(tabsReport.results)).toBe(true);
+    expect(out("patterns/index.md")).toContain("| [Tabs](https://odonckers.github.io/domestic-ui/patterns/tabs.md) | molecule | Available |");
+    const guide = out("guides/simple-site-to-erp-app.md");
+    expect(guide).toContain("chosen from a list of tabs. Available.");
+    expect(guide).not.toContain("Tabs (M3)");
+    expect(guide).toContain("Not available yet: Disclosure (M3), Dialog and drawer (M3),");
+
+    // The layout lands under Layouts, from css/layouts/ with its example in examples/layouts/.
+    const layoutPage = out("layouts/demo-layout.html");
+    expect(layoutPage).toContain('src="../examples/layouts/demo-layout.html"');
+    expect(layoutPage).toMatch(/<nav class="section-nav" aria-label="Layouts">[\s\S]*aria-current="page">Demo layout<\/a>/);
+    expect(out("layouts/index.md")).toContain("- [Demo layout](https://odonckers.github.io/domestic-ui/layouts/demo-layout.md): A demo layout used by the docs discovery test.");
+    expect(index.slice(index.indexOf("## Layouts"))).toContain("[Demo layout](https://odonckers.github.io/domestic-ui/layouts/demo-layout.md)");
 
     const readme = read(join(fixture, "README.md"));
     expect(readme).toContain('| Atoms | Demo | `class="demo"` | [Demo](https://odonckers.github.io/domestic-ui/components/atoms/demo.html) |');
     expect(readme).not.toContain("| Atoms | Coming in M2 |");
+    expect(readme).toContain('| Molecules | Tabs | `class="tabs"` | [Tabs](https://odonckers.github.io/domestic-ui/patterns/tabs.html) |');
+    expect(readme).toContain("| [Tabs](https://odonckers.github.io/domestic-ui/patterns/tabs.html) | M3 | Available |");
+    expect(readme).toContain('| Layouts | Demo layout | `class="demo-layout"` | [Demo layout](https://odonckers.github.io/domestic-ui/layouts/demo-layout.html) |');
 
-    expect(read(join(fixture, "llms.txt"))).toContain("- [Demo](https://odonckers.github.io/domestic-ui/components/atoms/demo.md): A demo atom used by the docs discovery test.");
+    const llms = read(join(fixture, "llms.txt"));
+    expect(llms).toContain("- [Demo](https://odonckers.github.io/domestic-ui/components/atoms/demo.md): A demo atom used by the docs discovery test.");
+    expect(llms).toContain("- [Tabs](https://odonckers.github.io/domestic-ui/patterns/tabs.md): Available.");
+    expect(llms).not.toContain("- Tabs: Coming in M3.");
+    expect(llms.slice(llms.indexOf("## Layouts"), llms.indexOf("## Patterns"))).toContain("- [Demo layout](https://odonckers.github.io/domestic-ui/layouts/demo-layout.md)");
     const full = read(join(fixture, "llms-full.txt"));
     // The snippet contains ``` so its fence must be longer.
     expect(full).toContain(`\`\`\`\`html\n${expected[0]}\n\`\`\`\``);
-    expect(htmlFences(full)).toEqual(expect.arrayContaining(expected));
+    expect(htmlFences(full)).toEqual(expect.arrayContaining([...expected, ...tabsCode]));
   } finally {
     rmSync(fixture, { recursive: true, force: true });
   }

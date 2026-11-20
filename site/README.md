@@ -46,11 +46,21 @@ compare bytes.
 | `PRINCIPLES.md`, each `## ` section | `principles/<slug>.html`, slug from the heading without its number |
 | `PRINCIPLES.md`, text before the first `## ` | `principles/index.html` |
 | `css/tokens/semantic.css`, each section comment such as `/* Space */` | `tokens/<group>.html` |
-| `css/base/*.css` and `examples/base.html` | `components/base.html` |
-| `css/layout/<name>.css` | `components/layout/<name>.html` |
+| `css/base/*.css` and `examples/base.html` | `components/base.html` (an atom) |
+| `css/layout/<name>.css`, `css/layouts/<name>.css` or `css/components/layouts/<name>.css`, with `examples/layout/<name>.html` or `examples/layouts/<name>.html` | `layouts/<name>.html` |
 | `css/utilities/<name>.css` | `components/utilities/<name>.html` |
 | `css/components/<group>/<name>.css` and `examples/<group>/<name>.html` | `components/<group>/<name>.html`, for `atoms`, `molecules`, `organisms` |
+| `site/content/patterns/<slug>.md`, filled in by matching example and CSS files | `patterns/<slug>.html`, listed on `patterns/index.html` |
+| `site/content/guides/<slug>.md` | `guides/<slug>.html`, listed on `guides/index.html` |
 | `examples/*.html`, `examples/*/*.html` | Listed on `examples.html` by their `<title>` |
+
+The docs are organized by level: Tokens, Atoms, Molecules, Organisms and Layouts, plus Utilities.
+`components/index.html` lists every level, including planned patterns at their level with their
+status; `layouts/index.html` lists the Layouts level. In the Components section nav, pages are
+grouped under Atoms, Molecules, Organisms and Utilities.
+
+Layout directories are all read, in the order above; when two hold a file of the same name, the
+first wins. Missing directories are skipped.
 
 Relative links in `PRINCIPLES.md` and override bodies are repo-root paths. They are rewritten to the
 matching docs page where one exists (`examples/theming.html`, `css/layout/stack.css`, a
@@ -66,8 +76,13 @@ No site change is needed. Add the two files below and run `node site/build.mjs`:
   without it the page says there is no example yet. `examples/<group>/index.html` is a showcase,
   not a component; it is listed on `examples.html` only.
 
-The "Coming in M2" or "Coming in M3" note for that group disappears from `components/index.html`
-and `README.md` as soon as the group has one CSS file.
+If the name matches a registered pattern (see [Patterns](#patterns)), the files fill in that
+pattern page instead. The "coming in …" note for a group disappears from `components/index.html`
+and `README.md` as soon as the group has one CSS file or one available pattern.
+
+A layout primitive works the same way: add `<name>.css` to `css/layout/`, `css/layouts/` or
+`css/components/layouts/`, and optionally `examples/layout/<name>.html` or
+`examples/layouts/<name>.html`.
 
 ### Header comment fields
 
@@ -116,13 +131,88 @@ title: Button
 summary: One line.
 specs:
   - MDN <button>: https://developer.mozilla.org/en-US/docs/Web/HTML/Element/button
+our-choice: One line on why, only when no native element or APG pattern covers it.
 ---
 Markdown body = accessibility notes.
 ```
 
 Only `key: value` pairs and `- item` lists are parsed. Each key is optional; anything left out falls
 back to the header comment. A `specs` entry is `Label: URL`. The body replaces the derived
-accessibility notes; its relative links are repo-root paths, rewritten as above.
+accessibility notes; its relative links are repo-root paths, rewritten as above. Layout overrides
+live at `site/content/components/layouts/<name>.md`, whichever CSS directory the layout is in.
+
+`our-choice` is rendered under the summary as "**Our choice:** …". Use it only where no native
+element and no [WAI-ARIA APG pattern](https://www.w3.org/WAI/ARIA/apg/patterns/) exists; where one
+does, link it under `specs` instead and never present it as ours.
+
+## Patterns
+
+`site/content/patterns/<slug>.md` is the registry of planned patterns, one file each. The body
+is optional (rendered as Notes once the pattern is available); the front matter is the data:
+
+```md
+---
+title: Tabs
+summary: Sections of content shown one at a time, chosen from a list of tabs.
+milestone: M3
+level: molecule
+standard: APG Tabs pattern: https://www.w3.org/WAI/ARIA/apg/patterns/tabs/
+specs:
+  - Label: https://…
+sources:
+  - tabs
+keyboard:
+  - Tab: moves focus into the tab list, onto the active tab.
+  - Left Arrow / Right Arrow: moves focus to the previous or next tab.
+---
+```
+
+| Key | Rule |
+| --- | --- |
+| `title`, `summary` | Required in practice. Inline Markdown. |
+| `milestone` | `M3` or `M3b`; groups `patterns/index.html` and sets the "Coming in …" sentence. |
+| `level` | `molecule`, `organism`, `layout` or `token`; places the pattern on `components/index.html` (and `layouts/index.html`). |
+| `standard` | One `Label: URL` or a list of them: the native element or APG pattern it follows. |
+| `our-choice` | One line, only when there is no standard. The build fails if a pattern has neither. |
+| `specs` | Further `Label: URL` links, shown once the pattern is available. |
+| `sources` | Other file names that fill this pattern in (`dialog.md` lists `dialog` and `drawer`). The slug is always one. |
+| `keyboard` | `Key: action` lines, used only when neither the example nor the CSS has a `Keyboard` block. Separate alternative keys with ` / `. |
+
+A pattern **fills in on its own** when any of its names matches a file:
+
+- an example page `examples/{molecules,organisms,layouts,layout,patterns}/<name>.html`, or
+- a CSS file `css/**/<name>.css` (outside `css/base/` and `css/reset/`).
+
+A pattern owns its names: `css/components/molecules/tabs.css` fills `patterns/tabs.html` and gets no
+`components/molecules/tabs.html` page. A filled page shows the API (from the CSS header), the live
+example, copy-paste markup (the snippet convention below, byte for byte), keyboard notes, the
+standard or Our choice line, specs and sources. Keyboard notes come from the first `Keyboard`
+block found in an HTML comment of the example page, else in the CSS header comment, else the
+`keyboard` front matter; with none, one line points at the standard's keyboard section.
+
+```css
+/*
+ * Keyboard
+ *   Left Arrow / Right Arrow: moves focus to the previous or next tab
+ *   Home  moves focus to the first tab
+ */
+```
+
+Until a file lands, the page shows only the summary, the standard or Our choice line and "Coming
+in M3." (or M3b): no demo, no markup, no keyboard table. `README.md` lists every pattern with its
+status and adds available ones to the components table at their level; `llms.txt` links available
+patterns to their `.md` twin and names planned ones with their milestone.
+
+## Guides
+
+`site/content/guides/<slug>.md` (front matter `title`, `summary`; Markdown body with `site:` links
+or repo-root links) becomes `guides/<slug>.html`. Two lines are generated at build time, so a
+guide never claims something is available when it is not:
+
+| Line | Becomes |
+| --- | --- |
+| `{{patterns: nav, breadcrumb, search}}` | Those patterns with their status, then "Not available yet: …" (or "All of these are available."). An unknown slug fails the build. |
+| `{{layouts}}` | The layout primitives found by discovery. |
 
 ## Snippet convention
 

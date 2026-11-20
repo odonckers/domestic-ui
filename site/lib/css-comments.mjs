@@ -17,6 +17,9 @@
  *   Example                         indented block = markup
  *     <div class="stack">…</div>
  *
+ *   Keyboard                        indented block = keyboard notes
+ *     Tab: moves focus into the widget
+ *
  *   https://…                       every URL = a spec link
  */
 import { firstSentence } from "./util.mjs";
@@ -29,6 +32,7 @@ import { firstSentence } from "./util.mjs";
  * @property {string | null} api  dedented API block
  * @property {string[]} apiInline "API: …" one-liners found in any comment
  * @property {string | null} example dedented Example block
+ * @property {{ key: string, action: string }[]} keyboard lines of the Keyboard block
  * @property {string[]} urls      every URL, in order, without duplicates
  * @property {string[]} a11y      prose sentences about accessibility
  */
@@ -92,11 +96,14 @@ export function parseHeader(text, others = []) {
   let api = null;
   /** @type {string | null} */
   let example = null;
+  /** @type {{ key: string, action: string }[]} */
+  let keyboard = [];
   const prose = [];
   for (const lines of paragraphs) {
     const head = lines[0].trim();
     if (/^API:?$/.test(head)) api = dedent(lines.slice(1)).text;
     else if (/^Examples?:?$/.test(head)) example = dedent(lines.slice(1)).text;
+    else if (/^Keyboard:?$/.test(head)) keyboard = parseKeyboard(lines.slice(1));
     else if (!/^API:\s/.test(head) && !(label && lines.length === 1 && lines[0] === label)) prose.push(lines.map((l) => l.trim()).join(" "));
   }
   const apiInline = [text, ...others].flatMap((c) => [...c.matchAll(/^\s*API:\s+(.+)$/gm)].map((m) => m[1].trim()));
@@ -108,9 +115,35 @@ export function parseHeader(text, others = []) {
     api,
     apiInline,
     example,
+    keyboard,
     urls: findUrls(text),
     a11y,
   };
+}
+
+/**
+ * Keyboard lines, "Key: action" or "Key  action" (two or more spaces),
+ * optionally starting with "- ". Lines that do not split are dropped.
+ * @param {string[]} lines
+ * @returns {{ key: string, action: string }[]}
+ */
+export function parseKeyboard(lines) {
+  return lines.flatMap((l) => {
+    const m = l.trim().replace(/^-\s+/, "").match(/^(.+?)(?::\s+|\s{2,})(\S.*)$/);
+    return m ? [{ key: m[1].trim(), action: m[2].trim() }] : [];
+  });
+}
+
+/**
+ * The Keyboard block of the first HTML comment that has one (example pages).
+ * @param {string} html
+ */
+export function htmlKeyboard(html) {
+  for (const m of html.matchAll(/<!--([\s\S]*?)-->/g)) {
+    const { keyboard } = parseHeader(stripDecoration(m[1]));
+    if (keyboard.length) return keyboard;
+  }
+  return [];
 }
 
 /**

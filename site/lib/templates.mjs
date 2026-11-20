@@ -40,11 +40,28 @@ export function renderHtml(page, pages) {
 
   const siblings = page.section === "home" || page.section === "examples" ? [] : pages.filter((p) => p.section === page.section);
   const sectionTitle = SECTIONS.find((s) => s.section === page.section)?.title ?? "";
+  const item = (/** @type {Page} */ p, /** @type {string} */ indent) =>
+    `${indent}<li><a href="${link(p.path)}"${p.path === page.path ? ' aria-current="page"' : ""}>${escapeHtml(p.path.endsWith("index.html") ? `All ${sectionTitle.toLowerCase()}` : p.title)}</a></li>`;
+  // Pages with a `group` are listed under that label as a nested list, in page order.
+  /** @type {string[]} */
+  const items = [];
+  for (let i = 0; i < siblings.length; ) {
+    const group = siblings[i].group;
+    if (!group) {
+      items.push(item(siblings[i++], "          "));
+      continue;
+    }
+    const members = [];
+    while (i < siblings.length && siblings[i].group === group) members.push(siblings[i++]);
+    items.push(
+      `          <li>\n            <span class="section-nav-group">${escapeHtml(group)}</span>\n            <ul class="stack">\n${members.map((p) => item(p, "              ")).join("\n")}\n            </ul>\n          </li>`,
+    );
+  }
   const sidebar = siblings.length
     ? `
       <nav class="section-nav" aria-label="${escapeHtml(sectionTitle)}">
         <ul class="stack">
-${siblings.map((p) => `          <li><a href="${link(p.path)}"${p.path === page.path ? ' aria-current="page"' : ""}>${escapeHtml(p.path.endsWith("index.html") ? `All ${sectionTitle.toLowerCase()}` : p.title)}</a></li>`).join("\n")}
+${items.join("\n")}
         </ul>
       </nav>`
     : "";
