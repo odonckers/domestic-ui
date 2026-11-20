@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Form controls · domestic-ui</title>
+    <meta name="description" content="Native form controls as styled by the domestic-ui base layer, with copyable markup.">
+    <link rel="stylesheet" href="../../css/domestic.css">
+    <style>
+      /* Page-only layout, written with semantic tokens like any consumer would. */
+      body > :is(header, main, footer) {
+        max-inline-size: 72rem;
+        margin-inline: auto;
+        padding-inline: var(--dui-space-l);
+      }
+
+      body > header {
+        padding-block: var(--dui-space-m);
+        border-block-end: var(--dui-border-width) solid var(--dui-color-border);
+      }
+
+      body > main {
+        padding-block: var(--dui-space-2xl);
+      }
+
+      body > footer {
+        padding-block: var(--dui-space-l);
+        border-block-start: var(--dui-border-width) solid var(--dui-color-border);
+        color: var(--dui-color-text-muted);
+      }
+
+      /* Wrap long lines of example markup instead of scrolling them. */
+      pre {
+        white-space: pre-wrap;
+        overflow-wrap: anywhere;
+      }
+
+      .demo {
+        padding: var(--dui-space-l);
+        border: var(--dui-border-width) solid var(--dui-color-border);
+        border-radius: var(--dui-radius-surface);
+      }
+    </style>
+  </head>
+  <body>
+    <a class="visually-hidden" href="#main">Skip to main content</a>
+
+    <header class="cluster" style="--cluster-justify: space-between">
+      <p><strong>domestic-ui</strong></p>
+      <nav aria-label="Examples">
+        <ul class="cluster">
+          <li><a href="../base.html">Base elements</a></li>
+          <li><a href="../theming.html">Theming</a></li>
+          <li><a href="index.html">Atoms</a></li>
+        </ul>
+      </nav>
+    </header>
+
+    <main id="main">
+      <h1>Form controls</h1>
+      <p data-text="lead">Native form controls need no atom class: the base layer styles them.</p>
+      <p>
+        Source: <a href="../../css/base/forms.css"><code>css/base/forms.css</code></a>. Every control has a
+        <code>&lt;label&gt;</code>, and groups use <code>&lt;fieldset&gt;</code> and <code>&lt;legend&gt;</code>
+        (<a href="https://www.w3.org/WAI/tutorials/forms/">W3C forms tutorial</a>). For an on/off setting, see
+        <a href="switch.html">switch</a>; for hints and errors, see <a href="field.html">field</a>.
+      </p>
+
+      <section aria-labelledby="text-like-title">
+        <h2 id="text-like-title">Text-like inputs</h2>
+        <div class="demo">
+          <div class="grid" style="--grid-min: 14rem">
+            <div>
+              <label for="c-name">Name</label>
+              <input id="c-name" name="name" type="text" autocomplete="name">
+            </div>
+            <div>
+              <label for="c-email">Email</label>
+              <input id="c-email" name="email" type="email" autocomplete="email">
+            </div>
+            <div>
+              <label for="c-password">Password</label>
+              <input id="c-password" name="password" type="password" autocomplete="new-password">
+            </div>
+            <div>
+              <label for="c-search">Search</label>
+              <input id="c-search" name="q" type="search">
+            </div>
+            <div>
+              <label for="c-url">Website</label>
+              <input id="c-url" name="url" type="url" placeholder="https://example.com">
+            </div>
+            <div>
+              <label for="c-tel">Phone</label>
+              <input id="c-tel" name="tel" type="tel" autocomplete="tel">
+            </div>
+            <div>
+              <label for="c-number">Guests</label>
+              <input id="c-number" name="guests" type="number" min="1" max="12" value="2">
+            </div>
+            <div>
+              <label for="c-date">Date</label>
+              <input id="c-date" name="date" type="date">
+            </div>
+            <div>
+              <label for="c-time">Time</label>
+              <input id="c-time" name="time" type="time">
+            </div>
+          </div>
+        </div>
+        <pre><code>&lt;div class="grid" style="--grid-min: 14rem"&gt;
+  &lt;div&gt;
+    &lt;label for="c-name"&gt;Name&lt;/label&gt;
+    &lt;input id="c-name" name="name" type="text" autocomplete="name"&gt;
+  &lt;/div&gt;
+  &lt;div&gt;
+    &lt;label for="c-email"&gt;Email&lt;/label&gt;
+    &lt;input id="c-email" name="email" type="email" autocomplete="email"&gt;
+  &lt;/div&gt;
+  &lt;div&gt;
+    &lt;label for="c-password"&gt;Password&lt;/label&gt;
+    &lt;input id="c-password" name="password" type="password" autocomplete="new-password"&gt;
+  &lt;/div&gt;
+  &lt;div&gt;
+    &lt;label for="c-search"&gt;Search&lt;/label&gt;
+    &lt;input id="c-search" name="q" type="search"&gt;
+  &lt;/div&gt;
+  &lt;div&gt;
+    &lt;label for="c-url"&gt;Website&lt;/label&gt;
+    &lt;input id="c-url" name="url" type="url" placeholder="https://example.com"&gt;
+  &lt;/div&gt;
+  &lt;div&gt;
+    &lt;label for="c-tel"&gt;Phone&lt;/label&gt;
+    &lt;input id="c-tel" name="tel" type="tel" autocomplete="tel"&gt;
+  &lt;/div&gt;
+  &lt;div&gt;
+    &lt;label for="c-number"&gt;Guests&lt;/label&gt;
+    &lt;input id="c-number" name="guests" type="number" min="1" max="12" value="2"&gt;
+  &lt;/div&gt;
+  &lt;div&gt;
+    &lt;label for="c-date"&gt;Date&lt;/label&gt;
+    &lt;input id="c-date" name="date" type="date"&gt;
+  &lt;/div&gt;
+  &lt;div&gt;
+    &lt;label for="c-time"&gt;Time&lt;/label&gt;
+    &lt;input id="c-time" name="time" type="time"&gt;
+  &lt;/div&gt;
+&lt;/div&gt;</code></pre>
+      </section>
+
+      <section aria-labelledby="textarea-select-title">
+        <h2 id="textarea-select-title">Textarea and select</h2>
+        <div class="demo">
+          <div class="grid" style="--grid-min: 14rem">
+            <div>
+              <label for="c-notes">Notes</label>
+              <textarea id="c-notes" name="notes" rows="3"></textarea>
+            </div>
+            <div>
+              <label for="c-plan">Plan</label>
+              <select id="c-plan" name="plan">
+                <option value="free">Free</option>
+                <option value="team" selected>Team</option>
+              </select>
+            </div>
+          </div>
+        </div>
+        <pre><code>&lt;div class="grid" style="--grid-min: 14rem"&gt;
+  &lt;div&gt;
+    &lt;label for="c-notes"&gt;Notes&lt;/label&gt;
+    &lt;textarea id="c-notes" name="notes" rows="3"&gt;&lt;/textarea&gt;
+  &lt;/div&gt;
+  &lt;div&gt;
+    &lt;label for="c-plan"&gt;Plan&lt;/label&gt;
+    &lt;select id="c-plan" name="plan"&gt;
+      &lt;option value="free"&gt;Free&lt;/option&gt;
+      &lt;option value="team" selected&gt;Team&lt;/option&gt;
+    &lt;/select&gt;
+  &lt;/div&gt;
+&lt;/div&gt;</code></pre>
+      </section>
+
+      <section aria-labelledby="choices-title">
+        <h2 id="choices-title">Checkboxes and radios in a fieldset</h2>
+        <div class="demo">
+          <div class="grid" style="--grid-min: 14rem">
+            <fieldset>
+              <legend>Notify me by</legend>
+              <label><input type="checkbox" name="notify-email" checked> Email</label>
+              <label><input type="checkbox" name="notify-sms"> Text message</label>
+            </fieldset>
+            <fieldset>
+              <legend>Delivery</legend>
+              <label><input type="radio" name="delivery" value="standard" checked> Standard</label>
+              <label><input type="radio" name="delivery" value="express"> Express</label>
+            </fieldset>
+          </div>
+        </div>
+        <pre><code>&lt;div class="grid" style="--grid-min: 14rem"&gt;
+  &lt;fieldset&gt;
+    &lt;legend&gt;Notify me by&lt;/legend&gt;
+    &lt;label&gt;&lt;input type="checkbox" name="notify-email" checked&gt; Email&lt;/label&gt;
+    &lt;label&gt;&lt;input type="checkbox" name="notify-sms"&gt; Text message&lt;/label&gt;
+  &lt;/fieldset&gt;
+  &lt;fieldset&gt;
+    &lt;legend&gt;Delivery&lt;/legend&gt;
+    &lt;label&gt;&lt;input type="radio" name="delivery" value="standard" checked&gt; Standard&lt;/label&gt;
+    &lt;label&gt;&lt;input type="radio" name="delivery" value="express"&gt; Express&lt;/label&gt;
+  &lt;/fieldset&gt;
+&lt;/div&gt;</code></pre>
+      </section>
+
+      <section aria-labelledby="range-file-title">
+        <h2 id="range-file-title">Range and file</h2>
+        <div class="demo">
+          <div class="grid" style="--grid-min: 14rem">
+            <div>
+              <label for="c-volume">Volume</label>
+              <input id="c-volume" name="volume" type="range" min="0" max="100" value="40">
+            </div>
+            <div>
+              <label for="c-file">Attachment</label>
+              <input id="c-file" name="file" type="file">
+            </div>
+          </div>
+        </div>
+        <pre><code>&lt;div class="grid" style="--grid-min: 14rem"&gt;
+  &lt;div&gt;
+    &lt;label for="c-volume"&gt;Volume&lt;/label&gt;
+    &lt;input id="c-volume" name="volume" type="range" min="0" max="100" value="40"&gt;
+  &lt;/div&gt;
+  &lt;div&gt;
+    &lt;label for="c-file"&gt;Attachment&lt;/label&gt;
+    &lt;input id="c-file" name="file" type="file"&gt;
+  &lt;/div&gt;
+&lt;/div&gt;</code></pre>
+      </section>
+
+      <section aria-labelledby="specs-title">
+        <h2 id="specs-title">Specs and guidance</h2>
+        <ul>
+          <li><a href="https://html.spec.whatwg.org/multipage/forms.html">WHATWG: forms</a></li>
+          <li><a href="https://www.w3.org/WAI/tutorials/forms/">W3C WAI: forms tutorial</a></li>
+          <li><a href="https://developer.mozilla.org/en-US/docs/Web/CSS/accent-color">MDN: accent-color</a></li>
+          <li><a href="https://www.w3.org/WAI/WCAG22/Understanding/non-text-contrast.html">WCAG 2.2: 1.4.11 Non-text Contrast</a></li>
+        </ul>
+      </section>
+    </main>
+
+    <footer>
+      <p><small>domestic-ui packages existing standards and well-known patterns. MIT licensed.</small></p>
+    </footer>
+  </body>
+</html>

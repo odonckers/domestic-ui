@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Buttons · domestic-ui</title>
+    <meta name="description" content="Button variants, sizes, link buttons and honest disabled and loading states.">
+    <link rel="stylesheet" href="../../css/domestic.css">
+    <style>
+      /* Page-only layout, written with semantic tokens like any consumer would. */
+      body > :is(header, main, footer) {
+        max-inline-size: 72rem;
+        margin-inline: auto;
+        padding-inline: var(--dui-space-l);
+      }
+
+      body > header {
+        padding-block: var(--dui-space-m);
+        border-block-end: var(--dui-border-width) solid var(--dui-color-border);
+      }
+
+      body > main {
+        padding-block: var(--dui-space-2xl);
+      }
+
+      body > footer {
+        padding-block: var(--dui-space-l);
+        border-block-start: var(--dui-border-width) solid var(--dui-color-border);
+        color: var(--dui-color-text-muted);
+      }
+
+      /* Wrap long lines of example markup instead of scrolling them. */
+      pre {
+        white-space: pre-wrap;
+        overflow-wrap: anywhere;
+      }
+
+      .demo {
+        padding: var(--dui-space-l);
+        border: var(--dui-border-width) solid var(--dui-color-border);
+        border-radius: var(--dui-radius-surface);
+      }
+    </style>
+  </head>
+  <body>
+    <a class="visually-hidden" href="#main">Skip to main content</a>
+
+    <header class="cluster" style="--cluster-justify: space-between">
+      <p><strong>domestic-ui</strong></p>
+      <nav aria-label="Examples">
+        <ul class="cluster">
+          <li><a href="../base.html">Base elements</a></li>
+          <li><a href="../theming.html">Theming</a></li>
+          <li><a href="index.html">Atoms</a></li>
+        </ul>
+      </nav>
+    </header>
+
+    <main id="main">
+      <h1>Buttons</h1>
+      <p data-text="lead">Native <code>&lt;button&gt;</code> with one attribute for variant and size.</p>
+      <p>API: <code>data-button="[primary | secondary | quiet] [small | large]"</code>. Source: <a href="../../css/components/atoms/button.css"><code>css/components/atoms/button.css</code></a>.</p>
+      <p>
+        Without the attribute, the base layer already styles buttons: <code>type="submit"</code> is the primary action
+        and every other button is neutral. <code>data-button</code> overrides that when the native type does not match the
+        emphasis you want. Use <code>&lt;button&gt;</code> for actions and <code>&lt;a href&gt;</code> for navigation
+        (<a href="https://www.w3.org/WAI/ARIA/apg/patterns/button/">APG button pattern</a>).
+      </p>
+
+      <section aria-labelledby="variants-title">
+        <h2 id="variants-title">Variants</h2>
+        <p>Primary for the main action, secondary for the rest, quiet for low-emphasis actions next to others.</p>
+        <div class="demo">
+          <div class="cluster">
+            <button type="button" data-button="primary">Primary</button>
+            <button type="button" data-button="secondary">Secondary</button>
+            <button type="button" data-button="quiet">Quiet</button>
+          </div>
+        </div>
+        <pre><code>&lt;div class="cluster"&gt;
+  &lt;button type="button" data-button="primary"&gt;Primary&lt;/button&gt;
+  &lt;button type="button" data-button="secondary"&gt;Secondary&lt;/button&gt;
+  &lt;button type="button" data-button="quiet"&gt;Quiet&lt;/button&gt;
+&lt;/div&gt;</code></pre>
+      </section>
+
+      <section aria-labelledby="native-title">
+        <h2 id="native-title">Native default</h2>
+        <p>A submit button is primary with no attribute. Opt out with <code>secondary</code>.</p>
+        <div class="demo">
+          <form action="#native-title" class="cluster">
+            <button type="submit">Publish</button>
+            <button type="submit" name="draft" value="1" data-button="secondary">Save draft</button>
+            <button type="reset" data-button="quiet">Clear</button>
+          </form>
+        </div>
+        <pre><code>&lt;form action="#native-title" class="cluster"&gt;
+  &lt;button type="submit"&gt;Publish&lt;/button&gt;
+  &lt;button type="submit" name="draft" value="1" data-button="secondary"&gt;Save draft&lt;/button&gt;
+  &lt;button type="reset" data-button="quiet"&gt;Clear&lt;/button&gt;
+&lt;/form&gt;</code></pre>
+      </section>
+
+      <section aria-labelledby="sizes-title">
+        <h2 id="sizes-title">Sizes</h2>
+        <p>
+          Default and large are at least 44px tall. Small is 32px: below 44px but above the 24px minimum of
+          <a href="https://www.w3.org/WAI/WCAG22/Understanding/target-size-minimum.html">WCAG 2.5.8 Target Size (Minimum)</a>.
+        </p>
+        <div class="demo">
+          <div class="cluster">
+            <button type="button" data-button="primary small">Small</button>
+            <button type="button" data-button="primary">Default</button>
+            <button type="button" data-button="primary large">Large</button>
+          </div>
+        </div>
+        <pre><code>&lt;div class="cluster"&gt;
+  &lt;button type="button" data-button="primary small"&gt;Small&lt;/button&gt;
+  &lt;button type="button" data-button="primary"&gt;Default&lt;/button&gt;
+  &lt;button type="button" data-button="primary large"&gt;Large&lt;/button&gt;
+&lt;/div&gt;</code></pre>
+      </section>
+
+      <section aria-labelledby="links-title">
+        <h2 id="links-title">Links that look like buttons</h2>
+        <p>Same attribute on <code>&lt;a href&gt;</code>. It is still a link: it navigates, opens in a new tab and is announced as a link.</p>
+        <div class="demo">
+          <div class="cluster">
+            <a href="#links-title" data-button="primary">Create account</a>
+            <a href="#links-title" data-button="secondary">Read the guide</a>
+            <a href="#links-title" data-button="quiet">Skip for now</a>
+          </div>
+        </div>
+        <pre><code>&lt;div class="cluster"&gt;
+  &lt;a href="#links-title" data-button="primary"&gt;Create account&lt;/a&gt;
+  &lt;a href="#links-title" data-button="secondary"&gt;Read the guide&lt;/a&gt;
+  &lt;a href="#links-title" data-button="quiet"&gt;Skip for now&lt;/a&gt;
+&lt;/div&gt;</code></pre>
+      </section>
+
+      <section aria-labelledby="disabled-title">
+        <h2 id="disabled-title">Disabled</h2>
+        <p>
+          The <a href="https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Attributes/disabled"><code>disabled</code> attribute</a>
+          removes the button from the tab order and blocks activation. Use it when the action is simply not available.
+        </p>
+        <div class="demo">
+          <div class="cluster">
+            <button type="button" data-button="primary" disabled>Delete</button>
+            <button type="button" disabled>Archive</button>
+          </div>
+        </div>
+        <pre><code>&lt;div class="cluster"&gt;
+  &lt;button type="button" data-button="primary" disabled&gt;Delete&lt;/button&gt;
+  &lt;button type="button" disabled&gt;Archive&lt;/button&gt;
+&lt;/div&gt;</code></pre>
+      </section>
+
+      <section aria-labelledby="aria-disabled-title">
+        <h2 id="aria-disabled-title">Disabled but focusable</h2>
+        <p>
+          <a href="https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Reference/Attributes/aria-disabled"><code>aria-disabled="true"</code></a>
+          looks disabled and is announced as disabled, but stays in the tab order, so keyboard and screen reader users can
+          find it and read why. APG recommends this for controls whose reason matters
+          (<a href="https://www.w3.org/WAI/ARIA/apg/practices/keyboard-interface/#focusabilityofdisabledcontrols">focusability of disabled controls</a>).
+          It does not block clicks: your script must ignore them (see the script at the end of this page).
+        </p>
+        <div class="demo">
+          <div class="cluster">
+            <button type="button" data-button="primary" aria-disabled="true" aria-describedby="publish-why">Publish</button>
+            <p id="publish-why" data-text="small muted">Add a title before publishing.</p>
+          </div>
+        </div>
+        <pre><code>&lt;div class="cluster"&gt;
+  &lt;button type="button" data-button="primary" aria-disabled="true" aria-describedby="publish-why"&gt;Publish&lt;/button&gt;
+  &lt;p id="publish-why" data-text="small muted"&gt;Add a title before publishing.&lt;/p&gt;
+&lt;/div&gt;</code></pre>
+      </section>
+
+      <section aria-labelledby="loading-title">
+        <h2 id="loading-title">Loading</h2>
+        <p>
+          An honest loading state: the visible label says what is happening, <code>aria-busy="true"</code> and
+          <code>aria-disabled="true"</code> are set while it runs, focus stays on the button, and the result goes to a
+          <a href="https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Reference/Roles/status_role"><code>role="status"</code></a>
+          region. There is no spinner that replaces the label.
+        </p>
+        <div class="demo">
+          <div class="cluster">
+            <button type="button" id="save-demo" data-button="primary">Save changes</button>
+            <p id="save-status" role="status" data-text="small muted"></p>
+          </div>
+        </div>
+        <pre><code>&lt;div class="cluster"&gt;
+  &lt;button type="button" id="save-demo" data-button="primary"&gt;Save changes&lt;/button&gt;
+  &lt;p id="save-status" role="status" data-text="small muted"&gt;&lt;/p&gt;
+&lt;/div&gt;</code></pre>
+      </section>
+
+      <section aria-labelledby="specs-title">
+        <h2 id="specs-title">Specs and guidance</h2>
+        <ul>
+          <li><a href="https://html.spec.whatwg.org/multipage/form-elements.html#the-button-element">WHATWG: the button element</a></li>
+          <li><a href="https://www.w3.org/WAI/ARIA/apg/patterns/button/">APG: Button pattern</a></li>
+          <li><a href="https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Reference/Attributes/aria-disabled">MDN: aria-disabled</a></li>
+          <li><a href="https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Reference/Attributes/aria-busy">MDN: aria-busy</a></li>
+          <li><a href="https://www.w3.org/WAI/WCAG22/Understanding/target-size-minimum.html">WCAG 2.2: 2.5.8 Target Size (Minimum)</a></li>
+          <li><a href="https://www.w3.org/WAI/WCAG22/Understanding/non-text-contrast.html">WCAG 2.2: 1.4.11 Non-text Contrast</a></li>
+          <li><a href="https://www.w3.org/WAI/WCAG22/Understanding/focus-visible.html">WCAG 2.2: 2.4.7 Focus Visible</a></li>
+        </ul>
+      </section>
+    </main>
+
+    <footer>
+      <p><small>domestic-ui packages existing standards and well-known patterns. MIT licensed.</small></p>
+    </footer>
+
+    <script>
+      // aria-disabled="true" does not stop activation the way the disabled attribute does,
+      // so ignore clicks on it here. Enter and Space on a button also fire "click".
+      // https://www.w3.org/WAI/ARIA/apg/practices/keyboard-interface/#focusabilityofdisabledcontrols
+      document.addEventListener("click", (event) => {
+        if (event.target.closest('[aria-disabled="true"]')) {
+          event.preventDefault();
+          event.stopImmediatePropagation();
+        }
+      }, true);
+
+      // Loading state: the label changes, aria-busy and aria-disabled are set, the
+      // button keeps focus, and the result is announced in a role="status" region.
+      const save = document.getElementById("save-demo");
+      const status = document.getElementById("save-status");
+      save.addEventListener("click", () => {
+        save.setAttribute("aria-busy", "true");
+        save.setAttribute("aria-disabled", "true");
+        save.textContent = "Saving…";
+        status.textContent = "";
+        setTimeout(() => {
+          save.removeAttribute("aria-busy");
+          save.removeAttribute("aria-disabled");
+          save.textContent = "Save changes";
+          status.textContent = "Changes saved.";
+        }, 1500);
+      });
+    </script>
+  </body>
+</html>

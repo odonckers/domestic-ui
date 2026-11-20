@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Text helpers · domestic-ui</title>
+    <meta name="description" content="Lead, small and muted text helpers from domestic-ui, with copyable markup.">
+    <link rel="stylesheet" href="../../css/domestic.css">
+    <style>
+      /* Page-only layout, written with semantic tokens like any consumer would. */
+      body > :is(header, main, footer) {
+        max-inline-size: 72rem;
+        margin-inline: auto;
+        padding-inline: var(--dui-space-l);
+      }
+
+      body > header {
+        padding-block: var(--dui-space-m);
+        border-block-end: var(--dui-border-width) solid var(--dui-color-border);
+      }
+
+      body > main {
+        padding-block: var(--dui-space-2xl);
+      }
+
+      body > footer {
+        padding-block: var(--dui-space-l);
+        border-block-start: var(--dui-border-width) solid var(--dui-color-border);
+        color: var(--dui-color-text-muted);
+      }
+
+      /* Wrap long lines of example markup instead of scrolling them. */
+      pre {
+        white-space: pre-wrap;
+        overflow-wrap: anywhere;
+      }
+
+      .demo {
+        padding: var(--dui-space-l);
+        border: var(--dui-border-width) solid var(--dui-color-border);
+        border-radius: var(--dui-radius-surface);
+      }
+    </style>
+  </head>
+  <body>
+    <a class="visually-hidden" href="#main">Skip to main content</a>
+
+    <header class="cluster" style="--cluster-justify: space-between">
+      <p><strong>domestic-ui</strong></p>
+      <nav aria-label="Examples">
+        <ul class="cluster">
+          <li><a href="../base.html">Base elements</a></li>
+          <li><a href="../theming.html">Theming</a></li>
+          <li><a href="index.html">Atoms</a></li>
+        </ul>
+      </nav>
+    </header>
+
+    <main id="main">
+      <h1>Text helpers</h1>
+      <p data-text="lead">Three presentation helpers for prose: a lead paragraph, small text and muted text.</p>
+      <p>API: <code>data-text="lead | small | muted"</code>. Source: <a href="../../css/components/atoms/text.css"><code>css/components/atoms/text.css</code></a>.</p>
+      <p>
+        They change size or color only. Meaning still comes from HTML: use
+        <a href="https://html.spec.whatwg.org/multipage/text-level-semantics.html#the-small-element"><code>&lt;small&gt;</code></a>
+        for side comments and <code>&lt;strong&gt;</code> for importance. Code and keyboard input are
+        already styled by the base layer (<a href="../base.html">base elements</a>).
+      </p>
+
+      <section aria-labelledby="lead-title">
+        <h2 id="lead-title">Lead paragraph</h2>
+        <p>One step up the type scale, for the paragraph that opens a page or section.</p>
+        <div class="demo">
+          <p data-text="lead">Plan your week in five minutes. Everything else stays out of the way.</p>
+          <p>Regular body text follows at the normal size.</p>
+        </div>
+        <pre><code>&lt;p data-text="lead"&gt;Plan your week in five minutes. Everything else stays out of the way.&lt;/p&gt;
+&lt;p&gt;Regular body text follows at the normal size.&lt;/p&gt;</code></pre>
+      </section>
+
+      <section aria-labelledby="small-title">
+        <h2 id="small-title">Small and muted</h2>
+        <p>Values combine in one attribute, separated by spaces.</p>
+        <div class="demo">
+          <p data-text="small">Prices include tax.</p>
+          <p data-text="muted">Shared with 3 people.</p>
+          <p data-text="small muted">Last updated <time datetime="2026-05-03">3 May 2026</time>.</p>
+        </div>
+        <pre><code>&lt;p data-text="small"&gt;Prices include tax.&lt;/p&gt;
+&lt;p data-text="muted"&gt;Shared with 3 people.&lt;/p&gt;
+&lt;p data-text="small muted"&gt;Last updated &lt;time datetime="2026-05-03"&gt;3 May 2026&lt;/time&gt;.&lt;/p&gt;</code></pre>
+      </section>
+
+      <section aria-labelledby="specs-title">
+        <h2 id="specs-title">Specs and guidance</h2>
+        <ul>
+          <li><a href="https://html.spec.whatwg.org/multipage/text-level-semantics.html">WHATWG: text-level semantics</a></li>
+          <li><a href="https://www.w3.org/WAI/WCAG22/Understanding/contrast-minimum.html">WCAG 2.2: 1.4.3 Contrast (Minimum)</a></li>
+          <li><a href="https://www.w3.org/WAI/WCAG22/Understanding/resize-text.html">WCAG 2.2: 1.4.4 Resize Text</a></li>
+        </ul>
+      </section>
+    </main>
+
+    <footer>
+      <p><small>domestic-ui packages existing standards and well-known patterns. MIT licensed.</small></p>
+    </footer>
+  </body>
+</html>

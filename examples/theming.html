@@ -58,6 +58,7 @@
         <ul class="cluster">
           <li><a href="base.html">Base elements</a></li>
           <li><a href="theming.html" aria-current="page">Theming</a></li>
+          <li><a href="atoms/index.html">Atoms</a></li>
         </ul>
       </nav>
     </header>
@@ -81,8 +82,10 @@
   --dui-radius-surface: 0.25rem;
 }</code></pre>
       <p>
-        Links, focus rings and button hover colors follow <code>--dui-color-accent</code> automatically,
-        because those tokens are re-derived on every <code>[data-theme]</code> scope.
+        Links, focus rings, button hover colors and the tinted badge backgrounds follow <code>--dui-color-accent</code>
+        and <code>--dui-color-surface</code> automatically, because those tokens are re-derived on every
+        <code>[data-theme]</code> scope. The <a href="atoms/index.html">atoms</a> in each panel (badges, a field with a hint
+        and an error, a switch and button variants) pick up the theme with no extra CSS.
         Both themes follow your system light or dark preference through
         <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/color_value/light-dark"><code>light-dark()</code></a>.
       </p>
@@ -91,14 +94,25 @@
         <section class="panel stack" aria-labelledby="default-title">
           <h2 id="default-title">Default theme</h2>
           <p>Release notes are ready for review. <a href="#default-title">Read the summary</a> before the meeting.</p>
+          <p class="cluster">
+            <span data-badge>Draft</span>
+            <span data-badge="accent">New</span>
+            <span data-badge="success">Passing</span>
+            <span data-badge="warning">Review</span>
+            <span data-badge="danger">Blocked</span>
+          </p>
           <form action="#default-title" class="stack">
-            <div>
+            <div data-field>
               <label for="default-email">Email</label>
-              <input id="default-email" name="email" type="email" autocomplete="email">
+              <input id="default-email" name="email" type="email" autocomplete="email" value="ada@" aria-invalid="true" aria-describedby="default-email-hint default-email-error">
+              <p id="default-email-hint" data-field="hint">Release notes go to this address.</p>
+              <p id="default-email-error" data-field="error">Error: enter an email address like name@example.com.</p>
             </div>
+            <label><input type="checkbox" role="switch" name="notify" checked> Notify subscribers</label>
             <div class="cluster">
               <button type="submit">Publish</button>
-              <button type="button">Save draft</button>
+              <button type="button" data-button="secondary">Save draft</button>
+              <button type="button" data-button="quiet">Discard</button>
             </div>
           </form>
           <details>
@@ -110,14 +124,25 @@
         <section class="panel stack" data-theme="forest" aria-labelledby="forest-title">
           <h2 id="forest-title">Forest theme</h2>
           <p>Release notes are ready for review. <a href="#forest-title">Read the summary</a> before the meeting.</p>
+          <p class="cluster">
+            <span data-badge>Draft</span>
+            <span data-badge="accent">New</span>
+            <span data-badge="success">Passing</span>
+            <span data-badge="warning">Review</span>
+            <span data-badge="danger">Blocked</span>
+          </p>
           <form action="#forest-title" class="stack">
-            <div>
+            <div data-field>
               <label for="forest-email">Email</label>
-              <input id="forest-email" name="email" type="email" autocomplete="email">
+              <input id="forest-email" name="email" type="email" autocomplete="email" value="ada@" aria-invalid="true" aria-describedby="forest-email-hint forest-email-error">
+              <p id="forest-email-hint" data-field="hint">Release notes go to this address.</p>
+              <p id="forest-email-error" data-field="error">Error: enter an email address like name@example.com.</p>
             </div>
+            <label><input type="checkbox" role="switch" name="notify" checked> Notify subscribers</label>
             <div class="cluster">
               <button type="submit">Publish</button>
-              <button type="button">Save draft</button>
+              <button type="button" data-button="secondary">Save draft</button>
+              <button type="button" data-button="quiet">Discard</button>
             </div>
           </form>
           <details>

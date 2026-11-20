@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Badge · domestic-ui</title>
+    <meta name="description" content="Inline status labels with tone variants that meet WCAG AA contrast.">
+    <link rel="stylesheet" href="../../css/domestic.css">
+    <style>
+      /* Page-only layout, written with semantic tokens like any consumer would. */
+      body > :is(header, main, footer) {
+        max-inline-size: 72rem;
+        margin-inline: auto;
+        padding-inline: var(--dui-space-l);
+      }
+
+      body > header {
+        padding-block: var(--dui-space-m);
+        border-block-end: var(--dui-border-width) solid var(--dui-color-border);
+      }
+
+      body > main {
+        padding-block: var(--dui-space-2xl);
+      }
+
+      body > footer {
+        padding-block: var(--dui-space-l);
+        border-block-start: var(--dui-border-width) solid var(--dui-color-border);
+        color: var(--dui-color-text-muted);
+      }
+
+      /* Wrap long lines of example markup instead of scrolling them. */
+      pre {
+        white-space: pre-wrap;
+        overflow-wrap: anywhere;
+      }
+
+      .demo {
+        padding: var(--dui-space-l);
+        border: var(--dui-border-width) solid var(--dui-color-border);
+        border-radius: var(--dui-radius-surface);
+      }
+    </style>
+  </head>
+  <body>
+    <a class="visually-hidden" href="#main">Skip to main content</a>
+
+    <header class="cluster" style="--cluster-justify: space-between">
+      <p><strong>domestic-ui</strong></p>
+      <nav aria-label="Examples">
+        <ul class="cluster">
+          <li><a href="../base.html">Base elements</a></li>
+          <li><a href="../theming.html">Theming</a></li>
+          <li><a href="index.html">Atoms</a></li>
+        </ul>
+      </nav>
+    </header>
+
+    <main id="main">
+      <h1>Badge</h1>
+      <p data-text="lead">A short inline status label. Static text, not interactive.</p>
+      <p>API: <code>data-badge="neutral | accent | success | warning | danger"</code>. Source: <a href="../../css/components/atoms/badge.css"><code>css/components/atoms/badge.css</code></a>.</p>
+      <p>
+        The words carry the meaning; the tone only supports it
+        (<a href="https://www.w3.org/WAI/WCAG22/Understanding/use-of-color.html">WCAG 1.4.1 Use of Color</a>).
+        Text on every tone meets 4.5:1 in light and dark. If a badge must do something, wrap it in a real
+        <code>&lt;button&gt;</code> or <code>&lt;a href&gt;</code>.
+      </p>
+
+      <section aria-labelledby="tones-title">
+        <h2 id="tones-title">Tones</h2>
+        <div class="demo">
+          <p class="cluster">
+            <span data-badge>Draft</span>
+            <span data-badge="accent">New</span>
+            <span data-badge="success">Paid</span>
+            <span data-badge="warning">Due soon</span>
+            <span data-badge="danger">Overdue</span>
+          </p>
+        </div>
+        <pre><code>&lt;p class="cluster"&gt;
+  &lt;span data-badge&gt;Draft&lt;/span&gt;
+  &lt;span data-badge="accent"&gt;New&lt;/span&gt;
+  &lt;span data-badge="success"&gt;Paid&lt;/span&gt;
+  &lt;span data-badge="warning"&gt;Due soon&lt;/span&gt;
+  &lt;span data-badge="danger"&gt;Overdue&lt;/span&gt;
+&lt;/p&gt;</code></pre>
+      </section>
+
+      <section aria-labelledby="context-title">
+        <h2 id="context-title">In context</h2>
+        <p>In a table, the column header already says what the badge is.</p>
+        <div class="demo">
+          <table>
+            <caption>Invoices</caption>
+            <thead>
+              <tr><th scope="col">Invoice</th><th scope="col">Status</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>INV-031</td><td><span data-badge="success">Paid</span></td></tr>
+              <tr><td>INV-032</td><td><span data-badge="danger">Overdue</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+        <pre><code>&lt;table&gt;
+  &lt;caption&gt;Invoices&lt;/caption&gt;
+  &lt;thead&gt;
+    &lt;tr&gt;&lt;th scope="col"&gt;Invoice&lt;/th&gt;&lt;th scope="col"&gt;Status&lt;/th&gt;&lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;&lt;td&gt;INV-031&lt;/td&gt;&lt;td&gt;&lt;span data-badge="success"&gt;Paid&lt;/span&gt;&lt;/td&gt;&lt;/tr&gt;
+    &lt;tr&gt;&lt;td&gt;INV-032&lt;/td&gt;&lt;td&gt;&lt;span data-badge="danger"&gt;Overdue&lt;/span&gt;&lt;/td&gt;&lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;</code></pre>
+      </section>
+
+      <section aria-labelledby="specs-title">
+        <h2 id="specs-title">Specs and guidance</h2>
+        <ul>
+          <li><a href="https://www.w3.org/WAI/WCAG22/Understanding/contrast-minimum.html">WCAG 2.2: 1.4.3 Contrast (Minimum)</a></li>
+          <li><a href="https://www.w3.org/WAI/WCAG22/Understanding/use-of-color.html">WCAG 2.2: 1.4.1 Use of Color</a></li>
+          <li><a href="https://www.w3.org/TR/using-aria/#rule1">Using ARIA: first rule</a></li>
+        </ul>
+      </section>
+    </main>
+
+    <footer>
+      <p><small>domestic-ui packages existing standards and well-known patterns. MIT licensed.</small></p>
+    </footer>
+  </body>
+</html>

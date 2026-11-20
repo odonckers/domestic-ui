@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Field · domestic-ui</title>
+    <meta name="description" content="Label, control, hint and error message wired with aria-describedby and aria-invalid.">
+    <link rel="stylesheet" href="../../css/domestic.css">
+    <style>
+      /* Page-only layout, written with semantic tokens like any consumer would. */
+      body > :is(header, main, footer) {
+        max-inline-size: 72rem;
+        margin-inline: auto;
+        padding-inline: var(--dui-space-l);
+      }
+
+      body > header {
+        padding-block: var(--dui-space-m);
+        border-block-end: var(--dui-border-width) solid var(--dui-color-border);
+      }
+
+      body > main {
+        padding-block: var(--dui-space-2xl);
+      }
+
+      body > footer {
+        padding-block: var(--dui-space-l);
+        border-block-start: var(--dui-border-width) solid var(--dui-color-border);
+        color: var(--dui-color-text-muted);
+      }
+
+      /* Wrap long lines of example markup instead of scrolling them. */
+      pre {
+        white-space: pre-wrap;
+        overflow-wrap: anywhere;
+      }
+
+      .demo {
+        padding: var(--dui-space-l);
+        border: var(--dui-border-width) solid var(--dui-color-border);
+        border-radius: var(--dui-radius-surface);
+      }
+    </style>
+  </head>
+  <body>
+    <a class="visually-hidden" href="#main">Skip to main content</a>
+
+    <header class="cluster" style="--cluster-justify: space-between">
+      <p><strong>domestic-ui</strong></p>
+      <nav aria-label="Examples">
+        <ul class="cluster">
+          <li><a href="../base.html">Base elements</a></li>
+          <li><a href="../theming.html">Theming</a></li>
+          <li><a href="index.html">Atoms</a></li>
+        </ul>
+      </nav>
+    </header>
+
+    <main id="main">
+      <h1>Field</h1>
+      <p data-text="lead">One control with its label, hint and error message.</p>
+      <p>API: <code>data-field on the wrapper, data-field="hint" and data-field="error" on the messages</code>. Source: <a href="../../css/components/atoms/field.css"><code>css/components/atoms/field.css</code></a>.</p>
+      <p>
+        The label names the control. The hint and error are in the control's
+        <a href="https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Reference/Attributes/aria-describedby"><code>aria-describedby</code></a>,
+        so they are read as its description. An invalid control has
+        <a href="https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Reference/Attributes/aria-invalid"><code>aria-invalid="true"</code></a>.
+        The error starts with the word "Error:" and the control gets a thick start border, so the state never relies on color alone.
+      </p>
+
+      <section aria-labelledby="hint-title">
+        <h2 id="hint-title">With a hint</h2>
+        <div class="demo">
+          <div data-field>
+            <label for="f-name">Display name</label>
+            <input id="f-name" name="display-name" type="text" autocomplete="nickname" aria-describedby="f-name-hint">
+            <p id="f-name-hint" data-field="hint">Shown next to your comments.</p>
+          </div>
+        </div>
+        <pre><code>&lt;div data-field&gt;
+  &lt;label for="f-name"&gt;Display name&lt;/label&gt;
+  &lt;input id="f-name" name="display-name" type="text" autocomplete="nickname" aria-describedby="f-name-hint"&gt;
+  &lt;p id="f-name-hint" data-field="hint"&gt;Shown next to your comments.&lt;/p&gt;
+&lt;/div&gt;</code></pre>
+      </section>
+
+      <section aria-labelledby="error-title">
+        <h2 id="error-title">With a hint and an error</h2>
+        <p>Set by your server or script after validation.</p>
+        <div class="demo">
+          <div data-field>
+            <label for="f-email">Email</label>
+            <input id="f-email" name="email" type="email" autocomplete="email" value="ada@" aria-invalid="true" aria-describedby="f-email-hint f-email-error">
+            <p id="f-email-hint" data-field="hint">We only use this to reply.</p>
+            <p id="f-email-error" data-field="error">Error: enter an email address like name@example.com.</p>
+          </div>
+        </div>
+        <pre><code>&lt;div data-field&gt;
+  &lt;label for="f-email"&gt;Email&lt;/label&gt;
+  &lt;input id="f-email" name="email" type="email" autocomplete="email" value="ada@" aria-invalid="true" aria-describedby="f-email-hint f-email-error"&gt;
+  &lt;p id="f-email-hint" data-field="hint"&gt;We only use this to reply.&lt;/p&gt;
+  &lt;p id="f-email-error" data-field="error"&gt;Error: enter an email address like name@example.com.&lt;/p&gt;
+&lt;/div&gt;</code></pre>
+      </section>
+
+      <section aria-labelledby="native-title">
+        <h2 id="native-title">Native validation</h2>
+        <p>
+          Constraint attributes such as <code>required</code> get the same invalid look through
+          <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/:user-invalid"><code>:user-invalid</code></a>,
+          only after the user has changed the value or tried to submit. Type a few letters, clear them and leave the field.
+        </p>
+        <div class="demo">
+          <form action="#native-title" class="stack">
+            <div data-field>
+              <label for="f-code">Invite code</label>
+              <input id="f-code" name="code" type="text" required minlength="6" aria-describedby="f-code-hint">
+              <p id="f-code-hint" data-field="hint">Six characters or more.</p>
+            </div>
+            <div class="cluster">
+              <button type="submit">Join</button>
+            </div>
+          </form>
+        </div>
+        <pre><code>&lt;form action="#native-title" class="stack"&gt;
+  &lt;div data-field&gt;
+    &lt;label for="f-code"&gt;Invite code&lt;/label&gt;
+    &lt;input id="f-code" name="code" type="text" required minlength="6" aria-describedby="f-code-hint"&gt;
+    &lt;p id="f-code-hint" data-field="hint"&gt;Six characters or more.&lt;/p&gt;
+  &lt;/div&gt;
+  &lt;div class="cluster"&gt;
+    &lt;button type="submit"&gt;Join&lt;/button&gt;
+  &lt;/div&gt;
+&lt;/form&gt;</code></pre>
+      </section>
+
+      <section aria-labelledby="group-title">
+        <h2 id="group-title">A group with an error</h2>
+        <p>Use a fieldset as the wrapper; describe the fieldset.</p>
+        <div class="demo">
+          <fieldset data-field aria-describedby="f-size-error">
+            <legend>Size</legend>
+            <label><input type="radio" name="size" value="s"> Small</label>
+            <label><input type="radio" name="size" value="m"> Medium</label>
+            <p id="f-size-error" data-field="error">Error: choose a size.</p>
+          </fieldset>
+        </div>
+        <pre><code>&lt;fieldset data-field aria-describedby="f-size-error"&gt;
+  &lt;legend&gt;Size&lt;/legend&gt;
+  &lt;label&gt;&lt;input type="radio" name="size" value="s"&gt; Small&lt;/label&gt;
+  &lt;label&gt;&lt;input type="radio" name="size" value="m"&gt; Medium&lt;/label&gt;
+  &lt;p id="f-size-error" data-field="error"&gt;Error: choose a size.&lt;/p&gt;
+&lt;/fieldset&gt;</code></pre>
+      </section>
+
+      <section aria-labelledby="specs-title">
+        <h2 id="specs-title">Specs and guidance</h2>
+        <ul>
+          <li><a href="https://www.w3.org/WAI/WCAG22/Understanding/error-identification.html">WCAG 2.2: 3.3.1 Error Identification</a></li>
+          <li><a href="https://www.w3.org/WAI/WCAG22/Understanding/labels-or-instructions.html">WCAG 2.2: 3.3.2 Labels or Instructions</a></li>
+          <li><a href="https://www.w3.org/WAI/WCAG22/Understanding/info-and-relationships.html">WCAG 2.2: 1.3.1 Info and Relationships</a></li>
+          <li><a href="https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Reference/Attributes/aria-describedby">MDN: aria-describedby</a></li>
+          <li><a href="https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Reference/Attributes/aria-invalid">MDN: aria-invalid</a></li>
+          <li><a href="https://developer.mozilla.org/en-US/docs/Web/CSS/:user-invalid">MDN: :user-invalid</a></li>
+          <li><a href="https://www.w3.org/WAI/tutorials/forms/notifications/">W3C WAI: user notification in forms</a></li>
+        </ul>
+      </section>
+    </main>
+
+    <footer>
+      <p><small>domestic-ui packages existing standards and well-known patterns. MIT licensed.</small></p>
+    </footer>
+  </body>
+</html>

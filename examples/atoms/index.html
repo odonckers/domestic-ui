@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Atoms · domestic-ui</title>
+    <meta name="description" content="Every domestic-ui atom: text helpers, quiet link, buttons, form controls, switch, field and badge.">
+    <link rel="stylesheet" href="../../css/domestic.css">
+    <style>
+      /* Page-only layout, written with semantic tokens like any consumer would. */
+      body > :is(header, main, footer) {
+        max-inline-size: 72rem;
+        margin-inline: auto;
+        padding-inline: var(--dui-space-l);
+      }
+
+      body > header {
+        padding-block: var(--dui-space-m);
+        border-block-end: var(--dui-border-width) solid var(--dui-color-border);
+      }
+
+      body > main {
+        padding-block: var(--dui-space-2xl);
+      }
+
+      body > footer {
+        padding-block: var(--dui-space-l);
+        border-block-start: var(--dui-border-width) solid var(--dui-color-border);
+        color: var(--dui-color-text-muted);
+      }
+
+      /* Wrap long lines of example markup instead of scrolling them. */
+      pre {
+        white-space: pre-wrap;
+        overflow-wrap: anywhere;
+      }
+
+      .demo {
+        padding: var(--dui-space-l);
+        border: var(--dui-border-width) solid var(--dui-color-border);
+        border-radius: var(--dui-radius-surface);
+      }
+    </style>
+  </head>
+  <body>
+    <a class="visually-hidden" href="#main">Skip to main content</a>
+
+    <header class="cluster" style="--cluster-justify: space-between">
+      <p><strong>domestic-ui</strong></p>
+      <nav aria-label="Examples">
+        <ul class="cluster">
+          <li><a href="../base.html">Base elements</a></li>
+          <li><a href="../theming.html">Theming</a></li>
+          <li><a href="index.html" aria-current="page">Atoms</a></li>
+        </ul>
+      </nav>
+    </header>
+
+    <main id="main">
+      <h1>Atoms</h1>
+      <p data-text="lead">Atoms add the minimum on top of the base layer. Each has one attribute API.</p>
+      <p>
+        Plain HTML already looks right with the base layer; atoms cover what native elements cannot say on their own,
+        such as button emphasis or a status label. The full reference, with the reasoning behind each choice, is in
+        <a href="../../css/components/atoms/README.md">css/components/atoms/README.md</a>.
+      </p>
+      <table>
+        <caption>Atom index</caption>
+        <thead>
+          <tr><th scope="col">Atom</th><th scope="col">API</th><th scope="col">Built on</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><a href="text.html">Text helpers</a></td><td><code>data-text="lead | small | muted"</code></td><td><code>&lt;p&gt;</code>, any text element</td></tr>
+          <tr><td><a href="link.html">Quiet link</a></td><td><code>data-link="quiet"</code></td><td><code>&lt;a href&gt;</code></td></tr>
+          <tr><td><a href="button.html">Buttons</a></td><td><code>data-button="primary | secondary | quiet"</code> plus <code>small | large</code></td><td><code>&lt;button&gt;</code>, <code>&lt;a href&gt;</code></td></tr>
+          <tr><td><a href="controls.html">Form controls</a></td><td>None (base layer)</td><td>Native inputs, <code>&lt;select&gt;</code>, <code>&lt;textarea&gt;</code>, <code>&lt;fieldset&gt;</code></td></tr>
+          <tr><td><a href="switch.html">Switch</a></td><td><code>role="switch"</code></td><td><code>&lt;input type="checkbox"&gt;</code></td></tr>
+          <tr><td><a href="field.html">Field</a></td><td><code>data-field</code>, <code>data-field="hint | error"</code></td><td><code>&lt;label&gt;</code>, <code>aria-describedby</code>, <code>aria-invalid</code></td></tr>
+          <tr><td><a href="badge.html">Badge</a></td><td><code>data-badge="neutral | accent | success | warning | danger"</code></td><td><code>&lt;span&gt;</code></td></tr>
+        </tbody>
+      </table>
+
+      <section aria-labelledby="showcase-text-title">
+        <h2 id="showcase-text-title">Text helpers</h2>
+        <div class="demo">
+          <p data-text="lead">A lead paragraph opens the page.</p>
+          <p data-text="small muted">Small, muted metadata with a <a href="link.html" data-link="quiet">quiet link</a>.</p>
+        </div>
+        <pre><code>&lt;p data-text="lead"&gt;A lead paragraph opens the page.&lt;/p&gt;
+&lt;p data-text="small muted"&gt;Small, muted metadata with a &lt;a href="link.html" data-link="quiet"&gt;quiet link&lt;/a&gt;.&lt;/p&gt;</code></pre>
+      </section>
+
+      <section aria-labelledby="showcase-buttons-title">
+        <h2 id="showcase-buttons-title">Buttons</h2>
+        <div class="demo">
+          <div class="cluster">
+            <button type="button" data-button="primary">Primary</button>
+            <button type="button" data-button="secondary">Secondary</button>
+            <button type="button" data-button="quiet">Quiet</button>
+            <button type="button" data-button="primary small">Small</button>
+            <a href="button.html" data-button="secondary">Link as button</a>
+            <button type="button" data-button="primary" aria-disabled="true">Unavailable</button>
+          </div>
+        </div>
+        <pre><code>&lt;div class="cluster"&gt;
+  &lt;button type="button" data-button="primary"&gt;Primary&lt;/button&gt;
+  &lt;button type="button" data-button="secondary"&gt;Secondary&lt;/button&gt;
+  &lt;button type="button" data-button="quiet"&gt;Quiet&lt;/button&gt;
+  &lt;button type="button" data-button="primary small"&gt;Small&lt;/button&gt;
+  &lt;a href="button.html" data-button="secondary"&gt;Link as button&lt;/a&gt;
+  &lt;button type="button" data-button="primary" aria-disabled="true"&gt;Unavailable&lt;/button&gt;
+&lt;/div&gt;</code></pre>
+      </section>
+
+      <section aria-labelledby="showcase-controls-title">
+        <h2 id="showcase-controls-title">Switch and field</h2>
+        <div class="demo">
+          <div class="grid" style="--grid-min: 16rem">
+            <div data-field>
+              <label for="s-email">Email</label>
+              <input id="s-email" name="email" type="email" autocomplete="email" value="ada@" aria-invalid="true" aria-describedby="s-email-hint s-email-error">
+              <p id="s-email-hint" data-field="hint">We only use this to reply.</p>
+              <p id="s-email-error" data-field="error">Error: enter an email address like name@example.com.</p>
+            </div>
+            <div>
+              <label><input type="checkbox" role="switch" name="alerts" checked> Email alerts</label>
+            </div>
+          </div>
+        </div>
+        <pre><code>&lt;div class="grid" style="--grid-min: 16rem"&gt;
+  &lt;div data-field&gt;
+    &lt;label for="s-email"&gt;Email&lt;/label&gt;
+    &lt;input id="s-email" name="email" type="email" autocomplete="email" value="ada@" aria-invalid="true" aria-describedby="s-email-hint s-email-error"&gt;
+    &lt;p id="s-email-hint" data-field="hint"&gt;We only use this to reply.&lt;/p&gt;
+    &lt;p id="s-email-error" data-field="error"&gt;Error: enter an email address like name@example.com.&lt;/p&gt;
+  &lt;/div&gt;
+  &lt;div&gt;
+    &lt;label&gt;&lt;input type="checkbox" role="switch" name="alerts" checked&gt; Email alerts&lt;/label&gt;
+  &lt;/div&gt;
+&lt;/div&gt;</code></pre>
+      </section>
+
+      <section aria-labelledby="showcase-badges-title">
+        <h2 id="showcase-badges-title">Badges</h2>
+        <div class="demo">
+          <p class="cluster">
+            <span data-badge>Draft</span>
+            <span data-badge="accent">New</span>
+            <span data-badge="success">Paid</span>
+            <span data-badge="warning">Due soon</span>
+            <span data-badge="danger">Overdue</span>
+          </p>
+        </div>
+        <pre><code>&lt;p class="cluster"&gt;
+  &lt;span data-badge&gt;Draft&lt;/span&gt;
+  &lt;span data-badge="accent"&gt;New&lt;/span&gt;
+  &lt;span data-badge="success"&gt;Paid&lt;/span&gt;
+  &lt;span data-badge="warning"&gt;Due soon&lt;/span&gt;
+  &lt;span data-badge="danger"&gt;Overdue&lt;/span&gt;
+&lt;/p&gt;</code></pre>
+      </section>
+
+    </main>
+
+    <footer>
+      <p><small>domestic-ui packages existing standards and well-known patterns. MIT licensed.</small></p>
+    </footer>
+
+    <script>
+      // aria-disabled="true" does not stop activation the way the disabled attribute does,
+      // so ignore clicks on it here. Enter and Space on a button also fire "click".
+      // https://www.w3.org/WAI/ARIA/apg/practices/keyboard-interface/#focusabilityofdisabledcontrols
+      document.addEventListener("click", (event) => {
+        if (event.target.closest('[aria-disabled="true"]')) {
+          event.preventDefault();
+          event.stopImmediatePropagation();
+        }
+      }, true);
+    </script>
+  </body>
+</html>

@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Quiet link · domestic-ui</title>
+    <meta name="description" content="A link that takes the surrounding text color and keeps its underline, for dense UI.">
+    <link rel="stylesheet" href="../../css/domestic.css">
+    <style>
+      /* Page-only layout, written with semantic tokens like any consumer would. */
+      body > :is(header, main, footer) {
+        max-inline-size: 72rem;
+        margin-inline: auto;
+        padding-inline: var(--dui-space-l);
+      }
+
+      body > header {
+        padding-block: var(--dui-space-m);
+        border-block-end: var(--dui-border-width) solid var(--dui-color-border);
+      }
+
+      body > main {
+        padding-block: var(--dui-space-2xl);
+      }
+
+      body > footer {
+        padding-block: var(--dui-space-l);
+        border-block-start: var(--dui-border-width) solid var(--dui-color-border);
+        color: var(--dui-color-text-muted);
+      }
+
+      /* Wrap long lines of example markup instead of scrolling them. */
+      pre {
+        white-space: pre-wrap;
+        overflow-wrap: anywhere;
+      }
+
+      .demo {
+        padding: var(--dui-space-l);
+        border: var(--dui-border-width) solid var(--dui-color-border);
+        border-radius: var(--dui-radius-surface);
+      }
+    </style>
+  </head>
+  <body>
+    <a class="visually-hidden" href="#main">Skip to main content</a>
+
+    <header class="cluster" style="--cluster-justify: space-between">
+      <p><strong>domestic-ui</strong></p>
+      <nav aria-label="Examples">
+        <ul class="cluster">
+          <li><a href="../base.html">Base elements</a></li>
+          <li><a href="../theming.html">Theming</a></li>
+          <li><a href="index.html">Atoms</a></li>
+        </ul>
+      </nav>
+    </header>
+
+    <main id="main">
+      <h1>Quiet link</h1>
+      <p>A link that takes the color of the text around it, for dense UI where many accent-colored links are noisy.</p>
+      <p>API: <code>data-link="quiet"</code>. Source: <a href="../../css/components/atoms/link.css"><code>css/components/atoms/link.css</code></a>.</p>
+      <p>
+        It keeps its underline, so color is never the only way to spot it
+        (<a href="https://www.w3.org/WAI/WCAG22/Understanding/use-of-color.html">WCAG 1.4.1 Use of Color</a>).
+        Use regular links in prose; use quiet links where links repeat, such as table cells and metadata.
+      </p>
+
+      <section aria-labelledby="table-title">
+        <h2 id="table-title">In a table</h2>
+        <div class="demo">
+          <table>
+            <caption>Recent orders</caption>
+            <thead>
+              <tr><th scope="col">Order</th><th scope="col">Customer</th><th scope="col">Total</th></tr>
+            </thead>
+            <tbody>
+              <tr><td><a href="#table-title" data-link="quiet">#1042</a></td><td>Ada Lovelace</td><td>€120.00</td></tr>
+              <tr><td><a href="#table-title" data-link="quiet">#1041</a></td><td>Alan Turing</td><td>€48.50</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <pre><code>&lt;table&gt;
+  &lt;caption&gt;Recent orders&lt;/caption&gt;
+  &lt;thead&gt;
+    &lt;tr&gt;&lt;th scope="col"&gt;Order&lt;/th&gt;&lt;th scope="col"&gt;Customer&lt;/th&gt;&lt;th scope="col"&gt;Total&lt;/th&gt;&lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;&lt;td&gt;&lt;a href="#table-title" data-link="quiet"&gt;#1042&lt;/a&gt;&lt;/td&gt;&lt;td&gt;Ada Lovelace&lt;/td&gt;&lt;td&gt;€120.00&lt;/td&gt;&lt;/tr&gt;
+    &lt;tr&gt;&lt;td&gt;&lt;a href="#table-title" data-link="quiet"&gt;#1041&lt;/a&gt;&lt;/td&gt;&lt;td&gt;Alan Turing&lt;/td&gt;&lt;td&gt;€48.50&lt;/td&gt;&lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;</code></pre>
+      </section>
+
+      <section aria-labelledby="meta-title">
+        <h2 id="meta-title">In muted metadata</h2>
+        <p>A quiet link inherits muted text color too, which still meets 4.5:1.</p>
+        <div class="demo">
+          <p data-text="small muted">Posted by <a href="#meta-title" data-link="quiet">Grace Hopper</a> in <a href="#meta-title" data-link="quiet">Compilers</a>.</p>
+        </div>
+        <pre><code>&lt;p data-text="small muted"&gt;Posted by &lt;a href="#meta-title" data-link="quiet"&gt;Grace Hopper&lt;/a&gt; in &lt;a href="#meta-title" data-link="quiet"&gt;Compilers&lt;/a&gt;.&lt;/p&gt;</code></pre>
+      </section>
+
+      <section aria-labelledby="specs-title">
+        <h2 id="specs-title">Specs and guidance</h2>
+        <ul>
+          <li><a href="https://html.spec.whatwg.org/multipage/text-level-semantics.html#the-a-element">WHATWG: the a element</a></li>
+          <li><a href="https://www.w3.org/WAI/WCAG22/Understanding/use-of-color.html">WCAG 2.2: 1.4.1 Use of Color</a></li>
+          <li><a href="https://www.w3.org/WAI/WCAG22/Techniques/failures/F73">WCAG technique F73: links not visually evident without color vision</a></li>
+        </ul>
+      </section>
+    </main>
+
+    <footer>
+      <p><small>domestic-ui packages existing standards and well-known patterns. MIT licensed.</small></p>
+    </footer>
+  </body>
+</html>
