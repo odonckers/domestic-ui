@@ -29,11 +29,11 @@
  * condition cannot read a custom property, so it is written as a length.
  *
  * API
- *   data-page-header   on a <header> inside <main>; children, in order:
- *     <nav data-breadcrumb aria-label="Breadcrumb">   optional
- *     <h1>                                            the title (h2 or h3 in a region)
- *     <p>                                             optional description
- *     <div> (or role="toolbar", <dui-menu>)           optional actions, last
+ *   data-page-header                                on a <header> inside <main>: the page header
+ *   <nav data-breadcrumb aria-label="Breadcrumb">   optional, first child: the breadcrumb
+ *   <h1>                                            the title (h2 or h3 in a region)
+ *   <p>                                             optional, after the title: the description
+ *   <div>, role="toolbar" or <dui-menu>             optional, last child: the actions
  *
  * Example
  *   <header data-page-header>

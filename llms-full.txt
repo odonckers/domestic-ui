@@ -1759,8 +1759,8 @@ None: write semantic HTML.
 - [MDN `overflow-wrap`](https://developer.mozilla.org/en-US/docs/Web/CSS/overflow-wrap)
 - [W3C corner shaping](https://www.w3.org/TR/css-backgrounds-3/#corner-shaping)
 - [WHATWG the code element](https://html.spec.whatwg.org/multipage/text-level-semantics.html#the-code-element)
-- [MDN `white-space`](https://developer.mozilla.org/en-US/docs/Web/CSS/white-space)
 - [WCAG Reflow](https://www.w3.org/WAI/WCAG22/Understanding/reflow.html)
+- [MDN `white-space`](https://developer.mozilla.org/en-US/docs/Web/CSS/white-space)
 - [Deque University scrollable region focusable](https://dequeuniversity.com/rules/axe/4.10/scrollable-region-focusable)
 - [WCAG Keyboard](https://www.w3.org/WAI/WCAG22/Understanding/keyboard.html)
 - [MDN CSS Custom Highlight API](https://developer.mozilla.org/en-US/docs/Web/API/CSS_Custom_Highlight_API)
@@ -2410,15 +2410,9 @@ _Diagram: Buttons sit at the end of a form in the content area: the primary subm
 
 `data-button="[primary | secondary | quiet] [small | large]"` on `<button>`, `<input type=submit|button|reset>`, `<a href>`; states `disabled`, `aria-disabled="true"`, `aria-busy="true"`
 
-| Attribute or value | Effect |
-| --- | --- |
-| `data-button="[primary \| secondary \| quiet] [small \| large]"` |  |
-
-A space-separated list: at most one variant word and one size word.
-
-Works on `<button>`, `<input type="submit|button|reset">` and `<a href>`.
-
-No variant word keeps the native default: `type="submit"` is primary, other buttons and links are secondary.
+| Attribute or value | Where | Effect |
+| --- | --- | --- |
+| `data-button="[primary \| secondary \| quiet] [small \| large]"` | `<button>`, `<input type="submit \| button \| reset">` or `<a href>` | at most one variant word and one size word |
 
 - On `<a href>`, it looks like a button and keeps link semantics.
 
@@ -2995,11 +2989,11 @@ _Diagram: The page header is the top of the content area: a breadcrumb, the page
 
 | Attribute or value | Where | Effect |
 | --- | --- | --- |
-| `data-page-header` | a `<header>` inside `<main>` | children, in order: |
-| `<nav data-breadcrumb aria-label="Breadcrumb">` |  | optional |
+| `data-page-header` | a `<header>` inside `<main>` | the page header |
+| `<nav data-breadcrumb aria-label="Breadcrumb">` |  | optional, first child: the breadcrumb |
 | `<h1>` |  | the title (h2 or h3 in a region) |
-| `<p>` |  | optional description |
-| `<div> (or role="toolbar", <dui-menu>)` |  | optional actions, last |
+| `<p>` |  | optional, after the title: the description |
+| `<div>, role="toolbar" or <dui-menu>` |  | optional, last child: the actions |
 
 The top of a screen inside \<main>: an optional breadcrumb, the page's \<h1>, an optional one-line description, and the page's actions (buttons, a menu button). The actions sit beside the title when the header is at least 40rem wide and wrap under it when it is narrower, decided by a container query on the header itself, so it fits a full page, a split region or the main area of an app shell alike.
 
@@ -3103,11 +3097,11 @@ _Diagram: An alert is a notice at the top of the content area under the heading,
 
 #### Toasts
 
-`data-alert="toasts"` on a fixed region, plus the `<dui-toaster>` web component (`web-components/dui-toaster.js`) for a `show()` method and dismiss buttons. The region is `role="status"` and in the page from the start. Our choice: toasts never dismiss themselves, so nobody loses a message they did not have time to read (WCAG 2.2.1 Timing Adjustable); each has a Dismiss button. A toast is a status, not a dialog: it never takes focus. See `explainers/toast.md`.
+`data-alert="toasts"` on a fixed region, plus the `<dui-toaster>` web component (`web-components/dui-toaster.js`) for a `show()` method and dismiss buttons. The region is `role="status"` and in the page from the start. Each toast has a Dismiss button. A toast is a status, not a dialog: it never takes focus. See `explainers/toast.md`.
 
 #### Motion
 
-A new toast fades in and lifts by `--dui-motion-distance` over `--dui-motion-duration-normal`; reduced motion keeps the fade only. Inline alerts and live region text appear at once: they are essential feedback. Our choice: toasts sit at the overlay elevation (`--dui-elevation-overlay`), below popovers and dialogs, because they are non-modal and must never cover an open menu or dialog.
+A new toast fades in and lifts by `--dui-motion-distance` over `--dui-motion-duration-normal`; reduced motion keeps the fade only. Inline alerts and live region text appear at once: they are essential feedback.
 
 #### Keyboard
 
@@ -3997,6 +3991,7 @@ _Diagram: Site navigation is the list of main links in the sidebar, with the cur
 | --- | --- | --- |
 | `data-nav="vertical \| horizontal"` | `<nav>` (empty means vertical) |  |
 | `aria-current="page"` | the current link (native ARIA) |  |
+| `aria-current="true"` | a top-level horizontal link to the current section | marked like "page" |
 | `<details> / <summary>` |  | inside an `<li>` for a collapsible group; open to expand it on load, name for one-at-a-time |
 
 #### Elevation
@@ -4143,7 +4138,7 @@ _Diagram: Tabs are a row of labels under a heading in the content area, with the
 | --- | --- | --- |
 | `<dui-tabs>` |  | wraps a `<nav aria-label>` with a list of `<a href="#panel-id">` links, then the panels |
 | `activation="manual"` | `<dui-tabs>` | arrows move focus, Enter or Space selects (default: automatic) |
-| `aria-current="true"` | a link | the tab selected on load (else the tab named in the URL fragment, else the first). The component swaps it for `aria-selected`; `aria-selected` is not allowed on a link. |
+| `aria-current="true"` | a link | the tab selected on load (else the tab named in the URL fragment, else the first) |
 | `role="tablist" \| "tab" \| "tabpanel"` |  | added by the component; styled here |
 
 #### Keyboard
@@ -4598,7 +4593,8 @@ The primary sidebar sits beside main from 48rem of the shell's own inline size, 
 - Without JavaScript both are always visible: stacked above and below main when narrow, beside it when wide.
 - Toggle buttons are native buttons with aria-controls and aria-expanded (APG Disclosure); they carry the hidden attribute in the markup and the script shows them, so there is never a button that does nothing.
 - A collapsed sidebar has the hidden attribute, so it is gone for assistive technology and the Tab order as well.
-- Sidebars that sit beside main stick to the top of the scroll area and scroll on their own, at most --dui-size-pane tall; they are not focus traps and hold focusable links, so the keyboard reaches everything in them (WCAG 2.1.1).
+- Sidebars that sit beside main stick to the top of the scroll area and scroll on their own, at most --dui-size-pane tall; their columns run to the end of the shell and the footer sits between them, so they never cover it.
+- They are not focus traps and hold focusable links, so the keyboard reaches everything in them (WCAG 2.1.1).
 - Nothing scrolls sideways at 320px (WCAG 1.4.10): the app bar wraps, the search taking its own row.
 
 ### Specifications
@@ -5910,8 +5906,11 @@ _Diagram: List-detail splits the content area into a list of items and, beside i
 
 | Attribute or value | Where | Effect |
 | --- | --- | --- |
-| `data-list-detail` | the wrapper | exactly two children: 1. the list: a `<nav aria-label>` (or `<div>`) holding a `<ul>` or `<ol>` whose items are each one `<a href>` (or `<button>`) 2. the detail: a `<section>` or `<article>` with `aria-labelledby` |
-| `aria-current="page"` | the selected link ("true" on a selected button), or on its `<li>` |  |
+| `data-list-detail` | the wrapper | the list beside (or above) the detail |
+| `<nav aria-label> or <div>` |  | first child: the list, a `<ul>` or `<ol>` whose items are each one `<a href>` (or `<button>`) |
+| `<section> or <article> with aria-labelledby` |  | second child: the detail |
+| `aria-current="page"` | the selected link, or its `<li>` | the selected item |
+| `aria-current="true"` | the selected `<button>`, or its `<li>` | the selected item |
 
 #### Breakpoint
 

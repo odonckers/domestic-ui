@@ -15,11 +15,10 @@
  * tall, above the 24px minimum of WCAG 2.5.8.
  *
  * API
- *   data-button="[primary | secondary | quiet] [small | large]"
- *   A space-separated list: at most one variant word and one size word.
- *   Works on <button>, <input type="submit|button|reset"> and <a href>.
- *   No variant word keeps the native default: type="submit" is primary,
- *   other buttons and links are secondary.
+ *   data-button="[primary | secondary | quiet] [small | large]"  on <button>, <input type="submit | button | reset"> or <a href>: at most one variant word and one size word
+ *
+ * data-button is a space-separated list. No variant word keeps the native
+ * default: type="submit" is primary, other buttons and links are secondary.
  *
  * Example
  *   <button type="submit">Save</button>                         (primary by default)

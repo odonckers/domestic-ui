@@ -28,15 +28,13 @@
  * framework that follows the APG with its own script.
  *
  * API
- *   <dui-tabs>                 wraps a <nav aria-label> with a list of
- *                              <a href="#panel-id"> links, then the panels
- *   activation="manual"        on <dui-tabs>: arrows move focus, Enter or
- *                              Space selects (default: automatic)
- *   aria-current="true"        on a link: the tab selected on load (else the
- *                              tab named in the URL fragment, else the first).
- *                              The component swaps it for aria-selected;
- *                              aria-selected is not allowed on a link.
- *   role="tablist" | "tab" | "tabpanel" (added by the component; styled here)
+ *   <dui-tabs>                             wraps a <nav aria-label> with a list of <a href="#panel-id"> links, then the panels
+ *   activation="manual"                    on <dui-tabs>: arrows move focus, Enter or Space selects (default: automatic)
+ *   aria-current="true"                    on a link: the tab selected on load (else the tab named in the URL fragment, else the first)
+ *   role="tablist" | "tab" | "tabpanel"    added by the component; styled here
+ *
+ * The component swaps aria-current for aria-selected on the selected tab:
+ * aria-selected is not allowed on a link.
  *
  * Example
  *   <dui-tabs>

@@ -39,13 +39,14 @@
  * condition cannot read a custom property, so it is written as a length;
  * to move it, write your own @container dui-list-detail rule.
  *
+ * The wrapper has exactly two children: the list, then the detail.
+ *
  * API
- *   data-list-detail        on the wrapper; exactly two children:
- *     1. the list: a <nav aria-label> (or <div>) holding a <ul> or <ol> whose
- *        items are each one <a href> (or <button>)
- *     2. the detail: a <section> or <article> with aria-labelledby
- *   aria-current="page"     on the selected link ("true" on a selected button),
- *                           or on its <li>
+ *   data-list-detail                               on the wrapper: the list beside (or above) the detail
+ *   <nav aria-label> or <div>                      first child: the list, a <ul> or <ol> whose items are each one <a href> (or <button>)
+ *   <section> or <article> with aria-labelledby    second child: the detail
+ *   aria-current="page"                            on the selected link, or its <li>: the selected item
+ *   aria-current="true"                            on the selected <button>, or its <li>: the selected item
  *
  * Example
  *   <div data-list-detail>

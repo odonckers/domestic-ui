@@ -37,18 +37,21 @@
  * Toasts: data-alert="toasts" on a fixed region, plus the <dui-toaster>
  * web component (web-components/dui-toaster.js) for a show() method and
  * dismiss buttons. The region is role="status" and in the page from the
- * start. Our choice: toasts never dismiss themselves, so nobody loses a
- * message they did not have time to read (WCAG 2.2.1 Timing Adjustable);
- * each has a Dismiss button. A toast is a status, not a dialog: it never
- * takes focus. See explainers/toast.md.
+ * start. Each toast has a Dismiss button. A toast is a status, not a
+ * dialog: it never takes focus. See explainers/toast.md.
+ *
+ * Our choice: toasts never dismiss themselves, so nobody loses a message
+ * they did not have time to read (WCAG 2.2.1 Timing Adjustable).
  * https://www.w3.org/WAI/WCAG22/Understanding/timing-adjustable.html
  *
  * Motion: a new toast fades in and lifts by --dui-motion-distance over
  * --dui-motion-duration-normal; reduced motion keeps the fade only.
  * Inline alerts and live region text appear at once: they are essential
- * feedback. Our choice: toasts sit at the overlay elevation (--dui-
- * elevation-overlay), below popovers and dialogs, because they are non-
- * modal and must never cover an open menu or dialog.
+ * feedback.
+ *
+ * Our choice: toasts sit at the overlay elevation (--dui-elevation-overlay),
+ * below popovers and dialogs, because they are non-modal and must never
+ * cover an open menu or dialog.
  *
  * API
  *   data-alert="info | success | warning | danger"   an inline alert with a tone
