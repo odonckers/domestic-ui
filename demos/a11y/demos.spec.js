@@ -6,12 +6,51 @@ import { apps, selectedApps } from "./apps.js";
 const WCAG_TAGS = ["wcag2a", "wcag2aa", "wcag21a", "wcag21aa", "wcag22aa"];
 const schemes = /** @type {const} */ (["light", "dark"]);
 
+/** Small phone viewports every view must fit without horizontal scrolling. */
+const smallViewports = [
+  { width: 320, height: 640 },
+  { width: 375, height: 812 },
+];
+
 /** @param {import("@playwright/test").Page} page */
 const axe = (page) => new AxeBuilder({ page }).withTags(WCAG_TAGS).analyze();
 
 /** Readable summary of axe violations for the failure message. */
 const summarize = (violations) =>
   violations.map((v) => `${v.id} (${v.impact}): ${v.help}\n    ${v.nodes.map((n) => n.target.join(" ")).join("\n    ")}`).join("\n");
+
+/**
+ * Views expected to overflow at small sizes until a core fix lands.
+ * dashboard: the chores table needs css/'s data-scroll="inline" region.
+ */
+const PENDING_TABLE_OVERFLOW = new Set(["dashboard"]);
+
+/**
+ * Elements wider than the viewport, and whether the page scrolls sideways.
+ * Checks both the root scroller and body (WCAG 1.4.10 Reflow).
+ * @param {import("@playwright/test").Page} page
+ */
+const measureOverflow = (page) =>
+  page.evaluate(() => {
+    const root = document.documentElement;
+    const { body } = document;
+    const limit = root.clientWidth;
+    const culprits = [...document.querySelectorAll("body *")]
+      .filter((el) => el.getBoundingClientRect().right > limit + 0.5)
+      .filter((el) => !el.parentElement || el.parentElement.getBoundingClientRect().right <= limit + 0.5)
+      .map((el) => {
+        const id = el.id ? `#${el.id}` : "";
+        return `${el.tagName.toLowerCase()}${id} (right edge ${Math.round(el.getBoundingClientRect().right)}px)`;
+      });
+    return {
+      root: { scrollWidth: root.scrollWidth, clientWidth: root.clientWidth },
+      body: { scrollWidth: body.scrollWidth, clientWidth: body.clientWidth },
+      culprits,
+    };
+  });
+
+/** @param {Awaited<ReturnType<typeof measureOverflow>>} m */
+const overflows = (m) => m.root.scrollWidth > m.root.clientWidth || m.body.scrollWidth > m.body.clientWidth;
 
 /**
  * Fail the test on any request that leaves the local server.
@@ -49,6 +88,46 @@ for (const name of selectedApps()) {
 
           expect(external, "external network requests").toEqual([]);
         });
+      }
+
+      for (const viewport of smallViewports) {
+        const size = `${viewport.width}x${viewport.height}`;
+
+        test(`fits ${size} without horizontal overflow`, async ({ page }) => {
+          // The dashboard's chores table is wider than a phone; it overflows until
+          // css/ ships the data-scroll="inline" region for wide tables (core
+          // hotfix). Then wrap the table per its docs and delete this marker:
+          // test.fail() errors as soon as the view stops overflowing.
+          test.fail(PENDING_TABLE_OVERFLOW.has(view), "Waiting on the data-scroll=\"inline\" hotfix in css/");
+          await page.setViewportSize(viewport);
+          await page.goto(path, { waitUntil: "networkidle" });
+
+          const closed = await measureOverflow(page);
+          expect(overflows(closed), `horizontal overflow: ${JSON.stringify(closed)}`).toBe(false);
+
+          await page.locator("details").evaluateAll((all) => all.forEach((d) => d.setAttribute("open", "")));
+          const open = await measureOverflow(page);
+          expect(overflows(open), `horizontal overflow with details open: ${JSON.stringify(open)}`).toBe(false);
+        });
+
+        for (const colorScheme of schemes) {
+          test(`has no axe violations at ${size} (${colorScheme})`, async ({ page, baseURL }) => {
+            const external = await blockExternalRequests(page, baseURL ?? "");
+            await page.setViewportSize(viewport);
+            await page.emulateMedia({ colorScheme });
+            await page.goto(path, { waitUntil: "networkidle" });
+            await expect(page).toHaveTitle(title);
+
+            const { violations } = await axe(page);
+            expect(violations, summarize(violations)).toEqual([]);
+
+            await page.locator("details").evaluateAll((all) => all.forEach((d) => d.setAttribute("open", "")));
+            const expanded = await axe(page);
+            expect(expanded.violations, summarize(expanded.violations)).toEqual([]);
+
+            expect(external, "external network requests").toEqual([]);
+          });
+        }
       }
 
       test("has the page structure every view shares", async ({ page }) => {
