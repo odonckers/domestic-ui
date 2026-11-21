@@ -16,7 +16,7 @@
  * a tinted fill, accent text and a doubled border, so the state does not
  * rely on color alone (WCAG 1.4.1). aria-orientation="vertical" stacks the
  * controls and switches the arrow keys to Up and Down. Separators are <hr>
- * (role separator). Controls keep the 44px target size and focus ring.
+ * (role separator). Controls keep their target size (44px, 32px compact) and focus ring.
  * https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Reference/Attributes/aria-pressed
  *
  * API
@@ -52,10 +52,10 @@
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: var(--dui-space-2xs);
+  gap: var(--dui-space-gap-tight);
   inline-size: fit-content;
   max-inline-size: 100%;
-  padding: var(--dui-space-2xs);
+  padding: var(--dui-space-gap-tight);
   background-color: var(--dui-color-surface);
   border: var(--dui-border-width) solid var(--dui-color-border);
   border-radius: var(--dui-radius-surface);

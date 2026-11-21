@@ -16,7 +16,7 @@
  * Accessibility: <dui-menu> adds aria-haspopup, aria-expanded, role="menu",
  * role="menuitem" and the APG keyboard behavior; with JavaScript off, every
  * action is a plain button in the tab order. Items are at least
- * --dui-size-target tall (WCAG 2.5.8) and show the base focus outline
+ * --dui-size-control tall (44px, 32px compact; WCAG 2.5.8) and show the base focus outline
  * (WCAG 2.4.7).
  *
  * When not to use it: if the items are links to other pages, use a
@@ -27,8 +27,8 @@
  * https://www.w3.org/WAI/ARIA/apg/patterns/disclosure/examples/disclosure-navigation/).
  *
  * The panel look and anchoring come from popover.css (data-popover); this
- * file styles the items. Items are at least --dui-size-target tall
- * (WCAG 2.5.8) and show the base focus outline (WCAG 2.4.7).
+ * file styles the items. Items are at least --dui-size-control tall
+ * (44px, 32px compact; WCAG 2.5.8) and show the base focus outline (WCAG 2.4.7).
  *
  * Elevation and motion come from popover.css: the popover level, and the
  * fade and zoom of a data-popover panel.
@@ -73,18 +73,18 @@
 
 :is([role="menu"], dui-menu > [popover]) {
   min-inline-size: var(--dui-size-menu-min);
-  padding: var(--dui-space-2xs);
+  padding: var(--dui-space-gap-tight);
 }
 
 :is([role="menu"], dui-menu > [popover]) > :is(button, a, li > button, li > a) {
   display: flex;
   align-items: center;
   justify-content: flex-start;
-  gap: var(--dui-space-xs);
+  gap: var(--dui-space-gap);
   inline-size: 100%;
-  min-block-size: var(--dui-size-target);
+  min-block-size: var(--dui-size-control);
   margin: 0;
-  padding: var(--dui-space-xs) var(--dui-space-s);
+  padding: var(--dui-space-control-block) var(--dui-space-control-inline);
   background-color: transparent;
   color: var(--dui-color-text);
   border: 0;

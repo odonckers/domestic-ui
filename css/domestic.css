@@ -41,6 +41,7 @@
 @import url("components/molecules/toolbar.css") layer(components);
 @import url("components/molecules/pagination.css") layer(components);
 @import url("components/molecules/search.css") layer(components);
+@import url("components/molecules/combobox.css") layer(components);
 @import url("components/molecules/card.css") layer(components);
 @import url("components/molecules/alerts.css") layer(components);
 @import url("utilities/visually-hidden.css") layer(utilities);

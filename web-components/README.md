@@ -35,6 +35,7 @@ any added later:
 | --- | --- | --- | --- | --- |
 | `<dui-tabs>` | [`dui-tabs.js`](dui-tabs.js) | No tabs element: one panel at a time, roving tabindex and arrow keys ([APG Tabs](https://www.w3.org/WAI/ARIA/apg/patterns/tabs/)). Upgrades a `<nav>` of in-page links and `<section>` panels; `aria-current="true"` on a link selects it on load. | [tabs.css](../css/components/molecules/tabs.css) | [tabs.html](../examples/molecules/tabs.html) |
 | `<dui-menu>` | [`dui-menu.js`](dui-menu.js) | `popovertarget` opens the list, but there is no menu widget: arrow keys, Home/End, typeahead, opening on a chosen item ([APG Menu Button](https://www.w3.org/WAI/ARIA/apg/patterns/menu-button/)). | [menu-button.css](../css/components/molecules/menu-button.css) | [menu-button.html](../examples/molecules/menu-button.html) |
+| `<dui-combobox>` | [`dui-combobox.js`](dui-combobox.js) | `<input list>` suggests values, but the browser draws the popup: it cannot be styled, filters differently per engine and announces no result count. Builds an APG list autocomplete listbox from the `<datalist>` and keeps the same input ([APG Combobox](https://www.w3.org/WAI/ARIA/apg/patterns/combobox/)). See [combobox.md](../explainers/combobox.md). | [combobox.css](../css/components/molecules/combobox.css) | [combobox.html](../examples/molecules/combobox.html) |
 | `<dui-toolbar>` | [`dui-toolbar.js`](dui-toolbar.js) | No roving focus in HTML: one Tab stop with arrow keys between controls ([APG Toolbar](https://www.w3.org/WAI/ARIA/apg/patterns/toolbar/)). | [toolbar.css](../css/components/molecules/toolbar.css) | [toolbar.html](../examples/molecules/toolbar.html) |
 | `<dui-tooltip>` | [`dui-tooltip.js`](dui-tooltip.js) | A popover cannot open on hover or focus yet. [`interestfor`](https://open-ui.org/components/interest-invokers.explainer/) is the coming standard (Chromium only today); this element stands in until it is interoperable. | [popover.css](../css/components/molecules/popover.css) | [popover.html](../examples/molecules/popover.html) |
 | `<dui-toaster>` | [`dui-toaster.js`](dui-toaster.js) | A live region announces messages, but nothing builds a toast, adds its Dismiss button and moves focus sensibly when one goes away. See [toast.md](../explainers/toast.md). | [alerts.css](../css/components/molecules/alerts.css) | [alerts.html](../examples/molecules/alerts.html) |
@@ -44,6 +45,8 @@ any added later:
 | Element | Event | When |
 | --- | --- | --- |
 | `<dui-tabs>` | `dui-tabs-change` | After the selected tab changes; `event.detail` is `{ tab, panel }`. Bubbles. |
+| `<dui-combobox>` | `dui-combobox-filter` | On every input, before filtering; `event.detail` is `{ query }`. Bubbles; cancelable: cancel it to load options yourself, then call `setOptions()`. |
+| `<dui-combobox>` | `change` (on the input) | When an option is accepted with Enter or a click, as a native control would. |
 | `<dui-toaster>` | `dui-toast-dismiss` | Before a toast is removed. Bubbles; cancelable. |
 
 `<dui-menu>`, `<dui-toolbar>` and `<dui-tooltip>` fire no events of their own: listen for the native

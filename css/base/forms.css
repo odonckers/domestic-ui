@@ -12,8 +12,8 @@
 ) {
   display: block;
   inline-size: 100%;
-  min-block-size: var(--dui-size-target);
-  padding: var(--dui-space-xs) var(--dui-space-s);
+  min-block-size: var(--dui-size-control);
+  padding: var(--dui-space-control-block) var(--dui-space-control-inline);
   background-color: var(--dui-color-surface);
   color: var(--dui-color-text);
   border: var(--dui-border-width) solid var(--dui-color-border-control);
@@ -27,7 +27,7 @@
 textarea {
   resize: vertical;
   field-sizing: content;
-  min-block-size: calc(var(--dui-size-target) * 2);
+  min-block-size: calc(var(--dui-size-control) * 2);
 }
 
 ::placeholder {
@@ -67,8 +67,8 @@ input[type="range"] {
 }
 
 input[type="color"] {
-  inline-size: var(--dui-size-target);
-  block-size: var(--dui-size-target);
+  inline-size: var(--dui-size-control);
+  block-size: var(--dui-size-control);
   padding: var(--dui-space-3xs);
   background-color: var(--dui-color-surface);
   border: var(--dui-border-width) solid var(--dui-color-border-control);
@@ -88,8 +88,8 @@ label + :where(input, select, textarea) {
 label:has(> input[type="checkbox"], > input[type="radio"]) {
   display: flex;
   align-items: center;
-  gap: var(--dui-space-xs);
-  min-block-size: var(--dui-size-target);
+  gap: var(--dui-space-gap);
+  min-block-size: var(--dui-size-control);
   font-weight: var(--dui-font-weight-body);
   inline-size: fit-content;
 }
@@ -121,10 +121,10 @@ input:is([type="button"], [type="submit"], [type="reset"]),
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: var(--dui-space-xs);
-  min-block-size: var(--dui-size-target);
-  min-inline-size: var(--dui-size-target);
-  padding: var(--dui-space-xs) var(--dui-space-m);
+  gap: var(--dui-space-gap);
+  min-block-size: var(--dui-size-control);
+  min-inline-size: var(--dui-size-control);
+  padding: var(--dui-space-control-block) var(--dui-space-button-inline);
   background-color: var(--dui-color-surface-raised);
   color: var(--dui-color-text);
   border: var(--dui-border-width) solid var(--dui-color-border-control);

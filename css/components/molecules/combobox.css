@@ -1,0 +1,175 @@
+/*
+ * Molecule: combobox (typeahead)
+ *
+ * A text field that suggests values as you type, following the APG
+ * Combobox pattern, list autocomplete variant: the input keeps focus, a
+ * listbox of matching options opens below it, and the arrow keys move an
+ * active option shown with aria-activedescendant. The <dui-combobox> web
+ * component (web-components/dui-combobox.js) builds the listbox from a
+ * native <datalist> and adds the keyboard behavior; with JavaScript off the
+ * same markup is a native <input list> with the browser's own suggestions.
+ * APG: https://www.w3.org/WAI/ARIA/apg/patterns/combobox/
+ * APG example: https://www.w3.org/WAI/ARIA/apg/patterns/combobox/examples/combobox-autocomplete-list/
+ * https://html.spec.whatwg.org/multipage/form-elements.html#the-datalist-element
+ *
+ * Our choice: <input list> + <datalist> as the native fallback, not <select>,
+ * because the value is free text and the upgrade reuses the same input and
+ * the same options.
+ *
+ * Our choice: options are filtered case-insensitively by "contains", not
+ * "starts with", because users often remember a word from the middle of a
+ * value, and the native datalist popups in Chromium and Firefox match the
+ * same way.
+ *
+ * Our choice: the listbox is absolutely positioned under the input, inside
+ * <dui-combobox>, not a popover in the top layer. The listbox is exactly as
+ * wide as the combobox, so it never overflows the viewport sideways (WCAG 1.4.10),
+ * and it needs neither anchor positioning nor the popover fallback that
+ * centers a panel at the bottom of the viewport. Keep the input the last
+ * visible child of <dui-combobox> (put hints and errors after it, outside),
+ * and do not put a combobox inside an element that clips its overflow.
+ *
+ * Accessibility: the input has role="combobox", aria-autocomplete="list",
+ * aria-expanded and aria-controls; the list is role="listbox", named by
+ * the label, with role="option" items. Focus never leaves the input; the
+ * active option is aria-activedescendant and has aria-selected="true", and
+ * it is drawn with an outline in the focus color (3:1, WCAG 1.4.11) and a
+ * tint, so it does not rely on color alone (WCAG 1.4.1). A polite
+ * role="status" region, in the page from the upgrade on, announces how many
+ * options match after typing pauses (WCAG 4.1.3). Options are at least
+ * --dui-size-control tall (44px, 32px compact; WCAG 2.5.8). In forced
+ * colors mode the list keeps its border and the active option its outline,
+ * in system colors.
+ *
+ * Elevation and motion: the list sits at the popover level
+ * (--dui-elevation-popover and --dui-elevation-popover-surface). The list
+ * fades and grows from --dui-motion-zoom over --dui-motion-duration-fast, entering
+ * with --dui-motion-easing-enter and leaving with --dui-motion-easing-exit;
+ * the zoom runs for that duration times --dui-motion-movement, so reduced
+ * motion keeps only the fade (WCAG 2.3.3).
+ *
+ * API
+ *   <dui-combobox>                  wraps a <label>, an <input list> and its <datalist>
+ *   <option value="…" label="…">    the suggestions; an optional label shows as a hint
+ *   dui-combobox-filter             event, cancelable, detail { query }: cancel it to load options yourself
+ *   element.setOptions([...])       replaces the options: strings or { value, label } objects
+ *
+ * Example
+ *   <dui-combobox>
+ *     <label for="city">City</label>
+ *     <input type="text" id="city" name="city" list="city-options">
+ *     <datalist id="city-options">
+ *       <option value="Amsterdam"></option>
+ *       <option value="Berlin"></option>
+ *       <option value="Copenhagen"></option>
+ *     </datalist>
+ *   </dui-combobox>
+ *   <script type="module" src="web-components/dui-combobox.js"></script>
+ *
+ * Keyboard
+ *   Down Arrow: opens the list and moves to the next option (the first if none)
+ *   Up Arrow: opens the list and moves to the previous option (the last if none)
+ *   Alt+Down Arrow: opens the list without moving to an option
+ *   Enter: accepts the active option and closes the list
+ *   Escape: closes the list; if it is already closed, clears the input
+ *   Home / End: moves the caret to the start or end of the input; the list loses its active option
+ *   Typing: filters the options
+ *   Tab: closes the list without accepting an option
+ *
+ * Specs
+ *   https://www.w3.org/WAI/ARIA/apg/patterns/combobox/
+ *   https://www.w3.org/WAI/ARIA/apg/patterns/combobox/examples/combobox-autocomplete-list/
+ *   https://html.spec.whatwg.org/multipage/form-elements.html#the-datalist-element
+ *   https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/datalist
+ *   https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Reference/Roles/combobox_role
+ *   https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Reference/Roles/listbox_role
+ *   https://www.w3.org/WAI/WCAG22/Understanding/status-messages.html
+ *   https://www.w3.org/WAI/WCAG22/Understanding/target-size-minimum.html
+ */
+
+dui-combobox {
+  display: block;
+  position: relative;
+}
+
+dui-combobox > [role="listbox"] {
+  display: none;
+  position: absolute;
+  z-index: 1;
+  inset-block-start: 100%;
+  inset-inline: 0;
+  max-block-size: calc(var(--dui-size-control) * 6);
+  margin: var(--dui-space-2xs) 0 0;
+  padding: var(--dui-space-gap-tight);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  list-style: none;
+  background-color: var(--dui-elevation-popover-surface);
+  border: var(--dui-border-width) solid var(--dui-color-border);
+  border-radius: var(--dui-radius-surface);
+  box-shadow: var(--dui-elevation-popover);
+  transform-origin: top center;
+  opacity: 0;
+  scale: var(--dui-motion-zoom);
+  transition:
+    opacity var(--dui-motion-duration-fast) var(--dui-motion-easing-exit),
+    scale calc(var(--dui-motion-duration-fast) * var(--dui-motion-movement)) var(--dui-motion-easing-exit);
+  transition:
+    opacity var(--dui-motion-duration-fast) var(--dui-motion-easing-exit),
+    scale calc(var(--dui-motion-duration-fast) * var(--dui-motion-movement)) var(--dui-motion-easing-exit),
+    display var(--dui-motion-duration-fast) allow-discrete;
+}
+
+dui-combobox:has(> [role="combobox"][aria-expanded="true"]) > [role="listbox"] {
+  display: block;
+  opacity: 1;
+  scale: 1;
+  transition-timing-function: var(--dui-motion-easing-enter);
+}
+
+@starting-style {
+  dui-combobox:has(> [role="combobox"][aria-expanded="true"]) > [role="listbox"] {
+    opacity: 0;
+    scale: var(--dui-motion-zoom);
+  }
+}
+
+dui-combobox [role="option"] {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0 var(--dui-space-gap);
+  min-block-size: var(--dui-size-control);
+  max-inline-size: none; /* full width of the list, not the prose measure of base <li> */
+  margin: 0;
+  padding: var(--dui-space-control-block) var(--dui-space-control-inline);
+  border-radius: var(--dui-radius-control);
+  line-height: var(--dui-line-height-heading);
+  cursor: pointer;
+}
+
+dui-combobox [role="option"]:hover {
+  background-color: var(--dui-color-surface-sunken);
+}
+
+/* The active option: an outline in the focus color and a tint, not color alone. */
+dui-combobox [role="option"][aria-selected="true"] {
+  background-color: var(--dui-color-surface-sunken);
+  outline: var(--dui-focus-width) solid var(--dui-color-focus);
+  outline-offset: calc(var(--dui-focus-width) * -1);
+}
+
+dui-combobox [data-combobox-hint] {
+  color: var(--dui-color-text-muted);
+  font-size: var(--dui-step--1);
+}
+
+@media (forced-colors: active) {
+  dui-combobox > [role="listbox"] {
+    border-color: canvastext;
+  }
+
+  dui-combobox [role="option"][aria-selected="true"] {
+    outline-color: highlight;
+  }
+}

@@ -44,8 +44,8 @@ details[open] {
 
 summary {
   display: list-item;
-  min-block-size: var(--dui-size-target);
-  padding-block: var(--dui-space-xs);
+  min-block-size: var(--dui-size-control);
+  padding-block: var(--dui-space-control-block);
   font-weight: var(--dui-font-weight-strong);
   cursor: pointer;
 }

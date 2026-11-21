@@ -19,7 +19,7 @@
  * count stable. At the first and last page, Previous or Next is a placeholder
  * <a> with no href: it is not a link, not focusable, and looks disabled. Gaps
  * are an "…" item hidden from assistive technology. Every link is at least
- * 44px square (WCAG 2.5.8) and keeps the base focus ring; the current page
+ * --dui-size-control square (44px, 32px compact; WCAG 2.5.8) and keeps the base focus ring; the current page
  * adds an inner ring in its text color, like the primary button.
  * https://www.w3.org/WAI/WCAG22/Understanding/link-purpose-in-context.html
  * https://html.spec.whatwg.org/multipage/links.html#link-type-next
@@ -58,7 +58,7 @@
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: var(--dui-space-2xs);
+  gap: var(--dui-space-gap-tight);
   margin: 0;
   padding: 0;
   list-style: none;
@@ -77,9 +77,9 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  min-block-size: var(--dui-size-target);
-  min-inline-size: var(--dui-size-target);
-  padding: var(--dui-space-xs) var(--dui-space-s);
+  min-block-size: var(--dui-size-control);
+  min-inline-size: var(--dui-size-control);
+  padding: var(--dui-space-control-block) var(--dui-space-control-inline);
   background-color: var(--dui-color-surface);
   border: var(--dui-border-width) solid var(--dui-color-border);
   border-radius: var(--dui-radius-control);

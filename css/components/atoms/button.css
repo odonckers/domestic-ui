@@ -40,6 +40,8 @@
  *
  * Sizes: default and large are at least 44px tall. small is 32px: below the
  * 44px default but above the 24px minimum of WCAG 2.5.8 Target Size (Minimum).
+ * The default size follows density (--dui-size-control): 32px inside
+ * data-density="compact". small and large keep their size at every density.
  * https://www.w3.org/WAI/WCAG22/Understanding/target-size-minimum.html
  *
  * Focus: every variant keeps the base :focus-visible outline. Filled (primary)
@@ -66,10 +68,10 @@ a[data-button] {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: var(--dui-space-xs);
-  min-block-size: var(--dui-size-target);
-  min-inline-size: var(--dui-size-target);
-  padding: var(--dui-space-xs) var(--dui-space-m);
+  gap: var(--dui-space-gap);
+  min-block-size: var(--dui-size-control);
+  min-inline-size: var(--dui-size-control);
+  padding: var(--dui-space-control-block) var(--dui-space-button-inline);
   border: var(--dui-border-width) solid;
   border-radius: var(--dui-radius-control);
   font-weight: var(--dui-font-weight-strong);

@@ -23,7 +23,7 @@ caption {
  */
 th,
 td {
-  padding: var(--dui-space-xs);
+  padding: var(--dui-space-cell);
   border-block-end: var(--dui-border-width) solid var(--dui-color-border);
   text-align: start;
   vertical-align: top;

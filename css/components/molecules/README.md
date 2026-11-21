@@ -35,6 +35,7 @@ Every molecule:
 | Toolbar | [`toolbar.css`](toolbar.css) | `role="toolbar"` + `aria-label` on `<dui-toolbar>`; `aria-orientation`; `aria-pressed` | [APG Toolbar](https://www.w3.org/WAI/ARIA/apg/patterns/toolbar/) | [toolbar.html](../../../examples/molecules/toolbar.html) | none |
 | Pagination | [`pagination.css`](pagination.css) | `data-pagination` on `<nav aria-label="Pagination">`; `aria-current="page"`; `<a>` without `href` for a disabled end | Our choice (no native element, no APG pattern) | [pagination.html](../../../examples/molecules/pagination.html) | [pagination.md](../../../explainers/pagination.md) |
 | Search field | [`search.css`](search.css) | None: `<search>` > `<form>` with a labelled `<input type="search">` and a submit button | [WHATWG `search`](https://html.spec.whatwg.org/multipage/grouping-content.html#the-search-element), [MDN `search`](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/search) | [search.html](../../../examples/molecules/search.html) | none |
+| Combobox (typeahead) | [`combobox.css`](combobox.css) | `<dui-combobox>` around a `<label>`, an `<input list>` and its `<datalist>`; `dui-combobox-filter` event and `setOptions()` for options loaded by the page | [APG Combobox](https://www.w3.org/WAI/ARIA/apg/patterns/combobox/) (list autocomplete), [WHATWG `datalist`](https://html.spec.whatwg.org/multipage/form-elements.html#the-datalist-element) | [combobox.html](../../../examples/molecules/combobox.html) | [combobox.md](../../../explainers/combobox.md) |
 | Card | [`card.css`](card.css) | `data-card` and `data-card="link"` on `<article>` | Our choice (no native element, no APG pattern) | [card.html](../../../examples/molecules/card.html) | [card.md](../../../explainers/card.md) |
 | Alert and toast | [`alerts.css`](alerts.css) | `data-alert="info \| success \| warning \| danger"`; `role="status"` / `role="alert"`; `<dui-toaster data-alert="toasts" role="status">` | [MDN `status`](https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Reference/Roles/status_role), [MDN `alert`](https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Reference/Roles/alert_role), [WCAG 4.1.3](https://www.w3.org/WAI/WCAG22/Understanding/status-messages.html); toast region is Our choice | [alerts.html](../../../examples/molecules/alerts.html) | [toast.md](../../../explainers/toast.md) |
 
@@ -44,7 +45,7 @@ All molecules together: [examples/molecules/index.html](../../../examples/molecu
 
 | Candidate | Decision |
 | --- | --- |
-| Combobox, typeahead, datalist | Later milestone (`dui-combobox`). It needs the APG Combobox pattern and a listbox, which is a bigger piece of work. |
+| Combobox with inline autocomplete, select-only combobox, multi-select | Not added. `<dui-combobox>` is the APG list autocomplete variant; a select-only combobox is a `<select>`, and inline completion and multiple values need their own use cases. |
 | Vertical tabs | Not added. The APG allows them (`aria-orientation="vertical"`), but they need a different layout and Up/Down keys; add them with a real use case. |
 | Menubar, submenus | Not added. Application menubars are rare on the web, and submenus are hard to use; a menu button covers actions. |
 | Arrow-key navigation between accordion headers | Not added. It is optional in the APG Accordion pattern, and native `<details>` gives every summary a Tab stop. |
@@ -77,6 +78,11 @@ Each is a choice between valid options, not a standard.
 - **Our choice:** `<dui-menu>` adds `role="menu"` and `role="menuitem"` itself. Without the script
   there are no menu roles, so assistive technology is never promised arrow keys that do not work.
   A list of links is never a menu; use a disclosure.
+- **Our choice:** `<dui-combobox>` upgrades a native `<input list>` + `<datalist>`, not a `<select>`,
+  because the value is free text and the upgrade reuses the same input and options. Its listbox is
+  positioned under the input inside the component (not a top-layer popover), so it is never wider
+  than the field. Options are filtered by "contains", case-insensitive, like the native datalist
+  popups in Chromium and Firefox. See [combobox.md](../../../explainers/combobox.md).
 - **Our choice:** `<dui-toolbar>` keeps `role="toolbar"` in the markup, because a labelled group of
   Tab stops is still correct without the script; only the roving focus is added.
 - **Our choice:** navigation lists (nav, tabs, pagination) drop the link underline, because

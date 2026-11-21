@@ -24,7 +24,7 @@
  * Links in a navigation list drop their underline: their role is clear from
  * the list, and WCAG failure F73 is about links inside running text
  * (https://www.w3.org/WAI/WCAG22/Techniques/failures/F73). Hover brings the
- * underline back. Items are at least --dui-size-target tall (WCAG 2.5.8).
+ * underline back. Items are at least --dui-size-control tall (44px, 32px compact; WCAG 2.5.8).
  * Horizontal groups open as dropdowns; give their <details> a shared name so
  * opening one closes the others. Native <details> does not close on Esc or
  * when focus leaves, which the APG example does with script; Enter or Space
@@ -88,8 +88,8 @@
 /* Links and group summaries share one row style. */
 [data-nav] :is(a, summary) {
   align-content: center;
-  min-block-size: var(--dui-size-target);
-  padding: var(--dui-space-xs) var(--dui-space-s);
+  min-block-size: var(--dui-size-control);
+  padding: var(--dui-space-control-block) var(--dui-space-control-inline);
   border-radius: var(--dui-radius-control);
   color: var(--dui-color-text);
   font-weight: var(--dui-font-weight-body);
@@ -139,7 +139,7 @@
 
 [data-nav] details[open] > summary {
   margin-inline: 0;
-  padding-inline: var(--dui-space-s);
+  padding-inline: var(--dui-space-control-inline);
   border-block-end-color: transparent;
 }
 
@@ -184,7 +184,7 @@
   inset-inline-start: 0;
   min-inline-size: var(--dui-size-menu-min);
   margin-block-start: var(--dui-space-2xs);
-  padding: var(--dui-space-2xs);
+  padding: var(--dui-space-gap-tight);
   background-color: var(--dui-elevation-popover-surface);
   border: var(--dui-border-width) solid var(--dui-color-border);
   border-radius: var(--dui-radius-surface);
