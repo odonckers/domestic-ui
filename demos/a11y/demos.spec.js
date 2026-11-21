@@ -212,8 +212,10 @@ for (const name of selectedApps()) {
           });
           expect(appearance).toEqual("none");
           await expect(page.getByRole("switch")).toHaveCount(3);
-          // Five headed sections and the form's action bar.
-          await expect(page.locator("form[data-form-sections] > section[aria-labelledby] > header > h2")).toHaveCount(5);
+          // Profile, Region and About you are named by an h2. Email me and Notify me
+          // about are named once by the fieldset legend, which is the section body.
+          await expect(page.locator("form[data-form-sections] > section[aria-labelledby] > header > h2")).toHaveCount(3);
+          await expect(page.locator("form[data-form-sections] > section[aria-labelledby] > fieldset > legend[id]")).toHaveCount(2);
           await expect(page.locator("form[data-form-sections] > footer[data-action-bar]:last-child")).toHaveCount(1);
         }
 
