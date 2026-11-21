@@ -1765,6 +1765,7 @@ None: write semantic HTML.
 - [WCAG Keyboard](https://www.w3.org/WAI/WCAG22/Understanding/keyboard.html)
 - [MDN CSS Custom Highlight API](https://developer.mozilla.org/en-US/docs/Web/API/CSS_Custom_Highlight_API)
 - [W3C css highlight api 1](https://drafts.csswg.org/css-highlight-api-1/)
+- [MDN `forced-color-adjust`](https://developer.mozilla.org/en-US/docs/Web/CSS/forced-color-adjust)
 
 ### See also
 
