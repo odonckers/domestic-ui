@@ -8,7 +8,7 @@
  * Links between pages are written as "site:<path>" and resolved per output:
  * relative in HTML, absolute in Markdown (see ./templates.mjs).
  */
-import { specLabel } from "./css-comments.mjs";
+import { specName } from "./css-comments.mjs";
 import { COMPONENT_GROUPS, LEVELS } from "./discovery.mjs";
 import { inline, plainText, shiftHeadings, tokenize } from "./markdown.mjs";
 import { previewKind } from "./tokens.mjs";
@@ -34,6 +34,7 @@ import { BLOB_URL, REPO_URL, byString, escapeHtml, escapeMdCell, fence, firstSen
  * @property {{ href: string, label: string }} source  footer link to the source
  * @property {Block[]} blocks
  * @property {Snippet[]} [snippets] copy-paste markup shown on the page, in order
+ * @property {false} [inFull]      false: left out of llms-full.txt (a list of other pages, a guide, a repository file)
  */
 
 /** Where the component API convention is documented: the Getting started page. */
@@ -131,36 +132,39 @@ function firstSentenceOf(body) {
 /* ------------------------------------------------------------------ */
 
 /** @param {Model} model */
-export const installMd = (model) => `domestic-ui is plain CSS with no build step. Copy the \`css/\` folder into your project, or clone the repository:
-
-\`\`\`sh
-git clone ${REPO_URL}.git
-\`\`\`
-
-Link the single entry point. Plain semantic HTML then gets the full look; base elements need no classes.
+export const installMd = (model) => `Plain CSS, no build step. Copy \`css/\` from the [repository](${REPO_URL}) into your project and link the entry point:
 
 \`\`\`html
 <link rel="stylesheet" href="css/domestic.css">
 \`\`\`
 
-Its imports use relative paths, so it works from file paths and from subpaths. File paths under \`css/\` are public API; see [Agent-friendly by design](site:${principleLink(model, "agent-friendly-by-design")}).`;
+Imports are relative, so it works from any path. Paths under \`css/\` are public API ([Agent-friendly by design](site:${principleLink(model, "agent-friendly-by-design")})).`;
 
 /** @param {Model} model */
-export const layersMd = (model) => `\`css/domestic.css\` declares the [cascade layers](site:${principleLink(model, "cascade-layers")}) once, lowest priority first. Later layers win regardless of selector specificity, and your own unlayered CSS beats all of them.
+export const layersMd = (model) => `\`css/domestic.css\` declares the [cascade layers](site:${principleLink(model, "cascade-layers")}), lowest priority first. Your unlayered CSS beats all of them.
 
 \`\`\`css
 @layer ${model.layers.join(", ")};
 \`\`\``;
 
 /** @param {Model} model */
-export const themingMd = (model) => `Override semantic \`--dui-*\` tokens on \`:root\`, or on an element with \`data-theme\` to scope a theme ([Theming](site:${principleLink(model, "theming")}), [theming example](site:examples/theming.html)).
-Force a color scheme on the page or any subtree with \`data-color-scheme="light"\` or \`data-color-scheme="dark"\`.`;
+export const themingMd = (model) => `Override semantic \`--dui-*\` tokens on \`:root\`, or on an element with \`data-theme\` ([Theming](site:${principleLink(model, "theming")}), [example](site:examples/theming.html)). Force a scheme with \`data-color-scheme="light"\` or \`"dark"\`.`;
 
 const ATTRIBUTE_SELECTORS_URL = "https://developer.mozilla.org/en-US/docs/Web/CSS/Attribute_selectors";
 const REL_URL = "https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Attributes/rel";
 
-/** The layout primitive and utility classes, as code: `.cluster`, `.grid`, … @param {Model} model */
-export const classApis = (model) => [...model.layouts, ...model.utilities].map((c) => `\`.${c.name}\``).join(", ");
+/**
+ * The layout primitive and utility APIs, as code: `.cluster`, `.grid`, …;
+ * an attribute where the API block names one instead of a class (`data-scroll`).
+ * @param {Model} model
+ */
+export const classApis = (model) =>
+  [...model.layouts, ...model.utilities]
+    .map((c) => {
+      const attr = !/class="/.test(c.api ?? "") && (c.api ?? "").match(/\b(data-[a-z][\w-]*)/)?.[1];
+      return `\`${attr || `.${c.name}`}\``;
+    })
+    .join(", ");
 
 /**
  * The one-line why of the component API convention: the group README's
@@ -176,29 +180,14 @@ export function conventionWhy(model) {
 /** The component API convention, for the Getting started page and README.md. @param {Model} model */
 export function conventionMd(model) {
   const why = conventionWhy(model);
-  return `Each component exposes one \`data-<component>\` attribute. Its value is a list of space-separated words matched with the [\`~=\` attribute selector](${ATTRIBUTE_SELECTORS_URL}), like [\`rel\`](${REL_URL}): \`data-button="primary small"\`. Component APIs use no classes. State is carried by native attributes and ARIA: \`disabled\`, \`aria-disabled\`, \`aria-busy\`, \`aria-invalid\`.
+  return `Each component exposes one \`data-<component>\` attribute. Its value is space-separated words matched with the [\`~=\` selector](${ATTRIBUTE_SELECTORS_URL}), like [\`rel\`](${REL_URL}): \`data-button="primary small"\`. State uses native attributes and ARIA: \`disabled\`, \`aria-disabled\`, \`aria-busy\`, \`aria-invalid\`.
 
-${why ? `**Our choice:** ${why}\n\n` : ""}Layout primitives and utilities from M1 are classes: ${classApis(model)}. Base elements need no API: write semantic HTML.`;
+${why ? `**Our choice:** ${why}\n\n` : ""}Layout primitives and utilities: ${classApis(model)}. Base elements need no API.`;
 }
 
 /** The convention in one paragraph, for llms.txt. @param {Model} model */
 export const conventionShortMd = (model) =>
-  `Each component exposes one \`data-<component>\` attribute whose value is space-separated words matched with \`~=\`, such as \`data-button="primary small"\`, never classes; state is carried by native attributes and ARIA (\`disabled\`, \`aria-disabled\`, \`aria-busy\`, \`aria-invalid\`). Layout primitives and utilities are classes (${classApis(model)}), tuned with custom properties.`;
-
-/**
- * The line next to a component's API: which data-* attribute follows the
- * convention, or that the API is native HTML and ARIA. Classes for layouts and utilities.
- * @param {Component} c
- */
-function conventionNoteMd(c) {
-  const link = `[component API convention](site:${CONVENTION_LINK})`;
-  if (c.group === "layouts" || c.group === "utilities") return `Layout primitives and utilities are classes, not \`data-*\` attributes; see the ${link}.`;
-  if (c.group === "base") return "";
-  const attr = `${c.indexApi ?? ""}\n${c.api ?? ""}`.match(/\b(data-[a-z][\w-]*)/)?.[1];
-  return attr
-    ? `\`${attr}\` follows the ${link}: one attribute, its value space-separated words matched with \`~=\`; state is carried by native attributes and ARIA.`
-    : `No \`data-*\` attribute: the API is native HTML and ARIA. See the ${link}.`;
-}
+  `Components: one \`data-<component>\` attribute of space-separated words matched with \`~=\` (\`data-button="primary small"\`), no classes; state via native attributes and ARIA. Layout primitives and utilities: ${classApis(model)}.`;
 
 /** One-line API summary: first word of each API line. @param {Component} c */
 export function apiSummary(c) {
@@ -277,37 +266,23 @@ function homePage(model) {
       md(`## Layer order\n\n${layersMd(model)}`),
       md(`## Theming\n\n${themingMd(model)}`),
       md(`## Component API\n\n${conventionMd(model)}`),
-      md(`## What is in these docs
+      md(`## How these docs are organized
 
-The Docs menu lists every page. In order:
-
-${docsMapMd(model)}`),
+${organizationMd(model)}`),
       md(`## For coding agents
 
-- [llms.txt](site:llms.txt): an index of these docs in the [llms.txt](https://llmstxt.org/) format.
-- [llms-full.txt](site:llms-full.txt): every page in one Markdown file.
-- Every docs page has a Markdown twin at the same path with \`.md\` instead of \`.html\`.`),
+[llms.txt](site:llms.txt) ([format](https://llmstxt.org/)) indexes these docs; [llms-full.txt](site:llms-full.txt) has every page. Each page has a Markdown twin: same path, \`.md\`.`),
     ],
   };
 }
 
-/** One line per sidebar entry after Getting started. @param {Model} model */
-const docsMapMd = (model) => {
-  const tokens = model.tokenFiles.map((f) => f.groups.reduce((n, g) => n + g.tokens.length, 0)).reduce((a, b) => a + b, 0);
-  const available = model.patterns.filter((p) => p.available).length;
-  return [
-    `- [Principles](site:principles/index.html): ${model.principles.sections.length} sections, one page each.`,
-    `- [Tokens](site:tokens/index.html): all ${tokens} custom properties with their light and dark values.`,
-    `- [Base](site:${model.base.sitePath}): native elements styled with no classes, and the ${model.utilities.map((u) => `\`.${u.name}\``).join(", ")} utility.`,
-    `- [Layout](site:layouts/index.html): the layout primitives ${model.layouts.map((l) => `\`.${l.name}\``).join(", ")}.`,
-    ...COMPONENT_GROUPS.map(({ group, title, milestone }) => {
-      const n = model.components[group].length;
-      return `- [${title}](site:${group}/index.html): ${n ? `${n} component${n === 1 ? "" : "s"}.` : `coming in ${milestone}.`}`;
-    }),
-    `- [Patterns and guides](site:patterns/index.html): ${model.patterns.length} patterns (${available} available) and ${model.guides.length} guide${model.guides.length === 1 ? "" : "s"}.`,
-    `- [Demos](site:demos.html): ${model.demos.length ? `${model.demos.length} demo directories in \`demos/\`, on GitHub.` : "coming in M5."}`,
-    "- [Contributing](site:contributing.html) and [Changelog](site:changelog.html).",
-  ].join("\n");
+/** Brad Frost's Atomic Design, which the component levels follow. */
+export const ATOMIC_DESIGN_URL = "https://atomicdesign.bradfrost.com/";
+
+/** How the sidebar is organized, in one paragraph. @param {Model} model */
+const organizationMd = (model) => {
+  const levels = COMPONENT_GROUPS.map(({ group, title }) => `[${title.toLowerCase()}](site:${group}/index.html)`);
+  return `The sidebar follows Brad Frost's [Atomic Design](${ATOMIC_DESIGN_URL}): [tokens](site:tokens/index.html), then [base elements](site:${model.base.sitePath}) and [layouts](site:layouts/index.html), then ${levels.slice(0, -1).join(", ")} and ${levels.at(-1)}. [Patterns](site:patterns/index.html) combine them. The [principles](site:principles/index.html) explain each choice.`;
 };
 
 /** @param {Model} model */
@@ -318,12 +293,15 @@ const tokenListMd = (model) =>
   model.tokenFiles
     .map((f) => {
       const n = f.groups.reduce((sum, g) => sum + g.tokens.length, 0);
-      return `- [${f.title}](site:${f.sitePath})${f.tier ? ` (${f.tier})` : ""}: ${n} token${n === 1 ? "" : "s"} in ${f.groups.map((g) => g.name.toLowerCase()).join(", ")}.`;
+      return `- [${f.title}](site:${f.sitePath}): ${n} token${n === 1 ? "" : "s"}${f.tier ? `, ${f.tier}` : ""}.`;
     })
     .join("\n");
 
 /** @param {Component} c */
-const componentLine = (c) => `- [${c.title}](site:${c.sitePath}): ${commentMd(c.summary)}`;
+const componentLine = (c) => `- [${c.title}](site:${c.sitePath}): ${summaryMd(c)}`;
+
+/** A component's one-line summary, without URLs (they are listed under Specifications). @param {Component} c */
+const summaryMd = (c) => commentMd(withoutUrls(c.summary));
 
 /**
  * A component group's README sections: every Our choices bullet, labels kept,
@@ -338,7 +316,7 @@ function groupDetailsMd(model, group, level) {
   const h = "#".repeat(level);
   const src = `[\`${readme.path}\`](${BLOB_URL}${readme.path})`;
   const out = [];
-  if (readme.choices.length) out.push(`${h} Our choices\n\nFrom ${src}. Each is a choice between valid options, not a standard.\n\n${readme.choices.map((c) => `- ${rewriteRepoLinks(c, model)}`).join("\n")}`);
+  if (readme.choices.length) out.push(`${h} Our choices\n\nFrom ${src}.\n\n${readme.choices.map((c) => `- ${rewriteRepoLinks(c, model)}`).join("\n")}`);
   if (readme.notShipped) out.push(`${h} Not shipped, and why\n\n${rewriteRepoLinks(readme.notShipped, model)}`);
   return out.join("\n\n");
 }
@@ -374,7 +352,7 @@ export function levelMd(model, level) {
 /** @param {Model} model */
 const guideListMd = (model) => model.guides.map((g) => `- [${g.title}](site:${g.sitePath}): ${g.summary}`).join("\n") || "No guides yet.";
 
-const patternIntroMd = `Where a standard exists, a native HTML element or a [WAI-ARIA APG pattern](https://www.w3.org/WAI/ARIA/apg/patterns/), the pattern follows it and links to it. Where none exists, the pattern is written as close to plain HTML as possible and labeled **Our choice:** with one line on why.`;
+const patternIntroMd = `Each pattern follows a native HTML element or a [WAI-ARIA APG pattern](https://www.w3.org/WAI/ARIA/apg/patterns/) where one exists. Otherwise it stays close to plain HTML and is labeled **Our choice**.`;
 
 /** @param {Model} model @returns {Page} */
 function principlesIndex(model) {
@@ -414,33 +392,30 @@ function principlePage(model, s) {
 function tierTableMd(model) {
   for (const s of model.principles.sections) {
     const table = tokenize(s.body).find((b) => b.type === "table" && /^tier$/i.test(b.rows[0][0]));
-    if (table) return `From [${s.title}](site:${s.sitePath}) in \`PRINCIPLES.md\`:\n\n${rewriteRepoLinks(table.raw, model)}`;
+    if (table) return `From [${s.title}](site:${s.sitePath}):\n\n${rewriteRepoLinks(table.raw, model)}`;
   }
   return "";
 }
 
-const RESOLVED_MD = `**Written as** is the value in the file. **Light** and **dark** follow every \`var()\` through all token files and take one side of [\`light-dark()\`](https://developer.mozilla.org/en-US/docs/Web/CSS/color_value/light-dark); functions such as \`color-mix()\` and \`clamp()\` are left for the browser. Overrides under a condition, such as \`@media (prefers-reduced-motion: reduce)\`, are listed in the description. Previews are decorative; the text in each row is the reference.`;
+/** How a token table's values are shown. @param {Model} model @param {boolean} fallbacks some descriptions come from PRINCIPLES.md */
+const resolvedMd = (model, fallbacks) =>
+  `**Light** and **Dark** resolve every \`var()\` and take one side of [\`light-dark()\`](https://developer.mozilla.org/en-US/docs/Web/CSS/color_value/light-dark). Previews are decorative.${fallbacks ? ` † marks a description taken from the semantic token table in [Theming](site:${principleLink(model, "theming")}).` : ""}`;
 
 /** @param {Model} model @returns {Page} */
 function tokensIndex(model) {
   const all = model.tokenFiles.flatMap((f) => f.groups.flatMap((g) => g.tokens));
   return {
     path: "tokens/index.html",
+    inFull: false,
     section: "tokens",
     title: "Tokens",
     heading: "Tokens",
     description: `The two tiers of domestic-ui design tokens: ${all.length} custom properties with their light and dark values.`,
     source: { href: `${REPO_URL}/tree/main/css/tokens`, label: "Browse css/tokens/ on GitHub" },
     blocks: [
-      md(`All tokens are [CSS custom properties](https://developer.mozilla.org/en-US/docs/Web/CSS/--*) on \`:root\` with the \`--dui-\` prefix, in two tiers:
-
-- **Primitive** tokens are named by what they are, such as \`--dui-color-blue-600\`. They are internal and may change in any release.
-- **Semantic** tokens are named by what they are for, such as \`--dui-color-accent\`. They are the public theming API: renaming or removing one is a breaking change.
-
-Base, layout, utility and component CSS use only semantic tokens; \`npm run lint:tokens\` enforces this. To theme, override semantic tokens: see [Theming](site:${principleLink(model, "theming")}) and the [theming example](site:examples/theming.html).`),
-      md(`## Token files\n\nOne page per file in \`css/tokens/\`, grouped by its section comments, with a filter.\n\n${tokenListMd(model)}`),
+      md(`[CSS custom properties](https://developer.mozilla.org/en-US/docs/Web/CSS/--*) on \`:root\`, prefixed \`--dui-\`, in two tiers. Semantic tokens are the public API, and the only ones base, layout and component CSS use (\`npm run lint:tokens\` checks). To theme, override them ([Theming](site:${principleLink(model, "theming")})).`),
+      md(`## Token files\n\n${tokenListMd(model)}`),
       ...(tierTableMd(model) ? [md(`## Tiers\n\n${tierTableMd(model)}`)] : []),
-      md(`## How values are shown\n\n${RESOLVED_MD}`),
     ],
   };
 }
@@ -471,7 +446,7 @@ function previewHtml(kind, value) {
   if (kind === "text" || !previewable(css)) return "";
   const style = `--preview: ${css}`;
   if (kind === "color") return `<span class="token-chip" style="${style}"></span>`;
-  const text = /^font|line-height|letter-spacing/.test(kind) ? "Aa Bb Cc" : "";
+  const text = /^font|line-height|letter-spacing/.test(kind) ? "Aa" : "";
   return `<span class="token-preview" data-preview="${kind}" style="${style}">${text}</span>`;
 }
 
@@ -495,16 +470,18 @@ const valueCode = (value) =>
  */
 const previewable = (value) => !/[&<>"';]/.test(value);
 
-/** The preview cell: one sample, or light and dark side by side when they differ. Each with its value. @param {Token} t */
+/**
+ * The preview cell: one sample, or light then dark when they differ (and
+ * always both for colors). Decorative: the Light and Dark cells of the
+ * same row hold the values as text.
+ * @param {Token} t
+ */
 function previewCell(t) {
   const shown = previewKind(t);
   const kind = previewable(shown === "font-family" ? t.light.replace(/"([A-Za-z][\w -]*)"/g, "$1") : t.light) ? shown : "text";
-  if (kind === "text") return `<span class="token-text-only">${t.light === t.dark ? "" : "Light: "}${valueCode(t.light)}${t.light === t.dark ? "" : `; dark: ${valueCode(t.dark)}`}</span>`;
-  const one = (/** @type {"light" | "dark"} */ scheme, /** @type {string} */ label) => {
-    const value = t[scheme];
-    return `<span class="token-sample" data-color-scheme="${scheme}"><span aria-hidden="true">${previewHtml(kind, value)}</span><span>${label}${valueCode(value)}</span></span>`;
-  };
-  return t.light === t.dark && kind !== "color" ? one("light", "") : `${one("light", "Light: ")}${one("dark", "Dark: ")}`;
+  if (kind === "text") return '<span class="token-text-only" data-text="muted">None</span>';
+  const one = (/** @type {"light" | "dark"} */ scheme) => `<span class="token-sample" data-color-scheme="${scheme}"><span aria-hidden="true">${previewHtml(kind, t[scheme])}</span></span>`;
+  return t.light === t.dark && kind !== "color" ? one("light") : `${one("light")}${one("dark")}`;
 }
 
 /**
@@ -537,7 +514,7 @@ function tokenFilePage(model, f) {
     const note = g.note ? `${commentMd(g.note.charAt(0).toUpperCase() + g.note.slice(1)).replace(/([^.])$/, "$1.")}` : "";
     const descMd = (/** @type {Token} */ t) => {
       const d = tokenDescription(t);
-      return [d.text ? `${d.text}${d.from === "PRINCIPLES.md" ? " (from PRINCIPLES.md)" : ""}` : "No description yet.", ...conditionLines(t, false)].join(" ");
+      return [d.text ? `${d.text}${d.from === "PRINCIPLES.md" ? " †" : ""}` : "No description yet.", ...conditionLines(t, false)].join(" ");
     };
     const tableMd = [
       "| Token | Light | Dark | Description |",
@@ -550,7 +527,7 @@ function tokenFilePage(model, f) {
         const rows = g.tokens.map((t) => {
           const d = tokenDescription(t);
           const text = d.text
-            ? `${d.from === "comment" ? inline(commentMd(d.text)) : inline(d.text)}${d.from === "PRINCIPLES.md" ? ' <span data-text="muted">(from PRINCIPLES.md)</span>' : ""}`
+            ? `${d.from === "comment" ? inline(commentMd(d.text)) : inline(d.text)}${d.from === "PRINCIPLES.md" ? ' <span data-text="muted">†</span>' : ""}`
             : '<span class="token-missing">No description yet</span>';
           const conditions = conditionLines(t, true).map((l) => `<br>${l}`).join("");
           return `<tr><th scope="row"><code>${escapeHtml(t.name)}</code></th><td>${valueCode(t.value)}</td><td>${valueCode(t.light)}</td><td>${valueCode(t.dark)}</td><td>${text}${conditions}</td><td>${previewCell(t)}</td></tr>`;
@@ -583,7 +560,7 @@ ${rows.join("\n")}
     description: `All ${count} ${short} in ${f.path}${f.tier ? ` (${f.tier})` : ""}, with resolved light and dark values.`,
     source: edit(f.path),
     blocks: [
-      md(`${intro}\n\nDefined in ${fileLink}: ${count} tokens in ${f.groups.length} groups, one per section comment. See [Tokens](site:tokens/index.html) for the two tiers.\n\n${RESOLVED_MD}`),
+      md(`${intro}\n\n${count} tokens in ${fileLink}. ${resolvedMd(model, f.groups.some((g) => g.tokens.some((t) => tokenDescription(t).from === "PRINCIPLES.md")))}`),
       filter,
       ...f.groups.map(groupBlock),
     ],
@@ -592,6 +569,13 @@ ${rows.join("\n")}
 
 /** The "Coming in M3" note shown after a planned pattern's sidebar link. @param {Pattern} p */
 const patternNavNote = (p) => (p.available ? "" : `coming in ${p.milestone}`);
+
+/** One line on what each component level holds. */
+const LEVEL_INTROS = /** @type {Record<string, string>} */ ({
+  atoms: "Small additions to the base layer, for what a native element cannot express on its own.",
+  molecules: "Small groups of atoms that work as one unit.",
+  organisms: "Larger sections of an interface built from molecules and atoms.",
+});
 
 /**
  * The index page of one component level (Atoms, Molecules, Organisms):
@@ -612,7 +596,7 @@ function levelIndex(model, group) {
   /** @type {Block[]} */
   const blocks = [
     md(
-      `${group === "atoms" ? `Atoms add the minimum on top of the [base layer](site:${model.base.sitePath}): plain HTML already looks right, and an atom covers what a native element cannot say on its own. ` : ""}Components use one \`data-<component>\` attribute each; see the [component API convention](site:${CONVENTION_LINK}). The levels follow [atomic design](https://atomicdesign.bradfrost.com/chapter-2/); planned [patterns](site:patterns/index.html) are listed at their level with their status.`,
+      `${LEVEL_INTROS[group] ?? ""} A level of [Atomic Design](${ATOMIC_DESIGN_URL}); APIs follow the [component API convention](site:${CONVENTION_LINK}).`.trim(),
     ),
   ];
   blocks.push(md(`## ${title}\n\n${[...items, ...patterns].join("\n") || `Coming in ${milestone}; see the [components README](${BLOB_URL}css/components/README.md).`}`));
@@ -620,6 +604,7 @@ function levelIndex(model, group) {
   if (details) blocks.push(md(details));
   return {
     path: `${group}/index.html`,
+    ...(details ? {} : { inFull: /** @type {const} */ (false) }),
     section: /** @type {Section} */ (group),
     title,
     heading: title,
@@ -633,13 +618,14 @@ function levelIndex(model, group) {
 function layoutsIndex(model) {
   return {
     path: "layouts/index.html",
+    inFull: false,
     section: "layouts",
     title: "Layouts",
     heading: "Layouts",
     description: "Layout primitives and planned page layouts of domestic-ui.",
     source: edit(model.layouts[0]?.cssPath ?? "PRINCIPLES.md"),
     blocks: [
-      md(`Layout primitives arrange their children and nothing else; see [Layout primitives](site:${principleLink(model, "layout-primitives")}). Each has one class and is tuned with custom properties. Page layouts such as the app shell are listed with their status.`),
+      md(`Layout primitives arrange their children and nothing else ([Layout primitives](site:${principleLink(model, "layout-primitives")})). Each is one class or attribute, tuned with custom properties.`),
       md(`## All layouts\n\n${levelMd(model, "layouts")}`),
     ],
   };
@@ -652,59 +638,71 @@ function layoutsIndex(model) {
 const ourChoiceMd = (why) => `**Our choice:** ${why}`;
 
 /**
- * Copy-paste markup blocks: an intro naming the source, then one code block
- * per snippet (HTML: <pre data-snippet>; Markdown: a long-enough fence).
+ * The live example and, directly below it, its copy-paste markup: the
+ * framed example page (or, with none, the pages that use it), then one code
+ * block per snippet (HTML: <pre data-snippet>; Markdown: a long-enough fence).
+ * @param {Model} model
+ * @param {string[]} paths example pages
+ * @param {string} title
  * @param {Snippet[]} snippets
+ * @param {string[]} [usedIn] example pages that use it, when it has none of its own
  * @returns {Block[]}
  */
-function markupBlocks(snippets) {
-  const n = snippets.length;
-  const first = snippets[0];
-  const sources = [...new Set(snippets.map((s) => s.source))].map((s) => `[\`${s}\`](${BLOB_URL}${s})`).join(" and ");
-  const intro =
-    first.from === "css-comment"
-      ? `From the \`Example\` block in ${sources}:`
-      : first.from === "pre"
-        ? `The \`<pre><code>\` blocks in ${sources}, HTML-unescaped and otherwise unchanged, each named by the heading of its section:`
-        : first.from === "main" && n === 1
-        ? `The content of \`<main>\` in ${sources}, unchanged except for removing the common indentation:`
-        : `From ${sources}, unchanged except for removing the common indentation:`;
+function liveExampleBlocks(model, paths, title, snippets, usedIn = []) {
+  const name = (/** @type {string} */ p) => (paths.length > 1 ? (model.examples.find((e) => e.path === p)?.title ?? p) : title);
+  const open = (/** @type {string} */ p) => `Open ${paths.length > 1 ? name(p) : "the example"}`;
+  const used = usedIn.map((p) => `[${model.examples.find((e) => e.path === p)?.title ?? p}](site:${p})`);
+  const none = `No example page yet.${used.length ? ` Used in ${used.join(", ")}.` : ""}${snippets.length ? "" : " No markup snippet yet."}`;
+  /** @type {Block} */
+  const frame = paths.length
+    ? {
+        md: `## Live example\n\n${paths.map((p) => `- [${open(p)}](site:${p})`).join("\n")}`,
+        html: (ctx) =>
+          [
+            ctx.heading(2, "Live example"),
+            ...paths.map(
+              (p) =>
+                `<iframe class="example-frame" src="${escapeHtml(ctx.link(p))}" title="Live example: ${escapeHtml(name(p))}" loading="lazy"></iframe>\n<p><a href="${escapeHtml(ctx.link(p))}">${escapeHtml(open(p))}</a></p>`,
+            ),
+          ].join("\n"),
+      }
+    : md(`## Live example\n\n${none}`);
   return [
-    md(`## Markup\n\n${intro}`),
+    frame,
     ...snippets.map((s, i) => {
-      const name = snippetName(s, i, n);
+      const heading = snippetName(s, i, snippets.length);
       return {
-        md: `${name ? `### ${name}\n\n` : ""}${fence(s.code, "html")}`,
-        html: (/** @type {HtmlContext} */ ctx) => `${name ? `${ctx.heading(3, name)}\n` : ""}<pre data-snippet="${escapeHtml(s.source)}"><code>${escapeHtml(s.code)}</code></pre>`,
+        md: `${heading ? `### ${heading}\n\n` : ""}${fence(s.code, "html")}`,
+        html: (/** @type {HtmlContext} */ ctx) => `${heading ? `${ctx.heading(3, heading)}\n` : ""}<pre data-snippet="${escapeHtml(s.source)}"><code>${escapeHtml(s.code)}</code></pre>`,
       };
     }),
   ];
 }
 
-/**
- * Live example blocks: one framed example page per path.
- * @param {Model} model
- * @param {string[]} paths
- * @param {string} title
- * @returns {Block}
- */
-function liveExampleBlock(model, paths, title) {
-  const name = (/** @type {string} */ p) => (paths.length > 1 ? (model.examples.find((e) => e.path === p)?.title ?? p) : title);
-  return {
-    md: `## Live example\n\n${paths.map((p) => `- [Open ${paths.length > 1 ? name(p) : "the example"} on its own](site:${p})`).join("\n")}`,
-    html: (ctx) =>
-      [
-        ctx.heading(2, "Live example"),
-        ...paths.map(
-          (p) =>
-            `<iframe class="example-frame" src="${escapeHtml(ctx.link(p))}" title="Live example: ${escapeHtml(name(p))}" loading="lazy"></iframe>\n<p><a href="${escapeHtml(ctx.link(p))}">Open ${escapeHtml(paths.length > 1 ? name(p) : "the example")} on its own</a></p>`,
-        ),
-      ].join("\n"),
-  };
-}
-
 /** Name for a snippet heading and aria label. @param {Snippet} s @param {number} i @param {number} n */
 const snippetName = (s, i, n) => s.name || (n > 1 ? `Snippet ${i + 1}` : "");
+
+/**
+ * Comment prose without its URLs: every URL in a header comment is already
+ * listed, labelled, under Specifications. Drops "(URL)", "Label: URL" and
+ * bare URLs.
+ * @param {string} text
+ */
+const withoutUrls = (text) =>
+  text
+    .replace(/\s*\(\s*https?:\/\/[^\s)]+\s*\)/g, "")
+    .replace(/(^|[.;]\s+)[A-Z][\w ]{0,40}:\s*https?:\/\/\S+/g, "$1")
+    .replace(/\s*https?:\/\/\S+/g, "")
+    .replace(/\s+([.,;:)])/g, "$1")
+    .replace(/[,:;]\)/g, ")")
+    .replace(/[,:;]\s*$/, ".")
+    .trim();
+
+/** Sentences of comment prose. @param {string} text */
+const sentences = (text) => text.split(/(?<=[.!?])\s+(?=[A-Z<"`(])/).map((s) => s.trim()).filter(Boolean);
+
+/** Specifications as a list of labelled links. @param {{ label: string, url: string }[]} specs */
+const specListMd = (specs) => specs.map((s) => `- ${specLink(s)}`).join("\n");
 
 /**
  * @param {Model} model
@@ -713,84 +711,83 @@ const snippetName = (s, i, n) => s.name || (n > 1 ? `Snippet ${i + 1}` : "");
  */
 function componentPage(model, c) {
   /** @type {Block[]} */
-  const blocks = [md(commentMd(c.summary))];
+  const blocks = [md(summaryMd(c))];
   if (c.ourChoice) blocks.push(md(ourChoiceMd(c.ourChoice)));
 
-  // API: the index row's cell as written, then the CSS header's API block.
+  blocks.push(...liveExampleBlocks(model, c.examplePath ? [c.examplePath] : [], c.title, c.snippets, c.usedIn));
+
+  // Attributes: the index row's cell as written, then the CSS header's API block.
+  const isClass = c.group === "layouts" || c.group === "utilities";
   const api = [];
-  const cssLink = `[\`${c.cssPath}\`](${BLOB_URL}${c.cssPath})`;
-  if (c.indexApi && c.indexPath) api.push(`From the index in [\`${c.indexPath}\`](${BLOB_URL}${c.indexPath}):\n\n${c.indexApi}`);
-  if (c.api) api.push(`${c.indexApi ? `The \`API\` block in ${cssLink}:\n\n` : ""}${fence(c.api, "text")}`);
+  if (c.indexApi) api.push(c.indexApi);
+  if (c.api) api.push(fence(c.api, "text"));
   for (const line of c.apiInline) api.push(`- ${mdCode(line)}`);
-  if (c.group === "base") api.unshift("No classes: write semantic HTML and the base layer styles it.");
-  if (!api.length) api.push("The CSS header comment does not have an `API` block yet.");
-  const convention = conventionNoteMd(c);
-  if (convention) api.push(convention);
-  blocks.push(md(`## API\n\n${api.join("\n\n")}`));
+  if (c.group === "base") api.unshift("None: write semantic HTML.");
+  if (!api.length) api.push("Not documented yet.");
+  if (c.files.length) {
+    const rows = c.files.map((f) => `| [${mdCode(f.path)}](${BLOB_URL}${f.path}) | ${escapeMdCell(commentMd(f.summary)) || "–"} |`);
+    api.push(`| File | Covers |\n| --- | --- |\n${rows.join("\n")}`);
+  }
+  // Notes: comment prose that is not repeated under Accessibility.
+  const a11ySentences = new Set(sentences(c.a11yFromOverride ? "" : c.a11y));
+  const notes = c.notesFromOverride
+    ? c.notes.length
+      ? [c.notes.map((n) => `- ${rewriteRepoLinks(n, model)}`).join("\n")]
+      : []
+    : c.notes
+        .map((n) => withoutUrls(sentences(n).filter((s) => !a11ySentences.has(s)).join(" ")))
+        .filter((n) => /\w/.test(n))
+        .map(commentMd);
+  blocks.push(md(`## ${isClass ? "API" : "Attributes"}\n\n${[...api, ...notes].join("\n\n")}`));
 
   // Labelled blocks of the header comment (States, Sizes, Focus, …), verbatim.
-  for (const b of c.blocks) blocks.push(md(`## ${b.label}\n\nFrom the \`${b.label}\` block in ${cssLink}:\n\n${fence(b.text, "text")}`));
+  for (const b of c.blocks) blocks.push(md(`## ${b.label}\n\n${fence(b.text, "text")}`));
 
   if (c.keyboard.length) {
     const rows = c.keyboard.map((k) => `| ${escapeMdCell(kbdMd(k.key, false))} | ${escapeMdCell(commentMd(k.action))} |`);
-    blocks.push(md(`## Keyboard\n\nFrom the \`Keyboard\` block in ${cssLink}.\n\n| Key | Action |\n| --- | --- |\n${rows.join("\n")}`));
+    blocks.push(md(`## Keyboard\n\n| Key | Action |\n| --- | --- |\n${rows.join("\n")}`));
   }
 
-  if (c.choices.length && c.indexPath) {
-    blocks.push(md(`## Our choice\n\nFrom [\`${c.indexPath}\`](${BLOB_URL}${c.indexPath}). Each is a choice between valid options, not a standard.\n\n${c.choices.map((x) => `- ${rewriteRepoLinks(x, model)}`).join("\n")}`));
-  }
+  if (c.choices.length && c.indexPath) blocks.push(md(`## Our choice\n\n${c.choices.map((x) => `- ${rewriteRepoLinks(x, model)}`).join("\n")}`));
 
-  if (c.files.length) {
-    const rows = c.files.map((f) => `| [${mdCode(f.path)}](${BLOB_URL}${f.path}) | ${escapeMdCell(commentMd(f.summary))} |`);
-    blocks.push(md(`## Files in css/base/\n\n| File | Covers |\n| --- | --- |\n${rows.join("\n")}`));
-  }
-
-  // Live example
-  if (c.examplePath) {
-    blocks.push(liveExampleBlock(model, [c.examplePath], c.title));
-  } else {
-    const used = c.usedIn.map((p) => `[${model.examples.find((e) => e.path === p)?.title ?? p}](site:${p})`);
-    const usedMd = used.length ? ` These example pages use it: ${used.join(", ")}.` : "";
-    blocks.push(md(`## Live example\n\nThere is no standalone example page for ${c.title.toLowerCase()} yet.${usedMd}`));
-  }
-
-  // Copy-paste markup
-  if (c.snippets.length) {
-    blocks.push(...markupBlocks(c.snippets));
-  } else {
-    blocks.push(md("## Markup\n\nNo markup snippet yet: there is no example page and no `Example` block in the CSS header comment."));
-  }
-
-  if (c.notes.length) blocks.push(md(`## Notes\n\n${c.notes.map(commentMd).join("\n\n")}`));
-
-  const baseline = `[Accessibility baseline](site:${principleLink(model, "accessibility-baseline-wcag-22-aa")})`;
+  const cssLink = `[\`${c.cssPath}\`](${BLOB_URL}${c.cssPath})`;
   const a11y = !c.ownCss
-    ? `There is no CSS file of its own: ${cssLink} styles these elements in the base layer. See [Base elements](site:${model.base.sitePath}) for their accessibility notes, the spec links below and the ${baseline} principle.`
-    : c.a11y
-    ? c.a11yFromOverride
+    ? `- Styled by the base layer; see [Base elements](site:${model.base.sitePath}).`
+    : c.a11yFromOverride
       ? rewriteRepoLinks(c.a11y, model)
-      : `From the CSS header comment: ${commentMd(c.a11y)}\n\nSee also the spec links below and the ${baseline} principle.`
-    : `The CSS header comment has no accessibility notes. See the spec links below and the ${baseline} principle.`;
-  const labelled = c.blocks.length ? `\n\nThe header comment's ${c.blocks.map((b) => `\`${b.label}\``).join(", ")} ${c.blocks.length === 1 ? "block is" : "blocks are"} shown above under ${c.blocks.length === 1 ? "its own heading" : "their own headings"}.` : "";
-  blocks.push(md(`## Accessibility\n\n${a11y}${labelled}`));
+      : sentences(c.a11y)
+          .map((s) => withoutUrls(s))
+          .filter((s) => /\w/.test(s))
+          .map((s) => `- ${commentMd(s)}`)
+          .join("\n") || "- No notes beyond the accessibility baseline.";
+  blocks.push(md(`## Accessibility\n\n${a11y}`));
 
-  const specs = c.specs.length
-    ? c.specs.map((s) => `- **${escapeMdCell(s.label)}**: [${s.url.replace(/^https?:\/\//, "")}](${s.url})`).join("\n")
-    : "The CSS header comment links no specs.";
-  blocks.push(md(`## Specs\n\n${specs}`));
+  blocks.push(md(`## Specifications\n\n${c.specs.length ? specListMd(c.specs) : "None linked yet."}`));
 
+  const group = COMPONENT_GROUPS.find((g) => g.group === c.group);
+  const level = group
+    ? { title: group.title, path: `${c.group}/index.html` }
+    : c.group === "layouts"
+      ? { title: "Layouts", path: "layouts/index.html" }
+      : c.group === "utilities"
+        ? { title: "Base elements", path: model.base.sitePath }
+        : null;
   const sources = [c.group === "base" ? `[\`css/base/\`](${REPO_URL}/tree/main/css/base)` : `${cssLink}${c.ownCss ? "" : " (base layer; no CSS file of its own)"}`];
   if (c.examplePath) sources.push(`[\`${c.examplePath}\`](${BLOB_URL}${c.examplePath})`);
-  if (c.indexPath) sources.push(`[\`${c.indexPath}\`](${BLOB_URL}${c.indexPath})`);
-  if (c.overridePath) sources.push(`[\`${c.overridePath}\`](${BLOB_URL}${c.overridePath})`);
-  blocks.push(md(`## Source\n\n${sources.map((s) => `- ${s}`).join("\n")}`));
+  const seeAlso = [
+    ...(level ? [`[${level.title}](site:${level.path})`] : []),
+    ...(c.group === "base" ? [] : [`[Component API convention](site:${CONVENTION_LINK})`]),
+    `[Accessibility baseline](site:${principleLink(model, "accessibility-baseline-wcag-22-aa")})`,
+    `Source: ${sources.join(", ")}`,
+  ];
+  blocks.push(md(`## See also\n\n${seeAlso.map((s) => `- ${s}`).join("\n")}`));
 
   return {
     path: c.sitePath,
     section: "atoms", // set by buildPages()
     title: c.title,
     heading: c.title,
-    description: plainMd(commentMd(c.summary)),
+    description: plainMd(summaryMd(c)),
     source: edit(c.overridePath ?? (c.group === "base" ? (c.files[0]?.path ?? "css/base/document.css") : c.ownCss ? c.cssPath : (c.indexPath ?? c.cssPath))),
     blocks,
     snippets: c.snippets,
@@ -811,13 +808,14 @@ function examplesPage(model) {
   });
   return {
     path: "examples.html",
+    inFull: false,
     section: "home",
     navLabel: "All example pages",
     title: "Examples",
     heading: "Examples",
     description: "Standalone example pages that load the real domestic-ui CSS.",
     source: { href: `${REPO_URL}/tree/main/examples`, label: "Browse the examples source on GitHub" },
-    blocks: [md("Standalone HTML pages that load `css/domestic.css`, nothing else. Open one, or read its source on GitHub."), ...sections.map(md)],
+    blocks: [md("Standalone HTML pages that load only `css/domestic.css`."), ...sections.map(md)],
   };
 }
 
@@ -826,6 +824,7 @@ function demosPage(model) {
   const intro = model.demosIntro ? `${rewriteRepoLinks(model.demosIntro, model)}\n\n` : "";
   return {
     path: "demos.html",
+    inFull: false,
     section: "demos",
     title: "Demos",
     heading: "Demos",
@@ -834,7 +833,7 @@ function demosPage(model) {
     blocks: [
       md(
         model.demos.length
-          ? `${intro}Each directory in [\`demos/\`](${REPO_URL}/tree/main/demos) with a \`README.md\`, by name, with the first sentence of that README. Demos are not part of this site; follow the link to read the source and how to run it.\n\n${demoListMd(model)}`
+          ? `${intro}Source and run instructions are on GitHub.\n\n${demoListMd(model)}`
           : "Coming in M5.",
       ),
     ],
@@ -854,9 +853,10 @@ function repoFilePage(model, file, text, section) {
   const title = section === "contributing" ? "Contributing" : "Changelog";
   const h1 = text.match(/^#\s+(.+)$/m)?.[1].trim() ?? title;
   const body = text.replace(/^#\s+.+\n+/m, "").trim();
-  const note = `Rendered read-only from [\`${file}\`](${BLOB_URL}${file}). To change it, [edit ${file} on GitHub](${REPO_URL}/edit/main/${file}).`;
+  const note = `From [\`${file}\`](${BLOB_URL}${file}); [edit ${file} on GitHub](${REPO_URL}/edit/main/${file}).`;
   return {
     path: `${section}.html`,
+    inFull: false,
     section,
     title,
     heading: h1,
@@ -870,20 +870,21 @@ function repoFilePage(model, file, text, section) {
 function patternsIndex(model) {
   const row = (/** @type {Pattern} */ p) => {
     const level = LEVELS.find((l) => l.level === p.level)?.singular ?? p.level;
-    return `| [${p.title}](site:${p.sitePath}) | ${level} | ${patternStatus(p)} | ${escapeMdCell(followsMd(p))} |`;
+    return `| [${p.title}](site:${p.sitePath}) | ${level} | ${patternStatus(p)} | ${escapeMdCell(p.standards.length ? followsMd(p) : "Our choice")} |`;
   };
   const milestones = [...new Set(sortedPatterns(model).map((p) => p.milestone))];
   const guide = model.guides[0];
-  const guideMd = guide ? ` To go from a plain page to a full app step by step, read [${guide.title}](site:${guide.sitePath}).` : "";
+  const guideMd = guide ? ` Step by step: [${guide.title}](site:${guide.sitePath}).` : "";
   return {
     path: "patterns/index.html",
+    inFull: false,
     section: "patterns",
     title: "Patterns",
     heading: "Patterns",
     description: "Planned and available interface patterns, from site navigation to app shells, with the standard each one follows.",
     source: { href: `${REPO_URL}/tree/main/site/content/patterns`, label: "Browse the pattern registry on GitHub" },
     blocks: [
-      md(`${patternIntroMd}\n\nA pattern page fills in on its own when its example page or CSS file lands. Until then it says which milestone it is planned for.${guideMd}`),
+      md(`${patternIntroMd}${guideMd}`),
       ...milestones.map((m) => {
         const rows = sortedPatterns(model).filter((p) => p.milestone === m).map(row);
         return md(`## ${milestoneLabel(m)}\n\n| Pattern | Level | Status | Follows |\n| --- | --- | --- | --- |\n${rows.join("\n")}`);
@@ -910,14 +911,14 @@ function keyboardBlock(model, p) {
   if (p.keyboard.length) {
     const markdown = p.keyboardFrom === "front matter";
     const src = `[\`${p.keyboardSource}\`](${BLOB_URL}${p.keyboardSource})`;
-    const intro = markdown ? `From the pattern registry, ${src}; the example page and CSS have no \`Keyboard\` block yet.` : `From the \`Keyboard\` block in ${src}.`;
+    const intro = markdown ? `From the pattern registry, ${src}.` : `From the \`Keyboard\` block in ${src}.`;
     const rows = p.keyboard.map((k) => `| ${escapeMdCell(kbdMd(k.key, markdown))} | ${escapeMdCell(markdown ? k.action : commentMd(k.action))} |`);
     return md(`## Keyboard\n\n${intro}\n\n| Key | Action |\n| --- | --- |\n${rows.join("\n")}`);
   }
   const apg = p.standards.find((s) => s.url.startsWith("https://www.w3.org/WAI/ARIA/apg/"));
-  if (apg) return md(`## Keyboard\n\nNo keyboard notes yet. Follow the keyboard interaction section of the ${specLink(apg)}.`);
-  if (p.standards.length) return md(`## Keyboard\n\nNo keyboard notes yet. Native elements keep their built-in keyboard behavior; see ${specLink(p.standards[0])}.`);
-  return md(`## Keyboard\n\nNo keyboard notes yet. See the [Accessibility baseline](site:${principleLink(model, "accessibility-baseline-wcag-22-aa")}) principle.`);
+  if (apg) return md(`## Keyboard\n\nSee the keyboard section of the ${specLink(apg)}.`);
+  if (p.standards.length) return md(`## Keyboard\n\nNative keyboard behavior; see ${specLink(p.standards[0])}.`);
+  return md(`## Keyboard\n\nSee the [Accessibility baseline](site:${principleLink(model, "accessibility-baseline-wcag-22-aa")}).`);
 }
 
 /**
@@ -928,38 +929,35 @@ function keyboardBlock(model, p) {
  * @returns {Page}
  */
 function patternPage(model, p) {
-  const level = LEVELS.find((l) => l.level === p.level)?.singular ?? p.level;
-  const standard = p.standards.length
-    ? `This pattern follows:\n\n${p.standards.map((s) => `- ${specLink(s)}`).join("\n")}`
-    : "No native element or WAI-ARIA APG pattern covers this.";
+  const level = LEVELS.find((l) => l.level === p.level);
   /** @type {Block[]} */
   const blocks = [md(p.summary)];
   if (p.ourChoice) blocks.push(md(ourChoiceMd(p.ourChoice)));
   if (!p.available) blocks.push(md(`Coming in ${p.milestone}.`));
-  blocks.push(md(`## Standard\n\n${standard}\n\nLevel: ${level}. Milestone: ${milestoneLabel(p.milestone)}.`));
 
+  const doc = p.available ? p.doc : null;
   if (p.available) {
-    const doc = p.doc;
-    if (doc && (doc.api || doc.apiInline.length)) {
-      const api = [...(doc.api ? [fence(doc.api, "text")] : []), ...doc.apiInline.map((l) => `- ${mdCode(l)}`)];
-      blocks.push(md(`## API\n\n${api.join("\n\n")}`));
-    }
-    blocks.push(
-      p.examplePaths.length
-        ? liveExampleBlock(model, p.examplePaths, p.title)
-        : md(`## Live example\n\nThere is no standalone example page for ${p.title.toLowerCase()} yet.`),
-    );
-    blocks.push(...(p.snippets.length ? markupBlocks(p.snippets) : [md("## Markup\n\nNo markup snippet yet: there is no example page and no `Example` block in the CSS header comment.")]));
+    blocks.push(...liveExampleBlocks(model, p.examplePaths, p.title, p.snippets));
+    const api = doc ? [...(doc.api ? [fence(doc.api, "text")] : []), ...doc.apiInline.map((l) => `- ${mdCode(l)}`)] : [];
+    if (api.length) blocks.push(md(`## Attributes\n\n${api.join("\n\n")}`));
+    // The registry body is the accessibility notes; without one, the CSS header's.
+    const derived = (doc?.a11y ?? []).flatMap(sentences).map(withoutUrls).filter((s) => s.split(/\s+/).length > 3 && !/[<>]/.test(s));
+    const a11y = p.body ? rewriteRepoLinks(p.body, model) : derived.map((s) => `- ${commentMd(s)}`).join("\n");
+    if (a11y) blocks.push(md(`## Accessibility\n\n${a11y}`));
     blocks.push(keyboardBlock(model, p));
-    if (p.body) blocks.push(md(`## Notes\n\n${rewriteRepoLinks(p.body, model)}`));
-    if (doc?.a11y.length) blocks.push(md(`## Accessibility\n\nFrom the CSS header comment: ${commentMd(doc.a11y.join(" "))}`));
-    const known = new Set([...p.standards, ...p.specs].map((s) => s.url));
-    const fromCss = (doc?.urls ?? []).filter((u) => !known.has(u)).map((url) => ({ label: specLabel(url), url }));
-    const specs = [...p.standards, ...p.specs, ...fromCss];
-    blocks.push(md(`## Specs\n\n${specs.map((s) => `- **${escapeMdCell(s.label)}**: [${s.url.replace(/^https?:\/\//, "")}](${s.url})`).join("\n")}`));
-    const sources = [...p.cssPaths, ...p.examplePaths, p.contentPath].map((s) => `- [\`${s}\`](${BLOB_URL}${s})`);
-    blocks.push(md(`## Source\n\n${sources.join("\n")}`));
   }
+
+  // CSS header URLs, less those the page already links (standards, specs, the accessibility notes).
+  const known = new Set([...p.standards, ...p.specs].map((s) => s.url));
+  const fromCss = (doc?.urls ?? []).filter((u) => !known.has(u) && !p.body.includes(`(${u})`)).map((url) => ({ label: specName(url), url }));
+  const specs = [...p.standards, ...p.specs, ...fromCss];
+  blocks.push(md(`## Specifications\n\n${specs.length ? specListMd(specs) : "None: no native element or WAI-ARIA APG pattern covers this."}`));
+
+  const seeAlso = [
+    level ? `[${level.title}](site:${level.level}/index.html)` : `[Patterns](site:patterns/index.html)`,
+    ...(p.available ? [`Source: ${[...p.cssPaths, ...p.examplePaths].map((s) => `[\`${s}\`](${BLOB_URL}${s})`).join(", ")}`] : []),
+  ];
+  blocks.push(md(`## See also\n\n${seeAlso.map((s) => `- ${s}`).join("\n")}`));
 
   return {
     path: p.sitePath,
@@ -978,6 +976,7 @@ function patternPage(model, p) {
 function guidesIndex(model) {
   return {
     path: "guides/index.html",
+    inFull: false,
     section: "guides",
     title: "Guides",
     heading: "Guides",
@@ -1020,6 +1019,7 @@ function expandGuide(model, g) {
 function guidePage(model, g) {
   return {
     path: g.sitePath,
+    inFull: false,
     section: "guides",
     title: g.title,
     heading: g.title,

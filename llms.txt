@@ -1,12 +1,12 @@
 # domestic-ui
 
-> domestic-ui is a design system built on native HTML, CSS custom properties and cascade layers. Link one stylesheet and plain semantic HTML gets its look in light and dark, with WCAG 2.2 AA as the accessibility baseline; theme it by overriding semantic tokens. It packages existing web standards and well-known patterns: nothing here is original.
+> domestic-ui is a CSS design system built on native HTML, custom properties and cascade layers. Link one stylesheet and semantic HTML is styled in light and dark, with WCAG 2.2 AA as the baseline. Theme it by overriding semantic tokens. It packages existing web standards and patterns; nothing here is original.
 
-To use it, link `css/domestic.css` (copy the `css/` folder or clone https://github.com/odonckers/domestic-ui). Plain semantic HTML then gets the full look with no classes. Each component exposes one `data-<component>` attribute whose value is space-separated words matched with `~=`, such as `data-button="primary small"`, never classes; state is carried by native attributes and ARIA (`disabled`, `aria-disabled`, `aria-busy`, `aria-invalid`). Layout primitives and utilities are classes (`.cluster`, `.grid`, `.scroll`, `.stack`, `.visually-hidden`), tuned with custom properties. Theme only by overriding semantic `--dui-*` tokens; primitive tokens are internal and may change.
+Link `css/domestic.css` (copy `css/` from https://github.com/odonckers/domestic-ui); semantic HTML needs no classes. Components: one `data-<component>` attribute of space-separated words matched with `~=` (`data-button="primary small"`), no classes; state via native attributes and ARIA. Layout primitives and utilities: `.cluster`, `.grid`, `data-scroll`, `.stack`, `.visually-hidden`. Theme only with semantic `--dui-*` tokens; primitives are internal.
 
 ## Getting started
 
-- [Getting started](https://odonckers.github.io/domestic-ui/index.md): domestic-ui is a design system built on native HTML, CSS custom properties and cascade layers.
+- [Getting started](https://odonckers.github.io/domestic-ui/index.md): domestic-ui is a CSS design system built on native HTML, custom properties and cascade layers.
 - [Examples](https://odonckers.github.io/domestic-ui/examples.md): Standalone example pages that load the real domestic-ui CSS.
 - [Base elements](https://odonckers.github.io/domestic-ui/examples/base.html): live example page (HTML)
 - [Theming](https://odonckers.github.io/domestic-ui/examples/theming.html): live example page (HTML)
@@ -62,7 +62,7 @@ To use it, link `css/domestic.css` (copy the `css/` folder or clone https://gith
 - [Layouts](https://odonckers.github.io/domestic-ui/layouts/index.md): Layout primitives and planned page layouts of domestic-ui.
 - [Cluster](https://odonckers.github.io/domestic-ui/layouts/cluster.md): An inline group that wraps onto new lines (buttons, tags, nav links).
 - [Grid](https://odonckers.github.io/domestic-ui/layouts/grid.md): A responsive grid: as many columns as fit, each at least --grid-min wide, never wider than the container.
-- [Scroll](https://odonckers.github.io/domestic-ui/layouts/scroll.md): A scroll container for content wider than the screen (data tables, long code, wide media), so it scrolls on its own instead of widening the page (WCAG 1.4.10 Reflow allows two-dimensional scrolling for data tables: https://www.w3.org/WAI/WCAG22/Understanding/reflow.html).
+- [Scroll](https://odonckers.github.io/domestic-ui/layouts/scroll.md): A scroll container for content wider than the screen, such as a data table, so it scrolls on its own instead of widening the page.
 - [Stack](https://odonckers.github.io/domestic-ui/layouts/stack.md): Vertical flow with a consistent gap between children.
 
 ## Atoms
@@ -70,7 +70,7 @@ To use it, link `css/domestic.css` (copy the `css/` folder or clone https://gith
 - [Atoms](https://odonckers.github.io/domestic-ui/atoms/index.md): Every atom in domestic-ui.
 - [Text helpers](https://odonckers.github.io/domestic-ui/components/atoms/text.md): Lead, small and muted text helpers from domestic-ui, with copyable markup.
 - [Quiet link](https://odonckers.github.io/domestic-ui/components/atoms/link.md): A link that takes the surrounding text color and keeps its underline, for dense UI.
-- [Buttons](https://odonckers.github.io/domestic-ui/components/atoms/button.md): Button variants, sizes, link buttons and honest disabled and loading states.
+- [Buttons](https://odonckers.github.io/domestic-ui/components/atoms/button.md): Button variants and sizes, links styled as buttons, and disabled and loading states.
 - [Form controls](https://odonckers.github.io/domestic-ui/components/atoms/controls.md): Native form controls as styled by the domestic-ui base layer, with copyable markup.
 - [Switch](https://odonckers.github.io/domestic-ui/components/atoms/switch.md): An on/off switch built on a native checkbox with role switch, following the APG Switch pattern.
 - [Field](https://odonckers.github.io/domestic-ui/components/atoms/field.md): Label, control, hint and error message wired with aria-describedby and aria-invalid.
@@ -87,29 +87,29 @@ To use it, link `css/domestic.css` (copy the `css/` folder or clone https://gith
 ## Patterns and guides
 
 - [Patterns](https://odonckers.github.io/domestic-ui/patterns/index.md): Planned and available interface patterns, from site navigation to app shells, with the standard each one follows.
-- [Alerts](https://odonckers.github.io/domestic-ui/patterns/alerts.md): Available. Messages about status, from notices in the page to live alerts for important, time-sensitive changes. Follows [APG Alert pattern](https://www.w3.org/WAI/ARIA/apg/patterns/alert/).
-- [Breadcrumb](https://odonckers.github.io/domestic-ui/patterns/breadcrumb.md): Available. The path to the current page as an ordered list of links in a labelled `<nav>`. Follows [APG Breadcrumb pattern](https://www.w3.org/WAI/ARIA/apg/patterns/breadcrumb/).
-- [Card](https://odonckers.github.io/domestic-ui/patterns/card.md): Available. A self-contained item, such as a product or an article teaser, on a raised surface. **Our choice:** No native element or APG pattern exists; an `<article>` with a heading, where the heading holds the one link, so the whole card is not one long link name.
+- [Alerts](https://odonckers.github.io/domestic-ui/patterns/alerts.md): Available. Status messages, from notices in the page to live alerts and toasts. Follows [APG Alert pattern](https://www.w3.org/WAI/ARIA/apg/patterns/alert/).
+- [Breadcrumb](https://odonckers.github.io/domestic-ui/patterns/breadcrumb.md): Available. The path to the current page: an ordered list of links in a labelled `<nav>`. Follows [APG Breadcrumb pattern](https://www.w3.org/WAI/ARIA/apg/patterns/breadcrumb/).
+- [Card](https://odonckers.github.io/domestic-ui/patterns/card.md): Available. A self-contained item, such as an article teaser, on a raised surface. **Our choice:** No standard exists: an `<article>` whose heading holds the one link, so the link name stays short.
 - [Dialog and drawer](https://odonckers.github.io/domestic-ui/patterns/dialog.md): Available. A modal `<dialog>`, either centered or as a drawer along one edge of the viewport. Follows [HTML `<dialog>` element](https://html.spec.whatwg.org/multipage/interactive-elements.html#the-dialog-element), [APG Dialog (Modal) pattern](https://www.w3.org/WAI/ARIA/apg/patterns/dialog-modal/).
 - [Disclosure](https://odonckers.github.io/domestic-ui/patterns/disclosure.md): Available. A summary that shows or hides more content, built on `<details>` and `<summary>`. Follows [HTML `<details>` element](https://html.spec.whatwg.org/multipage/interactive-elements.html#the-details-element), [APG Disclosure pattern](https://www.w3.org/WAI/ARIA/apg/patterns/disclosure/).
 - [Menu button](https://odonckers.github.io/domestic-ui/patterns/menu-button.md): Available. A button that opens a menu of actions. Follows [APG Menu Button pattern](https://www.w3.org/WAI/ARIA/apg/patterns/menu-button/).
-- [Pagination](https://odonckers.github.io/domestic-ui/patterns/pagination.md): Available. Links to the pages of a long list of results. **Our choice:** No native element or APG pattern exists; a labelled `<nav>` with a list of links and `aria-current="page"` on the current one, as for breadcrumbs.
+- [Pagination](https://odonckers.github.io/domestic-ui/patterns/pagination.md): Available. Links to the pages of a long list of results. **Our choice:** No standard exists: a labelled `<nav>` with a list of links and `aria-current="page"`, as for breadcrumbs.
 - [Popover](https://odonckers.github.io/domestic-ui/patterns/popover.md): Available. Content shown on top of the page from a button, with the `popover` attribute. Follows [HTML `popover` attribute](https://html.spec.whatwg.org/multipage/popover.html#the-popover-attribute), [MDN Popover API](https://developer.mozilla.org/en-US/docs/Web/API/Popover_API).
 - [Search](https://odonckers.github.io/domestic-ui/patterns/search.md): Available. A search form in a `<search>` landmark with an `<input type="search">`. Follows [HTML `<search>` element](https://html.spec.whatwg.org/multipage/grouping-content.html#the-search-element), [MDN `<input type="search">`](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/input/search).
 - [Site navigation](https://odonckers.github.io/domestic-ui/patterns/nav.md): Available. The main links of a site in a `<nav>` landmark, with the current page marked. Follows [HTML `<nav>` element](https://html.spec.whatwg.org/multipage/sections.html#the-nav-element), [APG Landmark regions](https://www.w3.org/WAI/ARIA/apg/practices/landmark-regions/), [APG Disclosure navigation example](https://www.w3.org/WAI/ARIA/apg/patterns/disclosure/examples/disclosure-navigation/).
 - [Tabs](https://odonckers.github.io/domestic-ui/patterns/tabs.md): Available. Sections of content shown one at a time, chosen from a list of tabs. Follows [APG Tabs pattern](https://www.w3.org/WAI/ARIA/apg/patterns/tabs/).
 - [Toolbar](https://odonckers.github.io/domestic-ui/patterns/toolbar.md): Available. A row of related controls that is one stop in the tab order. Follows [APG Toolbar pattern](https://www.w3.org/WAI/ARIA/apg/patterns/toolbar/).
-- Typeahead: Coming in M3. A text field that suggests values as you type, with `<datalist>` first and an APG combobox only where `<datalist>` falls short. Follows [HTML `<datalist>` element](https://html.spec.whatwg.org/multipage/form-elements.html#the-datalist-element), [APG Combobox pattern](https://www.w3.org/WAI/ARIA/apg/patterns/combobox/).
-- App shell: Coming in M3b. The frame of an application: header, primary sidebar, main content and an optional auxiliary sidebar. **Our choice:** No standard defines an app shell; it is the HTML landmarks `<header>`, `<nav>`, `<main>` and `<aside>` placed with CSS grid, with no wrapper elements of our own.
-- Compact density: Coming in M3b. A compact density token that tightens spacing for data-heavy screens. **Our choice:** No standard exists for density; one semantic token override that tightens space while targets stay at least 24 by 24 CSS pixels.
-- Dashboard: Coming in M3b. A grid of summary sections, each with a heading, that reflows to fit the screen. **Our choice:** No standard exists; a CSS grid of `<section>` elements, each with a heading, that reflows without media queries.
+- Typeahead: Coming in M3. A text field that suggests values as you type: `<datalist>` first, an APG combobox where it falls short. Follows [HTML `<datalist>` element](https://html.spec.whatwg.org/multipage/form-elements.html#the-datalist-element), [APG Combobox pattern](https://www.w3.org/WAI/ARIA/apg/patterns/combobox/).
+- App shell: Coming in M3b. The frame of an application: header, primary sidebar, main content and an optional auxiliary sidebar. **Our choice:** No standard defines an app shell: the landmarks `<header>`, `<nav>`, `<main>` and `<aside>`, placed with CSS grid.
+- Compact density: Coming in M3b. A compact density token that tightens spacing for data-heavy screens. **Our choice:** No standard exists: one semantic token override; targets stay at least 24 by 24 CSS pixels.
+- Dashboard: Coming in M3b. A grid of summary sections, each with a heading, that reflows to fit the screen. **Our choice:** No standard exists: a CSS grid of headed `<section>` elements that reflows without media queries.
 - Data table: Coming in M3b. Rows of records in a native `<table>` with a caption, header cells and optional sorting. Follows [HTML `<table>` element](https://html.spec.whatwg.org/multipage/tables.html#the-table-element), [APG Table pattern](https://www.w3.org/WAI/ARIA/apg/patterns/table/).
-- Filter bar: Coming in M3b. A row of native form controls that narrows a list or table. **Our choice:** No standard exists; a `<form>` inside `<search>` with labelled native controls in a row that wraps, and the result count announced as a status message.
+- Filter bar: Coming in M3b. A row of native form controls that narrows a list or table. **Our choice:** No standard exists: a `<form>` in `<search>` with labelled controls, and the result count as a status message.
 - Large forms: Coming in M3b. Long forms split into labelled groups, in one or more columns. Follows [HTML `<form>` element](https://html.spec.whatwg.org/multipage/forms.html#the-form-element), [HTML `<fieldset>` element](https://html.spec.whatwg.org/multipage/form-elements.html#the-fieldset-element).
-- List-detail: Coming in M3b. A list of items beside the details of the selected one, stacked on narrow screens. **Our choice:** No standard exists; a list of links beside the detail region, placed with CSS grid, where each item is a real link so the browser's history and the URL keep working.
-- Split: Coming in M3b. Two regions side by side at a set ratio, stacked on narrow screens. **Our choice:** No standard exists for a fixed split; two regions placed with CSS grid. A divider users can drag would follow the APG Window Splitter pattern.
+- List-detail: Coming in M3b. A list of items beside the details of the selected one, stacked on narrow screens. **Our choice:** No standard exists: real links beside a detail region, placed with CSS grid, so history and URLs keep working.
+- Split: Coming in M3b. Two regions side by side at a set ratio, stacked on narrow screens. **Our choice:** No standard exists for a fixed split: two regions in a CSS grid. A draggable divider would follow the APG Window Splitter pattern.
 - [Guides](https://odonckers.github.io/domestic-ui/guides/index.md): Step-by-step guides for building with domestic-ui.
-- [From a simple site to an ERP app](https://odonckers.github.io/domestic-ui/guides/simple-site-to-erp-app.md): Five steps from a plain content page to a dense business application, and which parts of each step are available today.
+- [From a simple site to an ERP app](https://odonckers.github.io/domestic-ui/guides/simple-site-to-erp-app.md): Five steps from a plain content page to a dense business application, with what is available today.
 
 ## Demos
 
@@ -132,4 +132,4 @@ To use it, link `css/domestic.css` (copy the `css/` folder or clone https://gith
 
 - [GitHub repository](https://github.com/odonckers/domestic-ui): source, issues and contributing guide
 - [PRINCIPLES.md](https://raw.githubusercontent.com/odonckers/domestic-ui/main/PRINCIPLES.md): the full principles as one Markdown file
-- [llms-full.txt](https://odonckers.github.io/domestic-ui/llms-full.txt): every docs page in one file
+- [llms-full.txt](https://odonckers.github.io/domestic-ui/llms-full.txt): every reference page in one file

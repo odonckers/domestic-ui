@@ -177,6 +177,34 @@ export function specLabel(url) {
   return "Other";
 }
 
+/** Hosts outside the standards bodies, by their own names. */
+const HOST_NAMES = /** @type {Record<string, string>} */ ({
+  "every-layout.dev": "Every Layout",
+  "alistapart.com": "A List Apart",
+  "dequeuniversity.com": "Deque University",
+  "a11yproject.com": "The A11Y Project",
+  "adrianroselli.com": "Adrian Roselli",
+  "inclusive-components.design": "Inclusive Components",
+  "open-ui.org": "Open UI",
+});
+
+/**
+ * A readable label for a bare URL: its host label and the page it names,
+ * from the fragment or else the last path segment ("MDN `color-scheme`",
+ * "WCAG Use of color", "Every Layout stack").
+ * @param {string} url
+ */
+export function specName(url) {
+  const { hostname, pathname, hash } = new URL(url);
+  const host = specLabel(url);
+  const name = host === "Other" ? (HOST_NAMES[hostname.replace(/^www\./, "")] ?? hostname.replace(/^www\./, "")) : host;
+  const segment = decodeURIComponent(hash.slice(1) || pathname.split("/").filter(Boolean).at(-1) || "").replace(/\.html?$/, "");
+  if (!segment) return name;
+  if (host === "MDN") return `${name} \`${segment}\``;
+  const words = segment.replace(/[-_]+/g, " ");
+  return `${name} ${host === "WCAG" ? words.charAt(0).toUpperCase() + words.slice(1) : words}`;
+}
+
 /** The declared layer order in css/domestic.css. @param {string} css */
 export function parseLayerOrder(css) {
   const m = css.replace(/\/\*[\s\S]*?\*\//g, "").match(/@layer\s+([^;{]+);/);

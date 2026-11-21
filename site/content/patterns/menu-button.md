@@ -13,3 +13,5 @@ keyboard:
   - Enter: in the menu, activates the focused item and closes the menu.
   - Escape: closes the menu and returns focus to the button.
 ---
+- `<dui-menu>` adds the ARIA and arrow keys. Without JavaScript, every action is a Tab stop.
+- For links to other pages, use a disclosure: `role="menu"` means arrow keys and no Tab stops ([APG note](https://www.w3.org/WAI/ARIA/apg/patterns/disclosure/examples/disclosure-navigation/)).

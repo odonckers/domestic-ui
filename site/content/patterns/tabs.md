@@ -10,3 +10,6 @@ keyboard:
   - Home / End: moves focus to the first or last tab.
   - Enter / Space: activates the focused tab, when tabs are not activated on focus.
 ---
+- The selected tab has a bar and full-strength text, not color alone ([WCAG 1.4.11](https://www.w3.org/WAI/WCAG22/Understanding/non-text-contrast.html)).
+- Without JavaScript, every section shows and the links work as a table of contents.
+- **Our choice:** automatic activation, as the [APG recommends](https://www.w3.org/WAI/ARIA/apg/patterns/tabs/#deciding-when-to-make-selection-automatically-follow-focus) for fast panels; `activation="manual"` otherwise.

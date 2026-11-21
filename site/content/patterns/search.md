@@ -9,3 +9,5 @@ standard:
 specs:
   - MDN `<search>`: https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/search
 ---
+- `<search>` is a landmark; label it only when there are several.
+- The input needs a `<label>`, visually hidden if space is short; a placeholder is not a label ([WCAG 3.3.2](https://www.w3.org/WAI/WCAG22/Understanding/labels-or-instructions.html)).

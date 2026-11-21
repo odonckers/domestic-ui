@@ -7,7 +7,7 @@
  */
 import { existsSync, readFileSync, readdirSync } from "node:fs";
 import { join, posix } from "node:path";
-import { comments, dedent, headerComment, htmlKeyboard, parseHeader, parseKeyboard, parseLayerOrder, specLabel } from "./css-comments.mjs";
+import { comments, dedent, headerComment, htmlKeyboard, parseHeader, parseKeyboard, parseLayerOrder, specLabel, specName } from "./css-comments.mjs";
 import { splitSections, tokenize, plainText } from "./markdown.mjs";
 import { parseTokenFile, resolveTokens } from "./tokens.mjs";
 import { byString, firstSentence, readTitle, slugify, unescapeHtml } from "./util.mjs";
@@ -58,7 +58,8 @@ export const PATTERN_EXAMPLE_DIRS = /** @type {const} */ (["molecules", "organis
  * @property {{ label: string, text: string }[]} blocks labelled header blocks (States, Sizes, Focus, …)
  * @property {Key[]} keyboard    the header's Keyboard block
  * @property {string[]} choices  the group README's Our choices bullets about this component
- * @property {string[]} notes    prose paragraphs after the summary
+ * @property {string[]} notes    prose paragraphs after the summary, or the override's `usage` list
+ * @property {boolean} [notesFromOverride] notes are Markdown from an override
  * @property {string} a11y       accessibility notes, Markdown
  * @property {boolean} a11yFromOverride
  * @property {Spec[]} specs
@@ -412,9 +413,11 @@ export function loadModel(root) {
       indexPath: indexed?.readme.path ?? null,
       blocks: doc.blocks,
       keyboard: doc.keyboard,
-      notes: description ? doc.prose : [...restOfFirst(doc.prose[0] ?? "", doc.summary), ...doc.prose.slice(1)],
+      // An override's `usage` list replaces the comment prose; `usage: none` drops it.
+      notes: over && "usage" in over.data ? strList(over.data.usage).filter((u) => u !== "none") : description ? doc.prose : [...restOfFirst(doc.prose[0] ?? "", doc.summary), ...doc.prose.slice(1)],
       a11y: over?.body || doc.a11y.join(" "),
       a11yFromOverride: Boolean(over?.body),
+      notesFromOverride: Boolean(over && "usage" in over.data),
       specs: [...indexSpecs, ...headerSpecs],
       snippets,
       usedIn: examplePath ? [] : findUsage(doc.api, examples),
@@ -653,10 +656,10 @@ function specsFrom(declared, urls) {
   if (Array.isArray(declared) && declared.length) {
     return declared.map((line) => {
       const m = String(line).match(/^(.*?):\s+(https?:\/\/\S+)$/);
-      return m ? { label: m[1], url: m[2] } : { label: specLabel(String(line)), url: String(line) };
+      return m ? { label: m[1], url: m[2] } : { label: specName(String(line)), url: String(line) };
     });
   }
-  return urls.map((url) => ({ label: specLabel(url), url }));
+  return urls.map((url) => ({ label: specName(url), url }));
 }
 
 /** @typedef {ReturnType<typeof loadModel>} Model */

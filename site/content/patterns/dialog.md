@@ -15,3 +15,6 @@ keyboard:
   - Tab / Shift+Tab: moves focus through the focusable elements inside the dialog; a modal dialog keeps focus inside.
   - Escape: closes the dialog; focus returns to the element that opened it.
 ---
+- `showModal()` or `command="show-modal"` makes the page inert, moves focus in and returns it on close.
+- Name each dialog with `aria-labelledby`. Put `autofocus` on the least destructive action.
+- <kbd>Esc</kbd> and the close buttons always work ([WCAG 2.1.2](https://www.w3.org/WAI/WCAG22/Understanding/no-keyboard-trap.html)); [`closedby="any"`](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/dialog#closedby) adds light dismiss.

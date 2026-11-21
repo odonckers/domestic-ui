@@ -214,8 +214,8 @@ main pre {
 }
 
 /*
- * Previews. Decorative (aria-hidden): the value text beside each one is
- * the reference. Each sample sits in a data-color-scheme scope, so the
+ * Previews. Decorative (aria-hidden): the Light and Dark cells of the row
+ * hold the values as text. Each sample sits in a data-color-scheme scope, so the
  * dark one is shown on the dark surface whatever the page scheme. --preview
  * holds the resolved value, never var(), so the dark value is literal too.
  */

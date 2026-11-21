@@ -1,6 +1,6 @@
 ---
 title: Typeahead
-summary: A text field that suggests values as you type, with `<datalist>` first and an APG combobox only where `<datalist>` falls short.
+summary: A text field that suggests values as you type: `<datalist>` first, an APG combobox where it falls short.
 milestone: M3
 level: molecule
 standard:

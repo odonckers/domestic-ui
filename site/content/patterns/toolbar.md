@@ -9,3 +9,5 @@ keyboard:
   - Left Arrow / Right Arrow: moves focus to the previous or next control.
   - Home / End: moves focus to the first or last control.
 ---
+- Use a toolbar for three or more controls. Without JavaScript, each control is a Tab stop.
+- Toggle buttons use [`aria-pressed`](https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Reference/Attributes/aria-pressed), shown by more than color ([WCAG 1.4.1](https://www.w3.org/WAI/WCAG22/Understanding/use-of-color.html)).

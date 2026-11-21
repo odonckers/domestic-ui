@@ -154,8 +154,8 @@ test.describe("how other systems do it", () => {
       const headings = [...main.matchAll(/<h2 id="([^"]*)">/g)].map((m) => m[1]);
       expect(headings.at(-1), `${key}: last h2`).toBe("how-other-systems-do-it");
       expect(headings.filter((h) => h === "how-other-systems-do-it"), `${key}: once`).toHaveLength(1);
-      // After the spec links: "Specs" on built pages, "Standard" on planned pattern pages; and after Keyboard.
-      const specs = headings.includes("specs") ? "specs" : "standard";
+      // After the spec links ("Specifications") and after Keyboard.
+      const specs = "specifications";
       expect(headings, `${key}: has spec links`).toContain(specs);
       expect(headings.indexOf("how-other-systems-do-it")).toBeGreaterThan(headings.indexOf(specs));
       if (headings.includes("keyboard")) expect(headings.indexOf("how-other-systems-do-it")).toBeGreaterThan(headings.indexOf("keyboard"));
@@ -251,7 +251,7 @@ test.describe("atoms from the group README", () => {
       expect(page.path, title).toBe(`components/atoms/${exampleFile.replace(/^.*\//, "")}`);
       expect(html, `${title}: live example`).toContain(`src="../../${exampleFile}"`);
       expect(md, `${title}: API cell as written`).toContain(`\n\n${api}\n\n`);
-      expect(md, `${title}: specs`).toMatch(/## Specs\n\n- \*\*/);
+      expect(md, `${title}: specs`).toMatch(/## Specifications\n\n- \[/);
       // Copy-paste markup: one named block per <pre><code> in the example, byte for byte.
       const source = read(join(ROOT, exampleFile));
       const pre = [...source.matchAll(/<pre\b[^>]*><code>([\s\S]*?)<\/code><\/pre>/g)].map((m) => unescapeHtml(m[1]));

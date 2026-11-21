@@ -46,6 +46,30 @@ can compare bytes.
 `_site/search-index.json` has one record per page (`title`, `url`, `level` = its sidebar entry,
 `summary`, and its `h2`/`h3` `headings`) for a later in-page search. There is no search UI yet.
 
+## Page structure
+
+Element, component, layout and pattern pages follow the order of an MDN reference page. A new page
+type follows it too:
+
+1. **H1 and a one-sentence summary.** An **Our choice:** line under it only when no native element
+   or APG pattern covers the thing.
+2. **Live example.** The framed `examples/` page with a link to open it, then its copy-paste markup
+   directly below (one `###` per snippet), byte for byte (see [Snippet convention](#snippet-convention)).
+   Planned patterns show "Coming in M3." instead and nothing else from this list until 4.
+3. **Attributes** (**API** for layouts and utilities). The `data-<component>` attribute and its
+   values, the native attributes that matter, then short usage notes. Labelled header blocks
+   (`States`, `Sizes`, `Focus`), `Keyboard` and the group README's **Our choice** bullets follow.
+4. **Accessibility.** Short, concrete bullets, each borrowed fact linked to WCAG, APG, MDN or its author.
+5. **Specifications.** Labelled links: MDN, WHATWG, W3C, WCAG 2.2, WAI-ARIA APG.
+6. **See also.** The level index, the component API convention, the accessibility baseline, and the
+   source files on GitHub.
+7. **How other systems do it**, last (see below).
+
+Writing rules: be specific and direct; no preamble ("This page describes…"), no repeating the
+summary in the body, no marketing. Never present a native pattern as ours. One short example per
+concept. Opinion only as **Our choice:** with one line on why. Link every borrowed fact to its source,
+or drop it.
+
 ## Sidebar
 
 Every page has one navigation: the Docs sidebar, `<nav aria-label="Docs">`. Its top-level entries
@@ -79,8 +103,12 @@ sidebar column (`--dui-size-column-min`) beside `main`; the sidebar is sticky, a
 tall and scrolls on its own; the summary is hidden while the menu is open. Links and the summary
 are at least 44px tall (`--dui-size-target`).
 
-`llms.txt` has one H2 per sidebar entry, in the same order. `README.md` follows the same order where
-it makes sense (Base, Layout and the component levels share one table).
+`llms.txt` has one H2 per sidebar entry, in the same order. `README.md` is short: the intro, links,
+install and use, the principles list, one components table (Base, Layout and the component levels),
+the patterns table, demos, contributing and license. `llms-full.txt` has every reference page; pages
+built with `inFull: false` (`Page` in `site/lib/pages.mjs`) are only linked from `llms.txt`: the
+examples, demos, patterns and guides indexes, the tokens and layouts indexes, level indexes with no
+group README, guides, Contributing and Changelog.
 
 ## Source to page
 
@@ -112,10 +140,11 @@ to Getting started and its per-level lists and Our choices are on the level inde
 Each component exposes one `data-<component>` attribute whose value is space-separated words
 matched with `~=` (like `rel`), for example `data-button="primary small"`. Component APIs use no
 classes; state is carried by native attributes and ARIA (`disabled`, `aria-disabled`, `aria-busy`,
-`aria-invalid`). Layout primitives and utilities from M1 are classes (`.stack`, `.cluster`, `.grid`,
-`.visually-hidden`). The build states this on `index.html` (with the **Our choice:** why,
-taken from the group README's bullet about `data-<…>`), next to the API on each component
-page, in `README.md` and in `llms.txt` and `llms-full.txt`.
+`aria-invalid`). Layout primitives and utilities are classes (`.stack`, `.cluster`, `.grid`,
+`.visually-hidden`), or one attribute where the API block names no class (`data-scroll`). The build
+states this on `index.html` (with the **Our choice:** why, taken from the group README's bullet
+about `data-<…>`), in `README.md`, `llms.txt` and `llms-full.txt`; component pages link it under
+See also.
 
 Layout directories are all read, in the order above; when two hold a file of the same name, the
 first wins. Missing directories are skipped.
@@ -194,13 +223,13 @@ The parser reads the comment that opens the CSS file:
 | --- | --- |
 | Label | An optional first paragraph of one line in the form `Word: text` (`Atom: button variants, sizes and states`); never the summary. |
 | Summary | The example page's `<meta name="description">`, else the first sentence of the first prose paragraph. Plain text: it is also the meta description. |
-| Notes | The prose paragraphs, less the summary sentence when the summary came from the comment. |
+| Notes | The prose paragraphs, less the summary sentence when the summary came from the comment, less sentences repeated under Accessibility, with URLs removed (they are listed under Specifications). Shown at the end of Attributes. |
 | `API` | A paragraph whose first line is `API`; the indented lines below it, dedented. `API: …` one-liners in any comment are collected too. |
 | `Example` | A paragraph whose first line is `Example`; used as the markup only when there is no example page. |
 | `Keyboard` | A paragraph whose first line is `Keyboard`; `Key: action` lines, shown as a Keyboard table. |
 | Other labelled blocks | A paragraph whose first line is one capitalized word (`States`) over indented lines, or that opens with `Word: ` (`Sizes: default and large are …`). Shown verbatim as preformatted text under a heading of that word, without the label. |
-| Accessibility | Prose sentences that mention WCAG, ARIA, APG, focus, contrast, accessibility, screen readers, forced colors or reduced motion. If there are none, the page says so and links the spec list and the accessibility principle. |
-| Specs | Every URL in the comment, labelled by host: MDN, WHATWG, WCAG (`/WAI/WCAG22/Understanding/`, `/TR/WCAG…`), APG (`/WAI/ARIA/apg`), W3C (other `w3.org`, `csswg.org`), else Other. |
+| Accessibility | Prose sentences that mention WCAG, ARIA, APG, focus, contrast, accessibility, screen readers, forced colors or reduced motion, one bullet each, URLs removed. With none, one bullet says there is nothing beyond the accessibility baseline. |
+| Specs | Every URL in the comment, labelled by host (MDN, WHATWG, WCAG for `/WAI/WCAG22/Understanding/` and `/TR/WCAG…`, APG for `/WAI/ARIA/apg`, W3C for other `w3.org` and `csswg.org`, else the site's name) and the page it names (`specName()`: "MDN `gap`", "WCAG Use of color"). |
 
 The title is the file name: `visually-hidden.css` becomes "Visually hidden".
 
@@ -216,14 +245,18 @@ summary: One line.
 specs:
   - MDN <button>: https://developer.mozilla.org/en-US/docs/Web/HTML/Element/button
 our-choice: One line on why, only when no native element or APG pattern covers it.
+usage:
+  - One usage note per item, Markdown. `usage: none` drops the comment's notes.
 ---
-Markdown body = accessibility notes.
+- Markdown body = accessibility bullets, each fact linked to its source.
 ```
 
 Only `key: value` pairs and `- item` lists are parsed. Each key is optional; anything left out falls
-back to the header comment. A `specs` entry is `Label: URL`. The body replaces the derived
-accessibility notes; its relative links are repo-root paths, rewritten as above. Layout overrides
-live at `site/content/components/layouts/<name>.md`, whichever CSS directory the layout is in.
+back to the header comment. A `specs` entry is `Label: URL`. `usage` replaces the derived notes and
+is shown as a list at the end of Attributes. The body replaces the derived accessibility notes; its
+relative links are repo-root paths, rewritten as above. Layout overrides live at
+`site/content/components/layouts/<name>.md`, whichever CSS directory the layout is in. The atoms
+and `scroll` have overrides because their comments mix usage, accessibility and URLs in one paragraph.
 
 `our-choice` is rendered under the summary as "**Our choice:** …". Use it only where no native
 element and no [WAI-ARIA APG pattern](https://www.w3.org/WAI/ARIA/apg/patterns/) exists; where one
@@ -232,7 +265,9 @@ does, link it under `specs` instead and never present it as ours.
 ## Patterns
 
 `site/content/patterns/<slug>.md` is the registry of planned patterns, one file each. The body
-is optional (rendered as Notes once the pattern is available); the front matter is the data:
+is optional: Markdown accessibility bullets, shown under Accessibility once the pattern is available
+in place of the sentences derived from the CSS header. CSS header URLs the body already links are
+not repeated under Specifications. The front matter is the data:
 
 ```md
 ---
@@ -258,7 +293,7 @@ keyboard:
 | `level` | `molecule`, `organism`, `layout` or `token`; places the pattern on that level's index page (`molecules/index.html`, `layouts/index.html`, …). |
 | `standard` | One `Label: URL` or a list of them: the native element or APG pattern it follows. |
 | `our-choice` | One line, only when there is no standard. The build fails if a pattern has neither. |
-| `specs` | Further `Label: URL` links, shown once the pattern is available. |
+| `specs` | Further `Label: URL` links, shown under Specifications after the standards. |
 | `sources` | Other file names that fill this pattern in (`dialog.md` lists `dialog` and `drawer`). The slug is always one. |
 | `keyboard` | `Key: action` lines, used only when neither the example nor the CSS has a `Keyboard` block. Separate alternative keys with ` / `. |
 
@@ -268,9 +303,10 @@ A pattern **fills in on its own** when any of its names matches a file:
 - a CSS file `css/**/<name>.css` (outside `css/base/` and `css/reset/`).
 
 A pattern owns its names: `css/components/molecules/tabs.css` fills `patterns/tabs.html` and gets no
-`components/molecules/tabs.html` page. A filled page shows the API (from the CSS header), the live
-example, copy-paste markup (the snippet convention below, byte for byte), keyboard notes, the
-standard or Our choice line, specs and sources. Keyboard notes come from the first `Keyboard`
+`components/molecules/tabs.html` page. A filled page follows [Page structure](#page-structure): live
+example with its copy-paste markup (the snippet convention below, byte for byte), Attributes (the
+CSS header's API block), Accessibility, Keyboard, Specifications (standards, `specs`, then CSS header
+URLs), See also with the source files. Keyboard notes come from the first `Keyboard`
 block found in an HTML comment of the example page, else in the CSS header comment, else the
 `keyboard` front matter; with none, one line points at the standard's keyboard section.
 
@@ -282,8 +318,9 @@ block found in an HTML comment of the example page, else in the CSS header comme
  */
 ```
 
-Until a file lands, the page shows only the summary, the standard or Our choice line and "Coming
-in M3." (or M3b): no demo, no markup, no keyboard table. `README.md` lists every pattern with its
+Until a file lands, the page shows only the summary, the Our choice line if any, "Coming in M3."
+(or M3b), Specifications (the standards and `specs`) and See also: no demo, no markup, no keyboard
+table. `README.md` lists every pattern with its
 status and adds available ones to the components table at their level; `llms.txt` links available
 patterns to their `.md` twin and names planned ones with their milestone.
 
@@ -291,8 +328,8 @@ patterns to their `.md` twin and names planned ones with their milestone.
 
 Base, component and pattern pages end with links to how Apple, Material and Geist handle the same
 thing, from `site/data/other-systems.json`. Planned pattern pages have them too. The section is the
-last on the page, after the spec links (and the keyboard notes), in the HTML page, its Markdown twin
-and `llms-full.txt`; not in `llms.txt` or `README.md`.
+last on the page, after Specifications and See also, in the HTML page, its Markdown twin and
+`llms-full.txt`; not in `llms.txt` or `README.md`.
 
 Rules:
 
@@ -375,7 +412,8 @@ until `;`), selectors that may span lines.
 
 So to describe a token, put a comment on its line or on the line above it with no blank line in
 between. A token with no comment falls back to its purpose in the `PRINCIPLES.md` semantic token
-table, labelled "(from PRINCIPLES.md)"; with neither it shows "No description yet" in muted italic.
+table, marked "†" (the page intro says where † descriptions come from); with neither it shows
+"No description yet" in muted italic.
 
 Values: **Written as** is the value in the file. **Light** and **Dark** substitute every `var()`
 recursively through the tokens of all files (a fallback is used for unknown names; a cycle stays as
@@ -385,12 +423,13 @@ written) and take the first or second argument of `light-dark()`. Other function
 Previews, by name then value (`previewKind()`): color (`-color-`, or a color value) as a swatch;
 `-shadow-` as a shadowed box; `-space-`, `-size-`, `--*-measure` lengths as a bar capped at half a
 sidebar column; font family, size, weight, line height (`-leading-`) and letter spacing (`-tracking-`)
-as "Aa Bb Cc"; `-radius-` as a rounded box; border and focus widths as a bordered box; anything else
-(durations, easings, opacity, mix amounts, underline metrics) as text only, never animated. Each
-preview shows the light and the dark sample side by side, each in a `data-color-scheme` scope with
-its value as text beside it, so color is never the only cue. The sample's value is the resolved
+as "Aa"; `-radius-` as a rounded box; border and focus widths as a bordered box; anything else
+(durations, easings, opacity, mix amounts, underline metrics) as "None", never animated. Previews
+are decorative (`aria-hidden`): the Light and Dark cells of the same row hold the values as text, so
+color is never the only cue. Light and dark samples sit one after the other (always both for colors,
+one when the values match), each in a `data-color-scheme` scope. The sample's value is the resolved
 literal (in `style="--preview: …"`), so the dark sample shows the dark value whatever the page
-scheme. A value that would need an HTML entity in the `style` attribute gets text only.
+scheme. A value that would need an HTML entity in the `style` attribute gets "None".
 
 Each group is a `<table>` with a `<caption>` ("Spacing (primitive tokens)"), `<th scope="col">`
 headers and the token name in `<code>` in a `<th scope="row">`, wrapped in:

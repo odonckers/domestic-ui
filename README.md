@@ -2,161 +2,36 @@
 
 # domestic-ui
 
-domestic-ui is a design system built on native HTML, CSS custom properties and cascade layers. Link one stylesheet and plain semantic HTML gets its look in light and dark, with WCAG 2.2 AA as the accessibility baseline; theme it by overriding semantic tokens. It packages existing web standards and well-known patterns: nothing here is original.
+domestic-ui is a CSS design system built on native HTML, custom properties and cascade layers. Link one stylesheet and semantic HTML is styled in light and dark, with WCAG 2.2 AA as the baseline. Theme it by overriding semantic tokens. It packages existing web standards and patterns; nothing here is original.
 
-- Docs: <https://odonckers.github.io/domestic-ui/>
-- Live examples: [Base elements](https://odonckers.github.io/domestic-ui/examples/base.html), [Theming](https://odonckers.github.io/domestic-ui/examples/theming.html), [Badge](https://odonckers.github.io/domestic-ui/examples/atoms/badge.html), [Buttons](https://odonckers.github.io/domestic-ui/examples/atoms/button.html), [Form controls](https://odonckers.github.io/domestic-ui/examples/atoms/controls.html), [Field](https://odonckers.github.io/domestic-ui/examples/atoms/field.html), [Atoms showcase](https://odonckers.github.io/domestic-ui/examples/atoms/index.html), [Quiet link](https://odonckers.github.io/domestic-ui/examples/atoms/link.html), [Switch](https://odonckers.github.io/domestic-ui/examples/atoms/switch.html), [Text helpers](https://odonckers.github.io/domestic-ui/examples/atoms/text.html), [Alert and toast](https://odonckers.github.io/domestic-ui/examples/molecules/alerts.html), [Breadcrumb](https://odonckers.github.io/domestic-ui/examples/molecules/breadcrumb.html), [Card](https://odonckers.github.io/domestic-ui/examples/molecules/card.html), [Dialog and drawer](https://odonckers.github.io/domestic-ui/examples/molecules/dialog.html), [Disclosure and accordion](https://odonckers.github.io/domestic-ui/examples/molecules/disclosure.html), [Molecules showcase](https://odonckers.github.io/domestic-ui/examples/molecules/index.html), [Menu button](https://odonckers.github.io/domestic-ui/examples/molecules/menu-button.html), [Navigation list](https://odonckers.github.io/domestic-ui/examples/molecules/nav.html), [Pagination](https://odonckers.github.io/domestic-ui/examples/molecules/pagination.html), [Popover and tooltip](https://odonckers.github.io/domestic-ui/examples/molecules/popover.html), [Search field](https://odonckers.github.io/domestic-ui/examples/molecules/search.html), [Tabs](https://odonckers.github.io/domestic-ui/examples/molecules/tabs.html), [Toolbar](https://odonckers.github.io/domestic-ui/examples/molecules/toolbar.html)
-- For coding agents: [llms.txt](https://odonckers.github.io/domestic-ui/llms.txt) and [llms-full.txt](https://odonckers.github.io/domestic-ui/llms-full.txt)
+[Docs](https://odonckers.github.io/domestic-ui/) · [Examples](https://odonckers.github.io/domestic-ui/examples.html) · [llms.txt](https://odonckers.github.io/domestic-ui/llms.txt) · [llms-full.txt](https://odonckers.github.io/domestic-ui/llms-full.txt)
 
-## Getting started
+## Install and use
 
-### Install and use
-
-domestic-ui is plain CSS with no build step. Copy the `css/` folder into your project, or clone the repository:
-
-```sh
-git clone https://github.com/odonckers/domestic-ui.git
-```
-
-Link the single entry point. Plain semantic HTML then gets the full look; base elements need no classes.
+Plain CSS, no build step. Copy `css/` from the [repository](https://github.com/odonckers/domestic-ui) into your project and link the entry point:
 
 ```html
 <link rel="stylesheet" href="css/domestic.css">
 ```
 
-Its imports use relative paths, so it works from file paths and from subpaths. File paths under `css/` are public API; see [Agent-friendly by design](https://odonckers.github.io/domestic-ui/principles/agent-friendly-by-design.html).
+Imports are relative, so it works from any path. Paths under `css/` are public API ([Agent-friendly by design](https://odonckers.github.io/domestic-ui/principles/agent-friendly-by-design.html)).
 
-### Layer order
-
-`css/domestic.css` declares the [cascade layers](https://odonckers.github.io/domestic-ui/principles/cascade-layers.html) once, lowest priority first. Later layers win regardless of selector specificity, and your own unlayered CSS beats all of them.
-
-```css
-@layer reset, tokens, base, layout, components, utilities;
-```
-
-### Theming
-
-Override semantic `--dui-*` tokens on `:root`, or on an element with `data-theme` to scope a theme ([Theming](https://odonckers.github.io/domestic-ui/principles/theming.html), [theming example](https://odonckers.github.io/domestic-ui/examples/theming.html)).
-Force a color scheme on the page or any subtree with `data-color-scheme="light"` or `data-color-scheme="dark"`.
-
-### Component API
-
-Each component exposes one `data-<component>` attribute. Its value is a list of space-separated words matched with the [`~=` attribute selector](https://developer.mozilla.org/en-US/docs/Web/CSS/Attribute_selectors), like [`rel`](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Attributes/rel): `data-button="primary small"`. Component APIs use no classes. State is carried by native attributes and ARIA: `disabled`, `aria-disabled`, `aria-busy`, `aria-invalid`.
-
-**Our choice:** One attribute is one API to learn, it reads as a sentence (`data-button="primary small"`), and it cannot pile up like modifier classes.
-
-Layout primitives and utilities from M1 are classes: `.cluster`, `.grid`, `.scroll`, `.stack`, `.visually-hidden`. Base elements need no API: write semantic HTML.
+Components: one `data-<component>` attribute of space-separated words matched with `~=` (`data-button="primary small"`), no classes; state via native attributes and ARIA. Layout primitives and utilities: `.cluster`, `.grid`, `data-scroll`, `.stack`, `.visually-hidden`. Theme by overriding semantic `--dui-*` tokens ([Tokens](https://odonckers.github.io/domestic-ui/tokens/index.html)); primitive tokens are internal.
 
 ## Principles
 
-domestic-ui packages existing web standards and well-known patterns. Nothing here is
-original: the rules below come from the [WHATWG HTML Living Standard](https://html.spec.whatwg.org/multipage/),
-the [W3C CSS specifications](https://www.w3.org/Style/CSS/specs.en.html),
-[WCAG 2.2](https://www.w3.org/TR/WCAG22/), the
-[ARIA Authoring Practices Guide (APG)](https://www.w3.org/WAI/ARIA/apg/) and
-[MDN Web Docs](https://developer.mozilla.org/). Where we had to pick between valid
-options, the pick is labeled **Our choice:** with one line saying why.
+1. [Native element first](https://odonckers.github.io/domestic-ui/principles/native-element-first.html)
+2. [Agent-friendly by design](https://odonckers.github.io/domestic-ui/principles/agent-friendly-by-design.html)
+3. [Accessibility baseline: WCAG 2.2 AA](https://odonckers.github.io/domestic-ui/principles/accessibility-baseline-wcag-22-aa.html)
+4. [Cascade layers](https://odonckers.github.io/domestic-ui/principles/cascade-layers.html)
+5. [Theming](https://odonckers.github.io/domestic-ui/principles/theming.html)
+6. [Opinions we hold](https://odonckers.github.io/domestic-ui/principles/opinions-we-hold.html)
+7. [Layout primitives](https://odonckers.github.io/domestic-ui/principles/layout-primitives.html)
+8. [Web components](https://odonckers.github.io/domestic-ui/principles/web-components.html)
+9. [Explainers](https://odonckers.github.io/domestic-ui/principles/explainers.html)
+10. [Tooling](https://odonckers.github.io/domestic-ui/principles/tooling.html)
 
-### 1. [Native element first](https://odonckers.github.io/domestic-ui/principles/native-element-first.html)
-
-- Use the HTML element that already has the semantics and behavior you need:
-  `<button>`, `<a href>`, `<dialog>`, `<details>`, `<label>`, `<fieldset>`, `<table>`.
-  This is the [first rule of ARIA use](https://www.w3.org/TR/using-aria/#rule1) in W3C *Using ARIA*.
-- Add ARIA only when native HTML cannot express something, and only in the ways
-  [ARIA in HTML](https://www.w3.org/TR/html-aria/) allows. Never add a role an element
-  already has (see the [document conformance rules](https://www.w3.org/TR/html-aria/#docconformance)).
-- When an interactive widget has no native element, follow its
-  [APG pattern](https://www.w3.org/WAI/ARIA/apg/patterns/) exactly.
-- Native behavior beats script: open a `<dialog>` with
-  [`showModal()`](https://developer.mozilla.org/en-US/docs/Web/API/HTMLDialogElement/showModal)
-  or [invoker commands](https://developer.mozilla.org/en-US/docs/Web/API/Invoker_Commands_API)
-  so the browser handles focus, <kbd>Esc</kbd> and inertness.
-
-### 2. [Agent-friendly by design](https://odonckers.github.io/domestic-ui/principles/agent-friendly-by-design.html)
-
-Humans and coding agents should be able to write a whole view from this document alone.
-
-### 3. [Accessibility baseline: WCAG 2.2 AA](https://odonckers.github.io/domestic-ui/principles/accessibility-baseline-wcag-22-aa.html)
-
-Every example must pass, and every token pair is tested against, these criteria:
-
-| Topic | Rule | Source |
-| --- | --- | --- |
-| Text contrast | 4.5:1 for body text, in light **and** dark | [1.4.3 Contrast (Minimum)](https://www.w3.org/WAI/WCAG22/Understanding/contrast-minimum.html) |
-| Non-text contrast | 3:1 for control boundaries and the focus indicator | [1.4.11 Non-text Contrast](https://www.w3.org/WAI/WCAG22/Understanding/non-text-contrast.html) |
-| Links | Links keep their underline; color is never the only cue | [1.4.1 Use of Color](https://www.w3.org/WAI/WCAG22/Understanding/use-of-color.html) |
-| Focus visible | Every focusable element shows a `:focus-visible` outline | [2.4.7 Focus Visible](https://www.w3.org/WAI/WCAG22/Understanding/focus-visible.html) |
-| Focus not obscured | `scroll-padding` keeps focused elements clear of sticky edges | [2.4.11 Focus Not Obscured (Minimum)](https://www.w3.org/WAI/WCAG22/Understanding/focus-not-obscured-minimum.html) |
-| Focus appearance (AAA, optional) | The default 2px solid outline with a 2px offset aims to meet it | [2.4.13 Focus Appearance](https://www.w3.org/WAI/WCAG22/Understanding/focus-appearance.html) |
-| Target size | Controls are at least 44px tall, above the 24px minimum | [2.5.8 Target Size (Minimum)](https://www.w3.org/WAI/WCAG22/Understanding/target-size-minimum.html) |
-| Reduced motion | Duration tokens become `0s` under `prefers-reduced-motion: reduce` | [MDN `prefers-reduced-motion`](https://developer.mozilla.org/en-US/docs/Web/CSS/@media/prefers-reduced-motion), [2.3.3 Animation from Interactions](https://www.w3.org/WAI/WCAG22/Understanding/animation-from-interactions.html) |
-| Color scheme | `color-scheme: light dark` plus [`light-dark()`](https://developer.mozilla.org/en-US/docs/Web/CSS/color_value/light-dark) in every semantic color | [MDN `color-scheme`](https://developer.mozilla.org/en-US/docs/Web/CSS/color-scheme) |
-| Forced colors | Borders and outlines switch to system colors | [MDN `forced-colors`](https://developer.mozilla.org/en-US/docs/Web/CSS/@media/forced-colors) |
-
-### 4. [Cascade layers](https://odonckers.github.io/domestic-ui/principles/cascade-layers.html)
-
-`css/domestic.css` declares the order once, before anything else
-([`@layer` on MDN](https://developer.mozilla.org/en-US/docs/Web/CSS/@layer),
-[CSS Cascade 5](https://www.w3.org/TR/css-cascade-5/#layering)):
-
-```css
-@layer reset, tokens, base, layout, components, utilities;
-```
-
-### 5. [Theming](https://odonckers.github.io/domestic-ui/principles/theming.html)
-
-All tokens are [custom properties](https://www.w3.org/TR/css-variables-1/) on `:root`
-with the `--dui-` prefix.
-
-### 6. [Opinions we hold](https://odonckers.github.io/domestic-ui/principles/opinions-we-hold.html)
-
-Each of these is a choice between valid options, not a standard.
-
-### 7. [Layout primitives](https://odonckers.github.io/domestic-ui/principles/layout-primitives.html)
-
-| Class | What it does | Custom properties |
-| --- | --- | --- |
-| `.stack` | Vertical flow with a gap | `--stack-gap` |
-| `.cluster` | Wrapping inline group | `--cluster-gap`, `--cluster-justify`, `--cluster-align` |
-| `.grid` | Auto-fit responsive grid, no media queries | `--grid-min`, `--grid-gap` |
-| `[data-scroll="inline"]` | Scroll container for content wider than the screen, such as a data table | None |
-
-### 8. [Web components](https://odonckers.github.io/domestic-ui/principles/web-components.html)
-
-HTML still has no element for tabs, menus, roving focus in a toolbar, hover tooltips or a toast
-stack. For those, and only those, [`web-components/`](https://github.com/odonckers/domestic-ui/blob/main/web-components/README.md) has one small
-custom element each: `<dui-tabs>`, `<dui-menu>`, `<dui-toolbar>`, `<dui-tooltip>` and `<dui-toaster>`.
-
-### 9. [Explainers](https://odonckers.github.io/domestic-ui/principles/explainers.html)
-
-A pattern with no native element and no APG pattern is written up like a platform proposal in
-[`explainers/`](https://github.com/odonckers/domestic-ui/blob/main/explainers/README.md): problem, use cases, goals and non-goals, markup and API,
-keyboard, accessibility mappings, alternatives, prior art and open questions, with normative
-text in [RFC 2119](https://www.rfc-editor.org/rfc/rfc2119) keywords. The card, pagination, drawer
-and toast molecules have one. Names follow HTML and ARIA conventions, so a pattern could map onto
-a future native element or attribute.
-
-### 10. [Tooling](https://odonckers.github.io/domestic-ui/principles/tooling.html)
-
-`npm test` runs, in order, and fails if any step fails:
-
-| Script | Tool | Checks |
-| --- | --- | --- |
-| `lint:html` | [html-validate](https://html-validate.org/) | `examples/**/*.html` against `html-validate:recommended` |
-| `lint:css` | [Stylelint](https://stylelint.io/) | `css/**/*.css` against `stylelint-config-standard` |
-| `lint:tokens` | `scripts/check-tokens.mjs` | Semantic-only tokens and no literal colors or sizes outside `css/tokens/` |
-| `test:a11y` | [Playwright](https://playwright.dev/) + [axe-core](https://github.com/dequelabs/axe-core) | Every `examples/**/*.html` (atoms and molecules included) in light and dark, in Chromium, Firefox and WebKit, with tags `wcag2a`, `wcag2aa`, `wcag21a`, `wcag21aa`, `wcag22aa`, including open dialogs and drawers, open popovers and menus, shown tooltips and toasts, every tab selected and every details expanded; no horizontal page overflow and no axe violations at 320×640 and 375×812; no external requests; token contrast pairs (atoms and molecules included) in the default and forest themes; rendered focus-ring and indicator contrast; atom and molecule states through accessibility APIs; molecule keyboard behavior against the APG; no-JavaScript fallbacks; fallbacks for engine-specific features; scoped theming of atoms and molecules |
-
-## Tokens
-
-Primitive tokens are internal and may change; semantic tokens are the public theming API. Every token, with its light and dark value, is on the [Tokens](https://odonckers.github.io/domestic-ui/tokens/index.html) pages:
-
-- [Primitive tokens](https://odonckers.github.io/domestic-ui/tokens/primitives.html) (internal): 87 tokens in [`css/tokens/primitives.css`](https://github.com/odonckers/domestic-ui/blob/main/css/tokens/primitives.css).
-- [Semantic tokens](https://odonckers.github.io/domestic-ui/tokens/semantic.html) (public theming API): 81 tokens in [`css/tokens/semantic.css`](https://github.com/odonckers/domestic-ui/blob/main/css/tokens/semantic.css).
-
-## Base, layout and components
-
-By level ([Base](https://odonckers.github.io/domestic-ui/components/base.html), [Layout](https://odonckers.github.io/domestic-ui/layouts/index.html), [Atoms](https://odonckers.github.io/domestic-ui/atoms/index.html), [Molecules](https://odonckers.github.io/domestic-ui/molecules/index.html), [Organisms](https://odonckers.github.io/domestic-ui/organisms/index.html)):
+## Components
 
 | Level | Name | API | Docs |
 | --- | --- | --- | --- |
@@ -186,39 +61,35 @@ By level ([Base](https://odonckers.github.io/domestic-ui/components/base.html), 
 | Organisms | Dialog and drawer | `data-dialog`, `and the open transition`, `data-dialog="drawer [start \| end]"`, `edge (end is the default)`, `closedby="any \| closerequest \| none"`, `Children: an optional <header> (heading and close button) and <footer>`, `(actions, end-aligned); everything else is the body.` | [Dialog and drawer](https://odonckers.github.io/domestic-ui/patterns/dialog.html) |
 | Organisms | Site navigation | `data-nav="vertical \| horizontal"`, `aria-current="page"`, `<details> / <summary>`, `open to expand it on load, name for`, `one-at-a-time` | [Site navigation](https://odonckers.github.io/domestic-ui/patterns/nav.html) |
 
-Component and pattern pages in the docs end with links to how other design systems handle the same thing, for comparison only.
+Docs pages also link how other design systems handle the same thing, for comparison only.
 
-## Patterns and guides
+## Patterns
 
-Where a standard exists (a native HTML element or a WAI-ARIA APG pattern), the pattern follows it and links to it. Where none exists, it is labeled **Our choice:** with one line on why ([Patterns](https://odonckers.github.io/domestic-ui/patterns/index.html)).
+Each follows a native element or WAI-ARIA APG pattern where one exists ([Patterns](https://odonckers.github.io/domestic-ui/patterns/index.html)). Guides: [From a simple site to an ERP app](https://odonckers.github.io/domestic-ui/guides/simple-site-to-erp-app.html).
 
-| Pattern | Milestone | Status | Follows |
-| --- | --- | --- | --- |
-| [Alerts](https://odonckers.github.io/domestic-ui/patterns/alerts.html) | M3 | Available | [APG Alert pattern](https://www.w3.org/WAI/ARIA/apg/patterns/alert/) |
-| [Breadcrumb](https://odonckers.github.io/domestic-ui/patterns/breadcrumb.html) | M3 | Available | [APG Breadcrumb pattern](https://www.w3.org/WAI/ARIA/apg/patterns/breadcrumb/) |
-| [Card](https://odonckers.github.io/domestic-ui/patterns/card.html) | M3 | Available | **Our choice:** No native element or APG pattern exists; an `<article>` with a heading, where the heading holds the one link, so the whole card is not one long link name. |
-| [Dialog and drawer](https://odonckers.github.io/domestic-ui/patterns/dialog.html) | M3 | Available | [HTML `<dialog>` element](https://html.spec.whatwg.org/multipage/interactive-elements.html#the-dialog-element), [APG Dialog (Modal) pattern](https://www.w3.org/WAI/ARIA/apg/patterns/dialog-modal/) |
-| [Disclosure](https://odonckers.github.io/domestic-ui/patterns/disclosure.html) | M3 | Available | [HTML `<details>` element](https://html.spec.whatwg.org/multipage/interactive-elements.html#the-details-element), [APG Disclosure pattern](https://www.w3.org/WAI/ARIA/apg/patterns/disclosure/) |
-| [Menu button](https://odonckers.github.io/domestic-ui/patterns/menu-button.html) | M3 | Available | [APG Menu Button pattern](https://www.w3.org/WAI/ARIA/apg/patterns/menu-button/) |
-| [Pagination](https://odonckers.github.io/domestic-ui/patterns/pagination.html) | M3 | Available | **Our choice:** No native element or APG pattern exists; a labelled `<nav>` with a list of links and `aria-current="page"` on the current one, as for breadcrumbs. |
-| [Popover](https://odonckers.github.io/domestic-ui/patterns/popover.html) | M3 | Available | [HTML `popover` attribute](https://html.spec.whatwg.org/multipage/popover.html#the-popover-attribute), [MDN Popover API](https://developer.mozilla.org/en-US/docs/Web/API/Popover_API) |
-| [Search](https://odonckers.github.io/domestic-ui/patterns/search.html) | M3 | Available | [HTML `<search>` element](https://html.spec.whatwg.org/multipage/grouping-content.html#the-search-element), [MDN `<input type="search">`](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/input/search) |
-| [Site navigation](https://odonckers.github.io/domestic-ui/patterns/nav.html) | M3 | Available | [HTML `<nav>` element](https://html.spec.whatwg.org/multipage/sections.html#the-nav-element), [APG Landmark regions](https://www.w3.org/WAI/ARIA/apg/practices/landmark-regions/), [APG Disclosure navigation example](https://www.w3.org/WAI/ARIA/apg/patterns/disclosure/examples/disclosure-navigation/) |
-| [Tabs](https://odonckers.github.io/domestic-ui/patterns/tabs.html) | M3 | Available | [APG Tabs pattern](https://www.w3.org/WAI/ARIA/apg/patterns/tabs/) |
-| [Toolbar](https://odonckers.github.io/domestic-ui/patterns/toolbar.html) | M3 | Available | [APG Toolbar pattern](https://www.w3.org/WAI/ARIA/apg/patterns/toolbar/) |
-| [Typeahead](https://odonckers.github.io/domestic-ui/patterns/typeahead.html) | M3 | Coming in M3 | [HTML `<datalist>` element](https://html.spec.whatwg.org/multipage/form-elements.html#the-datalist-element), [APG Combobox pattern](https://www.w3.org/WAI/ARIA/apg/patterns/combobox/) |
-| [App shell](https://odonckers.github.io/domestic-ui/patterns/app-shell.html) | M3b | Coming in M3b | **Our choice:** No standard defines an app shell; it is the HTML landmarks `<header>`, `<nav>`, `<main>` and `<aside>` placed with CSS grid, with no wrapper elements of our own. |
-| [Compact density](https://odonckers.github.io/domestic-ui/patterns/density.html) | M3b | Coming in M3b | **Our choice:** No standard exists for density; one semantic token override that tightens space while targets stay at least 24 by 24 CSS pixels. |
-| [Dashboard](https://odonckers.github.io/domestic-ui/patterns/dashboard.html) | M3b | Coming in M3b | **Our choice:** No standard exists; a CSS grid of `<section>` elements, each with a heading, that reflows without media queries. |
-| [Data table](https://odonckers.github.io/domestic-ui/patterns/data-table.html) | M3b | Coming in M3b | [HTML `<table>` element](https://html.spec.whatwg.org/multipage/tables.html#the-table-element), [APG Table pattern](https://www.w3.org/WAI/ARIA/apg/patterns/table/) |
-| [Filter bar](https://odonckers.github.io/domestic-ui/patterns/filter-bar.html) | M3b | Coming in M3b | **Our choice:** No standard exists; a `<form>` inside `<search>` with labelled native controls in a row that wraps, and the result count announced as a status message. |
-| [Large forms](https://odonckers.github.io/domestic-ui/patterns/large-forms.html) | M3b | Coming in M3b | [HTML `<form>` element](https://html.spec.whatwg.org/multipage/forms.html#the-form-element), [HTML `<fieldset>` element](https://html.spec.whatwg.org/multipage/form-elements.html#the-fieldset-element) |
-| [List-detail](https://odonckers.github.io/domestic-ui/patterns/list-detail.html) | M3b | Coming in M3b | **Our choice:** No standard exists; a list of links beside the detail region, placed with CSS grid, where each item is a real link so the browser's history and the URL keep working. |
-| [Split](https://odonckers.github.io/domestic-ui/patterns/split.html) | M3b | Coming in M3b | **Our choice:** No standard exists for a fixed split; two regions placed with CSS grid. A divider users can drag would follow the APG Window Splitter pattern. |
-
-Guides:
-
-- [From a simple site to an ERP app](https://odonckers.github.io/domestic-ui/guides/simple-site-to-erp-app.html): Five steps from a plain content page to a dense business application, and which parts of each step are available today.
+| Pattern | Milestone | Status |
+| --- | --- | --- |
+| [Alerts](https://odonckers.github.io/domestic-ui/patterns/alerts.html) | M3 | Available |
+| [Breadcrumb](https://odonckers.github.io/domestic-ui/patterns/breadcrumb.html) | M3 | Available |
+| [Card](https://odonckers.github.io/domestic-ui/patterns/card.html) | M3 | Available |
+| [Dialog and drawer](https://odonckers.github.io/domestic-ui/patterns/dialog.html) | M3 | Available |
+| [Disclosure](https://odonckers.github.io/domestic-ui/patterns/disclosure.html) | M3 | Available |
+| [Menu button](https://odonckers.github.io/domestic-ui/patterns/menu-button.html) | M3 | Available |
+| [Pagination](https://odonckers.github.io/domestic-ui/patterns/pagination.html) | M3 | Available |
+| [Popover](https://odonckers.github.io/domestic-ui/patterns/popover.html) | M3 | Available |
+| [Search](https://odonckers.github.io/domestic-ui/patterns/search.html) | M3 | Available |
+| [Site navigation](https://odonckers.github.io/domestic-ui/patterns/nav.html) | M3 | Available |
+| [Tabs](https://odonckers.github.io/domestic-ui/patterns/tabs.html) | M3 | Available |
+| [Toolbar](https://odonckers.github.io/domestic-ui/patterns/toolbar.html) | M3 | Available |
+| [Typeahead](https://odonckers.github.io/domestic-ui/patterns/typeahead.html) | M3 | Coming in M3 |
+| [App shell](https://odonckers.github.io/domestic-ui/patterns/app-shell.html) | M3b | Coming in M3b |
+| [Compact density](https://odonckers.github.io/domestic-ui/patterns/density.html) | M3b | Coming in M3b |
+| [Dashboard](https://odonckers.github.io/domestic-ui/patterns/dashboard.html) | M3b | Coming in M3b |
+| [Data table](https://odonckers.github.io/domestic-ui/patterns/data-table.html) | M3b | Coming in M3b |
+| [Filter bar](https://odonckers.github.io/domestic-ui/patterns/filter-bar.html) | M3b | Coming in M3b |
+| [Large forms](https://odonckers.github.io/domestic-ui/patterns/large-forms.html) | M3b | Coming in M3b |
+| [List-detail](https://odonckers.github.io/domestic-ui/patterns/list-detail.html) | M3b | Coming in M3b |
+| [Split](https://odonckers.github.io/domestic-ui/patterns/split.html) | M3b | Coming in M3b |
 
 ## Demos
 
@@ -228,14 +99,6 @@ Guides:
 - **React** ([`demos/react/`](https://github.com/odonckers/domestic-ui/tree/main/demos/react)): The dashboard and account settings views in React 19 with Vite, as a two-page [multi-page app](https://vite.dev/guide/build#multi-page-app) (`index.html` and `settings.html`).
 - **Plain HTML** ([`demos/vanilla/`](https://github.com/odonckers/domestic-ui/tree/main/demos/vanilla)): The dashboard and account settings views as two static HTML files, with no build step.
 
-## Contributing
+## Contributing and license
 
-Read [CONTRIBUTING.md](https://odonckers.github.io/domestic-ui/contributing.html), the [Code of Conduct](https://github.com/odonckers/domestic-ui/blob/main/CODE_OF_CONDUCT.md) and the [security policy](https://github.com/odonckers/domestic-ui/blob/main/SECURITY.md). `npm test` runs every check.
-
-## Changelog
-
-See [CHANGELOG.md](https://odonckers.github.io/domestic-ui/changelog.html).
-
-## License
-
-[MIT](https://github.com/odonckers/domestic-ui/blob/main/LICENSE)
+[Contributing](https://odonckers.github.io/domestic-ui/contributing.html), [Code of Conduct](https://github.com/odonckers/domestic-ui/blob/main/CODE_OF_CONDUCT.md), [Security](https://github.com/odonckers/domestic-ui/blob/main/SECURITY.md), [Changelog](https://odonckers.github.io/domestic-ui/changelog.html). `npm test` runs every check. [MIT](https://github.com/odonckers/domestic-ui/blob/main/LICENSE).
