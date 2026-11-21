@@ -248,6 +248,15 @@ table[data-table] > tbody > tr:has(> :first-child > label > input[type="checkbox
   border-end-start-radius: 0;
 }
 
+/*
+ * Our choice (PRINCIPLES.md, Edges and alignment): the header's checkbox cell
+ * takes the body rows' bar width as padding, so the "select all" checkbox
+ * centers on the same column as the row checkboxes.
+ */
+table[data-table]:has(> tbody > tr > :first-child > label > input[type="checkbox"]) > thead > tr > :first-child {
+  padding-inline-start: calc(var(--dui-space-cell) + var(--dui-border-width-emphasis));
+}
+
 table[data-table] > tbody > tr:has(> :first-child > label > input[type="checkbox"]:checked) > * {
   background-color: var(--dui-color-accent-surface);
 }

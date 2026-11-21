@@ -224,6 +224,9 @@ Semantic token names and file paths under `css/` are public API; primitive token
   each covers; `tests/tokens.spec.js` checks each token's contrast.
 - `<pre data-scroll="inline" tabindex="0" aria-label="...">` opts a code block in to scrolling along the inline
   axis with whole lines (`css/layout/scroll.css`, `examples/base.html`).
+- Alignment passes: the MIT-licensed [gridlines](https://github.com/pritamux/gridlines) skill vendored unmodified in
+  `.claude/skills/gridlines/` with `DOMESTIC-UI.md` (how it applies here), `npm run gridlines` (a manual tool, not a
+  CI gate) and a new "Edges and alignment" section in `PRINCIPLES.md` naming each container's lines in tokens.
 
 ### Changed
 
@@ -276,6 +279,10 @@ Semantic token names and file paths under `css/` are public API; primitive token
 
 ### Fixed
 
+- Alignment pass (`PRINCIPLES.md`, Edges and alignment): in a vertical nav, a link beside a group starts its icon
+  and label on the group's line (`--dui-space-m` further in), instead of 16px before it; a menu panel takes its
+  `--dui-space-gap-tight` padding, which popover.css used to override, so item labels sit on the popover text line;
+  a data table's "select all" checkbox centers on the row checkboxes' column (2px further in).
 - Colored leading edges are straight: alerts, the current nav link, the selected list-detail item and
   data table row, invalid fields and `<blockquote>` set `border-start-start-radius` and
   `border-end-start-radius` to `0` (trailing corners stay rounded; RTL follows), so the edge no longer

@@ -31,6 +31,15 @@ The default theme should look complete and consistent out of the box. Consumers 
 
 `npm test` must pass. That run includes html-validate, axe, and stylelint.
 
+## Alignment passes
+
+To check or fix how items line up (sidebars, nav, toolbars, menus, tabs, dialogs, tables, page headers), use the
+vendored [gridlines](https://github.com/pritamux/gridlines) skill: read
+[`.claude/skills/gridlines/DOMESTIC-UI.md`](.claude/skills/gridlines/DOMESTIC-UI.md) first, then
+[`.claude/skills/gridlines/SKILL.md`](.claude/skills/gridlines/SKILL.md). Its rules are our choice, not a standard;
+the target lines are in [`PRINCIPLES.md` § 13](PRINCIPLES.md#13-edges-and-alignment). Measure with
+`npm run gridlines -- examples/app-shell.html` (a manual tool, not part of `npm test`).
+
 ## Changelog
 
 Every user-facing change needs an entry in `CHANGELOG.md`.

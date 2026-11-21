@@ -74,6 +74,7 @@ options, the pick is labeled **Our choice:** with one line saying why.
 10. [Web components](https://odonckers.github.io/domestic-ui/principles/web-components.md)
 11. [Explainers](https://odonckers.github.io/domestic-ui/principles/explainers.md)
 12. [Tooling](https://odonckers.github.io/domestic-ui/principles/tooling.md)
+13. [Edges and alignment](https://odonckers.github.io/domestic-ui/principles/edges-and-alignment.md)
 
 ## Native element first
 
@@ -1068,6 +1069,48 @@ Rule relaxations, each with its reason:
   that set only custom properties are already allowed by its
   [`no-inline-style`](https://html-validate.org/rules/no-inline-style.html) default
   (`allowVariables: true`), which is how the layout primitives are configured.
+
+## Edges and alignment
+
+Page: https://odonckers.github.io/domestic-ui/principles/edges-and-alignment.html
+
+**Our choice:** every container has a few named vertical lines, written in tokens, and every item sits on one of them
+or has a written reason, because edges picked by eye drift by a few pixels per panel and nobody can say which was meant.
+No web standard covers this. The method is prior art, not a spec: Karri Saarinen's redraw of the Linear sidebar
+([How we redesigned the Linear UI](https://linear.app/now/how-we-redesigned-the-linear-ui)) and the
+[Apple Human Interface Guidelines: Layout](https://developer.apple.com/design/human-interface-guidelines/layout),
+as packaged by the [gridlines](https://github.com/pritamux/gridlines) skill. Standards win any conflict:
+[2.5.8 Target Size (Minimum)](https://www.w3.org/WAI/WCAG22/Understanding/target-size-minimum.html), focus outlines
+and forced-colors borders are never reduced to close a gap; the gap is left and written down.
+
+- **Box line and text line.** Boxed rows and controls (nav links, menu items, list rows, tabs, table rows, buttons)
+  put their box on the container's content edge and their label one control padding in. **Our choice:** the box never
+  hangs outside its container (the skill's "pull the strip in" for tabs), because a hit area or focus ring past the
+  edge is clipped by scroll containers and goes off screen in a container with no padding.
+- **Icons on one column, labels on one line.** In a list, every row's icon starts on the same column and every
+  label on the same line, whatever sits before them (an indicator bar, a disclosure marker).
+- **Bars centre on one line.** Items in a toolbar, app bar, dialog header or page header title row are centred on one
+  horizontal line (`align-items: center`); the first item starts on the box line, the last ends on the trailing line.
+- Lines use `--dui-space-*` and the other semantic tokens with logical properties (`padding-inline-start`), never px.
+  A line that needs a value off the scale means the container's padding is wrong.
+
+The lines, measured from each container's inline-start edge (the trailing line mirrors the leading one unless noted):
+
+| Container | Box line | Text line | Other lines |
+| --- | --- | --- | --- |
+| App shell frame: `<header>`, sidebars, `<footer>` | `--dui-space-m` | box line + the control's `--dui-space-button-inline` (app bar), or the nav's lines below | Trailing: `--dui-space-m`. Each frame region measures from its own edge |
+| App shell `<main>` | `--dui-space-l` beside a sidebar, `--dui-space-m` stacked | same as box line | |
+| Nav list (`data-nav="vertical"`) | the list's edge; a group's links `--dui-space-m` in | `--dui-border-width-indicator` + `--dui-space-control-inline`, plus `--dui-space-m` for links beside a group (the disclosure marker's width) and inside one | Icon column: starts on the text line, `--dui-size-icon` wide, then `--dui-space-gap` to the label |
+| Toolbar (`role="toolbar"`) | `--dui-border-width` + `--dui-space-gap-tight` | box line + `--dui-space-button-inline` | One centre line |
+| Menus and popovers | menu items: `--dui-border-width` + `--dui-space-gap-tight` | `--dui-border-width` + `--dui-space-m` (a menu: `--dui-space-gap-tight` + `--dui-space-control-inline`, equal at comfortable density) | A horizontal nav's dropdown adds its `--dui-border-width-indicator` |
+| Tabs | the tab list's edge | box line + `--dui-space-button-inline` | Panel text on the tab list's edge |
+| Dialogs and drawers | `--dui-border-width` + `--dui-space-l` | same as box line | Header title and close button share a centre line; footer actions end on the trailing line |
+| List-detail | list rows on the list's edge | rows: `--dui-border-width-emphasis` + `--dui-space-control-inline`; detail: `--dui-focus-width` + `--dui-focus-offset` side by side (room for focus rings), its edge when stacked | |
+| Data table | rows on the table's edge; the caption on it too | `--dui-space-cell` | Checkbox column: one centre line; body rows' `--dui-border-width-emphasis` bar is matched by the header cell's padding. Number columns end on `--dui-space-cell` |
+| Page header (`data-page-header`) | the region's edge | same as box line | Actions end on the trailing line (the edge); title and actions share a centre line |
+
+These were read from the CSS in an alignment pass on 21 November 2026 (Owen Donckers, with Claude), taking the line
+most rows already used. [`CONTRIBUTING.md`](https://odonckers.github.io/domestic-ui/contributing.md#alignment-passes) explains how to run a pass.
 
 ## Primitive tokens
 

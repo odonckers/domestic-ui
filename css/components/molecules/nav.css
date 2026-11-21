@@ -250,6 +250,20 @@
   box-shadow: var(--dui-elevation-popover);
 }
 
+/*
+ * Our choice (PRINCIPLES.md, Edges and alignment): in a vertical list that
+ * holds groups, a link beside a group starts its icon and label on the
+ * group's line. A summary's label sits after the native disclosure marker,
+ * which takes about --dui-space-m plus the link's indicator width, the same
+ * inset the group's own links get from their list's padding above. It is
+ * exact in Chromium and WebKit at the 18px body text of a wide viewport; the
+ * marker scales with the fluid text, so it is up to 2px narrower on a phone,
+ * and Firefox draws it 2 to 3px narrower.
+ */
+[data-nav]:not([data-nav~="horizontal"]) :is(ul, ol):has(> li > details) > li > a {
+  padding-inline-start: calc(var(--dui-space-control-inline) + var(--dui-space-m));
+}
+
 @media (forced-colors: active) {
   [data-nav] a[aria-current="page"],
   [data-nav~="horizontal"] > :is(ul, ol) > li > a[aria-current]:not([aria-current="false"], [aria-current=""]) {

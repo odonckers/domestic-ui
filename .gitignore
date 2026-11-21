@@ -4,3 +4,6 @@ playwright-report/
 blob-report/
 playwright/.cache/
 _site/
+
+# Gridlines alignment captures (npm run gridlines)
+.gridlines/

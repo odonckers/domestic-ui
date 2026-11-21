@@ -23,6 +23,7 @@ Link `css/domestic.css` (copy `css/` from https://github.com/odonckers/domestic-
 - [Web components](https://odonckers.github.io/domestic-ui/principles/web-components.md): HTML still has no element for tabs, menus, roving focus in a toolbar, hover tooltips or a toast stack.
 - [Explainers](https://odonckers.github.io/domestic-ui/principles/explainers.md): A pattern with no native element and no APG pattern is written up like a platform proposal in explainers/: problem, use cases, goals and non-goals, markup and API, keyboard, accessibility mappings, alternatives, prior art and open questions, with normative text in RFC 2119 keywords.
 - [Tooling](https://odonckers.github.io/domestic-ui/principles/tooling.md): npm test runs, in order, and fails if any step fails.
+- [Edges and alignment](https://odonckers.github.io/domestic-ui/principles/edges-and-alignment.md): Our choice: every container has a few named vertical lines, written in tokens, and every item sits on one of them or has a written reason, because edges picked by eye drift by a few pixels per panel and nobody can say which was meant.
 
 ## Tokens
 

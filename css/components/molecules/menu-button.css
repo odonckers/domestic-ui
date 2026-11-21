@@ -71,7 +71,14 @@
  *   https://html.spec.whatwg.org/multipage/popover.html
  */
 
-:is([role="menu"], dui-menu > [popover]) {
+/*
+ * The second selector outranks popover.css's [popover][data-popover] padding,
+ * which otherwise wins on specificity and set the items' labels 12px past the
+ * popover text line (PRINCIPLES.md, Edges and alignment): a menu panel is
+ * --dui-space-gap-tight in, so its labels land where a popover's text does.
+ */
+:is([role="menu"], dui-menu > [popover]),
+[popover][data-popover]:is([role="menu"], dui-menu > *) {
   min-inline-size: var(--dui-size-menu-min);
   padding: var(--dui-space-gap-tight);
 }
