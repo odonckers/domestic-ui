@@ -119,8 +119,9 @@ main :is(p, li, dt, dd, h1, h2, h3, h4) :is(a, code) {
 
 /*
  * Header diagrams (site/assets/diagrams/, site/README.md "Diagrams"): the
- * width of the content column, scaled down with it. currentColor in the
- * files is the muted text colour; everything else is a token.
+ * width of the content column up to 28rem (448×252 at 16px), at its start
+ * edge, scaled down with it. currentColor in the files is the muted text
+ * colour; everything else is a token.
  */
 .docs-diagram {
   margin-inline: 0;
@@ -130,8 +131,55 @@ main :is(p, li, dt, dd, h1, h2, h3, h4) :is(a, code) {
 .docs-diagram svg {
   display: block;
   inline-size: 100%;
-  max-inline-size: var(--dui-measure);
+  max-inline-size: 28rem;
   block-size: auto;
+}
+
+/*
+ * Forced colors: system colours by the files' presentation attributes
+ * (CSS beats them; no file changes). Lines, outlines and text bars are
+ * CanvasText at full opacity; frame, panel and tint fills Canvas; the
+ * element's stroke and solid fill Highlight, with HighlightText bars on a
+ * solid fill and Highlight bars on its tint. The backdrop stays a veil.
+ */
+@media (forced-colors: active) {
+  .docs-diagram svg {
+    forced-color-adjust: none;
+  }
+
+  .docs-diagram svg * {
+    fill-opacity: 1;
+    stroke-opacity: 1;
+  }
+
+  .docs-diagram svg :is([stroke="currentColor"], [stroke="var(--dui-color-border)"]) {
+    stroke: CanvasText;
+  }
+
+  .docs-diagram svg [fill="currentColor"] {
+    fill: CanvasText;
+  }
+
+  .docs-diagram svg :is([fill="var(--dui-color-surface)"], [fill="var(--dui-color-accent-surface)"]) {
+    fill: Canvas;
+  }
+
+  .docs-diagram svg :is([fill="var(--dui-color-backdrop)"], [fill="var(--dui-color-backdrop)"] *) {
+    fill: Canvas;
+    fill-opacity: 0.7;
+  }
+
+  .docs-diagram svg [stroke^="var(--dui-color-accent"] {
+    stroke: Highlight;
+  }
+
+  .docs-diagram svg [fill="var(--dui-color-accent)"] {
+    fill: Highlight;
+  }
+
+  .docs-diagram svg [fill="var(--dui-color-accent)"] > [fill="var(--dui-color-surface)"] {
+    fill: HighlightText;
+  }
 }
 
 /*

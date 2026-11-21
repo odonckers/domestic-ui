@@ -681,6 +681,49 @@ test.describe("docs pages in the browser", () => {
     }
   });
 
+  test("in forced colors a diagram draws its element in Highlight and the rest in CanvasText on Canvas", async ({ page }) => {
+    await page.emulateMedia({ forcedColors: "active" });
+    await page.goto("_site/components/atoms/button.html");
+    const colors = await page.locator("figure.docs-diagram > svg").evaluate((svg) => {
+      // Each system colour as the browser resolves it, from a probe element.
+      const system = (/** @type {string} */ name) => {
+        const probe = document.body.appendChild(document.createElement("span"));
+        probe.style.color = name;
+        const value = getComputedStyle(probe).color;
+        probe.remove();
+        return value;
+      };
+      const style = (/** @type {string} */ selector) => {
+        const el = svg.querySelector(selector);
+        if (!el) throw new Error(`No ${selector} in the diagram`);
+        const s = getComputedStyle(el);
+        return { fill: s.fill, stroke: s.stroke, fillOpacity: s.fillOpacity };
+      };
+      return {
+        system: { Canvas: system("Canvas"), CanvasText: system("CanvasText"), Highlight: system("Highlight"), HighlightText: system("HighlightText") },
+        frame: style('rect[fill="var(--dui-color-surface)"][stroke="var(--dui-color-border)"]'),
+        line: style('g[stroke="currentColor"] > *'),
+        textBar: style('g[fill="currentColor"] > rect'),
+        accent: style('g[stroke="var(--dui-color-accent)"] > rect'),
+        solid: style('rect[fill="var(--dui-color-accent)"]'),
+        tint: style('g[fill="var(--dui-color-accent-surface)"] > rect:not([fill])'),
+        onSolid: style('g[fill="var(--dui-color-accent)"] > rect[fill="var(--dui-color-surface)"]'),
+      };
+    });
+    const { system } = colors;
+    // HighlightText may equal Canvas (it does in Chromium's emulation); the other pairs must differ.
+    expect(new Set([system.Canvas, system.CanvasText, system.Highlight]).size, "Canvas, CanvasText and Highlight differ").toBe(3);
+    expect(system.HighlightText, "HighlightText differs from Highlight").not.toBe(system.Highlight);
+    expect(colors.frame).toMatchObject({ fill: system.Canvas, stroke: system.CanvasText });
+    expect(colors.line.stroke, "region lines").toBe(system.CanvasText);
+    expect(colors.textBar, "text bars stay visible: CanvasText, fully opaque").toMatchObject({ fill: system.CanvasText, fillOpacity: "1" });
+    expect(colors.accent.stroke, "the element's outline").toBe(system.Highlight);
+    expect(colors.accent.stroke, "the element differs from the muted shapes").not.toBe(colors.line.stroke);
+    expect(colors.solid.fill, "the element's solid fill").toBe(system.Highlight);
+    expect(colors.tint.fill, "the element's tint").toBe(system.Canvas);
+    expect(colors.onSolid.fill, "text bars on the solid fill").toBe(system.HighlightText);
+  });
+
   test("redirect pages have no axe violations, refresh at once and land on their page", async ({ page }) => {
     // Each target page loads its live frames eagerly, so budget time per redirect, not per test.
     test.setTimeout(30_000 + redirectPages.length * 5_000);

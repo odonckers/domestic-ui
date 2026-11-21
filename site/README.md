@@ -199,7 +199,8 @@ has no page, or a file breaks these rules:
 
 - One root `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 180" role="img"
   aria-labelledby="diagram-<slug>-title" aria-describedby="diagram-<slug>-desc">`, no `width` or
-  `height`: site.css sizes it to the content column. The
+  `height`: site.css sizes it: the width of the content column up to 28rem (448×252 CSS pixels),
+  at the column's start edge. The
   accessible name is the title alone and the accessible description is the desc
   ([SVG-AAM](https://www.w3.org/TR/svg-aam-1.0/#mapping_additional_nd)); the build fails when
   `aria-labelledby` is anything but the title id or `aria-describedby` is not the desc id.
@@ -225,6 +226,22 @@ One look for every diagram (`site.css` sets `color: var(--dui-color-text-muted)`
 
 Each file groups its shapes in that order, one `<g>` per part with the shared attributes and a short
 comment, 2-space indent, plain `rect`, `path` and `circle`.
+
+In forced colours (`@media (forced-colors: active)` in `site.css`) the diagram keeps its shapes and
+swaps the colours for system colours, chosen by the presentation attributes above (CSS beats them, so
+the files do not change), all at full opacity:
+
+| Attribute | Forced colour |
+| --- | --- |
+| `stroke="currentColor"`, `stroke="var(--dui-color-border)"` (frame, regions, other controls) | `CanvasText` |
+| `fill="currentColor"` (text bars) | `CanvasText` |
+| `fill="var(--dui-color-surface)"`, `fill="var(--dui-color-accent-surface)"` (frame, panels, the element's tint) | `Canvas` |
+| `fill="var(--dui-color-backdrop)"` | `Canvas` at `fill-opacity` .7, a veil over the page |
+| `stroke="var(--dui-color-accent…)"` (the element's outline) | `Highlight` |
+| `fill="var(--dui-color-accent)"` (its solid fill and its text bars) | `Highlight` |
+| `fill="var(--dui-color-surface)"` directly inside a `fill="var(--dui-color-accent)"` group (text bars on the solid fill) | `HighlightText` |
+
+So a new diagram needs no extra markup, as long as it uses only these colour values.
 
 ## Demo views
 
