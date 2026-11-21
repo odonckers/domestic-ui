@@ -162,15 +162,6 @@ main pre {
 }
 
 /*
- * Horizontal scroll region for wide tables. Delete this rule once
- * css/ styles [data-scroll="inline"] (see site/README.md).
- */
-[data-scroll="inline"] {
-  max-inline-size: 100%;
-  overflow-x: auto;
-}
-
-/*
  * Live examples: one frame per snippet, of its render page (live/, with the
  * real CSS). This height holds without JavaScript; site.js fits
  * each frame to its content. Frames that open dialogs, popovers or toasts

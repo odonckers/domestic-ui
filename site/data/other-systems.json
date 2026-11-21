@@ -1,5 +1,5 @@
 {
-  "$comment": "Links to how other design systems handle the same thing. For comparison only; not normative. Links only: never copy text or visuals from these systems. Keys are site page paths without .html. Each system is {url, title} or null (rendered as 'No equivalent'). Checked by tests/docs-other-systems.spec.js. A system's optional soft404Title marks a page that answers 200 but is really missing (Geist returns 200 with that generic <title> for unknown slugs); the checker GETs those pages and treats that title as a 404.",
+  "$comment": "Links to how other design systems handle the same thing. For comparison only; not normative. Links only: never copy text or visuals from these systems. Keys are site page paths without .html. Each system is {url, title}, a non-empty list of those (for pages that cover several controls), or null (rendered as 'No equivalent'). Checked by tests/docs-other-systems.spec.js. A system's optional soft404Title marks a page that answers 200 but is really missing (Geist returns 200 with that generic <title> for unknown slugs); the checker GETs those pages and treats that title as a 404.",
   "systems": {
     "apple": {
       "name": "Apple Human Interface Guidelines",
@@ -55,18 +55,76 @@
       }
     },
     "components/atoms/controls": {
-      "apple": {
-        "url": "https://developer.apple.com/design/human-interface-guidelines/text-fields",
-        "title": "Text fields"
-      },
-      "material": {
-        "url": "https://m3.material.io/components/text-fields/overview",
-        "title": "Text fields"
-      },
-      "geist": {
-        "url": "https://vercel.com/geist/input",
-        "title": "Input"
-      }
+      "apple": [
+        {
+          "url": "https://developer.apple.com/design/human-interface-guidelines/text-fields",
+          "title": "Text fields"
+        },
+        {
+          "url": "https://developer.apple.com/design/human-interface-guidelines/toggles",
+          "title": "Toggles"
+        },
+        {
+          "url": "https://developer.apple.com/design/human-interface-guidelines/pop-up-buttons",
+          "title": "Pop-up buttons"
+        },
+        {
+          "url": "https://developer.apple.com/design/human-interface-guidelines/sliders",
+          "title": "Sliders"
+        }
+      ],
+      "material": [
+        {
+          "url": "https://m3.material.io/components/text-fields/overview",
+          "title": "Text fields"
+        },
+        {
+          "url": "https://m3.material.io/components/checkbox/overview",
+          "title": "Checkbox"
+        },
+        {
+          "url": "https://m3.material.io/components/radio-button/overview",
+          "title": "Radio button"
+        },
+        {
+          "url": "https://m3.material.io/components/switch/overview",
+          "title": "Switch"
+        },
+        {
+          "url": "https://m3.material.io/components/menus/overview",
+          "title": "Menus"
+        },
+        {
+          "url": "https://m3.material.io/components/sliders/overview",
+          "title": "Sliders"
+        }
+      ],
+      "geist": [
+        {
+          "url": "https://vercel.com/geist/input",
+          "title": "Input"
+        },
+        {
+          "url": "https://vercel.com/geist/checkbox",
+          "title": "Checkbox"
+        },
+        {
+          "url": "https://vercel.com/geist/radio",
+          "title": "Radio"
+        },
+        {
+          "url": "https://vercel.com/geist/switch",
+          "title": "Switch"
+        },
+        {
+          "url": "https://vercel.com/geist/select",
+          "title": "Select"
+        },
+        {
+          "url": "https://vercel.com/geist/slider",
+          "title": "Slider"
+        }
+      ]
     },
     "components/atoms/switch": {
       "apple": {
@@ -218,7 +276,10 @@
         "url": "https://developer.apple.com/design/human-interface-guidelines/feedback",
         "title": "Feedback"
       },
-      "material": null,
+      "material": {
+        "url": "https://m3.material.io/components/snackbar/overview",
+        "title": "Snackbar"
+      },
       "geist": {
         "url": "https://vercel.com/geist/note",
         "title": "Note"

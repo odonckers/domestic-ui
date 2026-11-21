@@ -22,8 +22,16 @@ export const OTHER_SYSTEMS_NOTE = "For comparison only; these are not the standa
 /**
  * @typedef {{ url: string, title: string }} Link
  * @typedef {{ name: string, home?: string, soft404Title?: string }} System
- * @typedef {{ systems: Record<string, System>, pages: Record<string, Record<string, Link | null>> }} OtherSystems
+ * @typedef {Link | Link[] | null} Entry  one link, a non-empty list of links, or null ("No equivalent")
+ * @typedef {{ systems: Record<string, System>, pages: Record<string, Record<string, Entry>> }} OtherSystems
  */
+
+/**
+ * The links of one system's entry, in order; [] for null.
+ * @param {Entry | undefined} entry
+ * @returns {Link[]}
+ */
+export const linksOf = (entry) => (entry == null ? [] : Array.isArray(entry) ? entry : [entry]);
 
 /**
  * The data file, or null when the repository has none (test fixtures).
@@ -81,11 +89,15 @@ export function validateOtherSystems(data, pagePaths) {
         problems.push(`${at}: missing "${system}" (use null for no equivalent)`);
         continue;
       }
-      const link = entry[system];
-      if (link === null) continue;
-      const keys = link && typeof link === "object" ? Object.keys(link).sort().join(",") : "";
-      if (keys !== "title,url" || !isHttps(link?.url) || typeof link?.title !== "string" || !link.title.trim()) {
-        problems.push(`${at}.${system}: must be null or { "url": "https://…", "title": "…" }`);
+      const value = entry[system];
+      if (value === null) continue;
+      const links = Array.isArray(value) ? value : [value];
+      const isLink = (/** @type {any} */ link) => {
+        const keys = link && typeof link === "object" && !Array.isArray(link) ? Object.keys(link).sort().join(",") : "";
+        return keys === "title,url" && isHttps(link.url) && typeof link.title === "string" && !!link.title.trim();
+      };
+      if (!links.length || !links.every(isLink)) {
+        problems.push(`${at}.${system}: must be null, { "url": "https://…", "title": "…" }, or a non-empty list of those`);
       }
     }
   }
@@ -109,13 +121,13 @@ const mdText = (text) => text.replace(/([\\`*_[\]<])/g, "\\$1");
 /**
  * The section's Markdown: heading, the comparison-only line, one item per system.
  * @param {OtherSystems} data
- * @param {Record<string, Link | null>} entry
+ * @param {Record<string, Entry>} entry
  */
 export function otherSystemsMd(data, entry) {
-  const items = SYSTEM_KEYS.map((key) => {
+  const items = SYSTEM_KEYS.flatMap((key) => {
     const name = data.systems[key].name;
-    const link = entry[key];
-    return link ? `- [${mdText(`${name}: ${link.title}`)}](${link.url})` : `- ${mdText(name)}: No equivalent`;
+    const links = linksOf(entry[key]);
+    return links.length ? links.map((link) => `- [${mdText(`${name}: ${link.title}`)}](${link.url})`) : [`- ${mdText(name)}: No equivalent`];
   });
   return `## ${OTHER_SYSTEMS_HEADING}\n\n${OTHER_SYSTEMS_NOTE}\n\n${items.join("\n")}`;
 }

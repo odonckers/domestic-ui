@@ -1803,8 +1803,21 @@ No API; native elements
 For comparison only; these are not the standard this system follows.
 
 - [Apple Human Interface Guidelines: Text fields](https://developer.apple.com/design/human-interface-guidelines/text-fields)
+- [Apple Human Interface Guidelines: Toggles](https://developer.apple.com/design/human-interface-guidelines/toggles)
+- [Apple Human Interface Guidelines: Pop-up buttons](https://developer.apple.com/design/human-interface-guidelines/pop-up-buttons)
+- [Apple Human Interface Guidelines: Sliders](https://developer.apple.com/design/human-interface-guidelines/sliders)
 - [Material Design 3: Text fields](https://m3.material.io/components/text-fields/overview)
+- [Material Design 3: Checkbox](https://m3.material.io/components/checkbox/overview)
+- [Material Design 3: Radio button](https://m3.material.io/components/radio-button/overview)
+- [Material Design 3: Switch](https://m3.material.io/components/switch/overview)
+- [Material Design 3: Menus](https://m3.material.io/components/menus/overview)
+- [Material Design 3: Sliders](https://m3.material.io/components/sliders/overview)
 - [Vercel Geist: Input](https://vercel.com/geist/input)
+- [Vercel Geist: Checkbox](https://vercel.com/geist/checkbox)
+- [Vercel Geist: Radio](https://vercel.com/geist/radio)
+- [Vercel Geist: Switch](https://vercel.com/geist/switch)
+- [Vercel Geist: Select](https://vercel.com/geist/select)
+- [Vercel Geist: Slider](https://vercel.com/geist/slider)
 
 ## Switch
 
@@ -2175,7 +2188,7 @@ role="status" | role="alert"                      native ARIA live regions
 For comparison only; these are not the standard this system follows.
 
 - [Apple Human Interface Guidelines: Feedback](https://developer.apple.com/design/human-interface-guidelines/feedback)
-- Material Design 3: No equivalent
+- [Material Design 3: Snackbar](https://m3.material.io/components/snackbar/overview)
 - [Vercel Geist: Note](https://vercel.com/geist/note)
 
 ## Breadcrumb
