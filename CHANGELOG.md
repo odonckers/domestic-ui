@@ -264,6 +264,8 @@ Semantic token names and file paths under `css/` are public API; primitive token
   so a code block reflows at 320px with no extra focus stop. Only a `<pre data-scroll="inline">` needs
   `tabindex="0"` and an accessible name; `tests/mobile.spec.js` checks those instead of `tabindex` on every
   `<pre>`.
+- Example snippets are working code only: explanatory comments inside `dui:snippet` blocks were removed
+  (one, in `examples/elevation.html`'s "Level swatch CSS").
 
 ### Deprecated
 
