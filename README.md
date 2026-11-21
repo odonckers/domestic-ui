@@ -107,10 +107,10 @@ Each follows a native element or WAI-ARIA APG pattern where one exists ([Pattern
 ## Demos
 
 - **Accessibility checker** ([`demos/a11y/`](https://github.com/odonckers/domestic-ui/tree/main/demos/a11y)): Checks the built demo apps the same way the repository checks `examples/`: Playwright with [axe](https://github.com/dequelabs/axe-core) (tags `wcag2a`, `wcag2aa`, `wcag21a`, `wcag21aa`, `wcag22aa`), in light and dark, with every `<details>` opened and checked again.
-- **Angular** ([`demos/angular/`](https://github.com/odonckers/domestic-ui/tree/main/demos/angular)): The dashboard and account settings views in Angular 22: standalone components, two routes (`''` and `'settings'`) with Angular Router, a `title` per route, and `routerLinkActive` with `ariaCurrentWhenActive="page"` for the current link.
-- **Astro** ([`demos/astro/`](https://github.com/odonckers/domestic-ui/tree/main/demos/astro)): The dashboard and account settings views as two static Astro pages (`src/pages/index.astro` and `src/pages/settings.astro`) sharing `src/layouts/Base.astro`.
-- **React** ([`demos/react/`](https://github.com/odonckers/domestic-ui/tree/main/demos/react)): The dashboard and account settings views in React 19 with Vite, as a two-page [multi-page app](https://vite.dev/guide/build#multi-page-app) (`index.html` and `settings.html`).
-- **Plain HTML** ([`demos/vanilla/`](https://github.com/odonckers/domestic-ui/tree/main/demos/vanilla)): The dashboard and account settings views as two static HTML files, with no build step.
+- **Angular** ([`demos/angular/`](https://github.com/odonckers/domestic-ui/tree/main/demos/angular)): The dashboard, account settings and orders views in Angular 22: standalone components, three routes (`''`, `'settings'` and `'orders'`) with Angular Router, a `title` per route, and `routerLinkActive` with `ariaCurrentWhenActive="page"` for the current link.
+- **Astro** ([`demos/astro/`](https://github.com/odonckers/domestic-ui/tree/main/demos/astro)): The dashboard, account settings and orders views as three static Astro pages (`src/pages/index.astro`, `src/pages/settings.astro` and `src/pages/orders.astro`) sharing `src/layouts/Base.astro`.
+- **React** ([`demos/react/`](https://github.com/odonckers/domestic-ui/tree/main/demos/react)): The dashboard, account settings and orders views in React 19 with Vite, as a three-page [multi-page app](https://vite.dev/guide/build#multi-page-app) (`index.html`, `settings.html` and `orders.html`).
+- **Plain HTML** ([`demos/vanilla/`](https://github.com/odonckers/domestic-ui/tree/main/demos/vanilla)): The dashboard, account settings and orders views as three static HTML files, with no build step.
 
 ## Contributing and license
 
