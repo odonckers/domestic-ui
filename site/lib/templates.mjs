@@ -79,9 +79,9 @@ ${/role="region"/.test(body) ? `${REGIONS_NOTE}\n` : ""}${renderBreadcrumb(page,
 <h1>${escapeHtml(page.heading)}</h1>
 ${body}
         </article>
-${renderPrevNext(page, tree, link)}
       </main>${toc}
       <footer>
+${renderPrevNext(page, tree, link)}
         <p><small>domestic-ui is <a href="${BLOB_URL}LICENSE">MIT licensed</a>. <a href="${REPO_URL}">Source on GitHub</a>. <a href="${escapeHtml(page.source.href)}">${escapeHtml(page.source.label)}</a>. <a href="${link("llms.txt")}">llms.txt</a></small></p>
       </footer>
     </dui-app-shell>

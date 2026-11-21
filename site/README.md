@@ -78,7 +78,7 @@ added to fill one. A new page type follows it too:
    source files on GitHub, and the demo views that use the page (see [Demo views](#demo-views)).
 7. **How other systems do it**, last (see below).
 
-The breadcrumb sits above the H1, previous and next links after the page, and the page's H2s are
+The breadcrumb sits above the H1, previous and next links in the footer, and the page's H2s are
 listed in "On this page" beside it on wide screens (see [Sidebar](#sidebar)). Prose, tables, code
 and live frames share one content width (`--dui-measure`); token pages (`wide: true`) take all of
 `main` and have no "On this page".
@@ -143,7 +143,7 @@ closed except the current one.
 
 - **Breadcrumb** (`data-breadcrumb`) above the `h1` on every page but the home page: the top section
   (text), the entry's index page and the page itself with `aria-current="page"`.
-- **Previous and next** (`data-pagination`, "Previous: Badge") at the end of `main`, in sidebar order.
+- **Previous and next** (`data-pagination`, "Previous: Badge") in the footer, before its small print, in sidebar order.
 - **On this page:** the `<aside>` lists the page's `h2`s when it has two or more. It is the shell's
   auxiliary sidebar from `64rem`; narrower it is left out (the same links are just below).
 
@@ -693,7 +693,7 @@ themselves, then run `node site/build.mjs`. Two checks catch a forgotten rebuild
 Every page has a skip link (the first focusable element), landmarks in source order (app shell), one
 `aria-current="page"` in the Docs nav, one `h1`, tables labelled by their heading with `th scope`,
 and iframes with a `title`. Long words and URLs in prose and cells break only where they would
-overflow (`overflow-wrap: break-word`); inline code in prose may break anywhere only below `30em`.
+overflow (`overflow-wrap: break-word`); inline code wraps as css/base/typography.css sets it.
 Tables and multi-line code blocks scroll inside named `data-scroll="inline"` regions. Header
 diagrams are `role="img"` named by their `<title>` and described by their `<desc>` (see [Diagrams](#diagrams)).
 

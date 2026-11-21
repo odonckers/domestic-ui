@@ -71,23 +71,34 @@
   }
 }
 
-/* Previous and next, after the page: at the two ends of the row. */
-.docs-content + [data-pagination] {
+/* Previous and next, in the footer before its small print: at the two ends of the row. */
+.docs-shell > footer > [data-pagination] {
   max-inline-size: var(--dui-measure);
-  margin-block-start: var(--dui-space-2xl);
+  margin-block-end: var(--dui-space-l);
 }
 
-.docs-content + [data-pagination] > ul {
+.docs-shell > footer > [data-pagination] > ul {
   justify-content: space-between;
+}
+
+/*
+ * Beside a sidebar (app-shell.css's 48rem breakpoint) main pads by
+ * --dui-space-l and the footer by --dui-space-m: line the links up with
+ * the page's start edge.
+ */
+@container dui-app-shell (inline-size >= 48rem) {
+  .docs-shell > footer > [data-pagination] {
+    margin-inline-start: calc(var(--dui-space-l) - var(--dui-space-m));
+  }
 }
 
 /*
  * Reflow at 320 CSS pixels (WCAG 1.4.10). Long words and URLs in prose,
  * cells and headings break only where they would overflow (break-word
  * keeps the min-content width, so table columns keep their words whole).
- * The base layer lets links in running text and all inline code break
- * anywhere (css/base/typography.css); in the docs they keep whole words
- * in prose and headings, except inline code on narrow screens. In tables
+ * The base layer lets links in running text break anywhere and handles
+ * inline code (css/base/typography.css); in the docs links keep whole
+ * words in prose and headings. In tables
  * (all inside data-scroll="inline" regions) the base layer already keeps
  * whole tokens. Code blocks follow the base layer: they wrap, or scroll
  * as pre[data-scroll~="inline"] with tabindex="0" and a name.
@@ -96,7 +107,7 @@ main :is(p, li, dt, dd, td, th, caption, h1, h2, h3, h4) {
   overflow-wrap: break-word;
 }
 
-main :is(p, li, dt, dd, h1, h2, h3, h4) :is(a, code) {
+main :is(p, li, dt, dd, h1, h2, h3, h4) a {
   overflow-wrap: break-word;
 }
 
@@ -108,12 +119,6 @@ main :is(p, li, dt, dd, h1, h2, h3, h4) :is(a, code) {
 @media (min-width: 30em) {
   main th[scope="row"] code {
     white-space: nowrap;
-  }
-}
-
-@media (max-width: 30em) {
-  main :is(p, li, dt, dd) code {
-    overflow-wrap: anywhere;
   }
 }
 
