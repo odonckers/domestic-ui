@@ -11,11 +11,11 @@ import { AppNav } from '../shell/app-nav';
   templateUrl: './dashboard.html',
 })
 export class DashboardPage {
-  protected readonly summary: { title: string; count: number; note?: string }[] = [
-    { title: 'Due today', count: 2 },
-    { title: 'Overdue', count: 1 },
-    { title: 'Done this week', count: 12, note: 'Since Monday' },
-    { title: 'Household members', count: 4 },
+  protected readonly summary: { id: string; title: string; count: number; note?: string }[] = [
+    { id: 'due-today', title: 'Due today', count: 2 },
+    { id: 'overdue', title: 'Overdue', count: 1 },
+    { id: 'done-this-week', title: 'Done this week', count: 12, note: 'Since Monday' },
+    { id: 'members', title: 'Household members', count: 4 },
   ];
 
   protected readonly chores = [

@@ -16,7 +16,7 @@
         "angular": "demos/angular/src/app/dashboard",
         "astro": "demos/astro/src/pages/index.astro"
       },
-      "pages": ["patterns/app-shell", "patterns/nav", "patterns/menu-button", "patterns/popover", "patterns/disclosure"]
+      "pages": ["patterns/app-shell", "patterns/nav", "patterns/menu-button", "patterns/popover", "patterns/disclosure", "patterns/dashboard", "patterns/data-table"]
     },
     {
       "id": "settings",
@@ -28,7 +28,7 @@
         "angular": "demos/angular/src/app/settings",
         "astro": "demos/astro/src/pages/settings.astro"
       },
-      "pages": ["patterns/app-shell", "patterns/nav", "patterns/menu-button", "patterns/popover"]
+      "pages": ["patterns/app-shell", "patterns/nav", "patterns/menu-button", "patterns/popover", "patterns/large-forms"]
     },
     {
       "id": "orders",

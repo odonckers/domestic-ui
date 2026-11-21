@@ -166,11 +166,13 @@ for (const name of selectedApps()) {
 
       test("applies the domestic-ui stylesheet", async ({ page }) => {
         await page.goto(path, { waitUntil: "networkidle" });
-        const applied = await page.evaluate(() => ({
+        // Settings has no .cluster: its buttons sit in the form's action bar, also a flex row from the layout layer.
+        const flexRow = view === "settings" ? "form > [data-action-bar]" : ".cluster";
+        const applied = await page.evaluate((flexRow) => ({
           spaceM: getComputedStyle(document.documentElement).getPropertyValue("--dui-space-m").trim(),
-          clusterDisplay: getComputedStyle(/** @type {Element} */ (document.querySelector(".cluster"))).display,
+          clusterDisplay: getComputedStyle(/** @type {Element} */ (document.querySelector(flexRow))).display,
           skipLinkPosition: getComputedStyle(/** @type {Element} */ (document.querySelector('a[href="#main"]'))).position,
-        }));
+        }), flexRow);
         expect(applied.spaceM).not.toEqual("");
         expect(applied.clusterDisplay).toEqual("flex");
         // .visually-hidden (utilities layer) hides the skip link until it is focused.
@@ -193,6 +195,11 @@ for (const name of selectedApps()) {
           }));
           expect(colors.badge).not.toEqual("rgba(0, 0, 0, 0)");
           expect(colors.badge).not.toEqual(colors.page);
+          // Four summary tiles and the chores tile across the whole row, laid out by the dashboard grid.
+          await expect(page.locator("main div[data-dashboard] > section[aria-labelledby]")).toHaveCount(5);
+          await expect(page.locator('main div[data-dashboard] > section[data-dashboard="full"] [data-scroll="inline"] > table[data-table]')).toHaveCount(1);
+          const display = await page.locator("main div[data-dashboard]").evaluate((el) => getComputedStyle(el).display);
+          expect(display).toEqual("grid");
         }
 
         if (view === "settings") {
@@ -205,6 +212,9 @@ for (const name of selectedApps()) {
           });
           expect(appearance).toEqual("none");
           await expect(page.getByRole("switch")).toHaveCount(3);
+          // Five headed sections and the form's action bar.
+          await expect(page.locator("form[data-form-sections] > section[aria-labelledby] > header > h2")).toHaveCount(5);
+          await expect(page.locator("form[data-form-sections] > footer[data-action-bar]:last-child")).toHaveCount(1);
         }
 
         if (view === "orders") {
