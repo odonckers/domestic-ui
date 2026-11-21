@@ -247,49 +247,55 @@ pre code {
  * ::highlight() may only set color, background, text-decoration and
  * text-shadow, so a token is told apart by color alone; the code still reads
  * as plain text without it (WCAG 1.4.1).
+ *
+ * The rules apply inside <code> only, where the ranges are. WebKit can
+ * paint a highlight's style on text no range covers, such as the heading
+ * of a modal <dialog> in the top layer (seen in Playwright's WebKit), so
+ * an unscoped rule turned a drawer title the string color. :where() keeps
+ * the specificity of the unscoped rule.
  */
-::highlight(dui-code-keyword) {
+:where(code, code *)::highlight(dui-code-keyword) {
   color: var(--dui-color-code-keyword);
 }
 
-::highlight(dui-code-string) {
+:where(code, code *)::highlight(dui-code-string) {
   color: var(--dui-color-code-string);
 }
 
-::highlight(dui-code-comment) {
+:where(code, code *)::highlight(dui-code-comment) {
   color: var(--dui-color-code-comment);
 }
 
-::highlight(dui-code-tag) {
+:where(code, code *)::highlight(dui-code-tag) {
   color: var(--dui-color-code-tag);
 }
 
-::highlight(dui-code-attribute) {
+:where(code, code *)::highlight(dui-code-attribute) {
   color: var(--dui-color-code-attribute);
 }
 
-::highlight(dui-code-property) {
+:where(code, code *)::highlight(dui-code-property) {
   color: var(--dui-color-code-property);
 }
 
-::highlight(dui-code-number) {
+:where(code, code *)::highlight(dui-code-number) {
   color: var(--dui-color-code-number);
 }
 
-::highlight(dui-code-punctuation) {
+:where(code, code *)::highlight(dui-code-punctuation) {
   color: var(--dui-color-code-punctuation);
 }
 
 /* Forced colors: every highlight falls back to the system text color. */
 @media (forced-colors: active) {
-  ::highlight(dui-code-keyword),
-  ::highlight(dui-code-string),
-  ::highlight(dui-code-comment),
-  ::highlight(dui-code-tag),
-  ::highlight(dui-code-attribute),
-  ::highlight(dui-code-property),
-  ::highlight(dui-code-number),
-  ::highlight(dui-code-punctuation) {
+  :where(code, code *)::highlight(dui-code-keyword),
+  :where(code, code *)::highlight(dui-code-string),
+  :where(code, code *)::highlight(dui-code-comment),
+  :where(code, code *)::highlight(dui-code-tag),
+  :where(code, code *)::highlight(dui-code-attribute),
+  :where(code, code *)::highlight(dui-code-property),
+  :where(code, code *)::highlight(dui-code-number),
+  :where(code, code *)::highlight(dui-code-punctuation) {
     color: canvastext;
   }
 }

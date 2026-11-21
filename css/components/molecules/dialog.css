@@ -86,15 +86,25 @@
   overscroll-behavior: contain;
 }
 
+/*
+ * Our choice: the title and the close button are centered on the cross
+ * axis, so a one-line title and the button share a middle line.
+ * https://developer.mozilla.org/en-US/docs/Web/CSS/align-items
+ * The header's children drop the flow margin the base layer gives siblings
+ * (css/base/document.css), which would push the button below the title.
+ */
 [data-dialog] > header {
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   justify-content: space-between;
   gap: var(--dui-space-m);
 }
 
-[data-dialog] > header > :is(h1, h2, h3, h4, h5, h6) {
+[data-dialog] > header > * {
   margin-block: 0;
+}
+
+[data-dialog] > header > :is(h1, h2, h3, h4, h5, h6) {
   font-size: var(--dui-step-2);
 }
 
@@ -207,10 +217,17 @@
   }
 }
 
-/* The drawer body scrolls; the header stays at the top, on the drawer's own surface. */
+/*
+ * The drawer body scrolls; the header stays at the top, on the drawer's own
+ * surface. Chromium, Firefox and WebKit stick it inside the drawer's
+ * padding, so inset 0 left a strip of scrolled content above it; the
+ * negative inset (the padding of a dialog, css/base/interactive.css) puts
+ * it at the drawer's top edge.
+ * https://drafts.csswg.org/css-position-3/#stickypos-insets
+ */
 [data-dialog~="drawer"] > header {
   position: sticky;
-  inset-block-start: 0;
+  inset-block-start: calc(var(--dui-space-l) * -1);
   margin: calc(var(--dui-space-l) * -1) calc(var(--dui-space-l) * -1) 0;
   padding: var(--dui-space-l) var(--dui-space-l) var(--dui-space-s);
   background-color: var(--dui-elevation-dialog-surface);

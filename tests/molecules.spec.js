@@ -139,6 +139,70 @@ test.describe("dialog and drawer", () => {
     });
   }
 
+  test("drawer header: title and Close share a middle line; the header stays at the top edge when the drawer scrolls", async ({ page }) => {
+    await page.getByRole("button", { name: "Menu", exact: true }).click();
+    const drawer = page.getByRole("dialog", { name: "Menu" });
+    await settle(page);
+    const centers = await drawer.evaluate((el) => {
+      const mid = (/** @type {Element} */ e) => {
+        const r = e.getBoundingClientRect();
+        return r.top + r.height / 2;
+      };
+      return { title: mid(/** @type {Element} */ (el.querySelector("header > h2"))), close: mid(/** @type {Element} */ (el.querySelector("header > button"))) };
+    });
+    expect(Math.abs(centers.title - centers.close)).toBeLessThan(1);
+    // Scrolled: no strip of content shows above the sticky header (it sits at the drawer's top edge).
+    const tops = await drawer.evaluate((el) => {
+      const filler = document.createElement("div");
+      filler.style.blockSize = "300vh";
+      el.append(filler);
+      el.scrollTop = 200;
+      return { drawer: el.getBoundingClientRect().top, header: /** @type {Element} */ (el.querySelector("header")).getBoundingClientRect().top, scrolled: el.scrollTop };
+    });
+    expect(tops.scrolled).toBeGreaterThan(0);
+    expect(Math.abs(tops.header - tops.drawer)).toBeLessThan(1);
+  });
+
+  // The ::highlight(dui-code-*) rules are scoped to <code>: WebKit painted an unscoped one on the
+  // title of a modal dialog that no range covered.
+  test("code highlights never paint a modal drawer's title", async ({ page, browserName }) => {
+    test.skip(!(await page.evaluate(() => "highlights" in CSS)), `CSS Custom Highlight API is not supported in this ${browserName} build`);
+    const target = await page.evaluate(() => {
+      const code = /** @type {HTMLElement} */ (document.querySelector("main code"));
+      const range = new Range();
+      range.selectNodeContents(code);
+      CSS.highlights.set("dui-code-string", new Highlight(range));
+      const probe = document.createElement("span");
+      probe.style.color = "var(--dui-color-code-string)";
+      document.body.append(probe);
+      const rgb = getComputedStyle(probe).color.match(/\d+/g)?.slice(0, 3).map(Number) ?? [];
+      probe.remove();
+      return rgb;
+    });
+    await page.getByRole("button", { name: "Menu", exact: true }).click();
+    const title = page.getByRole("dialog", { name: "Menu" }).locator("header > h2");
+    await settle(page);
+    const png = (await title.screenshot()).toString("base64");
+    const near = await page.evaluate(
+      async ([data, rgb]) => {
+        const img = new Image();
+        img.src = `data:image/png;base64,${data}`;
+        await img.decode();
+        const canvas = document.createElement("canvas");
+        canvas.width = img.width;
+        canvas.height = img.height;
+        const ctx = /** @type {CanvasRenderingContext2D} */ (canvas.getContext("2d"));
+        ctx.drawImage(img, 0, 0);
+        const px = ctx.getImageData(0, 0, img.width, img.height).data;
+        let count = 0;
+        for (let i = 0; i < px.length; i += 4) if (Math.abs(px[i] - rgb[0]) + Math.abs(px[i + 1] - rgb[1]) + Math.abs(px[i + 2] - rgb[2]) < 60) count++;
+        return count;
+      },
+      /** @type {[string, number[]]} */ ([png, target]),
+    );
+    expect(near, "title pixels in the string highlight color").toBe(0);
+  });
+
   test("drawer edges follow the writing direction (right-to-left)", async ({ page }) => {
     await page.evaluate(() => document.documentElement.setAttribute("dir", "rtl"));
     await page.getByRole("button", { name: "Filters" }).click();
