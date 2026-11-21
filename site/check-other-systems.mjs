@@ -112,8 +112,10 @@ export async function checkOtherSystems({ file = DEFAULT_FILE, timeoutMs = 10000
   };
   for (const [key, system] of Object.entries(data.systems ?? {})) if (system?.home) add(system.home, null, `systems.${key}.home`);
   for (const [page, entry] of Object.entries(data.pages ?? {})) {
-    for (const [key, link] of Object.entries(entry ?? {})) {
-      if (link?.url) add(link.url, data.systems?.[key]?.soft404Title ?? null, `${page} (${key})`);
+    for (const [key, value] of Object.entries(entry ?? {})) {
+      for (const link of value == null ? [] : Array.isArray(value) ? value : [value]) {
+        if (link?.url) add(link.url, data.systems?.[key]?.soft404Title ?? null, `${page} (${key})`);
+      }
     }
   }
 

@@ -318,6 +318,11 @@ Format:
       "apple": { "url": "https://…", "title": "Tab views" },
       "material": { "url": "https://…", "title": "Tabs" },
       "geist": null
+    },
+    "components/atoms/controls": {
+      "apple": [{ "url": "https://…", "title": "Text fields" }, { "url": "https://…", "title": "Toggles" }],
+      "material": null,
+      "geist": null
     }
   }
 }
@@ -326,8 +331,11 @@ Format:
 - `systems`: exactly `apple`, `material` and `geist` (listed in that order on each page), each with a
   display `name`, an optional `home` page and an optional `soft404Title`.
 - `pages`: keyed by site page path without `.html` (`components/base`, `components/atoms/button`,
-  `patterns/tabs`). Each value has all three systems, each `null` or `{ "url", "title" }` with an
-  `https` URL and the page's title as that system writes it.
+  `patterns/tabs`). Each value has all three systems, each `null`, one `{ "url", "title" }` with an
+  `https` URL and the page's title as that system writes it, or a non-empty list of those when one of
+  our pages covers several of theirs (form controls: text fields, checkboxes, radios, switches,
+  selects, sliders). Each link in a list is its own list item on the page and in llms-full.txt, in
+  the order written; the link check checks every one.
 - `soft404Title`: some sites answer 200 for pages that do not exist (Geist does, with a generic
   `<title>`). The link check fetches that system's page URLs with GET and fails any whose `<title>` is
   exactly this.
@@ -399,9 +407,8 @@ headers and the token name in `<code>` in a `<th scope="row">`, wrapped in:
 <div data-scroll="inline" tabindex="0" role="region" aria-label="Spacing (primitive tokens) (scrolls horizontally)">
 ```
 
-`data-scroll="inline"` is the core CSS API for horizontal scroll regions. `css/` does not style it
-yet, so `site.css` has `[data-scroll="inline"] { overflow-x: auto; }`; **delete that rule from
-`site.css` once core ships it.** Tables are never `display: block`. Hyphenated words in values never
+`data-scroll="inline"` is the core CSS API for horizontal scroll regions, styled by
+[`css/layout/scroll.css`](../css/layout/scroll.css); `site.css` adds no rule of its own. Tables are never `display: block`. Hyphenated words in values never
 break, so a narrow table scrolls in its region instead of breaking names apart. The wrapper is a
 `div` with `role="region"` by design, so the build adds an html-validate directive that silences
 `prefer-native-element` for it.

@@ -7,7 +7,7 @@ import { tmpdir } from "node:os";
 import { dirname, join, posix } from "node:path";
 import { GENERATED, NAV, ROOT, build, extractSnippets, generate } from "../site/build.mjs";
 import { parseTokenFile, resolveTokens, resolveValue } from "../site/lib/tokens.mjs";
-import { validateOtherSystems } from "../site/lib/other-systems.mjs";
+import { linksOf, validateOtherSystems } from "../site/lib/other-systems.mjs";
 import { escapeHtml, unescapeHtml } from "../site/lib/util.mjs";
 import { SITE_DIR, WCAG_TAGS, builtPages, summarize } from "./docs-helpers.js";
 import { blockExternalRequests, schemes } from "./helpers.js";
@@ -138,9 +138,9 @@ test.describe("how other systems do it", () => {
       "",
       NOTE,
       "",
-      ...order.map((s) => {
-        const link = data.pages[key][s];
-        return link ? `- [${data.systems[s].name}: ${link.title}](${link.url})` : `- ${data.systems[s].name}: No equivalent`;
+      ...order.flatMap((s) => {
+        const links = linksOf(data.pages[key][s]);
+        return links.length ? links.map((link) => `- [${data.systems[s].name}: ${link.title}](${link.url})`) : [`- ${data.systems[s].name}: No equivalent`];
       }),
     ].join("\n");
 
@@ -164,10 +164,10 @@ test.describe("how other systems do it", () => {
       expect(section, key).toContain(`How other systems do it</h2>\n<p>${NOTE}</p>\n<ul>\n`);
       const items = [...section.matchAll(/<li>([\s\S]*?)<\/li>/g)].map((m) => m[1]);
       expect(items, key).toEqual(
-        order.map((s) => {
-          const link = data.pages[key][s];
+        order.flatMap((s) => {
+          const links = linksOf(data.pages[key][s]);
           const name = escapeHtml(data.systems[s].name);
-          return link ? `<a href="${escapeHtml(link.url)}">${name}: ${escapeHtml(link.title)}</a>` : `${name}: No equivalent`;
+          return links.length ? links.map((link) => `<a href="${escapeHtml(link.url)}">${name}: ${escapeHtml(link.title)}</a>`) : [`${name}: No equivalent`];
         }),
       );
       expect(section, `${key}: plain links`).not.toContain("target=");
@@ -202,9 +202,11 @@ test.describe("how other systems do it", () => {
     expect(bad({ "patterns/nope": tabs })).toEqual(['pages["patterns/nope"]: no built page patterns/nope.html']);
     expect(bad({ "patterns/tabs": { ...tabs, carbon: null } })).toEqual(['pages["patterns/tabs"].carbon: unknown system; expected one of apple, material, geist']);
     expect(bad({ "patterns/tabs": { apple: null, material: null } })).toEqual(['pages["patterns/tabs"]: missing "geist" (use null for no equivalent)']);
-    for (const value of [{ url: "http://example.com/", title: "T" }, { url: "https://example.com/" }, { url: "https://example.com/", title: "T", note: "x" }, "https://example.com/", false]) {
-      expect(bad({ "patterns/tabs": { ...tabs, geist: value } }), JSON.stringify(value)).toEqual(['pages["patterns/tabs"].geist: must be null or { "url": "https://…", "title": "…" }']);
+    for (const value of [{ url: "http://example.com/", title: "T" }, { url: "https://example.com/" }, { url: "https://example.com/", title: "T", note: "x" }, "https://example.com/", false, [], [{ url: "https://example.com/", title: "T" }, null]]) {
+      expect(bad({ "patterns/tabs": { ...tabs, geist: value } }), JSON.stringify(value)).toEqual(['pages["patterns/tabs"].geist: must be null, { "url": "https://…", "title": "…" }, or a non-empty list of those']);
     }
+    // A list of links is valid.
+    expect(bad({ "patterns/tabs": { ...tabs, geist: [{ url: "https://example.com/a", title: "A" }, { url: "https://example.com/b", title: "B" }] } })).toEqual([]);
     expect(bad({}, { ...data.systems, carbon: { name: "Carbon" } })).toEqual(["systems.carbon: unknown system; expected one of apple, material, geist"]);
 
     // End to end, with the fixture approach below: a bad key fails the build with a clear message.

@@ -161,15 +161,6 @@ main pre {
   overflow-wrap: anywhere;
 }
 
-/*
- * Horizontal scroll region for wide tables. Delete this rule once
- * css/ styles [data-scroll="inline"] (see site/README.md).
- */
-[data-scroll="inline"] {
-  max-inline-size: 100%;
-  overflow-x: auto;
-}
-
 /* Live examples: the real example page, framed. */
 .example-frame {
   display: block;
