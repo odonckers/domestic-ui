@@ -120,6 +120,7 @@ export function build({ root = ROOT, outDir, writeRoot = true } = {}) {
   if (existsSync(join(root, "web-components"))) cpSync(join(root, "web-components"), join(out, "web-components"), { recursive: true });
   cpSync(join(ASSETS, "site.css"), join(out, "site.css"));
   cpSync(join(ASSETS, "site.js"), join(out, "site.js"));
+  cpSync(join(ASSETS, "highlight.js"), join(out, "highlight.js"));
   // GitHub Pages: serve files as-is, no Jekyll processing.
   writeFileSync(join(out, ".nojekyll"), "");
 

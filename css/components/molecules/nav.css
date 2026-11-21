@@ -117,11 +117,17 @@
   line-height: var(--dui-line-height-heading);
 }
 
+/*
+ * Our choice: the leading corners are square so the current link's edge stays straight
+ * (see blockquote in css/base/typography.css).
+ */
 [data-nav] a {
   display: flex;
   align-items: center;
   gap: var(--dui-space-gap);
   border-inline-start: var(--dui-border-width-indicator) solid transparent;
+  border-start-start-radius: 0;
+  border-end-start-radius: 0;
   text-decoration-line: none;
 }
 
@@ -200,6 +206,9 @@
 [data-nav~="horizontal"] > :is(ul, ol) > li > a:any-link {
   border-inline-start: 0;
   border-block-end: var(--dui-border-width-indicator) solid transparent;
+
+  /* No leading edge here, so the top start corner is rounded again. */
+  border-start-start-radius: var(--dui-radius-control);
   border-end-start-radius: 0;
   border-end-end-radius: 0;
 }

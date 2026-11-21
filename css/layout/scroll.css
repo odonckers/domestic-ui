@@ -13,9 +13,15 @@
  *                                sticky table header stays in view
  *                                (css/components/organisms/data-table.css)
  *
- * tabindex="0" lets keyboard users scroll it with the arrow keys (WCAG 2.1.1
- * Keyboard, axe rule scrollable-region-focusable:
- * https://dequeuniversity.com/rules/axe/4.10/scrollable-region-focusable).
+ * On <pre>: code wraps by default (css/base/typography.css). Add
+ * data-scroll="inline" to keep each line whole and scroll it instead:
+ *   <pre data-scroll="inline" tabindex="0" aria-label="Install command">
+ *
+ * Every data-scroll element MUST have tabindex="0", which lets keyboard users
+ * scroll it with the arrow keys (WCAG 2.1.1 Keyboard, axe rule
+ * scrollable-region-focusable:
+ * https://dequeuniversity.com/rules/axe/4.10/scrollable-region-focusable),
+ * and an accessible name (aria-label or aria-labelledby).
  * A <section> named with aria-labelledby is a region landmark
  * (https://www.w3.org/TR/html-aam-1.0/#el-section), so screen readers
  * announce what the focus stop is. Our choice: <section> over

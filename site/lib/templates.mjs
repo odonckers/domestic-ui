@@ -55,6 +55,7 @@ export function renderHtml(page, tree) {
     <link rel="alternate" type="text/markdown" href="${link(page.path.replace(/\.html$/, ".md"))}">
     <script type="module" src="${link("web-components/dui-app-shell.js")}"></script>
     <script src="${link("site.js")}" defer></script>
+    <script src="${link("highlight.js")}" defer></script>
   </head>
   <body>
     <a class="skip-link visually-hidden" href="#main">Skip to content</a>

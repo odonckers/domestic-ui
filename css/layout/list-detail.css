@@ -120,7 +120,14 @@
   color: var(--dui-color-text);
   border: 0;
   border-inline-start: var(--dui-border-width-emphasis) solid transparent;
+
+  /*
+   * Our choice: the leading corners are square so the accent edge stays straight
+   * (see blockquote in css/base/typography.css).
+   */
   border-radius: var(--dui-radius-control);
+  border-start-start-radius: 0;
+  border-end-start-radius: 0;
   font-weight: var(--dui-font-weight-body);
   line-height: var(--dui-line-height-heading);
   text-align: start;

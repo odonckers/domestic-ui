@@ -167,6 +167,14 @@ may change. Fluid `--dui-step-*` values are `clamp()` expressions; see `primitiv
 | `--dui-color-mark-text` | Text on mark | light: `color-gray-900` (#12151b)<br>dark: `color-gray-900` (#12151b) |
 | `--dui-color-backdrop` | dialog::backdrop | light: `color-black-a40` (rgb(0 0 0 / 40%))<br>dark: `color-black-a60` (rgb(0 0 0 / 60%)) |
 | `--dui-color-shadow` | Shadow color | light: `color-black-a10` (rgb(0 0 0 / 10%))<br>dark: `color-black-a40` (rgb(0 0 0 / 40%)) |
+| `--dui-color-code-keyword` | JS keywords and CSS at-rules in highlighted code (4.5:1 on surface-sunken) | light: `color-purple-700` (#6b2fb3)<br>dark: `color-purple-300` (#d2a8ff) |
+| `--dui-color-code-string` | Strings and HTML attribute values in highlighted code (4.5:1 on surface-sunken) | light: `color-green-700` (#17773a)<br>dark: `color-green-300` (#5fd38d) |
+| `--dui-color-code-comment` | Comments in highlighted code (4.5:1 on surface-sunken) | light: `color-gray-600` (#545b68)<br>dark: `color-gray-400` (#a3aab6) |
+| `--dui-color-code-tag` | HTML tag names and CSS selectors in highlighted code (4.5:1 on surface-sunken) | light: `color-blue-700` (#2b43b0)<br>dark: `color-blue-300` (#a8b7ff) |
+| `--dui-color-code-attribute` | HTML attribute names in highlighted code (4.5:1 on surface-sunken) | light: `color-amber-700` (#8a5a00)<br>dark: `color-amber-300` (#f2c14e) |
+| `--dui-color-code-property` | CSS and JS properties in highlighted code (4.5:1 on surface-sunken) | light: `color-teal-700` (#0b6e75)<br>dark: `color-teal-300` (#5cc8d1) |
+| `--dui-color-code-number` | Numbers and units in highlighted code (4.5:1 on surface-sunken) | light: `color-red-700` (#b42318)<br>dark: `color-red-300` (#ff8a80) |
+| `--dui-color-code-punctuation` | Brackets, braces and separators in highlighted code (4.5:1 on surface-sunken) | light: `color-gray-700` (#3a404b)<br>dark: `color-gray-300` (#c4c9d2) |
 | `--dui-font-body` | Body font stack | `--dui-font-stack-system-ui` (`system-ui, sans-serif`) |
 | `--dui-font-mono` | Code font stack | `--dui-font-stack-monospace` (`ui-monospace`, …, `monospace`) |
 | `--dui-font-weight-body` | Body weight | `font-weight-400` (400) |

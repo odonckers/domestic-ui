@@ -39,6 +39,19 @@
   --dui-color-backdrop: light-dark(var(--dui-color-black-a40), var(--dui-color-black-a60));
   --dui-color-shadow: light-dark(var(--dui-color-black-a10), var(--dui-color-black-a40));
 
+  /*
+   * Code highlighting (css/base/typography.css, explainers/code-highlighting.md).
+   * Each meets 4.5:1 on --dui-color-surface-sunken, the <pre> background (WCAG 1.4.3).
+   */
+  --dui-color-code-keyword: light-dark(var(--dui-color-purple-700), var(--dui-color-purple-300)); /* JS keywords and CSS at-rules: const, return, @layer */
+  --dui-color-code-string: light-dark(var(--dui-color-green-700), var(--dui-color-green-300)); /* Quoted strings in JS and CSS, and HTML attribute values */
+  --dui-color-code-comment: light-dark(var(--dui-color-gray-600), var(--dui-color-gray-400)); /* Comments in HTML, CSS and JS */
+  --dui-color-code-tag: light-dark(var(--dui-color-blue-700), var(--dui-color-blue-300)); /* HTML tag names and CSS selectors */
+  --dui-color-code-attribute: light-dark(var(--dui-color-amber-700), var(--dui-color-amber-300)); /* HTML attribute names */
+  --dui-color-code-property: light-dark(var(--dui-color-teal-700), var(--dui-color-teal-300)); /* CSS properties and custom properties, JS object properties */
+  --dui-color-code-number: light-dark(var(--dui-color-red-700), var(--dui-color-red-300)); /* Numbers with their units: 0.5rem, 100%, 42 */
+  --dui-color-code-punctuation: light-dark(var(--dui-color-gray-700), var(--dui-color-gray-300)); /* Brackets, braces, angle brackets, colons, semicolons, commas */
+
   /* Type */
   --dui-font-body: var(--dui-font-stack-system-ui);
   --dui-font-mono: var(--dui-font-stack-monospace);

@@ -63,6 +63,14 @@ body {
   margin-block-start: var(--dui-space-xs);
 }
 
+/*
+ * A heading straight after a heading (an h2 then its first h3) keeps a
+ * full step apart, so the two do not read as one double title.
+ */
+:where(body, main, article, section, aside, details, dialog, form) > :where(h1, h2, h3, h4, h5, h6) + :where(h1, h2, h3, h4, h5, h6) {
+  margin-block-start: var(--dui-space-m);
+}
+
 /* Comfortable measure for prose. */
 :where(p, li, dt, dd, blockquote, figcaption, h1, h2, h3, h4, h5, h6) {
   max-inline-size: var(--dui-measure);
