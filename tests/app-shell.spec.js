@@ -93,7 +93,8 @@ test.describe("landmarks", () => {
 
   test("grid areas: header above, navigation at the inline start of main, aux at the inline end", async ({ page }) => {
     await page.goto(ERP);
-    const areas = await page.locator("dui-app-shell > *:not(dialog)").evaluateAll((els) => els.map((el) => [el.localName, getComputedStyle(el).gridArea]));
+    // The sidebars take their columns down to the end of the shell (past the footer row).
+    const areas = await page.locator("dui-app-shell > *:not(dialog)").evaluateAll((els) => els.map((el) => [el.localName, getComputedStyle(el).gridColumnStart]));
     expect(areas).toContainEqual(["header", "header"]);
     expect(areas).toContainEqual(["nav", "start"]);
     expect(areas).toContainEqual(["main", "main"]);
@@ -104,6 +105,27 @@ test.describe("landmarks", () => {
     expect(Math.abs(aside.y - main.y)).toBeLessThan(2);
     expect(main.x).toBeGreaterThanOrEqual(nav.x + nav.width - 1);
     expect(aside.x).toBeGreaterThanOrEqual(main.x + main.width - 1);
+  });
+
+  // A sticky grid item is held by the grid container, not its grid area, in every engine:
+  // the footer sits beside the sidebars, so at the page end they never cover it.
+  // https://drafts.csswg.org/css-position-3/#stickypos-insets
+  test("scrolled to the end at 1280x720, no sidebar covers the footer and its links take clicks", async ({ page }) => {
+    await page.setViewportSize({ width: 1280, height: 720 });
+    await page.goto(ERP);
+    await page.evaluate(() => window.scrollTo(0, document.documentElement.scrollHeight));
+    await expect.poll(() => page.evaluate(() => Math.ceil(window.scrollY + innerHeight) >= document.documentElement.scrollHeight)).toBe(true);
+    const footer = await box(page.locator("dui-app-shell > footer"));
+    for (const selector of ["#app-nav", "#app-aux"]) {
+      const sidebar = await box(page.locator(selector));
+      const overlapX = Math.min(sidebar.x + sidebar.width, footer.x + footer.width) - Math.max(sidebar.x, footer.x);
+      const overlapY = Math.min(sidebar.y + sidebar.height, footer.y + footer.height) - Math.max(sidebar.y, footer.y);
+      expect(overlapX > 0.5 && overlapY > 0.5, `${selector} overlaps the footer`).toBe(false);
+    }
+    const link = page.locator("dui-app-shell > footer a").first();
+    const href = await link.getAttribute("href");
+    await link.click(); // fails if another element intercepts the pointer
+    await expect(page).toHaveURL(new RegExp(`${href}$`));
   });
 
   test("the skip link goes to main", async ({ page }) => {

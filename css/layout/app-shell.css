@@ -41,9 +41,10 @@
  * button that does nothing. A collapsed sidebar has the hidden attribute,
  * so it is gone for assistive technology and the Tab order as well.
  * Sidebars that sit beside main stick to the top of the scroll area and
- * scroll on their own, at most --dui-size-pane tall; they are not focus
- * traps and hold focusable links, so the keyboard reaches everything in
- * them (WCAG 2.1.1). Nothing scrolls sideways at 320px (WCAG 1.4.10): the
+ * scroll on their own, at most --dui-size-pane tall; their columns run
+ * to the end of the shell and the footer sits between them, so they never
+ * cover it. They are not focus traps and hold focusable links, so the
+ * keyboard reaches everything in them (WCAG 2.1.1). Nothing scrolls sideways at 320px (WCAG 1.4.10): the
  * app bar wraps, the search taking its own row.
  *
  * Motion: collapsing and expanding a sidebar beside main animates the
@@ -238,12 +239,26 @@
   color: var(--dui-color-text-muted);
 }
 
-/* Sidebars beside main stick to the top of the scroll area and scroll on their own. */
+/*
+ * Sidebars beside main stick to the top of the scroll area and scroll on
+ * their own. In Chromium, Firefox and WebKit a sticky grid item stays
+ * inside the grid container, not its own grid area, so a sidebar as tall
+ * as the viewport would slide past the end of its rows and cover a
+ * full-width footer at the end of the page (and take its clicks).
+ * https://drafts.csswg.org/css-position-3/#stickypos-insets
+ * Our choice: while a sidebar sits beside main, its column runs to the
+ * end of the shell and the footer takes only the columns beside it, so the
+ * sticky sidebar ends where the shell ends and never overlaps the footer,
+ * with no extra element and no script. The parts are placed with
+ * grid-row and grid-column because a container query applies to the
+ * shell's children, not to the shell, so its areas cannot change here.
+ */
 @container dui-app-shell (inline-size >= 48rem) {
   [data-app-shell] > :is(nav, aside):has(~ main) {
     position: sticky;
     inset-block-start: 0;
-    grid-area: start;
+    grid-row: start-start / -1;
+    grid-column: start;
     max-block-size: var(--dui-size-pane);
     overflow: hidden auto;
     overscroll-behavior: contain;
@@ -270,6 +285,10 @@
     grid-row: 4;
     grid-column: main-start / -1;
   }
+
+  [data-app-shell] > footer {
+    grid-column: main-start / -1;
+  }
 }
 
 @container dui-app-shell (inline-size >= 64rem) {
@@ -280,7 +299,8 @@
   [data-app-shell] > main ~ aside {
     position: sticky;
     inset-block-start: 0;
-    grid-area: end;
+    grid-row: end-start / -1;
+    grid-column: end;
     max-block-size: var(--dui-size-pane);
     overflow: hidden auto;
     overscroll-behavior: contain;
@@ -291,6 +311,10 @@
 
   [data-app-shell] > main ~ aside > * {
     min-inline-size: calc(var(--dui-size-sidebar-aux) - var(--dui-space-m) * 2 - var(--dui-border-width));
+  }
+
+  [data-app-shell] > footer {
+    grid-column: main;
   }
 }
 
