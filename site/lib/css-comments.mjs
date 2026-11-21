@@ -207,7 +207,7 @@ const HOST_NAMES = /** @type {Record<string, string>} */ ({
 /**
  * A readable label for a bare URL: its host label and the page it names,
  * from the fragment or else the last path segment ("MDN `color-scheme`",
- * "WCAG Use of color", "Every Layout stack").
+ * "MDN `combobox` role", "WCAG Use of color", "Every Layout stack").
  * @param {string} url
  */
 export function specName(url) {
@@ -216,7 +216,12 @@ export function specName(url) {
   const name = host === "Other" ? (HOST_NAMES[hostname.replace(/^www\./, "")] ?? hostname.replace(/^www\./, "")) : host;
   const segment = decodeURIComponent(hash.slice(1) || pathname.split("/").filter(Boolean).at(-1) || "").replace(/\.html?$/, "");
   if (!segment) return name;
-  if (host === "MDN") return `${name} \`${segment}\``;
+  if (host === "MDN") {
+    // MDN slugs: "combobox_role" → MDN `combobox` role, "CSS_anchor_positioning" → MDN CSS anchor positioning.
+    const role = segment.match(/^([a-z]+)_role$/);
+    if (role) return `${name} \`${role[1]}\` role`;
+    return segment.includes("_") ? `${name} ${segment.replace(/_+/g, " ")}` : `${name} \`${segment}\``;
+  }
   const words = segment.replace(/[-_]+/g, " ");
   return `${name} ${host === "WCAG" ? words.charAt(0).toUpperCase() + words.slice(1) : words}`;
 }

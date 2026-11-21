@@ -45,11 +45,29 @@ export const NAV = [
   { title: "Atoms", path: "atoms/index.html", sections: ["atoms"], top: "Components" },
   { title: "Molecules", path: "molecules/index.html", sections: ["molecules"], top: "Components" },
   { title: "Organisms", path: "organisms/index.html", sections: ["organisms"], top: "Components" },
-  { title: "Patterns and guides", path: "patterns/index.html", sections: ["patterns", "guides"], top: "Patterns & guides" },
+  { title: "Patterns", path: "patterns/index.html", sections: ["patterns"], top: "Patterns & guides" },
+  { title: "Guides", path: "guides/index.html", sections: ["guides"], top: "Patterns & guides" },
   { title: "Demos", path: "demos.html", sections: ["demos"], top: "Demos" },
   { title: "Contributing", path: "contributing.html", sections: ["contributing"], top: "Get started" },
   { title: "Changelog", path: "changelog.html", sections: ["changelog"], top: "Get started" },
 ];
+
+/**
+ * Sidebar link text, where a page's title is not the element's name: named
+ * after the element or attribute, singular. Titles (h1, <title>) keep the
+ * group README's or registry's wording.
+ */
+export const NAV_LABELS = /** @type {Record<string, string>} */ ({
+  "components/atoms/text.html": "Text",
+  "components/atoms/link.html": "Link",
+  "components/atoms/button.html": "Button",
+  "components/atoms/controls.html": "Controls",
+  "patterns/alerts.html": "Alert",
+  "patterns/density.html": "Density",
+});
+
+/** A page's sidebar link text. @param {Page} page */
+export const navLabel = (page) => NAV_LABELS[page.path] ?? page.navLabel ?? page.title;
 
 /** The entry a page belongs to. @param {Page} page */
 export const navEntryOf = (page) => NAV.find((e) => e.sections.includes(page.section));
@@ -62,7 +80,7 @@ export const navEntryOf = (page) => NAV.find((e) => e.sections.includes(page.sec
 export function navTree(pages) {
   return NAV.map((entry) => ({
     ...entry,
-    children: pages.filter((p) => entry.sections.includes(p.section) && p.path !== entry.path).map((p) => ({ path: p.path, label: p.navLabel ?? p.title, note: p.navNote ?? "" })),
+    children: pages.filter((p) => entry.sections.includes(p.section) && p.path !== entry.path).map((p) => ({ path: p.path, label: navLabel(p), note: p.navNote ?? "" })),
   }));
 }
 
@@ -139,7 +157,7 @@ export function renderBreadcrumb(page, link) {
   if (!entry || page.path === "index.html") return "";
   const items = [`<li><span>${escapeHtml(entry.top)}</span></li>`];
   if (entry.path !== page.path) items.push(`<li><a href="${escapeHtml(link(entry.path))}">${escapeHtml(entry.title)}</a></li>`);
-  items.push(`<li><a href="${escapeHtml(link(page.path))}" aria-current="page">${escapeHtml(page.navLabel ?? page.title)}</a></li>`);
+  items.push(`<li><a href="${escapeHtml(link(page.path))}" aria-current="page">${escapeHtml(navLabel(page))}</a></li>`);
   return `<nav aria-label="Breadcrumb" data-breadcrumb>
 <ol>
 ${items.join("\n")}

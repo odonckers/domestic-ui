@@ -21,7 +21,7 @@ const read = (/** @type {string} */ path) => readFileSync(path, "utf8");
 const htmlValidate = new HtmlValidate(JSON.parse(read(join(ROOT, ".htmlvalidate.json"))));
 
 /** The markup inside every <pre data-snippet><code>, unescaped. @param {string} html */
-const snippetBlocks = (html) => [...html.matchAll(/<pre data-snippet="[^"]*"><code>([\s\S]*?)<\/code><\/pre>/g)].map((m) => unescapeHtml(m[1]));
+const snippetBlocks = (html) => [...html.matchAll(/<pre data-snippet="[^"]*"[^>]*><code>([\s\S]*?)<\/code><\/pre>/g)].map((m) => unescapeHtml(m[1]));
 
 /** Fenced ```html blocks of a Markdown file, closed by a fence of the same length. @param {string} md */
 const htmlFences = (md) => [...md.matchAll(/^(`{3,})html\n([\s\S]*?)\n\1$/gm)].map((m) => m[2]);
@@ -138,7 +138,7 @@ test.describe("docs build", () => {
     const frames = new Map();
     for (const p of site.pages) {
       const html = read(join(SITE_DIR, p.path));
-      for (const m of html.matchAll(/<iframe\b[^>]*\bsrc="([^"]+)"[^>]*><\/iframe>\n<pre data-snippet="[^"]*"><code>([\s\S]*?)<\/code><\/pre>/g)) {
+      for (const m of html.matchAll(/<iframe\b[^>]*\bsrc="([^"]+)"[^>]*><\/iframe>\n<pre data-snippet="[^"]*"[^>]*><code>([\s\S]*?)<\/code><\/pre>/g)) {
         const target = posix.join(posix.dirname(p.path), unescapeHtml(m[1]));
         frames.set(target, [...(frames.get(target) ?? []), { page: p.path, code: unescapeHtml(m[2]) }]);
       }
@@ -361,12 +361,15 @@ test.describe("atoms from the group README", () => {
       expect(snippetBlocks(html), title).toEqual(extractSnippets(source, exampleFile).map((s) => s.code));
       for (const s of page.snippets) {
         const name = s.name.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-        expect(html).toMatch(new RegExp(`<h3 id="[^"]*">${name}</h3>\\n<iframe class="example-frame" data-live[^>]* src="../../${s.live}" title="Live example: ${name}" loading="lazy"></iframe>\\n<pre data-snippet=`));
+        expect(html).toMatch(new RegExp(`<h3 id="[^"]*">${name}</h3>\\n<iframe class="example-frame" data-live[^>]* src="../../${s.live}" title="Live example: ${name}"></iframe>\\n<pre data-snippet=`));
       }
     }
     const button = read(join(SITE_DIR, "components/atoms/button.md"));
     expect(button).not.toContain("# Buttons\n\nPlain <button>");
-    for (const h of ["## States", "## Sizes", "## Focus", "## Our choice"]) expect(button).toContain(`\n${h}\n`);
+    // Labelled header blocks are h3s under Attributes; the Our choice bullets keep their label, with no heading.
+    for (const h of ["## Attributes", "### States", "### Sizes", "### Focus"]) expect(button).toContain(`\n${h}\n`);
+    expect(button).not.toContain("\n## Our choice\n");
+    expect(button).toContain("| `aria-disabled=\"true\"` | Looks disabled");
     expect(button).toContain("- **Our choice:** small buttons are 32px tall");
     const controls = read(join(SITE_DIR, "components/atoms/controls.md"));
     expect(controls).toContain("[`css/base/forms.css`](https://github.com/odonckers/domestic-ui/blob/main/css/base/forms.css) (base layer; no CSS file of its own)");
@@ -518,14 +521,15 @@ test.describe("tokens from css/tokens/", () => {
     expect(tokens["--x-four"].description).toBe("");
   });
 
-  test("token tables have a caption, column headers and a named horizontal scroll region", () => {
+  test("token tables are labelled by their heading, have column headers and sit in a named horizontal scroll region", () => {
     for (const f of files) {
       const html = read(join(SITE_DIR, `tokens/${f.replace(/\.css$/, ".html")}`));
-      const tables = [...html.matchAll(/<div data-scroll="inline" tabindex="0" role="region" aria-label="([^"]+)">\n<table class="token-table">\n<caption>([^<]+)<\/caption>/g)];
+      const tables = [...html.matchAll(/<h2 id="([^"]+)">[^<]*<\/h2>\n(?:<p>.*<\/p>\n)?<div data-scroll="inline" tabindex="0" role="region" aria-labelledby="([^"]+)">\n<table class="token-table" aria-labelledby="([^"]+)">/g)];
       expect(tables.length, f).toBe(html.split("<table").length - 1);
-      for (const [, label, caption] of tables) expect(label).toBe(`${caption} (scrolls horizontally)`);
-      expect(html).toContain('<th scope="col">Token</th><th scope="col">Written as</th><th scope="col">Light</th><th scope="col">Dark</th><th scope="col">Description</th><th scope="col">Preview</th>');
-      expect(html).not.toMatch(/style="[^"]*var\(/);
+      for (const [, id, region, table] of tables) expect([region, table]).toEqual([id, id]);
+      expect(html, "no caption repeats the heading").not.toContain("<caption>");
+      expect(html).toContain('<th scope="col">Token</th><th scope="col">Preview</th><th scope="col">Light</th><th scope="col">Dark</th><th scope="col">Description</th>');
+    expect(html).not.toMatch(/style="[^"]*var\(/);
       // Missing descriptions say so, never an empty cell.
       expect(html).not.toContain("<td></td>");
     }
@@ -579,7 +583,8 @@ test.describe("docs pages in the browser", () => {
       expect(violations, `${path}\n${summarize(violations)}`).toEqual([]);
       await page.unroute(target);
       await page.goto(`_site/${path}`);
-      await page.waitForURL(`**/_site/${to}`);
+      // Live frames load with the page (not lazily), so wait for the document, not every frame.
+      await page.waitForURL(`**/_site/${to}`, { waitUntil: "domcontentloaded" });
       await expect(page.locator("h1"), `${path} → ${to}`).toHaveCount(1);
     }
   });
@@ -671,7 +676,8 @@ test.describe("docs pages in the browser", () => {
       "Atoms",
       "Molecules",
       "Organisms",
-      "Patterns and guides",
+      "Patterns",
+      "Guides",
       "Demos",
       "Contributing",
       "Changelog",
@@ -926,7 +932,11 @@ test("discovery picks up a new component with no site changes", async ({ browser
     expect(tabsPage).toContain('<a href="https://www.w3.org/WAI/ARIA/apg/patterns/tabs/">APG Tabs pattern</a>');
     const tabsReport = await htmlValidate.validateString(tabsPage, join(fixture, "_site/patterns/tabs.html"));
     expect(tabsReport.valid, JSON.stringify(tabsReport.results)).toBe(true);
-    expect(out("patterns/index.md")).toContain("| [Tabs](https://odonckers.github.io/domestic-ui/patterns/tabs.md) | molecule | Available |");
+    // Grouped by level, as in the sidebar.
+    const patternsIndex = out("patterns/index.md");
+    expect(patternsIndex).toContain("| [Tabs](https://odonckers.github.io/domestic-ui/patterns/tabs.md) | Available |");
+    expect(patternsIndex.indexOf("## Molecules")).toBeLessThan(patternsIndex.indexOf("[Tabs]"));
+    expect(patternsIndex).not.toMatch(/^## M3/m);
     const guide = out("guides/simple-site-to-erp-app.md");
     expect(guide).toContain("chosen from a list of tabs. Available.");
     expect(guide).not.toContain("Tabs (M3)");

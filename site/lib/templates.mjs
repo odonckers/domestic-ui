@@ -24,6 +24,9 @@ import { REPO_URL, SITE_URL, BLOB_URL, escapeHtml, relativeUrl } from "./util.mj
 
 /** @typedef {import("./pages.mjs").Page} Page */
 
+/** The data-scroll="inline" API is an element with role="region" (css/layout/scroll.css), which html-validate would have be a <section>. */
+const REGIONS_NOTE = '<!-- [html-validate-disable-block prefer-native-element: data-scroll="inline" regions (code blocks, wide tables) are elements with role="region", the css/layout/scroll.css API] -->';
+
 /**
  * @param {Page} page
  * @param {ReturnType<typeof import("./nav.mjs").navTree>} tree the sidebar
@@ -38,7 +41,7 @@ export function renderHtml(page, tree) {
   };
   const body = page.blocks.map((b) => (b.html ? b.html(ctx) : markdownToHtml(b.md, { resolveLink, ids, caption: page.heading }))).join("\n");
 
-  const toc = tocHtml(body);
+  const toc = page.wide ? "" : tocHtml(body);
 
   return `<!DOCTYPE html>
 <html lang="en">
@@ -70,8 +73,8 @@ export function renderHtml(page, tree) {
       </header>
       ${renderNav(page, tree, link)}
       <main id="main" tabindex="-1">
-        <article class="docs-content">
-${renderBreadcrumb(page, link)}
+        <article class="docs-content"${page.wide ? " data-wide" : ""}>
+${/role="region"/.test(body) ? `${REGIONS_NOTE}\n` : ""}${renderBreadcrumb(page, link)}
 <h1>${escapeHtml(page.heading)}</h1>
 ${body}
         </article>

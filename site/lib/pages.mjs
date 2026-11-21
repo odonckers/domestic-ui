@@ -8,7 +8,8 @@
  * Links between pages are written as "site:<path>" and resolved per output:
  * relative in HTML, absolute in Markdown (see ./templates.mjs).
  */
-import { specName } from "./css-comments.mjs";
+import { apiMd, codeMd, labelledMd } from "./api-table.mjs";
+import { findUrls, specName } from "./css-comments.mjs";
 import { demoAppLinksMd, demoViewMd } from "./demo-views.mjs";
 import { COMPONENT_GROUPS, LEVELS } from "./discovery.mjs";
 import { inline, plainText, shiftHeadings, tokenize } from "./markdown.mjs";
@@ -36,6 +37,7 @@ import { BLOB_URL, REPO_URL, byString, escapeHtml, escapeMdCell, fence, firstSen
  * @property {Block[]} blocks
  * @property {Snippet[]} [snippets] the snippets rendered and printed on the page, in order
  * @property {false} [inFull]      false: left out of llms-full.txt (a list of other pages, a guide, a repository file)
+ * @property {true} [wide]         wide tables are the content (token pages): the full width of main, no "On this page"
  */
 
 /** Where the component API convention is documented: the Getting started page. */
@@ -220,9 +222,6 @@ export const followsMd = (p) => (p.standards.length ? p.standards.map(specLink).
 /** @param {Pattern} p */
 const patternLine = (p) => `- [${p.title}](site:${p.sitePath}): ${p.summary} ${patternStatus(p)}.`;
 
-/** "M3: Molecules and navigation patterns". @param {string} milestone */
-const milestoneLabel = (milestone) => (MILESTONES[milestone] ? `${milestone}: ${MILESTONES[milestone]}` : milestone);
-
 /* ------------------------------------------------------------------ */
 /* Pages                                                               */
 /* ------------------------------------------------------------------ */
@@ -238,7 +237,7 @@ export function buildPages(model) {
     tokensIndex(model),
     ...model.tokenFiles.map((f) => tokenFilePage(model, f)),
     as(componentPage(model, model.base), "base"),
-    ...model.utilities.map((c) => ({ ...as(componentPage(model, c), "base"), navNote: "utility" })),
+    ...model.utilities.map((c) => as(componentPage(model, c), "base")),
     layoutsIndex(model),
     ...model.layouts.map((c) => as(componentPage(model, c), "layouts")),
     ...COMPONENT_GROUPS.flatMap(({ group }) => [levelIndex(model, group), ...model.components[group].map((c) => as(componentPage(model, c), /** @type {Section} */ (group)))]),
@@ -311,21 +310,21 @@ const componentLine = (c) => `- [${c.title}](site:${c.sitePath}): ${summaryMd(c)
 const summaryMd = (c) => commentMd(withoutUrls(c.summary));
 
 /**
- * A component group's README sections: every Our choices bullet, labels kept,
- * and the Not shipped table.
+ * A component group's README sections: every Our choices bullet, labels
+ * kept and with no heading of their own (each bullet says "Our choice:"),
+ * and the Not shipped table under its heading.
  * @param {Model} model
  * @param {string} group
  * @param {number} level heading level
  */
 function groupDetailsMd(model, group, level) {
   const readme = model.readmes[group];
-  if (!readme) return "";
-  const h = "#".repeat(level);
+  if (!readme) return { choices: "", notShipped: "" };
   const src = `[\`${readme.path}\`](${BLOB_URL}${readme.path})`;
-  const out = [];
-  if (readme.choices.length) out.push(`${h} Our choices\n\nFrom ${src}.\n\n${readme.choices.map((c) => `- ${rewriteRepoLinks(c, model)}`).join("\n")}`);
-  if (readme.notShipped) out.push(`${h} Not shipped, and why\n\n${rewriteRepoLinks(readme.notShipped, model)}`);
-  return out.join("\n\n");
+  return {
+    choices: readme.choices.length ? `From ${src}:\n\n${readme.choices.map((c) => `- ${rewriteRepoLinks(c, model)}`).join("\n")}` : "",
+    notShipped: readme.notShipped ? `${"#".repeat(level)} Not shipped, and why\n\n${rewriteRepoLinks(readme.notShipped, model)}` : "",
+  };
 }
 
 /** Demo apps on GitHub: name, link, and the first sentence of the README. @param {Model} model */
@@ -430,6 +429,35 @@ function tokensIndex(model) {
   };
 }
 
+/**
+ * A paragraph of a token file's header comment as Markdown: code spans for
+ * code, repository paths and "PRINCIPLES.md, "Theming"" as links, and its
+ * URL as the link of the term it explains ("Label: URL" becomes a link).
+ * @param {Model} model
+ * @param {string} para
+ */
+function tokenIntroMd(model, para) {
+  const flat = para.replace(/\s+/g, " ").trim();
+  const label = flat.match(/^([A-Z][\w ]{0,40}):\s*(https?:\/\/\S+?)\.?$/);
+  if (label) return `[${label[1]}](${label[2]}).`;
+  const urls = findUrls(flat);
+  // Token file comments write code in backticks, so keep those as code spans.
+  let out = withoutUrls(flat)
+    .split(/(`[^`]+`)/)
+    .map((part, i) => (i % 2 ? part : codeMd(part, commentMd)))
+    .join("");
+  out = out.replace(/`((?:css|examples|web-components)\/[\w./-]+)`/g, (m, path) => `[${m}](${repoTarget(path, model)})`);
+  out = out.replace(/`PRINCIPLES\.md`, "([^"]+)"/g, (m, title) => {
+    const s = model.principles.sections.find((x) => x.title === title);
+    return s ? `[${title}](site:${s.sitePath})` : m;
+  });
+  if (urls.length === 1) {
+    const term = out.match(/`[a-z][\w-]*\(\)`/)?.[0];
+    out = term ? out.replace(term, `[${term}](${urls[0]})`) : `${out} ([${specName(urls[0])}](${urls[0]}))`;
+  } else for (const url of urls) out += ` [${specName(url)}](${url})`;
+  return out;
+}
+
 /** @typedef {Model["tokenFiles"][number]} TokenFile @typedef {TokenFile["groups"][number]["tokens"][number]} Token */
 
 /** A token's description: its comment, else its purpose in PRINCIPLES.md, else "". @param {Token} t */
@@ -503,9 +531,7 @@ function previewCell(t) {
 function tokenFilePage(model, f) {
   const count = f.groups.reduce((n, g) => n + g.tokens.length, 0);
   const fileLink = `[\`${f.path}\`](${BLOB_URL}${f.path})`;
-  // Token file comments write code in backticks, so keep those as code spans.
-  const prose = (/** @type {string} */ text) => text.split(/(`[^`]+`)/).map((part, i) => (i % 2 ? part : commentMd(part))).join("");
-  const intro = [f.tier ? `**${f.tier.charAt(0).toUpperCase()}${f.tier.slice(1)}.** ` : "", f.intro.split("\n\n").map(prose).join("\n\n")].join("");
+  const intro = [f.tier ? `**${f.tier.charAt(0).toUpperCase()}${f.tier.slice(1)}.** ` : "", f.intro.split("\n\n").map((p) => tokenIntroMd(model, p)).join("\n\n")].join("");
   const short = f.title.toLowerCase();
 
   /** @type {Block} */
@@ -520,7 +546,6 @@ function tokenFilePage(model, f) {
   };
 
   const groupBlock = (/** @type {TokenFile["groups"][number]} */ g) => {
-    const caption = `${g.name} (${short})`;
     const note = g.note ? `${commentMd(g.note.charAt(0).toUpperCase() + g.note.slice(1)).replace(/([^.])$/, "$1.")}` : "";
     const descMd = (/** @type {Token} */ t) => {
       const d = tokenDescription(t);
@@ -540,15 +565,17 @@ function tokenFilePage(model, f) {
             ? `${d.from === "comment" ? inline(commentMd(d.text)) : inline(d.text)}${d.from === "PRINCIPLES.md" ? ' <span data-text="muted">†</span>' : ""}`
             : '<span class="token-missing">No description yet</span>';
           const conditions = conditionLines(t, true).map((l) => `<br>${l}`).join("");
-          return `<tr><th scope="row"><code>${escapeHtml(t.name)}</code></th><td>${valueCode(t.value)}</td><td>${valueCode(t.light)}</td><td>${valueCode(t.dark)}</td><td>${text}${conditions}</td><td>${previewCell(t)}</td></tr>`;
+          // How the file writes it, when that is not already the light or dark value.
+          const written = t.value !== t.light || t.value !== t.dark ? `<br><span data-text="small muted">Written as <code>${escapeHtml(t.value)}</code></span>` : "";
+          return `<tr><th scope="row"><code>${escapeHtml(t.name)}</code></th><td>${previewCell(t)}</td><td>${valueCode(t.light)}</td><td>${valueCode(t.dark)}</td><td>${text}${conditions}${written}</td></tr>`;
         });
-        const head = ["Token", "Written as", "Light", "Dark", "Description", "Preview"].map((h) => `<th scope="col">${h}</th>`).join("");
+        const head = ["Token", "Preview", "Light", "Dark", "Description"].map((h) => `<th scope="col">${h}</th>`).join("");
+        const heading = ctx.heading(2, g.name);
+        const id = heading.match(/ id="([^"]+)"/)?.[1] ?? "";
         return `<div class="token-group" data-token-group>
-${ctx.heading(2, g.name)}
-${note ? `<p>${inline(note)}</p>\n` : ""}<!-- [html-validate-disable-next prefer-native-element: the data-scroll="inline" API is a div with role="region"] -->
-<div data-scroll="inline" tabindex="0" role="region" aria-label="${escapeHtml(caption)} (scrolls horizontally)">
-<table class="token-table">
-<caption>${escapeHtml(caption)}</caption>
+${heading}
+${note ? `<p>${inline(note)}</p>\n` : ""}<div data-scroll="inline" tabindex="0" role="region" aria-labelledby="${id}">
+<table class="token-table" aria-labelledby="${id}">
 <thead>
 <tr>${head}</tr>
 </thead>
@@ -565,6 +592,7 @@ ${rows.join("\n")}
   return {
     path: f.sitePath,
     section: "tokens",
+    wide: true,
     title: f.title,
     heading: f.title,
     description: `All ${count} ${short} in ${f.path}${f.tier ? ` (${f.tier})` : ""}, with resolved light and dark values.`,
@@ -609,13 +637,14 @@ function levelIndex(model, group) {
       `${LEVEL_INTROS[group] ?? ""} A level of [Atomic Design](${ATOMIC_DESIGN_URL}); APIs follow the [component API convention](site:${CONVENTION_LINK}).`.trim(),
     ),
   ];
-  // The list repeats each page's summary, which opens that page's own part of llms-full.txt.
-  blocks.push({ ...md(`## ${title}\n\n${[...items, ...patterns].join("\n") || `Coming in ${milestone}; see the [components README](${BLOB_URL}css/components/README.md).`}`), inFull: false });
   const details = groupDetailsMd(model, group, 2);
-  if (details) blocks.push(md(details));
+  if (details.choices) blocks.push(md(details.choices));
+  // The list repeats each page's summary, which opens that page's own part of llms-full.txt.
+  blocks.push({ ...md(`## Pages\n\n${[...items, ...patterns].join("\n") || `Coming in ${milestone}; see the [components README](${BLOB_URL}css/components/README.md).`}`), inFull: false });
+  if (details.notShipped) blocks.push(md(details.notShipped));
   return {
     path: `${group}/index.html`,
-    ...(details ? {} : { inFull: /** @type {const} */ (false) }),
+    ...(details.choices || details.notShipped ? {} : { inFull: /** @type {const} */ (false) }),
     section: /** @type {Section} */ (group),
     title,
     heading: title,
@@ -681,9 +710,9 @@ function liveExampleBlocks(model, snippets, usedIn = []) {
           [
             ctx.heading(3, s.name),
             s.live
-              ? `<iframe class="example-frame" data-live${TALL_RE.test(s.code) ? " data-tall" : ""} src="${escapeHtml(ctx.link(s.live))}" title="Live example: ${escapeHtml(s.name)}" loading="lazy"></iframe>`
+              ? `<iframe class="example-frame" data-live${TALL_RE.test(s.code) ? " data-tall" : ""} src="${escapeHtml(ctx.link(s.live))}" title="Live example: ${escapeHtml(s.name)}"></iframe>`
               : `<p>${inline(note)}</p>`,
-            `<pre data-snippet="${escapeHtml(s.source)}"><code>${escapeHtml(s.code)}</code></pre>`,
+            `<pre data-snippet="${escapeHtml(s.source)}" data-scroll="inline" role="region" tabindex="0" aria-label="Markup: ${escapeHtml(s.name)}"><code>${escapeHtml(s.code)}</code></pre>`,
           ].join("\n"),
       };
     }),
@@ -701,7 +730,7 @@ const withoutUrls = (text) =>
     .replace(/\s*\(\s*https?:\/\/[^\s)]+\s*\)/g, "")
     .replace(/(^|[.;]\s+)[A-Z][\w ]{0,40}:\s*https?:\/\/\S+/g, "$1")
     .replace(/\s*https?:\/\/\S+/g, "")
-    .replace(/\s+([.,;:)])/g, "$1")
+    .replace(/\s+([.,;)]|:(?!\S))/g, "$1")
     .replace(/[,:;]\)/g, ")")
     .replace(/[,:;]\s*$/, ".")
     .trim();
@@ -722,16 +751,13 @@ function componentPage(model, c) {
   const blocks = [md(summaryMd(c))];
   if (c.ourChoice) blocks.push(md(ourChoiceMd(c.ourChoice)));
 
-  blocks.push(...liveExampleBlocks(model, c.snippets, c.usedIn));
-
-  // Attributes: the index row's cell as written, then the CSS header's API block.
+  // Attributes: the index row's cell as written, then the CSS header's API block as tables.
   const isClass = c.group === "layouts" || c.group === "utilities";
   const api = [];
+  if (c.group === "base") api.push("None: write semantic HTML.");
   if (c.indexApi) api.push(c.indexApi);
-  if (c.api) api.push(fence(c.api, "text"));
-  for (const line of c.apiInline) api.push(`- ${mdCode(line)}`);
-  if (c.group === "base") api.unshift("None: write semantic HTML.");
-  if (!api.length) api.push("Not documented yet.");
+  if (c.api) api.push(apiMd(c.api, commentMd));
+  if (c.apiInline.length) api.push(c.apiInline.map((line) => `- ${mdCode(line)}`).join("\n"));
   if (c.files.length) {
     const rows = c.files.map((f) => `| [${mdCode(f.path)}](${BLOB_URL}${f.path}) | ${escapeMdCell(commentMd(f.summary)) || "–"} |`);
     api.push(`| File | Covers |\n| --- | --- |\n${rows.join("\n")}`);
@@ -746,18 +772,6 @@ function componentPage(model, c) {
         .map((n) => withoutUrls(sentences(n).filter((s) => !a11ySentences.has(s) && !(c.group === "layouts" && s === STALE_LAYOUT_NOTE)).join(" ")))
         .filter((n) => /\w/.test(n))
         .map(commentMd);
-  blocks.push(md(`## ${isClass ? "API" : "Attributes"}\n\n${[...api, ...notes].join("\n\n")}`));
-
-  // Labelled blocks of the header comment (States, Sizes, Focus, …), verbatim.
-  for (const b of c.blocks) blocks.push(md(`## ${b.label}\n\n${fence(b.text, "text")}`));
-
-  if (c.keyboard.length) {
-    const rows = c.keyboard.map((k) => `| ${escapeMdCell(kbdMd(k.key, false))} | ${escapeMdCell(commentMd(k.action))} |`);
-    blocks.push(md(`## Keyboard\n\n| Key | Action |\n| --- | --- |\n${rows.join("\n")}`));
-  }
-
-  // In llms-full.txt these bullets appear once, with all the others, on the level index.
-  if (c.choices.length && c.indexPath) blocks.push({ ...md(`## Our choice\n\n${c.choices.map((x) => `- ${rewriteRepoLinks(x, model)}`).join("\n")}`), inFull: false });
 
   const cssLink = `[\`${c.cssPath}\`](${BLOB_URL}${c.cssPath})`;
   const a11y = !c.ownCss
@@ -768,10 +782,7 @@ function componentPage(model, c) {
           .map((s) => withoutUrls(s))
           .filter((s) => /\w/.test(s))
           .map((s) => `- ${commentMd(s)}`)
-          .join("\n") || "- No notes beyond the accessibility baseline.";
-  blocks.push(md(`## Accessibility\n\n${a11y}`));
-
-  blocks.push(md(`## Specifications\n\n${c.specs.length ? specListMd(c.specs) : "None linked yet."}`));
+          .join("\n");
 
   const group = COMPONENT_GROUPS.find((g) => g.group === c.group);
   const level = group
@@ -790,7 +801,20 @@ function componentPage(model, c) {
     `Source: ${sources.join(", ")}`,
     ...demosLine(model, c.sitePath),
   ];
-  blocks.push(md(`## See also\n\n${seeAlso.map((s) => `- ${s}`).join("\n")}`));
+  blocks.push(
+    ...referenceBlocks({
+      live: liveExampleBlocks(model, c.snippets, c.usedIn),
+      apiTitle: isClass ? "API" : "Attributes",
+      api: [...api, ...notes].join("\n\n"),
+      // In llms-full.txt these bullets appear once, with all the others, on the level index.
+      choices: c.indexPath ? c.choices.map((x) => rewriteRepoLinks(x, model)) : [],
+      labelled: c.blocks,
+      keyboard: c.keyboard.length ? keyboardTable(c.keyboard, false) : "",
+      a11y,
+      specs: c.specs.length ? specListMd(c.specs) : "",
+      seeAlso,
+    }),
+  );
 
   return {
     path: c.sitePath,
@@ -883,11 +907,9 @@ function repoFilePage(model, file, text, section) {
 
 /** @param {Model} model @returns {Page} */
 function patternsIndex(model) {
-  const row = (/** @type {Pattern} */ p) => {
-    const level = LEVELS.find((l) => l.level === p.level)?.singular ?? p.level;
-    return `| [${p.title}](site:${p.sitePath}) | ${level} | ${patternStatus(p)} | ${escapeMdCell(p.standards.length ? followsMd(p) : "Our choice")} |`;
-  };
-  const milestones = [...new Set(sortedPatterns(model).map((p) => p.milestone))];
+  const row = (/** @type {Pattern} */ p) => `| [${p.title}](site:${p.sitePath}) | ${patternStatus(p)} | ${escapeMdCell(p.standards.length ? followsMd(p) : "Our choice")} |`;
+  // Grouped by level, as in the sidebar.
+  const levels = LEVELS.filter((l) => model.patterns.some((p) => p.level === l.level));
   const guide = model.guides[0];
   const guideMd = guide ? ` Step by step: [${guide.title}](site:${guide.sitePath}).` : "";
   return {
@@ -900,9 +922,9 @@ function patternsIndex(model) {
     source: { href: `${REPO_URL}/tree/main/site/content/patterns`, label: "Browse the pattern registry on GitHub" },
     blocks: [
       md(`${patternIntroMd}${guideMd}`),
-      ...milestones.map((m) => {
-        const rows = sortedPatterns(model).filter((p) => p.milestone === m).map(row);
-        return md(`## ${milestoneLabel(m)}\n\n| Pattern | Level | Status | Follows |\n| --- | --- | --- | --- |\n${rows.join("\n")}`);
+      ...levels.map((l) => {
+        const rows = sortedPatterns(model).filter((p) => p.level === l.level).map(row);
+        return md(`## ${l.title}\n\n| Pattern | Status | Follows |\n| --- | --- | --- |\n${rows.join("\n")}`);
       }),
     ],
   };
@@ -915,23 +937,47 @@ const kbdMd = (key, markdown) =>
     .map((k) => `<kbd>${markdown ? k : commentMd(k)}</kbd>`)
     .join(" / ");
 
+/** A Key | Action table. @param {{ key: string, action: string }[]} keys @param {boolean} markdown the notes are Markdown already */
+const keyboardTable = (keys, markdown) =>
+  `| Key | Action |\n| --- | --- |\n${keys.map((k) => `| ${escapeMdCell(kbdMd(k.key, markdown))} | ${escapeMdCell(markdown ? k.action : commentMd(k.action))} |`).join("\n")}`;
+
 /**
  * Keyboard notes: the Keyboard block of the example page or CSS header,
- * else the registry's list, else one line pointing at the standard.
- * @param {Model} model
+ * else the registry's list, else one line pointing at the standard's
+ * keyboard section; "" when there is no standard to point at.
  * @param {Pattern} p
- * @returns {Block}
  */
-function keyboardBlock(model, p) {
-  if (p.keyboard.length) {
-    const markdown = p.keyboardFrom === "front matter";
-    const rows = p.keyboard.map((k) => `| ${escapeMdCell(kbdMd(k.key, markdown))} | ${escapeMdCell(markdown ? k.action : commentMd(k.action))} |`);
-    return md(`## Keyboard\n\n| Key | Action |\n| --- | --- |\n${rows.join("\n")}`);
-  }
+function keyboardMd(p) {
+  if (p.keyboard.length) return keyboardTable(p.keyboard, p.keyboardFrom === "front matter");
   const apg = p.standards.find((s) => s.url.startsWith("https://www.w3.org/WAI/ARIA/apg/"));
-  if (apg) return md(`## Keyboard\n\nSee the keyboard section of the ${specLink(apg)}.`);
-  if (p.standards.length) return md(`## Keyboard\n\nNative keyboard behavior; see ${specLink(p.standards[0])}.`);
-  return md(`## Keyboard\n\nSee the [Accessibility baseline](site:${principleLink(model, "accessibility-baseline-wcag-22-aa")}).`);
+  if (apg) return `See the keyboard section of the ${specLink(apg)}.`;
+  if (p.standards.length) return `Native keyboard behavior; see ${specLink(p.standards[0])}.`;
+  return "";
+}
+
+/**
+ * The shared outline of every element and pattern page (site/README.md,
+ * "Page structure"): Live example; Attributes (or API) with ### labelled
+ * blocks (States, Sizes, Focus, Motion, …) and ### Keyboard; Accessibility;
+ * Specifications; See also. "How other systems do it" is added last by
+ * ./other-systems.mjs. Empty sections are left out.
+ * @param {{ live: Block[], apiTitle: string, api: string, choices: string[], labelled: { label: string, text: string }[], keyboard: string, a11y: string, specs: string, seeAlso: string[] }} parts
+ * @returns {Block[]}
+ */
+function referenceBlocks({ live, apiTitle, api, choices, labelled, keyboard, a11y, specs, seeAlso }) {
+  /** @type {Block[]} */
+  const blocks = [...live];
+  const h3s = [...labelled.map((b) => `### ${b.label}\n\n${labelledMd(withoutUrls(b.text), commentMd)}`), ...(keyboard ? [`### Keyboard\n\n${keyboard}`] : [])];
+  if (api || choices.length || h3s.length) {
+    blocks.push(md(`## ${apiTitle}${api ? `\n\n${api}` : ""}`));
+    // Each bullet keeps its "Our choice:" label (no heading of its own).
+    if (choices.length) blocks.push({ ...md(choices.map((x) => `- ${x}`).join("\n")), inFull: false });
+    if (h3s.length) blocks.push(md(h3s.join("\n\n")));
+  }
+  if (a11y) blocks.push(md(`## Accessibility\n\n${a11y}`));
+  if (specs) blocks.push(md(`## Specifications\n\n${specs}`));
+  if (seeAlso.length) blocks.push(md(`## See also\n\n${seeAlso.map((x) => `- ${x}`).join("\n")}`));
+  return blocks;
 }
 
 /**
@@ -949,33 +995,39 @@ function patternPage(model, p) {
   if (!p.available) blocks.push(md(`Coming in ${p.milestone}.`));
 
   const doc = p.available ? p.doc : null;
-  if (p.available) {
-    blocks.push(...liveExampleBlocks(model, p.snippets));
-    const api = doc ? [...(doc.api ? [fence(doc.api, "text")] : []), ...doc.apiInline.map((l) => `- ${mdCode(l)}`)] : [];
-    if (api.length) blocks.push(md(`## Attributes\n\n${api.join("\n\n")}`));
-    // The registry body is the accessibility notes; without one, the CSS header's.
-    const derived = (doc?.a11y ?? []).flatMap(sentences).map(withoutUrls).filter((s) => s.split(/\s+/).length > 3 && !/[<>]/.test(s));
-    const a11y = p.body ? rewriteRepoLinks(p.body, model) : derived.map((s) => `- ${commentMd(s)}`).join("\n");
-    if (a11y) blocks.push(md(`## Accessibility\n\n${a11y}`));
-    blocks.push(keyboardBlock(model, p));
-  }
+  const api = doc ? [...(doc.api ? [apiMd(doc.api, commentMd)] : []), ...(doc.apiInline.length ? [doc.apiInline.map((l) => `- ${mdCode(l)}`).join("\n")] : [])] : [];
+  // The registry body is the accessibility notes; without one, the CSS header's.
+  const derived = (doc?.a11y ?? []).flatMap(sentences).map(withoutUrls).filter((s) => s.split(/\s+/).length > 3 && !/[<>]/.test(s));
+  const a11y = !p.available ? "" : p.body ? rewriteRepoLinks(p.body, model) : derived.map((s) => `- ${commentMd(s)}`).join("\n");
 
   // CSS header URLs, less those the page already links (standards, specs, the accessibility notes).
   const known = new Set([...p.standards, ...p.specs].map((s) => s.url));
   const fromCss = (doc?.urls ?? []).filter((u) => !known.has(u) && !p.body.includes(`(${u})`)).map((url) => ({ label: specName(url), url }));
   const specs = [...p.standards, ...p.specs, ...fromCss];
-  blocks.push(md(`## Specifications\n\n${specs.length ? specListMd(specs) : "None: no native element or WAI-ARIA APG pattern covers this."}`));
 
   const seeAlso = [
     level ? `[${level.title}](site:${level.level}/index.html)` : `[Patterns](site:patterns/index.html)`,
     ...(p.available ? [`Source: ${[...p.cssPaths, ...p.examplePaths].map((s) => `[\`${s}\`](${BLOB_URL}${s})`).join(", ")}`] : []),
     ...demosLine(model, p.sitePath),
   ];
-  blocks.push(md(`## See also\n\n${seeAlso.map((s) => `- ${s}`).join("\n")}`));
+  blocks.push(
+    ...referenceBlocks({
+      live: p.available ? liveExampleBlocks(model, p.snippets) : [],
+      apiTitle: "Attributes",
+      api: api.join("\n\n"),
+      choices: [],
+      labelled: doc?.blocks ?? [],
+      keyboard: p.available ? keyboardMd(p) : "",
+      a11y,
+      specs: specs.length ? specListMd(specs) : "None: no native element or WAI-ARIA APG pattern covers this.",
+      seeAlso,
+    }),
+  );
 
   return {
     path: p.sitePath,
-    section: "patterns",
+    // Listed with the elements of its level: a molecule under Molecules, a layout under Layout.
+    section: /** @type {Section} */ (p.level),
     navNote: patternNavNote(p),
     title: p.title,
     heading: p.title,

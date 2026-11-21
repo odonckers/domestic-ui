@@ -1064,11 +1064,11 @@ Rule relaxations, each with its reason:
 
 Page: https://odonckers.github.io/domestic-ui/tokens/primitives.html
 
-**Internal.** Raw values named by what they are, not by what they are for. Only css/tokens/semantic.css may reference these. Base, layout, utility and component CSS must use semantic tokens instead; `npm run lint:tokens` enforces this.
+**Internal.** Raw values named by what they are, not by what they are for. Only [`css/tokens/semantic.css`](https://odonckers.github.io/domestic-ui/tokens/semantic.md) may reference these. Base, layout, utility and component CSS must use semantic tokens instead; `npm run lint:tokens` enforces this.
 
 Primitives are NOT public API: they may be renamed, added or removed in any release. Theme with semantic tokens.
 
-Custom properties: <https://developer.mozilla.org/en-US/docs/Web/CSS/--*>
+[Custom properties](https://developer.mozilla.org/en-US/docs/Web/CSS/--*).
 
 107 tokens in [`css/tokens/primitives.css`](https://github.com/odonckers/domestic-ui/blob/main/css/tokens/primitives.css). **Light** and **Dark** resolve every `var()` and take one side of [`light-dark()`](https://developer.mozilla.org/en-US/docs/Web/CSS/color_value/light-dark). Previews are decorative.
 
@@ -1271,11 +1271,11 @@ X offset, y offset, blur, spread. The color is added by the semantic elevation t
 
 Page: https://odonckers.github.io/domestic-ui/tokens/semantic.html
 
-**Public theming API.** Named by role. Each points at a primitive (css/tokens/primitives.css) or at another semantic token. Base, layout, utility and component CSS use only these. Renaming or removing one is a breaking change.
+**Public theming API.** Named by role. Each points at a primitive ([`css/tokens/primitives.css`](https://odonckers.github.io/domestic-ui/tokens/primitives.md)) or at another semantic token. Base, layout, utility and component CSS use only these. Renaming or removing one is a breaking change.
 
-A theme is an override of these tokens on :root or on a scoped element. No rebuild. See PRINCIPLES.md, "Theming".
+A theme is an override of these tokens on `:root` or on a scoped element. No rebuild. See [Theming](https://odonckers.github.io/domestic-ui/principles/theming.md).
 
-Colors use light-dark(), which picks a value from the used color-scheme of the element where the token is read. <https://developer.mozilla.org/en-US/docs/Web/CSS/color_value/light-dark>
+Colors use [`light-dark()`](https://developer.mozilla.org/en-US/docs/Web/CSS/color_value/light-dark), which picks a value from the used color-scheme of the element where the token is read.
 
 128 tokens in [`css/tokens/semantic.css`](https://github.com/odonckers/domestic-ui/blob/main/css/tokens/semantic.css). **Light** and **Dark** resolve every `var()` and take one side of [`light-dark()`](https://developer.mozilla.org/en-US/docs/Web/CSS/color_value/light-dark). Previews are decorative. † marks a description taken from the semantic token table in [Theming](https://odonckers.github.io/domestic-ui/principles/theming.md).
 
@@ -1715,7 +1715,7 @@ None: write semantic HTML.
 - [MDN `color-scheme`](https://developer.mozilla.org/en-US/docs/Web/CSS/color-scheme)
 - [A List Apart axiomatic css and lobotomized owls](https://alistapart.com/article/axiomatic-css-and-lobotomized-owls/)
 - [MDN `:focus-visible`](https://developer.mozilla.org/en-US/docs/Web/CSS/:focus-visible)
-- [MDN `View_Transition_API`](https://developer.mozilla.org/en-US/docs/Web/API/View_Transition_API)
+- [MDN View Transition API](https://developer.mozilla.org/en-US/docs/Web/API/View_Transition_API)
 - [MDN `forced-colors`](https://developer.mozilla.org/en-US/docs/Web/CSS/@media/forced-colors)
 - [WHATWG forms](https://html.spec.whatwg.org/multipage/forms.html)
 - [W3C labels](https://www.w3.org/WAI/tutorials/forms/labels/)
@@ -1764,9 +1764,9 @@ Hides content visually but keeps it in the accessibility tree.
 
 ### API
 
-```text
-class="visually-hidden"
-```
+| Attribute or value | Effect |
+| --- | --- |
+| `class="visually-hidden"` |  |
 
 - The technique from [The A11Y Project](https://www.a11yproject.com/posts/how-to-hide-content/).
 - The content shows again on focus, so it works for skip links.
@@ -1872,24 +1872,19 @@ A long form whose Save and Cancel buttons stay in a sticky bar at the bottom of 
 
 ### API
 
-```text
-data-action-bar   on a <footer> (or <div>) that is the last child of a
-                  <form>; holds that form's buttons
-```
+| Attribute or value | Where | Effect |
+| --- | --- | --- |
+| `data-action-bar` | a `<footer>` (or `<div>`) that is the last child of a `<form>` | holds that form's buttons |
 
 The Save and Cancel buttons of a long form, kept in view: a bar at the end of the \<form> that sticks to the bottom of the scroll area while the form scrolls, and comes to rest after the last field when the end of the form is reached. Built with position: sticky, so it never leaves its form and needs no script. The buttons wrap onto a second row on narrow screens.
 
 Our choice: the bar is the last child of the \<form> it submits, so its buttons submit and reset that form with no form="…" attribute, and the sticky bar stops at the form's end instead of covering what follows.
 
-### Elevation
+#### Elevation
 
-```text
---dui-elevation-overlay and its surface (level 2), with a
-border, so it reads as above the fields it covers and forced colors mode
-still draws its edge.
-```
+`--dui-elevation-overlay` and its surface (level 2), with a border, so it reads as above the fields it covers and forced colors mode still draws its edge.
 
-### Keyboard
+#### Keyboard
 
 | Key | Action |
 | --- | --- |
@@ -1944,20 +1939,16 @@ An inline group that wraps onto new lines (buttons, tags, nav links).
 
 ### API
 
-```text
-class="cluster"
---cluster-gap       space between items   (default: var(--dui-space-s))
---cluster-justify   justify-content value (default: flex-start)
---cluster-align     align-items value     (default: center)
-```
+| Attribute or value | Effect |
+| --- | --- |
+| `class="cluster"` |  |
+| `--cluster-gap` | space between items (default: `var(--dui-space-s)`) |
+| `--cluster-justify` | justify-content value (default: flex-start) |
+| `--cluster-align` | align-items value (default: center) |
 
 Pattern: "The Cluster", Every Layout, built with flex-wrap and gap.
 
 The custom properties do not inherit, so nested clusters keep their defaults.
-
-### Accessibility
-
-- No notes beyond the accessibility baseline.
 
 ### Specifications
 
@@ -1999,19 +1990,15 @@ A responsive grid: as many columns as fit, each at least --grid-min wide, never 
 
 ### API
 
-```text
-class="grid"
---grid-min   minimum column width (default: var(--dui-size-column-min))
---grid-gap   gap between cells    (default: var(--dui-space-l))
-```
+| Attribute or value | Effect |
+| --- | --- |
+| `class="grid"` |  |
+| `--grid-min` | minimum column width (default: `var(--dui-size-column-min)`) |
+| `--grid-gap` | gap between cells (default: `var(--dui-space-l)`) |
 
 No media queries. Pattern: "RAM" (repeat, auto-fit, minmax), see and "The Grid", Every Layout.
 
 The custom properties do not inherit, so nested grids keep their defaults.
-
-### Accessibility
-
-- No notes beyond the accessibility baseline.
 
 ### Specifications
 
@@ -2067,13 +2054,10 @@ A scroll container for content wider than the screen, such as a data table, so i
 
 ### API
 
-```text
-data-scroll="inline"         scroll along the inline axis (left/right in English)
-data-scroll="block inline"   also scroll along the block axis, at most
-                             --dui-size-pane (the viewport) tall, so a
-                             sticky table header stays in view
-                             (css/components/organisms/data-table.css)
-```
+| Attribute or value | Effect |
+| --- | --- |
+| `data-scroll="inline"` | scroll along the inline axis (left/right in English) |
+| `data-scroll="block inline"` | also scroll along the block axis, at most `--dui-size-pane` (the viewport) tall, so a sticky table header stays in view (`css/components/organisms/data-table.css`) |
 
 - Add `tabindex="0"` so keyboard users can scroll it ([WCAG 2.1.1](https://www.w3.org/WAI/WCAG22/Understanding/keyboard.html), [axe rule](https://dequeuniversity.com/rules/axe/4.10/scrollable-region-focusable)).
 - **Our choice:** a `<section>` with `aria-labelledby`, not `<div role="region">`, because the native element already has the role.
@@ -2119,18 +2103,14 @@ Vertical flow with a consistent gap between children.
 
 ### API
 
-```text
-class="stack"
---stack-gap   space between children (default: var(--dui-space-m))
-```
+| Attribute or value | Effect |
+| --- | --- |
+| `class="stack"` |  |
+| `--stack-gap` | space between children (default: `var(--dui-space-m)`) |
 
 Pattern: "The Stack", Every Layout, built with flexbox gap.
 
 --stack-gap does not inherit, so nested stacks keep their own default.
-
-### Accessibility
-
-- No notes beyond the accessibility baseline.
 
 ### Specifications
 
@@ -2150,9 +2130,7 @@ Page: https://odonckers.github.io/domestic-ui/atoms/index.html
 
 Small additions to the base layer, for what a native element cannot express on its own. A level of [Atomic Design](https://atomicdesign.bradfrost.com/); APIs follow the [component API convention](https://odonckers.github.io/domestic-ui/index.md#component-api).
 
-### Our choices
-
-From [`css/components/atoms/README.md`](https://github.com/odonckers/domestic-ui/blob/main/css/components/atoms/README.md).
+From [`css/components/atoms/README.md`](https://github.com/odonckers/domestic-ui/blob/main/css/components/atoms/README.md):
 
 - **Our choice:** one `data-<atom>` attribute per atom, whose value is a space-separated list matched with [`~=`](https://developer.mozilla.org/en-US/docs/Web/CSS/Attribute_selectors). One attribute is one API to learn, it reads as a sentence (`data-button="primary small"`), and it cannot pile up like modifier classes.
 - **Our choice:** `data-button` with no variant word keeps the native default (a submit button is primary, everything else is secondary), so M1 markup keeps working and the attribute is only needed when the native type does not match the emphasis you want.
@@ -2203,10 +2181,11 @@ Lead, small and muted text helpers from domestic-ui, with copyable markup.
 
 `data-text="lead | small | muted"` (combinable)
 
-```text
-data-text="lead | small | muted"
-Values are a space-separated list, so they combine: data-text="small muted".
-```
+| Attribute or value | Effect |
+| --- | --- |
+| `data-text="lead \| small \| muted"` |  |
+
+Values are a space-separated list, so they combine: `data-text="small muted"`.
 
 - Values combine: `data-text="small muted"`.
 - Size and color only. For meaning, use [`<small>`](https://html.spec.whatwg.org/multipage/text-level-semantics.html#the-small-element), `<strong>` or `<em>`.
@@ -2271,9 +2250,9 @@ A link that takes the surrounding text color and keeps its underline, for dense 
 
 `data-link="quiet"` on `<a href>`
 
-```text
-data-link="quiet"   on <a href>
-```
+| Attribute or value | Where | Effect |
+| --- | --- | --- |
+| `data-link="quiet"` | `<a href>` |  |
 
 - For dense UI, such as table cells, footers and metadata, where many accent-colored links would be noisy.
 - Visited links keep the surrounding color too.
@@ -2382,56 +2361,37 @@ Button variants and sizes, links styled as buttons, and disabled and loading sta
 
 `data-button="[primary | secondary | quiet] [small | large]"` on `<button>`, `<input type=submit|button|reset>`, `<a href>`; states `disabled`, `aria-disabled="true"`, `aria-busy="true"`
 
-```text
-data-button="[primary | secondary | quiet] [small | large]"
+| Attribute or value | Effect |
+| --- | --- |
+| `data-button="[primary \| secondary \| quiet] [small \| large]"` |  |
+
 A space-separated list: at most one variant word and one size word.
-Works on <button>, <input type="submit|button|reset"> and <a href>.
-No variant word keeps the native default: type="submit" is primary,
-other buttons and links are secondary.
-```
+
+Works on `<button>`, `<input type="submit|button|reset">` and `<a href>`.
+
+No variant word keeps the native default: `type="submit"` is primary, other buttons and links are secondary.
 
 - On `<a href>`, it looks like a button and keeps link semantics.
 
-### States
+#### States
 
-```text
-disabled              Native. Removed from the tab order, not submitted.
-aria-disabled="true"  Looks disabled and is exposed as disabled, but stays
-                      focusable so a description can explain why. Your script
-                      must ignore activation. https://www.w3.org/WAI/ARIA/apg/practices/keyboard-interface/#focusabilityofdisabledcontrols
-                      https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Reference/Attributes/aria-disabled
-aria-busy="true"      Work in progress. Change the visible label too
-                      ("Saving…") and announce the result in a role="status"
-                      region; nothing here hides the label.
-                      https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Reference/Attributes/aria-busy
-```
+| Attribute or value | Effect |
+| --- | --- |
+| `disabled` | Native. Removed from the tab order, not submitted. |
+| `aria-disabled="true"` | Looks disabled and is exposed as disabled, but stays focusable so a description can explain why. Your script must ignore activation. |
+| `aria-busy="true"` | Work in progress. Change the visible label too ("Saving…") and announce the result in a `role="status"` region; nothing here hides the label. |
 
-### Sizes
+#### Sizes
 
-```text
-default and large are at least 44px tall. small is 32px: below the
-44px default but above the 24px minimum of WCAG 2.5.8 Target Size (Minimum).
-The default size follows density (--dui-size-control): 32px inside
-data-density="compact". small and large keep their size at every density.
-https://www.w3.org/WAI/WCAG22/Understanding/target-size-minimum.html
-```
+Default and large are at least 44px tall. small is 32px: below the 44px default but above the 24px minimum of WCAG 2.5.8 Target Size (Minimum). The default size follows density (`--dui-size-control`): 32px inside `data-density="compact"`. small and large keep their size at every density.
 
-### Focus
+#### Focus
 
-```text
-every variant keeps the base :focus-visible outline. Filled (primary)
-buttons add an inner ring in their text color, so the indicator contrasts
-with the fill as well as with the surface (WCAG 1.4.11, 2.4.13).
-https://www.w3.org/WAI/WCAG22/Understanding/focus-appearance.html
-```
+Every variant keeps the base `:focus-visible` outline. Filled (primary) buttons add an inner ring in their text color, so the indicator contrasts with the fill as well as with the surface (WCAG 1.4.11, 2.4.13).
 
-### Motion
+#### Motion
 
-```text
-background and border colors fade over --dui-motion-duration-
-fast with --dui-motion-easing-standard. Focus rings, disabled and
-aria-busy change at once: they are essential feedback.
-```
+Background and border colors fade over `--dui-motion-duration-fast` with `--dui-motion-easing-standard`. Focus rings, disabled and `aria-busy` change at once: they are essential feedback.
 
 ### Accessibility
 
@@ -2637,21 +2597,16 @@ An on/off switch built on a native checkbox with role switch, following the APG 
 
 `role="switch"` on `<input type="checkbox">`
 
-```text
-role="switch"   on <input type="checkbox">; no class needed.
-```
+| Attribute or value | Where | Effect |
+| --- | --- | --- |
+| `role="switch"` | `<input type="checkbox">` | no class needed. |
 
 - Keep the label the same in both states; the state is on or off.
 - Wrap the input in its `<label>` so the whole label is the click target.
 
-### Motion
+#### Motion
 
-```text
-the track color fades over --dui-motion-duration-fast; the
-thumb slides for that duration times --dui-motion-movement, so with
-reduced motion it jumps and the color change stays. The state itself
-never waits on the transition.
-```
+The track color fades over `--dui-motion-duration-fast`; the thumb slides for that duration times `--dui-motion-movement`, so with reduced motion it jumps and the color change stays. The state itself never waits on the transition.
 
 ### Accessibility
 
@@ -2743,11 +2698,11 @@ Label, control, hint and error message wired with aria-describedby and aria-inva
 
 `data-field` on the wrapper, `data-field="hint"` and `data-field="error"` on the messages
 
-```text
-data-field              on the wrapper (a <div>, or a <fieldset> for groups)
-data-field="hint"       on the hint
-data-field="error"      on the error message
-```
+| Attribute or value | Where | Effect |
+| --- | --- | --- |
+| `data-field` | the wrapper (a `<div>`, or a `<fieldset>` for groups) |  |
+| `data-field="hint"` | the hint |  |
+| `data-field="error"` | the error message |  |
 
 - The wrapper is a `<div>`, or a `<fieldset>` for a group of controls.
 - Hide an error that does not apply with `hidden`, and remove its id from `aria-describedby`.
@@ -2825,10 +2780,9 @@ Inline status labels with tone variants that meet WCAG AA contrast.
 
 `data-badge="neutral | accent | success | warning | danger"`
 
-```text
-data-badge="neutral | accent | success | warning | danger"
-(empty means neutral)
-```
+| Attribute or value | Effect |
+| --- | --- |
+| `data-badge="neutral \| accent \| success \| warning \| danger"` | (empty means neutral) |
 
 - Static text. To make a badge clickable, put a real `<button>` or `<a href>` around it.
 - An empty value is neutral.
@@ -2865,9 +2819,7 @@ Page: https://odonckers.github.io/domestic-ui/molecules/index.html
 
 Small groups of atoms that work as one unit. A level of [Atomic Design](https://atomicdesign.bradfrost.com/); APIs follow the [component API convention](https://odonckers.github.io/domestic-ui/index.md#component-api).
 
-### Our choices
-
-From [`css/components/molecules/README.md`](https://github.com/odonckers/domestic-ui/blob/main/css/components/molecules/README.md).
+From [`css/components/molecules/README.md`](https://github.com/odonckers/domestic-ui/blob/main/css/components/molecules/README.md):
 
 - **Our choice:** native first, even where it differs from the APG example. The accordion is `<details name>`, so there are no heading wrappers and no arrow keys between headers (both optional in the APG); nav groups are `<details>` rather than scripted disclosure buttons, so they do not close on <kbd>Esc</kbd>. Both work with no script and keep find-in-page.
 - **Our choice:** the drawer is a `<dialog>` variant (`data-dialog="drawer"`), not a new element or a popover, so it gets modality, inertness, focus handling and <kbd>Esc</kbd> from the browser. See [drawer.md](https://github.com/odonckers/domestic-ui/blob/main/explainers/drawer.md).
@@ -2905,9 +2857,7 @@ Page: https://odonckers.github.io/domestic-ui/organisms/index.html
 
 Larger sections of an interface built from molecules and atoms. A level of [Atomic Design](https://atomicdesign.bradfrost.com/); APIs follow the [component API convention](https://odonckers.github.io/domestic-ui/index.md#component-api).
 
-### Our choices
-
-From [`css/components/organisms/README.md`](https://github.com/odonckers/domestic-ui/blob/main/css/components/organisms/README.md).
+From [`css/components/organisms/README.md`](https://github.com/odonckers/domestic-ui/blob/main/css/components/organisms/README.md):
 
 - **Our choice:** the page header takes its layout from its children's elements (a `<nav>` breadcrumb, a heading, a `<p>`, and a last child of actions) rather than extra attributes, so it is the markup any page already writes; `<header>` inside `<main>` is not the banner landmark.
 - **Our choice:** the filter bar is a plain `<form method="get">` in `<search>` with an Apply button, so the filters live in the URL, work with JavaScript off, and do not interrupt screen reader users while they set several; the result count is a `role="status"` element present from page load, so changes are announced.
@@ -2984,24 +2934,21 @@ The top of a screen: an optional breadcrumb, the title, a description and action
 
 `data-page-header` on a `<header>` inside `<main>`: optional breadcrumb `<nav>`, heading, optional `<p>`, actions last
 
-```text
-data-page-header   on a <header> inside <main>; children, in order:
-  <nav data-breadcrumb aria-label="Breadcrumb">   optional
-  <h1>                                            the title (h2 or h3 in a region)
-  <p>                                             optional description
-  <div> (or role="toolbar", <dui-menu>)           optional actions, last
-```
+| Attribute or value | Where | Effect |
+| --- | --- | --- |
+| `data-page-header` | a `<header>` inside `<main>` | children, in order: |
+| `<nav data-breadcrumb aria-label="Breadcrumb">` |  | optional |
+| `<h1>` |  | the title (h2 or h3 in a region) |
+| `<p>` |  | optional description |
+| `<div> (or role="toolbar", <dui-menu>)` |  | optional actions, last |
 
 The top of a screen inside \<main>: an optional breadcrumb, the page's \<h1>, an optional one-line description, and the page's actions (buttons, a menu button). The actions sit beside the title when the header is at least 40rem wide and wrap under it when it is narrower, decided by a container query on the header itself, so it fits a full page, a split region or the main area of an app shell alike.
 
 Our choice: the layout is chosen from the children's elements (a \<nav> breadcrumb, a heading, a \<p> description, and a last child holding the actions), not from extra attributes, so the markup is what any page would already write.
 
-### Breakpoint
+#### Breakpoint
 
-```text
-40rem of the header's own inline size. A container query
-condition cannot read a custom property, so it is written as a length.
-```
+40rem of the header's own inline size. A container query condition cannot read a custom property, so it is written as a length.
 
 ### Accessibility
 
@@ -3016,7 +2963,7 @@ condition cannot read a custom property, so it is written as a length.
 - [WHATWG `header`](https://html.spec.whatwg.org/multipage/sections.html#the-header-element)
 - [APG Breadcrumb](https://www.w3.org/WAI/ARIA/apg/patterns/breadcrumb/)
 - [W3C el header](https://www.w3.org/TR/html-aam-1.0/#el-header)
-- [MDN `Container_queries`](https://developer.mozilla.org/en-US/docs/Web/CSS/Guides/Containment/Container_queries)
+- [MDN Container queries](https://developer.mozilla.org/en-US/docs/Web/CSS/Guides/Containment/Container_queries)
 - [WCAG Focus order](https://www.w3.org/WAI/WCAG22/Understanding/focus-order.html)
 
 ### See also
@@ -3086,12 +3033,27 @@ Status messages, from notices in the page to live alerts and toasts.
 
 ### Attributes
 
-```text
-data-alert="info | success | warning | danger"   an inline alert with a tone
-data-alert="toasts"                               the toast region (fixed position)
-data-alert="dismiss"                              a toast's dismiss button
-role="status" | role="alert"                      native ARIA live regions
-```
+| Attribute or value | Effect |
+| --- | --- |
+| `data-alert="info \| success \| warning \| danger"` | an inline alert with a tone |
+| `data-alert="toasts"` | the toast region (fixed position) |
+| `data-alert="dismiss"` | a toast's dismiss button |
+| `role="status" \| role="alert"` | native ARIA live regions |
+
+#### Toasts
+
+`data-alert="toasts"` on a fixed region, plus the `<dui-toaster>` web component (`web-components/dui-toaster.js`) for a `show()` method and dismiss buttons. The region is `role="status"` and in the page from the start. Our choice: toasts never dismiss themselves, so nobody loses a message they did not have time to read (WCAG 2.2.1 Timing Adjustable); each has a Dismiss button. A toast is a status, not a dialog: it never takes focus. See `explainers/toast.md`.
+
+#### Motion
+
+A new toast fades in and lifts by `--dui-motion-distance` over `--dui-motion-duration-normal`; reduced motion keeps the fade only. Inline alerts and live region text appear at once: they are essential feedback. Our choice: toasts sit at the overlay elevation (`--dui-elevation-overlay`), below popovers and dialogs, because they are non-modal and must never cover an open menu or dialog.
+
+#### Keyboard
+
+| Key | Action |
+| --- | --- |
+| <kbd>Tab</kbd> | reaches each toast's Dismiss button; toasts never take focus |
+| <kbd>Enter</kbd> / <kbd>Space</kbd> | on Dismiss, removes the toast and focuses the next one |
 
 ### Accessibility
 
@@ -3100,19 +3062,12 @@ role="status" | role="alert"                      native ARIA live regions
 - Start the message with a word such as "Warning:", so tone is not color alone ([WCAG 1.4.1](https://www.w3.org/WAI/WCAG22/Understanding/use-of-color.html)).
 - **Our choice:** toasts never dismiss themselves or take focus, so nobody loses a message ([WCAG 2.2.1](https://www.w3.org/WAI/WCAG22/Understanding/timing-adjustable.html)).
 
-### Keyboard
-
-| Key | Action |
-| --- | --- |
-| <kbd>Tab</kbd> | reaches each toast's Dismiss button; toasts never take focus |
-| <kbd>Enter</kbd> / <kbd>Space</kbd> | on Dismiss, removes the toast and focuses the next one |
-
 ### Specifications
 
 - [APG Alert pattern](https://www.w3.org/WAI/ARIA/apg/patterns/alert/)
 - [WCAG 4.1.3 Status Messages](https://www.w3.org/WAI/WCAG22/Understanding/status-messages.html)
 - [MDN `status` role](https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Reference/Roles/status_role)
-- [MDN `alert_role`](https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Reference/Roles/alert_role)
+- [MDN `alert` role](https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Reference/Roles/alert_role)
 
 ### See also
 
@@ -3164,20 +3119,20 @@ The path to the current page: an ordered list of links in a labelled `<nav>`.
 
 ### Attributes
 
-```text
-data-breadcrumb       on <nav aria-label="Breadcrumb">
-aria-current="page"   on the last link (native ARIA)
-```
+| Attribute or value | Where | Effect |
+| --- | --- | --- |
+| `data-breadcrumb` | `<nav aria-label="Breadcrumb">` |  |
+| `aria-current="page"` | the last link (native ARIA) |  |
+
+#### Keyboard
+
+See the keyboard section of the [APG Breadcrumb pattern](https://www.w3.org/WAI/ARIA/apg/patterns/breadcrumb/).
 
 ### Accessibility
 
 - [`aria-current="page"`](https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Reference/Attributes/aria-current) marks the current page, which is also bold ([WCAG 1.4.1](https://www.w3.org/WAI/WCAG22/Understanding/use-of-color.html)).
 - Separators use CSS [alternative text](https://developer.mozilla.org/en-US/docs/Web/CSS/content#alternative_text) `""`, so they are not read.
 - Links are at least 24px tall ([WCAG 2.5.8](https://www.w3.org/WAI/WCAG22/Understanding/target-size-minimum.html)).
-
-### Keyboard
-
-See the keyboard section of the [APG Breadcrumb pattern](https://www.w3.org/WAI/ARIA/apg/patterns/breadcrumb/).
 
 ### Specifications
 
@@ -3240,25 +3195,29 @@ A self-contained item, such as an article teaser, on a raised surface.
 
 ### Attributes
 
-```text
-data-card          on <article> (or <section>, <li>): the card
-data-card="link"   the whole card follows the link in its heading
-Children: an optional first <img> (or <picture>, <video>) as media,
-a heading, body content, and an optional <footer> for actions.
-```
+| Attribute or value | Where | Effect |
+| --- | --- | --- |
+| `data-card` | `<article>` (or `<section>`, `<li>`) | the card |
+| `data-card="link"` |  | the whole card follows the link in its heading |
+
+Children: an optional first `<img>` (or `<picture>`, `<video>`) as media, a heading, body content, and an optional `<footer>` for actions.
+
+#### Elevation
+
+`--dui-elevation-raised` and `--dui-elevation-raised-surface` (level 1). The border stays, so forced colors mode, which drops box-shadow, still draws the edge.
+
+#### Keyboard
+
+| Key | Action |
+| --- | --- |
+| <kbd>Tab</kbd> | moves to each card's heading link, then to its footer actions |
+| <kbd>Enter</kbd> | follows the focused link |
 
 ### Accessibility
 
 - Every card has a heading. Use `<article>` when it stands on its own.
 - Images need `alt`, or `alt=""` when decorative.
 - `data-card="link"` stretches the heading's link over the card, so the link name is the heading ([Inclusive Components](https://inclusive-components.design/cards/)). Footer actions stay focusable; card text cannot be selected with the mouse.
-
-### Keyboard
-
-| Key | Action |
-| --- | --- |
-| <kbd>Tab</kbd> | moves to each card's heading link, then to its footer actions |
-| <kbd>Enter</kbd> | follows the focused link |
 
 ### Specifications
 
@@ -3366,23 +3325,23 @@ A modal `<dialog>`, either centered or as a drawer along one edge of the viewpor
 
 ### Attributes
 
-```text
-data-dialog                         on <dialog>: header, body and footer layout
-                                    and the open transition
-data-dialog="drawer [start | end]"  a drawer at the inline-start or inline-end
-                                    edge (end is the default)
-closedby="any | closerequest | none"  native: how the dialog can be dismissed
-Children: an optional <header> (heading and close button) and <footer>
-(actions, end-aligned); everything else is the body.
-```
+| Attribute or value | Where | Effect |
+| --- | --- | --- |
+| `data-dialog` | `<dialog>` | header, body and footer layout and the open transition |
+| `data-dialog="drawer [start \| end]"` |  | a drawer at the inline-start or inline-end edge (end is the default) |
+| `closedby="any \| closerequest \| none"` |  | native: how the dialog can be dismissed |
 
-### Accessibility
+Children: an optional `<header>` (heading and close button) and `<footer>` (actions, end-aligned); everything else is the body.
 
-- `showModal()` or `command="show-modal"` makes the page inert, moves focus in and returns it on close.
-- Name each dialog with `aria-labelledby`. Put `autofocus` on the least destructive action.
-- <kbd>Esc</kbd> and the close buttons always work ([WCAG 2.1.2](https://www.w3.org/WAI/WCAG22/Understanding/no-keyboard-trap.html)); [`closedby="any"`](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/dialog#closedby) adds light dismiss.
+#### Motion
 
-### Keyboard
+Dialogs fade and lift and drawers slide and fade, with `@starting-style` and transition-behavior: allow-discrete, entering with `--dui-motion-easing-enter` and leaving with `--dui-motion-easing-exit`. Durations are `--dui-motion-duration-normal` (dialog) and `--dui-motion-duration-slow` (drawer), so `--dui-motion-scale` retunes them. Under prefers-reduced-motion or `data-motion="reduced"` the movement is dropped and the fade stays (WCAG 2.3.3); `data-motion="none"` turns it off. Browsers without these features simply open and close with no transition (the declaration without allow-discrete comes first, so an engine that rejects the keyword keeps it).
+
+#### Elevation
+
+Dialogs and drawers use `--dui-elevation-dialog` and its surface (the highest level). The border stays, so forced colors mode, which drops box-shadow, still draws the edge.
+
+#### Keyboard
 
 | Key | Action |
 | --- | --- |
@@ -3390,12 +3349,18 @@ Children: an optional <header> (heading and close button) and <footer>
 | <kbd>Tab</kbd> | moves to the next focusable element inside the dialog / Shift+Tab: previous |
 | <kbd>Esc</kbd> | closes the dialog and returns focus to the opener |
 
+### Accessibility
+
+- `showModal()` or `command="show-modal"` makes the page inert, moves focus in and returns it on close.
+- Name each dialog with `aria-labelledby`. Put `autofocus` on the least destructive action.
+- <kbd>Esc</kbd> and the close buttons always work ([WCAG 2.1.2](https://www.w3.org/WAI/WCAG22/Understanding/no-keyboard-trap.html)); [`closedby="any"`](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/dialog#closedby) adds light dismiss.
+
 ### Specifications
 
 - [HTML `<dialog>` element](https://html.spec.whatwg.org/multipage/interactive-elements.html#the-dialog-element)
 - [APG Dialog (Modal) pattern](https://www.w3.org/WAI/ARIA/apg/patterns/dialog-modal/)
 - [MDN `<dialog>`](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/dialog)
-- [MDN `Invoker_Commands_API`](https://developer.mozilla.org/en-US/docs/Web/API/Invoker_Commands_API)
+- [MDN Invoker Commands API](https://developer.mozilla.org/en-US/docs/Web/API/Invoker_Commands_API)
 - [MDN `@starting-style`](https://developer.mozilla.org/en-US/docs/Web/CSS/@starting-style)
 - [MDN `transition-behavior`](https://developer.mozilla.org/en-US/docs/Web/CSS/transition-behavior)
 - [WCAG Animation from interactions](https://www.w3.org/WAI/WCAG22/Understanding/animation-from-interactions.html)
@@ -3480,27 +3445,25 @@ A summary that shows or hides more content, built on `<details>` and `<summary>`
 
 ### Attributes
 
-```text
-data-disclosure="accordion"   on a wrapper around several <details>:
-                              joins them into one bordered block
-data-disclosure="plain"       on a <details>: no box, for "Show more"
-                              text inside prose
-name="group"                  on each <details> (native): only one open
-open                          on a <details> (native): open on load
-```
+| Attribute or value | Where | Effect |
+| --- | --- | --- |
+| `data-disclosure="accordion"` | a wrapper around several `<details>` | joins them into one bordered block |
+| `data-disclosure="plain"` | a `<details>` | no box, for "Show more" text inside prose |
+| `name="group"` | each `<details>` (native) | only one open |
+| `open` | a `<details>` (native) | open on load |
+
+#### Keyboard
+
+| Key | Action |
+| --- | --- |
+| <kbd>Tab</kbd> | moves to the next summary / Shift+Tab: previous |
+| <kbd>Enter</kbd> / <kbd>Space</kbd> | opens or closes the focused section |
 
 ### Accessibility
 
 - `<summary>` is a button with `aria-expanded` ([HTML-AAM](https://www.w3.org/TR/html-aam-1.0/#el-summary)); no ARIA to write.
 - Unlike the [APG Accordion](https://www.w3.org/WAI/ARIA/apg/patterns/accordion/), headers are not headings and have no arrow keys; both are optional there.
 - Avoid exclusive groups ([`name`](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/details#name)) when people compare sections.
-
-### Keyboard
-
-| Key | Action |
-| --- | --- |
-| <kbd>Tab</kbd> | moves to the next summary / Shift+Tab: previous |
-| <kbd>Enter</kbd> / <kbd>Space</kbd> | opens or closes the focused section |
 
 ### Specifications
 
@@ -3563,21 +3526,16 @@ A button that opens a menu of actions.
 
 ### Attributes
 
-```text
-<dui-menu>                         wraps the button and its popover
-popovertarget="menu-id"            on the <button> (native)
-popover data-popover               on the menu element
-<button> or <a href> children      the actions; <hr> separates groups
-Added by the component: aria-haspopup, aria-expanded, role="menu",
-role="menuitem", tabindex="-1".
-```
+| Attribute or value | Where | Effect |
+| --- | --- | --- |
+| `<dui-menu>` |  | wraps the button and its popover |
+| `popovertarget="menu-id"` | the `<button>` (native) |  |
+| `popover data-popover` | the menu element |  |
+| `<button> or <a href> children` |  | the actions; `<hr>` separates groups |
 
-### Accessibility
+Added by the component: `aria-haspopup`, `aria-expanded`, `role="menu"`, `role="menuitem"`, `tabindex="-1"`.
 
-- `<dui-menu>` adds the ARIA and arrow keys. Without JavaScript, every action is a Tab stop.
-- For links to other pages, use a disclosure: `role="menu"` means arrow keys and no Tab stops ([APG note](https://www.w3.org/WAI/ARIA/apg/patterns/disclosure/examples/disclosure-navigation/)).
-
-### Keyboard
+#### Keyboard
 
 | Key | Action |
 | --- | --- |
@@ -3590,11 +3548,16 @@ role="menuitem", tabindex="-1".
 | <kbd>Esc</kbd> | closes the menu and returns focus to the button |
 | <kbd>Tab</kbd> | closes the menu and moves on |
 
+### Accessibility
+
+- `<dui-menu>` adds the ARIA and arrow keys. Without JavaScript, every action is a Tab stop.
+- For links to other pages, use a disclosure: `role="menu"` means arrow keys and no Tab stops ([APG note](https://www.w3.org/WAI/ARIA/apg/patterns/disclosure/examples/disclosure-navigation/)).
+
 ### Specifications
 
 - [APG Menu Button pattern](https://www.w3.org/WAI/ARIA/apg/patterns/menu-button/)
 - [APG Menu and Menubar pattern](https://www.w3.org/WAI/ARIA/apg/patterns/menubar/)
-- [MDN `menu_role`](https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Reference/Roles/menu_role)
+- [MDN `menu` role](https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Reference/Roles/menu_role)
 - [MDN `aria-haspopup`](https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Reference/Attributes/aria-haspopup)
 - [WHATWG popover](https://html.spec.whatwg.org/multipage/popover.html)
 
@@ -3656,25 +3619,25 @@ Links to the pages of a long list of results.
 
 ### Attributes
 
-```text
-data-pagination        on <nav aria-label="Pagination">
-aria-current="page"    on the current page link (native ARIA)
-<a> without href       a disabled Previous or Next (native placeholder link)
-<li aria-hidden="true">…</li>   a gap in the page numbers
-```
+| Attribute or value | Where | Effect |
+| --- | --- | --- |
+| `data-pagination` | `<nav aria-label="Pagination">` |  |
+| `aria-current="page"` | the current page link (native ARIA) |  |
+| `<a> without href` |  | a disabled Previous or Next (native placeholder link) |
+| `<li aria-hidden="true">…</li>` |  | a gap in the page numbers |
+
+#### Keyboard
+
+| Key | Action |
+| --- | --- |
+| <kbd>Tab</kbd> | moves to the next page link / Shift+Tab: previous |
+| <kbd>Enter</kbd> | follows the focused link |
 
 ### Accessibility
 
 - A visually hidden "Page" completes each number's link name ([WCAG 2.4.4](https://www.w3.org/WAI/WCAG22/Understanding/link-purpose-in-context.html)).
 - At the ends, Previous or Next is an `<a>` with no `href`: not focusable.
 - **Our choice:** the current page stays a link with `aria-current="page"`, so the list count stays stable.
-
-### Keyboard
-
-| Key | Action |
-| --- | --- |
-| <kbd>Tab</kbd> | moves to the next page link / Shift+Tab: previous |
-| <kbd>Enter</kbd> | follows the focused link |
 
 ### Specifications
 
@@ -3742,22 +3705,37 @@ Content shown on top of the page from a button, with the `popover` attribute.
 
 ### Attributes
 
-```text
-data-popover                    on a [popover] element: panel look, anchored
-                                below the invoker, aligned to its start edge
-data-popover="block-start | inline-start | inline-end"
-                                place it above or beside the invoker instead
-role="tooltip"                  on a [popover] element: tooltip look,
-                                placed above the trigger
-popover="auto | manual | hint"  native: auto light-dismisses, manual does not
-```
+| Attribute or value | Where | Effect |
+| --- | --- | --- |
+| `data-popover` | a `[popover]` element | panel look, anchored below the invoker, aligned to its start edge |
+| `data-popover="block-start \| inline-start \| inline-end"` |  | place it above or beside the invoker instead |
+| `role="tooltip"` | a `[popover]` element | tooltip look, placed above the trigger |
+| `popover="auto \| manual \| hint"` |  | native: auto light-dismisses, manual does not |
 
-### Accessibility
+#### Positioning
 
-- A popover does not trap focus; decisions belong in a modal `<dialog>`. For actions, use the [menu button](https://odonckers.github.io/domestic-ui/patterns/menu-button.md).
-- A tooltip supplements the trigger's name, shows on focus and hover, and closes on <kbd>Esc</kbd> ([WCAG 1.4.13](https://www.w3.org/WAI/WCAG22/Understanding/content-on-hover-or-focus.html); [APG Tooltip](https://www.w3.org/WAI/ARIA/apg/patterns/tooltip/) is a draft).
+A popover opened by popovertarget (or by showPopover() with a source) has its invoker as an implicit anchor, so position-area places it next to the button and position-try-fallbacks flips it when it would overflow. Inside @supports only; where anchor positioning is missing the popover sits centered at the bottom of the viewport, readable and clear of the content it belongs to.
 
-### Keyboard
+#### Tooltip
+
+`role="tooltip"` on a `popover="hint"` element, referenced from the trigger with `aria-describedby`. The APG Tooltip pattern is still marked as work in progress, so these rules come from it and from WCAG 1.4.13 Content on Hover or Focus:
+
+- A tooltip supplements the trigger's own accessible name; it is never the only label, because touch and some assistive technology users never see it;
+- It appears on keyboard focus as well as on hover;
+- Esc hides it without moving focus (dismissible), the pointer can move onto it without it closing (hoverable), and it stays until focus or the pointer leaves (persistent);
+- It holds no interactive content (use a popover for that).
+
+HTML cannot show a popover on hover or focus yet: the interestfor attribute is the coming standard, shipped only in Chromium today. Until it is interoperable, the `<dui-tooltip>` web component (`web-components/dui-tooltip.js`) does the showing and hiding. `popover="hint"` does not close other open popovers; where "hint" is unsupported the attribute falls back to "manual" and the component still handles Esc.
+
+#### Motion
+
+A `data-popover` panel fades and grows from `--dui-motion-zoom` over `--dui-motion-duration-fast`, entering with `--dui-motion-easing-enter` and leaving with `--dui-motion-easing-exit` (`@starting-style` and transition-behavior: allow-discrete). The zoom runs for that duration times `--dui-motion-movement`, so reduced motion keeps only the fade (WCAG 2.3.3). Tooltips appear at once.
+
+#### Elevation
+
+Panels use `--dui-elevation-popover` and `--dui-elevation-popover-surface`; tooltips use the popover shadow on their inverse surface. Both keep a border, which forced colors mode draws in place of the dropped shadow.
+
+#### Keyboard
 
 | Key | Action |
 | --- | --- |
@@ -3766,13 +3744,18 @@ popover="auto | manual | hint"  native: auto light-dismisses, manual does not
 | <kbd>Esc</kbd> | closes an auto popover and returns focus to its button |
 | <kbd>Tab to a tooltip trigger</kbd> | shows its tooltip / Esc: hides it, focus stays |
 
+### Accessibility
+
+- A popover does not trap focus; decisions belong in a modal `<dialog>`. For actions, use the [menu button](https://odonckers.github.io/domestic-ui/patterns/menu-button.md).
+- A tooltip supplements the trigger's name, shows on focus and hover, and closes on <kbd>Esc</kbd> ([WCAG 1.4.13](https://www.w3.org/WAI/WCAG22/Understanding/content-on-hover-or-focus.html); [APG Tooltip](https://www.w3.org/WAI/ARIA/apg/patterns/tooltip/) is a draft).
+
 ### Specifications
 
 - [HTML `popover` attribute](https://html.spec.whatwg.org/multipage/popover.html#the-popover-attribute)
 - [MDN Popover API](https://developer.mozilla.org/en-US/docs/Web/API/Popover_API)
 - [WHATWG popover](https://html.spec.whatwg.org/multipage/popover.html)
 - [MDN `popover`](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Global_attributes/popover)
-- [MDN `CSS_anchor_positioning`](https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_anchor_positioning)
+- [MDN CSS anchor positioning](https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_anchor_positioning)
 - [MDN `position-area`](https://developer.mozilla.org/en-US/docs/Web/CSS/position-area)
 - [MDN `position-try-fallbacks`](https://developer.mozilla.org/en-US/docs/Web/CSS/position-try-fallbacks)
 - [W3C css anchor position 1](https://drafts.csswg.org/css-anchor-position-1/)
@@ -3827,24 +3810,22 @@ A search form in a `<search>` landmark with an `<input type="search">`.
 
 ### Attributes
 
-```text
-<search> > <form> with an <input type="search">   no attribute needed:
-the label and any hint span the full width, the input and the submit
-button share the row below.
-```
+| Attribute or value | Effect |
+| --- | --- |
+| `<search> > <form> with an <input type="search">` | no attribute needed: the label and any hint span the full width, the input and the submit button share the row below. |
 
-### Accessibility
-
-- `<search>` is a landmark; label it only when there are several.
-- The input needs a `<label>`, visually hidden if space is short; a placeholder is not a label ([WCAG 3.3.2](https://www.w3.org/WAI/WCAG22/Understanding/labels-or-instructions.html)).
-
-### Keyboard
+#### Keyboard
 
 | Key | Action |
 | --- | --- |
 | <kbd>Enter</kbd> | in the field, submits the search |
 | <kbd>Esc</kbd> | in the field, clears it (in browsers that support it) |
 | <kbd>Tab</kbd> | moves from the field to the button |
+
+### Accessibility
+
+- `<search>` is a landmark; label it only when there are several.
+- The input needs a `<label>`, visually hidden if space is short; a placeholder is not a label ([WCAG 3.3.2](https://www.w3.org/WAI/WCAG22/Understanding/labels-or-instructions.html)).
 
 ### Specifications
 
@@ -3933,13 +3914,23 @@ The main links of a site in a `<nav>` landmark, with the current page marked.
 
 ### Attributes
 
-```text
-data-nav="vertical | horizontal"   on <nav> (empty means vertical)
-aria-current="page"                on the current link (native ARIA)
-<details> / <summary>              inside an <li> for a collapsible group;
-                                   open to expand it on load, name for
-                                   one-at-a-time
-```
+| Attribute or value | Where | Effect |
+| --- | --- | --- |
+| `data-nav="vertical \| horizontal"` | `<nav>` (empty means vertical) |  |
+| `aria-current="page"` | the current link (native ARIA) |  |
+| `<details> / <summary>` |  | inside an `<li>` for a collapsible group; open to expand it on load, name for one-at-a-time |
+
+#### Elevation
+
+Horizontal dropdowns use `--dui-elevation-popover` and its surface, like a popover. They open at once: native details has no open transition.
+
+#### Keyboard
+
+| Key | Action |
+| --- | --- |
+| <kbd>Tab</kbd> | moves to the next link or group summary / Shift+Tab: previous |
+| <kbd>Enter</kbd> / <kbd>Space</kbd> | on a summary, opens or closes the group |
+| <kbd>Enter</kbd> | on a link, follows it |
 
 ### Accessibility
 
@@ -3947,14 +3938,6 @@ aria-current="page"                on the current link (native ARIA)
 - [`aria-current="page"`](https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Reference/Attributes/aria-current) is shown with a bar, a tint and bold text ([WCAG 1.4.1](https://www.w3.org/WAI/WCAG22/Understanding/use-of-color.html)).
 - Give each `<nav>` a distinct `aria-label` when there are several.
 - Groups do not close on <kbd>Esc</kbd>; <kbd>Enter</kbd> on the summary does.
-
-### Keyboard
-
-| Key | Action |
-| --- | --- |
-| <kbd>Tab</kbd> | moves to the next link or group summary / Shift+Tab: previous |
-| <kbd>Enter</kbd> / <kbd>Space</kbd> | on a summary, opens or closes the group |
-| <kbd>Enter</kbd> | on a link, follows it |
 
 ### Specifications
 
@@ -4075,25 +4058,14 @@ Sections of content shown one at a time, chosen from a list of tabs.
 
 ### Attributes
 
-```text
-<dui-tabs>                 wraps a <nav aria-label> with a list of
-                           <a href="#panel-id"> links, then the panels
-activation="manual"        on <dui-tabs>: arrows move focus, Enter or
-                           Space selects (default: automatic)
-aria-current="true"        on a link: the tab selected on load (else the
-                           tab named in the URL fragment, else the first).
-                           The component swaps it for aria-selected;
-                           aria-selected is not allowed on a link.
-role="tablist" | "tab" | "tabpanel" (added by the component; styled here)
-```
+| Attribute or value | Where | Effect |
+| --- | --- | --- |
+| `<dui-tabs>` |  | wraps a `<nav aria-label>` with a list of `<a href="#panel-id">` links, then the panels |
+| `activation="manual"` | `<dui-tabs>` | arrows move focus, Enter or Space selects (default: automatic) |
+| `aria-current="true"` | a link | the tab selected on load (else the tab named in the URL fragment, else the first). The component swaps it for `aria-selected`; `aria-selected` is not allowed on a link. |
+| `role="tablist" \| "tab" \| "tabpanel"` |  | added by the component; styled here |
 
-### Accessibility
-
-- The selected tab has a bar and full-strength text, not color alone ([WCAG 1.4.11](https://www.w3.org/WAI/WCAG22/Understanding/non-text-contrast.html)).
-- Without JavaScript, every section shows and the links work as a table of contents.
-- **Our choice:** automatic activation, as the [APG recommends](https://www.w3.org/WAI/ARIA/apg/patterns/tabs/#deciding-when-to-make-selection-automatically-follow-focus) for fast panels; `activation="manual"` otherwise.
-
-### Keyboard
+#### Keyboard
 
 | Key | Action |
 | --- | --- |
@@ -4102,11 +4074,17 @@ role="tablist" | "tab" | "tabpanel" (added by the component; styled here)
 | <kbd>Home</kbd> / <kbd>End</kbd> | first or last tab |
 | <kbd>Enter</kbd> / <kbd>Space</kbd> | selects the focused tab (manual activation) |
 
+### Accessibility
+
+- The selected tab has a bar and full-strength text, not color alone ([WCAG 1.4.11](https://www.w3.org/WAI/WCAG22/Understanding/non-text-contrast.html)).
+- Without JavaScript, every section shows and the links work as a table of contents.
+- **Our choice:** automatic activation, as the [APG recommends](https://www.w3.org/WAI/ARIA/apg/patterns/tabs/#deciding-when-to-make-selection-automatically-follow-focus) for fast panels; `activation="manual"` otherwise.
+
 ### Specifications
 
 - [APG Tabs pattern](https://www.w3.org/WAI/ARIA/apg/patterns/tabs/)
-- [MDN `tab_role`](https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Reference/Roles/tab_role)
-- [MDN `tabpanel_role`](https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Reference/Roles/tabpanel_role)
+- [MDN `tab` role](https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Reference/Roles/tab_role)
+- [MDN `tabpanel` role](https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Reference/Roles/tabpanel_role)
 - [W3C el nav](https://www.w3.org/TR/html-aria/#el-nav)
 
 ### See also
@@ -4155,19 +4133,14 @@ A row of related controls that is one stop in the tab order.
 
 ### Attributes
 
-```text
-role="toolbar" aria-label="…"     on the container (<dui-toolbar> or any element)
-aria-orientation="vertical"       optional; default horizontal
-aria-pressed="true | false"       on toggle buttons (native ARIA)
-<hr>                              a separator between groups of controls
-```
+| Attribute or value | Where | Effect |
+| --- | --- | --- |
+| `role="toolbar" aria-label="…"` | the container (`<dui-toolbar>` or any element) |  |
+| `aria-orientation="vertical"` |  | optional; default horizontal |
+| `aria-pressed="true \| false"` | toggle buttons (native ARIA) |  |
+| `<hr>` |  | a separator between groups of controls |
 
-### Accessibility
-
-- Use a toolbar for three or more controls. Without JavaScript, each control is a Tab stop.
-- Toggle buttons use [`aria-pressed`](https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Reference/Attributes/aria-pressed), shown by more than color ([WCAG 1.4.1](https://www.w3.org/WAI/WCAG22/Understanding/use-of-color.html)).
-
-### Keyboard
+#### Keyboard
 
 | Key | Action |
 | --- | --- |
@@ -4177,10 +4150,15 @@ aria-pressed="true | false"       on toggle buttons (native ARIA)
 | <kbd>Home</kbd> / <kbd>End</kbd> | first or last control |
 | <kbd>Enter</kbd> / <kbd>Space</kbd> | activates the focused button |
 
+### Accessibility
+
+- Use a toolbar for three or more controls. Without JavaScript, each control is a Tab stop.
+- Toggle buttons use [`aria-pressed`](https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Reference/Attributes/aria-pressed), shown by more than color ([WCAG 1.4.1](https://www.w3.org/WAI/WCAG22/Understanding/use-of-color.html)).
+
 ### Specifications
 
 - [APG Toolbar pattern](https://www.w3.org/WAI/ARIA/apg/patterns/toolbar/)
-- [MDN `toolbar_role`](https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Reference/Roles/toolbar_role)
+- [MDN `toolbar` role](https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Reference/Roles/toolbar_role)
 - [APG kbd roving tabindex](https://www.w3.org/WAI/ARIA/apg/practices/keyboard-interface/#kbd_roving_tabindex)
 
 ### See also
@@ -4261,25 +4239,14 @@ A text field that suggests values as you type: `<datalist>` first, an APG combob
 
 ### Attributes
 
-```text
-<dui-combobox>                  wraps a <label>, an <input list> and its <datalist>
-<option value="…" label="…">    the suggestions; an optional label shows as a hint
-dui-combobox-filter             event, cancelable, detail { query }: cancel it to load options yourself
-element.setOptions([...])       replaces the options: strings or { value, label } objects
-```
+| Attribute or value | Effect |
+| --- | --- |
+| `<dui-combobox>` | wraps a `<label>`, an `<input list>` and its `<datalist>` |
+| `<option value="…" label="…">` | the suggestions; an optional label shows as a hint |
+| `dui-combobox-filter` | event, cancelable, detail { query }: cancel it to load options yourself |
+| `element.setOptions([...])` | replaces the options: strings or { value, label } objects |
 
-### Accessibility
-
-- A text field that suggests values as you type, following the APG Combobox pattern, list autocomplete variant: the input keeps focus, a listbox of matching options opens below it, and the arrow keys move an active option shown with aria-activedescendant.
-- The listbox is exactly as wide as the combobox, so it never overflows the viewport sideways (WCAG 1.4.10), and it needs neither anchor positioning nor the popover fallback that centers a panel at the bottom of the viewport.
-- The input has role="combobox", aria-autocomplete="list", aria-expanded and aria-controls; the list is role="listbox", named by the label, with role="option" items.
-- Focus never leaves the input; the active option is aria-activedescendant and has aria-selected="true", and it is drawn with an outline in the focus color (3:1, WCAG 1.4.11) and a tint, so it does not rely on color alone (WCAG 1.4.1).
-- A polite role="status" region, in the page from the upgrade on, announces how many options match after typing pauses (WCAG 4.1.3).
-- Options are at least --dui-size-control tall (44px, 32px compact; WCAG 2.5.8).
-- In forced colors mode the list keeps its border and the active option its outline, in system colors.
-- The list fades and grows from --dui-motion-zoom over --dui-motion-duration-fast, entering with --dui-motion-easing-enter and leaving with --dui-motion-easing-exit; the zoom runs for that duration times --dui-motion-movement, so reduced motion keeps only the fade (WCAG 2.3.3).
-
-### Keyboard
+#### Keyboard
 
 | Key | Action |
 | --- | --- |
@@ -4292,14 +4259,25 @@ element.setOptions([...])       replaces the options: strings or { value, label 
 | <kbd>Typing</kbd> | filters the options |
 | <kbd>Tab</kbd> | closes the list without accepting an option |
 
+### Accessibility
+
+- A text field that suggests values as you type, following the APG Combobox pattern, list autocomplete variant: the input keeps focus, a listbox of matching options opens below it, and the arrow keys move an active option shown with aria-activedescendant.
+- The listbox is exactly as wide as the combobox, so it never overflows the viewport sideways (WCAG 1.4.10), and it needs neither anchor positioning nor the popover fallback that centers a panel at the bottom of the viewport.
+- The input has role="combobox", aria-autocomplete="list", aria-expanded and aria-controls; the list is role="listbox", named by the label, with role="option" items.
+- Focus never leaves the input; the active option is aria-activedescendant and has aria-selected="true", and it is drawn with an outline in the focus color (3:1, WCAG 1.4.11) and a tint, so it does not rely on color alone (WCAG 1.4.1).
+- A polite role="status" region, in the page from the upgrade on, announces how many options match after typing pauses (WCAG 4.1.3).
+- Options are at least --dui-size-control tall (44px, 32px compact; WCAG 2.5.8).
+- In forced colors mode the list keeps its border and the active option its outline, in system colors.
+- The list fades and grows from --dui-motion-zoom over --dui-motion-duration-fast, entering with --dui-motion-easing-enter and leaving with --dui-motion-easing-exit; the zoom runs for that duration times --dui-motion-movement, so reduced motion keeps only the fade (WCAG 2.3.3).
+
 ### Specifications
 
 - [HTML `<datalist>` element](https://html.spec.whatwg.org/multipage/form-elements.html#the-datalist-element)
 - [APG Combobox pattern](https://www.w3.org/WAI/ARIA/apg/patterns/combobox/)
 - [MDN `<datalist>`](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/datalist)
 - [APG combobox autocomplete list](https://www.w3.org/WAI/ARIA/apg/patterns/combobox/examples/combobox-autocomplete-list/)
-- [MDN `combobox_role`](https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Reference/Roles/combobox_role)
-- [MDN `listbox_role`](https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Reference/Roles/listbox_role)
+- [MDN `combobox` role](https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Reference/Roles/combobox_role)
+- [MDN `listbox` role](https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Reference/Roles/listbox_role)
 - [WCAG Status messages](https://www.w3.org/WAI/WCAG22/Understanding/status-messages.html)
 - [WCAG Target size minimum](https://www.w3.org/WAI/WCAG22/Understanding/target-size-minimum.html)
 
@@ -4494,24 +4472,39 @@ The frame of an application: header, primary sidebar, main content and an option
 
 ### Attributes
 
-```text
-data-app-shell                on a wrapper (or <dui-app-shell>), after the skip link
-data-app-shell="contained"    the shell is --dui-size-pane tall and scrolls inside
-                              its own box (a shell inside a page section)
+| Attribute or value | Where | Effect |
+| --- | --- | --- |
+| `data-app-shell` | a wrapper (or `<dui-app-shell>`), after the skip link |  |
+| `data-app-shell="contained"` |  | the shell is `--dui-size-pane` tall and scrolls inside its own box (a shell inside a page section) |
+
 Children, in source order:
-  <header>                    the app bar: app name, toggles, search, user menu
-  <nav aria-label> or <aside aria-label>   the primary sidebar (before <main>)
-  <main id>                   the content
-  <aside aria-label>          optional auxiliary sidebar (after <main>)
-  <footer>                    optional
-<button type="button" aria-controls="sidebar-id" aria-expanded="true" hidden>
-                              a sidebar's toggle; <dui-app-shell> shows it.
-                              aria-expanded="false" in the markup starts the
-                              sidebar collapsed when it sits beside main
---dui-size-sidebar, --dui-size-sidebar-aux   sidebar widths beside main
---dui-size-pane               max block size of a sidebar beside main; the
-                              block size of a contained shell
-```
+
+| Attribute or value | Effect |
+| --- | --- |
+| `<header>` | the app bar: app name, toggles, search, user menu |
+| `<nav aria-label> or <aside aria-label>` | the primary sidebar (before `<main>`) |
+| `<main id>` | the content |
+| `<aside aria-label>` | optional auxiliary sidebar (after `<main>`) |
+| `<footer>` | optional |
+| `<button type="button" aria-controls="sidebar-id" aria-expanded="true" hidden>` | a sidebar's toggle; `<dui-app-shell>` shows it. `aria-expanded="false"` in the markup starts the sidebar collapsed when it sits beside main |
+| `--dui-size-sidebar, --dui-size-sidebar-aux` | sidebar widths beside main |
+| `--dui-size-pane` | max block size of a sidebar beside main; the block size of a contained shell |
+
+#### Motion
+
+Collapsing and expanding a sidebar beside main animates the grid columns for `--dui-motion-duration-slow` times `--dui-motion-movement`, so reduced motion and `data-motion="none"` make it instant (WCAG 2.3.3); the drawer is `dialog.css`'s drawer and moves like it. Elevation: the app bar and sidebars are on the page (flat) and separated by hairlines; the drawer is at the dialog level.
+
+#### Breakpoints
+
+The primary sidebar sits beside main from 48rem of the shell's own inline size, the auxiliary sidebar from 64rem (between the two it stacks under main, or is a drawer with the script). A container query condition cannot read a custom property, so both are lengths; `web-components/dui-app-shell.js` uses the same two numbers.
+
+#### Keyboard
+
+| Key | Action |
+| --- | --- |
+| <kbd>Tab</kbd> | skip link, app bar, primary sidebar, main, auxiliary sidebar (source order) |
+| <kbd>Enter</kbd> / <kbd>Space</kbd> | on a toggle, collapses or expands its sidebar; when the shell is narrow, opens it as a drawer |
+| <kbd>Esc</kbd> | in a drawer, closes it and returns focus to its toggle |
 
 ### Accessibility
 
@@ -4521,14 +4514,6 @@ Children, in source order:
 - Sidebars that sit beside main stick to the top of the scroll area and scroll on their own, at most --dui-size-pane tall; they are not focus traps and hold focusable links, so the keyboard reaches everything in them (WCAG 2.1.1).
 - Nothing scrolls sideways at 320px (WCAG 1.4.10): the app bar wraps, the search taking its own row.
 
-### Keyboard
-
-| Key | Action |
-| --- | --- |
-| <kbd>Tab</kbd> | skip link, app bar, primary sidebar, main, auxiliary sidebar (source order) |
-| <kbd>Enter</kbd> / <kbd>Space</kbd> | on a toggle, collapses or expands its sidebar; when the shell is narrow, opens it as a drawer |
-| <kbd>Esc</kbd> | in a drawer, closes it and returns focus to its toggle |
-
 ### Specifications
 
 - [APG Landmark regions](https://www.w3.org/WAI/ARIA/apg/practices/landmark-regions/)
@@ -4536,7 +4521,7 @@ Children, in source order:
 - [HTML `<aside>` element](https://html.spec.whatwg.org/multipage/sections.html#the-aside-element)
 - [WCAG 1.4.10 Reflow](https://www.w3.org/WAI/WCAG22/Understanding/reflow.html)
 - [MDN `grid-template-areas`](https://developer.mozilla.org/en-US/docs/Web/CSS/grid-template-areas)
-- [MDN `Container_queries`](https://developer.mozilla.org/en-US/docs/Web/CSS/Guides/Containment/Container_queries)
+- [MDN Container queries](https://developer.mozilla.org/en-US/docs/Web/CSS/Guides/Containment/Container_queries)
 - [APG disclosure](https://www.w3.org/WAI/ARIA/apg/patterns/disclosure/)
 - [WCAG Bypass blocks](https://www.w3.org/WAI/WCAG22/Understanding/bypass-blocks.html)
 
@@ -4690,10 +4675,6 @@ A compact density token that tightens spacing for data-heavy screens.
 </div>
 ```
 
-### Keyboard
-
-See the [Accessibility baseline](https://odonckers.github.io/domestic-ui/principles/accessibility-baseline-wcag-22-aa.md).
-
 ### Specifications
 
 - [WCAG 2.5.8 Target Size (Minimum)](https://www.w3.org/WAI/WCAG22/Understanding/target-size-minimum.html)
@@ -4785,12 +4766,21 @@ A grid of summary sections, each with a heading, that reflows to fit the screen.
 
 ### Attributes
 
-```text
-data-dashboard          on the wrapper (a <div>, or a <ul> of tiles)
-data-dashboard="wide"   on a tile: two columns when they fit, else one
-data-dashboard="full"   on a tile: the whole row
-Tiles: <section aria-labelledby> (or <article>, <li>) with a heading first.
-```
+| Attribute or value | Where | Effect |
+| --- | --- | --- |
+| `data-dashboard` | the wrapper (a `<div>`, or a `<ul>` of tiles) |  |
+| `data-dashboard="wide"` | a tile | two columns when they fit, else one |
+| `data-dashboard="full"` | a tile | the whole row |
+
+Tiles: `<section aria-labelledby>` (or `<article>`, `<li>`) with a heading first.
+
+#### Elevation
+
+Tiles use `--dui-elevation-raised` and its surface (level 1), with a border, so forced colors mode still draws the edge.
+
+#### Breakpoint
+
+A wide tile spans two columns from 33.5rem of the wrapper's own inline size (two 16rem columns and the 1.5rem gap). A container query condition cannot read a custom property, so it is written as a length.
 
 ### Accessibility
 
@@ -4798,16 +4788,12 @@ Tiles: <section aria-labelledby> (or <article>, <li>) with a heading first.
 - Figures in a tile are text, not only color (WCAG 1.4.1).
 - Nothing scrolls sideways at 320px (WCAG 1.4.10); wrap a table in a tile in data-scroll="inline".
 
-### Keyboard
-
-See the [Accessibility baseline](https://odonckers.github.io/domestic-ui/principles/accessibility-baseline-wcag-22-aa.md).
-
 ### Specifications
 
 - [MDN CSS grid layout](https://developer.mozilla.org/en-US/docs/Web/CSS/Guides/Grid_layout)
 - [WCAG 1.4.10 Reflow](https://www.w3.org/WAI/WCAG22/Understanding/reflow.html)
 - [MDN `auto-fit`](https://developer.mozilla.org/en-US/docs/Web/CSS/repeat#auto-fit)
-- [MDN `Container_queries`](https://developer.mozilla.org/en-US/docs/Web/CSS/Guides/Containment/Container_queries)
+- [MDN Container queries](https://developer.mozilla.org/en-US/docs/Web/CSS/Guides/Containment/Container_queries)
 
 ### See also
 
@@ -5283,14 +5269,39 @@ Rows of records in a native `<table>` with a caption, header cells and optional 
 
 ### Attributes
 
-```text
-data-table               on the <table>: header surface, sort buttons, selection, empty and loading states
-data-table="sticky"      on the <table>: the header row sticks to the nearest scroll container
-data-table="number"      on every <th> and <td> of a numeric column: end-aligned, tabular, no wrapping
-data-table="sortable"    on a <thead> <th>: <dui-table> turns its text into a sort button
-aria-sort="ascending | descending"   on the sorted <th> only (native ARIA)
-aria-busy="true"         on the <table> while rows load
-```
+| Attribute or value | Where | Effect |
+| --- | --- | --- |
+| `data-table` | the `<table>` | header surface, sort buttons, selection, empty and loading states |
+| `data-table="sticky"` | the `<table>` | the header row sticks to the nearest scroll container |
+| `data-table="number"` | every `<th>` and `<td>` of a numeric column | end-aligned, tabular, no wrapping |
+| `data-table="sortable"` | a `<thead>` `<th>` | `<dui-table>` turns its text into a sort button |
+| `aria-sort="ascending \| descending"` | the sorted `<th>` only (native ARIA) |  |
+| `aria-busy="true"` | the `<table>` while rows load |  |
+
+#### Cells
+
+Words on the table cannot target a column, so number and sortable go on cells, with the same attribute.
+
+#### Selection
+
+A `<label>` with a checkbox and visually hidden text naming the row ("Select order 1042") in the first cell of each body row, and an empty first header cell, where `<dui-table>` adds the "select all" checkbox.
+
+#### Empty
+
+One row with a single `<td colspan>` holding a message and an optional action.
+
+#### Loading
+
+`aria-busy="true"` on the table and skeleton rows of empty `<td>`s with `aria-hidden="true"`; the empty cells show as bars.
+
+#### Keyboard
+
+| Key | Action |
+| --- | --- |
+| <kbd>Tab</kbd> | moves to the scroll container, then each sort button and checkbox |
+| <kbd>Enter</kbd> / <kbd>Space</kbd> | on a sort button, sorts by that column (again: reverses) |
+| <kbd>Space</kbd> | on a checkbox, selects or deselects the row (or every row) |
+| <kbd>Arrow keys</kbd> | scroll the focused scroll container |
 
 ### Accessibility
 
@@ -5304,15 +5315,6 @@ aria-busy="true"         on the <table> while rows load
 - Header buttons and checkbox labels are --dui-size-control tall (44px, 32px compact), above the 24px of WCAG 2.5.8.
 - Those make the table an APG Grid, which this is not.
 
-### Keyboard
-
-| Key | Action |
-| --- | --- |
-| <kbd>Tab</kbd> | moves to the scroll container, then each sort button and checkbox |
-| <kbd>Enter</kbd> / <kbd>Space</kbd> | on a sort button, sorts by that column (again: reverses) |
-| <kbd>Space</kbd> | on a checkbox, selects or deselects the row (or every row) |
-| <kbd>Arrow keys</kbd> | scroll the focused scroll container |
-
 ### Specifications
 
 - [HTML `<table>` element](https://html.spec.whatwg.org/multipage/tables.html#the-table-element)
@@ -5322,7 +5324,7 @@ aria-busy="true"         on the <table> while rows load
 - [APG sortable table](https://www.w3.org/WAI/ARIA/apg/patterns/table/examples/sortable-table/)
 - [MDN `aria-sort`](https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Reference/Attributes/aria-sort)
 - [MDN `aria-busy`](https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Reference/Attributes/aria-busy)
-- [MDN `sticky_positioning`](https://developer.mozilla.org/en-US/docs/Web/CSS/position#sticky_positioning)
+- [MDN sticky positioning](https://developer.mozilla.org/en-US/docs/Web/CSS/position#sticky_positioning)
 - [WCAG Status messages](https://www.w3.org/WAI/WCAG22/Understanding/status-messages.html)
 - [WCAG Focus not obscured minimum](https://www.w3.org/WAI/WCAG22/Understanding/focus-not-obscured-minimum.html)
 
@@ -5439,31 +5441,34 @@ A row of native form controls that narrows a list or table.
 
 ### Attributes
 
-```text
-data-filter-bar    on a <search> (aria-label when the page has several)
-Children: a <form> of fields (each a data-field, or a <dui-combobox>)
-whose last child holds the buttons, then a role="status" element with
-the result count.
-```
+| Attribute or value | Where | Effect |
+| --- | --- | --- |
+| `data-filter-bar` | a `<search>` (`aria-label` when the page has several) |  |
 
-### Accessibility
+Children: a `<form>` of fields (each a `data-field`, or a `<dui-combobox>`) whose last child holds the buttons, then a `role="status"` element with the result count.
 
-- The status text says what changed ("24 orders match"), and is announced politely without moving focus (WCAG 4.1.3 Status Messages).
-- Controls keep their size (44px, 32px compact: above the 24px of WCAG 2.5.8).
+#### Breakpoint
 
-### Keyboard
+30rem of the bar's own inline size. A container query condition cannot read a custom property, so it is written as a length.
+
+#### Keyboard
 
 | Key | Action |
 | --- | --- |
 | <kbd>Tab</kbd> | moves through the filters, then Apply and Reset |
 | <kbd>Enter</kbd> | in a text field, applies the filters |
 
+### Accessibility
+
+- The status text says what changed ("24 orders match"), and is announced politely without moving focus (WCAG 4.1.3 Status Messages).
+- Controls keep their size (44px, 32px compact: above the 24px of WCAG 2.5.8).
+
 ### Specifications
 
 - [HTML `<search>` element](https://html.spec.whatwg.org/multipage/grouping-content.html#the-search-element)
 - [WCAG 4.1.3 Status Messages](https://www.w3.org/WAI/WCAG22/Understanding/status-messages.html)
 - [MDN `search`](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/search)
-- [MDN `status_role`](https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Reference/Roles/status_role)
+- [MDN `status` role](https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Reference/Roles/status_role)
 - [WCAG Labels or instructions](https://www.w3.org/WAI/WCAG22/Understanding/labels-or-instructions.html)
 
 ### See also
@@ -5596,21 +5601,25 @@ Long forms split into labelled groups, in one or more columns.
 
 ### Attributes
 
-```text
-data-form-sections   on the <form>; each child <section> is a section:
-  <header>           its heading (h2) and an optional description <p>
-  one body element   a <div> (or <fieldset>) of fields, after the header
-```
+| Attribute or value | Where | Effect |
+| --- | --- | --- |
+| `data-form-sections` | the `<form>` | each child `<section>` is a section: |
+| `<header>` |  | its heading (h2) and an optional description `<p>` |
+| `one body element` |  | a `<div>` (or `<fieldset>`) of fields, after the header |
+
+#### Breakpoint
+
+48rem of the form's own inline size. A container query condition cannot read a custom property, so it is written as a length.
+
+#### Keyboard
+
+Native keyboard behavior; see [HTML `<form>` element](https://html.spec.whatwg.org/multipage/forms.html#the-form-element).
 
 ### Accessibility
 
 - Sections keep source order in both layouts, so the reading and Tab order stay top to bottom (WCAG 1.3.2, 2.4.3).
 - Put the form's buttons in a data-action-bar at the end of the form so they stay in reach.
 - Nothing scrolls sideways at 320px (WCAG 1.4.10).
-
-### Keyboard
-
-Native keyboard behavior; see [HTML `<form>` element](https://html.spec.whatwg.org/multipage/forms.html#the-form-element).
 
 ### Specifications
 
@@ -5619,7 +5628,7 @@ Native keyboard behavior; see [HTML `<form>` element](https://html.spec.whatwg.o
 - [WAI Forms tutorial](https://www.w3.org/WAI/tutorials/forms/)
 - [WCAG 3.3.2 Labels or Instructions](https://www.w3.org/WAI/WCAG22/Understanding/labels-or-instructions.html)
 - [W3C grouping](https://www.w3.org/WAI/tutorials/forms/grouping/)
-- [MDN `Container_queries`](https://developer.mozilla.org/en-US/docs/Web/CSS/Guides/Containment/Container_queries)
+- [MDN Container queries](https://developer.mozilla.org/en-US/docs/Web/CSS/Guides/Containment/Container_queries)
 
 ### See also
 
@@ -5800,14 +5809,22 @@ A list of items beside the details of the selected one, stacked on narrow screen
 
 ### Attributes
 
-```text
-data-list-detail        on the wrapper; exactly two children:
-  1. the list: a <nav aria-label> (or <div>) holding a <ul> or <ol> whose
-     items are each one <a href> (or <button>)
-  2. the detail: a <section> or <article> with aria-labelledby
-aria-current="page"     on the selected link ("true" on a selected button),
-                        or on its <li>
-```
+| Attribute or value | Where | Effect |
+| --- | --- | --- |
+| `data-list-detail` | the wrapper | exactly two children: 1. the list: a `<nav aria-label>` (or `<div>`) holding a `<ul>` or `<ol>` whose items are each one `<a href>` (or `<button>`) 2. the detail: a `<section>` or `<article>` with `aria-labelledby` |
+| `aria-current="page"` | the selected link ("true" on a selected button), or on its `<li>` |  |
+
+#### Breakpoint
+
+40rem of the wrapper's own inline size. A container query condition cannot read a custom property, so it is written as a length; to move it, write your own @container dui-list-detail rule.
+
+#### Keyboard
+
+| Key | Action |
+| --- | --- |
+| <kbd>Tab</kbd> | moves through the list links, then into the detail pane |
+| <kbd>Enter</kbd> | on a link, opens that item's detail |
+| <kbd>Arrow keys</kbd> | scroll the detail pane once it has focus |
 
 ### Accessibility
 
@@ -5819,19 +5836,11 @@ aria-current="page"     on the selected link ("true" on a selected button),
 - Source order is list, then detail, which is also the reading and Tab order in both layouts (WCAG 1.3.2, 2.4.3).
 - When a link loads a new detail, move focus to the detail's heading or leave it on the link; never move it without a page load.
 
-### Keyboard
-
-| Key | Action |
-| --- | --- |
-| <kbd>Tab</kbd> | moves through the list links, then into the detail pane |
-| <kbd>Enter</kbd> | on a link, opens that item's detail |
-| <kbd>Arrow keys</kbd> | scroll the detail pane once it has focus |
-
 ### Specifications
 
 - [MDN CSS grid layout](https://developer.mozilla.org/en-US/docs/Web/CSS/Guides/Grid_layout)
 - [WCAG 1.4.10 Reflow](https://www.w3.org/WAI/WCAG22/Understanding/reflow.html)
-- [MDN `Container_queries`](https://developer.mozilla.org/en-US/docs/Web/CSS/Guides/Containment/Container_queries)
+- [MDN Container queries](https://developer.mozilla.org/en-US/docs/Web/CSS/Guides/Containment/Container_queries)
 - [MDN `aria-current`](https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Reference/Attributes/aria-current)
 - [WCAG Meaningful sequence](https://www.w3.org/WAI/WCAG22/Understanding/meaningful-sequence.html)
 - [WCAG Use of color](https://www.w3.org/WAI/WCAG22/Understanding/use-of-color.html)
@@ -5946,10 +5955,13 @@ Two regions side by side at a set ratio, stacked on narrow screens.
 
 ### Attributes
 
-```text
-data-split="[1:1 | 1:2 | 2:1]"   on the wrapper of exactly two regions;
-                                 empty means 1:1 (equal halves)
-```
+| Attribute or value | Where | Effect |
+| --- | --- | --- |
+| `data-split="[1:1 \| 1:2 \| 2:1]"` | the wrapper of exactly two regions | empty means 1:1 (equal halves) |
+
+#### Breakpoint
+
+40rem of the wrapper's own inline size. A container query condition cannot read a custom property, so it is written as a length; to move it, write your own @container dui-split rule.
 
 ### Accessibility
 
@@ -5957,16 +5969,12 @@ data-split="[1:1 | 1:2 | 2:1]"   on the wrapper of exactly two regions;
 - Source order is the reading and Tab order in both layouts; the ratio never reorders the regions (WCAG 1.3.2, 2.4.3).
 - Nothing scrolls sideways at 320px (WCAG 1.4.10).
 
-### Keyboard
-
-See the [Accessibility baseline](https://odonckers.github.io/domestic-ui/principles/accessibility-baseline-wcag-22-aa.md).
-
 ### Specifications
 
 - [APG Window Splitter pattern](https://www.w3.org/WAI/ARIA/apg/patterns/windowsplitter/)
 - [WCAG 1.4.10 Reflow](https://www.w3.org/WAI/WCAG22/Understanding/reflow.html)
-- [MDN `Grid_layout`](https://developer.mozilla.org/en-US/docs/Web/CSS/Guides/Grid_layout)
-- [MDN `Container_queries`](https://developer.mozilla.org/en-US/docs/Web/CSS/Guides/Containment/Container_queries)
+- [MDN Grid layout](https://developer.mozilla.org/en-US/docs/Web/CSS/Guides/Grid_layout)
+- [MDN Container queries](https://developer.mozilla.org/en-US/docs/Web/CSS/Guides/Containment/Container_queries)
 
 ### See also
 

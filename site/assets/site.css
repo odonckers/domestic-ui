@@ -43,6 +43,11 @@
   max-inline-size: var(--dui-measure);
 }
 
+/* Token pages: the tables are the content and take all of main ("On this page" is left out). */
+.docs-content[data-wide] {
+  max-inline-size: none;
+}
+
 /* "On this page": a plain list of in-page links. */
 .docs-toc ul {
   margin: 0;
@@ -77,18 +82,31 @@
 }
 
 /*
- * Reflow at 320 CSS pixels (WCAG 1.4.10): long words, URLs and inline code
- * in prose break anywhere instead of widening the page. Code blocks wrap
- * instead of scrolling, so a long line never needs a focusable scroll
- * region. Copying still gives the exact bytes.
+ * Reflow at 320 CSS pixels (WCAG 1.4.10). Long words and URLs in prose,
+ * cells and headings break only where they would overflow (break-word
+ * keeps the min-content width, so table columns keep their words whole).
+ * Inline code, which the base layer lets break anywhere, keeps whole
+ * tokens except on narrow screens. Code blocks keep their lines and scroll
+ * in their own named [data-scroll="inline"] region (role="region",
+ * tabindex="0"), as wide tables do.
  */
 main :is(p, li, dt, dd, td, th, caption, h1, h2, h3, h4) {
-  overflow-wrap: anywhere;
+  overflow-wrap: break-word;
 }
 
-main pre {
-  white-space: pre-wrap;
-  overflow-wrap: anywhere;
+main :is(p, li, dt, dd, td, th, caption, h1, h2, h3, h4) code {
+  overflow-wrap: break-word;
+}
+
+/* The first column of a table names an attribute, token or key: kept on one line (the table scrolls in its region instead). */
+main th[scope="row"] code {
+  white-space: nowrap;
+}
+
+@media (max-width: 30em) {
+  main :is(p, li, dt, dd) code {
+    overflow-wrap: anywhere;
+  }
 }
 
 /*

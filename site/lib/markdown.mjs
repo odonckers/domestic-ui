@@ -20,7 +20,7 @@ import { escapeHtml, unescapeHtml, slugify } from "./util.mjs";
  * @property {(href: string) => string} [resolveLink] rewrite link targets
  * @property {Set<string>} [ids] heading ids already used on the page
  * @property {number} [headingShift] added to every heading level
- * @property {string} [caption] caption for tables with no heading above them
+ * @property {string} [caption] name for tables and code with no heading above them (the page's h1)
  *
  * @typedef {{ type: "heading", level: number, text: string, raw: string }
  *   | { type: "code", lang: string, code: string, raw: string }
@@ -211,40 +211,57 @@ function renderList(items, options) {
 
 /**
  * Render Markdown to HTML.
- * Tables get a <caption> (the nearest heading above them, or
- * options.caption) and th scope, per https://www.w3.org/WAI/tutorials/tables/.
+ * Wide blocks scroll in a named, focusable [data-scroll="inline"] region
+ * (css/layout/scroll.css; WCAG 1.4.10 Reflow, 2.1.1 Keyboard):
+ * - a table sits in a region; both are labelled by the nearest heading
+ *   above them (aria-labelledby), or options.caption at the top of a
+ *   page; the visible heading is the caption
+ *   (https://www.w3.org/WAI/tutorials/tables/caption-summary/). th scope as
+ *   in https://www.w3.org/WAI/tutorials/tables/.
+ * - a code block is its own region, named "Code: <heading>".
+ * A second table or code block under one heading gets "(2)" in its name.
  * @param {string} md
  * @param {Options} [options]
  */
 export function markdownToHtml(md, options = {}) {
   const ids = options.ids ?? new Set();
   const shift = options.headingShift ?? 0;
-  let caption = options.caption ?? "";
+  /** The nearest heading above: its id (none at the top of a page) and text. */
+  let heading = { id: "", text: options.caption ?? "" };
   /** @type {Map<string, number>} */
-  const captions = new Map();
+  const seen = new Map();
+  /** Count of blocks of a kind under the current heading. @param {string} kind */
+  const nth = (kind) => {
+    const key = `${kind}\u0000${heading.id}\u0000${heading.text}`;
+    const n = (seen.get(key) ?? 0) + 1;
+    seen.set(key, n);
+    return n;
+  };
   return tokenize(md)
     .map((block) => {
       switch (block.type) {
         case "heading": {
           const level = Math.min(6, Math.max(1, block.level + shift));
-          caption = plainText(block.text);
-          return `<h${level} id="${uniqueId(caption, ids)}">${inline(block.text, options)}</h${level}>`;
+          const text = plainText(block.text);
+          heading = { id: uniqueId(text, ids), text };
+          return `<h${level} id="${heading.id}">${inline(block.text, options)}</h${level}>`;
         }
         case "code": {
+          const n = nth("code");
+          const name = `Code${heading.text ? `: ${heading.text}` : ""}${n > 1 ? ` (${n})` : ""}`;
           const lang = block.lang ? ` class="language-${escapeHtml(block.lang)}"` : "";
-          return `<pre><code${lang}>${escapeHtml(block.code)}</code></pre>`;
+          return `<pre data-scroll="inline" role="region" tabindex="0" aria-label="${escapeHtml(name)}"><code${lang}>${escapeHtml(block.code)}</code></pre>`;
         }
         case "table": {
           const [head, ...body] = block.rows;
-          const n = (captions.get(caption) ?? 0) + 1;
-          captions.set(caption, n);
-          const text = n > 1 ? `${caption} (table ${n})` : caption;
+          const n = nth("table");
+          const name = n === 1 && heading.id ? `aria-labelledby="${heading.id}"` : `aria-label="${escapeHtml(`${heading.text || "Table"}${n > 1 ? ` (${n})` : ""}`)}"`;
           const ths = head.map((cell) => `<th scope="col">${inline(cell, options)}</th>`).join("");
           const trs = body.map(
             (row) =>
               `<tr>${row.map((cell, c) => (c === 0 ? `<th scope="row">${inline(cell, options)}</th>` : `<td>${inline(cell, options)}</td>`)).join("")}</tr>`,
           );
-          return `<table>\n<caption>${escapeHtml(text)}</caption>\n<thead>\n<tr>${ths}</tr>\n</thead>\n<tbody>\n${trs.join("\n")}\n</tbody>\n</table>`;
+          return `<div data-scroll="inline" role="region" tabindex="0" ${name}>\n<table ${name}>\n<thead>\n<tr>${ths}</tr>\n</thead>\n<tbody>\n${trs.join("\n")}\n</tbody>\n</table>\n</div>`;
         }
         case "list":
           return renderList(block.items, options);

@@ -51,22 +51,33 @@ compare bytes.
 
 ## Page structure
 
-Element, component, layout and pattern pages follow the order of an MDN reference page. A new page
-type follows it too:
+Element, component, layout and pattern pages share one outline, built by `referenceBlocks()` in
+`site/lib/pages.mjs` (the order of an MDN reference page). Empty sections are left out; nothing is
+added to fill one. A new page type follows it too:
 
 1. **H1 and a one-sentence summary.** An **Our choice:** line under it only when no native element
-   or APG pattern covers the thing.
+   or APG pattern covers the thing. Planned patterns add "Coming in M3." and skip 2 and 3.
 2. **Live example.** Per snippet: its name (`###`), its render and directly below it its markup,
    from the same text (see [Snippet convention](#snippet-convention)). Prose never repeats markup.
-   Planned patterns show "Coming in M3." instead and nothing else from this list until 4.
-3. **Attributes** (**API** for layouts and utilities). The `data-<component>` attribute and its
-   values, the native attributes that matter, then short usage notes. Labelled header blocks
-   (`States`, `Sizes`, `Focus`), `Keyboard` and the group README's **Our choice** bullets follow.
+3. **Attributes** (**API** for layouts and utilities). The group README's index cell as written,
+   then the header comment's API block as a table (**Attribute or value | Where | Effect**: rows are
+   split at two or more spaces, a line indented to the second column continues its row, "on
+   `<element>`" becomes Where; see `site/lib/api-table.mjs`), prose lines of the block as
+   paragraphs, then short usage notes, then the group README's **Our choice:** bullets (each keeps
+   its label; no heading). Then, as `###` under it, each labelled header block (`States`, `Sizes`,
+   `Focus`, `Motion`, `Breakpoint`, `Elevation`, …) as prose without URLs, or as a table when it is
+   written as rows, and `### Keyboard` (Key | Action, or one line pointing at the standard's
+   keyboard section).
 4. **Accessibility.** Short, concrete bullets, each borrowed fact linked to WCAG, APG, MDN or its author.
 5. **Specifications.** Labelled links: MDN, WHATWG, W3C, WCAG 2.2, WAI-ARIA APG.
 6. **See also.** The level index, the component API convention, the accessibility baseline, the
    source files on GitHub, and the demo views that use the page (see [Demo views](#demo-views)).
 7. **How other systems do it**, last (see below).
+
+The breadcrumb sits above the H1, previous and next links after the page, and the page's H2s are
+listed in "On this page" beside it on wide screens (see [Sidebar](#sidebar)). Prose, tables, code
+and live frames share one content width (`--dui-measure`); token pages (`wide: true`) take all of
+`main` and have no "On this page".
 
 Writing rules: be specific and direct; no preamble ("This page describes…"), no repeating the
 summary in the body, no marketing. Never present a native pattern as ours. One short example per
@@ -93,16 +104,21 @@ pages of its sections below it, in the order `buildPages()` returns them.
 | --- | --- | --- |
 | Getting started | `index.html` | |
 | Principles | `principles/index.html` | one page per `PRINCIPLES.md` section |
-| Tokens | `tokens/index.html` | one page per file in `css/tokens/` |
+| Tokens | `tokens/index.html` | one page per file in `css/tokens/`, then the patterns at level `token` (density) |
 | Base | `components/base.html` | utilities (`components/utilities/<name>.html`) |
-| Layout | `layouts/index.html` | the layout primitives |
-| Atoms, Molecules, Organisms | `<group>/index.html` | `components/<group>/<name>.html` |
-| Patterns and guides | `patterns/index.html` | every pattern with "(coming in M3)" while planned, `guides/index.html`, every guide |
+| Layout | `layouts/index.html` | the layout primitives, then the patterns at level `layout` |
+| Atoms, Molecules, Organisms | `<group>/index.html` | `components/<group>/<name>.html`, then the patterns at that level, with "(coming in M3)" while planned |
+| Patterns | `patterns/index.html` | (every pattern is under its level) |
+| Guides | `guides/index.html` | every guide |
 | Demos | `demos.html` | |
 | Contributing | `contributing.html` | |
 | Changelog | `changelog.html` | |
 
 **Our choice:** utilities sit under Base, not Layout, because they are not layout primitives.
+A pattern is listed under its level (its `level` front matter), so Molecules and Organisms hold the
+molecules and organisms whatever their source; `patterns/index.html` lists them all, grouped by
+level. Link text is the element's name, singular (`NAV_LABELS` in `site/lib/nav.mjs`: Button, Link,
+Controls, Alert, Density); the page title keeps the README's or registry's wording.
 There is no examples section: each example is on its element's page, and the old example URLs
 redirect there.
 
@@ -336,8 +352,8 @@ keyboard:
 | Key | Rule |
 | --- | --- |
 | `title`, `summary` | Required in practice. Inline Markdown. |
-| `milestone` | `M3` or `M3b`; groups `patterns/index.html` and sets the "Coming in …" sentence. |
-| `level` | `molecule`, `organism`, `layout` or `token`; places the pattern on that level's index page (`molecules/index.html`, `layouts/index.html`, …). |
+| `milestone` | `M3` or `M3b`; sets the "Coming in …" sentence and the sidebar note while planned. |
+| `level` | `molecule`, `organism`, `layout` or `token`; places the pattern on that level's index page and under that level in the sidebar (`molecules/index.html`, `layouts/index.html`, …). |
 | `standard` | One `Label: URL` or a list of them: the native element or APG pattern it follows. |
 | `our-choice` | One line, only when there is no standard. The build fails if a pattern has neither. |
 | `specs` | Further `Label: URL` links, shown under Specifications after the standards. |
@@ -470,7 +486,8 @@ between. A token with no comment falls back to its purpose in the `PRINCIPLES.md
 table, marked "†" (the page intro says where † descriptions come from); with neither it shows
 "No description yet" in muted italic.
 
-Values: **Written as** is the value in the file. **Light** and **Dark** substitute every `var()`
+Columns: **Token | Preview | Light | Dark | Description**; **Written as** (the value in the file)
+is a small muted line in Description when it differs from Light or Dark. **Light** and **Dark** substitute every `var()`
 recursively through the tokens of all files (a fallback is used for unknown names; a cycle stays as
 written) and take the first or second argument of `light-dark()`. Other functions (`color-mix()`,
 `clamp()`) are left as written with their arguments resolved.
@@ -486,12 +503,17 @@ one when the values match), each in a `data-color-scheme` scope. The sample's va
 literal (in `style="--preview: …"`), so the dark sample shows the dark value whatever the page
 scheme. A value that would need an HTML entity in the `style` attribute gets "None".
 
-Each group is a `<table>` with a `<caption>` ("Spacing (primitive tokens)"), `<th scope="col">`
-headers and the token name in `<code>` in a `<th scope="row">`, wrapped in:
+Each group is its `h2`, then a `<table aria-labelledby="<h2 id>">` (no visible caption: the
+heading is the name), `<th scope="col">` headers and the token name in `<code>` in a
+`<th scope="row">`, wrapped in:
 
 ```html
-<div data-scroll="inline" tabindex="0" role="region" aria-label="Spacing (primitive tokens) (scrolls horizontally)">
+<div data-scroll="inline" tabindex="0" role="region" aria-labelledby="spacing">
 ```
+
+Markdown tables get the same: a region and a table both labelled by the heading above them, and
+code blocks are their own region (`<pre data-scroll="inline" role="region" tabindex="0"
+aria-label="Markup: Variants">`), so code keeps its lines instead of breaking inside tokens.
 
 `data-scroll="inline"` is the core CSS API for horizontal scroll regions, styled by
 [`css/layout/scroll.css`](../css/layout/scroll.css); `site.css` adds no rule of its own. Tables are never `display: block`. Hyphenated words in values never
@@ -592,8 +614,9 @@ themselves, then run `node site/build.mjs`. Two checks catch a forgotten rebuild
 
 Every page has a skip link (the first focusable element), landmarks in source order (app shell), one
 `aria-current="page"` in the Docs nav, one `h1`, tables with `<caption>` and `th scope`, and iframes
-with a `title`. Long words, URLs and inline code in prose break anywhere (`overflow-wrap: anywhere`);
-only token tables scroll, inside their named `data-scroll` region.
+with a `title`. Long words and URLs in prose and cells break only where they would overflow
+(`overflow-wrap: break-word`); inline code may break anywhere only below `30em`. Tables and code
+blocks scroll inside named `data-scroll="inline"` regions.
 
 `tests/docs.spec.js` (Chromium) runs html-validate and axe (WCAG 2.2 AA tags, light and dark) on
 every page and every render page, blocks external requests, and checks the navigation (sidebar order, every built page reachable, one `aria-current` and only the

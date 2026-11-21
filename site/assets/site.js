@@ -5,8 +5,9 @@
  *   scrolled into view inside the sidebar.
  * - Token pages list every token. Here the filter is shown and hides rows
  *   that do not match, and groups with no match, and says how many are shown.
- * - Live examples are frames of a fixed height (site.css). Here each is fitted
- *   to its content, and refitted when the content changes size.
+ * - Live examples are frames of a fixed height (site.css), loaded with the
+ *   page (not lazily, so the page does not jump as you scroll). Here each is
+ *   fitted to its content, and refitted when the content changes size.
  * No network requests.
  */
 
@@ -14,7 +15,11 @@ for (const frame of document.querySelectorAll("iframe[data-live]")) {
   if (!(frame instanceof HTMLIFrameElement)) continue;
   const fit = () => {
     const root = frame.contentDocument?.documentElement;
-    if (root) frame.style.blockSize = `${Math.ceil(root.getBoundingClientRect().height) + 2}px`;
+    const inner = frame.contentWindow?.innerHeight ?? 0;
+    if (!root) return;
+    // Content that overflows the frame (margins, wide or positioned children) shows in scrollHeight; content shorter than the frame, in the root's own height.
+    const height = root.scrollHeight > inner ? root.scrollHeight : root.getBoundingClientRect().height;
+    frame.style.blockSize = `${Math.ceil(height) + 2}px`;
   };
   const watch = () => {
     const body = frame.contentDocument?.body;

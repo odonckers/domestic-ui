@@ -16,11 +16,13 @@ const VIEWPORTS = [
 /**
  * Null when the page does not scroll sideways; otherwise the widths and the
  * element reaching furthest right. Content inside a [data-scroll="inline"]
- * region scrolls there, so only the region itself counts.
+ * region scrolls there, so only the region itself counts; a <pre> may
+ * scroll only when it is such a region.
  */
 function overflow() {
   const root = document.documentElement;
-  const pre = [...document.querySelectorAll("main pre")].filter((p) => p.scrollWidth > p.clientWidth);
+  // A code block scrolls only as its own named region (data-scroll="inline", role="region", tabindex="0").
+  const pre = [...document.querySelectorAll("main pre:not([data-scroll~='inline'][role='region'][tabindex='0'][aria-label])")].filter((p) => p.scrollWidth > p.clientWidth);
   if (root.scrollWidth <= root.clientWidth && !pre.length) return null;
   let worst = pre[0] ?? null;
   let right = root.clientWidth;
