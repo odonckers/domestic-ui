@@ -94,10 +94,17 @@
   --dui-focus-width: var(--dui-border-2);
   --dui-focus-offset: var(--dui-border-2);
 
-  /* Motion */
-  --dui-duration-fast: var(--dui-duration-150);
-  --dui-duration-normal: var(--dui-duration-250);
-  --dui-easing-standard: var(--dui-easing-ease-out);
+  /* Motion knobs: durations and distances (section 2) are derived from these. */
+  --dui-motion-scale: var(--dui-factor-1); /* Multiplies every motion duration: 2 is twice as slow, 0 turns motion off */
+  --dui-motion-movement: var(--dui-factor-1); /* 1 lets things slide, lift and zoom; 0 (reduced motion) keeps fades and color changes only */
+  --dui-motion-enabled: var(--dui-factor-1); /* 0 (data-motion="none") makes every duration 0s, whatever the scale set inside */
+  --dui-motion-easing-standard: var(--dui-easing-ease-out); /* Easing for state changes that stay on screen: hover, press, switch */
+  --dui-motion-easing-enter: var(--dui-easing-decelerate); /* Easing for things arriving: dialogs, drawers, popovers, toasts */
+  --dui-motion-easing-exit: var(--dui-easing-accelerate); /* Easing for things leaving */
+
+  /* Elevation knobs */
+  --dui-elevation-strength: var(--dui-mix-100); /* How much of --dui-color-shadow each shadow uses, 0% to 100% */
+  --dui-elevation-surface-step: var(--dui-mix-3); /* Dark scheme: how much text color each level mixes into its surface */
 
   /* State */
   --dui-opacity-disabled: var(--dui-opacity-60);
@@ -115,16 +122,19 @@
  * theme scope: an element with a data-theme attribute or a theme-* class.
  * https://drafts.csswg.org/css-variables/#cycles (substitution timing)
  *
+ * Motion tokens follow --dui-motion-scale, --dui-motion-enabled and
+ * --dui-motion-movement, so they are re-declared on [data-motion] too
+ * (section 3).
+ *
  * Our choice: themes are scoped with [data-theme] or .theme-*, so one
  * attribute (or class) is the whole scoping API.
  */
 :root,
-:where([data-theme], [class^="theme-"], [class*=" theme-"]) {
+:where([data-theme], [class^="theme-"], [class*=" theme-"], [data-motion]) {
   --dui-color-link: var(--dui-color-accent);
   --dui-color-focus: var(--dui-color-accent);
   --dui-color-accent-hover: color-mix(in oklab, var(--dui-color-accent) 82%, var(--dui-color-text));
   --dui-font-heading: var(--dui-font-body);
-  --dui-shadow-raised: 0 var(--dui-border-1) var(--dui-space-2) var(--dui-color-shadow), 0 var(--dui-space-3) var(--dui-space-7) var(--dui-color-shadow);
 
   /* Tinted surfaces for status badges: a little of the tone mixed into the surface. */
   --dui-color-accent-surface: color-mix(in oklab, var(--dui-color-accent) var(--dui-tint-amount), var(--dui-color-surface));
@@ -136,16 +146,79 @@
   /* Inverse pair for small overlays on top of content (tooltips): text and surface swapped. */
   --dui-color-surface-inverse: var(--dui-color-text);
   --dui-color-text-inverse: var(--dui-color-surface);
+
+  /* Motion: durations times --dui-motion-scale and --dui-motion-enabled, distances times --dui-motion-movement. */
+  --dui-motion-duration-fast: calc(var(--dui-duration-150) * var(--dui-motion-scale) * var(--dui-motion-enabled)); /* Small state changes: hover, press, switch, popovers and menus */
+  --dui-motion-duration-normal: calc(var(--dui-duration-250) * var(--dui-motion-scale) * var(--dui-motion-enabled)); /* Dialogs and toasts */
+  --dui-motion-duration-slow: calc(var(--dui-duration-350) * var(--dui-motion-scale) * var(--dui-motion-enabled)); /* Large surfaces that travel: the drawer */
+  --dui-motion-distance: calc(var(--dui-space-4) * var(--dui-motion-movement)); /* How far a dialog or toast lifts as it fades in; 0 with reduced motion */
+  --dui-motion-zoom: calc(1 - (1 - var(--dui-ratio-95)) * var(--dui-motion-movement)); /* Scale a popover or menu grows from; 1 (no zoom) with reduced motion */
+
+  /*
+   * Elevation: a shadow and a surface per level. Light scheme: the shadow
+   * does the work and every level keeps --dui-color-surface. Dark scheme:
+   * shadows barely show on a dark page, so each level also mixes
+   * --dui-elevation-surface-step more of the text color into its surface.
+   */
+  --dui-elevation-shadow-color: color-mix(in srgb, var(--dui-color-shadow) var(--dui-elevation-strength), transparent); /* Shadow color after strength; retune --dui-color-shadow and --dui-elevation-strength */
+  --dui-elevation-0: var(--dui-shadow-none); /* Level 0, flat: no shadow */
+  --dui-elevation-1: var(--dui-shadow-1-key) var(--dui-elevation-shadow-color), var(--dui-shadow-1-ambient) var(--dui-elevation-shadow-color); /* Level 1 shadow */
+  --dui-elevation-2: var(--dui-shadow-2-key) var(--dui-elevation-shadow-color), var(--dui-shadow-2-ambient) var(--dui-elevation-shadow-color); /* Level 2 shadow */
+  --dui-elevation-3: var(--dui-shadow-3-key) var(--dui-elevation-shadow-color), var(--dui-shadow-3-ambient) var(--dui-elevation-shadow-color); /* Level 3 shadow */
+  --dui-elevation-4: var(--dui-shadow-4-key) var(--dui-elevation-shadow-color), var(--dui-shadow-4-ambient) var(--dui-elevation-shadow-color); /* Level 4 shadow */
+  --dui-elevation-0-surface: var(--dui-color-surface); /* Level 0 surface: the page */
+  --dui-elevation-1-surface: light-dark(var(--dui-color-surface), color-mix(in oklab, var(--dui-color-text) var(--dui-elevation-surface-step), var(--dui-color-surface))); /* Level 1 surface: one step lighter in dark */
+  --dui-elevation-2-surface: light-dark(var(--dui-color-surface), color-mix(in oklab, var(--dui-color-text) calc(var(--dui-elevation-surface-step) * 2), var(--dui-color-surface))); /* Level 2 surface: two steps lighter in dark */
+  --dui-elevation-3-surface: light-dark(var(--dui-color-surface), color-mix(in oklab, var(--dui-color-text) calc(var(--dui-elevation-surface-step) * 3), var(--dui-color-surface))); /* Level 3 surface: three steps lighter in dark */
+  --dui-elevation-4-surface: light-dark(var(--dui-color-surface), color-mix(in oklab, var(--dui-color-text) calc(var(--dui-elevation-surface-step) * 4), var(--dui-color-surface))); /* Level 4 surface: four steps lighter in dark */
+
+  /* Elevation by role: components use these, never the numbers. */
+  --dui-elevation-flat: var(--dui-elevation-0); /* Shadow of content on the page */
+  --dui-elevation-flat-surface: var(--dui-elevation-0-surface); /* Surface of content on the page */
+  --dui-elevation-raised: var(--dui-elevation-1); /* Shadow of cards */
+  --dui-elevation-raised-surface: var(--dui-elevation-1-surface); /* Surface of cards */
+  --dui-elevation-overlay: var(--dui-elevation-2); /* Shadow of toasts and other non-modal layers over the page */
+  --dui-elevation-overlay-surface: var(--dui-elevation-2-surface); /* Surface of non-modal layers over the page */
+  --dui-elevation-popover: var(--dui-elevation-3); /* Shadow of popovers, menus, tooltips and nav dropdowns */
+  --dui-elevation-popover-surface: var(--dui-elevation-3-surface); /* Surface of popovers, menus and nav dropdowns */
+  --dui-elevation-dialog: var(--dui-elevation-4); /* Shadow of dialogs and drawers */
+  --dui-elevation-dialog-surface: var(--dui-elevation-4-surface); /* Surface of dialogs and drawers */
+
+  /* Deprecated aliases, removed in the next release (see CHANGELOG.md). */
+  --dui-shadow-raised: var(--dui-elevation-1); /* Deprecated: use --dui-elevation-raised (level 1) */
+  --dui-duration-fast: var(--dui-motion-duration-fast); /* Deprecated: use --dui-motion-duration-fast */
+  --dui-duration-normal: var(--dui-motion-duration-normal); /* Deprecated: use --dui-motion-duration-normal */
+  --dui-easing-standard: var(--dui-motion-easing-standard); /* Deprecated: use --dui-motion-easing-standard */
 }
 
 /*
- * 3. Reduced motion: durations collapse to zero.
+ * 3. Motion preferences.
+ *
+ * Reduced motion keeps fades and color changes and drops movement
+ * (slides, lifts, zooms): --dui-motion-movement becomes 0, which zeroes
+ * the distances above and, in components, the duration of every
+ * translate or scale transition. WCAG 2.3.3 Animation from Interactions.
  * https://developer.mozilla.org/en-US/docs/Web/CSS/@media/prefers-reduced-motion
+ * https://www.w3.org/WAI/WCAG22/Understanding/animation-from-interactions.html
+ *
+ * API: data-motion="reduced" on any element behaves like the media query
+ * for everything inside it; data-motion="none" turns every transition off
+ * (all durations 0s, even where a --dui-motion-scale is set inside it);
+ * an empty data-motion is a scope for your own --dui-motion-* overrides.
+ * Our choice: no "full" value, so a page can never override a user's
+ * reduced-motion setting.
  */
 @media (prefers-reduced-motion: reduce) {
   :root {
-    --dui-duration-fast: var(--dui-duration-0);
-    --dui-duration-normal: var(--dui-duration-0);
-    --dui-easing-standard: var(--dui-easing-linear);
+    --dui-motion-movement: var(--dui-factor-0);
   }
+}
+
+[data-motion="reduced"] {
+  --dui-motion-movement: var(--dui-factor-0);
+}
+
+[data-motion="none"] {
+  --dui-motion-enabled: var(--dui-factor-0);
+  --dui-motion-movement: var(--dui-factor-0);
 }
