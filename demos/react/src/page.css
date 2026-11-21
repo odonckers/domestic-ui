@@ -1,6 +1,6 @@
 /* Page-only layout, written with semantic tokens like any consumer would. */
 :has(> #main) > :is(header, main, footer) {
-  max-inline-size: 72rem;
+  max-inline-size: var(--dui-size-page);
   margin-inline: auto;
   padding-inline: var(--dui-space-l);
 }
