@@ -92,6 +92,12 @@ Semantic token names and file paths under `css/` are public API; primitive token
   shown tooltips and toasts, and waits for transitions to finish.
 - `PRINCIPLES.md`: molecule choices, new semantic tokens, and "Web components" and "Explainers" sections.
 
+### Changed
+
+- CI: lint, html-validate, the token check and `node site/build.mjs --check` run as a `lint` job, and the
+  Playwright suite is split across six shards (`--shard=i/6`) in the Playwright container. A final job
+  named `ci` passes only when all of them pass, so the required check keeps its name.
+
 ### Fixed
 
 - Pages no longer scroll sideways on small screens (320px and up). Inline `code`, `kbd`, `samp`
