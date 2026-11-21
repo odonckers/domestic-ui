@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Organisms · domestic-ui</title>
-    <meta name="description" content="Every domestic-ui organism: page header, filter bar and large form sections.">
+    <meta name="description" content="Every domestic-ui organism: page header, filter bar, large form sections and data table.">
     <link rel="stylesheet" href="../../css/domestic.css">
     <style>
       /* Page-only layout, written with semantic tokens like any consumer would. */
@@ -81,6 +81,7 @@
           <tr><td><a href="page-header.html">Page header</a></td><td><code>data-page-header</code> on <code>&lt;header&gt;</code></td><td>Our choice; WHATWG <code>&lt;header&gt;</code>, APG Breadcrumb</td></tr>
           <tr><td><a href="filter-bar.html">Filter bar</a></td><td><code>data-filter-bar</code> on <code>&lt;search&gt;</code>, <code>role="status"</code></td><td>Our choice; WHATWG <code>&lt;search&gt;</code>, WCAG 4.1.3</td></tr>
           <tr><td><a href="large-forms.html">Large forms</a></td><td><code>data-form-sections</code> on <code>&lt;form&gt;</code></td><td>WHATWG <code>&lt;form&gt;</code> and <code>&lt;fieldset&gt;</code>, WAI forms tutorial</td></tr>
+          <tr><td><a href="data-table.html">Data table</a></td><td><code>data-table</code> on <code>&lt;table&gt;</code> and cells, <code>&lt;dui-table&gt;</code> for sorting and selection</td><td>WHATWG <code>&lt;table&gt;</code>, APG Sortable Table, WAI tables tutorial</td></tr>
         </tbody>
       </table>
 
@@ -150,6 +151,23 @@
             <button type="submit">Save contact</button>
           </footer>
         </form>
+      </section>
+      <section aria-labelledby="ix-table-title">
+        <h2 id="ix-table-title">Data table</h2>
+        <p><a href="data-table.html">Data table examples and markup</a></p>
+        <section data-scroll="inline" aria-labelledby="ix-table-caption" tabindex="0">
+          <table data-table>
+            <caption id="ix-table-caption">Unpaid invoices</caption>
+            <thead>
+              <tr><th scope="col">Invoice</th><th scope="col">Customer</th><th scope="col">Due</th><th scope="col" data-table="number">Amount</th></tr>
+            </thead>
+            <tbody>
+              <tr><th scope="row">INV-2051</th><td>Cobol Systems BV</td><td><time datetime="2025-03-31">31 Mar 2025</time></td><td data-table="number">€4,820.00</td></tr>
+              <tr><th scope="row">INV-2049</th><td>Lovelace Analytics</td><td><time datetime="2025-03-21">21 Mar 2025</time></td><td data-table="number">€15,064.50</td></tr>
+              <tr><th scope="row">INV-2048</th><td>Bletchley Instruments</td><td><time datetime="2025-03-14">14 Mar 2025</time></td><td data-table="number">€58.69</td></tr>
+            </tbody>
+          </table>
+        </section>
       </section>
     </main>
 

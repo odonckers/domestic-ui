@@ -51,4 +51,5 @@
 @import url("components/organisms/page-header.css") layer(components);
 @import url("components/organisms/filter-bar.css") layer(components);
 @import url("components/organisms/large-forms.css") layer(components);
+@import url("components/organisms/data-table.css") layer(components);
 @import url("utilities/visually-hidden.css") layer(utilities);

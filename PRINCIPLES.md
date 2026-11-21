@@ -83,7 +83,7 @@ unlayered CSS beats all of them**, so overriding never needs `!important` or spe
 | `tokens` | Primitive and semantic custom properties |
 | `base` | Native elements: typography, lists, tables, forms, buttons, dialog, details, focus |
 | `layout` | `.stack`, `.cluster`, `.grid`, `[data-scroll]` |
-| `components` | Atoms in `css/components/atoms/` (M2) and molecules in `css/components/molecules/` (M3a); organisms later. See the [atoms index](css/components/atoms/README.md) and the [molecules index](css/components/molecules/README.md) |
+| `components` | Atoms in `css/components/atoms/` (M2), molecules in `css/components/molecules/` (M3a) and organisms in `css/components/organisms/` (M3b). See the [atoms index](css/components/atoms/README.md), the [molecules index](css/components/molecules/README.md) and the [organisms index](css/components/organisms/README.md) |
 | `utilities` | Single-purpose helpers such as `.visually-hidden`; last so they always apply |
 
 **Our choice:** this order, because each layer only refines the ones before it, and a
@@ -429,8 +429,8 @@ Each of these is a choice between valid options, not a standard.
     [`<datalist>`](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/datalist) popups
     in Chromium and Firefox, and positions its listbox under the input rather than in the top layer, so
     it is never wider than the field ([explainer](explainers/combobox.md)).
-- **Our choice:** organisms (page header, filter bar, form sections) follow the same one-attribute rule
-  (`data-page-header`, `data-filter-bar`, `data-form-sections`) and take the rest of their layout from their
+- **Our choice:** organisms (page header, filter bar, form sections, data table) follow the same one-attribute rule
+  (`data-page-header`, `data-filter-bar`, `data-form-sections`, `data-table`) and take the rest of their layout from their
   children's native elements. Their choices are listed in the
   [organisms index](css/components/organisms/README.md#our-choices); the main ones:
   - **Our choice:** the filter bar is a `<form method="get">` in `<search>` with an Apply button and a
@@ -439,6 +439,15 @@ Each of these is a choice between valid options, not a standard.
   - **Our choice:** form sections are headed `<section>` elements with a `<header>` and one body of fields,
     not fieldsets, because a `<legend>` cannot be placed in a grid column; related controls still go in a
     `<fieldset>` inside the body.
+  - **Our choice:** the data table (`data-table` on a native `<table>`) has sortable headers that are plain
+    text in the markup; `<dui-table>` turns them into buttons and follows the
+    [APG Sortable Table](https://www.w3.org/WAI/ARIA/apg/patterns/table/examples/sortable-table/) example
+    (`aria-sort` on the sorted header only, a visually hidden caption hint, nothing else announced), so with
+    JavaScript off there are no buttons that do nothing. A selected row shows a checked checkbox, a bar on its
+    leading edge and a tint, never color alone; the count is a `role="status"` element present from load.
+  - **Our choice:** a sticky table header sticks to the nearest scroll container, so a sticky table goes in
+    `data-scroll="block inline"` (at most `--dui-size-pane` tall) or in none; numeric columns are marked per
+    cell with the same attribute (`data-table="number"`), because words on the table cannot target a column.
 - **Our choice:** layout primitives come from [Every Layout](https://every-layout.dev/)'s
   Stack, Cluster and Grid. Their custom properties are registered with
   [`@property`](https://developer.mozilla.org/en-US/docs/Web/CSS/@property) as non-inheriting,
@@ -452,6 +461,7 @@ Each of these is a choice between valid options, not a standard.
 | `.cluster` | Wrapping inline group | `--cluster-gap`, `--cluster-justify`, `--cluster-align` |
 | `.grid` | Auto-fit responsive grid, no media queries | `--grid-min`, `--grid-gap` |
 | `[data-scroll="inline"]` | Scroll container for content wider than the screen, such as a data table | None |
+| `[data-scroll="block inline"]` | Also scrolls vertically, at most `--dui-size-pane` (the viewport) tall, so a sticky table header stays in view | None |
 
 ```html
 <div class="grid" style="--grid-min: 12rem">…</div>
@@ -518,14 +528,15 @@ A `<pre>` already scrolls (`overflow-x: auto`); authors MUST give every `<pre>` 
 
 HTML still has no element for tabs, menus, roving focus in a toolbar, hover tooltips or a toast
 stack. For those, and only those, [`web-components/`](web-components/README.md) has one small
-custom element each: `<dui-tabs>`, `<dui-menu>`, `<dui-combobox>`, `<dui-toolbar>`, `<dui-tooltip>` and
-`<dui-toaster>`. HTML does have `<datalist>`, but its popup cannot be styled and differs between engines,
+custom element each: `<dui-tabs>`, `<dui-menu>`, `<dui-combobox>`, `<dui-toolbar>`, `<dui-tooltip>`,
+`<dui-toaster>` and `<dui-table>` (sorting rows and selecting them, which a `<table>` cannot do). HTML does have `<datalist>`, but its popup cannot be styled and differs between engines,
 so `<dui-combobox>` upgrades it to a listbox the page owns.
 
 - **Light DOM.** No shadow root: the molecule CSS and your CSS style the markup directly.
 - **Progressive enhancement.** The markup works before the script runs and with JavaScript off:
   tabs are a `<nav>` of in-page links and headed sections, toolbar buttons are Tab stops, a menu's
-  popover still opens, a tooltip is still the button's description.
+  popover still opens, a tooltip is still the button's description, a data table keeps the server's order
+  with plain-text headers and ordinary checkboxes.
 - **ARIA with behavior, or not at all.** An element adds roles such as `menu` or `tab` only together
   with the keyboard support those roles promise ([APG](https://www.w3.org/WAI/ARIA/apg/)).
 - **Why each exists** is written at the top of its file, and the
@@ -551,7 +562,7 @@ a future native element or attribute.
 | `lint:html` | [html-validate](https://html-validate.org/) | `examples/**/*.html` against `html-validate:recommended` |
 | `lint:css` | [Stylelint](https://stylelint.io/) | `css/**/*.css` against `stylelint-config-standard` |
 | `lint:tokens` | `scripts/check-tokens.mjs` | Semantic-only tokens and no literal colors or sizes outside `css/tokens/` |
-| `test:a11y` | [Playwright](https://playwright.dev/) + [axe-core](https://github.com/dequelabs/axe-core) | Every `examples/**/*.html` (atoms and molecules included) in light and dark, in Chromium, Firefox and WebKit, with tags `wcag2a`, `wcag2aa`, `wcag21a`, `wcag21aa`, `wcag22aa`, including open dialogs and drawers, open popovers and menus, shown tooltips and toasts, every tab selected and every details expanded; no horizontal page overflow and no axe violations at 320×640 and 375×812; no external requests; token contrast pairs (atoms and molecules included) in the default and forest themes; rendered focus-ring and indicator contrast; atom and molecule states through accessibility APIs; molecule keyboard behavior against the APG; no-JavaScript fallbacks; fallbacks for engine-specific features; scoped theming of atoms and molecules; layouts and organisms side by side when wide and stacked when narrow, the sticky action bar never covering the focused field, and 24px targets in compact density |
+| `test:a11y` | [Playwright](https://playwright.dev/) + [axe-core](https://github.com/dequelabs/axe-core) | Every `examples/**/*.html` (atoms and molecules included) in light and dark, in Chromium, Firefox and WebKit, with tags `wcag2a`, `wcag2aa`, `wcag21a`, `wcag21aa`, `wcag22aa`, including open dialogs and drawers, open popovers and menus, shown tooltips and toasts, every tab selected and every details expanded; no horizontal page overflow and no axe violations at 320×640 and 375×812; no external requests; token contrast pairs (atoms and molecules included) in the default and forest themes; rendered focus-ring and indicator contrast; atom and molecule states through accessibility APIs; molecule keyboard behavior against the APG; no-JavaScript fallbacks; fallbacks for engine-specific features; scoped theming of atoms and molecules; layouts and organisms side by side when wide and stacked when narrow, the sticky action bar never covering the focused field, data table sorting, selection, sticky header and loading state (with and without JavaScript), and 24px targets in compact density |
 
 Preview locally with `npm run serve` (a zero-dependency static server) and open
 <http://127.0.0.1:4173/examples/base.html>. To run tests from two checkouts at once, give each its own port, e.g. `PORT=4273 npm test`.

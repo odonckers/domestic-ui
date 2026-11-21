@@ -7,7 +7,11 @@
  * tables. Built on overflow-x.
  *
  * API
- *   data-scroll="inline"   scroll along the inline axis (left/right in English)
+ *   data-scroll="inline"         scroll along the inline axis (left/right in English)
+ *   data-scroll="block inline"   also scroll along the block axis, at most
+ *                                --dui-size-pane (the viewport) tall, so a
+ *                                sticky table header stays in view
+ *                                (css/components/organisms/data-table.css)
  *
  * tabindex="0" lets keyboard users scroll it with the arrow keys (WCAG 2.1.1
  * Keyboard, axe rule scrollable-region-focusable:
@@ -31,6 +35,11 @@
 [data-scroll~="inline"] {
   max-inline-size: 100%;
   overflow-x: auto;
+}
+
+[data-scroll~="block"] {
+  max-block-size: var(--dui-size-pane);
+  overflow-y: auto;
 }
 
 /* The focus ring is drawn inside, so the scroll box never clips it. */

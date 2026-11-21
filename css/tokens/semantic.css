@@ -79,7 +79,7 @@
   --dui-size-menu-min: var(--dui-size-12);
   --dui-size-drawer: var(--dui-size-24);
   --dui-size-page: var(--dui-size-72); /* Max inline size of a page's content column: header, main and footer */
-  --dui-size-pane: var(--dui-size-100svh); /* Max block size of a pane that scrolls on its own beside others, such as the detail of a list-detail */
+  --dui-size-pane: var(--dui-size-100svh); /* Max block size of a pane that scrolls on its own beside others, such as the detail of a list-detail or a data-scroll="block inline" table */
 
   /* Shape */
   --dui-radius-control: var(--dui-radius-2);

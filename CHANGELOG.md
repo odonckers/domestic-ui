@@ -166,6 +166,24 @@ Semantic token names and file paths under `css/` are public API; primitive token
   never under it, in the page and in a scrolling pane) and `tests/organisms.spec.js` (page header, filter bar
   status and labels, form sections, and every target at least 24 by 24 CSS pixels under
   `data-density="compact"` on all the new pages).
+- Data table organism (`css/components/organisms/data-table.css`, M3b): `data-table` on a native `<table>` with
+  a caption and `th[scope]`; `data-table="sticky"` for a header that sticks to its scroll container;
+  `data-table="number"` on the cells of numeric columns (end-aligned, tabular figures); separate cell borders so
+  the header's border moves with it; row selection with a highlight that is not color alone; an empty-state row
+  (one `<td colspan>`); a loading state (`aria-busy="true"` with `aria-hidden` skeleton rows whose shimmer stops
+  under reduced motion and `data-motion="none"`).
+- `<dui-table>` (`web-components/dui-table.js`): sortable columns after the APG Sortable Table example (header
+  text upgraded to buttons, `aria-sort` on the sorted header only, a caption hint, number, ISO date and
+  `data-sort-value` aware, stable) with a cancelable `dui-table-sort` event; row selection with a "select all"
+  checkbox (mixed when some rows are selected), a count in a `role="status"` element and bulk actions in a
+  toolbar disabled while nothing is selected.
+- `data-scroll="block inline"` (`css/layout/scroll.css`): the container also scrolls vertically, at most
+  `--dui-size-pane` tall, so a sticky table header stays in view.
+- `examples/organisms/data-table.html` (sortable, selection and bulk actions, empty, loading, wide with a sticky
+  header) and a data table on the organisms index; `tests/data-table.spec.js` (sorting by click and keyboard,
+  numbers, dates, stability, the event and canceling it, no-JavaScript fallback with axe, selection count,
+  select all and its mixed state, unique checkbox names, the sticky header, loading and the shimmer under
+  `data-motion="none"` and reduced motion, 320px, axe and 24px targets in compact density).
 
 ### Changed
 
@@ -175,6 +193,9 @@ Semantic token names and file paths under `css/` are public API; primitive token
   cells, field gaps, tabs, nav, menu, pagination and toolbar. Values are unchanged at the default
   (comfortable) density.
 - The molecules index no longer lists the combobox under "Not shipped".
+- `<dui-toolbar>` keeps one Tab stop when its controls are enabled or disabled after it upgrades (a bulk-action
+  bar).
+- `--dui-size-pane` also bounds a `data-scroll="block inline"` container (description only; the value is unchanged).
 
 - Components adopt the motion and elevation tokens: card uses the raised level (shadow added, surface
   `--dui-elevation-raised-surface`), popovers, menus, tooltips and nav dropdowns the popover level, toasts

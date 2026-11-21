@@ -42,7 +42,7 @@ Components: one `data-<component>` attribute of space-separated words matched wi
 | Layout | Action bar | `data-action-bar`, `<form>; holds that form's buttons` | [Action bar](https://odonckers.github.io/domestic-ui/layouts/action-bar.html) |
 | Layout | Cluster | `class="cluster"`, `--cluster-gap`, `--cluster-justify`, `--cluster-align` | [Cluster](https://odonckers.github.io/domestic-ui/layouts/cluster.html) |
 | Layout | Grid | `class="grid"`, `--grid-min`, `--grid-gap` | [Grid](https://odonckers.github.io/domestic-ui/layouts/grid.html) |
-| Layout | Scroll | `data-scroll="inline"` | [Scroll](https://odonckers.github.io/domestic-ui/layouts/scroll.html) |
+| Layout | Scroll | `data-scroll="inline"`, `data-scroll="block inline"`, `--dui-size-pane (the viewport) tall, so a`, `sticky table header stays in view`, `(css/components/organisms/data-table.css)` | [Scroll](https://odonckers.github.io/domestic-ui/layouts/scroll.html) |
 | Layout | Stack | `class="stack"`, `--stack-gap` | [Stack](https://odonckers.github.io/domestic-ui/layouts/stack.html) |
 | Layout | Dashboard | `data-dashboard`, `data-dashboard="wide"`, `data-dashboard="full"`, `Tiles: <section aria-labelledby> (or <article>, <li>) with a heading first.` | [Dashboard](https://odonckers.github.io/domestic-ui/patterns/dashboard.html) |
 | Layout | List-detail | `data-list-detail`, `1. the list: a <nav aria-label> (or <div>) holding a <ul> or <ol> whose`, `items are each one <a href> (or <button>)`, `2. the detail: a <section> or <article> with aria-labelledby`, `aria-current="page"` | [List-detail](https://odonckers.github.io/domestic-ui/patterns/list-detail.html) |
@@ -68,6 +68,7 @@ Components: one `data-<component>` attribute of space-separated words matched wi
 | Organisms | Page header | `data-page-header` on a `<header>` inside `<main>`: optional breadcrumb `<nav>`, heading, optional `<p>`, actions last | [Page header](https://odonckers.github.io/domestic-ui/components/organisms/page-header.html) |
 | Organisms | Dialog and drawer | `data-dialog`, `and the open transition`, `data-dialog="drawer [start \| end]"`, `edge (end is the default)`, `closedby="any \| closerequest \| none"`, `Children: an optional <header> (heading and close button) and <footer>`, `(actions, end-aligned); everything else is the body.` | [Dialog and drawer](https://odonckers.github.io/domestic-ui/patterns/dialog.html) |
 | Organisms | Site navigation | `data-nav="vertical \| horizontal"`, `aria-current="page"`, `<details> / <summary>`, `open to expand it on load, name for`, `one-at-a-time` | [Site navigation](https://odonckers.github.io/domestic-ui/patterns/nav.html) |
+| Organisms | Data table | `data-table`, `data-table="sticky"`, `data-table="number"`, `data-table="sortable"`, `aria-sort="ascending \| descending"`, `aria-busy="true"` | [Data table](https://odonckers.github.io/domestic-ui/patterns/data-table.html) |
 | Organisms | Filter bar | `data-filter-bar`, `Children: a <form> of fields (each a data-field, or a <dui-combobox>)`, `whose last child holds the buttons, then a role="status" element with`, `the result count.` | [Filter bar](https://odonckers.github.io/domestic-ui/patterns/filter-bar.html) |
 | Organisms | Large forms | `data-form-sections`, `<header>`, `one body element` | [Large forms](https://odonckers.github.io/domestic-ui/patterns/large-forms.html) |
 | Tokens | Compact density | see the pattern page | [Compact density](https://odonckers.github.io/domestic-ui/patterns/density.html) |
@@ -96,7 +97,7 @@ Each follows a native element or WAI-ARIA APG pattern where one exists ([Pattern
 | [App shell](https://odonckers.github.io/domestic-ui/patterns/app-shell.html) | M3b | Coming in M3b |
 | [Compact density](https://odonckers.github.io/domestic-ui/patterns/density.html) | M3b | Available |
 | [Dashboard](https://odonckers.github.io/domestic-ui/patterns/dashboard.html) | M3b | Available |
-| [Data table](https://odonckers.github.io/domestic-ui/patterns/data-table.html) | M3b | Coming in M3b |
+| [Data table](https://odonckers.github.io/domestic-ui/patterns/data-table.html) | M3b | Available |
 | [Filter bar](https://odonckers.github.io/domestic-ui/patterns/filter-bar.html) | M3b | Available |
 | [Large forms](https://odonckers.github.io/domestic-ui/patterns/large-forms.html) | M3b | Available |
 | [List-detail](https://odonckers.github.io/domestic-ui/patterns/list-detail.html) | M3b | Available |

@@ -15,7 +15,9 @@
  *   <dui-toolbar role="toolbar" aria-label="…">   (role is added if missing)
  *   aria-orientation="vertical"   Up and Down move instead of Left and Right
  *   Items: the buttons, links, selects and inputs inside, in DOM order,
- *   except disabled ones. Text inputs keep their own arrow keys.
+ *   except disabled ones. Text inputs keep their own arrow keys. Controls
+ *   that are enabled or disabled later (a bulk-action bar) are picked up,
+ *   and the toolbar keeps one Tab stop.
  *
  * Events
  *   None. Controls fire their native events.
@@ -41,6 +43,8 @@ class DuiToolbar extends HTMLElement {
     const items = this.#items;
     const start = items.find((item) => item.tabIndex >= 0) ?? items[0];
     for (const item of items) item.tabIndex = item === start ? 0 : -1;
+    // Controls enabled or disabled later (a bulk-action bar) keep one Tab stop.
+    new MutationObserver(() => this.#resetTabStop()).observe(this, { subtree: true, attributeFilter: ["disabled"] });
 
     this.addEventListener("focusin", (event) => {
       const target = /** @type {HTMLElement} */ (event.target);
@@ -48,6 +52,12 @@ class DuiToolbar extends HTMLElement {
       for (const item of this.#items) item.tabIndex = item === target ? 0 : -1;
     });
     this.addEventListener("keydown", (event) => this.#onKeydown(event));
+  }
+
+  #resetTabStop() {
+    const items = this.#items;
+    const start = items.find((item) => item === document.activeElement) ?? items.find((item) => item.getAttribute("tabindex") === "0") ?? items[0];
+    for (const item of items) if (item.tabIndex !== (item === start ? 0 : -1)) item.tabIndex = item === start ? 0 : -1;
   }
 
   get #items() {
