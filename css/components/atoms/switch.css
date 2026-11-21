@@ -33,6 +33,11 @@
  * Forced colors: system colors are set explicitly so both states stay visible.
  * https://developer.mozilla.org/en-US/docs/Web/CSS/@media/forced-colors
  *
+ * Motion: the track color fades over --dui-motion-duration-fast; the
+ * thumb slides for that duration times --dui-motion-movement, so with
+ * reduced motion it jumps and the color change stays. The state itself
+ * never waits on the transition.
+ *
  * Specs
  *   https://www.w3.org/WAI/ARIA/apg/patterns/switch/
  *   https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Reference/Roles/switch_role
@@ -53,8 +58,8 @@ input[type="checkbox"][role="switch"] {
   border-radius: var(--dui-radius-pill);
   cursor: pointer;
   transition:
-    background-color var(--dui-duration-fast) var(--dui-easing-standard),
-    border-color var(--dui-duration-fast) var(--dui-easing-standard);
+    background-color var(--dui-motion-duration-fast) var(--dui-motion-easing-standard),
+    border-color var(--dui-motion-duration-fast) var(--dui-motion-easing-standard);
 }
 
 /* The thumb. Decorative: the checkbox itself carries name and state. */
@@ -64,7 +69,7 @@ input[type="checkbox"][role="switch"]::before {
   aspect-ratio: 1;
   border-radius: var(--dui-radius-pill);
   background-color: var(--dui-color-border-control);
-  transition: translate var(--dui-duration-fast) var(--dui-easing-standard);
+  transition: translate calc(var(--dui-motion-duration-fast) * var(--dui-motion-movement)) var(--dui-motion-easing-standard);
 }
 
 input[type="checkbox"][role="switch"]:checked {

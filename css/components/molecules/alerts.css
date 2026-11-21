@@ -43,6 +43,13 @@
  * takes focus. See explainers/toast.md.
  * https://www.w3.org/WAI/WCAG22/Understanding/timing-adjustable.html
  *
+ * Motion: a new toast fades in and lifts by --dui-motion-distance over
+ * --dui-motion-duration-normal; reduced motion keeps the fade only.
+ * Inline alerts and live region text appear at once: they are essential
+ * feedback. Our choice: toasts sit at the overlay elevation (--dui-
+ * elevation-overlay), below popovers and dialogs, because they are non-
+ * modal and must never cover an open menu or dialog.
+ *
  * API
  *   data-alert="info | success | warning | danger"   an inline alert with a tone
  *   data-alert="toasts"                               the toast region (fixed position)
@@ -94,17 +101,17 @@
   align-items: flex-start;
   gap: var(--dui-space-s);
   margin: 0;
-  box-shadow: var(--dui-shadow-raised);
+  box-shadow: var(--dui-elevation-overlay);
   pointer-events: auto;
   transition:
-    opacity var(--dui-duration-normal) var(--dui-easing-standard),
-    translate var(--dui-duration-normal) var(--dui-easing-standard);
+    opacity var(--dui-motion-duration-normal) var(--dui-motion-easing-enter),
+    translate calc(var(--dui-motion-duration-normal) * var(--dui-motion-movement)) var(--dui-motion-easing-enter);
 }
 
 @starting-style {
   [data-alert~="toasts"] > * {
     opacity: 0;
-    translate: 0 var(--dui-space-s);
+    translate: 0 var(--dui-motion-distance);
   }
 }
 

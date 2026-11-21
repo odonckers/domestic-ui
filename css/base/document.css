@@ -78,9 +78,33 @@ body {
   outline-offset: var(--dui-focus-offset);
 }
 
+/* Smooth in-page scrolling is movement: off with reduced motion or data-motion on the root. */
 @media (prefers-reduced-motion: no-preference) {
-  :root:has(:target) {
+  :root:not([data-motion="reduced"], [data-motion="none"]):has(:target) {
     scroll-behavior: smooth;
+  }
+}
+
+/*
+ * View transitions are a progressive enhancement: nothing in domestic-ui
+ * starts one, and nothing depends on one. When your script or a
+ * cross-document @view-transition starts one, it uses the motion tokens:
+ * the cross-fade takes --dui-motion-duration-normal, and the group's
+ * move and resize take that times --dui-motion-movement, so reduced
+ * motion keeps the fade. The pseudo-elements inherit from the root, so
+ * data-motion on <html> applies.
+ * https://developer.mozilla.org/en-US/docs/Web/API/View_Transition_API
+ */
+@supports (view-transition-name: none) {
+  ::view-transition-old(*),
+  ::view-transition-new(*) {
+    animation-duration: var(--dui-motion-duration-normal);
+    animation-timing-function: var(--dui-motion-easing-standard);
+  }
+
+  ::view-transition-group(*) {
+    animation-duration: calc(var(--dui-motion-duration-normal) * var(--dui-motion-movement));
+    animation-timing-function: var(--dui-motion-easing-standard);
   }
 }
 

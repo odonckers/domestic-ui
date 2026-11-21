@@ -30,6 +30,10 @@
  * when focus leaves, which the APG example does with script; Enter or Space
  * on the summary closes it.
  *
+ * Elevation: horizontal dropdowns use --dui-elevation-popover and its
+ * surface, like a popover. They open at once: native details has no open
+ * transition.
+ *
  * API
  *   data-nav="vertical | horizontal"   on <nav> (empty means vertical)
  *   aria-current="page"                on the current link (native ARIA)
@@ -181,10 +185,10 @@
   min-inline-size: var(--dui-size-menu-min);
   margin-block-start: var(--dui-space-2xs);
   padding: var(--dui-space-2xs);
-  background-color: var(--dui-color-surface);
+  background-color: var(--dui-elevation-popover-surface);
   border: var(--dui-border-width) solid var(--dui-color-border);
   border-radius: var(--dui-radius-surface);
-  box-shadow: var(--dui-shadow-raised);
+  box-shadow: var(--dui-elevation-popover);
 }
 
 @media (forced-colors: active) {

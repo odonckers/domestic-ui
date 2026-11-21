@@ -28,14 +28,23 @@
  * --dui-size-drawer of the inline size (all of it on narrow screens), and
  * uses logical properties so "start" and "end" follow the writing direction.
  *
- * Motion: dialogs fade and drawers slide with @starting-style and
- * transition-behavior: allow-discrete. Duration tokens are 0s under
- * prefers-reduced-motion, and browsers without these features simply
- * open and close with no transition (the declaration without allow-discrete
- * comes first, so an engine that rejects the keyword keeps it).
+ * Motion: dialogs fade and lift and drawers slide and fade, with
+ * @starting-style and transition-behavior: allow-discrete, entering with
+ * --dui-motion-easing-enter and leaving with --dui-motion-easing-exit.
+ * Durations are --dui-motion-duration-normal (dialog) and
+ * --dui-motion-duration-slow (drawer), so --dui-motion-scale retunes them.
+ * Under prefers-reduced-motion or data-motion="reduced" the movement is
+ * dropped and the fade stays (WCAG 2.3.3); data-motion="none" turns it off.
+ * Browsers without these features simply open and close with no transition
+ * (the declaration without allow-discrete comes first, so an engine that
+ * rejects the keyword keeps it).
  * https://developer.mozilla.org/en-US/docs/Web/CSS/@starting-style
  * https://developer.mozilla.org/en-US/docs/Web/CSS/transition-behavior
  * https://www.w3.org/WAI/WCAG22/Understanding/animation-from-interactions.html
+ *
+ * Elevation: dialogs and drawers use --dui-elevation-dialog and its
+ * surface (the highest level). The border stays, so forced colors mode,
+ * which drops box-shadow, still draws the edge.
  *
  * API
  *   data-dialog                         on <dialog>: header, body and footer layout
@@ -100,33 +109,43 @@
   gap: var(--dui-space-xs);
 }
 
-/* Fade and lift in. The first declaration is the fallback without allow-discrete. */
+/*
+ * Fade and lift in, with the enter easing; fade and drop out with the exit
+ * easing. Movement (translate) runs for the duration times
+ * --dui-motion-movement, so reduced motion keeps only the fade. The first
+ * declaration is the fallback without allow-discrete.
+ */
 [data-dialog]:not([data-dialog~="drawer"]) {
   opacity: 0;
-  translate: 0 var(--dui-space-s);
+  translate: 0 var(--dui-motion-distance);
   transition:
-    opacity var(--dui-duration-normal) var(--dui-easing-standard),
-    translate var(--dui-duration-normal) var(--dui-easing-standard);
+    opacity var(--dui-motion-duration-normal) var(--dui-motion-easing-exit),
+    translate calc(var(--dui-motion-duration-normal) * var(--dui-motion-movement)) var(--dui-motion-easing-exit);
   transition:
-    opacity var(--dui-duration-normal) var(--dui-easing-standard),
-    translate var(--dui-duration-normal) var(--dui-easing-standard),
-    display var(--dui-duration-normal) allow-discrete,
-    overlay var(--dui-duration-normal) allow-discrete;
+    opacity var(--dui-motion-duration-normal) var(--dui-motion-easing-exit),
+    translate calc(var(--dui-motion-duration-normal) * var(--dui-motion-movement)) var(--dui-motion-easing-exit),
+    display var(--dui-motion-duration-normal) allow-discrete,
+    overlay var(--dui-motion-duration-normal) allow-discrete;
 }
 
 [data-dialog]:not([data-dialog~="drawer"])[open] {
   opacity: 1;
   translate: 0 0;
+  transition-timing-function: var(--dui-motion-easing-enter);
 }
 
 @starting-style {
   [data-dialog]:not([data-dialog~="drawer"])[open] {
     opacity: 0;
-    translate: 0 var(--dui-space-s);
+    translate: 0 var(--dui-motion-distance);
   }
 }
 
-/* Drawer: full block size at an inline edge. */
+/*
+ * Drawer: full block size at an inline edge. It slides in from that edge
+ * (the off-screen offset is 100% times --dui-motion-movement) and fades,
+ * so with reduced motion it fades in place.
+ */
 [data-dialog~="drawer"] {
   margin: 0;
   margin-inline-start: auto;
@@ -138,71 +157,83 @@
   border-block: 0;
   border-inline-end: 0;
   border-radius: 0;
-  translate: 100% 0;
-  transition: translate var(--dui-duration-normal) var(--dui-easing-standard);
+  opacity: 0;
+  translate: calc(100% * var(--dui-motion-movement)) 0;
   transition:
-    translate var(--dui-duration-normal) var(--dui-easing-standard),
-    display var(--dui-duration-normal) allow-discrete,
-    overlay var(--dui-duration-normal) allow-discrete;
+    opacity var(--dui-motion-duration-slow) var(--dui-motion-easing-exit),
+    translate calc(var(--dui-motion-duration-slow) * var(--dui-motion-movement)) var(--dui-motion-easing-exit);
+  transition:
+    opacity var(--dui-motion-duration-slow) var(--dui-motion-easing-exit),
+    translate calc(var(--dui-motion-duration-slow) * var(--dui-motion-movement)) var(--dui-motion-easing-exit),
+    display var(--dui-motion-duration-slow) allow-discrete,
+    overlay var(--dui-motion-duration-slow) allow-discrete;
 }
 
 [data-dialog~="drawer"][data-dialog~="start"] {
   margin-inline: 0 auto;
   border-inline-start: 0;
   border-inline-end: var(--dui-border-width) solid var(--dui-color-border);
-  translate: -100% 0;
+  translate: calc(-100% * var(--dui-motion-movement)) 0;
 }
 
 /* Right-to-left: the edges swap, so the off-screen offsets do too. */
 [data-dialog~="drawer"]:dir(rtl) {
-  translate: -100% 0;
+  translate: calc(-100% * var(--dui-motion-movement)) 0;
 }
 
 [data-dialog~="drawer"][data-dialog~="start"]:dir(rtl) {
-  translate: 100% 0;
+  translate: calc(100% * var(--dui-motion-movement)) 0;
 }
 
 [data-dialog~="drawer"][open] {
+  opacity: 1;
   translate: 0 0;
+  transition-timing-function: var(--dui-motion-easing-enter);
 }
 
 @starting-style {
   [data-dialog~="drawer"][open] {
-    translate: 100% 0;
+    opacity: 0;
+    translate: calc(100% * var(--dui-motion-movement)) 0;
   }
 
   [data-dialog~="drawer"][data-dialog~="start"][open],
   [data-dialog~="drawer"][open]:dir(rtl) {
-    translate: -100% 0;
+    translate: calc(-100% * var(--dui-motion-movement)) 0;
   }
 
   [data-dialog~="drawer"][data-dialog~="start"][open]:dir(rtl) {
-    translate: 100% 0;
+    translate: calc(100% * var(--dui-motion-movement)) 0;
   }
 }
 
-/* The drawer body scrolls; the header stays at the top. */
+/* The drawer body scrolls; the header stays at the top, on the drawer's own surface. */
 [data-dialog~="drawer"] > header {
   position: sticky;
   inset-block-start: 0;
   margin: calc(var(--dui-space-l) * -1) calc(var(--dui-space-l) * -1) 0;
   padding: var(--dui-space-l) var(--dui-space-l) var(--dui-space-s);
-  background-color: var(--dui-color-surface);
+  background-color: var(--dui-elevation-dialog-surface);
   border-block-end: var(--dui-border-width) solid var(--dui-color-border);
 }
 
-/* Backdrop fades with the dialog. */
+/* Backdrop fades with the dialog: it never moves, so reduced motion keeps it. */
 [data-dialog]::backdrop {
   opacity: 0;
-  transition: opacity var(--dui-duration-normal) var(--dui-easing-standard);
+  transition: opacity var(--dui-motion-duration-normal) var(--dui-motion-easing-exit);
   transition:
-    opacity var(--dui-duration-normal) var(--dui-easing-standard),
-    display var(--dui-duration-normal) allow-discrete,
-    overlay var(--dui-duration-normal) allow-discrete;
+    opacity var(--dui-motion-duration-normal) var(--dui-motion-easing-exit),
+    display var(--dui-motion-duration-normal) allow-discrete,
+    overlay var(--dui-motion-duration-normal) allow-discrete;
+}
+
+[data-dialog~="drawer"]::backdrop {
+  transition-duration: var(--dui-motion-duration-slow);
 }
 
 [data-dialog][open]::backdrop {
   opacity: 1;
+  transition-timing-function: var(--dui-motion-easing-enter);
 }
 
 @starting-style {

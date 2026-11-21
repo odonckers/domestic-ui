@@ -48,6 +48,18 @@
  * where "hint" is unsupported the attribute falls back to "manual" and the
  * component still handles Esc.
  *
+ * Motion: a data-popover panel fades and grows from --dui-motion-zoom
+ * over --dui-motion-duration-fast, entering with --dui-motion-easing-
+ * enter and leaving with --dui-motion-easing-exit (@starting-style and
+ * transition-behavior: allow-discrete). The zoom runs for that duration
+ * times --dui-motion-movement, so reduced motion keeps only the fade
+ * (WCAG 2.3.3). Tooltips appear at once.
+ *
+ * Elevation: panels use --dui-elevation-popover and --dui-elevation-
+ * popover-surface; tooltips use the popover shadow on their inverse
+ * surface. Both keep a border, which forced colors mode draws in place
+ * of the dropped shadow.
+ *
  * API
  *   data-popover                    on a [popover] element: panel look, anchored
  *                                   below the invoker, aligned to its start edge
@@ -94,25 +106,32 @@
 
 [popover][data-popover] {
   padding: var(--dui-space-s) var(--dui-space-m);
-  background-color: var(--dui-color-surface);
+  background-color: var(--dui-elevation-popover-surface);
   border: var(--dui-border-width) solid var(--dui-color-border);
   border-radius: var(--dui-radius-surface);
-  box-shadow: var(--dui-shadow-raised);
+  box-shadow: var(--dui-elevation-popover);
   opacity: 0;
-  transition: opacity var(--dui-duration-fast) var(--dui-easing-standard);
+  scale: var(--dui-motion-zoom);
   transition:
-    opacity var(--dui-duration-fast) var(--dui-easing-standard),
-    display var(--dui-duration-fast) allow-discrete,
-    overlay var(--dui-duration-fast) allow-discrete;
+    opacity var(--dui-motion-duration-fast) var(--dui-motion-easing-exit),
+    scale calc(var(--dui-motion-duration-fast) * var(--dui-motion-movement)) var(--dui-motion-easing-exit);
+  transition:
+    opacity var(--dui-motion-duration-fast) var(--dui-motion-easing-exit),
+    scale calc(var(--dui-motion-duration-fast) * var(--dui-motion-movement)) var(--dui-motion-easing-exit),
+    display var(--dui-motion-duration-fast) allow-discrete,
+    overlay var(--dui-motion-duration-fast) allow-discrete;
 }
 
 [popover][data-popover]:popover-open {
   opacity: 1;
+  scale: 1;
+  transition-timing-function: var(--dui-motion-easing-enter);
 }
 
 @starting-style {
   [popover][data-popover]:popover-open {
     opacity: 0;
+    scale: var(--dui-motion-zoom);
   }
 }
 
@@ -124,6 +143,7 @@
   color: var(--dui-color-text-inverse);
   border: var(--dui-border-width) solid transparent;
   border-radius: var(--dui-radius-control);
+  box-shadow: var(--dui-elevation-popover);
   font-size: var(--dui-step--1);
   line-height: var(--dui-line-height-heading);
 }

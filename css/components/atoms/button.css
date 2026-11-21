@@ -47,6 +47,10 @@
  * with the fill as well as with the surface (WCAG 1.4.11, 2.4.13).
  * https://www.w3.org/WAI/WCAG22/Understanding/focus-appearance.html
  *
+ * Motion: background and border colors fade over --dui-motion-duration-
+ * fast with --dui-motion-easing-standard. Focus rings, disabled and
+ * aria-busy change at once: they are essential feedback.
+ *
  * Specs
  *   https://html.spec.whatwg.org/multipage/form-elements.html#the-button-element
  *   https://www.w3.org/WAI/ARIA/apg/patterns/button/
@@ -73,8 +77,8 @@ a[data-button] {
   text-align: center;
   text-decoration-line: none;
   transition:
-    background-color var(--dui-duration-fast) var(--dui-easing-standard),
-    border-color var(--dui-duration-fast) var(--dui-easing-standard);
+    background-color var(--dui-motion-duration-fast) var(--dui-motion-easing-standard),
+    border-color var(--dui-motion-duration-fast) var(--dui-motion-easing-standard);
 }
 
 /* Secondary: neutral. The default for links and an opt-out for submit buttons. */

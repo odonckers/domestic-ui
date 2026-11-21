@@ -18,7 +18,6 @@
   color: var(--dui-color-text);
   border: var(--dui-border-width) solid var(--dui-color-border-control);
   border-radius: var(--dui-radius-control);
-  transition: border-color var(--dui-duration-fast) var(--dui-easing-standard);
 }
 
 :where(input, select, textarea):hover:not(:disabled) {
@@ -36,7 +35,11 @@ textarea {
   opacity: 1;
 }
 
-/* Invalid only after the user has interacted: https://developer.mozilla.org/en-US/docs/Web/CSS/:user-invalid */
+/*
+ * Our choice: text-like controls do not animate their border, because the
+ * same border carries the invalid state, essential feedback that changes
+ * at once. Invalid only after the user has interacted: https://developer.mozilla.org/en-US/docs/Web/CSS/:user-invalid
+ */
 :where(input, select, textarea):user-invalid {
   border-color: var(--dui-color-danger);
 }
@@ -130,8 +133,8 @@ input:is([type="button"], [type="submit"], [type="reset"]),
   line-height: var(--dui-line-height-heading);
   cursor: pointer;
   transition:
-    background-color var(--dui-duration-fast) var(--dui-easing-standard),
-    border-color var(--dui-duration-fast) var(--dui-easing-standard);
+    background-color var(--dui-motion-duration-fast) var(--dui-motion-easing-standard),
+    border-color var(--dui-motion-duration-fast) var(--dui-motion-easing-standard);
 }
 
 ::file-selector-button {

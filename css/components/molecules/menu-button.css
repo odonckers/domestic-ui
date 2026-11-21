@@ -30,6 +30,9 @@
  * file styles the items. Items are at least --dui-size-target tall
  * (WCAG 2.5.8) and show the base focus outline (WCAG 2.4.7).
  *
+ * Elevation and motion come from popover.css: the popover level, and the
+ * fade and zoom of a data-popover panel.
+ *
  * API
  *   <dui-menu>                         wraps the button and its popover
  *   popovertarget="menu-id"            on the <button> (native)

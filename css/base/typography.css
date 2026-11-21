@@ -58,7 +58,7 @@ a {
   text-decoration-line: underline;
   text-decoration-thickness: var(--dui-underline-thickness);
   text-underline-offset: var(--dui-underline-offset);
-  transition: text-decoration-thickness var(--dui-duration-fast) var(--dui-easing-standard);
+  transition: text-decoration-thickness var(--dui-motion-duration-fast) var(--dui-motion-easing-standard);
 }
 
 /*

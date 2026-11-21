@@ -22,6 +22,10 @@
  * card (WCAG 2.4.7). Trade-off: text in a clickable card cannot be selected
  * with the mouse; see the explainer.
  *
+ * Elevation: --dui-elevation-raised and --dui-elevation-raised-surface
+ * (level 1). The border stays, so forced colors mode, which drops box-
+ * shadow, still draws the edge.
+ *
  * API
  *   data-card          on <article> (or <section>, <li>): the card
  *   data-card="link"   the whole card follows the link in its heading
@@ -56,10 +60,11 @@
   flex-direction: column;
   gap: var(--dui-space-s);
   padding: var(--dui-space-l);
-  background-color: var(--dui-color-surface-raised);
+  background-color: var(--dui-elevation-raised-surface);
   color: var(--dui-color-text);
   border: var(--dui-border-width) solid var(--dui-color-border);
   border-radius: var(--dui-radius-surface);
+  box-shadow: var(--dui-elevation-raised);
 }
 
 /* The gap replaces the base flow rhythm inside a card. */
