@@ -59,29 +59,31 @@ export default function DashboardPage() {
           </form>
         </details>
 
-        <table>
-          <caption>Chores this week</caption>
-          <thead>
-            <tr>
-              <th scope="col">Chore</th>
-              <th scope="col">Room</th>
-              <th scope="col">Assigned to</th>
-              <th scope="col">Due</th>
-              <th scope="col">Status</th>
-            </tr>
-          </thead>
-          <tbody>
-            {chores.map(({ chore, room, assignee, date, due, status, tone }) => (
-              <tr key={chore}>
-                <th scope="row">{chore}</th>
-                <td>{room}</td>
-                <td>{assignee}</td>
-                <td><time dateTime={date}>{due}</time></td>
-                <td><span data-badge={tone}>{status}</span></td>
+        <section data-scroll="inline" aria-labelledby="chores-caption" tabIndex={0}>
+          <table>
+            <caption id="chores-caption">Chores this week</caption>
+            <thead>
+              <tr>
+                <th scope="col">Chore</th>
+                <th scope="col">Room</th>
+                <th scope="col">Assigned to</th>
+                <th scope="col">Due</th>
+                <th scope="col">Status</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {chores.map(({ chore, room, assignee, date, due, status, tone }) => (
+                <tr key={chore}>
+                  <th scope="row">{chore}</th>
+                  <td>{room}</td>
+                  <td>{assignee}</td>
+                  <td><time dateTime={date}>{due}</time></td>
+                  <td><span data-badge={tone}>{status}</span></td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </section>
 
         <div className="cluster">
           <button type="button" data-button="primary">Add chore</button>

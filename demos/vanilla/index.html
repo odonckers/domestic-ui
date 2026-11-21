@@ -93,55 +93,57 @@
           </form>
         </details>
 
-        <table>
-          <caption>Chores this week</caption>
-          <thead>
-            <tr>
-              <th scope="col">Chore</th>
-              <th scope="col">Room</th>
-              <th scope="col">Assigned to</th>
-              <th scope="col">Due</th>
-              <th scope="col">Status</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <th scope="row">Take out recycling</th>
-              <td>Garden</td>
-              <td>Jordan</td>
-              <td><time datetime="2026-11-19">Yesterday</time></td>
-              <td><span data-badge="danger">Overdue</span></td>
-            </tr>
-            <tr>
-              <th scope="row">Empty the dishwasher</th>
-              <td>Kitchen</td>
-              <td>Sam</td>
-              <td><time datetime="2026-11-20">Today</time></td>
-              <td><span data-badge="success">Done</span></td>
-            </tr>
-            <tr>
-              <th scope="row">Water the plants</th>
-              <td>Living room</td>
-              <td>Alex</td>
-              <td><time datetime="2026-11-20">Today</time></td>
-              <td><span data-badge="warning">Due today</span></td>
-            </tr>
-            <tr>
-              <th scope="row">Clean the bathroom</th>
-              <td>Bathroom</td>
-              <td>Riley</td>
-              <td><time datetime="2026-11-22">Sunday 22 November</time></td>
-              <td><span data-badge="neutral">Scheduled</span></td>
-            </tr>
-            <tr>
-              <th scope="row">Vacuum the stairs</th>
-              <td>Living room</td>
-              <td>Sam</td>
-              <td><time datetime="2026-11-24">Tuesday 24 November</time></td>
-              <td><span data-badge="neutral">Scheduled</span></td>
-            </tr>
-          </tbody>
-        </table>
+        <section data-scroll="inline" aria-labelledby="chores-caption" tabindex="0">
+          <table>
+            <caption id="chores-caption">Chores this week</caption>
+            <thead>
+              <tr>
+                <th scope="col">Chore</th>
+                <th scope="col">Room</th>
+                <th scope="col">Assigned to</th>
+                <th scope="col">Due</th>
+                <th scope="col">Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <th scope="row">Take out recycling</th>
+                <td>Garden</td>
+                <td>Jordan</td>
+                <td><time datetime="2026-11-19">Yesterday</time></td>
+                <td><span data-badge="danger">Overdue</span></td>
+              </tr>
+              <tr>
+                <th scope="row">Empty the dishwasher</th>
+                <td>Kitchen</td>
+                <td>Sam</td>
+                <td><time datetime="2026-11-20">Today</time></td>
+                <td><span data-badge="success">Done</span></td>
+              </tr>
+              <tr>
+                <th scope="row">Water the plants</th>
+                <td>Living room</td>
+                <td>Alex</td>
+                <td><time datetime="2026-11-20">Today</time></td>
+                <td><span data-badge="warning">Due today</span></td>
+              </tr>
+              <tr>
+                <th scope="row">Clean the bathroom</th>
+                <td>Bathroom</td>
+                <td>Riley</td>
+                <td><time datetime="2026-11-22">Sunday 22 November</time></td>
+                <td><span data-badge="neutral">Scheduled</span></td>
+              </tr>
+              <tr>
+                <th scope="row">Vacuum the stairs</th>
+                <td>Living room</td>
+                <td>Sam</td>
+                <td><time datetime="2026-11-24">Tuesday 24 November</time></td>
+                <td><span data-badge="neutral">Scheduled</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
 
         <div class="cluster">
           <button type="button" data-button="primary">Add chore</button>
