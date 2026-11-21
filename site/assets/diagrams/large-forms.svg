@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 180" role="img" aria-labelledby="diagram-large-forms-title diagram-large-forms-desc">
+  <title id="diagram-large-forms-title">Where large forms are used</title>
+  <desc id="diagram-large-forms-desc">A large form fills the content area as labelled groups of fields, in two columns on wide screens.</desc>
+  <!-- Frame -->
+  <rect x="0.75" y="0.75" width="318.5" height="178.5" rx="6" fill="var(--dui-color-surface)" stroke="var(--dui-color-border)" stroke-width="1.5"/>
+  <!-- Regions -->
+  <g fill="none" stroke="currentColor" stroke-opacity=".35">
+    <path d="M1 24.5h318M76.5 24.5V179"/>
+  </g>
+  <!-- Text -->
+  <g fill="currentColor" fill-opacity=".3">
+    <rect x="10" y="9" width="34" height="6" rx="2"/>
+    <rect x="12" y="38" width="44" height="6" rx="2"/>
+    <rect x="12" y="52" width="36" height="6" rx="2"/>
+    <rect x="12" y="66" width="50" height="6" rx="2"/>
+    <rect x="12" y="80" width="40" height="6" rx="2"/>
+    <rect x="12" y="94" width="46" height="6" rx="2"/>
+    <rect x="92" y="34" width="100" height="10" rx="2" fill-opacity=".6"/>
+    <rect x="100" y="60" width="50" height="6" rx="2"/>
+    <rect x="100" y="74" width="40" height="6" rx="2"/>
+    <rect x="204" y="60" width="46" height="6" rx="2"/>
+    <rect x="204" y="74" width="40" height="6" rx="2"/>
+    <rect x="100" y="120" width="44" height="6" rx="2"/>
+    <rect x="204" y="120" width="50" height="6" rx="2"/>
+  </g>
+  <!-- Other controls -->
+  <g fill="none" stroke="currentColor" stroke-opacity=".5">
+    <rect x="100" y="84" width="86" height="14" rx="3"/>
+    <rect x="204" y="84" width="92" height="14" rx="3"/>
+    <rect x="100" y="130" width="86" height="14" rx="3"/>
+    <rect x="204" y="130" width="92" height="14" rx="3"/>
+  </g>
+  <!-- The large forms -->
+  <g fill="var(--dui-color-accent-surface)" stroke="var(--dui-color-accent)" stroke-width="2">
+    <rect x="92" y="54" width="100" height="52" rx="4" fill="none"/>
+    <rect x="196" y="54" width="108" height="52" rx="4" fill="none"/>
+    <rect x="92" y="114" width="100" height="48" rx="4" fill="none"/>
+    <rect x="196" y="114" width="108" height="48" rx="4" fill="none"/>
+  </g>
+</svg>

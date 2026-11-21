@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 180" role="img" aria-labelledby="diagram-stack-title diagram-stack-desc">
+  <title id="diagram-stack-title">Where a stack is used</title>
+  <desc id="diagram-stack-desc">A stack is the vertical flow of a page or form in the content area: heading, text, a field and a button with the same gap between each.</desc>
+  <!-- Frame -->
+  <rect x="0.75" y="0.75" width="318.5" height="178.5" rx="6" fill="var(--dui-color-surface)" stroke="var(--dui-color-border)" stroke-width="1.5"/>
+  <!-- Regions -->
+  <g fill="none" stroke="currentColor" stroke-opacity=".35">
+    <path d="M1 24.5h318M76.5 24.5V179"/>
+  </g>
+  <!-- Text -->
+  <g fill="currentColor" fill-opacity=".3">
+    <rect x="10" y="9" width="34" height="6" rx="2"/>
+    <rect x="12" y="38" width="44" height="6" rx="2"/>
+    <rect x="12" y="52" width="36" height="6" rx="2"/>
+    <rect x="12" y="66" width="50" height="6" rx="2"/>
+    <rect x="12" y="80" width="40" height="6" rx="2"/>
+    <rect x="12" y="94" width="46" height="6" rx="2"/>
+    <rect x="98" y="38" width="96" height="10" rx="2" fill-opacity=".6"/>
+    <rect x="98" y="64" width="150" height="6" rx="2"/>
+    <rect x="98" y="76" width="120" height="6" rx="2"/>
+    <rect x="98" y="98" width="40" height="6" rx="2"/>
+  </g>
+  <!-- Other controls -->
+  <g fill="none" stroke="currentColor" stroke-opacity=".5">
+    <rect x="98" y="108" width="140" height="12" rx="3"/>
+    <rect x="98" y="136" width="44" height="12" rx="3"/>
+  </g>
+  <!-- The a stack -->
+  <g fill="var(--dui-color-accent-surface)" stroke="var(--dui-color-accent)" stroke-width="2">
+    <rect x="92" y="32" width="166" height="18" rx="3" fill="none"/>
+    <rect x="92" y="58" width="166" height="28" rx="3" fill="none"/>
+    <rect x="92" y="94" width="166" height="30" rx="3" fill="none"/>
+    <rect x="92" y="132" width="166" height="20" rx="3" fill="none"/>
+  </g>
+</svg>

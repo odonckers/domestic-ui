@@ -1,0 +1,47 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 180" role="img" aria-labelledby="diagram-filter-bar-title diagram-filter-bar-desc">
+  <title id="diagram-filter-bar-title">Where a filter bar is used</title>
+  <desc id="diagram-filter-bar-desc">The filter bar is a row of form controls above a list or table in the content area, with the result count after it.</desc>
+  <!-- Frame -->
+  <rect x="0.75" y="0.75" width="318.5" height="178.5" rx="6" fill="var(--dui-color-surface)" stroke="var(--dui-color-border)" stroke-width="1.5"/>
+  <!-- Regions -->
+  <g fill="none" stroke="currentColor" stroke-opacity=".35">
+    <path d="M1 24.5h318M76.5 24.5V179"/>
+    <path d="M92 100.5h216M92 116.5h216M92 132.5h216M92 148.5h216M92 164.5h216"/>
+  </g>
+  <!-- Text -->
+  <g fill="currentColor" fill-opacity=".3">
+    <rect x="10" y="9" width="34" height="6" rx="2"/>
+    <rect x="12" y="38" width="44" height="6" rx="2"/>
+    <rect x="12" y="52" width="36" height="6" rx="2"/>
+    <rect x="12" y="66" width="50" height="6" rx="2"/>
+    <rect x="12" y="80" width="40" height="6" rx="2"/>
+    <rect x="12" y="94" width="46" height="6" rx="2"/>
+    <rect x="92" y="34" width="90" height="10" rx="2" fill-opacity=".6"/>
+    <rect x="96" y="90" width="28" height="6" rx="2"/>
+    <rect x="178.4" y="90" width="28" height="6" rx="2"/>
+    <rect x="247.51999999999998" y="90" width="24" height="6" rx="2"/>
+    <rect x="96" y="105.5" width="30" height="6" rx="2"/>
+    <rect x="178.4" y="105.5" width="44" height="6" rx="2"/>
+    <rect x="247.51999999999998" y="105.5" width="26" height="6" rx="2"/>
+    <rect x="96" y="121.5" width="30" height="6" rx="2"/>
+    <rect x="178.4" y="121.5" width="44" height="6" rx="2"/>
+    <rect x="247.51999999999998" y="121.5" width="26" height="6" rx="2"/>
+    <rect x="96" y="137.5" width="30" height="6" rx="2"/>
+    <rect x="178.4" y="137.5" width="44" height="6" rx="2"/>
+    <rect x="247.51999999999998" y="137.5" width="26" height="6" rx="2"/>
+    <rect x="96" y="153.5" width="30" height="6" rx="2"/>
+    <rect x="178.4" y="153.5" width="44" height="6" rx="2"/>
+    <rect x="247.51999999999998" y="153.5" width="26" height="6" rx="2"/>
+  </g>
+  <!-- The a filter bar -->
+  <g fill="var(--dui-color-accent-surface)" stroke="var(--dui-color-accent)" stroke-width="2">
+    <rect x="88" y="52" width="224" height="26" rx="4" fill="none"/>
+    <rect x="94" y="57" width="70" height="16" rx="3"/>
+    <rect x="170" y="57" width="56" height="16" rx="3"/>
+    <rect x="232" y="57" width="40" height="16" rx="3"/>
+  </g>
+  <!-- Its text -->
+  <g fill="var(--dui-color-accent)">
+    <rect x="278" y="62" width="28" height="6" rx="2"/>
+  </g>
+</svg>

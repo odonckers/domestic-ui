@@ -1,0 +1,53 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 180" role="img" aria-labelledby="diagram-density-title diagram-density-desc">
+  <title id="diagram-density-title">Where compact density is used</title>
+  <desc id="diagram-density-desc">Compact density tightens a data-heavy area such as a table, so it shows more rows in the same height than a comfortable table beside it.</desc>
+  <!-- Frame -->
+  <rect x="0.75" y="0.75" width="318.5" height="178.5" rx="6" fill="var(--dui-color-surface)" stroke="var(--dui-color-border)" stroke-width="1.5"/>
+  <!-- Regions -->
+  <g fill="none" stroke="currentColor" stroke-opacity=".35">
+    <path d="M1 24.5h318M76.5 24.5V179"/>
+    <path d="M92 64.5h100M92 82.5h100M92 100.5h100M92 118.5h100M92 136.5h100"/>
+  </g>
+  <!-- Text -->
+  <g fill="currentColor" fill-opacity=".3">
+    <rect x="10" y="9" width="34" height="6" rx="2"/>
+    <rect x="12" y="38" width="44" height="6" rx="2"/>
+    <rect x="12" y="52" width="36" height="6" rx="2"/>
+    <rect x="12" y="66" width="50" height="6" rx="2"/>
+    <rect x="12" y="80" width="40" height="6" rx="2"/>
+    <rect x="12" y="94" width="46" height="6" rx="2"/>
+    <rect x="92" y="32" width="100" height="10" rx="2" fill-opacity=".6"/>
+    <rect x="96" y="54" width="28" height="6" rx="2"/>
+    <rect x="132" y="54" width="28" height="6" rx="2"/>
+    <rect x="96" y="70.5" width="30" height="6" rx="2"/>
+    <rect x="142" y="70.5" width="34" height="6" rx="2"/>
+    <rect x="96" y="88.5" width="30" height="6" rx="2"/>
+    <rect x="142" y="88.5" width="34" height="6" rx="2"/>
+    <rect x="96" y="106.5" width="30" height="6" rx="2"/>
+    <rect x="142" y="106.5" width="34" height="6" rx="2"/>
+    <rect x="96" y="124.5" width="30" height="6" rx="2"/>
+    <rect x="142" y="124.5" width="34" height="6" rx="2"/>
+  </g>
+  <!-- The compact density -->
+  <g fill="var(--dui-color-accent-surface)" stroke="var(--dui-color-accent)" stroke-width="2">
+    <rect x="204" y="46" width="108" height="84" rx="4" fill="none"/>
+    <path d="M208 64.5h100M208 74.5h100M208 84.5h100M208 94.5h100M208 104.5h100M208 114.5h100M208 124.5h100" stroke-width="1"/>
+  </g>
+  <!-- Its text -->
+  <g fill="var(--dui-color-accent)">
+    <rect x="212" y="54" width="28" height="6" rx="2"/>
+    <rect x="248" y="54" width="28" height="6" rx="2"/>
+    <rect x="212" y="67.5" width="30" height="4" rx="2"/>
+    <rect x="258" y="67.5" width="34" height="4" rx="2"/>
+    <rect x="212" y="77.5" width="30" height="4" rx="2"/>
+    <rect x="258" y="77.5" width="34" height="4" rx="2"/>
+    <rect x="212" y="87.5" width="30" height="4" rx="2"/>
+    <rect x="258" y="87.5" width="34" height="4" rx="2"/>
+    <rect x="212" y="97.5" width="30" height="4" rx="2"/>
+    <rect x="258" y="97.5" width="34" height="4" rx="2"/>
+    <rect x="212" y="107.5" width="30" height="4" rx="2"/>
+    <rect x="258" y="107.5" width="34" height="4" rx="2"/>
+    <rect x="212" y="117.5" width="30" height="4" rx="2"/>
+    <rect x="258" y="117.5" width="34" height="4" rx="2"/>
+  </g>
+</svg>

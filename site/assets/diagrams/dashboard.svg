@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 180" role="img" aria-labelledby="diagram-dashboard-title diagram-dashboard-desc">
+  <title id="diagram-dashboard-title">Where a dashboard is used</title>
+  <desc id="diagram-dashboard-desc">A dashboard fills the content area with a grid of headed summary sections, such as totals and a chart, that reflow to fit.</desc>
+  <!-- Frame -->
+  <rect x="0.75" y="0.75" width="318.5" height="178.5" rx="6" fill="var(--dui-color-surface)" stroke="var(--dui-color-border)" stroke-width="1.5"/>
+  <!-- Regions -->
+  <g fill="none" stroke="currentColor" stroke-opacity=".35">
+    <path d="M1 24.5h318M76.5 24.5V179"/>
+  </g>
+  <!-- Text -->
+  <g fill="currentColor" fill-opacity=".3">
+    <rect x="10" y="9" width="34" height="6" rx="2"/>
+    <rect x="12" y="38" width="44" height="6" rx="2"/>
+    <rect x="12" y="52" width="36" height="6" rx="2"/>
+    <rect x="12" y="66" width="50" height="6" rx="2"/>
+    <rect x="12" y="80" width="40" height="6" rx="2"/>
+    <rect x="12" y="94" width="46" height="6" rx="2"/>
+    <rect x="92" y="34" width="100" height="10" rx="2" fill-opacity=".6"/>
+    <rect x="100" y="62" width="36" height="6" rx="2"/>
+    <rect x="172" y="62" width="36" height="6" rx="2"/>
+    <rect x="244" y="62" width="36" height="6" rx="2"/>
+    <rect x="100" y="114" width="50" height="6" rx="2"/>
+    <rect x="208" y="114" width="40" height="6" rx="2"/>
+  </g>
+  <!-- The a dashboard -->
+  <g fill="var(--dui-color-accent-surface)" stroke="var(--dui-color-accent)" stroke-width="2">
+    <rect x="92" y="54" width="64" height="46" rx="4"/>
+    <rect x="164" y="54" width="64" height="46" rx="4"/>
+    <rect x="236" y="54" width="64" height="46" rx="4"/>
+    <rect x="92" y="106" width="100" height="58" rx="4"/>
+    <rect x="200" y="106" width="108" height="58" rx="4"/>
+    <path d="M108 152l16-12 14 6 18-16 22 8" fill="none" stroke-width="1.5"/>
+  </g>
+  <!-- Its text -->
+  <g fill="var(--dui-color-accent)">
+    <rect x="100" y="76" width="30" height="12" rx="2"/>
+    <rect x="172" y="76" width="30" height="12" rx="2"/>
+    <rect x="244" y="76" width="30" height="12" rx="2"/>
+    <rect x="212" y="142" width="12" height="14" rx="1"/>
+    <rect x="234" y="134" width="12" height="22" rx="1"/>
+    <rect x="256" y="146" width="12" height="10" rx="1"/>
+    <rect x="278" y="138" width="12" height="18" rx="1"/>
+  </g>
+</svg>

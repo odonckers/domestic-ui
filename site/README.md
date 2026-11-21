@@ -36,6 +36,8 @@ indexes, which is why every docs link points at a file (`principles/index.html`,
 | `site/lib/other-systems.mjs` | Validates `site/data/other-systems.json` and adds its section to each page (see [How other systems do it](#how-other-systems-do-it)). |
 | `site/check-other-systems.mjs` | Dead-link check for that file; run by `npm test`. |
 | `site/lib/demo-views.mjs` | Reads and validates `site/data/demo-views.json` (see [Demo views](#demo-views)). |
+| `site/lib/diagrams.mjs` | Reads and validates `site/assets/diagrams/*.svg`, the header diagrams (see [Diagrams](#diagrams)). |
+| `site/assets/diagrams/<slug>.svg` | One header diagram per element and pattern page, inlined into the page (not copied as a file). |
 | `site/assets/site.css` | Docs layout only, with semantic `--dui-*` tokens and the layout primitives. |
 | `site/assets/site.js` | Progressive enhancement only: scrolls the current sidebar link into view, fits live frames, runs the token filter. |
 | `site/assets/highlight.js` | Syntax highlighting for every `pre > code` with the CSS Custom Highlight API ([MDN](https://developer.mozilla.org/en-US/docs/Web/API/CSS_Custom_Highlight_API)). A block opts out with `class="language-text"`. Owned by the Lead. |
@@ -58,6 +60,7 @@ added to fill one. A new page type follows it too:
 
 1. **H1 and a one-sentence summary.** An **Our choice:** line under it only when no native element
    or APG pattern covers the thing. Planned patterns add "Coming in M3." and skip 2 and 3.
+   Then the page's [diagram](#diagrams): where the element sits in a layout.
 2. **Live example.** Per snippet: its name (`###`), its render and directly below it its markup,
    from the same text (see [Snippet convention](#snippet-convention)). Prose never repeats markup.
 3. **Attributes** (**API** for layouts and utilities). The group README's index cell as written,
@@ -179,6 +182,46 @@ level index).
 The component API convention is on the Getting started page (`index.html#component-api`). The
 all-levels overview `components/index.html` was removed in the sidebar change: its convention moved
 to Getting started and its per-level lists and Our choices are on the level index pages.
+
+## Diagrams
+
+Every element and pattern page (atoms, molecules, organisms, layouts, utilities and patterns; not
+Base elements, tokens, principles, guides, indexes or Demos) has one header diagram: a wireframe
+showing where the element sits in a layout. It is `site/assets/diagrams/<slug>.svg`, where `<slug>`
+is the last segment of the page's path without `.html`: `components/atoms/button.html` →
+`button.svg`, `patterns/nav.html` → `nav.svg`, `layouts/stack.html` → `stack.svg`. The build inlines
+the file in a `<figure class="docs-diagram">` under the H1, the summary and any **Our choice:** line,
+before Live example. The Markdown twin and `llms-full.txt` get one line instead of the markup:
+`_Diagram: <desc>_`.
+
+`node site/build.mjs` and `--check` fail (`site/lib/diagrams.mjs`) when a page has no diagram, a file
+has no page, or a file breaks these rules:
+
+- One root `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 180" role="img"
+  aria-labelledby="diagram-<slug>-title diagram-<slug>-desc">`, no `width` or `height`: site.css
+  sizes it to the content column.
+- `<title id="diagram-<slug>-title">Where … is used</title>` naming the page ("Where buttons are
+  used", "Where a data table is used"), and `<desc id="diagram-<slug>-desc">`: one sentence, what it
+  is and where it sits. Base it on the page's own text and examples.
+- Colours only as `currentColor`, `none`, `transparent` or `var(--dui-…)` with a token from
+  `css/tokens/semantic.css`, in `fill` and `stroke` attributes. No hex, `rgb()`, `hsl()` or named
+  colours; no `<script>`, `<style>`, `style` or `class` attributes, `href`, `<use>`, `<image>` or
+  `url()`. Under 3 KB.
+
+One look for every diagram (`site.css` sets `color: var(--dui-color-text-muted)` on the figure, so
+`currentColor` is muted):
+
+| Part | Drawn as |
+| --- | --- |
+| Frame | `<rect x=".75" y=".75" width="318.5" height="178.5" rx="6">`, fill `var(--dui-color-surface)`, stroke `var(--dui-color-border)`, `stroke-width="1.5"` |
+| Regions | App bar (y 0–24) and sidebar (x 0–76) as 1px lines, `currentColor` at `stroke-opacity=".35"`; content from x 92. Pages without a sidebar start content at x 40. |
+| Text | Bars `height="6" rx="2"`, `currentColor` at `fill-opacity=".3"`; headings `height="10"` at `.6` |
+| Other controls | Outlines `rx="3"`, `currentColor` at `stroke-opacity=".5"` |
+| Backdrop | A frame-sized rect, fill `var(--dui-color-backdrop)` |
+| The element | The only accent-coloured thing: stroke `var(--dui-color-accent)`, `stroke-width="2"`, fill `var(--dui-color-accent-surface)` (or `none` for a region); its text bars fill `var(--dui-color-accent)`. A dashed stroke (`4 3`) marks something with no box of its own (a cluster, a stack's flow, hidden text). |
+
+Each file groups its shapes in that order, one `<g>` per part with the shared attributes and a short
+comment, 2-space indent, plain `rect`, `path` and `circle`.
 
 ## Demo views
 
@@ -628,7 +671,8 @@ Every page has a skip link (the first focusable element), landmarks in source or
 `aria-current="page"` in the Docs nav, one `h1`, tables labelled by their heading with `th scope`,
 and iframes with a `title`. Long words and URLs in prose and cells break only where they would
 overflow (`overflow-wrap: break-word`); inline code in prose may break anywhere only below `30em`.
-Tables and multi-line code blocks scroll inside named `data-scroll="inline"` regions.
+Tables and multi-line code blocks scroll inside named `data-scroll="inline"` regions. Header
+diagrams are `role="img"` named by their `<title>` and described by their `<desc>` (see [Diagrams](#diagrams)).
 
 `tests/docs.spec.js` (Chromium) runs html-validate and axe (WCAG 2.2 AA tags, light and dark) on
 every page and every render page, blocks external requests, and checks the navigation (sidebar order, every built page reachable, one `aria-current` and only the

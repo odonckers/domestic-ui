@@ -8,6 +8,8 @@ import { dirname, join, posix } from "node:path";
 import { GENERATED, NAV, ROOT, build, extractSnippets, generate } from "../site/build.mjs";
 import { parseTokenFile, resolveTokens, resolveValue } from "../site/lib/tokens.mjs";
 import { linksOf, validateOtherSystems } from "../site/lib/other-systems.mjs";
+import { DIAGRAM_DIR, checkDiagrams, diagramProblems, loadDiagrams } from "../site/lib/diagrams.mjs";
+import { navLabel } from "../site/lib/nav.mjs";
 import { escapeHtml, unescapeHtml } from "../site/lib/util.mjs";
 import { SITE_DIR, WCAG_TAGS, builtPages, livePages, redirectPages, summarize } from "./docs-helpers.js";
 import { blockExternalRequests, examples, schemes } from "./helpers.js";
@@ -19,6 +21,21 @@ import { blockExternalRequests, examples, schemes } from "./helpers.js";
 const site = generate();
 const read = (/** @type {string} */ path) => readFileSync(path, "utf8");
 const htmlValidate = new HtmlValidate(JSON.parse(read(join(ROOT, ".htmlvalidate.json"))));
+
+/** Element and pattern pages: each has a header diagram (site/lib/diagrams.mjs). */
+const diagramPages = site.pages.filter((p) => p.diagram);
+
+/**
+ * A minimal valid header diagram, for fixture pages.
+ * @param {string} name the page's slug
+ * @param {string} title "Where … is used"
+ */
+const fixtureDiagram = (name, title) => `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 180" role="img" aria-labelledby="diagram-${name}-title diagram-${name}-desc">
+  <title id="diagram-${name}-title">${title}</title>
+  <desc id="diagram-${name}-desc">A fixture element in the content area.</desc>
+  <rect x="92" y="40" width="100" height="20" rx="3" fill="var(--dui-color-accent-surface)" stroke="var(--dui-color-accent)" stroke-width="2"/>
+</svg>
+`;
 
 /** The markup inside every <pre data-snippet><code>, unescaped. @param {string} html */
 const snippetBlocks = (html) => [...html.matchAll(/<pre data-snippet="[^"]*"[^>]*><code>([\s\S]*?)<\/code><\/pre>/g)].map((m) => unescapeHtml(m[1]));
@@ -76,6 +93,60 @@ test.describe("docs build", () => {
       }
     }
     expect(problems).toEqual([]);
+  });
+
+  test("every element and pattern page has one valid header diagram under its lead; its twin has the description", () => {
+    expect(diagramPages.map((p) => p.path)).not.toContain("components/base.html");
+    for (const p of site.pages.filter((x) => /^(components\/(atoms|molecules|organisms|utilities)|layouts\/(?!index)|patterns\/(?!index))/.test(x.path))) expect(p.diagram, p.path).toBeTruthy();
+    for (const p of diagramPages) {
+      const d = site.model.diagrams.get(/** @type {string} */ (p.diagram));
+      expect(d, p.path).toBeDefined();
+      const html = site.html(p);
+      expect(html.match(/<figure class="docs-diagram">/g), p.path).toHaveLength(1);
+      const at = html.indexOf('<figure class="docs-diagram">');
+      expect(at, `${p.path}: after the h1`).toBeGreaterThan(html.indexOf("<h1>"));
+      expect(at, `${p.path}: before the first section`).toBeLessThan(html.indexOf("<h2 id="));
+      const md = site.markdown(p);
+      expect(md, p.path).toContain(`\n\n_Diagram: ${d?.desc}_\n\n`);
+      expect(md, "no diagram markup in the twin").not.toContain("diagram-");
+    }
+    const full = read(join(ROOT, "llms-full.txt"));
+    expect(full, "no diagram markup in llms-full.txt").not.toContain("aria-labelledby=\"diagram-");
+    expect(full.match(/^_Diagram: .+_$/gm)).toHaveLength(diagramPages.length);
+  });
+
+  test("the build rejects a missing, orphan or invalid diagram with a clear message", () => {
+    const tokens = new Set(["--dui-color-accent", "--dui-color-accent-surface", "--dui-color-border"]);
+    const good = fixtureDiagram("demo", "Where a demo is used");
+    const problems = (/** @type {string} */ svg) => diagramProblems({ name: "demo", path: `${DIAGRAM_DIR}/demo.svg`, svg: svg.trim(), ...titleDesc(svg) }, ["Demo"], tokens);
+    const titleDesc = (/** @type {string} */ svg) => ({ title: svg.match(/<title[^>]*>([^<]*)/)?.[1] ?? "", desc: svg.match(/<desc[^>]*>([^<]*)/)?.[1] ?? "" });
+    expect(problems(good)).toEqual([]);
+    const cases = /** @type {[string, string, RegExp][]} */ ([
+      ["hex", good.replace('stroke="var(--dui-color-accent)"', 'stroke="#0055ff"'), /hex colour/],
+      ["rgb", good.replace('fill="var(--dui-color-accent-surface)"', 'fill="rgb(0 0 255)"'), /colour function/],
+      ["named", good.replace('fill="var(--dui-color-accent-surface)"', 'fill="blue"'), /fill="blue": use currentColor/],
+      ["unknown token", good.replace("--dui-color-accent-surface", "--dui-color-nope"), /--dui-color-nope is not in css\/tokens\/semantic\.css/],
+      ["viewBox", good.replace("0 0 320 180", "0 0 100 100"), /viewBox="0 0 320 180"/],
+      ["width", good.replace('role="img"', 'width="320" role="img"'), /must not have width or height/],
+      ["hidden", good.replace('role="img"', 'role="img" aria-hidden="true"'), /aria-hidden/],
+      ["title", good.replace("Where a demo is used", "A demo"), /<title> must be "Where … is used"/],
+      ["desc", good.replace("A fixture element in the content area.", ""), /<desc> must be one sentence/],
+      ["script", good.replace("</svg>", "<script>alert(1)</script></svg>"), /<script>/],
+      ["style", good.replace("</svg>", "<style>rect{}</style></svg>"), /<style>/],
+      ["xlink", good.replace("<rect", '<a xlink:href="https://example.com/"></a><rect'), /href/],
+      ["two roots", `${good}${good}`, /exactly one root/],
+      ["no accent", good.replace(/var\(--dui-color-accent[a-z-]*\)/g, "currentColor"), /accent token/],
+    ]);
+    for (const [label, svg, message] of cases) expect(problems(svg).join("\n"), label).toMatch(message);
+
+    // Missing and orphan files, through checkDiagrams() as build.mjs calls it.
+    const pages = [{ path: "components/atoms/demo.html", heading: "Demo", diagram: "demo" }];
+    const one = (/** @type {string} */ name, /** @type {string} */ svg) => new Map([[name, { name, path: `${DIAGRAM_DIR}/${name}.svg`, svg: svg.trim(), ...titleDesc(svg) }]]);
+    expect(() => checkDiagrams(pages, one("demo", good), navLabel, ROOT)).not.toThrow();
+    expect(() => checkDiagrams(pages, new Map(), navLabel, ROOT)).toThrow(`${DIAGRAM_DIR} is invalid (see site/README.md, "Diagrams"):\n  ${DIAGRAM_DIR}/demo.svg: missing; components/atoms/demo.html needs a diagram`);
+    expect(() => checkDiagrams([], one("demo", good), navLabel, ROOT)).toThrow(`${DIAGRAM_DIR}/demo.svg: no element or pattern page is named demo`);
+    // The real files: one per page, and every file is used.
+    expect([...loadDiagrams(ROOT).keys()].sort()).toEqual(diagramPages.map((p) => p.diagram).sort());
   });
 
   test("every relative href and src resolves inside _site/", () => {
@@ -312,10 +383,11 @@ test.describe("how other systems do it", () => {
     // End to end, with the fixture approach below: a bad key fails the build with a clear message.
     const fixture = mkdtempSync(join(tmpdir(), "dui-docs-other-"));
     try {
-      for (const path of ["PRINCIPLES.md", "css", "examples", "site/content", "site/data"]) cpSync(join(ROOT, path), join(fixture, path), { recursive: true });
+      for (const path of ["PRINCIPLES.md", "css", "examples", "site/content", "site/data", DIAGRAM_DIR]) cpSync(join(ROOT, path), join(fixture, path), { recursive: true });
       const file = join(fixture, "site/data/other-systems.json");
       // A new atom with no entry builds, with a warning naming it.
       cpSync(join(ROOT, "css/components/atoms/badge.css"), join(fixture, "css/components/atoms/demo.css"));
+      writeFileSync(join(fixture, DIAGRAM_DIR, "demo.svg"), fixtureDiagram("demo", "Where a demo is used"));
       const warned = generate(fixture);
       expect(warned.warnings).toEqual([`site/data/other-systems.json has no entry for: components/atoms/demo. Add one (null for no equivalent) to list how other systems do it.`]);
       expect(warned.pages.find((p) => p.path === "components/atoms/demo.html")?.blocks.some((b) => b.md.includes("How other systems do it"))).toBe(false);
@@ -572,6 +644,34 @@ test.describe("docs pages in the browser", () => {
     });
   }
 
+  test("every element and pattern page has one diagram between the h1 and the first h2, named and drawn with tokens", async ({ page }) => {
+    for (const p of diagramPages) {
+      const strokes = [];
+      for (const colorScheme of /** @type {const} */ (["light", "dark"])) {
+        await page.emulateMedia({ colorScheme });
+        await page.goto(`_site/${p.path}`);
+        const svg = page.locator("figure.docs-diagram > svg[role=img]");
+        await expect(svg, p.path).toHaveCount(1);
+        await expect(page.locator("main svg[role=img]"), `${p.path}: one diagram`).toHaveCount(1);
+        const placed = await svg.evaluate((el) => {
+          const h1 = document.querySelector("main h1");
+          const h2 = document.querySelector("main h2");
+          return Boolean(h1 && h2 && h1.compareDocumentPosition(el) & Node.DOCUMENT_POSITION_FOLLOWING && el.compareDocumentPosition(h2) & Node.DOCUMENT_POSITION_FOLLOWING);
+        });
+        expect(placed, `${p.path}: after the h1, before the first h2`).toBe(true);
+        // aria-labelledby names it by its <title> then its <desc>: "Where … used" and one sentence.
+        const desc = (await svg.locator("desc").textContent())?.trim() ?? "";
+        expect(desc, p.path).toMatch(/^[A-Z].+\.$/);
+        await expect(svg, p.path).toHaveAccessibleName(new RegExp(`^Where .+ used ${desc.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}$`));
+        await expect(svg).not.toHaveAttribute("aria-hidden", /.*/);
+        // The accent is a token: its computed colour changes with the colour scheme.
+        strokes.push(await svg.locator('g[stroke="var(--dui-color-accent)"]').first().evaluate((g) => getComputedStyle(g).stroke));
+      }
+      expect(strokes[0], `${p.path}: accent stroke resolves to a colour`).not.toMatch(/var\(|none/);
+      expect(strokes[1], `${p.path}: accent stroke differs in dark mode`).not.toBe(strokes[0]);
+    }
+  });
+
   test("redirect pages have no axe violations, refresh at once and land on their page", async ({ page }) => {
     for (const path of redirectPages) {
       const { to } = site.redirects[path];
@@ -740,7 +840,7 @@ test("discovery picks up a new component with no site changes", async ({ browser
   test.skip(browserName !== "chromium", "browser-independent; run once");
   const fixture = mkdtempSync(join(tmpdir(), "dui-docs-"));
   try {
-    for (const path of ["PRINCIPLES.md", "css", "examples", "site/content"]) cpSync(join(ROOT, path), join(fixture, path), { recursive: true });
+    for (const path of ["PRINCIPLES.md", "css", "examples", "site/content", DIAGRAM_DIR]) cpSync(join(ROOT, path), join(fixture, path), { recursive: true });
     // The fixture starts before any molecule exists (M3 "coming"); the test adds its own tabs files below.
     for (const path of ["css/components/molecules", "examples/molecules"]) rmSync(join(fixture, path), { recursive: true, force: true });
     const put = (/** @type {string} */ path, /** @type {string} */ text) => {
@@ -788,6 +888,7 @@ test("discovery picks up a new component with no site changes", async ({ browser
 </html>
 `;
     put("examples/atoms/demo.html", demo);
+    put(`${DIAGRAM_DIR}/demo.svg`, fixtureDiagram("demo", "Where a demo is used"));
     put("examples/atoms/index.html", demo.replace("Demo · domestic-ui", "Atoms · domestic-ui"));
 
     // Before its files land, the tabs pattern page is a short "coming" page.
@@ -861,12 +962,14 @@ test("discovery picks up a new component with no site changes", async ({ browser
 `,
     );
     put("examples/layouts/demo-layout.html", demo.replace("Demo · domestic-ui", "Demo layout · domestic-ui"));
+    put(`${DIAGRAM_DIR}/demo-layout.svg`, fixtureDiagram("demo-layout", "Where a demo layout is used"));
 
     const result = build({ root: fixture });
     const out = (/** @type {string} */ path) => read(join(fixture, "_site", path));
 
     const page = out("components/atoms/demo.html");
     expect(page).toContain("<h1>Demo</h1>");
+    expect(page, "the new page's diagram is inlined").toContain('aria-labelledby="diagram-demo-title diagram-demo-desc"');
     expect(page).toContain('src="../../live/atoms/demo--plain.html"');
     expect(page).toContain('src="../../live/atoms/demo--with-a-link.html"');
     expect(page).toContain('<a href="https://www.w3.org/WAI/WCAG22/Understanding/focus-visible.html">');

@@ -11,6 +11,7 @@
 import { apiMd, codeMd, labelledMd } from "./api-table.mjs";
 import { findUrls, specName } from "./css-comments.mjs";
 import { demoAppLinksMd, demoViewMd } from "./demo-views.mjs";
+import { diagramBlock, diagramName } from "./diagrams.mjs";
 import { COMPONENT_GROUPS, LEVELS } from "./discovery.mjs";
 import { inline, plainText, shiftHeadings, tokenize } from "./markdown.mjs";
 import { previewKind } from "./tokens.mjs";
@@ -40,6 +41,7 @@ import { BLOB_URL, REPO_URL, byString, escapeHtml, escapeMdCell, fence, firstSen
  * @property {Snippet[]} [snippets] the snippets rendered and printed on the page, in order
  * @property {false} [inFull]      false: left out of llms-full.txt (a list of other pages, a guide, a repository file)
  * @property {true} [wide]         wide tables are the content (token pages): the full width of main, no "On this page"
+ * @property {string} [diagram]    element and pattern pages: the name of their header diagram, site/assets/diagrams/<name>.svg (./diagrams.mjs)
  */
 
 /** Where the component API convention is documented: the Getting started page. */
@@ -775,6 +777,9 @@ function componentPage(model, c) {
   /** @type {Block[]} */
   const blocks = [md(summaryMd(c))];
   if (c.ourChoice) blocks.push(md(ourChoiceMd(c.ourChoice)));
+  // Base elements is an overview of many elements: no single place to draw.
+  const diagram = c.group === "base" ? undefined : diagramName(c.sitePath);
+  blocks.push(...leadDiagram(model, diagram));
 
   // Attributes: the index row's cell as written, then the CSS header's API block as tables.
   const isClass = c.group === "layouts" || c.group === "utilities";
@@ -850,6 +855,7 @@ function componentPage(model, c) {
     source: edit(c.overridePath ?? (c.group === "base" ? (c.files[0]?.path ?? "css/base/document.css") : c.ownCss ? c.cssPath : (c.indexPath ?? c.cssPath))),
     blocks,
     snippets: c.snippets,
+    diagram,
   };
 }
 
@@ -981,6 +987,18 @@ function keyboardMd(p) {
 }
 
 /**
+ * The header diagram under the lead (summary and Our choice line), before
+ * the first section; none when the file is missing, which build.mjs reports.
+ * @param {Model} model
+ * @param {string | undefined} name
+ * @returns {Block[]}
+ */
+function leadDiagram(model, name) {
+  const d = name ? model.diagrams.get(name) : undefined;
+  return d ? [diagramBlock(d)] : [];
+}
+
+/**
  * The shared outline of every element and pattern page (site/README.md,
  * "Page structure"): Live example; Attributes (or API) with ### labelled
  * blocks (States, Sizes, Focus, Motion, …) and ### Keyboard; Accessibility;
@@ -1018,6 +1036,8 @@ function patternPage(model, p) {
   const blocks = [md(p.summary)];
   if (p.ourChoice) blocks.push(md(ourChoiceMd(p.ourChoice)));
   if (!p.available) blocks.push(md(`Coming in ${p.milestone}.`));
+  const diagram = diagramName(p.sitePath);
+  blocks.push(...leadDiagram(model, diagram));
 
   const doc = p.available ? p.doc : null;
   const api = doc ? [...(doc.api ? [apiMd(doc.api, commentMd)] : []), ...(doc.apiInline.length ? [doc.apiInline.map((l) => `- ${mdCode(l)}`).join("\n")] : [])] : [];
@@ -1060,6 +1080,7 @@ function patternPage(model, p) {
     source: edit(p.contentPath),
     blocks,
     snippets: p.available ? p.snippets : [],
+    diagram,
   };
 }
 

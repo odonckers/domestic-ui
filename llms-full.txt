@@ -1785,6 +1785,8 @@ Page: https://odonckers.github.io/domestic-ui/components/utilities/visually-hidd
 
 Hides content visually but keeps it in the accessibility tree.
 
+_Diagram: Visually hidden text names an icon-only button, such as the close button of a panel, for screen readers without showing on screen._
+
 ### Live example
 
 #### Visually hidden
@@ -1822,6 +1824,8 @@ Hides content visually but keeps it in the accessibility tree.
 Page: https://odonckers.github.io/domestic-ui/layouts/action-bar.html
 
 A long form whose Save and Cancel buttons stay in a sticky bar at the bottom of the window, with scroll margins so the bar never hides the focused field (WCAG 2.4.11).
+
+_Diagram: The action bar is a sticky strip at the bottom of the window under a long form, holding its Save and Cancel buttons._
 
 ### Live example
 
@@ -1953,6 +1957,8 @@ Page: https://odonckers.github.io/domestic-ui/layouts/cluster.html
 
 An inline group that wraps onto new lines (buttons, tags, nav links).
 
+_Diagram: A cluster is a row of buttons, tags or nav links under a heading that wraps onto a second line when the row is full._
+
 ### Live example
 
 #### Cluster
@@ -1997,6 +2003,8 @@ The custom properties do not inherit, so nested clusters keep their defaults.
 Page: https://odonckers.github.io/domestic-ui/layouts/grid.html
 
 A responsive grid: as many columns as fit, each at least --grid-min wide, never wider than the container.
+
+_Diagram: A grid lays out cards or panels in the content area in as many equal columns as fit, here three columns and two rows._
 
 ### Live example
 
@@ -2048,6 +2056,8 @@ The custom properties do not inherit, so nested grids keep their defaults.
 Page: https://odonckers.github.io/domestic-ui/layouts/scroll.html
 
 A scroll container for content wider than the screen, such as a data table, so it scrolls on its own instead of widening the page.
+
+_Diagram: A scroll region holds a data table wider than the content area, so the table scrolls sideways on its own and the page does not._
 
 ### Live example
 
@@ -2120,6 +2130,8 @@ Page: https://odonckers.github.io/domestic-ui/layouts/stack.html
 
 Vertical flow with a consistent gap between children.
 
+_Diagram: A stack is the vertical flow of a page or form in the content area: heading, text, a field and a button with the same gap between each._
+
 ### Live example
 
 #### Stack
@@ -2191,6 +2203,8 @@ Page: https://odonckers.github.io/domestic-ui/components/atoms/text.html
 
 Lead, small and muted text helpers from domestic-ui, with copyable markup.
 
+_Diagram: The lead paragraph sits right under a page's heading in larger text, and small muted text holds metadata such as a last-updated line at the end._
+
 ### Live example
 
 #### Lead paragraph
@@ -2251,6 +2265,8 @@ For comparison only; these are not the standard this system follows.
 Page: https://odonckers.github.io/domestic-ui/components/atoms/link.html
 
 A link that takes the surrounding text color and keeps its underline, for dense UI.
+
+_Diagram: Quiet links sit in dense parts of the content: the order numbers in a table's first column and names in a muted metadata line._
 
 ### Live example
 
@@ -2318,6 +2334,8 @@ For comparison only; these are not the standard this system follows.
 Page: https://odonckers.github.io/domestic-ui/components/atoms/button.html
 
 Button variants and sizes, links styled as buttons, and disabled and loading states.
+
+_Diagram: Buttons sit at the end of a form in the content area: the primary submit button first, with a secondary button beside it._
 
 ### Live example
 
@@ -2459,6 +2477,8 @@ For comparison only; these are not the standard this system follows.
 Page: https://odonckers.github.io/domestic-ui/components/atoms/controls.html
 
 Native form controls as styled by the domestic-ui base layer, with copyable markup.
+
+_Diagram: Form controls are the inputs of a form in the content area: text fields, a select, and checkboxes in a fieldset, each under its label._
 
 ### Live example
 
@@ -2602,6 +2622,8 @@ Page: https://odonckers.github.io/domestic-ui/components/atoms/switch.html
 
 An on/off switch built on a native checkbox with role switch, following the APG Switch pattern.
 
+_Diagram: Switches sit at the start of each row in a settings fieldset, each turning one option on or off, with its label beside it._
+
 ### Live example
 
 #### Off, on and disabled
@@ -2675,6 +2697,8 @@ For comparison only; these are not the standard this system follows.
 Page: https://odonckers.github.io/domestic-ui/components/atoms/field.html
 
 Label, control, hint and error message wired with aria-describedby and aria-invalid.
+
+_Diagram: A field is one form entry in the content area: the label, the control, then a hint and an error message under it._
 
 ### Live example
 
@@ -2775,6 +2799,8 @@ For comparison only; these are not the standard this system follows.
 Page: https://odonckers.github.io/domestic-ui/components/atoms/badge.html
 
 Inline status labels with tone variants that meet WCAG AA contrast.
+
+_Diagram: Badges label the status of each row in a table's Status column, such as Paid or Overdue._
 
 ### Live example
 
@@ -2917,6 +2943,8 @@ Page: https://odonckers.github.io/domestic-ui/components/organisms/page-header.h
 
 The top of a screen: an optional breadcrumb, the title, a description and actions that sit beside the title when there is room and wrap under it when not.
 
+_Diagram: The page header is the top of the content area: a breadcrumb, the page title with its actions beside it, and a short description._
+
 ### Live example
 
 #### Order page
@@ -3019,6 +3047,8 @@ Page: https://odonckers.github.io/domestic-ui/patterns/alerts.html
 
 Status messages, from notices in the page to live alerts and toasts.
 
+_Diagram: An alert is a notice at the top of the content area under the heading, and a toast appears in the bottom corner at the end of the window._
+
 ### Live example
 
 #### Inline alerts
@@ -3119,6 +3149,8 @@ Page: https://odonckers.github.io/domestic-ui/patterns/breadcrumb.html
 
 The path to the current page: an ordered list of links in a labelled `<nav>`.
 
+_Diagram: The breadcrumb is the row of links above the page heading in the content area, from the top section to the current page._
+
 ### Live example
 
 #### Breadcrumb
@@ -3192,6 +3224,8 @@ Page: https://odonckers.github.io/domestic-ui/patterns/card.html
 A self-contained item, such as an article teaser, on a raised surface.
 
 **Our choice:** No standard exists: an `<article>` whose heading holds the one link, so the link name stays short.
+
+_Diagram: Cards sit in a grid in the content area, each a raised box with a heading link and a short text._
 
 ### Live example
 
@@ -3275,6 +3309,8 @@ For comparison only; these are not the standard this system follows.
 Page: https://odonckers.github.io/domestic-ui/patterns/dialog.html
 
 A modal `<dialog>`, either centered or as a drawer along one edge of the viewport.
+
+_Diagram: A modal dialog sits centred over the dimmed page; a drawer takes the same place along one edge of the window._
 
 ### Live example
 
@@ -3415,6 +3451,8 @@ Page: https://odonckers.github.io/domestic-ui/patterns/disclosure.html
 
 A summary that shows or hides more content, built on `<details>` and `<summary>`.
 
+_Diagram: Disclosures are summary rows in the content area, such as an accordion of questions, that each open to show their content below._
+
 ### Live example
 
 #### Disclosure
@@ -3522,6 +3560,8 @@ Page: https://odonckers.github.io/domestic-ui/patterns/menu-button.html
 
 A button that opens a menu of actions.
 
+_Diagram: A menu button is the Actions button at the end of a table row, opening a list of actions under it._
+
 ### Live example
 
 #### Actions menu
@@ -3614,6 +3654,8 @@ Links to the pages of a long list of results.
 
 **Our choice:** No standard exists: a labelled `<nav>` with a list of links and `aria-current="page"`, as for breadcrumbs.
 
+_Diagram: Pagination is the row of page links under a long list of results, with the current page marked._
+
 ### Live example
 
 #### Middle of a long list
@@ -3696,6 +3738,8 @@ For comparison only; these are not the standard this system follows.
 Page: https://odonckers.github.io/domestic-ui/patterns/popover.html
 
 Content shown on top of the page from a button, with the `popover` attribute.
+
+_Diagram: A popover opens from a button, such as Share beside the page heading, as a small panel on top of the page under the button._
 
 ### Live example
 
@@ -3812,6 +3856,8 @@ Page: https://odonckers.github.io/domestic-ui/patterns/search.html
 
 A search form in a `<search>` landmark with an `<input type="search">`.
 
+_Diagram: Site search sits in the app bar as a search input with a Search button; a labelled search form can also head a page of results._
+
 ### Live example
 
 #### With a visible label
@@ -3883,6 +3929,8 @@ For comparison only; these are not the standard this system follows.
 Page: https://odonckers.github.io/domestic-ui/patterns/nav.html
 
 The main links of a site in a `<nav>` landmark, with the current page marked.
+
+_Diagram: Site navigation is the list of main links in the sidebar, with the current page marked, or a short row of links in the app bar._
 
 ### Live example
 
@@ -4001,6 +4049,8 @@ For comparison only; these are not the standard this system follows.
 Page: https://odonckers.github.io/domestic-ui/patterns/tabs.html
 
 Sections of content shown one at a time, chosen from a list of tabs.
+
+_Diagram: Tabs are a row of labels under a heading in the content area, with the panel of the selected tab right below them._
 
 ### Live example
 
@@ -4137,6 +4187,8 @@ Page: https://odonckers.github.io/domestic-ui/patterns/toolbar.html
 
 A row of related controls that is one stop in the tab order.
 
+_Diagram: A toolbar is a row of related buttons at the top of the area it acts on, such as the formatting buttons above a text editor._
+
 ### Live example
 
 #### Text formatting
@@ -4211,6 +4263,8 @@ For comparison only; these are not the standard this system follows.
 Page: https://odonckers.github.io/domestic-ui/patterns/typeahead.html
 
 A text field that suggests values as you type: `<datalist>` first, an APG combobox where it falls short.
+
+_Diagram: A typeahead is a text field in a form whose list of suggestions opens right under it as you type._
 
 ### Live example
 
@@ -4333,6 +4387,8 @@ Page: https://odonckers.github.io/domestic-ui/patterns/app-shell.html
 The frame of an application: header, primary sidebar, main content and an optional auxiliary sidebar.
 
 **Our choice:** No standard defines an app shell: the landmarks `<header>`, `<nav>`, `<main>` and `<aside>`, placed with CSS grid.
+
+_Diagram: The app shell is the whole frame of an app: the app bar across the top, the primary sidebar, the main content and an optional auxiliary sidebar._
 
 ### Live example
 
@@ -4578,6 +4634,8 @@ A compact density token that tightens spacing for data-heavy screens.
 
 **Our choice:** No standard exists: `data-density="compact"` on any ancestor re-derives the density tokens; text size never changes and targets stay at least 24 by 24 CSS pixels.
 
+_Diagram: Compact density tightens a data-heavy area such as a table, so it shows more rows in the same height than a comfortable table beside it._
+
 ### Live example
 
 #### Comfortable and compact
@@ -4732,6 +4790,8 @@ A grid of summary sections, each with a heading, that reflows to fit the screen.
 
 **Our choice:** No standard exists: a CSS grid of headed `<section>` elements that reflows without media queries.
 
+_Diagram: A dashboard fills the content area with a grid of headed summary sections, such as totals and a chart, that reflow to fit._
+
 ### Live example
 
 #### Sales overview
@@ -4845,6 +4905,8 @@ For comparison only; these are not the standard this system follows.
 Page: https://odonckers.github.io/domestic-ui/patterns/data-table.html
 
 Rows of records in a native `<table>` with a caption, header cells and optional sorting.
+
+_Diagram: A data table fills the content area under the page heading: a caption, a header row and one row per record, with sortable columns._
 
 ### Live example
 
@@ -5381,6 +5443,8 @@ A row of native form controls that narrows a list or table.
 
 **Our choice:** No standard exists: a `<form>` in `<search>` with labelled controls, and the result count as a status message.
 
+_Diagram: The filter bar is a row of form controls above a list or table in the content area, with the result count after it._
+
 ### Live example
 
 #### Filter orders
@@ -5521,6 +5585,8 @@ For comparison only; these are not the standard this system follows.
 Page: https://odonckers.github.io/domestic-ui/patterns/large-forms.html
 
 Long forms split into labelled groups, in one or more columns.
+
+_Diagram: A large form fills the content area as labelled groups of fields, in two columns on wide screens._
 
 ### Live example
 
@@ -5682,6 +5748,8 @@ Page: https://odonckers.github.io/domestic-ui/patterns/list-detail.html
 A list of items beside the details of the selected one, stacked on narrow screens.
 
 **Our choice:** No standard exists: real links beside a detail region, placed with CSS grid, so history and URLs keep working.
+
+_Diagram: List-detail splits the content area into a list of items and, beside it, the details of the selected one._
 
 ### Live example
 
@@ -5899,6 +5967,8 @@ Page: https://odonckers.github.io/domestic-ui/patterns/split.html
 Two regions side by side at a set ratio, stacked on narrow screens.
 
 **Our choice:** No standard exists for a fixed split: two regions in a CSS grid. A draggable divider would follow the APG Window Splitter pattern.
+
+_Diagram: A split puts two regions side by side in the content area at a set ratio, such as an invoice and its payments at two to one._
 
 ### Live example
 

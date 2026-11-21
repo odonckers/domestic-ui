@@ -13,7 +13,8 @@ import { cpSync, existsSync, mkdirSync, readFileSync, rmSync, writeFileSync } fr
 import { dirname, join, resolve, sep } from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
 import { loadModel } from "./lib/discovery.mjs";
-import { NAV, navEntryOf, navTree } from "./lib/nav.mjs";
+import { checkDiagrams } from "./lib/diagrams.mjs";
+import { NAV, navEntryOf, navLabel, navTree } from "./lib/nav.mjs";
 import { generateLlms, generateLlmsFull, generateReadme, searchIndex } from "./lib/outputs.mjs";
 import { redirectMarkdown, redirectPage, renderPage } from "./lib/live.mjs";
 import { addOtherSystems, loadOtherSystems } from "./lib/other-systems.mjs";
@@ -58,6 +59,8 @@ export function generate(root = ROOT) {
   // Throws on invalid site/data/other-systems.json; warns about comparable pages with no entry.
   const { pages: withOthers, warnings } = addOtherSystems(buildPages(model), model, loadOtherSystems(root));
   const pages = dedupeTitles(withOthers);
+  // Every element and pattern page has a valid header diagram, and every diagram a page.
+  checkDiagrams(pages, model.diagrams, navLabel, root);
   for (const entry of NAV) if (!pages.some((p) => p.path === entry.path)) throw new Error(`The Docs sidebar entry "${entry.title}" links ${entry.path}, which no page builds`);
   // Every snippet is shown and rendered on exactly one docs page.
   for (const s of model.snippets) {

@@ -10,6 +10,7 @@ import { join, posix } from "node:path";
 import { comments, dedent, headerComment, htmlKeyboard, parseHeader, parseKeyboard, parseLayerOrder, specLabel, specName } from "./css-comments.mjs";
 import { splitSections, tokenize, plainText } from "./markdown.mjs";
 import { loadDemoViews } from "./demo-views.mjs";
+import { loadDiagrams } from "./diagrams.mjs";
 import { parseTokenFile, resolveTokens } from "./tokens.mjs";
 import { byString, firstSentence, readTitle, slugify, unescapeHtml } from "./util.mjs";
 
@@ -666,6 +667,8 @@ export function loadModel(root) {
     demoViews: demos.length ? loadDemoViews(root) : null,
     contributing: exists("CONTRIBUTING.md") ? read("CONTRIBUTING.md") : "",
     changelog: exists("CHANGELOG.md") ? read("CHANGELOG.md") : "",
+    // site/assets/diagrams/<slug>.svg, checked against the pages by build.mjs (./diagrams.mjs).
+    diagrams: loadDiagrams(root),
     examples,
     snippets,
     principleSnippets,

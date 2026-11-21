@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 180" role="img" aria-labelledby="diagram-page-header-title diagram-page-header-desc">
+  <title id="diagram-page-header-title">Where the page header is used</title>
+  <desc id="diagram-page-header-desc">The page header is the top of the content area: a breadcrumb, the page title with its actions beside it, and a short description.</desc>
+  <!-- Frame -->
+  <rect x="0.75" y="0.75" width="318.5" height="178.5" rx="6" fill="var(--dui-color-surface)" stroke="var(--dui-color-border)" stroke-width="1.5"/>
+  <!-- Regions -->
+  <g fill="none" stroke="currentColor" stroke-opacity=".35">
+    <path d="M1 24.5h318M76.5 24.5V179"/>
+  </g>
+  <!-- Text -->
+  <g fill="currentColor" fill-opacity=".3">
+    <rect x="10" y="9" width="34" height="6" rx="2"/>
+    <rect x="12" y="38" width="44" height="6" rx="2"/>
+    <rect x="12" y="52" width="36" height="6" rx="2"/>
+    <rect x="12" y="66" width="50" height="6" rx="2"/>
+    <rect x="12" y="80" width="40" height="6" rx="2"/>
+    <rect x="12" y="94" width="46" height="6" rx="2"/>
+    <rect x="98" y="34" width="20" height="6" rx="2"/>
+    <rect x="124" y="34" width="24" height="6" rx="2"/>
+    <rect x="98" y="48" width="104" height="10" rx="2" fill-opacity=".6"/>
+    <rect x="98" y="66" width="130" height="6" rx="2"/>
+    <rect x="92" y="98" width="200" height="6" rx="2"/>
+    <rect x="92" y="110" width="180" height="6" rx="2"/>
+    <rect x="92" y="122" width="196" height="6" rx="2"/>
+    <rect x="92" y="134" width="150" height="6" rx="2"/>
+  </g>
+  <!-- Other controls -->
+  <g fill="none" stroke="currentColor" stroke-opacity=".5">
+    <rect x="236" y="46" width="32" height="14" rx="3"/>
+    <rect x="272" y="46" width="30" height="14" rx="3"/>
+  </g>
+  <!-- The the page header -->
+  <g fill="var(--dui-color-accent-surface)" stroke="var(--dui-color-accent)" stroke-width="2">
+    <rect x="88" y="30" width="220" height="50" rx="4" fill="none"/>
+  </g>
+</svg>

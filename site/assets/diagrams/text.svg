@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 180" role="img" aria-labelledby="diagram-text-title diagram-text-desc">
+  <title id="diagram-text-title">Where text helpers are used</title>
+  <desc id="diagram-text-desc">The lead paragraph sits right under a page's heading in larger text, and small muted text holds metadata such as a last-updated line at the end.</desc>
+  <!-- Frame -->
+  <rect x="0.75" y="0.75" width="318.5" height="178.5" rx="6" fill="var(--dui-color-surface)" stroke="var(--dui-color-border)" stroke-width="1.5"/>
+  <!-- Regions -->
+  <g fill="none" stroke="currentColor" stroke-opacity=".35">
+    <path d="M1 24.5h318"/>
+  </g>
+  <!-- Text -->
+  <g fill="currentColor" fill-opacity=".3">
+    <rect x="10" y="9" width="34" height="6" rx="2"/>
+    <rect x="222" y="9" width="24" height="6" rx="2"/>
+    <rect x="254" y="9" width="24" height="6" rx="2"/>
+    <rect x="286" y="9" width="24" height="6" rx="2"/>
+    <rect x="40" y="38" width="130" height="10" rx="2" fill-opacity=".6"/>
+    <rect x="40" y="92" width="236" height="6" rx="2"/>
+    <rect x="40" y="104" width="220" height="6" rx="2"/>
+    <rect x="40" y="116" width="228" height="6" rx="2"/>
+    <rect x="40" y="128" width="160" height="6" rx="2"/>
+  </g>
+  <!-- The text helpers -->
+  <g fill="var(--dui-color-accent-surface)" stroke="var(--dui-color-accent)" stroke-width="2">
+    <rect x="36" y="54" width="248" height="30" rx="3" fill="none" stroke-dasharray="4 3"/>
+    <rect x="36" y="148" width="104" height="16" rx="3" fill="none" stroke-dasharray="4 3"/>
+  </g>
+  <!-- Its text -->
+  <g fill="var(--dui-color-accent)">
+    <rect x="40" y="59" width="230" height="8" rx="2"/>
+    <rect x="40" y="71" width="150" height="8" rx="2"/>
+    <rect x="40" y="153" width="90" height="5" rx="2" fill-opacity=".7"/>
+  </g>
+</svg>

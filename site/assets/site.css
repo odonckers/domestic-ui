@@ -118,6 +118,23 @@ main :is(p, li, dt, dd, h1, h2, h3, h4) :is(a, code) {
 }
 
 /*
+ * Header diagrams (site/assets/diagrams/, site/README.md "Diagrams"): the
+ * width of the content column, scaled down with it. currentColor in the
+ * files is the muted text colour; everything else is a token.
+ */
+.docs-diagram {
+  margin-inline: 0;
+  color: var(--dui-color-text-muted);
+}
+
+.docs-diagram svg {
+  display: block;
+  inline-size: 100%;
+  max-inline-size: var(--dui-measure);
+  block-size: auto;
+}
+
+/*
  * Live examples: one frame per snippet, of its render page (live/, with the
  * real CSS). This height holds without JavaScript; site.js fits
  * each frame to its content. Frames that open dialogs, popovers or toasts

@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 180" role="img" aria-labelledby="diagram-app-shell-title diagram-app-shell-desc">
+  <title id="diagram-app-shell-title">Where the app shell is used</title>
+  <desc id="diagram-app-shell-desc">The app shell is the whole frame of an app: the app bar across the top, the primary sidebar, the main content and an optional auxiliary sidebar.</desc>
+  <!-- Frame -->
+  <rect x="0.75" y="0.75" width="318.5" height="178.5" rx="6" fill="var(--dui-color-surface)" stroke="var(--dui-color-border)" stroke-width="1.5"/>
+  <!-- Text -->
+  <g fill="currentColor" fill-opacity=".3">
+    <rect x="14" y="12" width="34" height="6" rx="2"/>
+    <rect x="14" y="40" width="44" height="6" rx="2"/>
+    <rect x="14" y="54" width="36" height="6" rx="2"/>
+    <rect x="14" y="68" width="50" height="6" rx="2"/>
+    <rect x="14" y="82" width="40" height="6" rx="2"/>
+    <rect x="92" y="40" width="90" height="10" rx="2" fill-opacity=".6"/>
+    <rect x="92" y="60" width="130" height="6" rx="2"/>
+    <rect x="92" y="72" width="120" height="6" rx="2"/>
+    <rect x="92" y="84" width="136" height="6" rx="2"/>
+    <rect x="92" y="96" width="90" height="6" rx="2"/>
+    <rect x="250" y="40" width="52" height="6" rx="2"/>
+    <rect x="250" y="54" width="40" height="6" rx="2"/>
+    <rect x="250" y="68" width="46" height="6" rx="2"/>
+  </g>
+  <!-- The the app shell -->
+  <g fill="var(--dui-color-accent-surface)" stroke="var(--dui-color-accent)" stroke-width="2">
+    <rect x="6" y="6" width="308" height="20" rx="3" fill="none"/>
+    <rect x="6" y="32" width="70" height="142" rx="3" fill="none"/>
+    <rect x="84" y="32" width="154" height="142" rx="3" fill="none"/>
+    <rect x="244" y="32" width="70" height="142" rx="3" fill="none" stroke-dasharray="4 3"/>
+  </g>
+</svg>

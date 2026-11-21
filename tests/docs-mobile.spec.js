@@ -5,8 +5,9 @@ import { WCAG_TAGS, builtPages, summarize } from "./docs-helpers.js";
 
 /*
  * Docs pages on small screens, in every Playwright project: no horizontal
- * page scroll (WCAG 1.4.10 Reflow) and no axe violations at 320×640 and
- * 375×812, and the Docs sidebar works as a drawer by keyboard.
+ * page scroll (WCAG 1.4.10 Reflow), header diagrams no wider than the
+ * content column, and no axe violations at 320×640 and 375×812, and the
+ * Docs sidebar works as a drawer by keyboard.
  */
 const VIEWPORTS = [
   { width: 320, height: 640 },
@@ -44,6 +45,13 @@ for (const path of builtPages) {
       await page.goto(`_site/${path}`);
       const result = await page.evaluate(overflow);
       expect(result, `${path} at ${viewport.width}px: ${result}`).toBeNull();
+      // The header diagram (element and pattern pages) scales down to the content column.
+      const diagram = await page.evaluate(() => {
+        const svg = document.querySelector("figure.docs-diagram > svg");
+        const column = document.querySelector("main .docs-content");
+        return svg && column ? { svg: svg.getBoundingClientRect().width, column: column.clientWidth } : null;
+      });
+      if (diagram) expect(diagram.svg, `${path} at ${viewport.width}px: diagram wider than the content column`).toBeLessThanOrEqual(diagram.column);
       // Framed render pages (live/) hold examples/ markup, checked by tests/a11y.spec.js and axe-checked on their own in tests/docs.spec.js; the frame itself is checked here.
       const { violations } = await new AxeBuilder({ page }).withTags(WCAG_TAGS).exclude("iframe").analyze();
       expect(violations, `${path} at ${viewport.width}px\n${summarize(violations)}`).toEqual([]);
