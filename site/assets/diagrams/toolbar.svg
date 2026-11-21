@@ -25,7 +25,7 @@
   <g fill="none" stroke="currentColor" stroke-opacity=".5">
     <rect x="92" y="78" width="216" height="84" rx="3"/>
   </g>
-  <!-- The a toolbar -->
+  <!-- The toolbar -->
   <g fill="var(--dui-color-accent-surface)" stroke="var(--dui-color-accent)" stroke-width="2">
     <rect x="92" y="54" width="216" height="22" rx="3"/>
     <rect x="98" y="58" width="16" height="14" rx="2" fill="var(--dui-color-accent)"/>

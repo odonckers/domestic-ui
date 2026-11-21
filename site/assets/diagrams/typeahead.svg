@@ -23,7 +23,7 @@
   <g fill="none" stroke="currentColor" stroke-opacity=".5">
     <rect x="92" y="138" width="160" height="16" rx="3"/>
   </g>
-  <!-- The a typeahead -->
+  <!-- The typeahead -->
   <g fill="var(--dui-color-accent-surface)" stroke="var(--dui-color-accent)" stroke-width="2">
     <rect x="92" y="64" width="160" height="16" rx="3"/>
     <rect x="92" y="82" width="160" height="40" rx="3" fill="var(--dui-color-surface)"/>

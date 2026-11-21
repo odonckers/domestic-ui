@@ -26,6 +26,16 @@ const MAX_BYTES = 3072;
 /** Attributes that take a colour. */
 const COLOR_ATTRS = ["fill", "stroke", "color", "stop-color", "flood-color", "lighting-color"];
 
+/**
+ * The fill and stroke values site.css maps in forced colours ("Diagrams" in
+ * site/README.md); anything else would keep its token colour there. Strokes
+ * also take var(--dui-color-accent-…), which site.css matches by prefix.
+ */
+const FORCED = {
+  fill: ["currentColor", "none", "transparent", "var(--dui-color-surface)", "var(--dui-color-accent-surface)", "var(--dui-color-accent)", "var(--dui-color-backdrop)"],
+  stroke: ["currentColor", "none", "var(--dui-color-border)", "var(--dui-color-accent)"],
+};
+
 /** Markup that must not be inlined into a docs page. */
 const FORBIDDEN = [
   [/<script\b/i, "<script>"],
@@ -109,6 +119,8 @@ export function diagramProblems(d, names, tokens) {
     const token = value.match(/^var\((--dui-[a-z0-9-]+)\)$/)?.[1];
     if (token ? !tokens.has(token) : !["currentColor", "none", "transparent"].includes(value)) {
       problems.push(`${name}="${value}": use currentColor, none, transparent or var(--dui-…) with a semantic token${token ? ` (${token} is not in css/tokens/semantic.css)` : ""}`);
+    } else if (name in FORCED && !FORCED[/** @type {keyof typeof FORCED} */ (name)].includes(value) && !(name === "stroke" && token?.startsWith("--dui-color-accent-"))) {
+      problems.push(`${name}="${value}": site.css has no forced-colours rule for it; use one of ${FORCED[/** @type {keyof typeof FORCED} */ (name)].join(", ")}`);
     }
   }
   if (!/="var\(--dui-color-accent[a-z-]*\)"/.test(svg)) problems.push("must highlight the element with the accent token (var(--dui-color-accent…))");

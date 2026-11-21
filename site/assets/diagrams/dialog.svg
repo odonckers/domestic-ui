@@ -25,7 +25,7 @@
   <g fill="var(--dui-color-backdrop)">
     <rect x="0.75" y="0.75" width="318.5" height="178.5" rx="6"/>
   </g>
-  <!-- The the dialog and drawer -->
+  <!-- The dialog and drawer -->
   <g fill="var(--dui-color-accent-surface)" stroke="var(--dui-color-accent)" stroke-width="2">
     <rect x="90" y="40" width="140" height="100" rx="6" fill="var(--dui-color-surface)"/>
     <rect x="178" y="112" width="40" height="16" rx="3" fill="var(--dui-color-accent)"/>

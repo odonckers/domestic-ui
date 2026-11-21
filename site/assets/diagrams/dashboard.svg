@@ -22,7 +22,7 @@
     <rect x="100" y="114" width="50" height="6" rx="2"/>
     <rect x="208" y="114" width="40" height="6" rx="2"/>
   </g>
-  <!-- The a dashboard -->
+  <!-- The dashboard -->
   <g fill="var(--dui-color-accent-surface)" stroke="var(--dui-color-accent)" stroke-width="2">
     <rect x="92" y="54" width="64" height="46" rx="4"/>
     <rect x="164" y="54" width="64" height="46" rx="4"/>

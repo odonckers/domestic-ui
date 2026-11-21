@@ -30,7 +30,7 @@
     <rect x="178.4" y="143.5" width="44" height="6" rx="2"/>
     <rect x="247.51999999999998" y="143.5" width="26" height="6" rx="2"/>
   </g>
-  <!-- The a data table -->
+  <!-- The data table -->
   <g fill="var(--dui-color-accent-surface)" stroke="var(--dui-color-accent)" stroke-width="2">
     <rect x="92" y="56" width="216" height="106" rx="4" fill="none"/>
     <path d="M92 90.5h216M92 106.5h216M92 122.5h216M92 138.5h216M92 154.5h216" stroke-width="1"/>

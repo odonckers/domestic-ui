@@ -29,7 +29,7 @@
     <rect x="236" y="46" width="32" height="14" rx="3"/>
     <rect x="272" y="46" width="30" height="14" rx="3"/>
   </g>
-  <!-- The the page header -->
+  <!-- The page header -->
   <g fill="var(--dui-color-accent-surface)" stroke="var(--dui-color-accent)" stroke-width="2">
     <rect x="88" y="30" width="220" height="50" rx="4" fill="none"/>
   </g>

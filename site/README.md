@@ -207,9 +207,12 @@ has no page, or a file breaks these rules:
 - `<title id="diagram-<slug>-title">Where … is used</title>` naming the page ("Where buttons are
   used", "Where a data table is used"), and `<desc id="diagram-<slug>-desc">`: one sentence, what it
   is and where it sits. Base it on the page's own text and examples.
-- Colours only as `currentColor`, `none`, `transparent` or `var(--dui-…)` with a token from
-  `css/tokens/semantic.css`, in `fill` and `stroke` attributes. No hex, `rgb()`, `hsl()` or named
-  colours; no `<script>`, `<style>`, `style` or `class` attributes, `href`, `<use>`, `<image>` or
+- Colours only in `fill` and `stroke` attributes, and only the values the forced-colours rules
+  below cover: `fill` is `currentColor`, `none`, `transparent`, `var(--dui-color-surface)`,
+  `var(--dui-color-accent-surface)`, `var(--dui-color-accent)` or `var(--dui-color-backdrop)`;
+  `stroke` is `currentColor`, `none`, `var(--dui-color-border)` or `var(--dui-color-accent)` (or
+  another `var(--dui-color-accent-…)` token from `css/tokens/semantic.css`, which site.css matches
+  by prefix). No hex, `rgb()`, `hsl()` or named colours; no `<script>`, `<style>`, `style` or `class` attributes, `href`, `<use>`, `<image>` or
   `url()`. Under 3 KB.
 
 One look for every diagram (`site.css` sets `color: var(--dui-color-text-muted)` on the figure, so
@@ -241,7 +244,7 @@ the files do not change), all at full opacity:
 | `fill="var(--dui-color-accent)"` (its solid fill and its text bars) | `Highlight` |
 | `fill="var(--dui-color-surface)"` directly inside a `fill="var(--dui-color-accent)"` group (text bars on the solid fill) | `HighlightText` |
 
-So a new diagram needs no extra markup, as long as it uses only these colour values.
+So a new diagram needs no extra markup; the build rejects any other `fill` or `stroke` value.
 
 ## Demo views
 

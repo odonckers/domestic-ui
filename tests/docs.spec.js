@@ -116,11 +116,12 @@ test.describe("docs build", () => {
   });
 
   test("the build rejects a missing, orphan or invalid diagram with a clear message", () => {
-    const tokens = new Set(["--dui-color-accent", "--dui-color-accent-surface", "--dui-color-border"]);
+    const tokens = new Set(["--dui-color-accent", "--dui-color-accent-surface", "--dui-color-border", "--dui-color-accent-hover"]);
     const good = fixtureDiagram("demo", "Where a demo is used");
     const problems = (/** @type {string} */ svg) => diagramProblems({ name: "demo", path: `${DIAGRAM_DIR}/demo.svg`, svg: svg.trim(), ...titleDesc(svg) }, ["Demo"], tokens);
     const titleDesc = (/** @type {string} */ svg) => ({ title: svg.match(/<title[^>]*>([^<]*)/)?.[1] ?? "", desc: svg.match(/<desc[^>]*>([^<]*)/)?.[1] ?? "" });
     expect(problems(good)).toEqual([]);
+    expect(problems(good.replace('stroke="var(--dui-color-accent)"', 'stroke="var(--dui-color-accent-hover)"')), "site.css maps accent strokes by prefix").toEqual([]);
     const cases = /** @type {[string, string, RegExp][]} */ ([
       ["hex", good.replace('stroke="var(--dui-color-accent)"', 'stroke="#0055ff"'), /hex colour/],
       ["rgb", good.replace('fill="var(--dui-color-accent-surface)"', 'fill="rgb(0 0 255)"'), /colour function/],
@@ -139,6 +140,8 @@ test.describe("docs build", () => {
       ["style", good.replace("</svg>", "<style>rect{}</style></svg>"), /<style>/],
       ["xlink", good.replace("<rect", '<a xlink:href="https://example.com/"></a><rect'), /href/],
       ["two roots", `${good}${good}`, /exactly one root/],
+      ["fill not in forced colours", good.replace('fill="var(--dui-color-accent-surface)"', 'fill="var(--dui-color-border)"'), /fill="var\(--dui-color-border\)": site\.css has no forced-colours rule for it; use one of currentColor, none, transparent/],
+      ["stroke not in forced colours", good.replace('stroke="var(--dui-color-accent)"', 'stroke="transparent"'), /stroke="transparent": site\.css has no forced-colours rule for it/],
       ["no accent", good.replace(/var\(--dui-color-accent[a-z-]*\)/g, "currentColor"), /accent token/],
     ]);
     for (const [label, svg, message] of cases) expect(problems(svg).join("\n"), label).toMatch(message);
