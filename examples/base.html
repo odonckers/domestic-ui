@@ -123,7 +123,7 @@
 
       <section aria-labelledby="code-title">
         <h2 id="code-title">Preformatted code</h2>
-        <pre><code>&lt;link rel="stylesheet" href="css/domestic.css"&gt;
+        <pre tabindex="0"><code>&lt;link rel="stylesheet" href="css/domestic.css"&gt;
 
 :root {
   --dui-color-accent: light-dark(#7a2e8c, #e2a8f0);
@@ -161,44 +161,46 @@
 
       <section aria-labelledby="table-title">
         <h2 id="table-title">Tables</h2>
-        <table>
-          <caption>Contrast minimums in WCAG 2.2 AA</caption>
-          <thead>
-            <tr>
-              <th scope="col">Content</th>
-              <th scope="col">Success criterion</th>
-              <th scope="col">Minimum ratio</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <th scope="row">Body text</th>
-              <td>1.4.3 Contrast (Minimum)</td>
-              <td>4.5:1</td>
-            </tr>
-            <tr>
-              <th scope="row">Large text</th>
-              <td>1.4.3 Contrast (Minimum)</td>
-              <td>3:1</td>
-            </tr>
-            <tr>
-              <th scope="row">Control boundaries</th>
-              <td>1.4.11 Non-text Contrast</td>
-              <td>3:1</td>
-            </tr>
-            <tr>
-              <th scope="row">Focus indicator</th>
-              <td>1.4.11 Non-text Contrast</td>
-              <td>3:1</td>
-            </tr>
-          </tbody>
-          <tfoot>
-            <tr>
-              <th scope="row">Source</th>
-              <td colspan="2"><a href="https://www.w3.org/TR/WCAG22/">WCAG 2.2</a></td>
-            </tr>
-          </tfoot>
-        </table>
+        <section data-scroll="inline" aria-labelledby="contrast-caption" tabindex="0">
+          <table>
+            <caption id="contrast-caption">Contrast minimums in WCAG 2.2 AA</caption>
+            <thead>
+              <tr>
+                <th scope="col">Content</th>
+                <th scope="col">Success criterion</th>
+                <th scope="col">Minimum ratio</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <th scope="row">Body text</th>
+                <td>1.4.3 Contrast (Minimum)</td>
+                <td>4.5:1</td>
+              </tr>
+              <tr>
+                <th scope="row">Large text</th>
+                <td>1.4.3 Contrast (Minimum)</td>
+                <td>3:1</td>
+              </tr>
+              <tr>
+                <th scope="row">Control boundaries</th>
+                <td>1.4.11 Non-text Contrast</td>
+                <td>3:1</td>
+              </tr>
+              <tr>
+                <th scope="row">Focus indicator</th>
+                <td>1.4.11 Non-text Contrast</td>
+                <td>3:1</td>
+              </tr>
+            </tbody>
+            <tfoot>
+              <tr>
+                <th scope="row">Source</th>
+                <td colspan="2"><a href="https://www.w3.org/TR/WCAG22/">WCAG 2.2</a></td>
+              </tr>
+            </tfoot>
+          </table>
+        </section>
       </section>
 
       <section id="forms" aria-labelledby="forms-title">

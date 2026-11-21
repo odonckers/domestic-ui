@@ -13,6 +13,9 @@ h6 {
   font-weight: var(--dui-font-weight-heading);
   line-height: var(--dui-line-height-heading);
   text-wrap: balance;
+
+  /* A long word breaks instead of pushing the page sideways at small sizes. */
+  overflow-wrap: break-word;
 }
 
 h1 {
@@ -56,6 +59,18 @@ a {
   text-decoration-thickness: var(--dui-underline-thickness);
   text-underline-offset: var(--dui-underline-offset);
   transition: text-decoration-thickness var(--dui-duration-fast) var(--dui-easing-standard);
+}
+
+/*
+ * Long URLs in running text wrap instead of widening the page.
+ * https://developer.mozilla.org/en-US/docs/Web/CSS/overflow-wrap
+ * Our choice: anywhere, not break-word, because only anywhere also lowers
+ * the min-content width, which lets a table cell or flex item shrink.
+ * Running text only, so a link label in a table cell or button never
+ * breaks mid-word.
+ */
+:where(p, li, dd, blockquote, figcaption) a {
+  overflow-wrap: anywhere;
 }
 
 a:visited {
@@ -110,6 +125,16 @@ pre {
   font-size: var(--dui-font-size-code);
 }
 
+/*
+ * Long identifiers and attribute lists wrap too, for the same reason as
+ * links above. <pre> does not wrap (white-space: pre) and scrolls instead.
+ */
+code,
+kbd,
+samp {
+  overflow-wrap: anywhere;
+}
+
 :not(pre) > code,
 samp {
   background-color: var(--dui-color-surface-sunken);
@@ -123,7 +148,6 @@ kbd {
   border-block-end-width: var(--dui-focus-width);
   border-radius: var(--dui-radius-control);
   padding-inline: var(--dui-space-2xs);
-  white-space: nowrap;
 }
 
 pre {

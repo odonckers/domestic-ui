@@ -29,11 +29,16 @@
   background-color: var(--dui-color-surface-sunken);
   color: var(--dui-color-text);
   border: var(--dui-border-width) solid color-mix(in oklab, currentcolor var(--dui-border-tint-amount), transparent);
-  border-radius: var(--dui-radius-pill);
+
+  /*
+   * Half the height of one line: a pill on one line, and a rounded box
+   * (not a stadium that cuts into the text) when a long badge wraps in a
+   * narrow column. Our choice: let badges wrap rather than widen the page.
+   */
+  border-radius: calc(var(--dui-line-height-body) * var(--dui-step--1) / 2 + var(--dui-border-width));
   font-size: var(--dui-step--1);
   font-weight: var(--dui-font-weight-strong);
   line-height: var(--dui-line-height-body);
-  white-space: nowrap;
   vertical-align: baseline;
 }
 

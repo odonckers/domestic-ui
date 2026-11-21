@@ -1,16 +1,10 @@
 // @ts-check
 import { test, expect } from "@playwright/test";
 import AxeBuilder from "@axe-core/playwright";
-import { examples, schemes, blockExternalRequests } from "./helpers.js";
-
-const WCAG_TAGS = ["wcag2a", "wcag2aa", "wcag21a", "wcag21aa", "wcag22aa"];
+import { examples, schemes, blockExternalRequests, WCAG_TAGS, summarize } from "./helpers.js";
 
 /** @param {import("@playwright/test").Page} page */
 const axe = (page) => new AxeBuilder({ page }).withTags(WCAG_TAGS).analyze();
-
-/** Readable summary of axe violations for the failure message. */
-const summarize = (violations) =>
-  violations.map((v) => `${v.id} (${v.impact}): ${v.help}\n    ${v.nodes.map((n) => n.target.join(" ")).join("\n    ")}`).join("\n");
 
 for (const path of examples) {
   test.describe(path, () => {

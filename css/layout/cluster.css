@@ -47,4 +47,10 @@
 
 .cluster > * {
   margin: 0;
+
+  /*
+   * A flex item cannot shrink below its content by default (min-width: auto),
+   * so one long item would overflow. https://www.w3.org/TR/css-flexbox-1/#min-size-auto
+   */
+  min-inline-size: 0;
 }

@@ -47,7 +47,18 @@ Semantic token names and file paths under `css/` are public API; primitive token
 - Tests: atom states through Playwright accessibility APIs, rendered focus-ring contrast on every
   button variant, contrast pairs for every new token, and scoped theming of atoms.
 - Firefox and WebKit Playwright projects alongside Chromium, installed in CI.
+- `layout` layer: `data-scroll="inline"` (`css/layout/scroll.css`), a keyboard-focusable scroll
+  container for wide content such as data tables, used on a `<section>` named by the table caption (a region landmark).
+- Tests: `tests/mobile.spec.js` checks every example at 320×640 and 375×812 in Chromium, Firefox
+  and WebKit for horizontal page overflow and axe violations.
 
 ### Fixed
+
+- Pages no longer scroll sideways on small screens (320px and up). Inline `code`, `kbd`, `samp`
+  and links in running text wrap with `overflow-wrap: anywhere`, long words in headings break,
+  `.cluster` and `.grid` children get `min-inline-size: 0`, badges wrap (a wrapped badge keeps
+  rounded corners), table cells use `--dui-space-xs` padding on every side, and every example
+  table sits in a `data-scroll="inline"` region. The scrolling `<pre>` in `examples/base.html`
+  and `examples/theming.html` is now keyboard-focusable (axe `scrollable-region-focusable`).
 
 - Base button hover and press styles no longer apply to buttons with `aria-disabled="true"`.

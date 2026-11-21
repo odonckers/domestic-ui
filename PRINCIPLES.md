@@ -81,7 +81,7 @@ unlayered CSS beats all of them**, so overriding never needs `!important` or spe
 | `reset` | A modest reset: `box-sizing`, zero margins, block media, inherited form fonts |
 | `tokens` | Primitive and semantic custom properties |
 | `base` | Native elements: typography, lists, tables, forms, buttons, dialog, details, focus |
-| `layout` | `.stack`, `.cluster`, `.grid` |
+| `layout` | `.stack`, `.cluster`, `.grid`, `[data-scroll]` |
 | `components` | Atoms in `css/components/atoms/` (M2); molecules and organisms later. See the [atoms index](css/components/atoms/README.md) |
 | `utilities` | Single-purpose helpers such as `.visually-hidden`; last so they always apply |
 
@@ -265,12 +265,35 @@ Each of these is a choice between valid options, not a standard.
 | `.stack` | Vertical flow with a gap | `--stack-gap` |
 | `.cluster` | Wrapping inline group | `--cluster-gap`, `--cluster-justify`, `--cluster-align` |
 | `.grid` | Auto-fit responsive grid, no media queries | `--grid-min`, `--grid-gap` |
+| `[data-scroll="inline"]` | Scroll container for content wider than the screen, such as a data table | None |
 
 ```html
 <div class="grid" style="--grid-min: 12rem">…</div>
 ```
 
 On a `ul` or `ol`, the primitive also removes list markers and padding.
+
+Wrap any table that may not fit a 320px screen in `data-scroll="inline"`, named by its caption:
+
+```html
+<section data-scroll="inline" aria-labelledby="orders-caption" tabindex="0">
+  <table>
+    <caption id="orders-caption">Recent orders</caption>
+    …
+  </table>
+</section>
+```
+
+`tabindex="0"` makes it scrollable from the keyboard
+([2.1.1 Keyboard](https://www.w3.org/WAI/WCAG22/Understanding/keyboard.html), axe
+[`scrollable-region-focusable`](https://dequeuniversity.com/rules/axe/4.10/scrollable-region-focusable)),
+and a named `<section>` is a [region landmark](https://www.w3.org/TR/html-aam-1.0/#el-section), so
+screen reader users hear what that focus stop is. **Our choice:** `<section>` rather than
+`<div role="region">`, because the native element already has the role. Data tables
+may scroll sideways under [1.4.10 Reflow](https://www.w3.org/WAI/WCAG22/Understanding/reflow.html);
+the page itself must not. Never set `display: block` on the `<table>` instead: it can drop table
+semantics in some browsers ([Adrian Roselli](https://adrianroselli.com/2018/02/tables-css-display-properties-and-aria.html)).
+A `<pre>` already scrolls (`overflow-x: auto`); give one that can overflow `tabindex="0"` too.
 
 ## 8. Tooling
 
@@ -281,7 +304,7 @@ On a `ul` or `ol`, the primitive also removes list markers and padding.
 | `lint:html` | [html-validate](https://html-validate.org/) | `examples/**/*.html` against `html-validate:recommended` |
 | `lint:css` | [Stylelint](https://stylelint.io/) | `css/**/*.css` against `stylelint-config-standard` |
 | `lint:tokens` | `scripts/check-tokens.mjs` | Semantic-only tokens and no literal colors or sizes outside `css/tokens/` |
-| `test:a11y` | [Playwright](https://playwright.dev/) + [axe-core](https://github.com/dequelabs/axe-core) | Every `examples/**/*.html` (atoms included) in light and dark, in Chromium, Firefox and WebKit, with tags `wcag2a`, `wcag2aa`, `wcag21a`, `wcag21aa`, `wcag22aa`, including open dialogs and details; no external requests; token contrast pairs (atoms included) in the default and forest themes; rendered focus-ring contrast on every button variant; atom states through accessibility APIs; scoped theming of atoms |
+| `test:a11y` | [Playwright](https://playwright.dev/) + [axe-core](https://github.com/dequelabs/axe-core) | Every `examples/**/*.html` (atoms included) in light and dark, in Chromium, Firefox and WebKit, with tags `wcag2a`, `wcag2aa`, `wcag21a`, `wcag21aa`, `wcag22aa`, including open dialogs and details; no horizontal page overflow and no axe violations at 320×640 and 375×812; no external requests; token contrast pairs (atoms included) in the default and forest themes; rendered focus-ring contrast on every button variant; atom states through accessibility APIs; scoped theming of atoms |
 
 Preview locally with `npm run serve` (a zero-dependency static server) and open
 <http://127.0.0.1:4173/examples/base.html>. To run tests from two checkouts at once, give each its own port, e.g. `PORT=4273 npm test`.

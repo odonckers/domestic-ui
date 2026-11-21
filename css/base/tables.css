@@ -16,9 +16,14 @@ caption {
   padding-block-end: var(--dui-space-xs);
 }
 
+/*
+ * Our choice: the same small padding on every side, so a plain table of
+ * short text needs less width on a phone. Truly wide tables go in
+ * data-scroll="inline" (css/layout/scroll.css).
+ */
 th,
 td {
-  padding: var(--dui-space-xs) var(--dui-space-s);
+  padding: var(--dui-space-xs);
   border-block-end: var(--dui-border-width) solid var(--dui-color-border);
   text-align: start;
   vertical-align: top;

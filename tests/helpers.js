@@ -11,6 +11,13 @@ export const examples = readdirSync(fileURLToPath(new URL("../examples/", import
 
 export const schemes = /** @type {const} */ (["light", "dark"]);
 
+/** axe-core tags every accessibility test runs with. */
+export const WCAG_TAGS = ["wcag2a", "wcag2aa", "wcag21a", "wcag21aa", "wcag22aa"];
+
+/** Readable summary of axe violations for the failure message. */
+export const summarize = (violations) =>
+  violations.map((v) => `${v.id} (${v.impact}): ${v.help}\n    ${v.nodes.map((n) => n.target.join(" ")).join("\n    ")}`).join("\n");
+
 /**
  * Fail the test on any request that leaves the local server.
  * data: URIs are not network requests and never reach this handler.

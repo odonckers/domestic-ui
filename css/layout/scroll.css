@@ -1,0 +1,49 @@
+/*
+ * Layout: [data-scroll]
+ *
+ * A scroll container for content wider than the screen (data tables,
+ * long code, wide media), so it scrolls on its own instead of widening
+ * the page (WCAG 1.4.10 Reflow allows two-dimensional scrolling for data
+ * tables: https://www.w3.org/WAI/WCAG22/Understanding/reflow.html).
+ * Built on overflow-x: https://developer.mozilla.org/en-US/docs/Web/CSS/overflow-x
+ *
+ * API
+ *   data-scroll="inline"   scroll along the inline axis (left/right in English)
+ *
+ * Example
+ *   <section data-scroll="inline" aria-labelledby="orders-caption" tabindex="0">
+ *     <table>
+ *       <caption id="orders-caption">Recent orders</caption>
+ *       …
+ *     </table>
+ *   </section>
+ *
+ * tabindex="0" lets keyboard users scroll it with the arrow keys (WCAG 2.1.1
+ * Keyboard, axe rule scrollable-region-focusable:
+ * https://dequeuniversity.com/rules/axe/4.10/scrollable-region-focusable).
+ * A <section> named with aria-labelledby is a region landmark
+ * (https://www.w3.org/TR/html-aam-1.0/#el-section), so screen readers
+ * announce what the focus stop is. Our choice: <section> over
+ * <div role="region">, because the native element already has the role.
+ * Any element works if it has role="region" and a name.
+ * The table itself keeps display: table. Changing a table's display can drop
+ * its table semantics in some browsers (Adrian Roselli, "Tables, CSS Display
+ * Properties, and ARIA": https://adrianroselli.com/2018/02/tables-css-display-properties-and-aria.html).
+ */
+
+[data-scroll~="inline"] {
+  max-inline-size: 100%;
+  overflow-x: auto;
+}
+
+/* The focus ring is drawn inside, so the scroll box never clips it. */
+[data-scroll]:focus-visible {
+  outline: var(--dui-focus-width) solid var(--dui-color-focus);
+  outline-offset: calc(-1 * var(--dui-focus-width));
+}
+
+@media (forced-colors: active) {
+  [data-scroll]:focus-visible {
+    outline-color: highlight;
+  }
+}

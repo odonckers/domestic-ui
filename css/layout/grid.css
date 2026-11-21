@@ -42,4 +42,7 @@
 .grid > * {
   margin: 0;
   max-inline-size: none;
+
+  /* Wide content (a table, a long word) cannot stretch its column past the container. */
+  min-inline-size: 0;
 }
