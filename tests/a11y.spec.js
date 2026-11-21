@@ -11,7 +11,13 @@ const axe = (page) => new AxeBuilder({ page }).withTags(WCAG_TAGS).analyze();
  * to finish, so axe measures final colors, not a frame mid-fade.
  * @param {import("@playwright/test").Page} page
  */
-const settle = (page) => page.evaluate(() => Promise.all(document.getAnimations().map((a) => a.finished.catch(() => {}))));
+const settle = (page) =>
+  page.evaluate(async () => {
+    // Two frames first: under CI load WebKit can report no animations before an
+    // @starting-style transition has started, and axe then reads mid-fade colors.
+    for (let i = 0; i < 2; i++) await new Promise((r) => requestAnimationFrame(r));
+    await Promise.all(document.getAnimations().map((a) => a.finished.catch(() => {})));
+  });
 
 for (const path of examples) {
   test.describe(path, () => {
