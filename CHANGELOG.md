@@ -95,7 +95,7 @@ Semantic token names and file paths under `css/` are public API; primitive token
 ### Changed
 
 - CI: lint, html-validate, the token check and `node site/build.mjs --check` run as a `lint` job, and the
-  Playwright suite is split across six shards (`--shard=i/6`) in the Playwright container. A final job
+  Playwright suite is split across eight shards (`--shard=i/8`) in the Playwright container. A final job
   named `ci` passes only when all of them pass, so the required check keeps its name.
 
 ### Fixed
