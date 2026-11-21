@@ -125,3 +125,19 @@ test.describe("docs syntax highlighting", () => {
     expect(colors.highlight).toBe(colors.expected);
   });
 });
+
+test("in forced colors, highlighted code is plain text, not painted like a selection", async ({ page, browserName }) => {
+  test.skip(browserName !== "chromium", "forced-colors emulation is Chromium-only in Playwright");
+  await page.emulateMedia({ forcedColors: "active" });
+  await page.goto("_site/components/atoms/button.html");
+  const code = page.locator("main pre > code").first();
+  await expect(code).toBeVisible();
+  // Chromium forces Highlight/HighlightText onto ::highlight(); the code opts out (css/base/typography.css).
+  expect(await code.evaluate((c) => getComputedStyle(c).forcedColorAdjust)).toBe("none");
+  expect(await code.evaluate((c) => getComputedStyle(c).color)).toBe(await page.evaluate(() => {
+    const p = document.createElement("p");
+    p.style.color = "CanvasText";
+    document.body.append(p);
+    return getComputedStyle(p).color;
+  }));
+});

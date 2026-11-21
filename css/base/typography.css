@@ -297,6 +297,20 @@ pre code {
   :where(code, code *)::highlight(dui-code-number),
   :where(code, code *)::highlight(dui-code-punctuation) {
     color: canvastext;
+    background-color: transparent;
+  }
+
+  /*
+   * Chromium forces Highlight/HighlightText onto ::highlight() in forced
+   * colors, so highlighted code would look selected. Opting the code out of
+   * forced colors keeps it plain CanvasText on the block's forced background.
+   * The <pre> itself stays forced, so its border remains.
+   * https://developer.mozilla.org/en-US/docs/Web/CSS/forced-color-adjust
+   */
+  pre > code {
+    forced-color-adjust: none;
+    color: canvastext;
+    background-color: transparent;
   }
 }
 
