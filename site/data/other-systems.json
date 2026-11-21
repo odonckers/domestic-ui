@@ -358,8 +358,14 @@
     },
     "patterns/filter-bar": {
       "apple": null,
-      "material": null,
-      "geist": null
+      "material": {
+        "url": "https://m3.material.io/components/chips/overview",
+        "title": "Chips (filter chips)"
+      },
+      "geist": {
+        "url": "https://vercel.com/geist/filter-params",
+        "title": "Filter Params"
+      }
     },
     "patterns/large-forms": {
       "apple": null,
