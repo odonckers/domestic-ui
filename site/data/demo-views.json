@@ -21,7 +21,7 @@
     {
       "id": "settings",
       "title": "Account settings",
-      "description": "A form in fieldsets: profile, region, email frequency, notification switches and a note for the household.",
+      "description": "A long form in titled sections: profile, region, email frequency, notification switches and a note for the household, with Save and Cancel in an action bar.",
       "paths": {
         "vanilla": "demos/vanilla/settings.html",
         "react": "demos/react/src/SettingsPage.tsx",
