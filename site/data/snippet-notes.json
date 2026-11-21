@@ -1,0 +1,5 @@
+{
+  "examples/elevation.html": {
+    "Level swatch CSS": "Each `.level` swatch draws one elevation level from two custom properties: `--level-shadow` (its `box-shadow`) and `--level-surface` (its background)."
+  }
+}

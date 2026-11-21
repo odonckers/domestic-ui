@@ -511,9 +511,16 @@ heading is the name), `<th scope="col">` headers and the token name in `<code>` 
 <div data-scroll="inline" tabindex="0" role="region" aria-labelledby="spacing">
 ```
 
-Markdown tables get the same: a region and a table both labelled by the heading above them, and
-code blocks are their own region (`<pre data-scroll="inline" role="region" tabindex="0"
-aria-label="Markup: Variants">`), so code keeps its lines instead of breaking inside tokens.
+Markdown tables get the same: a region and a table both labelled by the heading above them.
+
+Code blocks follow `css/base/typography.css`: a `<pre>` wraps by default, and
+`pre[data-scroll~="inline"]` with `tabindex="0"` and a name keeps `white-space: pre` and scrolls.
+The docs opt in wherever line structure matters: every snippet (`<pre data-snippet="…"
+data-scroll="inline" role="region" tabindex="0" aria-label="Markup: Variants">`) and every fenced
+block of more than one line (`aria-label="Code: <heading>"`). `role="region"` lets the `<pre>` carry
+a name (ARIA prohibits naming its generic role). A one-line fence stays a plain `<pre>` and wraps,
+with no extra focus stop. `site.css` sets no `white-space` or `overflow-wrap` on `pre`.
+`site/assets/highlight.js` (the Lead's) highlights every `pre > code`.
 
 `data-scroll="inline"` is the core CSS API for horizontal scroll regions, styled by
 [`css/layout/scroll.css`](../css/layout/scroll.css); `site.css` adds no rule of its own. Tables are never `display: block`. Hyphenated words in values never
@@ -556,6 +563,10 @@ explanation and its live example. Example markup has one source: named snippet r
 </div>
 ```
 
+- **Working code only.** Snippets hold no explanatory comments. Prose about a snippet goes in
+  `site/data/snippet-notes.json` (`{ "<example path>": { "<snippet name>": "Markdown" } }`) and is
+  shown under the snippet's name on its page, its Markdown twin and `llms-full.txt`; the build fails
+  if a note names a snippet that does not exist.
 - **One rule.** A snippet is the text between `<!-- dui:snippet name="…" -->` and
   `<!-- /dui:snippet -->`. `name` is required (the build fails without one), is the snippet's
   heading, and is unique in its file. Nothing else is a snippet: not `<pre><code>`, not `<main>`.
@@ -613,10 +624,10 @@ themselves, then run `node site/build.mjs`. Two checks catch a forgotten rebuild
 ## Accessibility of the docs
 
 Every page has a skip link (the first focusable element), landmarks in source order (app shell), one
-`aria-current="page"` in the Docs nav, one `h1`, tables with `<caption>` and `th scope`, and iframes
-with a `title`. Long words and URLs in prose and cells break only where they would overflow
-(`overflow-wrap: break-word`); inline code may break anywhere only below `30em`. Tables and code
-blocks scroll inside named `data-scroll="inline"` regions.
+`aria-current="page"` in the Docs nav, one `h1`, tables labelled by their heading with `th scope`,
+and iframes with a `title`. Long words and URLs in prose and cells break only where they would
+overflow (`overflow-wrap: break-word`); inline code in prose may break anywhere only below `30em`.
+Tables and multi-line code blocks scroll inside named `data-scroll="inline"` regions.
 
 `tests/docs.spec.js` (Chromium) runs html-validate and axe (WCAG 2.2 AA tags, light and dark) on
 every page and every render page, blocks external requests, and checks the navigation (sidebar order, every built page reachable, one `aria-current` and only the

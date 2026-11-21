@@ -14,6 +14,8 @@ import { demoAppLinksMd, demoViewMd } from "./demo-views.mjs";
 import { COMPONENT_GROUPS, LEVELS } from "./discovery.mjs";
 import { inline, plainText, shiftHeadings, tokenize } from "./markdown.mjs";
 import { previewKind } from "./tokens.mjs";
+import { existsSync, readFileSync } from "node:fs";
+import { join } from "node:path";
 import { BLOB_URL, REPO_URL, byString, escapeHtml, escapeMdCell, fence, firstSentence, mdCode, slugify } from "./util.mjs";
 
 /**
@@ -681,6 +683,27 @@ const ourChoiceMd = (why) => `**Our choice:** ${why}`;
 const pageTitle = (model, path) =>
   [...allComponents(model), ...model.patterns, ...model.principles.sections].find((x) => x.sitePath === path)?.title ?? path;
 
+/** Repo path of the snippet notes: prose about a snippet, shown under its name (snippets hold working code only, no comments). */
+export const SNIPPET_NOTES_PATH = "site/data/snippet-notes.json";
+
+/**
+ * Snippet notes, { "<example path>": { "<snippet name>": "Markdown" } }.
+ * Throws when a note names a snippet that does not exist.
+ * @param {Model} model
+ * @returns {Record<string, Record<string, string>>}
+ */
+function snippetNotes(model) {
+  const file = join(model.root, SNIPPET_NOTES_PATH);
+  if (!existsSync(file)) return {};
+  const notes = JSON.parse(readFileSync(file, "utf8"));
+  for (const [source, byName] of Object.entries(notes)) {
+    for (const name of Object.keys(byName)) {
+      if (!model.snippets.some((s) => s.source === source && s.name === name)) throw new Error(`${SNIPPET_NOTES_PATH}: no snippet "${name}" in ${source}`);
+    }
+  }
+  return notes;
+}
+
 /** Snippets that open something in the top layer need a taller frame. */
 const TALL_RE = /<dialog\b|\spopover\b|<dui-(?:menu|toaster|tooltip)\b/;
 
@@ -704,11 +727,13 @@ function liveExampleBlocks(model, snippets, usedIn = []) {
     { md: "## Live example", html: (ctx) => ctx.heading(2, "Live example") },
     ...snippets.map((s) => {
       const note = s.head ? "In the `<head>` of the live example above." : "";
+      const about = snippetNotes(model)[s.source]?.[s.name] ?? "";
       return {
-        md: `### ${s.name}\n\n${note ? `${note}\n\n` : ""}${fence(s.code, "html")}`,
+        md: `### ${s.name}\n\n${about ? `${about}\n\n` : ""}${note ? `${note}\n\n` : ""}${fence(s.code, "html")}`,
         html: (/** @type {HtmlContext} */ ctx) =>
           [
             ctx.heading(3, s.name),
+            ...(about ? [`<p>${inline(about, { resolveLink: (href) => (href.startsWith("site:") ? ctx.link(href.slice(5)) : href) })}</p>`] : []),
             s.live
               ? `<iframe class="example-frame" data-live${TALL_RE.test(s.code) ? " data-tall" : ""} src="${escapeHtml(ctx.link(s.live))}" title="Live example: ${escapeHtml(s.name)}"></iframe>`
               : `<p>${inline(note)}</p>`,

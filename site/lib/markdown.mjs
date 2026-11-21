@@ -218,7 +218,9 @@ function renderList(items, options) {
  *   page; the visible heading is the caption
  *   (https://www.w3.org/WAI/tutorials/tables/caption-summary/). th scope as
  *   in https://www.w3.org/WAI/tutorials/tables/.
- * - a code block is its own region, named "Code: <heading>".
+ * - a code block of several lines is its own region, named
+ *   "Code: <heading>" (pre[data-scroll~="inline"] keeps its lines); a
+ *   one-line block wraps, as css/base/typography.css does by default.
  * A second table or code block under one heading gets "(2)" in its name.
  * @param {string} md
  * @param {Options} [options]
@@ -247,9 +249,11 @@ export function markdownToHtml(md, options = {}) {
           return `<h${level} id="${heading.id}">${inline(block.text, options)}</h${level}>`;
         }
         case "code": {
+          const lang = block.lang ? ` class="language-${escapeHtml(block.lang)}"` : "";
+          // A one-line block wraps (css/base/typography.css): no line structure to keep, no extra focus stop.
+          if (!block.code.includes("\n")) return `<pre><code${lang}>${escapeHtml(block.code)}</code></pre>`;
           const n = nth("code");
           const name = `Code${heading.text ? `: ${heading.text}` : ""}${n > 1 ? ` (${n})` : ""}`;
-          const lang = block.lang ? ` class="language-${escapeHtml(block.lang)}"` : "";
           return `<pre data-scroll="inline" role="region" tabindex="0" aria-label="${escapeHtml(name)}"><code${lang}>${escapeHtml(block.code)}</code></pre>`;
         }
         case "table": {
