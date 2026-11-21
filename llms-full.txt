@@ -5476,8 +5476,8 @@ the result count.
 For comparison only; these are not the standard this system follows.
 
 - Apple Human Interface Guidelines: No equivalent
-- Material Design 3: No equivalent
-- Vercel Geist: No equivalent
+- [Material Design 3: Chips (filter chips)](https://m3.material.io/components/chips/overview)
+- [Vercel Geist: Filter Params](https://vercel.com/geist/filter-params)
 
 ## Large forms
 
