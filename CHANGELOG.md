@@ -219,6 +219,9 @@ Semantic token names and file paths under `css/` are public API; primitive token
 
 ### Changed
 
+- Headings: h2 is now `--dui-step-3` (was step-4), h3 `--dui-step-2`, h4 `--dui-step-1`, h5 and h6
+  `--dui-step-0`, so section headings read as headings rather than display text; h1 stays `--dui-step-5`.
+  A heading directly after another heading now sits `--dui-space-m` below it (was `--dui-space-xs`).
 - Examples use `max-inline-size: var(--dui-size-page)` instead of a hard-coded `72rem`.
 - Components read the density tokens instead of `--dui-size-target` and fixed spaces: text fields, selects,
   textareas, color inputs, check and switch labels, buttons and `a[data-button]`, `<summary>`, table

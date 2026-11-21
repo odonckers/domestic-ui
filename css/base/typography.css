@@ -24,23 +24,25 @@ h1 {
   letter-spacing: var(--dui-letter-spacing-heading);
 }
 
+/*
+ * Our choice: section headings are sized for reading reference pages,
+ * closer to MDN than to a marketing page, so h1 stays the only display size.
+ * h6 shares step-0 with h5: step--1 would set it below the body text.
+ */
 h2 {
-  font-size: var(--dui-step-4);
+  font-size: var(--dui-step-3);
   letter-spacing: var(--dui-letter-spacing-heading);
 }
 
 h3 {
-  font-size: var(--dui-step-3);
-}
-
-h4 {
   font-size: var(--dui-step-2);
 }
 
-h5 {
+h4 {
   font-size: var(--dui-step-1);
 }
 
+h5,
 h6 {
   font-size: var(--dui-step-0);
 }
