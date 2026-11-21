@@ -230,8 +230,19 @@ test.describe("popover and tooltip", () => {
   test("near the bottom of the viewport the popover flips above its button", async ({ page }) => {
     const button = page.getByRole("button", { name: "Share" });
     const popover = page.locator("#share-popover");
-    await button.evaluate((el) => el.scrollIntoView({ block: "end" }));
-    await button.click();
+    // Shrink the viewport so the button sits just above its bottom edge. Where the
+    // button lands depends on font metrics, so scrolling alone left room below it
+    // on CI and the popover had no reason to flip.
+    await page.evaluate(() => window.scrollTo(0, 0));
+    const before = await button.boundingBox();
+    const width = page.viewportSize()?.width ?? 1280;
+    const height = Math.ceil((before?.y ?? 0) + (before?.height ?? 0) + 8);
+    await page.setViewportSize({ width, height });
+    await page.waitForFunction((h) => window.innerHeight === h, height);
+    // Open from the keyboard: click() scrolls the button toward the middle first.
+    await button.evaluate((el) => el.focus({ preventScroll: true }));
+    await page.keyboard.press("Enter");
+    await expect(popover).toBeVisible();
     const [b, p] = await Promise.all([button.boundingBox(), popover.boundingBox()]);
     expect((p?.y ?? 0) + (p?.height ?? 0)).toBeLessThanOrEqual((b?.y ?? 0) + 1);
   });
