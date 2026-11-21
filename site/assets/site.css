@@ -98,9 +98,15 @@ main :is(p, li, dt, dd, td, th, caption, h1, h2, h3, h4) :is(a, code) {
   overflow-wrap: break-word;
 }
 
-/* The first column of a table names an attribute, token or key: kept on one line (the table scrolls in its region instead). */
-main th[scope="row"] code {
-  white-space: nowrap;
+/*
+ * The first column of a table names an attribute, token or key: kept on
+ * one line where there is room (the table scrolls in its region instead);
+ * on narrow screens it wraps, so the Effect column stays in view.
+ */
+@media (min-width: 30em) {
+  main th[scope="row"] code {
+    white-space: nowrap;
+  }
 }
 
 @media (max-width: 30em) {

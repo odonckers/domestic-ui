@@ -40,15 +40,24 @@ for (const frame of document.querySelectorAll("iframe[data-live]")) {
 const revealCurrent = (scroller) => {
   const current = scroller.querySelector('a[aria-current="page"]');
   if (!(current instanceof HTMLElement) || scroller.scrollHeight <= scroller.clientHeight) return;
+  // The part of the sidebar on screen: below the app bar it may run past the bottom of the viewport.
   const box = scroller.getBoundingClientRect();
+  const top = Math.max(box.top, 0);
+  const bottom = Math.min(box.bottom, window.innerHeight);
   const r = current.getBoundingClientRect();
-  if (r.top < box.top) scroller.scrollTop -= box.top - r.top;
-  else if (r.bottom > box.bottom) scroller.scrollTop += r.bottom - box.bottom;
+  if (r.top < top) scroller.scrollTop -= top - r.top;
+  else if (r.bottom > bottom) scroller.scrollTop += r.bottom - bottom;
 };
 
 const docsNav = document.getElementById("docs-nav");
 if (docsNav) {
-  revealCurrent(docsNav);
+  // Once the sidebar has a size: <dui-app-shell> may dock it a frame after this runs (WebKit).
+  const sized = new ResizeObserver(() => {
+    if (!docsNav.clientHeight) return;
+    sized.disconnect();
+    revealCurrent(docsNav);
+  });
+  sized.observe(docsNav);
   // In the narrow-screen drawer, the dialog is the scroll container.
   document.addEventListener("dui-app-shell-toggle", (event) => {
     const { detail } = /** @type {CustomEvent} */ (event);
