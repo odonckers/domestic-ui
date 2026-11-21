@@ -48,6 +48,7 @@ export function renderHtml(page, tree) {
     <link rel="stylesheet" href="${link("site.css")}">
     <link rel="alternate" type="text/markdown" href="${link(page.path.replace(/\.html$/, ".md"))}">
     <script src="${link("site.js")}" defer></script>
+    <script src="${link("highlight.js")}" defer></script>
   </head>
   <body>
     <a class="skip-link visually-hidden" href="#main">Skip to content</a>

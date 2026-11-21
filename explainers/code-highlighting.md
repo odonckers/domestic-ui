@@ -32,7 +32,7 @@ no element or attribute for a token's kind.
 ## Non-goals
 
 - A tokenizer. Which ranges get which name is up to the page; the domestic-ui docs site registers
-  them from `site/assets/site.js`.
+  them from `site/assets/highlight.js`.
 - Languages other than HTML, CSS and JavaScript, line numbers, and diff markers.
 - Bold or italic tokens: `::highlight()` cannot set `font-weight` or `font-style`.
 

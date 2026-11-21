@@ -216,7 +216,7 @@ pre code {
  * classes. The page registers ranges by name, for example
  *   CSS.highlights.set("dui-code-keyword", new Highlight(...ranges));
  * What registers the ranges is up to the page (the docs site does it from
- * site/assets/site.js). Without JavaScript, or where the API is missing, the code
+ * site/assets/highlight.js). Without JavaScript, or where the API is missing, the code
  * is plain text, which is fine. Names and what each covers:
  * explainers/code-highlighting.md.
  * https://developer.mozilla.org/en-US/docs/Web/API/CSS_Custom_Highlight_API
