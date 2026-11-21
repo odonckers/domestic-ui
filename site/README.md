@@ -38,6 +38,7 @@ indexes, which is why every docs link points at a file (`principles/index.html`,
 | `site/lib/demo-views.mjs` | Reads and validates `site/data/demo-views.json` (see [Demo views](#demo-views)). |
 | `site/assets/site.css` | Docs layout only, with semantic `--dui-*` tokens and the layout primitives. |
 | `site/assets/site.js` | Progressive enhancement only: scrolls the current sidebar link into view, fits live frames, runs the token filter. |
+| `site/assets/highlight.js` | Syntax highlighting for every `pre > code` with the CSS Custom Highlight API ([MDN](https://developer.mozilla.org/en-US/docs/Web/API/CSS_Custom_Highlight_API)). A block opts out with `class="language-text"`. Owned by the Lead. |
 
 `_site/` is wiped and rebuilt each time. `css/` and `web-components/` are copied into it unchanged,
 so the docs and the render pages load the real CSS and components by relative path, at `/_site/`
@@ -520,7 +521,7 @@ data-scroll="inline" role="region" tabindex="0" aria-label="Markup: Variants">`)
 block of more than one line (`aria-label="Code: <heading>"`). `role="region"` lets the `<pre>` carry
 a name (ARIA prohibits naming its generic role). A one-line fence stays a plain `<pre>` and wraps,
 with no extra focus stop. `site.css` sets no `white-space` or `overflow-wrap` on `pre`.
-`site/assets/highlight.js` (the Lead's) highlights every `pre > code`.
+`site/assets/highlight.js` highlights every `pre > code`.
 
 `data-scroll="inline"` is the core CSS API for horizontal scroll regions, styled by
 [`css/layout/scroll.css`](../css/layout/scroll.css); `site.css` adds no rule of its own. Tables are never `display: block`. Hyphenated words in values never
