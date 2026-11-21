@@ -673,6 +673,8 @@ test.describe("docs pages in the browser", () => {
   });
 
   test("redirect pages have no axe violations, refresh at once and land on their page", async ({ page }) => {
+    // Each target page loads its live frames eagerly, so budget time per redirect, not per test.
+    test.setTimeout(30_000 + redirectPages.length * 5_000);
     for (const path of redirectPages) {
       const { to } = site.redirects[path];
       // Answer the target with 204 No Content, so the browser stays on the redirect page for axe (meta-refresh rule included).
