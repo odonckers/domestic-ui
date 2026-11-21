@@ -33,6 +33,7 @@
   --dui-color-danger: light-dark(var(--dui-color-red-700), var(--dui-color-red-300));
   --dui-color-success: light-dark(var(--dui-color-green-700), var(--dui-color-green-300));
   --dui-color-warning: light-dark(var(--dui-color-amber-700), var(--dui-color-amber-300));
+  --dui-color-info: light-dark(var(--dui-color-blue-700), var(--dui-color-blue-300));
   --dui-color-mark: light-dark(var(--dui-color-yellow-100), var(--dui-color-yellow-300));
   --dui-color-mark-text: light-dark(var(--dui-color-gray-900), var(--dui-color-gray-900));
   --dui-color-backdrop: light-dark(var(--dui-color-black-a40), var(--dui-color-black-a60));
@@ -75,6 +76,8 @@
   --dui-size-target-large: var(--dui-size-3-25);
   --dui-size-check: var(--dui-size-1-25);
   --dui-size-column-min: var(--dui-size-16);
+  --dui-size-menu-min: var(--dui-size-12);
+  --dui-size-drawer: var(--dui-size-24);
 
   /* Shape */
   --dui-radius-control: var(--dui-radius-2);
@@ -82,6 +85,7 @@
   --dui-radius-pill: var(--dui-radius-round);
   --dui-border-width: var(--dui-border-1);
   --dui-border-width-emphasis: var(--dui-border-4);
+  --dui-border-width-indicator: var(--dui-border-3);
   --dui-underline-offset: var(--dui-underline-offset-015em);
   --dui-underline-thickness: var(--dui-underline-1);
   --dui-underline-thickness-hover: var(--dui-underline-2);
@@ -127,6 +131,11 @@
   --dui-color-success-surface: color-mix(in oklab, var(--dui-color-success) var(--dui-tint-amount), var(--dui-color-surface));
   --dui-color-warning-surface: color-mix(in oklab, var(--dui-color-warning) var(--dui-tint-amount), var(--dui-color-surface));
   --dui-color-danger-surface: color-mix(in oklab, var(--dui-color-danger) var(--dui-tint-amount), var(--dui-color-surface));
+  --dui-color-info-surface: color-mix(in oklab, var(--dui-color-info) var(--dui-tint-amount), var(--dui-color-surface));
+
+  /* Inverse pair for small overlays on top of content (tooltips): text and surface swapped. */
+  --dui-color-surface-inverse: var(--dui-color-text);
+  --dui-color-text-inverse: var(--dui-color-surface);
 }
 
 /*

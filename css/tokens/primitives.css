@@ -100,8 +100,10 @@
   --dui-size-1-25: 1.25rem;
   --dui-size-2: 2rem;
   --dui-size-2-75: 2.75rem;
+  --dui-size-12: 12rem;
   --dui-size-3-25: 3.25rem;
   --dui-size-16: 16rem;
+  --dui-size-24: 24rem;
   --dui-size-65ch: 65ch;
 
   /* Radii */
@@ -114,6 +116,7 @@
   /* Border widths */
   --dui-border-1: 1px;
   --dui-border-2: 2px;
+  --dui-border-3: 3px;
   --dui-border-4: 0.25rem;
 
   /* Underline metrics, relative to the font */
