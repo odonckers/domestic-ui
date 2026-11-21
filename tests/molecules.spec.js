@@ -365,6 +365,32 @@ test.describe("nav list", () => {
     await expect(page.getByRole("menu")).toHaveCount(0);
   });
 
+  // https://w3c.github.io/aria/#aria-current: any value but "false" (or empty) means current.
+  test("a horizontal top-level link with aria-current=\"true\" (current section) is marked like \"page\"", async ({ page }) => {
+    const bar = page.getByRole("navigation", { name: "Top bar example" });
+    const styles = await bar.evaluate((nav) => {
+      const list = /** @type {HTMLElement} */ (nav.querySelector(":scope > ul"));
+      /** @param {string | null} value */
+      const add = (value) => {
+        const li = document.createElement("li");
+        const a = document.createElement("a");
+        a.href = "#horizontal-title";
+        a.textContent = `Section ${value}`;
+        if (value !== null) a.setAttribute("aria-current", value);
+        li.append(a);
+        list.append(li);
+        const cs = getComputedStyle(a);
+        return [cs.borderBottomColor, cs.backgroundColor, cs.fontWeight].join(" | ");
+      };
+      return { page: add("page"), true: add("true"), location: add("location"), false: add("false"), empty: add(""), none: add(null) };
+    });
+    expect(styles.true).toBe(styles.page);
+    expect(styles.location).toBe(styles.page);
+    expect(styles.false).toBe(styles.none);
+    expect(styles.empty).toBe(styles.none);
+    expect(styles.none).not.toBe(styles.page);
+  });
+
   test("horizontal groups open as dropdowns, one at a time", async ({ page }) => {
     const bar = page.getByRole("navigation", { name: "Top bar example" });
     const products = bar.locator("details", { hasText: "Products" });

@@ -55,6 +55,7 @@
  * API
  *   data-nav="vertical | horizontal"   on <nav> (empty means vertical)
  *   aria-current="page"                on the current link (native ARIA)
+ *   aria-current="true"                on a top-level horizontal link to the current section; marked like "page"
  *   <details> / <summary>              inside an <li> for a collapsible group;
  *                                      open to expand it on load, name for
  *                                      one-at-a-time
@@ -217,6 +218,20 @@
   border-block-end-color: var(--dui-color-accent);
 }
 
+/*
+ * A top-level link in a horizontal bar may stand for the current section,
+ * not the page itself (aria-current="true", or "location" and the other
+ * tokens): it gets the same marker as "page". Only "false" and an empty
+ * value mean "not current"; ARIA treats any other value as true.
+ * https://w3c.github.io/aria/#aria-current
+ */
+[data-nav~="horizontal"] > :is(ul, ol) > li > a[aria-current]:not([aria-current="false"], [aria-current=""]) {
+  background-color: var(--dui-color-accent-surface);
+  border-block-end-color: var(--dui-color-accent);
+  color: var(--dui-color-text);
+  font-weight: var(--dui-font-weight-strong);
+}
+
 [data-nav~="horizontal"] > :is(ul, ol) > li > details:has([aria-current="page"]) > summary {
   border-block-end-color: var(--dui-color-accent);
 }
@@ -236,7 +251,8 @@
 }
 
 @media (forced-colors: active) {
-  [data-nav] a[aria-current="page"] {
+  [data-nav] a[aria-current="page"],
+  [data-nav~="horizontal"] > :is(ul, ol) > li > a[aria-current]:not([aria-current="false"], [aria-current=""]) {
     border-color: highlight;
   }
 
