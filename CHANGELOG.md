@@ -261,6 +261,10 @@ Semantic token names and file paths under `css/` are public API; primitive token
 
 ### Fixed
 
+- Colored leading edges are straight: alerts, the current nav link, the selected list-detail item and
+  data table row, invalid fields and `<blockquote>` set `border-start-start-radius` and
+  `border-end-start-radius` to `0` (trailing corners stay rounded; RTL follows), so the edge no longer
+  bends with the box's `border-radius`. `tests/leading-edge.spec.js` checks every example in LTR and RTL.
 - Pages no longer scroll sideways on small screens (320px and up). Inline `code`, `kbd`, `samp`
   and links in running text wrap with `overflow-wrap: anywhere`, long words in headings break,
   `.cluster` and `.grid` children get `min-inline-size: 0`, badges wrap (a wrapped badge keeps

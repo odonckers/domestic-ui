@@ -72,10 +72,16 @@
   font-weight: var(--dui-font-weight-strong);
 }
 
-/* Invalid controls, wherever they are: a color and a shape change. */
+/*
+ * Invalid controls, wherever they are: a color and a shape change.
+ * Our choice: the leading corners are square so the accent edge stays straight
+ * (see blockquote in css/base/typography.css).
+ */
 :is(input, select, textarea):is([aria-invalid="true"], :user-invalid) {
   border-color: var(--dui-color-danger);
   border-inline-start-width: var(--dui-border-width-emphasis);
+  border-start-start-radius: 0;
+  border-end-start-radius: 0;
 }
 
 @media (forced-colors: active) {

@@ -238,8 +238,14 @@ table[data-table] > :is(thead, tbody) > tr > :first-child > label:has(> input[ty
   cursor: pointer;
 }
 
+/*
+ * Our choice: the leading corners are square so the accent edge stays straight
+ * (see blockquote in css/base/typography.css).
+ */
 table[data-table] > tbody > tr:has(> :first-child > label > input[type="checkbox"]) > :first-child {
   border-inline-start: var(--dui-border-width-emphasis) solid transparent;
+  border-start-start-radius: 0;
+  border-end-start-radius: 0;
 }
 
 table[data-table] > tbody > tr:has(> :first-child > label > input[type="checkbox"]:checked) > * {

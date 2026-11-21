@@ -106,8 +106,19 @@ abbr[title] {
   cursor: help;
 }
 
+/*
+ * Our choice: every colored leading edge (this one, alerts, the current nav
+ * link, the selected list-detail item and table row, an invalid field) has
+ * square leading corners, set with logical properties so RTL follows, and
+ * keeps its trailing corners rounded. A straight edge reads as a rule, not a
+ * bent stroke, and a rounded joint between borders of different widths
+ * tapers the stroke at the corners:
+ * https://www.w3.org/TR/css-backgrounds-3/#corner-shaping
+ */
 blockquote {
   border-inline-start: var(--dui-border-width-emphasis) solid var(--dui-color-border);
+  border-start-start-radius: 0;
+  border-end-start-radius: 0;
   padding-inline-start: var(--dui-space-m);
   color: var(--dui-color-text-muted);
 }

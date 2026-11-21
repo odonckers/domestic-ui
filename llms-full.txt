@@ -1731,6 +1731,7 @@ None: write semantic HTML.
 - [WHATWG text level semantics](https://html.spec.whatwg.org/multipage/text-level-semantics.html)
 - [WCAG Use of color](https://www.w3.org/WAI/WCAG22/Understanding/use-of-color.html)
 - [MDN `overflow-wrap`](https://developer.mozilla.org/en-US/docs/Web/CSS/overflow-wrap)
+- [W3C corner shaping](https://www.w3.org/TR/css-backgrounds-3/#corner-shaping)
 - [WHATWG the code element](https://html.spec.whatwg.org/multipage/text-level-semantics.html#the-code-element)
 - [Deque University scrollable region focusable](https://dequeuniversity.com/rules/axe/4.10/scrollable-region-focusable)
 - [WCAG Keyboard](https://www.w3.org/WAI/WCAG22/Understanding/keyboard.html)
