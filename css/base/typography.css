@@ -140,7 +140,7 @@ pre {
 
 /*
  * Long identifiers and attribute lists wrap too, for the same reason as
- * links above. <pre> does not wrap (white-space: pre) and scrolls instead.
+ * links above. <pre> has its own rule below.
  */
 code,
 kbd,
@@ -174,24 +174,101 @@ kbd {
 }
 
 /*
- * <pre> scrolls sideways instead of wrapping. Authors MUST give every <pre>
- * (and any data-scroll="inline" container) tabindex="0" so it can be scrolled
- * from the keyboard: axe scrollable-region-focusable,
- * https://dequeuniversity.com/rules/axe/4.10/scrollable-region-focusable, and
- * WCAG 2.1.1 Keyboard, https://www.w3.org/WAI/WCAG22/Understanding/keyboard.html
+ * <pre> wraps long lines: white-space: pre-wrap keeps spaces and line
+ * breaks, overflow-wrap: break-word splits a token only when it alone is
+ * wider than the block.
+ * https://developer.mozilla.org/en-US/docs/Web/CSS/white-space
+ * Our choice: wrap by default, so a code block reflows at 320px (WCAG 1.4.10,
+ * https://www.w3.org/WAI/WCAG22/Understanding/reflow.html) with no extra
+ * focus stop; opt in to scrolling when line structure matters.
+ *
+ * Opt in: <pre data-scroll="inline" tabindex="0" aria-label="..."> keeps
+ * white-space: pre and scrolls along the inline axis (css/layout/scroll.css).
+ * A <pre> that scrolls MUST have tabindex="0", so it can be scrolled from the
+ * keyboard (axe scrollable-region-focusable,
+ * https://dequeuniversity.com/rules/axe/4.10/scrollable-region-focusable;
+ * WCAG 2.1.1 Keyboard, https://www.w3.org/WAI/WCAG22/Understanding/keyboard.html),
+ * and an accessible name (aria-label or aria-labelledby) so screen readers
+ * announce what the focus stop is.
  */
 pre {
   background-color: var(--dui-color-surface-sunken);
   border: var(--dui-border-width) solid var(--dui-color-border);
   border-radius: var(--dui-radius-surface);
   padding: var(--dui-space-m);
-  overflow-x: auto;
+  white-space: pre-wrap;
+  overflow-wrap: break-word;
   tab-size: 2;
   line-height: var(--dui-line-height-heading);
 }
 
+pre[data-scroll~="inline"] {
+  white-space: pre;
+  overflow-wrap: normal;
+}
+
 pre code {
   font-size: inherit;
+}
+
+/*
+ * Syntax highlighting with the CSS Custom Highlight API: no markup, no
+ * classes. The page registers ranges by name, for example
+ *   CSS.highlights.set("dui-code-keyword", new Highlight(...ranges));
+ * What registers the ranges is up to the page (the docs site does it from
+ * site/assets/site.js). Without JavaScript, or where the API is missing, the code
+ * is plain text, which is fine. Names and what each covers:
+ * explainers/code-highlighting.md.
+ * https://developer.mozilla.org/en-US/docs/Web/API/CSS_Custom_Highlight_API
+ * https://drafts.csswg.org/css-highlight-api-1/
+ * ::highlight() may only set color, background, text-decoration and
+ * text-shadow, so a token is told apart by color alone; the code still reads
+ * as plain text without it (WCAG 1.4.1).
+ */
+::highlight(dui-code-keyword) {
+  color: var(--dui-color-code-keyword);
+}
+
+::highlight(dui-code-string) {
+  color: var(--dui-color-code-string);
+}
+
+::highlight(dui-code-comment) {
+  color: var(--dui-color-code-comment);
+}
+
+::highlight(dui-code-tag) {
+  color: var(--dui-color-code-tag);
+}
+
+::highlight(dui-code-attribute) {
+  color: var(--dui-color-code-attribute);
+}
+
+::highlight(dui-code-property) {
+  color: var(--dui-color-code-property);
+}
+
+::highlight(dui-code-number) {
+  color: var(--dui-color-code-number);
+}
+
+::highlight(dui-code-punctuation) {
+  color: var(--dui-color-code-punctuation);
+}
+
+/* Forced colors: every highlight falls back to the system text color. */
+@media (forced-colors: active) {
+  ::highlight(dui-code-keyword),
+  ::highlight(dui-code-string),
+  ::highlight(dui-code-comment),
+  ::highlight(dui-code-tag),
+  ::highlight(dui-code-attribute),
+  ::highlight(dui-code-property),
+  ::highlight(dui-code-number),
+  ::highlight(dui-code-punctuation) {
+    color: canvastext;
+  }
 }
 
 /* Lists */

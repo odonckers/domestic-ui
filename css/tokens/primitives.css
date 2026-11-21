@@ -43,6 +43,8 @@
   --dui-color-yellow-300: #e3c84f;
   --dui-color-amber-300: #f2c14e;
   --dui-color-amber-700: #8a5a00;
+  --dui-color-teal-300: #5cc8d1;
+  --dui-color-teal-700: #0b6e75;
 
   /* Translucent black, for overlays and shadows */
   --dui-color-black-a10: rgb(0 0 0 / 10%);

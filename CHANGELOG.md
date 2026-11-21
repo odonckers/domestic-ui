@@ -216,6 +216,14 @@ Semantic token names and file paths under `css/` are public API; primitive token
   and no overflow at 320px, sidebar navigation groups and current link, the orders screen's aux sidebar, combobox,
   filter bar, sorting and compact targets, motion); `tests/a11y.spec.js` also checks every app shell drawer open
   at 375px in light and dark; `tests/layouts.spec.js` checks the list-detail selected marker, also in forced colors.
+- Code highlighting with the CSS Custom Highlight API, CSS only: `::highlight(dui-code-keyword | string | comment |
+  tag | attribute | property | number | punctuation)` in `css/base/typography.css`, each colored by a new semantic
+  token `--dui-color-code-*` (4.5:1 on `--dui-color-surface-sunken` in light and dark; `CanvasText` in forced
+  colors). The page registers the ranges; without JavaScript code stays plain text. Primitives
+  `--dui-color-teal-300` and `--dui-color-teal-700`. `explainers/code-highlighting.md` lists the names and what
+  each covers; `tests/tokens.spec.js` checks each token's contrast.
+- `<pre data-scroll="inline" tabindex="0" aria-label="...">` opts a code block in to scrolling along the inline
+  axis with whole lines (`css/layout/scroll.css`, `examples/base.html`).
 
 ### Changed
 
@@ -252,6 +260,11 @@ Semantic token names and file paths under `css/` are public API; primitive token
   Playwright suite is split across eight shards (`--shard=i/8`) in the Playwright container. A final job
   named `ci` passes only when all of them pass, so the required check keeps its name.
 
+- `<pre>` wraps long lines by default (`white-space: pre-wrap; overflow-wrap: break-word`) instead of scrolling,
+  so a code block reflows at 320px with no extra focus stop. Only a `<pre data-scroll="inline">` needs
+  `tabindex="0"` and an accessible name; `tests/mobile.spec.js` checks those instead of `tabindex` on every
+  `<pre>`.
+
 ### Deprecated
 
 - `--dui-shadow-raised` (now `var(--dui-elevation-1)`; use `--dui-elevation-raised`),
@@ -269,9 +282,8 @@ Semantic token names and file paths under `css/` are public API; primitive token
   and links in running text wrap with `overflow-wrap: anywhere`, long words in headings break,
   `.cluster` and `.grid` children get `min-inline-size: 0`, badges wrap (a wrapped badge keeps
   rounded corners), table cells use `--dui-space-xs` padding on every side, and every example
-  table sits in a `data-scroll="inline"` region. Every example `<pre>` block (in
-  `examples/base.html`, `examples/theming.html` and `examples/atoms/`) now has `tabindex="0"`
-  and is keyboard-focusable (axe `scrollable-region-focusable`).
+  table sits in a `data-scroll="inline"` region. Code blocks wrap (see Changed); one that opts in to
+  `data-scroll="inline"` has `tabindex="0"` (axe `scrollable-region-focusable`).
 
 - Base button hover and press styles no longer apply to buttons with `aria-disabled="true"`.
 

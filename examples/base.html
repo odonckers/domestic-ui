@@ -135,11 +135,13 @@
       <section aria-labelledby="code-title">
         <h2 id="code-title">Preformatted code</h2>
         <!-- dui:snippet name="Preformatted code" -->
-        <pre tabindex="0"><code>&lt;link rel="stylesheet" href="css/domestic.css"&gt;
+        <pre><code>&lt;link rel="stylesheet" href="css/domestic.css"&gt;
 
 :root {
   --dui-color-accent: light-dark(#7a2e8c, #e2a8f0);
+  --dui-font-heading: charter, "Bitstream Charter", "Sitka Text", cambria, serif;
 }</code></pre>
+        <pre data-scroll="inline" tabindex="0" aria-label="Copy the CSS into a project"><code>git clone --depth 1 https://github.com/odonckers/domestic-ui.git &amp;&amp; cp -R domestic-ui/css public/css &amp;&amp; rm -rf domestic-ui</code></pre>
         <!-- /dui:snippet -->
       </section>
 

@@ -92,6 +92,14 @@ const PAIRS = [
   ["--dui-color-text-inverse", "--dui-color-surface-inverse", 4.5],
   ["--dui-color-surface-inverse", "--dui-color-surface", 3], // tooltip edge against the page
 
+  // Code highlighting (css/base/typography.css): every ::highlight(dui-code-*) color on the
+  // <pre> background.
+  ...["keyword", "string", "comment", "tag", "attribute", "property", "number", "punctuation"].map((name) => [
+    `--dui-color-code-${name}`,
+    "--dui-color-surface-sunken",
+    4.5,
+  ]),
+
   // Elevation (PRINCIPLES.md, "Elevation"): text, muted text, links, quiet-button and error text,
   // control borders and the focus ring on every level's surface and every role's surface.
   ...[0, 1, 2, 3, 4, "flat", "raised", "overlay", "popover", "dialog"].flatMap((level) => {

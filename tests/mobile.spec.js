@@ -7,7 +7,7 @@ import { examples, schemes, WCAG_TAGS, summarize } from "./helpers.js";
  * Small screens: no example may scroll sideways (WCAG 1.4.10 Reflow,
  * https://www.w3.org/WAI/WCAG22/Understanding/reflow.html), and each stays
  * axe-clean at that size, where code blocks and tables start to scroll.
- * Wide content belongs in data-scroll="inline" or a <pre>, which scroll on their own.
+ * Wide content belongs in data-scroll="inline", which scrolls on its own; a <pre> wraps.
  */
 const viewports = [
   { width: 320, height: 640 },
@@ -26,7 +26,7 @@ for (const viewport of viewports) {
             const root = document.documentElement;
             const offenders = [...document.body.querySelectorAll("*")]
               // Content inside a scroll container may be wider; the container itself may not.
-              .filter((el) => !el.parentElement?.closest("[data-scroll], pre"))
+              .filter((el) => !el.parentElement?.closest("[data-scroll]"))
               .filter((el) => el.getBoundingClientRect().right > root.clientWidth + 0.5)
               .map((el) => {
                 const id = el.id ? `#${el.id}` : "";
@@ -51,14 +51,15 @@ for (const viewport of viewports) {
               .filter((el) => el.scrollWidth > el.clientWidth)
               .filter((el) => /** @type {HTMLElement} */ (el).tabIndex < 0)
               .map(describe);
-            // Every <pre> may overflow at some viewport, so each needs tabindex="0" regardless of size.
-            const pres = [...document.querySelectorAll("pre")]
-              .filter((el) => el.getAttribute("tabindex") !== "0")
+            // A <pre> wraps by default; one that opts in to data-scroll may overflow at some
+            // viewport, so it needs tabindex="0" and a name regardless of size.
+            const pres = [...document.querySelectorAll("pre[data-scroll]")]
+              .filter((el) => el.getAttribute("tabindex") !== "0" || !(el.hasAttribute("aria-label") || el.hasAttribute("aria-labelledby")))
               .map(describe);
             return { scrolling, pres };
           });
           expect(scrolling, `scrollable but not focusable:\n  ${scrolling.join("\n  ")}`).toEqual([]);
-          expect(pres, `<pre> without tabindex="0":\n  ${pres.join("\n  ")}`).toEqual([]);
+          expect(pres, `<pre data-scroll> without tabindex="0" or a name:\n  ${pres.join("\n  ")}`).toEqual([]);
         });
 
         for (const colorScheme of schemes) {
