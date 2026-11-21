@@ -6,6 +6,13 @@ import { examples, schemes, blockExternalRequests, WCAG_TAGS, summarize } from "
 /** @param {import("@playwright/test").Page} page */
 const axe = (page) => new AxeBuilder({ page }).withTags(WCAG_TAGS).analyze();
 
+/**
+ * Wait for running CSS transitions and animations (dialog fades, drawer slides)
+ * to finish, so axe measures final colors, not a frame mid-fade.
+ * @param {import("@playwright/test").Page} page
+ */
+const settle = (page) => page.evaluate(() => Promise.all(document.getAnimations().map((a) => a.finished.catch(() => {}))));
+
 for (const path of examples) {
   test.describe(path, () => {
     for (const colorScheme of schemes) {
@@ -22,13 +29,63 @@ for (const path of examples) {
           await opener.click();
           const dialog = page.locator("dialog[open]");
           await expect(dialog).toBeVisible();
+          await settle(page);
           const open = await axe(page);
           expect(open.violations, summarize(open.violations)).toEqual([]);
           await page.keyboard.press("Escape");
           await expect(dialog).toHaveCount(0);
           await expect(opener).toBeFocused();
         }
-        await page.locator("details").evaluateAll((all) => all.forEach((d) => d.setAttribute("open", "")));
+
+        // Popovers and menus: open each from its button, check, close.
+        for (const opener of await page.locator("button[popovertarget]:not([popovertargetaction='hide'])").all()) {
+          const id = await opener.getAttribute("popovertarget");
+          const popover = page.locator(`[id="${id}"]`);
+          await opener.click();
+          await expect(popover).toBeVisible();
+          await settle(page);
+          const open = await axe(page);
+          expect(open.violations, `#${id}\n${summarize(open.violations)}`).toEqual([]);
+          await popover.evaluate((el) => el.hidePopover());
+          await expect(popover).toBeHidden();
+        }
+
+        // Tabs: select every tab once (the selected panel is the only one shown).
+        for (const tab of await page.getByRole("tab").all()) {
+          await tab.click();
+          await expect(tab).toHaveAttribute("aria-selected", "true");
+          const selected = await axe(page);
+          expect(selected.violations, summarize(selected.violations)).toEqual([]);
+        }
+
+        // Tooltips show on focus.
+        for (const trigger of await page.locator("dui-tooltip [aria-describedby]").all()) {
+          await trigger.focus();
+          await expect(page.locator("[role='tooltip']:popover-open")).toHaveCount(1);
+          await settle(page);
+          const shown = await axe(page);
+          expect(shown.violations, summarize(shown.violations)).toEqual([]);
+          await trigger.blur();
+        }
+
+        // Toasts and live regions: fill them, then check.
+        const fillers = page.locator("[data-toast], [data-announce]");
+        if (await fillers.count()) {
+          for (const button of await fillers.all()) await button.click();
+          await expect(page.locator("dui-toaster > *")).toHaveCount(await page.locator("[data-toast]").count());
+          await settle(page);
+          const filled = await axe(page);
+          expect(filled.violations, summarize(filled.violations)).toEqual([]);
+        }
+
+        // Every details element open at once. Drop name first, or exclusive groups would close all but one.
+        await page.locator("details").evaluateAll((all) =>
+          all.forEach((d) => {
+            d.removeAttribute("name");
+            d.setAttribute("open", "");
+          }),
+        );
+        await settle(page);
         const expanded = await axe(page);
         expect(expanded.violations, summarize(expanded.violations)).toEqual([]);
 
