@@ -6,13 +6,19 @@ Checks the built demo apps the same way the repository checks `examples/`: Playw
 leaves the local server fails the test.
 
 For each view it also checks: `lang="en"`, the page title, exactly one `<h1>`, one `main#main`,
-one `aria-current="page"` link in the primary nav, that the first Tab stop is the skip link and
+a `<dui-app-shell data-app-shell>` that upgraded (its Menu toggle shows), one `aria-current="page"`
+link in the shell's main navigation (`nav[aria-label="Main"]`), that the first Tab stop is the skip link and
 that following it stays on the view, and that domestic-ui's CSS really applied (`--dui-space-m`
 is set, `.cluster` is flex, `.visually-hidden` hides the skip link), and that the atoms applied
-(a `data-text` lead and footer, a tinted `data-badge` on the dashboard, the `role="switch"`
-checkboxes drawn with `appearance: none` on settings; on orders, two upgraded `<dui-combobox>`
-fields, the table in a `data-scroll="inline"` region, a tinted badge in it, and a "Compact table"
-switch that sets `data-density="compact"` on that region).
+(a `data-text` lead, except on orders, and footer, a tinted `data-badge` on the dashboard, the
+`role="switch"` checkboxes drawn with `appearance: none` on settings; on orders, a page header,
+a filter bar, two upgraded `<dui-combobox>` fields, a `<dui-table>` with sort buttons and "select
+all" around a `table[data-table]` in a `data-scroll="inline"` region, a tinted badge in it, and a
+"Compact table" switch that sets `data-density="compact"` on that region). On orders it also
+filters by status, and checks that an order link in the table or in the `data-list-detail` list
+shows that order in the order details sidebar with `aria-current="page"` on its list link; for the
+prerendered apps (vanilla, Astro) it checks with JavaScript off that every row, the order list and
+the default order are there and fit 320px.
 
 Small screens: every view also loads at 320×640 and 375×812. It must not scroll sideways
 (`scrollWidth > clientWidth` on `<html>` or `<body>`, closed and with `<details>` open; the failure

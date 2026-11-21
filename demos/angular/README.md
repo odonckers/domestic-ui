@@ -5,10 +5,14 @@ routes (`''`, `'settings'` and `'orders'`) with Angular Router, a `title` per ro
 `ariaCurrentWhenActive="page"` for the current link.
 
 The shipped stylesheet is listed in `angular.json` `styles` as `../../css/domestic.css`, so the
-build bundles it with its cascade layers. `src/styles.css` holds only the page container
-and `app-root { display: block; }` (custom elements are inline by default).
-The orders page (`src/app/orders/`) imports `web-components/dui-combobox.js` from the repository
-and declares `CUSTOM_ELEMENTS_SCHEMA` so the template can use `<dui-combobox>` as is.
+build bundles it with its cascade layers. `src/styles.css` holds only
+`app-root { display: block; }` (custom elements are inline by default).
+Each routed page's host element is the app shell itself (`selector: 'dui-app-shell[app-…-page]'`),
+so the app bar (`header[app-bar]`), main navigation (`nav[app-nav]`), `<main>` and the orders
+view's order details `<aside>` are its direct children. The orders view adds a page header, a
+filter bar, a data table, a list-detail of orders and a compact-density toggle; it imports
+`dui-combobox.js`, `dui-table.js` and `dui-toolbar.js` from the repository's `web-components/`
+and declares `CUSTOM_ELEMENTS_SCHEMA` so the template can use the `dui-*` tags as is.
 
 Two choices worth knowing:
 

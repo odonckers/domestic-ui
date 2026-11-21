@@ -6,6 +6,9 @@ import { apps, selectedApps } from "./apps.js";
 const WCAG_TAGS = ["wcag2a", "wcag2aa", "wcag21a", "wcag21aa", "wcag22aa"];
 const schemes = /** @type {const} */ (["light", "dark"]);
 
+/** Apps whose HTML already holds the rendered view, so it works with JavaScript off. */
+const prerendered = ["vanilla", "astro"];
+
 /** Small phone viewports every view must fit without horizontal scrolling. */
 const smallViewports = [
   { width: 320, height: 640 },
@@ -124,7 +127,10 @@ for (const name of selectedApps()) {
         await expect(page.locator("html")).toHaveAttribute("lang", "en");
         await expect(page.locator("h1")).toHaveCount(1);
         await expect(page.locator("main#main")).toHaveCount(1);
-        await expect(page.locator('nav[aria-label="Primary"] a[aria-current="page"]')).toHaveCount(1);
+        // The app shell is the chrome of every view, upgraded by <dui-app-shell> (it shows the Menu toggle).
+        await expect(page.locator("dui-app-shell[data-app-shell]")).toHaveCount(1);
+        await expect(page.locator('dui-app-shell > header > button[aria-controls="app-nav"]')).toBeVisible();
+        await expect(page.locator('nav[aria-label="Main"] a[aria-current="page"]')).toHaveCount(1);
 
         // The first Tab stop is the skip link, and it shows itself on focus.
         await page.keyboard.press("Tab");
@@ -143,13 +149,13 @@ for (const name of selectedApps()) {
         expect(after.hash).toEqual("#main");
       });
 
-      test("links to the next view in the primary nav", async ({ page }) => {
+      test("links to the next view in the shell's main navigation", async ({ page }) => {
         // The next view in apps.js (wrapping), so every link gets followed from some view.
         const { views } = apps[name];
         const other = views[(views.findIndex((v) => v.path === path) + 1) % views.length];
         // The nav label is the title before " · Homebase".
         const label = other.title.split(" · ")[0];
-        const nav = page.locator('nav[aria-label="Primary"]');
+        const nav = page.locator('nav[aria-label="Main"]');
         await page.goto(path, { waitUntil: "networkidle" });
         await nav.getByRole("link", { name: label, exact: true }).click();
         await expect(page).toHaveTitle(other.title);
@@ -173,7 +179,8 @@ for (const name of selectedApps()) {
 
       test("applies the atoms the view uses", async ({ page }) => {
         await page.goto(path, { waitUntil: "networkidle" });
-        await expect(page.locator('[data-text~="lead"]')).toHaveCount(1);
+        // The orders view introduces itself in its page header instead of a lead paragraph.
+        await expect(page.locator('[data-text~="lead"]')).toHaveCount(view === "orders" ? 0 : 1);
         await expect(page.locator('footer [data-text~="muted"]')).toHaveCount(1);
 
         if (view === "dashboard") {
@@ -204,7 +211,15 @@ for (const name of selectedApps()) {
           // Two typeahead fields, upgraded by <dui-combobox> when its script loaded.
           await expect(page.locator("dui-combobox")).toHaveCount(2);
           await expect(page.locator('dui-combobox input[role="combobox"]')).toHaveCount(2);
-          await expect(page.locator('[data-scroll="inline"] table')).toHaveCount(1);
+          await expect(page.locator("main header[data-page-header] > h1")).toHaveCount(1);
+          await expect(page.locator('search[data-filter-bar] > form')).toHaveCount(1);
+          await expect(page.locator('search[data-filter-bar] > [role="status"]')).toHaveText("8 orders");
+
+          // The data table: <dui-table> adds sort buttons and the "select all" checkbox.
+          await expect(page.locator('dui-table [data-scroll="inline"] > table[data-table]')).toHaveCount(1);
+          await expect(page.locator("table[data-table] thead th button")).toHaveCount(7);
+          await expect(page.getByRole("checkbox", { name: "Select all orders" })).toHaveCount(1);
+          await expect(page.locator("table[data-table] tbody tr")).toHaveCount(8);
 
           // The density toggle is a drawn switch, and it sets data-density on the table's scroll region.
           const toggle = page.getByRole("switch", { name: "Compact table" });
@@ -214,7 +229,7 @@ for (const name of selectedApps()) {
             return style.appearance || style.getPropertyValue("-webkit-appearance");
           });
           expect(appearance).toEqual("none");
-          const region = page.locator('[data-scroll="inline"]:has(table)');
+          const region = page.locator('[data-scroll="inline"]:has(> table[data-table])');
           await expect(region).not.toHaveAttribute("data-density", "compact");
           await toggle.check();
           await expect(region).toHaveAttribute("data-density", "compact");
@@ -232,6 +247,56 @@ for (const name of selectedApps()) {
           expect(colors.badge).not.toEqual(colors.page);
         }
       });
+
+      if (view === "orders") {
+        test("filters rows and shows the chosen order in list-detail and the aux sidebar", async ({ page }) => {
+          await page.goto(path, { waitUntil: "networkidle" });
+          const aux = page.locator('dui-app-shell > aside[aria-label="Order details"]');
+          const current = aux.locator('[data-list-detail] > nav a[aria-current="page"]');
+          await expect(current).toHaveCount(1);
+          await expect(current).toContainText("HB-1048");
+          await expect(aux.locator("h2")).toHaveText("Order HB-1048");
+
+          // An order number in the table shows that order.
+          await page.locator("table[data-table] tbody").getByRole("link", { name: "HB-1045", exact: true }).click();
+          await expect(aux.locator("h2")).toHaveText("Order HB-1045");
+          await expect(current).toHaveCount(1);
+          await expect(current).toContainText("HB-1045");
+
+          // So does a link in the order list.
+          await aux.locator("[data-list-detail] > nav").getByRole("link", { name: /HB-1042/ }).click();
+          await expect(aux.locator("h2")).toHaveText("Order HB-1042");
+          await expect(current).toContainText("HB-1042");
+          expect(new URL(page.url()).pathname).toEqual(path);
+
+          // The filter bar hides rows and updates its count.
+          await page.getByLabel("Status").selectOption("Delivered");
+          await page.getByRole("button", { name: "Apply", exact: true }).click();
+          await expect(page.locator('search[data-filter-bar] > [role="status"]')).toHaveText("2 orders");
+          await expect(page.locator("table[data-table] tbody tr:visible")).toHaveCount(2);
+          await page.getByRole("button", { name: "Reset", exact: true }).click();
+          await expect(page.locator('search[data-filter-bar] > [role="status"]')).toHaveText("8 orders");
+        });
+      }
+
+      if (view === "orders" && prerendered.includes(name)) {
+        test.describe("without JavaScript", () => {
+          test.use({ javaScriptEnabled: false });
+          test("shows every row, the order list and the default order", async ({ page }) => {
+            await page.goto(path, { waitUntil: "networkidle" });
+            await expect(page.locator("table[data-table] tbody tr:visible")).toHaveCount(8);
+            await expect(page.locator("[data-list-detail] > nav a:visible")).toHaveCount(8);
+            await expect(page.locator('[data-list-detail] > nav a[aria-current="page"]')).toContainText("HB-1048");
+            await expect(page.locator('aside[aria-label="Order details"] h2')).toBeVisible();
+            await expect(page.locator('aside[aria-label="Order details"] h2')).toHaveText("Order HB-1048");
+
+            // Without the script the sidebars stack above and below main; they still fit 320px.
+            await page.setViewportSize(smallViewports[0]);
+            const m = await measureOverflow(page);
+            expect(overflows(m), `horizontal overflow: ${JSON.stringify(m)}`).toBe(false);
+          });
+        });
+      }
     });
   }
 }

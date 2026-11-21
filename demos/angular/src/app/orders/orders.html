@@ -1,112 +1,145 @@
-<h1>Orders</h1>
-<p data-text="lead">Every order in the warehouse queue: who it is for, what to pick, and where it stands.</p>
+<header app-bar>
+  <button type="button" aria-controls="app-aux" aria-expanded="true" hidden>
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2"></rect><path d="M15 4v16"></path></svg>
+    Details
+  </button>
+</header>
 
-<div class="grid" style="--grid-min: 12rem" id="orders-summary">
-  @for (item of summary; track item.title) {
-    <article>
-      <h2>{{ item.title }}</h2>
-      <p>{{ item.count }}</p>
-    </article>
-  }
-</div>
+<nav app-nav></nav>
 
-<section aria-labelledby="orders-title">
-  <h2 id="orders-title">All orders</h2>
+<main id="main" class="stack">
+  <header data-page-header>
+    <nav aria-label="Breadcrumb" data-breadcrumb>
+      <ol>
+        <li><a routerLink="/">Homebase</a></li>
+        <li><a routerLink="/orders" aria-current="page">Orders</a></li>
+      </ol>
+    </nav>
+    <h1>Orders</h1>
+    <p>Every order in the warehouse queue: who it is for, what to pick, and where it stands.</p>
+  </header>
 
-  <form class="stack" method="get" id="orders-filter" (submit)="applyFilter($event)" (reset)="resetFilter()">
-    <div class="grid" style="--grid-min: 14rem">
+  <search data-filter-bar aria-label="Filter orders">
+    <form method="get" id="order-filters" (submit)="applyFilter($event)" (reset)="resetFilter()">
       <dui-combobox>
-        <label for="orders-customer">Customer</label>
-        <input type="text" id="orders-customer" name="customer" list="orders-customer-options">
-        <datalist id="orders-customer-options">
+        <label for="filter-customer">Customer</label>
+        <input type="text" id="filter-customer" name="customer" list="filter-customers">
+        <datalist id="filter-customers">
           @for (customer of customers; track customer) {
             <option [value]="customer"></option>
           }
         </datalist>
       </dui-combobox>
       <dui-combobox>
-        <label for="orders-sku">SKU</label>
-        <input type="text" id="orders-sku" name="sku" list="orders-sku-options">
-        <datalist id="orders-sku-options">
+        <label for="filter-sku">SKU</label>
+        <input type="text" id="filter-sku" name="sku" list="filter-skus">
+        <datalist id="filter-skus">
           @for (sku of skus; track sku.value) {
             <option [value]="sku.value" [label]="sku.label"></option>
           }
         </datalist>
       </dui-combobox>
       <div data-field>
-        <label for="orders-status">Status</label>
-        <select id="orders-status" name="status">
-          <option value="all" selected>All statuses</option>
+        <label for="filter-status">Status</label>
+        <select id="filter-status" name="status">
+          <option value="">Any status</option>
           @for (status of statuses; track status) {
-            <option [value]="status">{{ status }}</option>
+            <option>{{ status }}</option>
           }
         </select>
       </div>
-    </div>
-    <div class="cluster">
-      <button type="submit" data-button="small">Apply filter</button>
-      <button type="reset" data-button="quiet small">Reset</button>
-    </div>
-    <p role="status" id="orders-count">Showing {{ shown().length }} {{ shown().length === 1 ? 'order' : 'orders' }}</p>
-  </form>
+      <div>
+        <button type="submit">Apply</button>
+        <button type="reset">Reset</button>
+      </div>
+    </form>
+    <p role="status" id="order-count">{{ plural(shownCount()) }}</p>
+  </search>
 
   <label><input type="checkbox" role="switch" id="orders-compact" [checked]="compact()" (change)="toggleCompact($event)"> Compact table</label>
 
-  <section data-scroll="inline" [attr.data-density]="compact() ? 'compact' : 'comfortable'" aria-labelledby="orders-caption" tabindex="0" id="orders-table">
-    <table>
-      <caption id="orders-caption">Recent orders</caption>
-      <thead>
-        <tr>
-          <th scope="col">Order</th>
-          <th scope="col">Customer</th>
-          <th scope="col">SKU</th>
-          <th scope="col">Qty</th>
-          <th scope="col">Status</th>
-          <th scope="col">Total</th>
-        </tr>
-      </thead>
-      <tbody id="orders-rows">
-        @for (order of shown(); track order.id) {
-          <tr>
-            <th scope="row">{{ order.id }}</th>
-            <td>{{ order.customer }}</td>
-            <td>{{ order.sku }}</td>
-            <td>{{ order.qty }}</td>
-            <td><span [attr.data-badge]="order.tone">{{ order.status }}</span></td>
-            <td>{{ order.total }}</td>
-          </tr>
-        }
-      </tbody>
-    </table>
-  </section>
-</section>
+  <form id="bulk-orders" method="post" action="?" (submit)="bulkAction($event)">
+    <dui-table id="orders" class="stack" select-all-label="Select all orders" style="--stack-gap: var(--dui-space-s)">
+      <div class="cluster">
+        <dui-toolbar role="toolbar" aria-label="Bulk actions">
+          <button type="submit" name="action" value="ship" data-button="secondary" id="bulk-ship">Mark as shipped</button>
+          <button type="submit" name="action" value="print" data-button="secondary" id="bulk-print">Print packing slips</button>
+        </dui-toolbar>
+        <p role="status" id="selection-count"></p>
+      </div>
+      <section data-scroll="inline" [attr.data-density]="compact() ? 'compact' : null" aria-labelledby="orders-caption" tabindex="0" id="orders-region">
+        <table data-table id="orders-table">
+          <caption id="orders-caption">All orders</caption>
+          <thead>
+            <tr>
+              <td></td>
+              <th scope="col" data-table="sortable">Order</th>
+              <th scope="col" data-table="sortable">Customer</th>
+              <th scope="col" data-table="sortable">SKU</th>
+              <th scope="col" data-table="sortable number">Qty</th>
+              <th scope="col" data-table="sortable">Placed</th>
+              <th scope="col" data-table="sortable">Status</th>
+              <th scope="col" data-table="sortable number">Total</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (order of rows(); track order.id) {
+              <tr [hidden]="!matches(order)">
+                <td><label><input type="checkbox" name="orders[]" [value]="order.id" (change)="selectRow($event, order.id)"><span class="visually-hidden">Select order {{ order.id }}</span></label></td>
+                <th scope="row"><a href="?order={{ order.id }}" (click)="openOrder($event, order.id, true)">{{ order.id }}</a></th>
+                <td>{{ order.customer }}</td>
+                <td>{{ order.sku }}</td>
+                <td data-table="number">{{ order.qty }}</td>
+                <td><time [attr.datetime]="order.date">{{ order.placed }}</time></td>
+                <td><span [attr.data-badge]="order.tone">{{ order.status }}</span></td>
+                <td data-table="number">{{ order.total }}</td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </section>
+    </dui-table>
+  </form>
+  <p role="status" id="bulk-result">{{ bulkResult() }}</p>
+</main>
 
-<section aria-labelledby="detail-title">
-  <h2 id="detail-title">Order details</h2>
-  <nav aria-label="Order list">
-    <ul class="stack" style="--stack-gap: var(--dui-space-2xs)" id="order-list">
-      @for (order of orders; track order.id) {
-        <li>
-          <button type="button" data-button="quiet" [value]="order.id" [attr.aria-current]="order.id === selected().id ? 'true' : null" (click)="selectedId.set(order.id)">{{ order.id }} · {{ order.customer }}</button>
-        </li>
-      }
-    </ul>
-  </nav>
-  <article aria-labelledby="order-detail-title">
-    <h3 id="order-detail-title">Order {{ selected().id }}</h3>
-    <dl id="order-detail">
-      <dt>Customer</dt>
-      <dd>{{ selected().customer }}</dd>
-      <dt>SKU</dt>
-      <dd>{{ selected().sku }}, {{ selected().skuLabel }}</dd>
-      <dt>Quantity</dt>
-      <dd>{{ selected().qty }}</dd>
-      <dt>Status</dt>
-      <dd><span [attr.data-badge]="selected().tone">{{ selected().status }}</span></dd>
-      <dt>Total</dt>
-      <dd>{{ selected().total }}</dd>
-      <dt>Placed</dt>
-      <dd><time [attr.datetime]="selected().date">{{ selected().placed }}</time></dd>
-    </dl>
-  </article>
-</section>
+<aside id="app-aux" aria-label="Order details" class="stack">
+  <div data-list-detail>
+    <nav aria-label="Orders">
+      <ul>
+        @for (order of rows(); track order.id) {
+          <li><a href="?order={{ order.id }}" [attr.aria-current]="order.id === selected().id ? 'page' : null" (click)="openOrder($event, order.id)">Order {{ order.id }} <small>{{ order.customer }} · {{ order.total }}</small></a></li>
+        }
+      </ul>
+    </nav>
+    <section aria-labelledby="aux-title" tabindex="0">
+      <h2 id="aux-title">Order {{ selected().id }}</h2>
+      <p><span [attr.data-badge]="selected().tone" id="aux-status">{{ selected().status }}</span></p>
+      <dl>
+        <dt>Customer</dt>
+        <dd id="aux-customer">{{ selected().customer }}</dd>
+        <dt>SKU</dt>
+        <dd id="aux-sku">{{ selected().sku }}, {{ selected().skuLabel }}</dd>
+        <dt>Quantity</dt>
+        <dd id="aux-qty">{{ selected().qty }}</dd>
+        <dt>Placed</dt>
+        <dd id="aux-placed"><time [attr.datetime]="selected().date">{{ selected().placed }}</time></dd>
+        <dt>Total</dt>
+        <dd id="aux-total">{{ selected().total }}</dd>
+        <dt>Ship to</dt>
+        <dd id="aux-ship">{{ selected().shipTo }}</dd>
+        <dt>Carrier</dt>
+        <dd id="aux-carrier">{{ selected().carrier }}</dd>
+      </dl>
+      <p class="cluster">
+        <a href="?order={{ selected().id }}&amp;view=edit" id="aux-open" data-button>Open order</a>
+        <a href="?order={{ selected().id }}&amp;view=print" id="aux-print" data-button>Print</a>
+      </p>
+      <p role="status" class="visually-hidden" id="aux-announce">{{ announcement() }}</p>
+    </section>
+  </div>
+</aside>
+
+<footer>
+  <p data-text="small muted">Homebase is a domestic-ui demo app. MIT licensed.</p>
+</footer>

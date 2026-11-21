@@ -6,58 +6,80 @@
     <title>Orders · Homebase</title>
     <meta name="description" content="Warehouse order admin: a domestic-ui demo in plain HTML.">
     <link rel="stylesheet" href="../../css/domestic.css">
-    <style>
-      /* Page-only layout, written with semantic tokens like any consumer would. */
-      :has(> #main) > :is(header, main, footer) {
-        max-inline-size: var(--dui-size-page);
-        margin-inline: auto;
-        padding-inline: var(--dui-space-l);
-      }
-
-      :has(> #main) > header {
-        padding-block: var(--dui-space-m);
-        border-block-end: var(--dui-border-width) solid var(--dui-color-border);
-      }
-
-      #main {
-        padding-block: var(--dui-space-2xl);
-      }
-
-      :has(> #main) > footer {
-        padding-block: var(--dui-space-l);
-        border-block-start: var(--dui-border-width) solid var(--dui-color-border);
-      }
-    </style>
   </head>
   <body>
     <a class="visually-hidden" href="#main">Skip to main content</a>
 
-    <header class="cluster" style="--cluster-justify: space-between">
-      <p><strong>Homebase</strong></p>
-      <nav aria-label="Primary">
-        <ul class="cluster">
-          <li><a href="index.html">Dashboard</a></li>
-          <li><a href="settings.html">Account settings</a></li>
-          <li><a href="orders.html" aria-current="page">Orders</a></li>
+    <!--
+      Keyboard
+        Tab: skip link, app bar (Menu, app name, Details, user menu), sidebar links, main, order details, footer
+        Enter / Space: on Menu or Details, collapses or expands that sidebar; when narrow, opens it as a drawer
+        Esc: in a drawer, closes it and returns focus to its toggle
+        Enter: on an order number or an order in the list, shows that order in Order details
+    -->
+    <dui-app-shell data-app-shell>
+      <header>
+        <button type="button" aria-controls="app-nav" aria-expanded="true" hidden>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"></path></svg>
+          Menu
+        </button>
+        <a href="index.html" data-link="quiet"><strong>Homebase</strong></a>
+        <button type="button" aria-controls="app-aux" aria-expanded="true" hidden>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2"></rect><path d="M15 4v16"></path></svg>
+          Details
+        </button>
+        <dui-menu>
+          <button type="button" popovertarget="user-menu">Sam Rivera</button>
+          <div id="user-menu" popover data-popover>
+            <button type="button">Profile</button>
+            <button type="button">Preferences</button>
+            <hr>
+            <button type="button">Sign out</button>
+          </div>
+        </dui-menu>
+      </header>
+
+      <nav id="app-nav" aria-label="Main" data-nav="vertical">
+        <ul>
+          <li>
+            <a href="index.html">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 11.5 12 4l9 7.5M5 10v10h14V10"></path></svg>
+              Dashboard
+            </a>
+          </li>
+          <li>
+            <a href="orders.html" aria-current="page">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 4h2l2.5 11h11L21 7H6.2"></path><circle cx="9" cy="19.5" r="1.5"></circle><circle cx="17" cy="19.5" r="1.5"></circle></svg>
+              Orders
+            </a>
+          </li>
+          <li>
+            <a href="settings.html">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 6h10M4 12h4M12 12h8M4 18h12"></path><circle cx="16" cy="6" r="2"></circle><circle cx="10" cy="12" r="2"></circle><circle cx="18" cy="18" r="2"></circle></svg>
+              Account settings
+            </a>
+          </li>
         </ul>
       </nav>
-    </header>
 
-    <main id="main">
-      <h1>Orders</h1>
-      <p data-text="lead">Every order in the warehouse queue: who it is for, what to pick, and where it stands.</p>
+      <main id="main" class="stack">
+        <header data-page-header>
+          <nav aria-label="Breadcrumb" data-breadcrumb>
+            <ol>
+              <li><a href="index.html">Homebase</a></li>
+              <li><a href="orders.html" aria-current="page">Orders</a></li>
+            </ol>
+          </nav>
+          <h1>Orders</h1>
+          <p>Every order in the warehouse queue: who it is for, what to pick, and where it stands.</p>
+        </header>
 
-      <div class="grid" style="--grid-min: 12rem" id="orders-summary"></div>
-
-      <section aria-labelledby="orders-title">
-        <h2 id="orders-title">All orders</h2>
-
-        <form class="stack" method="get" id="orders-filter">
-          <div class="grid" style="--grid-min: 14rem">
+        <search data-filter-bar aria-label="Filter orders">
+          <form method="get" id="order-filters">
             <dui-combobox>
-              <label for="orders-customer">Customer</label>
-              <input type="text" id="orders-customer" name="customer" list="orders-customer-options">
-              <datalist id="orders-customer-options">
+              <label for="filter-customer">Customer</label>
+              <input type="text" id="filter-customer" name="customer" list="filter-customers">
+              <datalist id="filter-customers">
                 <option value="Bluebell Florists"></option>
                 <option value="Copperfield Books"></option>
                 <option value="Harbor Lane Café"></option>
@@ -71,9 +93,9 @@
               </datalist>
             </dui-combobox>
             <dui-combobox>
-              <label for="orders-sku">SKU</label>
-              <input type="text" id="orders-sku" name="sku" list="orders-sku-options">
-              <datalist id="orders-sku-options">
+              <label for="filter-sku">SKU</label>
+              <input type="text" id="filter-sku" name="sku" list="filter-skus">
+              <datalist id="filter-skus">
                 <option value="HB-BASKET-L" label="Woven laundry basket, large"></option>
                 <option value="HB-BOARD-OAK" label="Oak chopping board"></option>
                 <option value="HB-BOWL-06" label="Stoneware bowl, 6 in"></option>
@@ -87,134 +109,190 @@
               </datalist>
             </dui-combobox>
             <div data-field>
-              <label for="orders-status">Status</label>
-              <select id="orders-status" name="status">
-                <option value="all" selected>All statuses</option>
-                <option value="Open">Open</option>
-                <option value="Packed">Packed</option>
-                <option value="Shipped">Shipped</option>
-                <option value="Delivered">Delivered</option>
-                <option value="Cancelled">Cancelled</option>
+              <label for="filter-status">Status</label>
+              <select id="filter-status" name="status">
+                <option value="">Any status</option>
+                <option>Open</option>
+                <option>Packed</option>
+                <option>Shipped</option>
+                <option>Delivered</option>
+                <option>Cancelled</option>
               </select>
             </div>
-          </div>
-          <div class="cluster">
-            <button type="submit" data-button="small">Apply filter</button>
-            <button type="reset" data-button="quiet small">Reset</button>
-          </div>
-          <p role="status" id="orders-count">Showing 8 orders</p>
-        </form>
+            <div>
+              <button type="submit">Apply</button>
+              <button type="reset">Reset</button>
+            </div>
+          </form>
+          <p role="status" id="order-count">8 orders</p>
+        </search>
 
         <label><input type="checkbox" role="switch" id="orders-compact"> Compact table</label>
 
-        <section data-scroll="inline" data-density="comfortable" aria-labelledby="orders-caption" tabindex="0" id="orders-table">
-          <table>
-            <caption id="orders-caption">Recent orders</caption>
-            <thead>
-              <tr>
-                <th scope="col">Order</th>
-                <th scope="col">Customer</th>
-                <th scope="col">SKU</th>
-                <th scope="col">Qty</th>
-                <th scope="col">Status</th>
-                <th scope="col">Total</th>
-              </tr>
-            </thead>
-            <tbody id="orders-rows"></tbody>
-          </table>
-        </section>
-      </section>
+        <form id="bulk-orders" method="post" action="?">
+          <dui-table id="orders" class="stack" select-all-label="Select all orders" style="--stack-gap: var(--dui-space-s)">
+            <div class="cluster">
+              <dui-toolbar role="toolbar" aria-label="Bulk actions">
+                <button type="submit" name="action" value="ship" data-button="secondary" id="bulk-ship">Mark as shipped</button>
+                <button type="submit" name="action" value="print" data-button="secondary" id="bulk-print">Print packing slips</button>
+              </dui-toolbar>
+              <p role="status" id="selection-count"></p>
+            </div>
+            <section data-scroll="inline" aria-labelledby="orders-caption" tabindex="0" id="orders-region">
+              <table data-table id="orders-table">
+                <caption id="orders-caption">All orders</caption>
+                <thead>
+                  <tr>
+                    <td></td>
+                    <th scope="col" data-table="sortable">Order</th>
+                    <th scope="col" data-table="sortable">Customer</th>
+                    <th scope="col" data-table="sortable">SKU</th>
+                    <th scope="col" data-table="sortable number">Qty</th>
+                    <th scope="col" data-table="sortable">Placed</th>
+                    <th scope="col" data-table="sortable">Status</th>
+                    <th scope="col" data-table="sortable number">Total</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><label><input type="checkbox" name="orders[]" value="HB-1048"><span class="visually-hidden">Select order HB-1048</span></label></td>
+                    <th scope="row"><a href="?order=HB-1048">HB-1048</a></th>
+                    <td>Maple Street Bakery</td>
+                    <td>HB-MUG-12</td>
+                    <td data-table="number">24</td>
+                    <td><time datetime="2026-11-20">20 November 2026</time></td>
+                    <td><span data-badge="warning">Open</span></td>
+                    <td data-table="number">$216.00</td>
+                  </tr>
+                  <tr>
+                    <td><label><input type="checkbox" name="orders[]" value="HB-1047"><span class="visually-hidden">Select order HB-1047</span></label></td>
+                    <th scope="row"><a href="?order=HB-1047">HB-1047</a></th>
+                    <td>Northwind Hardware</td>
+                    <td>HB-BASKET-L</td>
+                    <td data-table="number">6</td>
+                    <td><time datetime="2026-11-19">19 November 2026</time></td>
+                    <td><span data-badge="accent">Packed</span></td>
+                    <td data-table="number">$171.00</td>
+                  </tr>
+                  <tr>
+                    <td><label><input type="checkbox" name="orders[]" value="HB-1046"><span class="visually-hidden">Select order HB-1046</span></label></td>
+                    <th scope="row"><a href="?order=HB-1046">HB-1046</a></th>
+                    <td>Harbor Lane Café</td>
+                    <td>HB-JAR-1L</td>
+                    <td data-table="number">18</td>
+                    <td><time datetime="2026-11-18">18 November 2026</time></td>
+                    <td><span data-badge="neutral">Shipped</span></td>
+                    <td data-table="number">$126.00</td>
+                  </tr>
+                  <tr>
+                    <td><label><input type="checkbox" name="orders[]" value="HB-1045"><span class="visually-hidden">Select order HB-1045</span></label></td>
+                    <th scope="row"><a href="?order=HB-1045">HB-1045</a></th>
+                    <td>Bluebell Florists</td>
+                    <td>HB-POT-TC</td>
+                    <td data-table="number">40</td>
+                    <td><time datetime="2026-11-18">18 November 2026</time></td>
+                    <td><span data-badge="warning">Open</span></td>
+                    <td data-table="number">$260.00</td>
+                  </tr>
+                  <tr>
+                    <td><label><input type="checkbox" name="orders[]" value="HB-1044"><span class="visually-hidden">Select order HB-1044</span></label></td>
+                    <th scope="row"><a href="?order=HB-1044">HB-1044</a></th>
+                    <td>Riverside Dental</td>
+                    <td>HB-TOWEL-04</td>
+                    <td data-table="number">10</td>
+                    <td><time datetime="2026-11-16">16 November 2026</time></td>
+                    <td><span data-badge="success">Delivered</span></td>
+                    <td data-table="number">$185.00</td>
+                  </tr>
+                  <tr>
+                    <td><label><input type="checkbox" name="orders[]" value="HB-1043"><span class="visually-hidden">Select order HB-1043</span></label></td>
+                    <th scope="row"><a href="?order=HB-1043">HB-1043</a></th>
+                    <td>Oakridge Primary School</td>
+                    <td>HB-BOARD-OAK</td>
+                    <td data-table="number">12</td>
+                    <td><time datetime="2026-11-15">15 November 2026</time></td>
+                    <td><span data-badge="neutral">Shipped</span></td>
+                    <td data-table="number">$336.00</td>
+                  </tr>
+                  <tr>
+                    <td><label><input type="checkbox" name="orders[]" value="HB-1042"><span class="visually-hidden">Select order HB-1042</span></label></td>
+                    <th scope="row"><a href="?order=HB-1042">HB-1042</a></th>
+                    <td>Pine &amp; Co. Interiors</td>
+                    <td>HB-THROW-WL</td>
+                    <td data-table="number">5</td>
+                    <td><time datetime="2026-11-14">14 November 2026</time></td>
+                    <td><span data-badge="danger">Cancelled</span></td>
+                    <td data-table="number">$345.00</td>
+                  </tr>
+                  <tr>
+                    <td><label><input type="checkbox" name="orders[]" value="HB-1041"><span class="visually-hidden">Select order HB-1041</span></label></td>
+                    <th scope="row"><a href="?order=HB-1041">HB-1041</a></th>
+                    <td>Summit Climbing Gym</td>
+                    <td>HB-CANDLE-08</td>
+                    <td data-table="number">30</td>
+                    <td><time datetime="2026-11-12">12 November 2026</time></td>
+                    <td><span data-badge="success">Delivered</span></td>
+                    <td data-table="number">$255.00</td>
+                  </tr>
+                </tbody>
+              </table>
+            </section>
+          </dui-table>
+        </form>
+        <p role="status" id="bulk-result"></p>
+      </main>
 
-      <section aria-labelledby="detail-title">
-        <h2 id="detail-title">Order details</h2>
-        <nav aria-label="Order list">
-          <ul class="stack" style="--stack-gap: var(--dui-space-2xs)" id="order-list"></ul>
-        </nav>
-        <article aria-labelledby="order-detail-title">
-          <h3 id="order-detail-title">Order HB-1048</h3>
-          <dl id="order-detail"></dl>
-        </article>
-      </section>
-    </main>
+      <aside id="app-aux" aria-label="Order details" class="stack">
+        <div data-list-detail>
+          <nav aria-label="Orders">
+            <ul>
+              <li><a href="?order=HB-1048" aria-current="page">Order HB-1048 <small>Maple Street Bakery · $216.00</small></a></li>
+              <li><a href="?order=HB-1047">Order HB-1047 <small>Northwind Hardware · $171.00</small></a></li>
+              <li><a href="?order=HB-1046">Order HB-1046 <small>Harbor Lane Café · $126.00</small></a></li>
+              <li><a href="?order=HB-1045">Order HB-1045 <small>Bluebell Florists · $260.00</small></a></li>
+              <li><a href="?order=HB-1044">Order HB-1044 <small>Riverside Dental · $185.00</small></a></li>
+              <li><a href="?order=HB-1043">Order HB-1043 <small>Oakridge Primary School · $336.00</small></a></li>
+              <li><a href="?order=HB-1042">Order HB-1042 <small>Pine &amp; Co. Interiors · $345.00</small></a></li>
+              <li><a href="?order=HB-1041">Order HB-1041 <small>Summit Climbing Gym · $255.00</small></a></li>
+            </ul>
+          </nav>
+          <section aria-labelledby="aux-title" tabindex="0">
+            <h2 id="aux-title">Order HB-1048</h2>
+            <p><span data-badge="warning" id="aux-status">Open</span></p>
+            <dl>
+              <dt>Customer</dt>
+              <dd id="aux-customer">Maple Street Bakery</dd>
+              <dt>SKU</dt>
+              <dd id="aux-sku">HB-MUG-12, Stoneware mug, 12 oz</dd>
+              <dt>Quantity</dt>
+              <dd id="aux-qty">24</dd>
+              <dt>Placed</dt>
+              <dd id="aux-placed"><time datetime="2026-11-20">20 November 2026</time></dd>
+              <dt>Total</dt>
+              <dd id="aux-total">$216.00</dd>
+              <dt>Ship to</dt>
+              <dd id="aux-ship">214 Maple Street, Portland, OR</dd>
+              <dt>Carrier</dt>
+              <dd id="aux-carrier">Not shipped yet</dd>
+            </dl>
+            <p class="cluster">
+              <a href="?order=HB-1048&amp;view=edit" id="aux-open" data-button>Open order</a>
+              <a href="?order=HB-1048&amp;view=print" id="aux-print" data-button>Print</a>
+            </p>
+            <p role="status" class="visually-hidden" id="aux-announce"></p>
+          </section>
+        </div>
+      </aside>
 
-    <footer>
-      <p data-text="small muted">Homebase is a domestic-ui demo app. MIT licensed.</p>
-    </footer>
+      <footer>
+        <p data-text="small muted">Homebase is a domestic-ui demo app. MIT licensed.</p>
+      </footer>
+    </dui-app-shell>
+    <script type="module" src="../../web-components/dui-app-shell.js"></script>
     <script type="module" src="../../web-components/dui-combobox.js"></script>
-    <script type="module">
-      // Demo only: render the sample orders, filter them, and toggle table density.
-      import { orders } from "./orders.js";
-
-      const el = (tag, attrs = {}, ...children) => {
-        const node = document.createElement(tag);
-        for (const [name, value] of Object.entries(attrs)) node.setAttribute(name, value);
-        node.append(...children);
-        return node;
-      };
-      const badge = (order) => el("span", { "data-badge": order.tone }, order.status);
-
-      document.getElementById("orders-summary").append(
-        ...["Open", "Packed", "Shipped", "Delivered"].map((status) =>
-          el("article", {}, el("h2", {}, status), el("p", {}, String(orders.filter((o) => o.status === status).length))),
-        ),
-      );
-
-      const rows = document.getElementById("orders-rows");
-      const count = document.getElementById("orders-count");
-      const showOrders = ({ customer = "", sku = "", status = "all" } = {}) => {
-        const shown = orders.filter(
-          (o) =>
-            o.customer.toLowerCase().includes(customer.trim().toLowerCase()) &&
-            o.sku.toLowerCase().includes(sku.trim().toLowerCase()) &&
-            (status === "all" || o.status === status),
-        );
-        rows.replaceChildren(
-          ...shown.map((o) =>
-            el("tr", {}, el("th", { scope: "row" }, o.id), el("td", {}, o.customer), el("td", {}, o.sku), el("td", {}, String(o.qty)), el("td", {}, badge(o)), el("td", {}, o.total)),
-          ),
-        );
-        count.textContent = `Showing ${shown.length} ${shown.length === 1 ? "order" : "orders"}`;
-      };
-      showOrders();
-
-      const filter = document.getElementById("orders-filter");
-      filter.addEventListener("submit", (event) => {
-        event.preventDefault();
-        showOrders(Object.fromEntries(new FormData(filter)));
-      });
-      filter.addEventListener("reset", () => showOrders());
-
-      const table = document.getElementById("orders-table");
-      document.getElementById("orders-compact").addEventListener("change", (event) => {
-        table.dataset.density = event.target.checked ? "compact" : "comfortable";
-      });
-
-      const list = document.getElementById("order-list");
-      const title = document.getElementById("order-detail-title");
-      const detail = document.getElementById("order-detail");
-      const select = (order) => {
-        for (const button of list.querySelectorAll("button")) {
-          if (button.value === order.id) button.setAttribute("aria-current", "true");
-          else button.removeAttribute("aria-current");
-        }
-        title.textContent = `Order ${order.id}`;
-        detail.replaceChildren(
-          el("dt", {}, "Customer"), el("dd", {}, order.customer),
-          el("dt", {}, "SKU"), el("dd", {}, `${order.sku}, ${order.skuLabel}`),
-          el("dt", {}, "Quantity"), el("dd", {}, String(order.qty)),
-          el("dt", {}, "Status"), el("dd", {}, badge(order)),
-          el("dt", {}, "Total"), el("dd", {}, order.total),
-          el("dt", {}, "Placed"), el("dd", {}, el("time", { datetime: order.date }, order.placed)),
-        );
-      };
-      list.append(
-        ...orders.map((order) => {
-          const button = el("button", { type: "button", "data-button": "quiet", value: order.id }, `${order.id} · ${order.customer}`);
-          button.addEventListener("click", () => select(order));
-          return el("li", {}, button);
-        }),
-      );
-      select(orders[0]);
-    </script>
+    <script type="module" src="../../web-components/dui-menu.js"></script>
+    <script type="module" src="../../web-components/dui-table.js"></script>
+    <script type="module" src="../../web-components/dui-toolbar.js"></script>
+    <script type="module" src="orders.js"></script>
   </body>
 </html>

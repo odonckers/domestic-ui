@@ -2,178 +2,243 @@
 import Base from "../layouts/Base.astro";
 import { customers, orders, skus, statuses } from "../data/orders";
 
-const summary = ["Open", "Packed", "Shipped", "Delivered"].map((status) => ({
-	title: status,
-	count: orders.filter((order) => order.status === status).length,
-}));
-
 const selected = orders[0];
 ---
 
 <Base title="Orders" description="Warehouse order admin: a domestic-ui demo in Astro." current="orders">
-	<h1>Orders</h1>
-	<p data-text="lead">Every order in the warehouse queue: who it is for, what to pick, and where it stands.</p>
-
-	<div class="grid" style="--grid-min: 12rem" id="orders-summary">
-		{summary.map(({ title, count }) => (
-			<article>
-				<h2>{title}</h2>
-				<p>{count}</p>
-			</article>
-		))}
-	</div>
-
-	<section aria-labelledby="orders-title">
-		<h2 id="orders-title">All orders</h2>
-
-		<form class="stack" method="get" id="orders-filter">
-			<div class="grid" style="--grid-min: 14rem">
-				<dui-combobox>
-					<label for="orders-customer">Customer</label>
-					<input type="text" id="orders-customer" name="customer" list="orders-customer-options" />
-					<datalist id="orders-customer-options">
-						{customers.map((customer) => <option value={customer}></option>)}
-					</datalist>
-				</dui-combobox>
-				<dui-combobox>
-					<label for="orders-sku">SKU</label>
-					<input type="text" id="orders-sku" name="sku" list="orders-sku-options" />
-					<datalist id="orders-sku-options">
-						{skus.map(({ value, label }) => <option value={value} label={label}></option>)}
-					</datalist>
-				</dui-combobox>
-				<div data-field>
-					<label for="orders-status">Status</label>
-					<select id="orders-status" name="status">
-						<option value="all" selected>All statuses</option>
-						{statuses.map((status) => <option value={status}>{status}</option>)}
-					</select>
-				</div>
-			</div>
-			<div class="cluster">
-				<button type="submit" data-button="small">Apply filter</button>
-				<button type="reset" data-button="quiet small">Reset</button>
-			</div>
-			<p role="status" id="orders-count">Showing {orders.length} orders</p>
-		</form>
-
-		<label><input type="checkbox" role="switch" id="orders-compact" /> Compact table</label>
-
-		<section data-scroll="inline" data-density="comfortable" aria-labelledby="orders-caption" tabindex="0" id="orders-table">
-			<table>
-				<caption id="orders-caption">Recent orders</caption>
-				<thead>
-					<tr>
-						<th scope="col">Order</th>
-						<th scope="col">Customer</th>
-						<th scope="col">SKU</th>
-						<th scope="col">Qty</th>
-						<th scope="col">Status</th>
-						<th scope="col">Total</th>
-					</tr>
-				</thead>
-				<tbody id="orders-rows">
-					{orders.map(({ id, customer, sku, qty, status, tone, total }) => (
-						<tr>
-							<th scope="row">{id}</th>
-							<td>{customer}</td>
-							<td>{sku}</td>
-							<td>{qty}</td>
-							<td><span data-badge={tone}>{status}</span></td>
-							<td>{total}</td>
-						</tr>
-					))}
-				</tbody>
-			</table>
-		</section>
-	</section>
-
-	<section aria-labelledby="detail-title">
-		<h2 id="detail-title">Order details</h2>
-		<nav aria-label="Order list">
-			<ul class="stack" style="--stack-gap: var(--dui-space-2xs)" id="order-list">
-				{orders.map(({ id, customer }) => (
-					<li>
-						<button type="button" data-button="quiet" value={id} aria-current={id === selected.id ? "true" : undefined}>{id} · {customer}</button>
-					</li>
-				))}
-			</ul>
+	<header data-page-header>
+		<nav aria-label="Breadcrumb" data-breadcrumb>
+			<ol>
+				<li><a href="/">Homebase</a></li>
+				<li><a href="/orders/" aria-current="page">Orders</a></li>
+			</ol>
 		</nav>
-		<article aria-labelledby="order-detail-title">
-			<h3 id="order-detail-title">Order {selected.id}</h3>
-			<dl id="order-detail">
-				<dt>Customer</dt>
-				<dd>{selected.customer}</dd>
-				<dt>SKU</dt>
-				<dd>{selected.sku}, {selected.skuLabel}</dd>
-				<dt>Quantity</dt>
-				<dd>{selected.qty}</dd>
-				<dt>Status</dt>
-				<dd><span data-badge={selected.tone}>{selected.status}</span></dd>
-				<dt>Total</dt>
-				<dd>{selected.total}</dd>
-				<dt>Placed</dt>
-				<dd><time datetime={selected.date}>{selected.placed}</time></dd>
-			</dl>
-		</article>
-	</section>
+		<h1>Orders</h1>
+		<p>Every order in the warehouse queue: who it is for, what to pick, and where it stands.</p>
+	</header>
+
+	<search data-filter-bar aria-label="Filter orders">
+		<form method="get" id="order-filters">
+			<dui-combobox>
+				<label for="filter-customer">Customer</label>
+				<input type="text" id="filter-customer" name="customer" list="filter-customers" />
+				<datalist id="filter-customers">
+					{customers.map((customer) => <option value={customer}></option>)}
+				</datalist>
+			</dui-combobox>
+			<dui-combobox>
+				<label for="filter-sku">SKU</label>
+				<input type="text" id="filter-sku" name="sku" list="filter-skus" />
+				<datalist id="filter-skus">
+					{skus.map(({ value, label }) => <option value={value} label={label}></option>)}
+				</datalist>
+			</dui-combobox>
+			<div data-field>
+				<label for="filter-status">Status</label>
+				<select id="filter-status" name="status">
+					<option value="">Any status</option>
+					{statuses.map((status) => <option>{status}</option>)}
+				</select>
+			</div>
+			<div>
+				<button type="submit">Apply</button>
+				<button type="reset">Reset</button>
+			</div>
+		</form>
+		<p role="status" id="order-count">{orders.length} orders</p>
+	</search>
+
+	<label><input type="checkbox" role="switch" id="orders-compact" /> Compact table</label>
+
+	<form id="bulk-orders" method="post" action="?">
+		<dui-table id="orders" class="stack" select-all-label="Select all orders" style="--stack-gap: var(--dui-space-s)">
+			<div class="cluster">
+				<dui-toolbar role="toolbar" aria-label="Bulk actions">
+					<button type="submit" name="action" value="ship" data-button="secondary" id="bulk-ship">Mark as shipped</button>
+					<button type="submit" name="action" value="print" data-button="secondary" id="bulk-print">Print packing slips</button>
+				</dui-toolbar>
+				<p role="status" id="selection-count"></p>
+			</div>
+			<section data-scroll="inline" aria-labelledby="orders-caption" tabindex="0" id="orders-region">
+				<table data-table id="orders-table">
+					<caption id="orders-caption">All orders</caption>
+					<thead>
+						<tr>
+							<td></td>
+							<th scope="col" data-table="sortable">Order</th>
+							<th scope="col" data-table="sortable">Customer</th>
+							<th scope="col" data-table="sortable">SKU</th>
+							<th scope="col" data-table="sortable number">Qty</th>
+							<th scope="col" data-table="sortable">Placed</th>
+							<th scope="col" data-table="sortable">Status</th>
+							<th scope="col" data-table="sortable number">Total</th>
+						</tr>
+					</thead>
+					<tbody>
+						{orders.map((order) => (
+							<tr>
+								<td><label><input type="checkbox" name="orders[]" value={order.id} /><span class="visually-hidden">Select order {order.id}</span></label></td>
+								<th scope="row"><a href={`?order=${order.id}`}>{order.id}</a></th>
+								<td>{order.customer}</td>
+								<td>{order.sku}</td>
+								<td data-table="number">{order.qty}</td>
+								<td><time datetime={order.date}>{order.placed}</time></td>
+								<td><span data-badge={order.tone}>{order.status}</span></td>
+								<td data-table="number">{order.total}</td>
+							</tr>
+						))}
+					</tbody>
+				</table>
+			</section>
+		</dui-table>
+	</form>
+	<p role="status" id="bulk-result"></p>
+
+	<aside slot="aux" id="app-aux" aria-label="Order details" class="stack">
+		<div data-list-detail>
+			<nav aria-label="Orders">
+				<ul>
+					{orders.map(({ id, customer, total }) => (
+						<li><a href={`?order=${id}`} aria-current={id === selected.id ? "page" : undefined}>Order {id} <small>{customer} · {total}</small></a></li>
+					))}
+				</ul>
+			</nav>
+			<section aria-labelledby="aux-title" tabindex="0">
+				<h2 id="aux-title">Order {selected.id}</h2>
+				<p><span data-badge={selected.tone} id="aux-status">{selected.status}</span></p>
+				<dl>
+					<dt>Customer</dt>
+					<dd id="aux-customer">{selected.customer}</dd>
+					<dt>SKU</dt>
+					<dd id="aux-sku">{selected.sku}, {selected.skuLabel}</dd>
+					<dt>Quantity</dt>
+					<dd id="aux-qty">{selected.qty}</dd>
+					<dt>Placed</dt>
+					<dd id="aux-placed"><time datetime={selected.date}>{selected.placed}</time></dd>
+					<dt>Total</dt>
+					<dd id="aux-total">{selected.total}</dd>
+					<dt>Ship to</dt>
+					<dd id="aux-ship">{selected.shipTo}</dd>
+					<dt>Carrier</dt>
+					<dd id="aux-carrier">{selected.carrier}</dd>
+				</dl>
+				<p class="cluster">
+					<a href={`?order=${selected.id}&view=edit`} id="aux-open" data-button>Open order</a>
+					<a href={`?order=${selected.id}&view=print`} id="aux-print" data-button>Print</a>
+				</p>
+				<p role="status" class="visually-hidden" id="aux-announce"></p>
+			</section>
+		</div>
+	</aside>
 </Base>
 
 <script>
 	import "../../../../web-components/dui-combobox.js";
+	import "../../../../web-components/dui-table.js";
+	import "../../../../web-components/dui-toolbar.js";
 	import { orders } from "../data/orders";
 
-	// Demo only: filter the rendered rows, toggle table density, and show the chosen order.
-	const filter = document.getElementById("orders-filter") as HTMLFormElement;
-	const rows = [...(document.getElementById("orders-rows") as HTMLElement).rows];
-	const count = document.getElementById("orders-count") as HTMLElement;
+	// Demo only: nothing is loaded or saved. The page already holds every row, the order list and the
+	// default order; this script filters rows, shows the chosen order and toggles table density in place.
+	type AppShell = HTMLElement & { isDrawer(edge: "start" | "end"): boolean; show(edge: "start" | "end"): void };
+	const $ = (id: string) => document.getElementById(id) as HTMLElement;
+	const shell = document.querySelector<AppShell>("dui-app-shell");
+	const plural = (count: number) => `${count} ${count === 1 ? "order" : "orders"}`;
 
-	const showOrders = ({ customer = "", sku = "", status = "all" }: Record<string, string> = {}) => {
-		let shown = 0;
-		orders.forEach((o, i) => {
-			const match =
-				o.customer.toLowerCase().includes(customer.trim().toLowerCase()) &&
-				o.sku.toLowerCase().includes(sku.trim().toLowerCase()) &&
-				(status === "all" || o.status === status);
-			rows[i].hidden = !match;
-			if (match) shown += 1;
-		});
-		count.textContent = `Showing ${shown} ${shown === 1 ? "order" : "orders"}`;
+	// Show one order in Order details, and mark its link in the order list.
+	const showOrder = (id: string, { announce = true } = {}) => {
+		const order = orders.find((o) => o.id === id);
+		if (!order) return false;
+		$("aux-title").textContent = `Order ${order.id}`;
+		$("aux-status").textContent = order.status;
+		$("aux-status").dataset.badge = order.tone;
+		$("aux-customer").textContent = order.customer;
+		$("aux-sku").textContent = `${order.sku}, ${order.skuLabel}`;
+		$("aux-qty").textContent = String(order.qty);
+		const time = document.createElement("time");
+		time.dateTime = order.date;
+		time.textContent = order.placed;
+		$("aux-placed").replaceChildren(time);
+		$("aux-total").textContent = order.total;
+		$("aux-ship").textContent = order.shipTo;
+		$("aux-carrier").textContent = order.carrier;
+		($("aux-open") as HTMLAnchorElement).href = `?order=${order.id}&view=edit`;
+		($("aux-print") as HTMLAnchorElement).href = `?order=${order.id}&view=print`;
+		for (const link of document.querySelectorAll("#app-aux [data-list-detail] nav a")) {
+			if (link.getAttribute("href") === `?order=${order.id}`) link.setAttribute("aria-current", "page");
+			else link.removeAttribute("aria-current");
+		}
+		if (announce) $("aux-announce").textContent = `Order ${order.id} shown in Order details.`;
+		return true;
 	};
 
-	filter.addEventListener("submit", (event) => {
+	// A link to ?order=… (an order number in the table, or the order list): show it here instead of
+	// loading the page again, and open the drawer when the details sidebar does not fit beside main.
+	document.addEventListener("click", (event) => {
+		const link = event.target instanceof Element ? event.target.closest<HTMLAnchorElement>("a[href^='?order=']:not([href*='&'])") : null;
+		if (!link || event.ctrlKey || event.metaKey || event.shiftKey) return;
+		const id = new URLSearchParams(link.search).get("order");
+		if (!id || !showOrder(id)) return;
 		event.preventDefault();
-		showOrders(Object.fromEntries(new FormData(filter)) as Record<string, string>);
-	});
-	filter.addEventListener("reset", () => showOrders());
-
-	const table = document.getElementById("orders-table") as HTMLElement;
-	document.getElementById("orders-compact")?.addEventListener("change", (event) => {
-		table.dataset.density = (event.target as HTMLInputElement).checked ? "compact" : "comfortable";
+		if (!$("app-aux").contains(link) && shell?.isDrawer?.("end")) shell.show("end");
 	});
 
-	const list = document.getElementById("order-list") as HTMLElement;
-	const title = document.getElementById("order-detail-title") as HTMLElement;
-	const detail = document.getElementById("order-detail") as HTMLElement;
-	list.addEventListener("click", (event) => {
-		const button = (event.target as HTMLElement).closest("button");
-		const order = orders.find((o) => o.id === button?.value);
-		if (!button || !order) return;
-		for (const b of list.querySelectorAll("button")) {
-			if (b === button) b.setAttribute("aria-current", "true");
-			else b.removeAttribute("aria-current");
+	// The order in the address bar (a link opened in a new tab) is the one shown.
+	const requested = new URLSearchParams(location.search).get("order");
+	if (requested) showOrder(requested, { announce: false });
+
+	// Selecting a row shows that order too.
+	$("orders-table").addEventListener("change", (event) => {
+		const box = event.target;
+		if (box instanceof HTMLInputElement && box.checked && box.value) showOrder(box.value);
+	});
+
+	// Filter bar: hide the rows that do not match and update the count.
+	const filters = $("order-filters") as HTMLFormElement;
+	const applyFilters = () => {
+		const data = new FormData(filters);
+		const customer = String(data.get("customer") ?? "").trim().toLowerCase();
+		const sku = String(data.get("sku") ?? "").trim().toLowerCase();
+		const status = String(data.get("status") ?? "");
+		let shown = 0;
+		for (const row of ($("orders-table") as HTMLTableElement).tBodies[0].rows) {
+			const order = orders.find((o) => o.id === row.cells[1].textContent?.trim());
+			const match = Boolean(order) && order!.customer.toLowerCase().includes(customer) && order!.sku.toLowerCase().includes(sku) && (!status || order!.status === status);
+			row.hidden = !match;
+			if (match) shown += 1;
 		}
-		title.textContent = `Order ${order.id}`;
-		const [customer, sku, qty, status, total, placed] = detail.querySelectorAll("dd");
-		const badge = status.querySelector("[data-badge]") as HTMLElement;
-		const time = placed.querySelector("time") as HTMLTimeElement;
-		customer.textContent = order.customer;
-		sku.textContent = `${order.sku}, ${order.skuLabel}`;
-		qty.textContent = String(order.qty);
-		badge.textContent = order.status;
-		badge.dataset.badge = order.tone;
-		total.textContent = order.total;
-		time.textContent = order.placed;
-		time.dateTime = order.date;
+		$("order-count").textContent = plural(shown);
+	};
+	filters.addEventListener("submit", (event) => {
+		event.preventDefault();
+		applyFilters();
+	});
+	// Reset clears the fields after this event, so apply on the next task.
+	filters.addEventListener("reset", () => setTimeout(applyFilters));
+
+	// Density: compact rows on the table's scroll region while the switch is on.
+	$("orders-compact").addEventListener("change", (event) => {
+		if ((event.target as HTMLInputElement).checked) $("orders-region").dataset.density = "compact";
+		else delete $("orders-region").dataset.density;
+	});
+
+	// Bulk actions: change the selected rows in place and report it. Without this script the form posts
+	// the checked orders with action=ship or print.
+	$("bulk-orders").addEventListener("submit", (event) => {
+		event.preventDefault();
+		const submitter = (event as SubmitEvent).submitter as HTMLButtonElement | null;
+		const ids = new FormData(event.currentTarget as HTMLFormElement).getAll("orders[]").map(String);
+		if (submitter?.value === "ship") {
+			for (const box of document.querySelectorAll("#orders-table tbody input:checked")) {
+				const badge = box.closest("tr")?.querySelector<HTMLElement>("[data-badge]");
+				if (!badge) continue;
+				badge.dataset.badge = "neutral";
+				badge.textContent = "Shipped";
+			}
+			for (const order of orders) if (ids.includes(order.id)) Object.assign(order, { status: "Shipped", tone: "neutral" });
+			$("bulk-result").textContent = `${plural(ids.length)} marked as shipped.`;
+		} else if (submitter?.value === "print") {
+			$("bulk-result").textContent = `Packing slips for ${plural(ids.length)} sent to the printer.`;
+		}
 	});
 </script>

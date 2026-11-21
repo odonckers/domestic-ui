@@ -1,0 +1,15 @@
+<button type="button" aria-controls="app-nav" aria-expanded="true" hidden>
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"></path></svg>
+  Menu
+</button>
+<a routerLink="/" data-link="quiet"><strong>Homebase</strong></a>
+<ng-content />
+<dui-menu>
+  <button type="button" popovertarget="user-menu">Sam Rivera</button>
+  <div id="user-menu" popover data-popover>
+    <button type="button">Profile</button>
+    <button type="button">Preferences</button>
+    <hr>
+    <button type="button">Sign out</button>
+  </div>
+</dui-menu>

@@ -5,10 +5,12 @@ warehouse **orders** admin view, built four ways to show that domestic-ui works 
 Every view uses the same native markup, the `stack`, `cluster` and `grid` layout primitives, and
 the [atom APIs](../css/components/atoms/README.md): `data-text`, `data-button`, `data-field`,
 `data-badge` and the `role="switch"` checkbox, written exactly as in
-[`examples/atoms/`](../examples/atoms/index.html). The orders view adds the
-[`<dui-combobox>`](../web-components/dui-combobox.js) typeahead and a `data-density` toggle on its
-table, written as in [`examples/molecules/combobox.html`](../examples/molecules/combobox.html) and
-[`examples/patterns/density.html`](../examples/patterns/density.html).
+[`examples/atoms/`](../examples/atoms/index.html). Every view sits in the
+[app shell](../css/layout/app-shell.css) (`<dui-app-shell>`: app bar with a `<dui-menu>`, main
+navigation, footer). The orders view follows [`examples/app-shell.html`](../examples/app-shell.html):
+a page header, a filter bar with two [`<dui-combobox>`](../web-components/dui-combobox.js)
+typeaheads, a `<dui-table>` data table with a `data-density` toggle, and the selected order in the
+order details sidebar as a `data-list-detail` list and detail.
 
 | App | Stack | Views |
 | --- | --- | --- |
@@ -20,9 +22,8 @@ table, written as in [`examples/molecules/combobox.html`](../examples/molecules/
 
 Every app links the shipped stylesheet, [`css/domestic.css`](../css/domestic.css), straight from
 this repository: no copy, no fork. Bundlers inline its `@import … layer()` rules and keep the
-cascade layers. The only app CSS is a tiny page container written with `--dui-*` semantic tokens,
-identical in all four apps (Angular adds `app-root { display: block; }`, since custom elements
-are inline by default).
+cascade layers. There is no app CSS: the app shell and organisms lay out every view (Angular only
+adds `app-root { display: block; }`, since custom elements are inline by default).
 
 Each app keeps its own `package.json` and `package-lock.json`; nothing is installed at the
 repository root. The [Demos workflow](../.github/workflows/demos.yml) builds and checks every app

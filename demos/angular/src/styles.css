@@ -1,25 +1,4 @@
-/* Page-only layout, written with semantic tokens like any consumer would. */
-:has(> #main) > :is(header, main, footer) {
-  max-inline-size: var(--dui-size-page);
-  margin-inline: auto;
-  padding-inline: var(--dui-space-l);
-}
-
-:has(> #main) > header {
-  padding-block: var(--dui-space-m);
-  border-block-end: var(--dui-border-width) solid var(--dui-color-border);
-}
-
-#main {
-  padding-block: var(--dui-space-2xl);
-}
-
-:has(> #main) > footer {
-  padding-block: var(--dui-space-l);
-  border-block-start: var(--dui-border-width) solid var(--dui-color-border);
-}
-
-/* Angular only: <app-root> sits between <body> and the page landmarks, and custom elements are inline by default. */
+/* Angular only: <app-root> sits between <body> and the skip link and app shell, and custom elements are inline by default. */
 app-root {
   display: block;
 }

@@ -1,19 +1,4 @@
 <a class="visually-hidden" href="#main">Skip to main content</a>
 
-<header class="cluster" style="--cluster-justify: space-between">
-  <p><strong>Homebase</strong></p>
-  <nav aria-label="Primary">
-    <ul class="cluster">
-      <li><a routerLink="/" routerLinkActive [routerLinkActiveOptions]="{ exact: true }" ariaCurrentWhenActive="page">Dashboard</a></li>
-      <li><a routerLink="/settings" routerLinkActive ariaCurrentWhenActive="page">Account settings</a></li>
-      <li><a routerLink="/orders" routerLinkActive ariaCurrentWhenActive="page">Orders</a></li>
-    </ul>
-  </nav>
-</header>
-
-<!-- Each routed page renders as <main id="main"> right after the outlet. -->
+<!-- Each routed page renders as <dui-app-shell data-app-shell> right after the outlet: app bar, main navigation, main, the optional order details sidebar and the footer. -->
 <router-outlet />
-
-<footer>
-  <p data-text="small muted">Homebase is a domestic-ui demo app. MIT licensed.</p>
-</footer>

@@ -1,10 +1,13 @@
 import { Component } from '@angular/core';
+import { AppBar } from '../shell/app-bar';
+import { AppNav } from '../shell/app-nav';
 
 @Component({
-  // The page's host element is the <main> landmark itself, so the markup matches
-  // the other demos (no wrapper element between <main> and its content).
-  selector: 'main[app-dashboard-page]',
-  host: { id: 'main' },
+  // The page's host element is the app shell itself, so <main> is its direct child as in the
+  // other demos (no wrapper element between the shell and its landmarks).
+  selector: 'dui-app-shell[app-dashboard-page]',
+  host: { 'data-app-shell': '' },
+  imports: [AppBar, AppNav],
   templateUrl: './dashboard.html',
 })
 export class DashboardPage {

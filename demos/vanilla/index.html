@@ -6,156 +6,173 @@
     <title>Dashboard · Homebase</title>
     <meta name="description" content="Household chores dashboard: a domestic-ui demo in plain HTML.">
     <link rel="stylesheet" href="../../css/domestic.css">
-    <style>
-      /* Page-only layout, written with semantic tokens like any consumer would. */
-      :has(> #main) > :is(header, main, footer) {
-        max-inline-size: var(--dui-size-page);
-        margin-inline: auto;
-        padding-inline: var(--dui-space-l);
-      }
-
-      :has(> #main) > header {
-        padding-block: var(--dui-space-m);
-        border-block-end: var(--dui-border-width) solid var(--dui-color-border);
-      }
-
-      #main {
-        padding-block: var(--dui-space-2xl);
-      }
-
-      :has(> #main) > footer {
-        padding-block: var(--dui-space-l);
-        border-block-start: var(--dui-border-width) solid var(--dui-color-border);
-      }
-    </style>
   </head>
   <body>
     <a class="visually-hidden" href="#main">Skip to main content</a>
 
-    <header class="cluster" style="--cluster-justify: space-between">
-      <p><strong>Homebase</strong></p>
-      <nav aria-label="Primary">
-        <ul class="cluster">
-          <li><a href="index.html" aria-current="page">Dashboard</a></li>
-          <li><a href="settings.html">Account settings</a></li>
-          <li><a href="orders.html">Orders</a></li>
+    <!--
+      Keyboard
+        Tab: skip link, app bar (Menu, app name, user menu), sidebar links, main, footer
+        Enter / Space: on Menu, collapses or expands the sidebar; when narrow, opens it as a drawer
+        Esc: in the drawer, closes it and returns focus to Menu
+    -->
+    <dui-app-shell data-app-shell>
+      <header>
+        <button type="button" aria-controls="app-nav" aria-expanded="true" hidden>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"></path></svg>
+          Menu
+        </button>
+        <a href="index.html" data-link="quiet"><strong>Homebase</strong></a>
+        <dui-menu>
+          <button type="button" popovertarget="user-menu">Sam Rivera</button>
+          <div id="user-menu" popover data-popover>
+            <button type="button">Profile</button>
+            <button type="button">Preferences</button>
+            <hr>
+            <button type="button">Sign out</button>
+          </div>
+        </dui-menu>
+      </header>
+
+      <nav id="app-nav" aria-label="Main" data-nav="vertical">
+        <ul>
+          <li>
+            <a href="index.html" aria-current="page">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 11.5 12 4l9 7.5M5 10v10h14V10"></path></svg>
+              Dashboard
+            </a>
+          </li>
+          <li>
+            <a href="orders.html">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 4h2l2.5 11h11L21 7H6.2"></path><circle cx="9" cy="19.5" r="1.5"></circle><circle cx="17" cy="19.5" r="1.5"></circle></svg>
+              Orders
+            </a>
+          </li>
+          <li>
+            <a href="settings.html">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 6h10M4 12h4M12 12h8M4 18h12"></path><circle cx="16" cy="6" r="2"></circle><circle cx="10" cy="12" r="2"></circle><circle cx="18" cy="18" r="2"></circle></svg>
+              Account settings
+            </a>
+          </li>
         </ul>
       </nav>
-    </header>
 
-    <main id="main">
-      <h1>Chores dashboard</h1>
-      <p data-text="lead">What needs doing around the house this week, and who is on it.</p>
+      <main id="main" class="stack">
+        <h1>Chores dashboard</h1>
+        <p data-text="lead">What needs doing around the house this week, and who is on it.</p>
 
-      <div class="grid" style="--grid-min: 12rem">
-        <article>
-          <h2>Due today</h2>
-          <p>2</p>
-        </article>
-        <article>
-          <h2>Overdue</h2>
-          <p>1</p>
-        </article>
-        <article>
-          <h2>Done this week</h2>
-          <p>12</p>
-          <p data-text="small muted">Since Monday</p>
-        </article>
-        <article>
-          <h2>Household members</h2>
-          <p>4</p>
-        </article>
-      </div>
-
-      <section aria-labelledby="upcoming-title">
-        <h2 id="upcoming-title">Upcoming chores</h2>
-
-        <details>
-          <summary>Filter</summary>
-          <form class="stack" method="get">
-            <div data-field>
-              <label for="filter-room">Room</label>
-              <select id="filter-room" name="room">
-                <option value="all" selected>All rooms</option>
-                <option value="kitchen">Kitchen</option>
-                <option value="bathroom">Bathroom</option>
-                <option value="living-room">Living room</option>
-                <option value="garden">Garden</option>
-              </select>
-            </div>
-            <fieldset>
-              <legend>Show</legend>
-              <label><input type="checkbox" name="mine"> Only chores assigned to me</label>
-              <label><input type="checkbox" name="completed"> Completed chores</label>
-            </fieldset>
-            <div class="cluster">
-              <button type="submit" data-button="small">Apply filter</button>
-            </div>
-          </form>
-        </details>
-
-        <section data-scroll="inline" aria-labelledby="chores-caption" tabindex="0">
-          <table>
-            <caption id="chores-caption">Chores this week</caption>
-            <thead>
-              <tr>
-                <th scope="col">Chore</th>
-                <th scope="col">Room</th>
-                <th scope="col">Assigned to</th>
-                <th scope="col">Due</th>
-                <th scope="col">Status</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <th scope="row">Take out recycling</th>
-                <td>Garden</td>
-                <td>Jordan</td>
-                <td><time datetime="2026-11-19">Yesterday</time></td>
-                <td><span data-badge="danger">Overdue</span></td>
-              </tr>
-              <tr>
-                <th scope="row">Empty the dishwasher</th>
-                <td>Kitchen</td>
-                <td>Sam</td>
-                <td><time datetime="2026-11-20">Today</time></td>
-                <td><span data-badge="success">Done</span></td>
-              </tr>
-              <tr>
-                <th scope="row">Water the plants</th>
-                <td>Living room</td>
-                <td>Alex</td>
-                <td><time datetime="2026-11-20">Today</time></td>
-                <td><span data-badge="warning">Due today</span></td>
-              </tr>
-              <tr>
-                <th scope="row">Clean the bathroom</th>
-                <td>Bathroom</td>
-                <td>Riley</td>
-                <td><time datetime="2026-11-22">Sunday 22 November</time></td>
-                <td><span data-badge="neutral">Scheduled</span></td>
-              </tr>
-              <tr>
-                <th scope="row">Vacuum the stairs</th>
-                <td>Living room</td>
-                <td>Sam</td>
-                <td><time datetime="2026-11-24">Tuesday 24 November</time></td>
-                <td><span data-badge="neutral">Scheduled</span></td>
-              </tr>
-            </tbody>
-          </table>
-        </section>
-
-        <div class="cluster">
-          <button type="button" data-button="primary">Add chore</button>
-          <button type="button" data-button="secondary">Swap a chore</button>
-          <button type="button" data-button="quiet">Print this week</button>
+        <div class="grid" style="--grid-min: 12rem">
+          <article>
+            <h2>Due today</h2>
+            <p>2</p>
+          </article>
+          <article>
+            <h2>Overdue</h2>
+            <p>1</p>
+          </article>
+          <article>
+            <h2>Done this week</h2>
+            <p>12</p>
+            <p data-text="small muted">Since Monday</p>
+          </article>
+          <article>
+            <h2>Household members</h2>
+            <p>4</p>
+          </article>
         </div>
-      </section>
-    </main>
 
-    <footer>
-      <p data-text="small muted">Homebase is a domestic-ui demo app. MIT licensed.</p>
-    </footer>
+        <section aria-labelledby="upcoming-title">
+          <h2 id="upcoming-title">Upcoming chores</h2>
+
+          <details>
+            <summary>Filter</summary>
+            <form class="stack" method="get">
+              <div data-field>
+                <label for="filter-room">Room</label>
+                <select id="filter-room" name="room">
+                  <option value="all" selected>All rooms</option>
+                  <option value="kitchen">Kitchen</option>
+                  <option value="bathroom">Bathroom</option>
+                  <option value="living-room">Living room</option>
+                  <option value="garden">Garden</option>
+                </select>
+              </div>
+              <fieldset>
+                <legend>Show</legend>
+                <label><input type="checkbox" name="mine"> Only chores assigned to me</label>
+                <label><input type="checkbox" name="completed"> Completed chores</label>
+              </fieldset>
+              <div class="cluster">
+                <button type="submit" data-button="small">Apply filter</button>
+              </div>
+            </form>
+          </details>
+
+          <section data-scroll="inline" aria-labelledby="chores-caption" tabindex="0">
+            <table>
+              <caption id="chores-caption">Chores this week</caption>
+              <thead>
+                <tr>
+                  <th scope="col">Chore</th>
+                  <th scope="col">Room</th>
+                  <th scope="col">Assigned to</th>
+                  <th scope="col">Due</th>
+                  <th scope="col">Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <th scope="row">Take out recycling</th>
+                  <td>Garden</td>
+                  <td>Jordan</td>
+                  <td><time datetime="2026-11-19">Yesterday</time></td>
+                  <td><span data-badge="danger">Overdue</span></td>
+                </tr>
+                <tr>
+                  <th scope="row">Empty the dishwasher</th>
+                  <td>Kitchen</td>
+                  <td>Sam</td>
+                  <td><time datetime="2026-11-20">Today</time></td>
+                  <td><span data-badge="success">Done</span></td>
+                </tr>
+                <tr>
+                  <th scope="row">Water the plants</th>
+                  <td>Living room</td>
+                  <td>Alex</td>
+                  <td><time datetime="2026-11-20">Today</time></td>
+                  <td><span data-badge="warning">Due today</span></td>
+                </tr>
+                <tr>
+                  <th scope="row">Clean the bathroom</th>
+                  <td>Bathroom</td>
+                  <td>Riley</td>
+                  <td><time datetime="2026-11-22">Sunday 22 November</time></td>
+                  <td><span data-badge="neutral">Scheduled</span></td>
+                </tr>
+                <tr>
+                  <th scope="row">Vacuum the stairs</th>
+                  <td>Living room</td>
+                  <td>Sam</td>
+                  <td><time datetime="2026-11-24">Tuesday 24 November</time></td>
+                  <td><span data-badge="neutral">Scheduled</span></td>
+                </tr>
+              </tbody>
+            </table>
+          </section>
+
+          <div class="cluster">
+            <button type="button" data-button="primary">Add chore</button>
+            <button type="button" data-button="secondary">Swap a chore</button>
+            <button type="button" data-button="quiet">Print this week</button>
+          </div>
+        </section>
+      </main>
+
+      <footer>
+        <p data-text="small muted">Homebase is a domestic-ui demo app. MIT licensed.</p>
+      </footer>
+    </dui-app-shell>
+    <script type="module" src="../../web-components/dui-app-shell.js"></script>
+    <script type="module" src="../../web-components/dui-menu.js"></script>
   </body>
 </html>
