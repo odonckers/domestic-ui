@@ -4813,6 +4813,7 @@ See the [Accessibility baseline](https://odonckers.github.io/domestic-ui/princip
 
 - [Layouts](https://odonckers.github.io/domestic-ui/layouts/index.md)
 - Source: [`css/layout/dashboard.css`](https://github.com/odonckers/domestic-ui/blob/main/css/layout/dashboard.css), [`examples/layouts/dashboard.html`](https://github.com/odonckers/domestic-ui/blob/main/examples/layouts/dashboard.html)
+- Demos: Dashboard view ([Plain HTML](https://github.com/odonckers/domestic-ui/blob/main/demos/vanilla/index.html), [React](https://github.com/odonckers/domestic-ui/blob/main/demos/react/src/DashboardPage.tsx), [Angular](https://github.com/odonckers/domestic-ui/tree/main/demos/angular/src/app/dashboard), [Astro](https://github.com/odonckers/domestic-ui/blob/main/demos/astro/src/pages/index.astro))
 
 ### How other systems do it
 
@@ -5329,7 +5330,7 @@ aria-busy="true"         on the <table> while rows load
 
 - [Organisms](https://odonckers.github.io/domestic-ui/organisms/index.md)
 - Source: [`css/components/organisms/data-table.css`](https://github.com/odonckers/domestic-ui/blob/main/css/components/organisms/data-table.css), [`examples/organisms/data-table.html`](https://github.com/odonckers/domestic-ui/blob/main/examples/organisms/data-table.html)
-- Demos: Orders view ([Plain HTML](https://github.com/odonckers/domestic-ui/blob/main/demos/vanilla/orders.html), [React](https://github.com/odonckers/domestic-ui/blob/main/demos/react/src/OrdersPage.tsx), [Angular](https://github.com/odonckers/domestic-ui/tree/main/demos/angular/src/app/orders), [Astro](https://github.com/odonckers/domestic-ui/blob/main/demos/astro/src/pages/orders.astro))
+- Demos: Dashboard view ([Plain HTML](https://github.com/odonckers/domestic-ui/blob/main/demos/vanilla/index.html), [React](https://github.com/odonckers/domestic-ui/blob/main/demos/react/src/DashboardPage.tsx), [Angular](https://github.com/odonckers/domestic-ui/tree/main/demos/angular/src/app/dashboard), [Astro](https://github.com/odonckers/domestic-ui/blob/main/demos/astro/src/pages/index.astro)); Orders view ([Plain HTML](https://github.com/odonckers/domestic-ui/blob/main/demos/vanilla/orders.html), [React](https://github.com/odonckers/domestic-ui/blob/main/demos/react/src/OrdersPage.tsx), [Angular](https://github.com/odonckers/domestic-ui/tree/main/demos/angular/src/app/orders), [Astro](https://github.com/odonckers/domestic-ui/blob/main/demos/astro/src/pages/orders.astro))
 
 ### How other systems do it
 
@@ -5624,6 +5625,7 @@ Native keyboard behavior; see [HTML `<form>` element](https://html.spec.whatwg.o
 
 - [Organisms](https://odonckers.github.io/domestic-ui/organisms/index.md)
 - Source: [`css/components/organisms/large-forms.css`](https://github.com/odonckers/domestic-ui/blob/main/css/components/organisms/large-forms.css), [`examples/organisms/large-forms.html`](https://github.com/odonckers/domestic-ui/blob/main/examples/organisms/large-forms.html)
+- Demos: Account settings view ([Plain HTML](https://github.com/odonckers/domestic-ui/blob/main/demos/vanilla/settings.html), [React](https://github.com/odonckers/domestic-ui/blob/main/demos/react/src/SettingsPage.tsx), [Angular](https://github.com/odonckers/domestic-ui/tree/main/demos/angular/src/app/settings), [Astro](https://github.com/odonckers/domestic-ui/blob/main/demos/astro/src/pages/settings.astro))
 
 ### How other systems do it
 
