@@ -1,6 +1,8 @@
 # domestic-ui demo: plain HTML
 
-The dashboard and account settings views as two static HTML files, with no build step.
+The dashboard, account settings and orders views as three static HTML files, with no build step.
+`orders.html` loads `../../web-components/dui-combobox.js` and renders its sample orders from
+`orders.js` with a short module script.
 
 ## Prerequisites
 

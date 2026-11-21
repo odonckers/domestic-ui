@@ -10,7 +10,9 @@ one `aria-current="page"` link in the primary nav, that the first Tab stop is th
 that following it stays on the view, and that domestic-ui's CSS really applied (`--dui-space-m`
 is set, `.cluster` is flex, `.visually-hidden` hides the skip link), and that the atoms applied
 (a `data-text` lead and footer, a tinted `data-badge` on the dashboard, the `role="switch"`
-checkboxes drawn with `appearance: none` on settings).
+checkboxes drawn with `appearance: none` on settings; on orders, two upgraded `<dui-combobox>`
+fields, the table in a `data-scroll="inline"` region, a tinted badge in it, and a "Compact table"
+switch that sets `data-density="compact"` on that region).
 
 Small screens: every view also loads at 320×640 and 375×812. It must not scroll sideways
 (`scrollWidth > clientWidth` on `<html>` or `<body>`, closed and with `<details>` open; the failure

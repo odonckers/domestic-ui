@@ -1,0 +1,179 @@
+---
+import Base from "../layouts/Base.astro";
+import { customers, orders, skus, statuses } from "../data/orders";
+
+const summary = ["Open", "Packed", "Shipped", "Delivered"].map((status) => ({
+	title: status,
+	count: orders.filter((order) => order.status === status).length,
+}));
+
+const selected = orders[0];
+---
+
+<Base title="Orders" description="Warehouse order admin: a domestic-ui demo in Astro." current="orders">
+	<h1>Orders</h1>
+	<p data-text="lead">Every order in the warehouse queue: who it is for, what to pick, and where it stands.</p>
+
+	<div class="grid" style="--grid-min: 12rem" id="orders-summary">
+		{summary.map(({ title, count }) => (
+			<article>
+				<h2>{title}</h2>
+				<p>{count}</p>
+			</article>
+		))}
+	</div>
+
+	<section aria-labelledby="orders-title">
+		<h2 id="orders-title">All orders</h2>
+
+		<form class="stack" method="get" id="orders-filter">
+			<div class="grid" style="--grid-min: 14rem">
+				<dui-combobox>
+					<label for="orders-customer">Customer</label>
+					<input type="text" id="orders-customer" name="customer" list="orders-customer-options" />
+					<datalist id="orders-customer-options">
+						{customers.map((customer) => <option value={customer}></option>)}
+					</datalist>
+				</dui-combobox>
+				<dui-combobox>
+					<label for="orders-sku">SKU</label>
+					<input type="text" id="orders-sku" name="sku" list="orders-sku-options" />
+					<datalist id="orders-sku-options">
+						{skus.map(({ value, label }) => <option value={value} label={label}></option>)}
+					</datalist>
+				</dui-combobox>
+				<div data-field>
+					<label for="orders-status">Status</label>
+					<select id="orders-status" name="status">
+						<option value="all" selected>All statuses</option>
+						{statuses.map((status) => <option value={status}>{status}</option>)}
+					</select>
+				</div>
+			</div>
+			<div class="cluster">
+				<button type="submit" data-button="small">Apply filter</button>
+				<button type="reset" data-button="quiet small">Reset</button>
+			</div>
+			<p role="status" id="orders-count">Showing {orders.length} orders</p>
+		</form>
+
+		<label><input type="checkbox" role="switch" id="orders-compact" /> Compact table</label>
+
+		<section data-scroll="inline" data-density="comfortable" aria-labelledby="orders-caption" tabindex="0" id="orders-table">
+			<table>
+				<caption id="orders-caption">Recent orders</caption>
+				<thead>
+					<tr>
+						<th scope="col">Order</th>
+						<th scope="col">Customer</th>
+						<th scope="col">SKU</th>
+						<th scope="col">Qty</th>
+						<th scope="col">Status</th>
+						<th scope="col">Total</th>
+					</tr>
+				</thead>
+				<tbody id="orders-rows">
+					{orders.map(({ id, customer, sku, qty, status, tone, total }) => (
+						<tr>
+							<th scope="row">{id}</th>
+							<td>{customer}</td>
+							<td>{sku}</td>
+							<td>{qty}</td>
+							<td><span data-badge={tone}>{status}</span></td>
+							<td>{total}</td>
+						</tr>
+					))}
+				</tbody>
+			</table>
+		</section>
+	</section>
+
+	<section aria-labelledby="detail-title">
+		<h2 id="detail-title">Order details</h2>
+		<nav aria-label="Order list">
+			<ul class="stack" style="--stack-gap: var(--dui-space-2xs)" id="order-list">
+				{orders.map(({ id, customer }) => (
+					<li>
+						<button type="button" data-button="quiet" value={id} aria-current={id === selected.id ? "true" : undefined}>{id} · {customer}</button>
+					</li>
+				))}
+			</ul>
+		</nav>
+		<article aria-labelledby="order-detail-title">
+			<h3 id="order-detail-title">Order {selected.id}</h3>
+			<dl id="order-detail">
+				<dt>Customer</dt>
+				<dd>{selected.customer}</dd>
+				<dt>SKU</dt>
+				<dd>{selected.sku}, {selected.skuLabel}</dd>
+				<dt>Quantity</dt>
+				<dd>{selected.qty}</dd>
+				<dt>Status</dt>
+				<dd><span data-badge={selected.tone}>{selected.status}</span></dd>
+				<dt>Total</dt>
+				<dd>{selected.total}</dd>
+				<dt>Placed</dt>
+				<dd><time datetime={selected.date}>{selected.placed}</time></dd>
+			</dl>
+		</article>
+	</section>
+</Base>
+
+<script>
+	import "../../../../web-components/dui-combobox.js";
+	import { orders } from "../data/orders";
+
+	// Demo only: filter the rendered rows, toggle table density, and show the chosen order.
+	const filter = document.getElementById("orders-filter") as HTMLFormElement;
+	const rows = [...(document.getElementById("orders-rows") as HTMLElement).rows];
+	const count = document.getElementById("orders-count") as HTMLElement;
+
+	const showOrders = ({ customer = "", sku = "", status = "all" }: Record<string, string> = {}) => {
+		let shown = 0;
+		orders.forEach((o, i) => {
+			const match =
+				o.customer.toLowerCase().includes(customer.trim().toLowerCase()) &&
+				o.sku.toLowerCase().includes(sku.trim().toLowerCase()) &&
+				(status === "all" || o.status === status);
+			rows[i].hidden = !match;
+			if (match) shown += 1;
+		});
+		count.textContent = `Showing ${shown} ${shown === 1 ? "order" : "orders"}`;
+	};
+
+	filter.addEventListener("submit", (event) => {
+		event.preventDefault();
+		showOrders(Object.fromEntries(new FormData(filter)) as Record<string, string>);
+	});
+	filter.addEventListener("reset", () => showOrders());
+
+	const table = document.getElementById("orders-table") as HTMLElement;
+	document.getElementById("orders-compact")?.addEventListener("change", (event) => {
+		table.dataset.density = (event.target as HTMLInputElement).checked ? "compact" : "comfortable";
+	});
+
+	const list = document.getElementById("order-list") as HTMLElement;
+	const title = document.getElementById("order-detail-title") as HTMLElement;
+	const detail = document.getElementById("order-detail") as HTMLElement;
+	list.addEventListener("click", (event) => {
+		const button = (event.target as HTMLElement).closest("button");
+		const order = orders.find((o) => o.id === button?.value);
+		if (!button || !order) return;
+		for (const b of list.querySelectorAll("button")) {
+			if (b === button) b.setAttribute("aria-current", "true");
+			else b.removeAttribute("aria-current");
+		}
+		title.textContent = `Order ${order.id}`;
+		const [customer, sku, qty, status, total, placed] = detail.querySelectorAll("dd");
+		const badge = status.querySelector("[data-badge]") as HTMLElement;
+		const time = placed.querySelector("time") as HTMLTimeElement;
+		customer.textContent = order.customer;
+		sku.textContent = `${order.sku}, ${order.skuLabel}`;
+		qty.textContent = String(order.qty);
+		badge.textContent = order.status;
+		badge.dataset.badge = order.tone;
+		total.textContent = order.total;
+		time.textContent = order.placed;
+		time.dateTime = order.date;
+	});
+</script>

@@ -5,7 +5,7 @@ import "../styles/page.css";
 interface Props {
 	title: string;
 	description: string;
-	current: "dashboard" | "settings";
+	current: "dashboard" | "settings" | "orders";
 }
 
 const { title, description, current } = Astro.props;
@@ -13,6 +13,7 @@ const { title, description, current } = Astro.props;
 const links = [
 	{ view: "dashboard", href: "/", label: "Dashboard" },
 	{ view: "settings", href: "/settings/", label: "Account settings" },
+	{ view: "orders", href: "/orders/", label: "Orders" },
 ];
 ---
 

@@ -7,8 +7,9 @@ export default defineConfig({
   plugins: [react()],
   server: {
     fs: {
-      // The shipped stylesheet lives outside this app, in the repo's css/ folder.
-      allow: ['.', '../../css'],
+      // The shipped stylesheet and web components live outside this app, in the repo's
+      // css/ and web-components/ folders.
+      allow: ['.', '../../css', '../../web-components'],
     },
   },
   build: {
@@ -18,6 +19,7 @@ export default defineConfig({
       input: {
         main: fileURLToPath(new URL('./index.html', import.meta.url)),
         settings: fileURLToPath(new URL('./settings.html', import.meta.url)),
+        orders: fileURLToPath(new URL('./orders.html', import.meta.url)),
       },
     },
   },

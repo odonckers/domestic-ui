@@ -21,6 +21,7 @@ export const apps = {
     views: [
       { path: "/demos/vanilla/index.html", view: "dashboard", title: "Dashboard · Homebase" },
       { path: "/demos/vanilla/settings.html", view: "settings", title: "Account settings · Homebase" },
+      { path: "/demos/vanilla/orders.html", view: "orders", title: "Orders · Homebase" },
     ],
   },
   react: {
@@ -30,6 +31,7 @@ export const apps = {
     views: [
       { path: "/", view: "dashboard", title: "Dashboard · Homebase" },
       { path: "/settings.html", view: "settings", title: "Account settings · Homebase" },
+      { path: "/orders.html", view: "orders", title: "Orders · Homebase" },
     ],
   },
   angular: {
@@ -39,6 +41,7 @@ export const apps = {
     views: [
       { path: "/", view: "dashboard", title: "Dashboard · Homebase" },
       { path: "/settings", view: "settings", title: "Account settings · Homebase" },
+      { path: "/orders", view: "orders", title: "Orders · Homebase" },
     ],
   },
   astro: {
@@ -48,6 +51,7 @@ export const apps = {
     views: [
       { path: "/", view: "dashboard", title: "Dashboard · Homebase" },
       { path: "/settings/", view: "settings", title: "Account settings · Homebase" },
+      { path: "/orders/", view: "orders", title: "Orders · Homebase" },
     ],
   },
 };

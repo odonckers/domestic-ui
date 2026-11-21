@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Orders · Homebase</title>
+    <meta name="description" content="Warehouse order admin: a domestic-ui demo in plain HTML.">
+    <link rel="stylesheet" href="../../css/domestic.css">
+    <style>
+      /* Page-only layout, written with semantic tokens like any consumer would. */
+      :has(> #main) > :is(header, main, footer) {
+        max-inline-size: var(--dui-size-page);
+        margin-inline: auto;
+        padding-inline: var(--dui-space-l);
+      }
+
+      :has(> #main) > header {
+        padding-block: var(--dui-space-m);
+        border-block-end: var(--dui-border-width) solid var(--dui-color-border);
+      }
+
+      #main {
+        padding-block: var(--dui-space-2xl);
+      }
+
+      :has(> #main) > footer {
+        padding-block: var(--dui-space-l);
+        border-block-start: var(--dui-border-width) solid var(--dui-color-border);
+      }
+    </style>
+  </head>
+  <body>
+    <a class="visually-hidden" href="#main">Skip to main content</a>
+
+    <header class="cluster" style="--cluster-justify: space-between">
+      <p><strong>Homebase</strong></p>
+      <nav aria-label="Primary">
+        <ul class="cluster">
+          <li><a href="index.html">Dashboard</a></li>
+          <li><a href="settings.html">Account settings</a></li>
+          <li><a href="orders.html" aria-current="page">Orders</a></li>
+        </ul>
+      </nav>
+    </header>
+
+    <main id="main">
+      <h1>Orders</h1>
+      <p data-text="lead">Every order in the warehouse queue: who it is for, what to pick, and where it stands.</p>
+
+      <div class="grid" style="--grid-min: 12rem" id="orders-summary"></div>
+
+      <section aria-labelledby="orders-title">
+        <h2 id="orders-title">All orders</h2>
+
+        <form class="stack" method="get" id="orders-filter">
+          <div class="grid" style="--grid-min: 14rem">
+            <dui-combobox>
+              <label for="orders-customer">Customer</label>
+              <input type="text" id="orders-customer" name="customer" list="orders-customer-options">
+              <datalist id="orders-customer-options">
+                <option value="Bluebell Florists"></option>
+                <option value="Copperfield Books"></option>
+                <option value="Harbor Lane Café"></option>
+                <option value="Lakeside Hotel"></option>
+                <option value="Maple Street Bakery"></option>
+                <option value="Northwind Hardware"></option>
+                <option value="Oakridge Primary School"></option>
+                <option value="Pine &amp; Co. Interiors"></option>
+                <option value="Riverside Dental"></option>
+                <option value="Summit Climbing Gym"></option>
+              </datalist>
+            </dui-combobox>
+            <dui-combobox>
+              <label for="orders-sku">SKU</label>
+              <input type="text" id="orders-sku" name="sku" list="orders-sku-options">
+              <datalist id="orders-sku-options">
+                <option value="HB-BASKET-L" label="Woven laundry basket, large"></option>
+                <option value="HB-BOARD-OAK" label="Oak chopping board"></option>
+                <option value="HB-BOWL-06" label="Stoneware bowl, 6 in"></option>
+                <option value="HB-CANDLE-08" label="Soy candle, 8 oz"></option>
+                <option value="HB-JAR-1L" label="Glass storage jar, 1 litre"></option>
+                <option value="HB-MUG-12" label="Stoneware mug, 12 oz"></option>
+                <option value="HB-MUG-16" label="Stoneware mug, 16 oz"></option>
+                <option value="HB-POT-TC" label="Terracotta plant pot"></option>
+                <option value="HB-THROW-WL" label="Wool throw blanket"></option>
+                <option value="HB-TOWEL-04" label="Linen tea towels, set of 4"></option>
+              </datalist>
+            </dui-combobox>
+            <div data-field>
+              <label for="orders-status">Status</label>
+              <select id="orders-status" name="status">
+                <option value="all" selected>All statuses</option>
+                <option value="Open">Open</option>
+                <option value="Packed">Packed</option>
+                <option value="Shipped">Shipped</option>
+                <option value="Delivered">Delivered</option>
+                <option value="Cancelled">Cancelled</option>
+              </select>
+            </div>
+          </div>
+          <div class="cluster">
+            <button type="submit" data-button="small">Apply filter</button>
+            <button type="reset" data-button="quiet small">Reset</button>
+          </div>
+          <p role="status" id="orders-count">Showing 8 orders</p>
+        </form>
+
+        <label><input type="checkbox" role="switch" id="orders-compact"> Compact table</label>
+
+        <section data-scroll="inline" data-density="comfortable" aria-labelledby="orders-caption" tabindex="0" id="orders-table">
+          <table>
+            <caption id="orders-caption">Recent orders</caption>
+            <thead>
+              <tr>
+                <th scope="col">Order</th>
+                <th scope="col">Customer</th>
+                <th scope="col">SKU</th>
+                <th scope="col">Qty</th>
+                <th scope="col">Status</th>
+                <th scope="col">Total</th>
+              </tr>
+            </thead>
+            <tbody id="orders-rows"></tbody>
+          </table>
+        </section>
+      </section>
+
+      <section aria-labelledby="detail-title">
+        <h2 id="detail-title">Order details</h2>
+        <nav aria-label="Order list">
+          <ul class="stack" style="--stack-gap: var(--dui-space-2xs)" id="order-list"></ul>
+        </nav>
+        <article aria-labelledby="order-detail-title">
+          <h3 id="order-detail-title">Order HB-1048</h3>
+          <dl id="order-detail"></dl>
+        </article>
+      </section>
+    </main>
+
+    <footer>
+      <p data-text="small muted">Homebase is a domestic-ui demo app. MIT licensed.</p>
+    </footer>
+    <script type="module" src="../../web-components/dui-combobox.js"></script>
+    <script type="module">
+      // Demo only: render the sample orders, filter them, and toggle table density.
+      import { orders } from "./orders.js";
+
+      const el = (tag, attrs = {}, ...children) => {
+        const node = document.createElement(tag);
+        for (const [name, value] of Object.entries(attrs)) node.setAttribute(name, value);
+        node.append(...children);
+        return node;
+      };
+      const badge = (order) => el("span", { "data-badge": order.tone }, order.status);
+
+      document.getElementById("orders-summary").append(
+        ...["Open", "Packed", "Shipped", "Delivered"].map((status) =>
+          el("article", {}, el("h2", {}, status), el("p", {}, String(orders.filter((o) => o.status === status).length))),
+        ),
+      );
+
+      const rows = document.getElementById("orders-rows");
+      const count = document.getElementById("orders-count");
+      const showOrders = ({ customer = "", sku = "", status = "all" } = {}) => {
+        const shown = orders.filter(
+          (o) =>
+            o.customer.toLowerCase().includes(customer.trim().toLowerCase()) &&
+            o.sku.toLowerCase().includes(sku.trim().toLowerCase()) &&
+            (status === "all" || o.status === status),
+        );
+        rows.replaceChildren(
+          ...shown.map((o) =>
+            el("tr", {}, el("th", { scope: "row" }, o.id), el("td", {}, o.customer), el("td", {}, o.sku), el("td", {}, String(o.qty)), el("td", {}, badge(o)), el("td", {}, o.total)),
+          ),
+        );
+        count.textContent = `Showing ${shown.length} ${shown.length === 1 ? "order" : "orders"}`;
+      };
+      showOrders();
+
+      const filter = document.getElementById("orders-filter");
+      filter.addEventListener("submit", (event) => {
+        event.preventDefault();
+        showOrders(Object.fromEntries(new FormData(filter)));
+      });
+      filter.addEventListener("reset", () => showOrders());
+
+      const table = document.getElementById("orders-table");
+      document.getElementById("orders-compact").addEventListener("change", (event) => {
+        table.dataset.density = event.target.checked ? "compact" : "comfortable";
+      });
+
+      const list = document.getElementById("order-list");
+      const title = document.getElementById("order-detail-title");
+      const detail = document.getElementById("order-detail");
+      const select = (order) => {
+        for (const button of list.querySelectorAll("button")) {
+          if (button.value === order.id) button.setAttribute("aria-current", "true");
+          else button.removeAttribute("aria-current");
+        }
+        title.textContent = `Order ${order.id}`;
+        detail.replaceChildren(
+          el("dt", {}, "Customer"), el("dd", {}, order.customer),
+          el("dt", {}, "SKU"), el("dd", {}, `${order.sku}, ${order.skuLabel}`),
+          el("dt", {}, "Quantity"), el("dd", {}, String(order.qty)),
+          el("dt", {}, "Status"), el("dd", {}, badge(order)),
+          el("dt", {}, "Total"), el("dd", {}, order.total),
+          el("dt", {}, "Placed"), el("dd", {}, el("time", { datetime: order.date }, order.placed)),
+        );
+      };
+      list.append(
+        ...orders.map((order) => {
+          const button = el("button", { type: "button", "data-button": "quiet", value: order.id }, `${order.id} · ${order.customer}`);
+          button.addEventListener("click", () => select(order));
+          return el("li", {}, button);
+        }),
+      );
+      select(orders[0]);
+    </script>
+  </body>
+</html>

@@ -1,0 +1,112 @@
+<h1>Orders</h1>
+<p data-text="lead">Every order in the warehouse queue: who it is for, what to pick, and where it stands.</p>
+
+<div class="grid" style="--grid-min: 12rem" id="orders-summary">
+  @for (item of summary; track item.title) {
+    <article>
+      <h2>{{ item.title }}</h2>
+      <p>{{ item.count }}</p>
+    </article>
+  }
+</div>
+
+<section aria-labelledby="orders-title">
+  <h2 id="orders-title">All orders</h2>
+
+  <form class="stack" method="get" id="orders-filter" (submit)="applyFilter($event)" (reset)="resetFilter()">
+    <div class="grid" style="--grid-min: 14rem">
+      <dui-combobox>
+        <label for="orders-customer">Customer</label>
+        <input type="text" id="orders-customer" name="customer" list="orders-customer-options">
+        <datalist id="orders-customer-options">
+          @for (customer of customers; track customer) {
+            <option [value]="customer"></option>
+          }
+        </datalist>
+      </dui-combobox>
+      <dui-combobox>
+        <label for="orders-sku">SKU</label>
+        <input type="text" id="orders-sku" name="sku" list="orders-sku-options">
+        <datalist id="orders-sku-options">
+          @for (sku of skus; track sku.value) {
+            <option [value]="sku.value" [label]="sku.label"></option>
+          }
+        </datalist>
+      </dui-combobox>
+      <div data-field>
+        <label for="orders-status">Status</label>
+        <select id="orders-status" name="status">
+          <option value="all" selected>All statuses</option>
+          @for (status of statuses; track status) {
+            <option [value]="status">{{ status }}</option>
+          }
+        </select>
+      </div>
+    </div>
+    <div class="cluster">
+      <button type="submit" data-button="small">Apply filter</button>
+      <button type="reset" data-button="quiet small">Reset</button>
+    </div>
+    <p role="status" id="orders-count">Showing {{ shown().length }} {{ shown().length === 1 ? 'order' : 'orders' }}</p>
+  </form>
+
+  <label><input type="checkbox" role="switch" id="orders-compact" [checked]="compact()" (change)="toggleCompact($event)"> Compact table</label>
+
+  <section data-scroll="inline" [attr.data-density]="compact() ? 'compact' : 'comfortable'" aria-labelledby="orders-caption" tabindex="0" id="orders-table">
+    <table>
+      <caption id="orders-caption">Recent orders</caption>
+      <thead>
+        <tr>
+          <th scope="col">Order</th>
+          <th scope="col">Customer</th>
+          <th scope="col">SKU</th>
+          <th scope="col">Qty</th>
+          <th scope="col">Status</th>
+          <th scope="col">Total</th>
+        </tr>
+      </thead>
+      <tbody id="orders-rows">
+        @for (order of shown(); track order.id) {
+          <tr>
+            <th scope="row">{{ order.id }}</th>
+            <td>{{ order.customer }}</td>
+            <td>{{ order.sku }}</td>
+            <td>{{ order.qty }}</td>
+            <td><span [attr.data-badge]="order.tone">{{ order.status }}</span></td>
+            <td>{{ order.total }}</td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </section>
+</section>
+
+<section aria-labelledby="detail-title">
+  <h2 id="detail-title">Order details</h2>
+  <nav aria-label="Order list">
+    <ul class="stack" style="--stack-gap: var(--dui-space-2xs)" id="order-list">
+      @for (order of orders; track order.id) {
+        <li>
+          <button type="button" data-button="quiet" [value]="order.id" [attr.aria-current]="order.id === selected().id ? 'true' : null" (click)="selectedId.set(order.id)">{{ order.id }} · {{ order.customer }}</button>
+        </li>
+      }
+    </ul>
+  </nav>
+  <article aria-labelledby="order-detail-title">
+    <h3 id="order-detail-title">Order {{ selected().id }}</h3>
+    <dl id="order-detail">
+      <dt>Customer</dt>
+      <dd>{{ selected().customer }}</dd>
+      <dt>SKU</dt>
+      <dd>{{ selected().sku }}, {{ selected().skuLabel }}</dd>
+      <dt>Quantity</dt>
+      <dd>{{ selected().qty }}</dd>
+      <dt>Status</dt>
+      <dd><span [attr.data-badge]="selected().tone">{{ selected().status }}</span></dd>
+      <dt>Total</dt>
+      <dd>{{ selected().total }}</dd>
+      <dt>Placed</dt>
+      <dd><time [attr.datetime]="selected().date">{{ selected().placed }}</time></dd>
+    </dl>
+  </article>
+</section>

@@ -16,6 +16,6 @@ describe('App', () => {
     await fixture.whenStable();
     const compiled = fixture.nativeElement as HTMLElement;
     expect(compiled.querySelector('a[href="#main"]')?.textContent).toContain('Skip to main content');
-    expect(compiled.querySelectorAll('nav[aria-label="Primary"] a')).toHaveLength(2);
+    expect(compiled.querySelectorAll('nav[aria-label="Primary"] a')).toHaveLength(3);
   });
 });

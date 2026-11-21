@@ -1,12 +1,14 @@
 # domestic-ui demo: Angular
 
-The dashboard and account settings views in Angular 22: standalone components, two routes
-(`''` and `'settings'`) with Angular Router, a `title` per route, and `routerLinkActive` with
+The dashboard, account settings and orders views in Angular 22: standalone components, three
+routes (`''`, `'settings'` and `'orders'`) with Angular Router, a `title` per route, and `routerLinkActive` with
 `ariaCurrentWhenActive="page"` for the current link.
 
 The shipped stylesheet is listed in `angular.json` `styles` as `../../css/domestic.css`, so the
 build bundles it with its cascade layers. `src/styles.css` holds only the page container
 and `app-root { display: block; }` (custom elements are inline by default).
+The orders page (`src/app/orders/`) imports `web-components/dui-combobox.js` from the repository
+and declares `CUSTOM_ELEMENTS_SCHEMA` so the template can use `<dui-combobox>` as is.
 
 Two choices worth knowing:
 
@@ -42,7 +44,7 @@ npm run build   # static output in dist/angular/browser/
 ```
 
 Serve `dist/angular/browser/` with a fallback to `index.html` for unknown paths, so `/settings`
-loads the app.
+and `/orders` load the app.
 
 ## Accessibility check
 

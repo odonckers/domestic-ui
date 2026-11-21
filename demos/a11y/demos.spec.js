@@ -143,12 +143,18 @@ for (const name of selectedApps()) {
         expect(after.hash).toEqual("#main");
       });
 
-      test("links to the other view in the primary nav", async ({ page }) => {
-        const other = apps[name].views.find((view) => view.path !== path);
+      test("links to the next view in the primary nav", async ({ page }) => {
+        // The next view in apps.js (wrapping), so every link gets followed from some view.
+        const { views } = apps[name];
+        const other = views[(views.findIndex((v) => v.path === path) + 1) % views.length];
+        // The nav label is the title before " · Homebase".
+        const label = other.title.split(" · ")[0];
+        const nav = page.locator('nav[aria-label="Primary"]');
         await page.goto(path, { waitUntil: "networkidle" });
-        await page.locator('nav[aria-label="Primary"] a:not([aria-current])').click();
-        await expect(page).toHaveTitle(other?.title ?? "");
-        await expect(page.locator('nav[aria-label="Primary"] a[aria-current="page"]')).toHaveCount(1);
+        await nav.getByRole("link", { name: label, exact: true }).click();
+        await expect(page).toHaveTitle(other.title);
+        await expect(nav.locator('a[aria-current="page"]')).toHaveCount(1);
+        await expect(nav.locator('a[aria-current="page"]')).toHaveText(label);
         await expect(page.locator("h1")).toHaveCount(1);
       });
 
@@ -192,6 +198,38 @@ for (const name of selectedApps()) {
           });
           expect(appearance).toEqual("none");
           await expect(page.getByRole("switch")).toHaveCount(3);
+        }
+
+        if (view === "orders") {
+          // Two typeahead fields, upgraded by <dui-combobox> when its script loaded.
+          await expect(page.locator("dui-combobox")).toHaveCount(2);
+          await expect(page.locator('dui-combobox input[role="combobox"]')).toHaveCount(2);
+          await expect(page.locator('[data-scroll="inline"] table')).toHaveCount(1);
+
+          // The density toggle is a drawn switch, and it sets data-density on the table's scroll region.
+          const toggle = page.getByRole("switch", { name: "Compact table" });
+          await expect(toggle).toBeVisible();
+          const appearance = await toggle.evaluate((el) => {
+            const style = getComputedStyle(el);
+            return style.appearance || style.getPropertyValue("-webkit-appearance");
+          });
+          expect(appearance).toEqual("none");
+          const region = page.locator('[data-scroll="inline"]:has(table)');
+          await expect(region).not.toHaveAttribute("data-density", "compact");
+          await toggle.check();
+          await expect(region).toHaveAttribute("data-density", "compact");
+          await toggle.uncheck();
+          await expect(region).not.toHaveAttribute("data-density", "compact");
+
+          // A badge in the table gets its tinted surface.
+          const badge = page.locator("table [data-badge]").first();
+          await expect(badge).toBeVisible();
+          const colors = await badge.evaluate((el) => ({
+            badge: getComputedStyle(el).backgroundColor,
+            page: getComputedStyle(document.documentElement).backgroundColor,
+          }));
+          expect(colors.badge).not.toEqual("rgba(0, 0, 0, 0)");
+          expect(colors.badge).not.toEqual(colors.page);
         }
       });
     });

@@ -2,11 +2,12 @@ import type { CSSProperties, ReactNode } from 'react'
 import '../../../css/domestic.css'
 import './page.css'
 
-type View = 'dashboard' | 'settings'
+type View = 'dashboard' | 'settings' | 'orders'
 
 const links: { view: View; href: string; label: string }[] = [
   { view: 'dashboard', href: '/', label: 'Dashboard' },
   { view: 'settings', href: '/settings.html', label: 'Account settings' },
+  { view: 'orders', href: '/orders.html', label: 'Orders' },
 ]
 
 export default function Layout({ current, children }: { current: View; children: ReactNode }) {
