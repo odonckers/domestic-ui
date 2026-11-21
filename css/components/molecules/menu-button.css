@@ -1,0 +1,114 @@
+/*
+ * Molecule: menu button (actions menu)
+ *
+ * A button that opens a list of actions, following the APG Menu Button
+ * pattern: aria-haspopup="menu" and aria-expanded on the button,
+ * role="menu" on the list and role="menuitem" on each action. The list is
+ * a popover opened with popovertarget, so the browser handles the top layer,
+ * light dismiss and Esc; the <dui-menu> web component
+ * (web-components/dui-menu.js) adds the roles and the APG keyboard
+ * behavior that HTML has no element for. With JavaScript off, the button
+ * still opens the popover and every action is a plain button in the tab order.
+ * APG: https://www.w3.org/WAI/ARIA/apg/patterns/menu-button/
+ * APG Menu: https://www.w3.org/WAI/ARIA/apg/patterns/menubar/
+ * https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Reference/Roles/menu_role
+ *
+ * When not to use it: if the items are links to other pages, use a
+ * disclosure (a <details> or a popover of links, see nav.css and
+ * popover.css) instead. role="menu" tells screen readers to expect an
+ * application menu, with arrow-key navigation and no Tab stops, which is
+ * wrong for site navigation (see the note in
+ * https://www.w3.org/WAI/ARIA/apg/patterns/disclosure/examples/disclosure-navigation/).
+ *
+ * The panel look and anchoring come from popover.css (data-popover); this
+ * file styles the items. Items are at least --dui-size-target tall
+ * (WCAG 2.5.8) and show the base focus outline (WCAG 2.4.7).
+ *
+ * API
+ *   <dui-menu>                         wraps the button and its popover
+ *   popovertarget="menu-id"            on the <button> (native)
+ *   popover data-popover               on the menu element
+ *   <button> or <a href> children      the actions; <hr> separates groups
+ *   Added by the component: aria-haspopup, aria-expanded, role="menu",
+ *   role="menuitem", tabindex="-1".
+ *
+ * Example
+ *   <dui-menu>
+ *     <button type="button" popovertarget="row-actions">Actions</button>
+ *     <div id="row-actions" popover data-popover>
+ *       <button type="button">Edit</button>
+ *       <button type="button">Duplicate</button>
+ *       <hr>
+ *       <button type="button">Delete</button>
+ *     </div>
+ *   </dui-menu>
+ *   <script type="module" src="web-components/dui-menu.js"></script>
+ *
+ * Keyboard
+ *   Enter / Space / Down Arrow: on the button, opens the menu and focuses the first item
+ *   Up Arrow: on the button, opens the menu and focuses the last item
+ *   Down Arrow / Up Arrow: next or previous item, wrapping
+ *   Home / End: first or last item
+ *   A letter: next item whose label starts with it
+ *   Enter / Space: activates the item and closes the menu
+ *   Esc: closes the menu and returns focus to the button
+ *   Tab: closes the menu and moves on
+ *
+ * Specs
+ *   https://www.w3.org/WAI/ARIA/apg/patterns/menu-button/
+ *   https://www.w3.org/WAI/ARIA/apg/patterns/menubar/
+ *   https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Reference/Roles/menu_role
+ *   https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Reference/Attributes/aria-haspopup
+ *   https://html.spec.whatwg.org/multipage/popover.html
+ */
+
+:is([role="menu"], dui-menu > [popover]) {
+  min-inline-size: var(--dui-size-menu-min);
+  padding: var(--dui-space-2xs);
+}
+
+:is([role="menu"], dui-menu > [popover]) > :is(button, a, li > button, li > a) {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: var(--dui-space-xs);
+  inline-size: 100%;
+  min-block-size: var(--dui-size-target);
+  margin: 0;
+  padding: var(--dui-space-xs) var(--dui-space-s);
+  background-color: transparent;
+  color: var(--dui-color-text);
+  border: 0;
+  border-radius: var(--dui-radius-control);
+  font-weight: var(--dui-font-weight-body);
+  text-align: start;
+  text-decoration-line: none;
+}
+
+:is([role="menu"], dui-menu > [popover]) :is(button, a):is(:hover, :focus) {
+  background-color: var(--dui-color-surface-sunken);
+}
+
+:is([role="menu"], dui-menu > [popover]) :is(ul, ol) {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+:is([role="menu"], dui-menu > [popover]) li {
+  margin: 0;
+}
+
+:is([role="menu"], dui-menu > [popover]) > hr {
+  margin-block: var(--dui-space-2xs);
+}
+
+dui-menu {
+  display: inline-block;
+}
+
+@media (forced-colors: active) {
+  :is([role="menu"], dui-menu > [popover]) :is(button, a):focus {
+    outline: var(--dui-focus-width) solid highlight;
+  }
+}

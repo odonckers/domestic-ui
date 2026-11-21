@@ -35,9 +35,10 @@ Humans and coding agents should be able to write a whole view from this document
 - **Paths are API.** `css/domestic.css` and every file under `css/` keep their paths.
   Renaming or moving a file is a breaking change.
 - **No hidden JS behavior.** CSS never depends on script. Any script an example uses is
-  inline, short, and commented.
+  inline, short, and commented, or one of the documented [web components](web-components/README.md).
 - **Our choice:** class and attribute APIs over custom elements, because they work with
-  any templating language and need no JavaScript.
+  any templating language and need no JavaScript. Custom elements are used only for behavior
+  HTML cannot do, and enhance markup that already works without them.
 
 ## 3. Accessibility baseline: WCAG 2.2 AA
 
@@ -82,7 +83,7 @@ unlayered CSS beats all of them**, so overriding never needs `!important` or spe
 | `tokens` | Primitive and semantic custom properties |
 | `base` | Native elements: typography, lists, tables, forms, buttons, dialog, details, focus |
 | `layout` | `.stack`, `.cluster`, `.grid`, `[data-scroll]` |
-| `components` | Atoms in `css/components/atoms/` (M2); molecules and organisms later. See the [atoms index](css/components/atoms/README.md) |
+| `components` | Atoms in `css/components/atoms/` (M2) and molecules in `css/components/molecules/` (M3a); organisms later. See the [atoms index](css/components/atoms/README.md) and the [molecules index](css/components/molecules/README.md) |
 | `utilities` | Single-purpose helpers such as `.visually-hidden`; last so they always apply |
 
 **Our choice:** this order, because each layer only refines the ones before it, and a
@@ -161,6 +162,7 @@ may change. Fluid `--dui-step-*` values are `clamp()` expressions; see `primitiv
 | `--dui-color-danger` | Errors, :user-invalid borders | light: `color-red-700` (#b42318)<br>dark: `color-red-300` (#ff8a80) |
 | `--dui-color-success` | Success messages | light: `color-green-700` (#17773a)<br>dark: `color-green-300` (#5fd38d) |
 | `--dui-color-warning` | Warning badges and messages | light: `color-amber-700` (#8a5a00)<br>dark: `color-amber-300` (#f2c14e) |
+| `--dui-color-info` | Informational alerts and toasts (separate from the accent, so a brand color never reads as a status) | light: `color-blue-700` (#2b43b0)<br>dark: `color-blue-300` (#a8b7ff) |
 | `--dui-color-mark` | mark and ::selection background | light: `color-yellow-100` (#fff1a8)<br>dark: `color-yellow-300` (#e3c84f) |
 | `--dui-color-mark-text` | Text on mark | light: `color-gray-900` (#12151b)<br>dark: `color-gray-900` (#12151b) |
 | `--dui-color-backdrop` | dialog::backdrop | light: `color-black-a40` (rgb(0 0 0 / 40%))<br>dark: `color-black-a60` (rgb(0 0 0 / 60%)) |
@@ -197,11 +199,14 @@ may change. Fluid `--dui-step-*` values are `clamp()` expressions; see `primitiv
 | `--dui-size-target-large` | Large buttons | `size-3-25` (3.25rem) |
 | `--dui-size-check` | Checkbox and radio size | `size-1-25` (1.25rem) |
 | `--dui-size-column-min` | Default .grid min column width | `size-16` (16rem) |
+| `--dui-size-menu-min` | Min width of menus and nav dropdowns | `size-12` (12rem) |
+| `--dui-size-drawer` | Drawer width (all of the viewport when narrower) | `size-24` (24rem) |
 | `--dui-radius-control` | Controls, buttons, inline code | `radius-2` (0.375rem) |
 | `--dui-radius-surface` | Panels, pre, dialog, details, media | `radius-3` (0.625rem) |
 | `--dui-radius-pill` | Fully rounded ends | `radius-round` (999rem) |
 | `--dui-border-width` | Hairline width | `border-1` (1px) |
-| `--dui-border-width-emphasis` | blockquote rule | `border-4` (0.25rem) |
+| `--dui-border-width-emphasis` | blockquote rule, alert start rule, invalid field | `border-4` (0.25rem) |
+| `--dui-border-width-indicator` | Selected tab, current nav item (3:1 against the surface) | `border-3` (3px) |
 | `--dui-underline-offset` | Link underline offset | `underline-offset-015em` (0.15em) |
 | `--dui-underline-thickness` | Link underline | `underline-1` (0.0625em) |
 | `--dui-underline-thickness-hover` | Link underline on hover | `underline-2` (0.125em) |
@@ -221,12 +226,16 @@ may change. Fluid `--dui-step-*` values are `clamp()` expressions; see `primitiv
 | `--dui-color-accent-surface` | Accent badge background | `color-mix()` of `--dui-tint-amount` `--dui-color-accent` into `--dui-color-surface` |
 | `--dui-color-success-surface` | Success badge background | same, with `--dui-color-success` |
 | `--dui-color-warning-surface` | Warning badge background | same, with `--dui-color-warning` |
-| `--dui-color-danger-surface` | Danger badge background | same, with `--dui-color-danger` |
+| `--dui-color-danger-surface` | Danger badge and alert background | same, with `--dui-color-danger` |
+| `--dui-color-info-surface` | Info alert background | same, with `--dui-color-info` |
+| `--dui-color-surface-inverse` | Tooltip background | `--dui-color-text` |
+| `--dui-color-text-inverse` | Tooltip text | `--dui-color-surface` |
 
 Derived (re-resolved on each theme scope): `--dui-color-link`, `--dui-color-focus`,
 `--dui-color-accent-hover`, `--dui-font-heading`, `--dui-shadow-raised`,
 `--dui-color-accent-surface`, `--dui-color-success-surface`, `--dui-color-warning-surface`,
-`--dui-color-danger-surface`.
+`--dui-color-danger-surface`, `--dui-color-info-surface`, `--dui-color-surface-inverse`,
+`--dui-color-text-inverse`.
 
 ## 6. Opinions we hold
 
@@ -253,6 +262,18 @@ Each of these is a choice between valid options, not a standard.
   list (`data-button="primary small"`), matched with `~=`, instead of modifier classes. The
   other atom choices (button variants, focus rings, switch, field errors, badge tints) are
   listed with their reasons in the [atoms index](css/components/atoms/README.md#our-choices).
+- **Our choice:** molecules follow the same rule (`data-card="link"`, `data-dialog="drawer end"`),
+  or use the native element or ARIA role when that already says everything (`<search>`,
+  `role="toolbar"`). The molecule choices are listed with their reasons in the
+  [molecules index](css/components/molecules/README.md#our-choices); the main ones:
+  - **Our choice:** tabs select on focus (automatic activation), as the
+    [APG recommends](https://www.w3.org/WAI/ARIA/apg/patterns/tabs/#deciding-when-to-make-selection-automatically-follow-focus)
+    when panels show at once; `activation="manual"` is available.
+  - **Our choice:** the drawer is a `<dialog>` variant, so the browser handles modality, focus and
+    <kbd>Esc</kbd> ([explainer](explainers/drawer.md)).
+  - **Our choice:** a clickable card links its heading and stretches that link over the card, so the
+    accessible name stays the heading ([explainer](explainers/card.md)).
+  - **Our choice:** toasts never dismiss themselves and never take focus ([explainer](explainers/toast.md)).
 - **Our choice:** layout primitives come from [Every Layout](https://every-layout.dev/)'s
   Stack, Cluster and Grid. Their custom properties are registered with
   [`@property`](https://developer.mozilla.org/en-US/docs/Web/CSS/@property) as non-inheriting,
@@ -296,7 +317,32 @@ semantics in some browsers ([Adrian Roselli](https://adrianroselli.com/2018/02/t
 A `<pre>` already scrolls (`overflow-x: auto`); authors MUST give every `<pre>` (and any
 `data-scroll="inline"` container) `tabindex="0"` so it can be scrolled from the keyboard.
 
-## 8. Tooling
+## 8. Web components
+
+HTML still has no element for tabs, menus, roving focus in a toolbar, hover tooltips or a toast
+stack. For those, and only those, [`web-components/`](web-components/README.md) has one small
+custom element each: `<dui-tabs>`, `<dui-menu>`, `<dui-toolbar>`, `<dui-tooltip>` and `<dui-toaster>`.
+
+- **Light DOM.** No shadow root: the molecule CSS and your CSS style the markup directly.
+- **Progressive enhancement.** The markup works before the script runs and with JavaScript off:
+  tabs are a `<nav>` of in-page links and headed sections, toolbar buttons are Tab stops, a menu's
+  popover still opens, a tooltip is still the button's description.
+- **ARIA with behavior, or not at all.** An element adds roles such as `menu` or `tab` only together
+  with the keyboard support those roles promise ([APG](https://www.w3.org/WAI/ARIA/apg/)).
+- **Why each exists** is written at the top of its file, and the
+  [web components index](web-components/README.md) lists them. Each one is a plain ES module with no
+  dependencies and no build: `<script type="module" src="web-components/dui-tabs.js"></script>`.
+
+## 9. Explainers
+
+A pattern with no native element and no APG pattern is written up like a platform proposal in
+[`explainers/`](explainers/README.md): problem, use cases, goals and non-goals, markup and API,
+keyboard, accessibility mappings, alternatives, prior art and open questions, with normative
+text in [RFC 2119](https://www.rfc-editor.org/rfc/rfc2119) keywords. The card, pagination, drawer
+and toast molecules have one. Names follow HTML and ARIA conventions, so a pattern could map onto
+a future native element or attribute.
+
+## 10. Tooling
 
 `npm test` runs, in order, and fails if any step fails:
 
@@ -305,7 +351,7 @@ A `<pre>` already scrolls (`overflow-x: auto`); authors MUST give every `<pre>` 
 | `lint:html` | [html-validate](https://html-validate.org/) | `examples/**/*.html` against `html-validate:recommended` |
 | `lint:css` | [Stylelint](https://stylelint.io/) | `css/**/*.css` against `stylelint-config-standard` |
 | `lint:tokens` | `scripts/check-tokens.mjs` | Semantic-only tokens and no literal colors or sizes outside `css/tokens/` |
-| `test:a11y` | [Playwright](https://playwright.dev/) + [axe-core](https://github.com/dequelabs/axe-core) | Every `examples/**/*.html` (atoms included) in light and dark, in Chromium, Firefox and WebKit, with tags `wcag2a`, `wcag2aa`, `wcag21a`, `wcag21aa`, `wcag22aa`, including open dialogs and details; no horizontal page overflow and no axe violations at 320×640 and 375×812; no external requests; token contrast pairs (atoms included) in the default and forest themes; rendered focus-ring contrast on every button variant; atom states through accessibility APIs; scoped theming of atoms |
+| `test:a11y` | [Playwright](https://playwright.dev/) + [axe-core](https://github.com/dequelabs/axe-core) | Every `examples/**/*.html` (atoms and molecules included) in light and dark, in Chromium, Firefox and WebKit, with tags `wcag2a`, `wcag2aa`, `wcag21a`, `wcag21aa`, `wcag22aa`, including open dialogs and drawers, open popovers and menus, shown tooltips and toasts, every tab selected and every details expanded; no horizontal page overflow and no axe violations at 320×640 and 375×812; no external requests; token contrast pairs (atoms and molecules included) in the default and forest themes; rendered focus-ring and indicator contrast; atom and molecule states through accessibility APIs; molecule keyboard behavior against the APG; no-JavaScript fallbacks; fallbacks for engine-specific features; scoped theming of atoms and molecules |
 
 Preview locally with `npm run serve` (a zero-dependency static server) and open
 <http://127.0.0.1:4173/examples/base.html>. To run tests from two checkouts at once, give each its own port, e.g. `PORT=4273 npm test`.
@@ -318,7 +364,16 @@ Rule relaxations, each with its reason:
   starting with `--dui-` or the documented layout properties (`--stack-*`, `--cluster-*`, `--grid-*`).
 - **Engine-specific test**: the field test also reads the `invalid` state from the accessibility
   tree through the Chrome DevTools Protocol, which only Chromium offers; Firefox and WebKit run the
-  rest of that test (attribute and accessible description). No browser is skipped.
+  rest of that test (attribute and accessible description). The molecule tests do the same for the
+  expanded state of `<summary>` and of a `popovertarget` button, which browsers expose natively but
+  Playwright's role engine does not compute; the other engines check the `open` attribute and the
+  popover's visibility instead. No browser is skipped.
+- **Feature fallbacks**: where every engine in the test run supports a feature (anchor positioning,
+  `@starting-style`, `closedby`, `popover="hint"`), the molecule tests also exercise the fallback path
+  by removing the feature in the page: deleting the `@supports` or `@starting-style` rules from the
+  CSSOM, removing the `closedby` attribute, or setting `popover="manual"` (what `hint` falls back to).
+- **Settling transitions**: axe and geometry checks wait for running CSS transitions to finish, so they
+  measure final colors and positions rather than a frame mid-fade.
 - **External-request check**: same-origin `blob:` URLs are allowed, because WebKit routes these
   in-memory objects through the request handler. Any other origin still fails the test.
 - **html-validate**: none. `html-validate:recommended` is used as-is. Inline `style` attributes

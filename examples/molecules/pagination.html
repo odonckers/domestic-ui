@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Pagination · domestic-ui</title>
+    <meta name="description" content="Pagination as a named nav with a list of links, aria-current on the current page, and accessible previous and next links.">
+    <link rel="stylesheet" href="../../css/domestic.css">
+    <style>
+      /* Page-only layout, written with semantic tokens like any consumer would. */
+      body > :is(header, main, footer) {
+        max-inline-size: 72rem;
+        margin-inline: auto;
+        padding-inline: var(--dui-space-l);
+      }
+
+      body > header {
+        padding-block: var(--dui-space-m);
+        border-block-end: var(--dui-border-width) solid var(--dui-color-border);
+      }
+
+      body > main {
+        padding-block: var(--dui-space-2xl);
+      }
+
+      body > footer {
+        padding-block: var(--dui-space-l);
+        border-block-start: var(--dui-border-width) solid var(--dui-color-border);
+        color: var(--dui-color-text-muted);
+      }
+
+      /* Wrap long lines of example markup instead of scrolling them. */
+      pre {
+        white-space: pre-wrap;
+        overflow-wrap: anywhere;
+      }
+
+      .demo {
+        padding: var(--dui-space-l);
+        border: var(--dui-border-width) solid var(--dui-color-border);
+        border-radius: var(--dui-radius-surface);
+      }
+    </style>
+  </head>
+  <body>
+    <a class="visually-hidden" href="#main">Skip to main content</a>
+
+    <header class="cluster" style="--cluster-justify: space-between">
+      <p><strong>domestic-ui</strong></p>
+      <nav aria-label="Examples">
+        <ul class="cluster">
+          <li><a href="../base.html">Base elements</a></li>
+          <li><a href="../theming.html">Theming</a></li>
+          <li><a href="../atoms/index.html">Atoms</a></li>
+          <li><a href="index.html">Molecules</a></li>
+        </ul>
+      </nav>
+    </header>
+
+    <main id="main">
+      <h1>Pagination</h1>
+      <!--
+        Keyboard
+          Tab: moves to the next page link / Shift+Tab: previous
+          Enter: follows the focused link
+      -->
+      <p data-text="lead">Links between the pages of a long list: a named <code>&lt;nav&gt;</code>, a list, and <code>aria-current="page"</code>.</p>
+      <p>API: <code>data-pagination</code> on <code>&lt;nav aria-label="Pagination"&gt;</code>, <code>aria-current="page"</code> on the current page, <code>&lt;a&gt;</code> without <code>href</code> for a disabled end. Source: <a href="../../css/components/molecules/pagination.css"><code>css/components/molecules/pagination.css</code></a>.</p>
+      <p>
+        There is no native element or APG pattern for pagination, so this is a written contract:
+        <a href="../../explainers/pagination.md">the pagination explainer</a>. Number links read "Page 5" thanks to visually hidden text,
+        and the current page is a filled box with bold text.
+      </p>
+
+      <section aria-labelledby="middle-title">
+        <h2 id="middle-title">Middle of a long list</h2>
+        <div class="demo">
+          <nav aria-label="Pagination" data-pagination>
+            <ul>
+              <li><a href="?page=4" rel="prev">Previous<span class="visually-hidden"> page</span></a></li>
+              <li><a href="?page=1"><span class="visually-hidden">Page </span>1</a></li>
+              <li aria-hidden="true">…</li>
+              <li><a href="?page=4"><span class="visually-hidden">Page </span>4</a></li>
+              <li><a href="?page=5" aria-current="page"><span class="visually-hidden">Page </span>5</a></li>
+              <li><a href="?page=6"><span class="visually-hidden">Page </span>6</a></li>
+              <li aria-hidden="true">…</li>
+              <li><a href="?page=10"><span class="visually-hidden">Page </span>10</a></li>
+              <li><a href="?page=6" rel="next">Next<span class="visually-hidden"> page</span></a></li>
+            </ul>
+          </nav>
+        </div>
+        <pre tabindex="0"><code>&lt;nav aria-label="Pagination" data-pagination&gt;
+  &lt;ul&gt;
+    &lt;li&gt;&lt;a href="?page=4" rel="prev"&gt;Previous&lt;span class="visually-hidden"&gt; page&lt;/span&gt;&lt;/a&gt;&lt;/li&gt;
+    &lt;li&gt;&lt;a href="?page=1"&gt;&lt;span class="visually-hidden"&gt;Page &lt;/span&gt;1&lt;/a&gt;&lt;/li&gt;
+    &lt;li aria-hidden="true"&gt;…&lt;/li&gt;
+    &lt;li&gt;&lt;a href="?page=4"&gt;&lt;span class="visually-hidden"&gt;Page &lt;/span&gt;4&lt;/a&gt;&lt;/li&gt;
+    &lt;li&gt;&lt;a href="?page=5" aria-current="page"&gt;&lt;span class="visually-hidden"&gt;Page &lt;/span&gt;5&lt;/a&gt;&lt;/li&gt;
+    &lt;li&gt;&lt;a href="?page=6"&gt;&lt;span class="visually-hidden"&gt;Page &lt;/span&gt;6&lt;/a&gt;&lt;/li&gt;
+    &lt;li aria-hidden="true"&gt;…&lt;/li&gt;
+    &lt;li&gt;&lt;a href="?page=10"&gt;&lt;span class="visually-hidden"&gt;Page &lt;/span&gt;10&lt;/a&gt;&lt;/li&gt;
+    &lt;li&gt;&lt;a href="?page=6" rel="next"&gt;Next&lt;span class="visually-hidden"&gt; page&lt;/span&gt;&lt;/a&gt;&lt;/li&gt;
+  &lt;/ul&gt;
+&lt;/nav&gt;</code></pre>
+      </section>
+
+      <section aria-labelledby="first-title">
+        <h2 id="first-title">First page</h2>
+        <p>On the first page, Previous is a placeholder link with no <code>href</code>: not focusable, not announced as a link.</p>
+        <div class="demo">
+          <nav aria-label="Pagination, search results" data-pagination>
+            <ul>
+              <li><a>Previous<span class="visually-hidden"> page</span></a></li>
+              <li><a href="?page=1" aria-current="page"><span class="visually-hidden">Page </span>1</a></li>
+              <li><a href="?page=2"><span class="visually-hidden">Page </span>2</a></li>
+              <li><a href="?page=3"><span class="visually-hidden">Page </span>3</a></li>
+              <li><a href="?page=2" rel="next">Next<span class="visually-hidden"> page</span></a></li>
+            </ul>
+          </nav>
+        </div>
+        <pre tabindex="0"><code>&lt;nav aria-label="Pagination, search results" data-pagination&gt;
+  &lt;ul&gt;
+    &lt;li&gt;&lt;a&gt;Previous&lt;span class="visually-hidden"&gt; page&lt;/span&gt;&lt;/a&gt;&lt;/li&gt;
+    &lt;li&gt;&lt;a href="?page=1" aria-current="page"&gt;&lt;span class="visually-hidden"&gt;Page &lt;/span&gt;1&lt;/a&gt;&lt;/li&gt;
+    &lt;li&gt;&lt;a href="?page=2"&gt;&lt;span class="visually-hidden"&gt;Page &lt;/span&gt;2&lt;/a&gt;&lt;/li&gt;
+    &lt;li&gt;&lt;a href="?page=3"&gt;&lt;span class="visually-hidden"&gt;Page &lt;/span&gt;3&lt;/a&gt;&lt;/li&gt;
+    &lt;li&gt;&lt;a href="?page=2" rel="next"&gt;Next&lt;span class="visually-hidden"&gt; page&lt;/span&gt;&lt;/a&gt;&lt;/li&gt;
+  &lt;/ul&gt;
+&lt;/nav&gt;</code></pre>
+      </section>
+
+      <section aria-labelledby="specs-title">
+        <h2 id="specs-title">Specs and guidance</h2>
+        <ul>
+          <li><a href="https://html.spec.whatwg.org/multipage/sections.html#the-nav-element">WHATWG: the nav element</a></li>
+          <li><a href="https://html.spec.whatwg.org/multipage/links.html#link-type-next">WHATWG: rel=next and rel=prev</a></li>
+          <li><a href="https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Reference/Attributes/aria-current">MDN: aria-current</a></li>
+          <li><a href="https://www.w3.org/WAI/WCAG22/Understanding/link-purpose-in-context.html">WCAG 2.2: 2.4.4 Link Purpose (In Context)</a></li>
+        </ul>
+      </section>
+    </main>
+
+    <footer>
+      <p><small>domestic-ui packages existing standards and well-known patterns. MIT licensed.</small></p>
+    </footer>
+  </body>
+</html>

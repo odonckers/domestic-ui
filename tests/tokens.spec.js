@@ -56,6 +56,41 @@ const PAIRS = [
 
   // Atoms: field (css/components/atoms/field.css). Hint is muted text and error is
   // danger on the surface; the invalid border is danger on the surface (all above).
+
+  // Molecules: alerts (css/components/molecules/alerts.css). Body text and links on each
+  // tinted surface; the prefix word in the tone color (danger, success, warning above);
+  // the inline-start rule and the icon disc are the tone against the surface and the tint;
+  // the icon glyph is the surface on the tone (same ratio as tone on surface).
+  ["--dui-color-info", "--dui-color-surface", 4.5],
+  ["--dui-color-info", "--dui-color-info-surface", 4.5],
+  ["--dui-color-text", "--dui-color-info-surface", 4.5],
+  ["--dui-color-text", "--dui-color-success-surface", 4.5],
+  ["--dui-color-text", "--dui-color-warning-surface", 4.5],
+  ["--dui-color-text", "--dui-color-danger-surface", 4.5],
+  ["--dui-color-link", "--dui-color-info-surface", 4.5],
+  ["--dui-color-link", "--dui-color-success-surface", 4.5],
+  ["--dui-color-link", "--dui-color-warning-surface", 4.5],
+  ["--dui-color-link", "--dui-color-danger-surface", 4.5],
+  ["--dui-color-focus", "--dui-color-info-surface", 3], // focus ring on links inside alerts
+  ["--dui-color-focus", "--dui-color-warning-surface", 3],
+  ["--dui-color-focus", "--dui-color-danger-surface", 3],
+  ["--dui-color-focus", "--dui-color-success-surface", 3],
+
+  // Molecules: tabs and nav (tabs.css, nav.css). Unselected tabs are muted text on the
+  // surface and on the hover fill (above). The selected tab bar and the current nav bar are
+  // accent on the surface (above) and, for nav, on the accent tint; current nav text is text on it.
+  ["--dui-color-accent", "--dui-color-accent-surface", 3],
+  ["--dui-color-text", "--dui-color-accent-surface", 4.5],
+  ["--dui-color-focus", "--dui-color-accent-surface", 3], // also pressed toolbar toggles
+
+  // Molecules: pagination (pagination.css). Links on the surface and on hover; the current
+  // page is accent-contrast on accent (above), and its fill reaches 3:1 against the surface.
+  ["--dui-color-link", "--dui-color-surface-sunken", 4.5],
+
+  // Molecules: card (card.css). Text, muted text and links on the raised surface, and button
+  // borders on it, are above. Tooltip (popover.css): inverse text on the inverse surface.
+  ["--dui-color-text-inverse", "--dui-color-surface-inverse", 4.5],
+  ["--dui-color-surface-inverse", "--dui-color-surface", 3], // tooltip edge against the page
 ];
 
 /**

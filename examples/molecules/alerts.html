@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Alert and toast · domestic-ui</title>
+    <meta name="description" content="Inline alerts with tones that do not rely on color, polite and assertive live regions, and a toast region with dismissible messages.">
+    <link rel="stylesheet" href="../../css/domestic.css">
+    <style>
+      /* Page-only layout, written with semantic tokens like any consumer would. */
+      body > :is(header, main, footer) {
+        max-inline-size: 72rem;
+        margin-inline: auto;
+        padding-inline: var(--dui-space-l);
+      }
+
+      body > header {
+        padding-block: var(--dui-space-m);
+        border-block-end: var(--dui-border-width) solid var(--dui-color-border);
+      }
+
+      body > main {
+        padding-block: var(--dui-space-2xl);
+      }
+
+      body > footer {
+        padding-block: var(--dui-space-l);
+        border-block-start: var(--dui-border-width) solid var(--dui-color-border);
+        color: var(--dui-color-text-muted);
+      }
+
+      /* Wrap long lines of example markup instead of scrolling them. */
+      pre {
+        white-space: pre-wrap;
+        overflow-wrap: anywhere;
+      }
+
+      .demo {
+        padding: var(--dui-space-l);
+        border: var(--dui-border-width) solid var(--dui-color-border);
+        border-radius: var(--dui-radius-surface);
+      }
+    </style>
+  </head>
+  <body>
+    <a class="visually-hidden" href="#main">Skip to main content</a>
+
+    <header class="cluster" style="--cluster-justify: space-between">
+      <p><strong>domestic-ui</strong></p>
+      <nav aria-label="Examples">
+        <ul class="cluster">
+          <li><a href="../base.html">Base elements</a></li>
+          <li><a href="../theming.html">Theming</a></li>
+          <li><a href="../atoms/index.html">Atoms</a></li>
+          <li><a href="index.html">Molecules</a></li>
+        </ul>
+      </nav>
+    </header>
+
+    <main id="main">
+      <h1>Alert and toast</h1>
+      <!--
+        Keyboard
+          Tab: reaches each toast's Dismiss button; toasts never take focus
+          Enter / Space: on Dismiss, removes the toast and focuses the next one
+      -->
+      <p data-text="lead">Inline alerts with a tone, live regions that announce changes, and toasts that wait for you.</p>
+      <p>API: <code>data-alert="info | success | warning | danger"</code>; <code>role="status"</code> or <code>role="alert"</code> for live regions; <code>&lt;dui-toaster data-alert="toasts" role="status"&gt;</code> for toasts. Source: <a href="../../css/components/molecules/alerts.css"><code>css/components/molecules/alerts.css</code></a>.</p>
+      <p>
+        Each tone starts with a word ("Warning:") in the markup and has an icon, so color is not the only cue.
+        A live region must be in the page <em>before</em> its text changes, or screen readers may stay silent
+        (<a href="https://www.w3.org/WAI/WCAG22/Understanding/status-messages.html">WCAG 4.1.3 Status Messages</a>).
+      </p>
+
+      <section aria-labelledby="inline-title">
+        <h2 id="inline-title">Inline alerts</h2>
+        <p>Present on load, so they need no live region role.</p>
+        <div class="demo">
+          <div class="stack">
+            <div data-alert="info">
+              <p><strong>Info:</strong> Maintenance is planned for Sunday at 02:00.</p>
+            </div>
+            <div data-alert="success">
+              <p><strong>Success:</strong> Your changes were published.</p>
+            </div>
+            <div data-alert="warning">
+              <p><strong>Warning:</strong> Your trial ends in 3 days.</p>
+              <p><a href="#inline-title">Choose a plan</a> to keep your projects.</p>
+            </div>
+            <div data-alert="danger">
+              <p><strong>Error:</strong> The file could not be uploaded. Try a file under 10 MB.</p>
+            </div>
+          </div>
+        </div>
+        <pre tabindex="0"><code>&lt;div class="stack"&gt;
+  &lt;div data-alert="info"&gt;
+    &lt;p&gt;&lt;strong&gt;Info:&lt;/strong&gt; Maintenance is planned for Sunday at 02:00.&lt;/p&gt;
+  &lt;/div&gt;
+  &lt;div data-alert="success"&gt;
+    &lt;p&gt;&lt;strong&gt;Success:&lt;/strong&gt; Your changes were published.&lt;/p&gt;
+  &lt;/div&gt;
+  &lt;div data-alert="warning"&gt;
+    &lt;p&gt;&lt;strong&gt;Warning:&lt;/strong&gt; Your trial ends in 3 days.&lt;/p&gt;
+    &lt;p&gt;&lt;a href="#inline-title"&gt;Choose a plan&lt;/a&gt; to keep your projects.&lt;/p&gt;
+  &lt;/div&gt;
+  &lt;div data-alert="danger"&gt;
+    &lt;p&gt;&lt;strong&gt;Error:&lt;/strong&gt; The file could not be uploaded. Try a file under 10 MB.&lt;/p&gt;
+  &lt;/div&gt;
+&lt;/div&gt;</code></pre>
+      </section>
+
+      <section aria-labelledby="live-title">
+        <h2 id="live-title">Live regions</h2>
+        <p>
+          Both regions are empty on load. The buttons put text into them: the status is read when the screen reader is idle,
+          the alert interrupts.
+        </p>
+        <div class="demo">
+          <div class="cluster">
+            <button type="button" data-announce="live-status">Save settings</button>
+            <button type="button" data-announce="live-alert">Send without a subject</button>
+          </div>
+          <div id="live-status" role="status"></div>
+          <div id="live-alert" role="alert"></div>
+        </div>
+        <pre tabindex="0"><code>&lt;div class="cluster"&gt;
+  &lt;button type="button" data-announce="live-status"&gt;Save settings&lt;/button&gt;
+  &lt;button type="button" data-announce="live-alert"&gt;Send without a subject&lt;/button&gt;
+&lt;/div&gt;
+&lt;div id="live-status" role="status"&gt;&lt;/div&gt;
+&lt;div id="live-alert" role="alert"&gt;&lt;/div&gt;</code></pre>
+      </section>
+
+      <section aria-labelledby="toasts-title">
+        <h2 id="toasts-title">Toasts</h2>
+        <p>
+          The toast region sits at the bottom inline-end corner and is in the page from the start.
+          Messages stay until you dismiss them; <kbd>Tab</kbd> reaches each Dismiss button.
+        </p>
+        <div class="demo">
+          <div class="cluster">
+            <button type="button" data-toast="success">Copy link</button>
+            <button type="button" data-toast="info">Start export</button>
+            <button type="button" data-toast="danger">Sync now</button>
+          </div>
+        </div>
+        <pre tabindex="0"><code>&lt;div class="cluster"&gt;
+  &lt;button type="button" data-toast="success"&gt;Copy link&lt;/button&gt;
+  &lt;button type="button" data-toast="info"&gt;Start export&lt;/button&gt;
+  &lt;button type="button" data-toast="danger"&gt;Sync now&lt;/button&gt;
+&lt;/div&gt;</code></pre>
+      </section>
+
+      <section aria-labelledby="specs-title">
+        <h2 id="specs-title">Specs and guidance</h2>
+        <ul>
+          <li><a href="https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Reference/Roles/status_role">MDN: status role</a></li>
+          <li><a href="https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Reference/Roles/alert_role">MDN: alert role</a></li>
+          <li><a href="https://www.w3.org/WAI/WCAG22/Understanding/status-messages.html">WCAG 2.2: 4.1.3 Status Messages</a></li>
+          <li><a href="https://www.w3.org/WAI/WCAG22/Understanding/timing-adjustable.html">WCAG 2.2: 2.2.1 Timing Adjustable</a></li>
+          <li><a href="https://www.w3.org/WAI/WCAG22/Techniques/aria/ARIA22">WCAG technique ARIA22: role=status</a></li>
+          <li><a href="https://www.w3.org/WAI/WCAG22/Techniques/aria/ARIA19">WCAG technique ARIA19: role=alert</a></li>
+        </ul>
+      </section>
+    </main>
+
+    <dui-toaster data-alert="toasts" role="status"></dui-toaster>
+
+    <footer>
+      <p><small>domestic-ui packages existing standards and well-known patterns. MIT licensed.</small></p>
+    </footer>
+    <script type="module" src="../../web-components/dui-toaster.js"></script>
+    <script>
+      // Demo only. Live regions: change the text of a region that is already in the page.
+      const messages = {
+        "live-status": "Settings saved.",
+        "live-alert": "Error: add a subject before sending.",
+      };
+      document.addEventListener("click", (event) => {
+        const announce = event.target.closest("[data-announce]");
+        if (announce) document.getElementById(announce.dataset.announce).textContent = messages[announce.dataset.announce];
+
+        // Toasts: the <dui-toaster> element builds the message and its Dismiss button.
+        const toast = event.target.closest("[data-toast]");
+        if (!toast) return;
+        const text = { success: "Link copied.", info: "Export started. We will email you the file.", danger: "Sync failed. Check your connection." };
+        document.querySelector("dui-toaster").show(text[toast.dataset.toast], { tone: toast.dataset.toast });
+      });
+    </script>
+  </body>
+</html>

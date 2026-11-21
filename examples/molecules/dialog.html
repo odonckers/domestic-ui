@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Dialog and drawer · domestic-ui</title>
+    <meta name="description" content="Native dialog with a header and footer layout, modal and non-modal, and a drawer variant from either edge.">
+    <link rel="stylesheet" href="../../css/domestic.css">
+    <style>
+      /* Page-only layout, written with semantic tokens like any consumer would. */
+      body > :is(header, main, footer) {
+        max-inline-size: 72rem;
+        margin-inline: auto;
+        padding-inline: var(--dui-space-l);
+      }
+
+      body > header {
+        padding-block: var(--dui-space-m);
+        border-block-end: var(--dui-border-width) solid var(--dui-color-border);
+      }
+
+      body > main {
+        padding-block: var(--dui-space-2xl);
+      }
+
+      body > footer {
+        padding-block: var(--dui-space-l);
+        border-block-start: var(--dui-border-width) solid var(--dui-color-border);
+        color: var(--dui-color-text-muted);
+      }
+
+      /* Wrap long lines of example markup instead of scrolling them. */
+      pre {
+        white-space: pre-wrap;
+        overflow-wrap: anywhere;
+      }
+
+      .demo {
+        padding: var(--dui-space-l);
+        border: var(--dui-border-width) solid var(--dui-color-border);
+        border-radius: var(--dui-radius-surface);
+      }
+    </style>
+  </head>
+  <body>
+    <a class="visually-hidden" href="#main">Skip to main content</a>
+
+    <header class="cluster" style="--cluster-justify: space-between">
+      <p><strong>domestic-ui</strong></p>
+      <nav aria-label="Examples">
+        <ul class="cluster">
+          <li><a href="../base.html">Base elements</a></li>
+          <li><a href="../theming.html">Theming</a></li>
+          <li><a href="../atoms/index.html">Atoms</a></li>
+          <li><a href="index.html">Molecules</a></li>
+        </ul>
+      </nav>
+    </header>
+
+    <main id="main">
+      <h1>Dialog and drawer</h1>
+      <!--
+        Keyboard
+          Enter / Space: on an opener, opens the dialog and moves focus into it
+          Tab: moves to the next focusable element inside the dialog / Shift+Tab: previous
+          Esc: closes the dialog and returns focus to the opener
+      -->
+      <p data-text="lead">The native <code>&lt;dialog&gt;</code>, opened with invoker commands, plus a drawer variant.</p>
+      <p>API: <code>data-dialog</code> and <code>data-dialog="drawer [start | end]"</code> on <code>&lt;dialog&gt;</code>. Source: <a href="../../css/components/molecules/dialog.css"><code>css/components/molecules/dialog.css</code></a>.</p>
+      <p>
+        <code>command="show-modal"</code> opens a modal dialog with no script: the browser makes the page inert, moves focus in,
+        closes on <kbd>Esc</kbd> and returns focus to the button (<a href="https://www.w3.org/WAI/ARIA/apg/patterns/dialog-modal/">APG Dialog (Modal)</a>).
+        <code>closedby="any"</code> also closes it on a click outside. The drawer is the same element at an edge of the viewport;
+        see <a href="../../explainers/drawer.md">the drawer explainer</a>.
+      </p>
+
+      <section aria-labelledby="modal-title">
+        <h2 id="modal-title">Modal dialog</h2>
+        <div class="demo">
+          <button type="button" commandfor="confirm-dialog" command="show-modal">Delete project…</button>
+          <dialog id="confirm-dialog" data-dialog aria-labelledby="confirm-dialog-title">
+            <header>
+              <h2 id="confirm-dialog-title">Delete project?</h2>
+            </header>
+            <p>This deletes the project and its 12 files for everyone. You cannot undo it.</p>
+            <form method="dialog">
+              <footer>
+                <button type="submit" value="cancel" data-button="secondary" autofocus>Cancel</button>
+                <button type="submit" value="delete">Delete project</button>
+              </footer>
+            </form>
+          </dialog>
+        </div>
+        <pre tabindex="0"><code>&lt;button type="button" commandfor="confirm-dialog" command="show-modal"&gt;Delete project…&lt;/button&gt;
+&lt;dialog id="confirm-dialog" data-dialog aria-labelledby="confirm-dialog-title"&gt;
+  &lt;header&gt;
+    &lt;h2 id="confirm-dialog-title"&gt;Delete project?&lt;/h2&gt;
+  &lt;/header&gt;
+  &lt;p&gt;This deletes the project and its 12 files for everyone. You cannot undo it.&lt;/p&gt;
+  &lt;form method="dialog"&gt;
+    &lt;footer&gt;
+      &lt;button type="submit" value="cancel" data-button="secondary" autofocus&gt;Cancel&lt;/button&gt;
+      &lt;button type="submit" value="delete"&gt;Delete project&lt;/button&gt;
+    &lt;/footer&gt;
+  &lt;/form&gt;
+&lt;/dialog&gt;</code></pre>
+      </section>
+
+      <section aria-labelledby="drawer-end-title">
+        <h2 id="drawer-end-title">Drawer (end)</h2>
+        <p>Slides in from the inline end. <code>closedby="any"</code> lets a click on the backdrop close it.</p>
+        <div class="demo">
+          <button type="button" commandfor="filters-drawer" command="show-modal">Filters</button>
+          <dialog id="filters-drawer" data-dialog="drawer end" closedby="any" aria-labelledby="filters-drawer-title">
+            <header>
+              <h2 id="filters-drawer-title">Filters</h2>
+              <button type="button" commandfor="filters-drawer" command="close" data-button="quiet small">Close</button>
+            </header>
+            <form method="dialog" class="stack">
+              <fieldset>
+                <legend>Status</legend>
+                <label><input type="checkbox" name="show-open" checked> Open</label>
+                <label><input type="checkbox" name="show-closed"> Closed</label>
+              </fieldset>
+              <div data-field>
+                <label for="filters-owner">Owner</label>
+                <input id="filters-owner" name="owner" type="text" autocomplete="off">
+              </div>
+              <footer>
+                <button type="submit" value="apply">Apply filters</button>
+              </footer>
+            </form>
+          </dialog>
+        </div>
+        <pre tabindex="0"><code>&lt;button type="button" commandfor="filters-drawer" command="show-modal"&gt;Filters&lt;/button&gt;
+&lt;dialog id="filters-drawer" data-dialog="drawer end" closedby="any" aria-labelledby="filters-drawer-title"&gt;
+  &lt;header&gt;
+    &lt;h2 id="filters-drawer-title"&gt;Filters&lt;/h2&gt;
+    &lt;button type="button" commandfor="filters-drawer" command="close" data-button="quiet small"&gt;Close&lt;/button&gt;
+  &lt;/header&gt;
+  &lt;form method="dialog" class="stack"&gt;
+    &lt;fieldset&gt;
+      &lt;legend&gt;Status&lt;/legend&gt;
+      &lt;label&gt;&lt;input type="checkbox" name="show-open" checked&gt; Open&lt;/label&gt;
+      &lt;label&gt;&lt;input type="checkbox" name="show-closed"&gt; Closed&lt;/label&gt;
+    &lt;/fieldset&gt;
+    &lt;div data-field&gt;
+      &lt;label for="filters-owner"&gt;Owner&lt;/label&gt;
+      &lt;input id="filters-owner" name="owner" type="text" autocomplete="off"&gt;
+    &lt;/div&gt;
+    &lt;footer&gt;
+      &lt;button type="submit" value="apply"&gt;Apply filters&lt;/button&gt;
+    &lt;/footer&gt;
+  &lt;/form&gt;
+&lt;/dialog&gt;</code></pre>
+      </section>
+
+      <section aria-labelledby="drawer-start-title">
+        <h2 id="drawer-start-title">Drawer (start)</h2>
+        <p>Slides in from the inline start, for example a navigation drawer on small screens.</p>
+        <div class="demo">
+          <button type="button" commandfor="menu-drawer" command="show-modal">Menu</button>
+          <dialog id="menu-drawer" data-dialog="drawer start" closedby="any" aria-labelledby="menu-drawer-title">
+            <header>
+              <h2 id="menu-drawer-title">Menu</h2>
+              <button type="button" commandfor="menu-drawer" command="close" data-button="quiet small">Close</button>
+            </header>
+            <nav aria-label="Drawer" data-nav>
+              <ul>
+                <li><a href="#menu-drawer-title" aria-current="page">Overview</a></li>
+                <li><a href="#drawer-start-title">Projects</a></li>
+                <li><a href="#drawer-start-title">Settings</a></li>
+              </ul>
+            </nav>
+          </dialog>
+        </div>
+        <pre tabindex="0"><code>&lt;button type="button" commandfor="menu-drawer" command="show-modal"&gt;Menu&lt;/button&gt;
+&lt;dialog id="menu-drawer" data-dialog="drawer start" closedby="any" aria-labelledby="menu-drawer-title"&gt;
+  &lt;header&gt;
+    &lt;h2 id="menu-drawer-title"&gt;Menu&lt;/h2&gt;
+    &lt;button type="button" commandfor="menu-drawer" command="close" data-button="quiet small"&gt;Close&lt;/button&gt;
+  &lt;/header&gt;
+  &lt;nav aria-label="Drawer" data-nav&gt;
+    &lt;ul&gt;
+      &lt;li&gt;&lt;a href="#menu-drawer-title" aria-current="page"&gt;Overview&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href="#drawer-start-title"&gt;Projects&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href="#drawer-start-title"&gt;Settings&lt;/a&gt;&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/nav&gt;
+&lt;/dialog&gt;</code></pre>
+      </section>
+
+      <section aria-labelledby="non-modal-title">
+        <h2 id="non-modal-title">Non-modal dialog</h2>
+        <p>Opened with <code>show()</code> (there is no invoker command for it): the page stays usable and focus is not trapped. The script is the two lines at the end of this page.</p>
+        <div class="demo">
+          <button type="button" data-show-dialog="note-dialog">Show a note</button>
+          <dialog id="note-dialog" data-dialog closedby="closerequest" aria-labelledby="note-dialog-title">
+            <header>
+              <h2 id="note-dialog-title">Autosave is on</h2>
+              <button type="button" commandfor="note-dialog" command="close" data-button="quiet small">Close</button>
+            </header>
+            <p>Changes are saved as you type.</p>
+          </dialog>
+        </div>
+        <pre tabindex="0"><code>&lt;button type="button" data-show-dialog="note-dialog"&gt;Show a note&lt;/button&gt;
+&lt;dialog id="note-dialog" data-dialog closedby="closerequest" aria-labelledby="note-dialog-title"&gt;
+  &lt;header&gt;
+    &lt;h2 id="note-dialog-title"&gt;Autosave is on&lt;/h2&gt;
+    &lt;button type="button" commandfor="note-dialog" command="close" data-button="quiet small"&gt;Close&lt;/button&gt;
+  &lt;/header&gt;
+  &lt;p&gt;Changes are saved as you type.&lt;/p&gt;
+&lt;/dialog&gt;</code></pre>
+      </section>
+
+      <section aria-labelledby="specs-title">
+        <h2 id="specs-title">Specs and guidance</h2>
+        <ul>
+          <li><a href="https://html.spec.whatwg.org/multipage/interactive-elements.html#the-dialog-element">WHATWG: the dialog element</a></li>
+          <li><a href="https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/dialog">MDN: dialog (including closedby)</a></li>
+          <li><a href="https://developer.mozilla.org/en-US/docs/Web/API/Invoker_Commands_API">MDN: Invoker Commands API</a></li>
+          <li><a href="https://www.w3.org/WAI/ARIA/apg/patterns/dialog-modal/">APG: Dialog (Modal) pattern</a></li>
+          <li><a href="https://developer.mozilla.org/en-US/docs/Web/CSS/@starting-style">MDN: @starting-style</a></li>
+          <li><a href="https://developer.mozilla.org/en-US/docs/Web/CSS/transition-behavior">MDN: transition-behavior</a></li>
+        </ul>
+      </section>
+    </main>
+
+    <footer>
+      <p><small>domestic-ui packages existing standards and well-known patterns. MIT licensed.</small></p>
+    </footer>
+    <script>
+      // Fallback for browsers without invoker commands (commandfor/command).
+      // https://developer.mozilla.org/en-US/docs/Web/API/Invoker_Commands_API
+      if (!("command" in HTMLButtonElement.prototype)) {
+        document.addEventListener("click", (event) => {
+          const button = event.target.closest("button[commandfor]");
+          const dialog = button && document.getElementById(button.getAttribute("commandfor"));
+          if (!(dialog instanceof HTMLDialogElement)) return;
+          const command = button.getAttribute("command");
+          if (command === "show-modal") dialog.showModal();
+          if (command === "close") dialog.close();
+        });
+      }
+
+      // Non-modal dialogs have no invoker command: open them with show().
+      document.querySelector("[data-show-dialog]").addEventListener("click", (event) => {
+        document.getElementById(event.currentTarget.dataset.showDialog).show();
+      });
+    </script>
+  </body>
+</html>

@@ -51,6 +51,46 @@ Semantic token names and file paths under `css/` are public API; primitive token
   container for wide content such as data tables, used on a `<section>` named by the table caption (a region landmark).
 - Tests: `tests/mobile.spec.js` checks every example at 320×640 and 375×812 in Chromium, Firefox
   and WebKit for horizontal page overflow and axe violations.
+- Molecules in `css/components/molecules/`, imported into the `components` layer after the atoms,
+  each documented in its file header (API, example, keyboard, specs) and indexed in
+  `css/components/molecules/README.md`:
+  - Disclosure and accordion (`disclosure.css`): native `<details>`/`<summary>`, exclusive groups with
+    `name`; `data-disclosure="accordion | plain"`.
+  - Dialog and drawer (`dialog.css`): header/body/footer layout and open transition for `<dialog>`;
+    `data-dialog="drawer [start | end]"`; invoker commands and `closedby`; `@starting-style` with a
+    no-transition fallback.
+  - Popover and tooltip (`popover.css`): `data-popover="[block-start | inline-start | inline-end]"`,
+    anchored with CSS anchor positioning inside `@supports` (bottom-center fallback); tooltips are
+    `role="tooltip"` on `popover="hint"`.
+  - Navigation list (`nav.css`): `data-nav="vertical | horizontal"`, `aria-current="page"`, `<details>` groups.
+  - Breadcrumb (`breadcrumb.css`): `data-breadcrumb`, separators with empty alternative text.
+  - Tabs (`tabs.css`): styles for `role="tablist" | "tab" | "tabpanel"`.
+  - Menu button (`menu-button.css`): items of a `<dui-menu>` popover.
+  - Toolbar (`toolbar.css`): `role="toolbar"`, `aria-orientation`, `aria-pressed` toggles.
+  - Pagination (`pagination.css`): `data-pagination`, `aria-current="page"`, placeholder links for disabled ends.
+  - Search field (`search.css`): the native `<search>` element around a search form.
+  - Card (`card.css`): `data-card` and `data-card="link"` (heading link stretched over the card).
+  - Alert and toast (`alerts.css`): `data-alert="info | success | warning | danger"` with a text prefix and
+    an icon; `data-alert="toasts"` region; live region guidance.
+- Web components in `web-components/`, light DOM, progressive enhancement, no dependencies:
+  `<dui-tabs>` (APG Tabs from in-page links and sections; `aria-current="true"` on the link selected on
+  load, swapped for `aria-selected` on upgrade; automatic or manual activation; RTL),
+  `<dui-menu>` (APG Menu Button keyboard on a popover), `<dui-toolbar>` (roving tabindex),
+  `<dui-tooltip>` (show on hover and focus, Esc to hide; stands in for `interestfor`) and
+  `<dui-toaster>` (`show()` and `dismiss()` for a toast region, no auto-dismiss).
+- Explainers in `explainers/` for the custom patterns: card, pagination, drawer and toast, plus an index.
+- Semantic tokens: `--dui-color-info`, `--dui-color-info-surface`, `--dui-color-surface-inverse`,
+  `--dui-color-text-inverse`, `--dui-border-width-indicator`, `--dui-size-menu-min`, `--dui-size-drawer`
+  (and primitives `--dui-border-3`, `--dui-size-12`, `--dui-size-24`).
+- `examples/molecules/`: an index and one page per molecule; the theming example now shows a breadcrumb,
+  an alert, tabs and a card in both themes; "Molecules" links in the example navigation.
+- Tests (`tests/molecules.spec.js` and additions to the existing specs): APG keyboard behavior for tabs,
+  menu button, toolbar, dialog and drawer, popover, tooltip, disclosure and nav groups; ARIA states through
+  accessibility APIs; no-JavaScript fallbacks; fallback paths for anchor positioning, `@starting-style`,
+  `closedby` and `popover="hint"`; rendered indicator and focus-ring contrast; contrast pairs for every new
+  token; scoped theming of molecules. The axe test now also checks open popovers and menus, every tab,
+  shown tooltips and toasts, and waits for transitions to finish.
+- `PRINCIPLES.md`: molecule choices, new semantic tokens, and "Web components" and "Explainers" sections.
 
 ### Fixed
 

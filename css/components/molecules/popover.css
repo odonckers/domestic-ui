@@ -1,0 +1,161 @@
+/*
+ * Molecule: popover and tooltip
+ *
+ * A floating panel built on the HTML popover attribute, anchored to the
+ * button that opens it with CSS anchor positioning, plus a tooltip style.
+ * A button with popovertarget="id" opens and closes the popover with no
+ * script; the browser puts it in the top layer, exposes the button's
+ * expanded state, and (for popover="auto") closes it on Esc or a click
+ * outside ("light dismiss") and returns focus to the button.
+ * https://html.spec.whatwg.org/multipage/popover.html
+ * https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Global_attributes/popover
+ * https://developer.mozilla.org/en-US/docs/Web/API/Popover_API
+ *
+ * Positioning: a popover opened by popovertarget (or by showPopover() with
+ * a source) has its invoker as an implicit anchor, so position-area places
+ * it next to the button and position-try-fallbacks flips it when it would
+ * overflow. Inside @supports only; where anchor positioning is missing the
+ * popover sits centered at the bottom of the viewport, readable and
+ * clear of the content it belongs to.
+ * https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_anchor_positioning
+ * https://developer.mozilla.org/en-US/docs/Web/CSS/position-area
+ * https://developer.mozilla.org/en-US/docs/Web/CSS/position-try-fallbacks
+ * https://drafts.csswg.org/css-anchor-position-1/
+ *
+ * Accessibility: a popover is not a dialog and does not trap focus. Content
+ * that needs a decision belongs in a modal <dialog>. Keep the popover right
+ * after its button in the DOM so Tab moves into it next (the browser also
+ * does this for popovertarget). If it holds a menu of actions, use the menu
+ * button molecule (menu-button.css), not role="menu" on a plain popover.
+ *
+ * Tooltip: role="tooltip" on a popover="hint" element, referenced from the
+ * trigger with aria-describedby. The APG Tooltip pattern is still marked as
+ * work in progress (https://www.w3.org/WAI/ARIA/apg/patterns/tooltip/), so
+ * these rules come from it and from WCAG 1.4.13 Content on Hover or Focus
+ * (https://www.w3.org/WAI/WCAG22/Understanding/content-on-hover-or-focus.html):
+ * - a tooltip supplements the trigger's own accessible name; it is never the
+ *   only label, because touch and some assistive technology users never see it;
+ * - it appears on keyboard focus as well as on hover;
+ * - Esc hides it without moving focus (dismissible), the pointer can move onto
+ *   it without it closing (hoverable), and it stays until focus or the pointer
+ *   leaves (persistent);
+ * - it holds no interactive content (use a popover for that).
+ * HTML cannot show a popover on hover or focus yet: the interestfor attribute
+ * (https://open-ui.org/components/interest-invokers.explainer/) is the
+ * coming standard, shipped only in Chromium today. Until it is interoperable,
+ * the <dui-tooltip> web component (web-components/dui-tooltip.js) does the
+ * showing and hiding. popover="hint" does not close other open popovers;
+ * where "hint" is unsupported the attribute falls back to "manual" and the
+ * component still handles Esc.
+ *
+ * API
+ *   data-popover                    on a [popover] element: panel look, anchored
+ *                                   below the invoker, aligned to its start edge
+ *   data-popover="block-start | inline-start | inline-end"
+ *                                   place it above or beside the invoker instead
+ *   role="tooltip"                  on a [popover] element: tooltip look,
+ *                                   placed above the trigger
+ *   popover="auto | manual | hint"  native: auto light-dismisses, manual does not
+ *
+ * Example
+ *   <button type="button" popovertarget="share">Share</button>
+ *   <div id="share" popover data-popover>
+ *     <p>Anyone with the link can view.</p>
+ *   </div>
+ *
+ *   <dui-tooltip>
+ *     <button type="button" aria-describedby="save-tip">Save</button>
+ *     <span id="save-tip" popover="hint" role="tooltip">Shortcut: Ctrl+S</span>
+ *   </dui-tooltip>
+ *
+ * Keyboard
+ *   Enter / Space: on the button, opens or closes the popover
+ *   Tab: moves into the open popover, then on to the rest of the page
+ *   Esc: closes an auto popover and returns focus to its button; hides a tooltip
+ *
+ * Specs
+ *   https://html.spec.whatwg.org/multipage/popover.html
+ *   https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Global_attributes/popover
+ *   https://developer.mozilla.org/en-US/docs/Web/API/Popover_API
+ *   https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_anchor_positioning
+ *   https://drafts.csswg.org/css-anchor-position-1/
+ *   https://www.w3.org/WAI/ARIA/apg/patterns/tooltip/
+ *   https://www.w3.org/WAI/WCAG22/Understanding/content-on-hover-or-focus.html
+ *   https://open-ui.org/components/interest-invokers.explainer/
+ */
+
+[popover]:is([data-popover], [role="tooltip"]) {
+  /* Fallback without anchor positioning: centered at the bottom of the viewport. */
+  inset: auto 0 var(--dui-space-l);
+  margin-inline: auto;
+  max-inline-size: min(var(--dui-measure), 100% - var(--dui-space-l) * 2);
+  color: var(--dui-color-text);
+}
+
+[popover][data-popover] {
+  padding: var(--dui-space-s) var(--dui-space-m);
+  background-color: var(--dui-color-surface);
+  border: var(--dui-border-width) solid var(--dui-color-border);
+  border-radius: var(--dui-radius-surface);
+  box-shadow: var(--dui-shadow-raised);
+  opacity: 0;
+  transition: opacity var(--dui-duration-fast) var(--dui-easing-standard);
+  transition:
+    opacity var(--dui-duration-fast) var(--dui-easing-standard),
+    display var(--dui-duration-fast) allow-discrete,
+    overlay var(--dui-duration-fast) allow-discrete;
+}
+
+[popover][data-popover]:popover-open {
+  opacity: 1;
+}
+
+@starting-style {
+  [popover][data-popover]:popover-open {
+    opacity: 0;
+  }
+}
+
+/* Tooltip: small, inverse colors, never interactive content. */
+[popover][role="tooltip"] {
+  padding: var(--dui-space-2xs) var(--dui-space-xs);
+  max-inline-size: calc(var(--dui-measure) / 2);
+  background-color: var(--dui-color-surface-inverse);
+  color: var(--dui-color-text-inverse);
+  border: var(--dui-border-width) solid transparent;
+  border-radius: var(--dui-radius-control);
+  font-size: var(--dui-step--1);
+  line-height: var(--dui-line-height-heading);
+}
+
+/* Anchored next to the invoker where the browser supports anchor positioning. */
+@supports (position-area: block-end) {
+  [popover]:is([data-popover], [role="tooltip"]) {
+    inset: auto;
+    margin: var(--dui-space-2xs);
+    position-area: block-end span-inline-end;
+    position-try-fallbacks: flip-block, flip-inline, flip-block flip-inline;
+  }
+
+  [popover][data-popover~="block-start"] {
+    position-area: block-start span-inline-end;
+  }
+
+  [popover][data-popover~="inline-start"] {
+    position-area: inline-start span-block-end;
+  }
+
+  [popover][data-popover~="inline-end"] {
+    position-area: inline-end span-block-end;
+  }
+
+  [popover][role="tooltip"] {
+    position-area: block-start;
+  }
+}
+
+@media (forced-colors: active) {
+  [popover]:is([data-popover], [role="tooltip"]) {
+    border-color: canvastext;
+  }
+}

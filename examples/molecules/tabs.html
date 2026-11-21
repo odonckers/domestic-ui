@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Tabs · domestic-ui</title>
+    <meta name="description" content="APG tabs upgraded from in-page links and sections by a light-DOM web component, with automatic and manual activation and right-to-left support.">
+    <link rel="stylesheet" href="../../css/domestic.css">
+    <style>
+      /* Page-only layout, written with semantic tokens like any consumer would. */
+      body > :is(header, main, footer) {
+        max-inline-size: 72rem;
+        margin-inline: auto;
+        padding-inline: var(--dui-space-l);
+      }
+
+      body > header {
+        padding-block: var(--dui-space-m);
+        border-block-end: var(--dui-border-width) solid var(--dui-color-border);
+      }
+
+      body > main {
+        padding-block: var(--dui-space-2xl);
+      }
+
+      body > footer {
+        padding-block: var(--dui-space-l);
+        border-block-start: var(--dui-border-width) solid var(--dui-color-border);
+        color: var(--dui-color-text-muted);
+      }
+
+      /* Wrap long lines of example markup instead of scrolling them. */
+      pre {
+        white-space: pre-wrap;
+        overflow-wrap: anywhere;
+      }
+
+      .demo {
+        padding: var(--dui-space-l);
+        border: var(--dui-border-width) solid var(--dui-color-border);
+        border-radius: var(--dui-radius-surface);
+      }
+    </style>
+  </head>
+  <body>
+    <a class="visually-hidden" href="#main">Skip to main content</a>
+
+    <header class="cluster" style="--cluster-justify: space-between">
+      <p><strong>domestic-ui</strong></p>
+      <nav aria-label="Examples">
+        <ul class="cluster">
+          <li><a href="../base.html">Base elements</a></li>
+          <li><a href="../theming.html">Theming</a></li>
+          <li><a href="../atoms/index.html">Atoms</a></li>
+          <li><a href="index.html">Molecules</a></li>
+        </ul>
+      </nav>
+    </header>
+
+    <main id="main">
+      <h1>Tabs</h1>
+      <!--
+        Keyboard
+          Tab: moves into the tab list (to the selected tab), then to the panel
+          Right Arrow / Left Arrow: next or previous tab, wrapping (swapped in right-to-left)
+          Home / End: first or last tab
+          Enter / Space: selects the focused tab (manual activation)
+      -->
+      <p data-text="lead">APG tabs from readable markup: a <code>&lt;nav&gt;</code> of in-page links and the sections they point at.</p>
+      <p>API: <code>&lt;dui-tabs&gt;</code> around a <code>&lt;nav aria-label&gt;</code> of <code>&lt;a href="#id"&gt;</code> links and <code>&lt;section id&gt;</code> panels; <code>activation="manual"</code> optional; <code>aria-current="true"</code> on a link selects it on load. Source: <a href="../../css/components/molecules/tabs.css"><code>css/components/molecules/tabs.css</code></a>.</p>
+      <p>
+        <code>&lt;dui-tabs&gt;</code> (<a href="../../web-components/dui-tabs.js"><code>web-components/dui-tabs.js</code></a>) adds the
+        <a href="https://www.w3.org/WAI/ARIA/apg/patterns/tabs/">APG Tabs</a> roles, states and keys. With JavaScript off, every section shows
+        with its heading and the links jump to them. Selection follows focus (automatic activation) unless you set <code>activation="manual"</code>.
+      </p>
+
+      <section aria-labelledby="automatic-title">
+        <h2 id="automatic-title">Automatic activation</h2>
+        <div class="demo">
+          <dui-tabs>
+            <nav aria-label="Account settings">
+              <ul>
+                <li><a href="#tab-profile">Profile</a></li>
+                <li><a href="#tab-security">Security</a></li>
+                <li><a href="#tab-notifications">Notifications</a></li>
+              </ul>
+            </nav>
+            <section id="tab-profile">
+              <h3>Profile</h3>
+              <p>Your name and photo appear on comments and shared projects.</p>
+            </section>
+            <section id="tab-security">
+              <h3>Security</h3>
+              <div data-field>
+                <label for="tab-security-code">Recovery code</label>
+                <input id="tab-security-code" name="recovery" type="text" autocomplete="off">
+              </div>
+            </section>
+            <section id="tab-notifications">
+              <h3>Notifications</h3>
+              <p>Email alerts are on. You get a weekly digest on Mondays.</p>
+            </section>
+          </dui-tabs>
+        </div>
+        <pre tabindex="0"><code>&lt;dui-tabs&gt;
+  &lt;nav aria-label="Account settings"&gt;
+    &lt;ul&gt;
+      &lt;li&gt;&lt;a href="#tab-profile"&gt;Profile&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href="#tab-security"&gt;Security&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href="#tab-notifications"&gt;Notifications&lt;/a&gt;&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/nav&gt;
+  &lt;section id="tab-profile"&gt;
+    &lt;h3&gt;Profile&lt;/h3&gt;
+    &lt;p&gt;Your name and photo appear on comments and shared projects.&lt;/p&gt;
+  &lt;/section&gt;
+  &lt;section id="tab-security"&gt;
+    &lt;h3&gt;Security&lt;/h3&gt;
+    &lt;div data-field&gt;
+      &lt;label for="tab-security-code"&gt;Recovery code&lt;/label&gt;
+      &lt;input id="tab-security-code" name="recovery" type="text" autocomplete="off"&gt;
+    &lt;/div&gt;
+  &lt;/section&gt;
+  &lt;section id="tab-notifications"&gt;
+    &lt;h3&gt;Notifications&lt;/h3&gt;
+    &lt;p&gt;Email alerts are on. You get a weekly digest on Mondays.&lt;/p&gt;
+  &lt;/section&gt;
+&lt;/dui-tabs&gt;</code></pre>
+      </section>
+
+      <section aria-labelledby="manual-title">
+        <h2 id="manual-title">Manual activation</h2>
+        <p>Arrow keys move focus; <kbd>Enter</kbd> or <kbd>Space</kbd> selects. Use it when showing a panel is slow.</p>
+        <div class="demo">
+          <dui-tabs activation="manual">
+            <nav aria-label="Report period">
+              <ul>
+                <li><a href="#tab-week">Week</a></li>
+                <li><a href="#tab-month" aria-current="true">Month</a></li>
+                <li><a href="#tab-year">Year</a></li>
+              </ul>
+            </nav>
+            <section id="tab-week">
+              <h3>Week</h3>
+              <p>42 orders this week.</p>
+            </section>
+            <section id="tab-month">
+              <h3>Month</h3>
+              <p>180 orders this month.</p>
+            </section>
+            <section id="tab-year">
+              <h3>Year</h3>
+              <p>2,140 orders this year.</p>
+            </section>
+          </dui-tabs>
+        </div>
+        <pre tabindex="0"><code>&lt;dui-tabs activation="manual"&gt;
+  &lt;nav aria-label="Report period"&gt;
+    &lt;ul&gt;
+      &lt;li&gt;&lt;a href="#tab-week"&gt;Week&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href="#tab-month" aria-current="true"&gt;Month&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href="#tab-year"&gt;Year&lt;/a&gt;&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/nav&gt;
+  &lt;section id="tab-week"&gt;
+    &lt;h3&gt;Week&lt;/h3&gt;
+    &lt;p&gt;42 orders this week.&lt;/p&gt;
+  &lt;/section&gt;
+  &lt;section id="tab-month"&gt;
+    &lt;h3&gt;Month&lt;/h3&gt;
+    &lt;p&gt;180 orders this month.&lt;/p&gt;
+  &lt;/section&gt;
+  &lt;section id="tab-year"&gt;
+    &lt;h3&gt;Year&lt;/h3&gt;
+    &lt;p&gt;2,140 orders this year.&lt;/p&gt;
+  &lt;/section&gt;
+&lt;/dui-tabs&gt;</code></pre>
+      </section>
+
+      <section aria-labelledby="rtl-title">
+        <h2 id="rtl-title">Right to left</h2>
+        <p>In a right-to-left context the arrow keys follow the visual order: <kbd>Left Arrow</kbd> moves to the next tab.</p>
+        <div class="demo">
+          <div dir="rtl" lang="ar">
+            <dui-tabs>
+              <nav aria-label="الإعدادات">
+                <ul>
+                  <li><a href="#tab-rtl-general">عام</a></li>
+                  <li><a href="#tab-rtl-privacy">الخصوصية</a></li>
+                  <li><a href="#tab-rtl-help">مساعدة</a></li>
+                </ul>
+              </nav>
+              <section id="tab-rtl-general">
+                <h3>عام</h3>
+                <p>الإعدادات العامة للحساب.</p>
+              </section>
+              <section id="tab-rtl-privacy">
+                <h3>الخصوصية</h3>
+                <p>من يمكنه رؤية ملفك الشخصي.</p>
+              </section>
+              <section id="tab-rtl-help">
+                <h3>مساعدة</h3>
+                <p>الأسئلة الشائعة والدعم.</p>
+              </section>
+            </dui-tabs>
+          </div>
+        </div>
+        <pre tabindex="0"><code>&lt;div dir="rtl" lang="ar"&gt;
+  &lt;dui-tabs&gt;
+    &lt;nav aria-label="الإعدادات"&gt;
+      &lt;ul&gt;
+        &lt;li&gt;&lt;a href="#tab-rtl-general"&gt;عام&lt;/a&gt;&lt;/li&gt;
+        &lt;li&gt;&lt;a href="#tab-rtl-privacy"&gt;الخصوصية&lt;/a&gt;&lt;/li&gt;
+        &lt;li&gt;&lt;a href="#tab-rtl-help"&gt;مساعدة&lt;/a&gt;&lt;/li&gt;
+      &lt;/ul&gt;
+    &lt;/nav&gt;
+    &lt;section id="tab-rtl-general"&gt;
+      &lt;h3&gt;عام&lt;/h3&gt;
+      &lt;p&gt;الإعدادات العامة للحساب.&lt;/p&gt;
+    &lt;/section&gt;
+    &lt;section id="tab-rtl-privacy"&gt;
+      &lt;h3&gt;الخصوصية&lt;/h3&gt;
+      &lt;p&gt;من يمكنه رؤية ملفك الشخصي.&lt;/p&gt;
+    &lt;/section&gt;
+    &lt;section id="tab-rtl-help"&gt;
+      &lt;h3&gt;مساعدة&lt;/h3&gt;
+      &lt;p&gt;الأسئلة الشائعة والدعم.&lt;/p&gt;
+    &lt;/section&gt;
+  &lt;/dui-tabs&gt;
+&lt;/div&gt;</code></pre>
+      </section>
+
+      <section aria-labelledby="specs-title">
+        <h2 id="specs-title">Specs and guidance</h2>
+        <ul>
+          <li><a href="https://www.w3.org/WAI/ARIA/apg/patterns/tabs/">APG: Tabs pattern</a></li>
+          <li><a href="https://www.w3.org/WAI/ARIA/apg/patterns/tabs/#deciding-when-to-make-selection-automatically-follow-focus">APG: when selection should follow focus</a></li>
+          <li><a href="https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Reference/Roles/tab_role">MDN: tab role</a></li>
+          <li><a href="https://www.w3.org/TR/html-aria/#el-nav">ARIA in HTML: roles allowed on nav</a></li>
+        </ul>
+      </section>
+    </main>
+
+    <footer>
+      <p><small>domestic-ui packages existing standards and well-known patterns. MIT licensed.</small></p>
+    </footer>
+    <script type="module" src="../../web-components/dui-tabs.js"></script>
+  </body>
+</html>

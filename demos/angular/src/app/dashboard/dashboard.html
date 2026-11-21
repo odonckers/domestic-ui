@@ -40,29 +40,31 @@
     </form>
   </details>
 
-  <table>
-    <caption>Chores this week</caption>
-    <thead>
-      <tr>
-        <th scope="col">Chore</th>
-        <th scope="col">Room</th>
-        <th scope="col">Assigned to</th>
-        <th scope="col">Due</th>
-        <th scope="col">Status</th>
-      </tr>
-    </thead>
-    <tbody>
-      @for (row of chores; track row.chore) {
+  <section data-scroll="inline" aria-labelledby="chores-caption" tabindex="0">
+    <table>
+      <caption id="chores-caption">Chores this week</caption>
+      <thead>
         <tr>
-          <th scope="row">{{ row.chore }}</th>
-          <td>{{ row.room }}</td>
-          <td>{{ row.assignee }}</td>
-          <td><time [attr.datetime]="row.date">{{ row.due }}</time></td>
-          <td><span [attr.data-badge]="row.tone">{{ row.status }}</span></td>
+          <th scope="col">Chore</th>
+          <th scope="col">Room</th>
+          <th scope="col">Assigned to</th>
+          <th scope="col">Due</th>
+          <th scope="col">Status</th>
         </tr>
-      }
-    </tbody>
-  </table>
+      </thead>
+      <tbody>
+        @for (row of chores; track row.chore) {
+          <tr>
+            <th scope="row">{{ row.chore }}</th>
+            <td>{{ row.room }}</td>
+            <td>{{ row.assignee }}</td>
+            <td><time [attr.datetime]="row.date">{{ row.due }}</time></td>
+            <td><span [attr.data-badge]="row.tone">{{ row.status }}</span></td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </section>
 
   <div class="cluster">
     <button type="button" data-button="primary">Add chore</button>

@@ -1,0 +1,218 @@
+/*
+ * Molecule: dialog and drawer
+ *
+ * A layout for the native <dialog> (header with title and close button,
+ * body, footer actions), an open and close transition, and a drawer
+ * variant that slides in from the inline-start or inline-end edge.
+ * Open a modal dialog with showModal() or a button with
+ * command="show-modal" commandfor="id" (invoker commands); close it with
+ * command="close", a <form method="dialog"> submit button, or Esc. The
+ * browser makes the rest of the page inert, moves focus into the dialog,
+ * and returns focus to the invoker when it closes.
+ * https://html.spec.whatwg.org/multipage/interactive-elements.html#the-dialog-element
+ * https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/dialog
+ * https://developer.mozilla.org/en-US/docs/Web/API/Invoker_Commands_API
+ *
+ * Accessibility: follows the APG Dialog (Modal) pattern
+ * (https://www.w3.org/WAI/ARIA/apg/patterns/dialog-modal/). Name every
+ * dialog with aria-labelledby pointing at its heading. Focus goes to the
+ * first focusable element, or to the element with autofocus; put autofocus
+ * on the least destructive action. closedby="any" adds light dismiss
+ * (a click on the backdrop closes it); where closedby is not supported Esc
+ * and the close buttons still work, which is all WCAG 2.1.2 No Keyboard Trap
+ * needs. The focus ring is the base :focus-visible outline (WCAG 2.4.7).
+ * https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/dialog#closedby
+ *
+ * The drawer is a dialog variant, not a new element: see
+ * explainers/drawer.md. It fills the block size of the viewport, takes
+ * --dui-size-drawer of the inline size (all of it on narrow screens), and
+ * uses logical properties so "start" and "end" follow the writing direction.
+ *
+ * Motion: dialogs fade and drawers slide with @starting-style and
+ * transition-behavior: allow-discrete. Duration tokens are 0s under
+ * prefers-reduced-motion, and browsers without these features simply
+ * open and close with no transition (the declaration without allow-discrete
+ * comes first, so an engine that rejects the keyword keeps it).
+ * https://developer.mozilla.org/en-US/docs/Web/CSS/@starting-style
+ * https://developer.mozilla.org/en-US/docs/Web/CSS/transition-behavior
+ * https://www.w3.org/WAI/WCAG22/Understanding/animation-from-interactions.html
+ *
+ * API
+ *   data-dialog                         on <dialog>: header, body and footer layout
+ *                                       and the open transition
+ *   data-dialog="drawer [start | end]"  a drawer at the inline-start or inline-end
+ *                                       edge (end is the default)
+ *   closedby="any | closerequest | none"  native: how the dialog can be dismissed
+ *   Children: an optional <header> (heading and close button) and <footer>
+ *   (actions, end-aligned); everything else is the body.
+ *
+ * Example
+ *   <button type="button" commandfor="filters" command="show-modal">Filters</button>
+ *   <dialog id="filters" data-dialog="drawer end" closedby="any" aria-labelledby="filters-title">
+ *     <header>
+ *       <h2 id="filters-title">Filters</h2>
+ *       <button type="button" commandfor="filters" command="close">Close</button>
+ *     </header>
+ *     <form method="dialog">
+ *       …
+ *       <footer><button type="submit">Apply</button></footer>
+ *     </form>
+ *   </dialog>
+ *
+ * Keyboard
+ *   Tab: moves to the next focusable element inside the dialog / Shift+Tab: previous
+ *   Esc: closes the dialog and returns focus to the invoker
+ *   Enter / Space: on a close or submit button, closes the dialog
+ *
+ * Specs
+ *   https://html.spec.whatwg.org/multipage/interactive-elements.html#the-dialog-element
+ *   https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/dialog
+ *   https://developer.mozilla.org/en-US/docs/Web/API/Invoker_Commands_API
+ *   https://www.w3.org/WAI/ARIA/apg/patterns/dialog-modal/
+ *   https://www.w3.org/WAI/WCAG22/Understanding/no-keyboard-trap.html
+ *   https://www.w3.org/WAI/WCAG22/Understanding/animation-from-interactions.html
+ */
+
+[data-dialog] {
+  overscroll-behavior: contain;
+}
+
+[data-dialog] > header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--dui-space-m);
+}
+
+[data-dialog] > header > :is(h1, h2, h3, h4, h5, h6) {
+  margin-block: 0;
+  font-size: var(--dui-step-2);
+}
+
+[data-dialog] > header > button {
+  flex-shrink: 0;
+}
+
+[data-dialog] footer {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: var(--dui-space-xs);
+}
+
+/* Fade and lift in. The first declaration is the fallback without allow-discrete. */
+[data-dialog]:not([data-dialog~="drawer"]) {
+  opacity: 0;
+  translate: 0 var(--dui-space-s);
+  transition:
+    opacity var(--dui-duration-normal) var(--dui-easing-standard),
+    translate var(--dui-duration-normal) var(--dui-easing-standard);
+  transition:
+    opacity var(--dui-duration-normal) var(--dui-easing-standard),
+    translate var(--dui-duration-normal) var(--dui-easing-standard),
+    display var(--dui-duration-normal) allow-discrete,
+    overlay var(--dui-duration-normal) allow-discrete;
+}
+
+[data-dialog]:not([data-dialog~="drawer"])[open] {
+  opacity: 1;
+  translate: 0 0;
+}
+
+@starting-style {
+  [data-dialog]:not([data-dialog~="drawer"])[open] {
+    opacity: 0;
+    translate: 0 var(--dui-space-s);
+  }
+}
+
+/* Drawer: full block size at an inline edge. */
+[data-dialog~="drawer"] {
+  margin: 0;
+  margin-inline-start: auto;
+  inline-size: min(var(--dui-size-drawer), 100%);
+  max-inline-size: 100%;
+  block-size: 100%;
+  max-block-size: 100%;
+  overflow: auto;
+  border-block: 0;
+  border-inline-end: 0;
+  border-radius: 0;
+  translate: 100% 0;
+  transition: translate var(--dui-duration-normal) var(--dui-easing-standard);
+  transition:
+    translate var(--dui-duration-normal) var(--dui-easing-standard),
+    display var(--dui-duration-normal) allow-discrete,
+    overlay var(--dui-duration-normal) allow-discrete;
+}
+
+[data-dialog~="drawer"][data-dialog~="start"] {
+  margin-inline: 0 auto;
+  border-inline-start: 0;
+  border-inline-end: var(--dui-border-width) solid var(--dui-color-border);
+  translate: -100% 0;
+}
+
+/* Right-to-left: the edges swap, so the off-screen offsets do too. */
+[data-dialog~="drawer"]:dir(rtl) {
+  translate: -100% 0;
+}
+
+[data-dialog~="drawer"][data-dialog~="start"]:dir(rtl) {
+  translate: 100% 0;
+}
+
+[data-dialog~="drawer"][open] {
+  translate: 0 0;
+}
+
+@starting-style {
+  [data-dialog~="drawer"][open] {
+    translate: 100% 0;
+  }
+
+  [data-dialog~="drawer"][data-dialog~="start"][open],
+  [data-dialog~="drawer"][open]:dir(rtl) {
+    translate: -100% 0;
+  }
+
+  [data-dialog~="drawer"][data-dialog~="start"][open]:dir(rtl) {
+    translate: 100% 0;
+  }
+}
+
+/* The drawer body scrolls; the header stays at the top. */
+[data-dialog~="drawer"] > header {
+  position: sticky;
+  inset-block-start: 0;
+  margin: calc(var(--dui-space-l) * -1) calc(var(--dui-space-l) * -1) 0;
+  padding: var(--dui-space-l) var(--dui-space-l) var(--dui-space-s);
+  background-color: var(--dui-color-surface);
+  border-block-end: var(--dui-border-width) solid var(--dui-color-border);
+}
+
+/* Backdrop fades with the dialog. */
+[data-dialog]::backdrop {
+  opacity: 0;
+  transition: opacity var(--dui-duration-normal) var(--dui-easing-standard);
+  transition:
+    opacity var(--dui-duration-normal) var(--dui-easing-standard),
+    display var(--dui-duration-normal) allow-discrete,
+    overlay var(--dui-duration-normal) allow-discrete;
+}
+
+[data-dialog][open]::backdrop {
+  opacity: 1;
+}
+
+@starting-style {
+  [data-dialog][open]::backdrop {
+    opacity: 0;
+  }
+}
+
+@media (forced-colors: active) {
+  [data-dialog~="drawer"] {
+    border-inline: var(--dui-border-width) solid canvastext;
+  }
+}

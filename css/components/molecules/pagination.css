@@ -1,0 +1,135 @@
+/*
+ * Molecule: pagination
+ *
+ * Links between the pages of a long list or search result: a <nav> named
+ * "Pagination" with a list of links, aria-current="page" on the current
+ * page, and Previous and Next links. There is no native element and no
+ * APG pattern for pagination, so this is a styling contract written up as
+ * an explainer: explainers/pagination.md.
+ * https://html.spec.whatwg.org/multipage/sections.html#the-nav-element
+ * https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Reference/Attributes/aria-current
+ *
+ * Accessibility: every link has a complete accessible name: number links
+ * add a visually hidden "Page " before the number, and Previous and Next say
+ * "page" too (WCAG 2.4.4 Link Purpose). rel="prev" and rel="next" mark the
+ * relationship for user agents. The current page is a filled box with bold
+ * text, the others are outlined, so the difference is shape and weight as well
+ * as color (WCAG 1.4.1). Our choice: the current page stays a link, with
+ * aria-current="page", so it is announced in place and keeps the list
+ * count stable. At the first and last page, Previous or Next is a placeholder
+ * <a> with no href: it is not a link, not focusable, and looks disabled. Gaps
+ * are an "…" item hidden from assistive technology. Every link is at least
+ * 44px square (WCAG 2.5.8) and keeps the base focus ring; the current page
+ * adds an inner ring in its text color, like the primary button.
+ * https://www.w3.org/WAI/WCAG22/Understanding/link-purpose-in-context.html
+ * https://html.spec.whatwg.org/multipage/links.html#link-type-next
+ *
+ * API
+ *   data-pagination        on <nav aria-label="Pagination">
+ *   aria-current="page"    on the current page link (native ARIA)
+ *   <a> without href       a disabled Previous or Next (native placeholder link)
+ *   <li aria-hidden="true">…</li>   a gap in the page numbers
+ *
+ * Example
+ *   <nav aria-label="Pagination" data-pagination>
+ *     <ul>
+ *       <li><a href="?page=1" rel="prev">Previous<span class="visually-hidden"> page</span></a></li>
+ *       <li><a href="?page=1"><span class="visually-hidden">Page </span>1</a></li>
+ *       <li><a href="?page=2" aria-current="page"><span class="visually-hidden">Page </span>2</a></li>
+ *       <li><a href="?page=3"><span class="visually-hidden">Page </span>3</a></li>
+ *       <li><a href="?page=3" rel="next">Next<span class="visually-hidden"> page</span></a></li>
+ *     </ul>
+ *   </nav>
+ *
+ * Keyboard
+ *   Tab: moves to the next page link / Shift+Tab: previous
+ *   Enter: follows the focused link
+ *
+ * Specs
+ *   https://html.spec.whatwg.org/multipage/sections.html#the-nav-element
+ *   https://html.spec.whatwg.org/multipage/text-level-semantics.html#the-a-element
+ *   https://html.spec.whatwg.org/multipage/links.html#link-type-next
+ *   https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Reference/Attributes/aria-current
+ *   https://www.w3.org/WAI/WCAG22/Understanding/link-purpose-in-context.html
+ *   https://www.w3.org/WAI/WCAG22/Understanding/target-size-minimum.html
+ */
+
+[data-pagination] > :is(ul, ol) {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--dui-space-2xs);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+[data-pagination] li {
+  margin: 0;
+}
+
+[data-pagination] li[aria-hidden="true"] {
+  padding-inline: var(--dui-space-2xs);
+  color: var(--dui-color-text-muted);
+}
+
+[data-pagination] a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-block-size: var(--dui-size-target);
+  min-inline-size: var(--dui-size-target);
+  padding: var(--dui-space-xs) var(--dui-space-s);
+  background-color: var(--dui-color-surface);
+  border: var(--dui-border-width) solid var(--dui-color-border);
+  border-radius: var(--dui-radius-control);
+  line-height: var(--dui-line-height-heading);
+  text-decoration-line: none;
+}
+
+[data-pagination] a[href],
+[data-pagination] a[href]:visited {
+  color: var(--dui-color-link);
+}
+
+[data-pagination] a[href]:hover {
+  background-color: var(--dui-color-surface-sunken);
+  text-decoration-line: underline;
+}
+
+[data-pagination] a[aria-current="page"],
+[data-pagination] a[aria-current="page"]:visited,
+[data-pagination] a[aria-current="page"]:hover {
+  background-color: var(--dui-color-accent);
+  color: var(--dui-color-accent-contrast);
+  border-color: var(--dui-color-accent);
+  font-weight: var(--dui-font-weight-strong);
+  text-decoration-line: none;
+}
+
+[data-pagination] a[aria-current="page"]:focus-visible {
+  box-shadow: inset 0 0 0 var(--dui-focus-width) currentcolor;
+}
+
+/* Disabled end: muted text (still 4.5:1) and a dashed border; no underline, no hover. */
+[data-pagination] a:not([href]) {
+  color: var(--dui-color-text-muted);
+  border-style: dashed;
+  cursor: not-allowed;
+}
+
+@media (forced-colors: active) {
+  [data-pagination] a {
+    border-color: linktext;
+  }
+
+  [data-pagination] a[aria-current="page"] {
+    border-color: highlight;
+    border-width: var(--dui-border-width-indicator);
+  }
+
+  [data-pagination] a:not([href]) {
+    border-color: graytext;
+    color: graytext;
+  }
+}

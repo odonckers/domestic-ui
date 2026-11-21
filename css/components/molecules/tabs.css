@@ -1,0 +1,144 @@
+/*
+ * Molecule: tabs
+ *
+ * Layered sections of content where one panel shows at a time, following
+ * the APG Tabs pattern (role="tablist", "tab" and "tabpanel", aria-selected,
+ * aria-controls, roving tabindex). HTML has no tabs element, so the
+ * <dui-tabs> web component (web-components/dui-tabs.js) turns readable
+ * fallback markup into tabs: a <nav> of in-page links followed by the
+ * <section> elements they point at. With JavaScript off, or before the
+ * script loads, every section shows with its heading and the links work as
+ * a table of contents.
+ * APG: https://www.w3.org/WAI/ARIA/apg/patterns/tabs/
+ * https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Reference/Roles/tab_role
+ *
+ * Accessibility: the selected tab has a 3:1 accent bar and full-strength
+ * text, unselected tabs have muted text and no bar, so selection does not
+ * rely on color alone (WCAG 1.4.1, 1.4.11). Only the selected tab is in the
+ * tab order; arrow keys move between tabs. Panels with no focusable content
+ * get tabindex="0" so keyboard users can reach and scroll them. Each panel
+ * is named by its tab; once upgraded, the panel's first heading is visually
+ * hidden (it repeats the tab label) but stays in the accessibility tree.
+ * Our choice: automatic activation (a tab is selected as soon as it gets
+ * focus), as the APG recommends when panels show without a delay. Set
+ * activation="manual" for panels that load slowly.
+ * https://www.w3.org/WAI/ARIA/apg/patterns/tabs/#deciding-when-to-make-selection-automatically-follow-focus
+ *
+ * The styles target the ARIA roles, so they also fit tabs rendered by a
+ * framework that follows the APG with its own script.
+ *
+ * API
+ *   <dui-tabs>                 wraps a <nav aria-label> with a list of
+ *                              <a href="#panel-id"> links, then the panels
+ *   activation="manual"        on <dui-tabs>: arrows move focus, Enter or
+ *                              Space selects (default: automatic)
+ *   aria-current="true"        on a link: the tab selected on load (else the
+ *                              tab named in the URL fragment, else the first).
+ *                              The component swaps it for aria-selected;
+ *                              aria-selected is not allowed on a link.
+ *   role="tablist" | "tab" | "tabpanel" (added by the component; styled here)
+ *
+ * Example
+ *   <dui-tabs>
+ *     <nav aria-label="Account settings">
+ *       <ul>
+ *         <li><a href="#profile">Profile</a></li>
+ *         <li><a href="#security">Security</a></li>
+ *       </ul>
+ *     </nav>
+ *     <section id="profile"><h3>Profile</h3><p>…</p></section>
+ *     <section id="security"><h3>Security</h3><p>…</p></section>
+ *   </dui-tabs>
+ *   <script type="module" src="web-components/dui-tabs.js"></script>
+ *
+ * Keyboard
+ *   Tab: moves into the tab list (to the selected tab), then to the panel
+ *   Right Arrow / Left Arrow: next or previous tab, wrapping (swapped in right-to-left)
+ *   Home / End: first or last tab
+ *   Enter / Space: selects the focused tab (manual activation only)
+ *
+ * Specs
+ *   https://www.w3.org/WAI/ARIA/apg/patterns/tabs/
+ *   https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Reference/Roles/tab_role
+ *   https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Reference/Roles/tabpanel_role
+ *   https://www.w3.org/TR/html-aria/#el-nav
+ *   https://www.w3.org/WAI/WCAG22/Understanding/non-text-contrast.html
+ */
+
+[role="tablist"] {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--dui-space-3xs);
+  margin: 0;
+  padding: 0;
+  border-block-end: var(--dui-border-width) solid var(--dui-color-border);
+}
+
+/* The fallback list's ul and li have role="none" once upgraded: tabs become flex items. */
+[role="tablist"] :is(ul, ol, li) {
+  display: contents;
+}
+
+[role="tab"] {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-block-size: var(--dui-size-target);
+  margin: 0 0 calc(var(--dui-border-width) * -1);
+  padding: var(--dui-space-xs) var(--dui-space-m);
+  background-color: transparent;
+  color: var(--dui-color-text-muted);
+  border: 0;
+  border-block-end: var(--dui-border-width-indicator) solid transparent;
+  border-radius: var(--dui-radius-control) var(--dui-radius-control) 0 0;
+  font-weight: var(--dui-font-weight-strong);
+  line-height: var(--dui-line-height-heading);
+  text-decoration-line: none;
+  cursor: pointer;
+}
+
+[role="tab"]:visited {
+  color: var(--dui-color-text-muted);
+}
+
+[role="tab"]:hover {
+  background-color: var(--dui-color-surface-sunken);
+  color: var(--dui-color-text);
+}
+
+[role="tab"][aria-selected="true"] {
+  color: var(--dui-color-text);
+  border-block-end-color: var(--dui-color-accent);
+}
+
+[role="tabpanel"] {
+  padding-block: var(--dui-space-m);
+}
+
+[role="tabpanel"] > * + * {
+  margin-block-start: var(--dui-space-m);
+}
+
+/* The panel heading repeats the tab label: hide it visually, keep it for assistive technology. */
+dui-tabs [role="tabpanel"] > :is(h2, h3, h4, h5, h6):first-child {
+  position: absolute;
+  inline-size: 1px;
+  block-size: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+dui-tabs [role="tabpanel"] > :is(h2, h3, h4, h5, h6):first-child + * {
+  margin-block-start: 0;
+}
+
+dui-tabs {
+  display: block;
+}
+
+@media (forced-colors: active) {
+  [role="tab"][aria-selected="true"] {
+    border-block-end-color: highlight;
+  }
+}

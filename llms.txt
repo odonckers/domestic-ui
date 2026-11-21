@@ -18,6 +18,19 @@ To use it, link `css/domestic.css` (copy the `css/` folder or clone https://gith
 - [Quiet link](https://odonckers.github.io/domestic-ui/examples/atoms/link.html): live example page (HTML)
 - [Switch](https://odonckers.github.io/domestic-ui/examples/atoms/switch.html): live example page (HTML)
 - [Text helpers](https://odonckers.github.io/domestic-ui/examples/atoms/text.html): live example page (HTML)
+- [Alert and toast](https://odonckers.github.io/domestic-ui/examples/molecules/alerts.html): live example page (HTML)
+- [Breadcrumb](https://odonckers.github.io/domestic-ui/examples/molecules/breadcrumb.html): live example page (HTML)
+- [Card](https://odonckers.github.io/domestic-ui/examples/molecules/card.html): live example page (HTML)
+- [Dialog and drawer](https://odonckers.github.io/domestic-ui/examples/molecules/dialog.html): live example page (HTML)
+- [Disclosure and accordion](https://odonckers.github.io/domestic-ui/examples/molecules/disclosure.html): live example page (HTML)
+- [Molecules showcase](https://odonckers.github.io/domestic-ui/examples/molecules/index.html): live example page (HTML)
+- [Menu button](https://odonckers.github.io/domestic-ui/examples/molecules/menu-button.html): live example page (HTML)
+- [Navigation list](https://odonckers.github.io/domestic-ui/examples/molecules/nav.html): live example page (HTML)
+- [Pagination](https://odonckers.github.io/domestic-ui/examples/molecules/pagination.html): live example page (HTML)
+- [Popover and tooltip](https://odonckers.github.io/domestic-ui/examples/molecules/popover.html): live example page (HTML)
+- [Search field](https://odonckers.github.io/domestic-ui/examples/molecules/search.html): live example page (HTML)
+- [Tabs](https://odonckers.github.io/domestic-ui/examples/molecules/tabs.html): live example page (HTML)
+- [Toolbar](https://odonckers.github.io/domestic-ui/examples/molecules/toolbar.html): live example page (HTML)
 
 ## Principles
 
@@ -29,13 +42,15 @@ To use it, link `css/domestic.css` (copy the `css/` folder or clone https://gith
 - [Theming](https://odonckers.github.io/domestic-ui/principles/theming.md): All tokens are custom properties on :root with the --dui- prefix.
 - [Opinions we hold](https://odonckers.github.io/domestic-ui/principles/opinions-we-hold.md): Each of these is a choice between valid options, not a standard.
 - [Layout primitives](https://odonckers.github.io/domestic-ui/principles/layout-primitives.md): Class: .stack, .cluster, .grid, [data-scroll="inline"].
+- [Web components](https://odonckers.github.io/domestic-ui/principles/web-components.md): HTML still has no element for tabs, menus, roving focus in a toolbar, hover tooltips or a toast stack.
+- [Explainers](https://odonckers.github.io/domestic-ui/principles/explainers.md): A pattern with no native element and no APG pattern is written up like a platform proposal in explainers/: problem, use cases, goals and non-goals, markup and API, keyboard, accessibility mappings, alternatives, prior art and open questions, with normative text in RFC 2119 keywords.
 - [Tooling](https://odonckers.github.io/domestic-ui/principles/tooling.md): npm test runs, in order, and fails if any step fails.
 
 ## Tokens
 
-- [Tokens](https://odonckers.github.io/domestic-ui/tokens/index.md): The two tiers of domestic-ui design tokens: 158 custom properties with their light and dark values.
-- [Primitive tokens](https://odonckers.github.io/domestic-ui/tokens/primitives.md): All 84 primitive tokens in css/tokens/primitives.css (internal), with resolved light and dark values.
-- [Semantic tokens](https://odonckers.github.io/domestic-ui/tokens/semantic.md): All 74 semantic tokens in css/tokens/semantic.css (public theming API), with resolved light and dark values.
+- [Tokens](https://odonckers.github.io/domestic-ui/tokens/index.md): The two tiers of domestic-ui design tokens: 168 custom properties with their light and dark values.
+- [Primitive tokens](https://odonckers.github.io/domestic-ui/tokens/primitives.md): All 87 primitive tokens in css/tokens/primitives.css (internal), with resolved light and dark values.
+- [Semantic tokens](https://odonckers.github.io/domestic-ui/tokens/semantic.md): All 81 semantic tokens in css/tokens/semantic.css (public theming API), with resolved light and dark values.
 
 ## Base
 
@@ -72,18 +87,18 @@ To use it, link `css/domestic.css` (copy the `css/` folder or clone https://gith
 ## Patterns and guides
 
 - [Patterns](https://odonckers.github.io/domestic-ui/patterns/index.md): Planned and available interface patterns, from site navigation to app shells, with the standard each one follows.
-- Alerts: Coming in M3. Messages about status, from notices in the page to live alerts for important, time-sensitive changes. Follows [APG Alert pattern](https://www.w3.org/WAI/ARIA/apg/patterns/alert/).
-- Breadcrumb: Coming in M3. The path to the current page as an ordered list of links in a labelled `<nav>`. Follows [APG Breadcrumb pattern](https://www.w3.org/WAI/ARIA/apg/patterns/breadcrumb/).
-- Card: Coming in M3. A self-contained item, such as a product or an article teaser, on a raised surface. **Our choice:** No native element or APG pattern exists; an `<article>` with a heading, where the heading holds the one link, so the whole card is not one long link name.
-- Dialog and drawer: Coming in M3. A modal `<dialog>`, either centered or as a drawer along one edge of the viewport. Follows [HTML `<dialog>` element](https://html.spec.whatwg.org/multipage/interactive-elements.html#the-dialog-element), [APG Dialog (Modal) pattern](https://www.w3.org/WAI/ARIA/apg/patterns/dialog-modal/).
-- Disclosure: Coming in M3. A summary that shows or hides more content, built on `<details>` and `<summary>`. Follows [HTML `<details>` element](https://html.spec.whatwg.org/multipage/interactive-elements.html#the-details-element), [APG Disclosure pattern](https://www.w3.org/WAI/ARIA/apg/patterns/disclosure/).
-- Menu button: Coming in M3. A button that opens a menu of actions. Follows [APG Menu Button pattern](https://www.w3.org/WAI/ARIA/apg/patterns/menu-button/).
-- Pagination: Coming in M3. Links to the pages of a long list of results. **Our choice:** No native element or APG pattern exists; a labelled `<nav>` with a list of links and `aria-current="page"` on the current one, as for breadcrumbs.
-- Popover: Coming in M3. Content shown on top of the page from a button, with the `popover` attribute. Follows [HTML `popover` attribute](https://html.spec.whatwg.org/multipage/popover.html#the-popover-attribute), [MDN Popover API](https://developer.mozilla.org/en-US/docs/Web/API/Popover_API).
-- Search: Coming in M3. A search form in a `<search>` landmark with an `<input type="search">`. Follows [HTML `<search>` element](https://html.spec.whatwg.org/multipage/grouping-content.html#the-search-element), [MDN `<input type="search">`](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/input/search).
-- Site navigation: Coming in M3. The main links of a site in a `<nav>` landmark, with the current page marked. Follows [HTML `<nav>` element](https://html.spec.whatwg.org/multipage/sections.html#the-nav-element), [APG Landmark regions](https://www.w3.org/WAI/ARIA/apg/practices/landmark-regions/), [APG Disclosure navigation example](https://www.w3.org/WAI/ARIA/apg/patterns/disclosure/examples/disclosure-navigation/).
-- Tabs: Coming in M3. Sections of content shown one at a time, chosen from a list of tabs. Follows [APG Tabs pattern](https://www.w3.org/WAI/ARIA/apg/patterns/tabs/).
-- Toolbar: Coming in M3. A row of related controls that is one stop in the tab order. Follows [APG Toolbar pattern](https://www.w3.org/WAI/ARIA/apg/patterns/toolbar/).
+- [Alerts](https://odonckers.github.io/domestic-ui/patterns/alerts.md): Available. Messages about status, from notices in the page to live alerts for important, time-sensitive changes. Follows [APG Alert pattern](https://www.w3.org/WAI/ARIA/apg/patterns/alert/).
+- [Breadcrumb](https://odonckers.github.io/domestic-ui/patterns/breadcrumb.md): Available. The path to the current page as an ordered list of links in a labelled `<nav>`. Follows [APG Breadcrumb pattern](https://www.w3.org/WAI/ARIA/apg/patterns/breadcrumb/).
+- [Card](https://odonckers.github.io/domestic-ui/patterns/card.md): Available. A self-contained item, such as a product or an article teaser, on a raised surface. **Our choice:** No native element or APG pattern exists; an `<article>` with a heading, where the heading holds the one link, so the whole card is not one long link name.
+- [Dialog and drawer](https://odonckers.github.io/domestic-ui/patterns/dialog.md): Available. A modal `<dialog>`, either centered or as a drawer along one edge of the viewport. Follows [HTML `<dialog>` element](https://html.spec.whatwg.org/multipage/interactive-elements.html#the-dialog-element), [APG Dialog (Modal) pattern](https://www.w3.org/WAI/ARIA/apg/patterns/dialog-modal/).
+- [Disclosure](https://odonckers.github.io/domestic-ui/patterns/disclosure.md): Available. A summary that shows or hides more content, built on `<details>` and `<summary>`. Follows [HTML `<details>` element](https://html.spec.whatwg.org/multipage/interactive-elements.html#the-details-element), [APG Disclosure pattern](https://www.w3.org/WAI/ARIA/apg/patterns/disclosure/).
+- [Menu button](https://odonckers.github.io/domestic-ui/patterns/menu-button.md): Available. A button that opens a menu of actions. Follows [APG Menu Button pattern](https://www.w3.org/WAI/ARIA/apg/patterns/menu-button/).
+- [Pagination](https://odonckers.github.io/domestic-ui/patterns/pagination.md): Available. Links to the pages of a long list of results. **Our choice:** No native element or APG pattern exists; a labelled `<nav>` with a list of links and `aria-current="page"` on the current one, as for breadcrumbs.
+- [Popover](https://odonckers.github.io/domestic-ui/patterns/popover.md): Available. Content shown on top of the page from a button, with the `popover` attribute. Follows [HTML `popover` attribute](https://html.spec.whatwg.org/multipage/popover.html#the-popover-attribute), [MDN Popover API](https://developer.mozilla.org/en-US/docs/Web/API/Popover_API).
+- [Search](https://odonckers.github.io/domestic-ui/patterns/search.md): Available. A search form in a `<search>` landmark with an `<input type="search">`. Follows [HTML `<search>` element](https://html.spec.whatwg.org/multipage/grouping-content.html#the-search-element), [MDN `<input type="search">`](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/input/search).
+- [Site navigation](https://odonckers.github.io/domestic-ui/patterns/nav.md): Available. The main links of a site in a `<nav>` landmark, with the current page marked. Follows [HTML `<nav>` element](https://html.spec.whatwg.org/multipage/sections.html#the-nav-element), [APG Landmark regions](https://www.w3.org/WAI/ARIA/apg/practices/landmark-regions/), [APG Disclosure navigation example](https://www.w3.org/WAI/ARIA/apg/patterns/disclosure/examples/disclosure-navigation/).
+- [Tabs](https://odonckers.github.io/domestic-ui/patterns/tabs.md): Available. Sections of content shown one at a time, chosen from a list of tabs. Follows [APG Tabs pattern](https://www.w3.org/WAI/ARIA/apg/patterns/tabs/).
+- [Toolbar](https://odonckers.github.io/domestic-ui/patterns/toolbar.md): Available. A row of related controls that is one stop in the tab order. Follows [APG Toolbar pattern](https://www.w3.org/WAI/ARIA/apg/patterns/toolbar/).
 - Typeahead: Coming in M3. A text field that suggests values as you type, with `<datalist>` first and an APG combobox only where `<datalist>` falls short. Follows [HTML `<datalist>` element](https://html.spec.whatwg.org/multipage/form-elements.html#the-datalist-element), [APG Combobox pattern](https://www.w3.org/WAI/ARIA/apg/patterns/combobox/).
 - App shell: Coming in M3b. The frame of an application: header, primary sidebar, main content and an optional auxiliary sidebar. **Our choice:** No standard defines an app shell; it is the HTML landmarks `<header>`, `<nav>`, `<main>` and `<aside>` placed with CSS grid, with no wrapper elements of our own.
 - Compact density: Coming in M3b. A compact density token that tightens spacing for data-heavy screens. **Our choice:** No standard exists for density; one semantic token override that tightens space while targets stay at least 24 by 24 CSS pixels.

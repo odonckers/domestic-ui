@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Menu button · domestic-ui</title>
+    <meta name="description" content="An actions menu following the APG Menu Button pattern, built on a popover and a small light-DOM web component.">
+    <link rel="stylesheet" href="../../css/domestic.css">
+    <style>
+      /* Page-only layout, written with semantic tokens like any consumer would. */
+      body > :is(header, main, footer) {
+        max-inline-size: 72rem;
+        margin-inline: auto;
+        padding-inline: var(--dui-space-l);
+      }
+
+      body > header {
+        padding-block: var(--dui-space-m);
+        border-block-end: var(--dui-border-width) solid var(--dui-color-border);
+      }
+
+      body > main {
+        padding-block: var(--dui-space-2xl);
+      }
+
+      body > footer {
+        padding-block: var(--dui-space-l);
+        border-block-start: var(--dui-border-width) solid var(--dui-color-border);
+        color: var(--dui-color-text-muted);
+      }
+
+      /* Wrap long lines of example markup instead of scrolling them. */
+      pre {
+        white-space: pre-wrap;
+        overflow-wrap: anywhere;
+      }
+
+      .demo {
+        padding: var(--dui-space-l);
+        border: var(--dui-border-width) solid var(--dui-color-border);
+        border-radius: var(--dui-radius-surface);
+      }
+    </style>
+  </head>
+  <body>
+    <a class="visually-hidden" href="#main">Skip to main content</a>
+
+    <header class="cluster" style="--cluster-justify: space-between">
+      <p><strong>domestic-ui</strong></p>
+      <nav aria-label="Examples">
+        <ul class="cluster">
+          <li><a href="../base.html">Base elements</a></li>
+          <li><a href="../theming.html">Theming</a></li>
+          <li><a href="../atoms/index.html">Atoms</a></li>
+          <li><a href="index.html">Molecules</a></li>
+        </ul>
+      </nav>
+    </header>
+
+    <main id="main">
+      <h1>Menu button</h1>
+      <!--
+        Keyboard
+          Enter / Space / Down Arrow: on the button, opens the menu and focuses the first item
+          Up Arrow: on the button, opens the menu and focuses the last item
+          Down Arrow / Up Arrow: next or previous item, wrapping
+          Home / End: first or last item
+          A letter: next item whose label starts with it
+          Enter / Space: activates the item and closes the menu
+          Esc: closes the menu and returns focus to the button
+          Tab: closes the menu and moves on
+      -->
+      <p data-text="lead">A button that opens a list of actions: a popover plus the APG Menu Button keyboard behavior.</p>
+      <p>API: <code>&lt;dui-menu&gt;</code> around a <code>&lt;button popovertarget&gt;</code> and a <code>[popover][data-popover]</code> of buttons. Source: <a href="../../css/components/molecules/menu-button.css"><code>css/components/molecules/menu-button.css</code></a>.</p>
+      <p>
+        The button opens the popover natively. <code>&lt;dui-menu&gt;</code> (<a href="../../web-components/dui-menu.js"><code>web-components/dui-menu.js</code></a>)
+        adds <code>aria-haspopup="menu"</code>, <code>aria-expanded</code>, <code>role="menu"</code> and <code>role="menuitem"</code>, and the
+        <a href="https://www.w3.org/WAI/ARIA/apg/patterns/menu-button/">APG Menu Button</a> keys. With JavaScript off the actions are plain buttons.
+      </p>
+
+      <section aria-labelledby="actions-title">
+        <h2 id="actions-title">Actions menu</h2>
+        <div class="demo">
+          <dui-menu>
+            <button type="button" popovertarget="row-actions">Actions</button>
+            <div id="row-actions" popover data-popover>
+              <button type="button">Edit</button>
+              <button type="button">Duplicate</button>
+              <button type="button">Archive</button>
+              <hr>
+              <button type="button">Delete</button>
+            </div>
+          </dui-menu>
+          <p role="status" id="menu-result"></p>
+        </div>
+        <pre tabindex="0"><code>&lt;dui-menu&gt;
+  &lt;button type="button" popovertarget="row-actions"&gt;Actions&lt;/button&gt;
+  &lt;div id="row-actions" popover data-popover&gt;
+    &lt;button type="button"&gt;Edit&lt;/button&gt;
+    &lt;button type="button"&gt;Duplicate&lt;/button&gt;
+    &lt;button type="button"&gt;Archive&lt;/button&gt;
+    &lt;hr&gt;
+    &lt;button type="button"&gt;Delete&lt;/button&gt;
+  &lt;/div&gt;
+&lt;/dui-menu&gt;
+&lt;p role="status" id="menu-result"&gt;&lt;/p&gt;</code></pre>
+      </section>
+
+      <section aria-labelledby="links-title">
+        <h2 id="links-title">Links are not a menu</h2>
+        <p>
+          When the items go to other pages, use a disclosure: a popover (or <code>&lt;details&gt;</code>) holding a list of links,
+          with no menu roles. <kbd>Tab</kbd> moves through the links, as screen reader users expect on the web.
+        </p>
+        <div class="demo">
+          <button type="button" popovertarget="account-links">Account</button>
+          <div id="account-links" popover data-popover>
+            <nav aria-label="Account" data-nav>
+              <ul>
+                <li><a href="#links-title">Profile</a></li>
+                <li><a href="#links-title">Billing</a></li>
+                <li><a href="#links-title">Sign out</a></li>
+              </ul>
+            </nav>
+          </div>
+        </div>
+        <pre tabindex="0"><code>&lt;button type="button" popovertarget="account-links"&gt;Account&lt;/button&gt;
+&lt;div id="account-links" popover data-popover&gt;
+  &lt;nav aria-label="Account" data-nav&gt;
+    &lt;ul&gt;
+      &lt;li&gt;&lt;a href="#links-title"&gt;Profile&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href="#links-title"&gt;Billing&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href="#links-title"&gt;Sign out&lt;/a&gt;&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/nav&gt;
+&lt;/div&gt;</code></pre>
+      </section>
+
+      <section aria-labelledby="specs-title">
+        <h2 id="specs-title">Specs and guidance</h2>
+        <ul>
+          <li><a href="https://www.w3.org/WAI/ARIA/apg/patterns/menu-button/">APG: Menu Button pattern</a></li>
+          <li><a href="https://www.w3.org/WAI/ARIA/apg/patterns/menubar/">APG: Menu and Menubar pattern</a></li>
+          <li><a href="https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Reference/Roles/menu_role">MDN: menu role</a></li>
+          <li><a href="https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Reference/Attributes/aria-haspopup">MDN: aria-haspopup</a></li>
+          <li><a href="https://html.spec.whatwg.org/multipage/popover.html">WHATWG: the popover attribute</a></li>
+        </ul>
+      </section>
+    </main>
+
+    <footer>
+      <p><small>domestic-ui packages existing standards and well-known patterns. MIT licensed.</small></p>
+    </footer>
+    <script type="module" src="../../web-components/dui-menu.js"></script>
+    <script>
+      // Demo only: say which action was chosen, in the status region above.
+      document.getElementById("row-actions").addEventListener("click", (event) => {
+        const item = event.target.closest("button");
+        if (item) document.getElementById("menu-result").textContent = `${item.textContent} chosen.`;
+      });
+    </script>
+  </body>
+</html>

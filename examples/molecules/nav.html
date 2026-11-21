@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Navigation list · domestic-ui</title>
+    <meta name="description" content="Navigation lists with aria-current and collapsible groups made with details, in vertical and horizontal layouts.">
+    <link rel="stylesheet" href="../../css/domestic.css">
+    <style>
+      /* Page-only layout, written with semantic tokens like any consumer would. */
+      body > :is(header, main, footer) {
+        max-inline-size: 72rem;
+        margin-inline: auto;
+        padding-inline: var(--dui-space-l);
+      }
+
+      body > header {
+        padding-block: var(--dui-space-m);
+        border-block-end: var(--dui-border-width) solid var(--dui-color-border);
+      }
+
+      body > main {
+        padding-block: var(--dui-space-2xl);
+      }
+
+      body > footer {
+        padding-block: var(--dui-space-l);
+        border-block-start: var(--dui-border-width) solid var(--dui-color-border);
+        color: var(--dui-color-text-muted);
+      }
+
+      /* Wrap long lines of example markup instead of scrolling them. */
+      pre {
+        white-space: pre-wrap;
+        overflow-wrap: anywhere;
+      }
+
+      .demo {
+        padding: var(--dui-space-l);
+        border: var(--dui-border-width) solid var(--dui-color-border);
+        border-radius: var(--dui-radius-surface);
+      }
+
+      /* Room for the open dropdowns below the top bar demo. */
+      .nav-demo {
+        min-block-size: 14rem;
+      }
+    </style>
+  </head>
+  <body>
+    <a class="visually-hidden" href="#main">Skip to main content</a>
+
+    <header class="cluster" style="--cluster-justify: space-between">
+      <p><strong>domestic-ui</strong></p>
+      <nav aria-label="Examples">
+        <ul class="cluster">
+          <li><a href="../base.html">Base elements</a></li>
+          <li><a href="../theming.html">Theming</a></li>
+          <li><a href="../atoms/index.html">Atoms</a></li>
+          <li><a href="index.html">Molecules</a></li>
+        </ul>
+      </nav>
+    </header>
+
+    <main id="main">
+      <h1>Navigation list</h1>
+      <!--
+        Keyboard
+          Tab: moves to the next link or group summary / Shift+Tab: previous
+          Enter / Space: on a summary, opens or closes the group
+          Enter: on a link, follows it
+      -->
+      <p data-text="lead">A <code>&lt;nav&gt;</code> of links with <code>aria-current="page"</code> and collapsible groups. No JavaScript.</p>
+      <p>API: <code>data-nav="vertical | horizontal"</code> on <code>&lt;nav aria-label&gt;</code>, <code>aria-current="page"</code> on the current link, <code>&lt;details&gt;</code> for groups. Source: <a href="../../css/components/molecules/nav.css"><code>css/components/molecules/nav.css</code></a>.</p>
+      <p>
+        This is the <a href="https://www.w3.org/WAI/ARIA/apg/patterns/disclosure/examples/disclosure-navigation/">APG disclosure navigation</a>
+        example with native <code>&lt;details&gt;</code> instead of scripted buttons. It is not an ARIA menu: site links belong in a
+        list that <kbd>Tab</kbd> moves through. The current page has an accent bar, a tint and bold text.
+      </p>
+
+      <section aria-labelledby="vertical-title">
+        <h2 id="vertical-title">Vertical (sidebar)</h2>
+        <div class="demo">
+          <nav aria-label="Sidebar example" data-nav="vertical">
+            <ul>
+              <li><a href="#vertical-title">Overview</a></li>
+              <li>
+                <details open>
+                  <summary>Projects</summary>
+                  <ul>
+                    <li><a href="#vertical-title" aria-current="page">Active</a></li>
+                    <li><a href="#vertical-title">Archived</a></li>
+                  </ul>
+                </details>
+              </li>
+              <li>
+                <details>
+                  <summary>Settings</summary>
+                  <ul>
+                    <li><a href="#vertical-title">Profile</a></li>
+                    <li><a href="#vertical-title">Billing</a></li>
+                  </ul>
+                </details>
+              </li>
+            </ul>
+          </nav>
+        </div>
+        <pre tabindex="0"><code>&lt;nav aria-label="Sidebar example" data-nav="vertical"&gt;
+  &lt;ul&gt;
+    &lt;li&gt;&lt;a href="#vertical-title"&gt;Overview&lt;/a&gt;&lt;/li&gt;
+    &lt;li&gt;
+      &lt;details open&gt;
+        &lt;summary&gt;Projects&lt;/summary&gt;
+        &lt;ul&gt;
+          &lt;li&gt;&lt;a href="#vertical-title" aria-current="page"&gt;Active&lt;/a&gt;&lt;/li&gt;
+          &lt;li&gt;&lt;a href="#vertical-title"&gt;Archived&lt;/a&gt;&lt;/li&gt;
+        &lt;/ul&gt;
+      &lt;/details&gt;
+    &lt;/li&gt;
+    &lt;li&gt;
+      &lt;details&gt;
+        &lt;summary&gt;Settings&lt;/summary&gt;
+        &lt;ul&gt;
+          &lt;li&gt;&lt;a href="#vertical-title"&gt;Profile&lt;/a&gt;&lt;/li&gt;
+          &lt;li&gt;&lt;a href="#vertical-title"&gt;Billing&lt;/a&gt;&lt;/li&gt;
+        &lt;/ul&gt;
+      &lt;/details&gt;
+    &lt;/li&gt;
+  &lt;/ul&gt;
+&lt;/nav&gt;</code></pre>
+      </section>
+
+      <section aria-labelledby="horizontal-title">
+        <h2 id="horizontal-title">Horizontal (top bar)</h2>
+        <p>Groups open as dropdowns. They share a <code>name</code>, so opening one closes the other.</p>
+        <div class="demo nav-demo">
+          <nav aria-label="Top bar example" data-nav="horizontal">
+            <ul>
+              <li><a href="#horizontal-title" aria-current="page">Home</a></li>
+              <li>
+                <details name="top-bar">
+                  <summary>Products</summary>
+                  <ul>
+                    <li><a href="#horizontal-title">Design system</a></li>
+                    <li><a href="#horizontal-title">Icons</a></li>
+                  </ul>
+                </details>
+              </li>
+              <li>
+                <details name="top-bar">
+                  <summary>Company</summary>
+                  <ul>
+                    <li><a href="#horizontal-title">About</a></li>
+                    <li><a href="#horizontal-title">Careers</a></li>
+                  </ul>
+                </details>
+              </li>
+              <li><a href="#horizontal-title">Contact</a></li>
+            </ul>
+          </nav>
+        </div>
+        <pre tabindex="0"><code>&lt;nav aria-label="Top bar example" data-nav="horizontal"&gt;
+  &lt;ul&gt;
+    &lt;li&gt;&lt;a href="#horizontal-title" aria-current="page"&gt;Home&lt;/a&gt;&lt;/li&gt;
+    &lt;li&gt;
+      &lt;details name="top-bar"&gt;
+        &lt;summary&gt;Products&lt;/summary&gt;
+        &lt;ul&gt;
+          &lt;li&gt;&lt;a href="#horizontal-title"&gt;Design system&lt;/a&gt;&lt;/li&gt;
+          &lt;li&gt;&lt;a href="#horizontal-title"&gt;Icons&lt;/a&gt;&lt;/li&gt;
+        &lt;/ul&gt;
+      &lt;/details&gt;
+    &lt;/li&gt;
+    &lt;li&gt;
+      &lt;details name="top-bar"&gt;
+        &lt;summary&gt;Company&lt;/summary&gt;
+        &lt;ul&gt;
+          &lt;li&gt;&lt;a href="#horizontal-title"&gt;About&lt;/a&gt;&lt;/li&gt;
+          &lt;li&gt;&lt;a href="#horizontal-title"&gt;Careers&lt;/a&gt;&lt;/li&gt;
+        &lt;/ul&gt;
+      &lt;/details&gt;
+    &lt;/li&gt;
+    &lt;li&gt;&lt;a href="#horizontal-title"&gt;Contact&lt;/a&gt;&lt;/li&gt;
+  &lt;/ul&gt;
+&lt;/nav&gt;</code></pre>
+      </section>
+
+      <section aria-labelledby="specs-title">
+        <h2 id="specs-title">Specs and guidance</h2>
+        <ul>
+          <li><a href="https://html.spec.whatwg.org/multipage/sections.html#the-nav-element">WHATWG: the nav element</a></li>
+          <li><a href="https://www.w3.org/WAI/ARIA/apg/patterns/disclosure/examples/disclosure-navigation/">APG: Disclosure Navigation Menu example</a></li>
+          <li><a href="https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Reference/Attributes/aria-current">MDN: aria-current</a></li>
+          <li><a href="https://www.w3.org/WAI/WCAG22/Techniques/failures/F73">WCAG failure F73 (links in text without underline)</a></li>
+        </ul>
+      </section>
+    </main>
+
+    <footer>
+      <p><small>domestic-ui packages existing standards and well-known patterns. MIT licensed.</small></p>
+    </footer>
+  </body>
+</html>

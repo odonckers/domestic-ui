@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Disclosure and accordion · domestic-ui</title>
+    <meta name="description" content="Native details and summary as a disclosure, an exclusive accordion with the name attribute, and an inline show-more.">
+    <link rel="stylesheet" href="../../css/domestic.css">
+    <style>
+      /* Page-only layout, written with semantic tokens like any consumer would. */
+      body > :is(header, main, footer) {
+        max-inline-size: 72rem;
+        margin-inline: auto;
+        padding-inline: var(--dui-space-l);
+      }
+
+      body > header {
+        padding-block: var(--dui-space-m);
+        border-block-end: var(--dui-border-width) solid var(--dui-color-border);
+      }
+
+      body > main {
+        padding-block: var(--dui-space-2xl);
+      }
+
+      body > footer {
+        padding-block: var(--dui-space-l);
+        border-block-start: var(--dui-border-width) solid var(--dui-color-border);
+        color: var(--dui-color-text-muted);
+      }
+
+      /* Wrap long lines of example markup instead of scrolling them. */
+      pre {
+        white-space: pre-wrap;
+        overflow-wrap: anywhere;
+      }
+
+      .demo {
+        padding: var(--dui-space-l);
+        border: var(--dui-border-width) solid var(--dui-color-border);
+        border-radius: var(--dui-radius-surface);
+      }
+    </style>
+  </head>
+  <body>
+    <a class="visually-hidden" href="#main">Skip to main content</a>
+
+    <header class="cluster" style="--cluster-justify: space-between">
+      <p><strong>domestic-ui</strong></p>
+      <nav aria-label="Examples">
+        <ul class="cluster">
+          <li><a href="../base.html">Base elements</a></li>
+          <li><a href="../theming.html">Theming</a></li>
+          <li><a href="../atoms/index.html">Atoms</a></li>
+          <li><a href="index.html">Molecules</a></li>
+        </ul>
+      </nav>
+    </header>
+
+    <main id="main">
+      <h1>Disclosure and accordion</h1>
+      <!--
+        Keyboard
+          Tab: moves to the next summary / Shift+Tab: previous
+          Enter / Space: opens or closes the focused section
+      -->
+      <p data-text="lead">Show and hide content with <code>&lt;details&gt;</code> and <code>&lt;summary&gt;</code>. No JavaScript.</p>
+      <p>API: <code>data-disclosure="accordion"</code> on a wrapper, <code>data-disclosure="plain"</code> on a <code>&lt;details&gt;</code>, native <code>name</code> and <code>open</code>. Source: <a href="../../css/components/molecules/disclosure.css"><code>css/components/molecules/disclosure.css</code></a>.</p>
+      <p>
+        <code>&lt;summary&gt;</code> is exposed as a button with an expanded state, which is the
+        <a href="https://www.w3.org/WAI/ARIA/apg/patterns/disclosure/">APG Disclosure pattern</a> with no ARIA to write.
+        Give several <code>&lt;details&gt;</code> the same <code>name</code> and opening one closes the others: an exclusive accordion.
+        Unlike the <a href="https://www.w3.org/WAI/ARIA/apg/patterns/accordion/">APG Accordion</a> example, the headers are not headings and
+        there is no arrow-key movement between them (both optional in the APG); <kbd>Tab</kbd> moves from one summary to the next.
+      </p>
+
+      <section aria-labelledby="single-title">
+        <h2 id="single-title">Disclosure</h2>
+        <p>A single <code>&lt;details&gt;</code> is styled by the base layer; no attribute needed.</p>
+        <div class="demo">
+          <details>
+            <summary>What is included in the plan?</summary>
+            <p>Unlimited projects, five collaborators and email support.</p>
+          </details>
+        </div>
+        <pre tabindex="0"><code>&lt;details&gt;
+  &lt;summary&gt;What is included in the plan?&lt;/summary&gt;
+  &lt;p&gt;Unlimited projects, five collaborators and email support.&lt;/p&gt;
+&lt;/details&gt;</code></pre>
+      </section>
+
+      <section aria-labelledby="accordion-title">
+        <h2 id="accordion-title">Exclusive accordion</h2>
+        <p>Same <code>name</code> on each item: only one is open at a time.</p>
+        <div class="demo">
+          <div data-disclosure="accordion">
+            <details name="faq" open>
+              <summary>Shipping</summary>
+              <p>Orders ship within two working days.</p>
+            </details>
+            <details name="faq">
+              <summary>Returns</summary>
+              <p>Return unused items within 30 days for a full refund.</p>
+            </details>
+            <details name="faq">
+              <summary>Warranty</summary>
+              <p>Every product has a two-year warranty.</p>
+            </details>
+          </div>
+        </div>
+        <pre tabindex="0"><code>&lt;div data-disclosure="accordion"&gt;
+  &lt;details name="faq" open&gt;
+    &lt;summary&gt;Shipping&lt;/summary&gt;
+    &lt;p&gt;Orders ship within two working days.&lt;/p&gt;
+  &lt;/details&gt;
+  &lt;details name="faq"&gt;
+    &lt;summary&gt;Returns&lt;/summary&gt;
+    &lt;p&gt;Return unused items within 30 days for a full refund.&lt;/p&gt;
+  &lt;/details&gt;
+  &lt;details name="faq"&gt;
+    &lt;summary&gt;Warranty&lt;/summary&gt;
+    &lt;p&gt;Every product has a two-year warranty.&lt;/p&gt;
+  &lt;/details&gt;
+&lt;/div&gt;</code></pre>
+      </section>
+
+      <section aria-labelledby="multi-title">
+        <h2 id="multi-title">Accordion with several open</h2>
+        <p>Leave out <code>name</code> when people need to compare sections.</p>
+        <div class="demo">
+          <div data-disclosure="accordion">
+            <details>
+              <summary>Monthly plan</summary>
+              <p>Pay each month and cancel any time.</p>
+            </details>
+            <details>
+              <summary>Yearly plan</summary>
+              <p>Pay once a year and get two months free.</p>
+            </details>
+          </div>
+        </div>
+        <pre tabindex="0"><code>&lt;div data-disclosure="accordion"&gt;
+  &lt;details&gt;
+    &lt;summary&gt;Monthly plan&lt;/summary&gt;
+    &lt;p&gt;Pay each month and cancel any time.&lt;/p&gt;
+  &lt;/details&gt;
+  &lt;details&gt;
+    &lt;summary&gt;Yearly plan&lt;/summary&gt;
+    &lt;p&gt;Pay once a year and get two months free.&lt;/p&gt;
+  &lt;/details&gt;
+&lt;/div&gt;</code></pre>
+      </section>
+
+      <section aria-labelledby="plain-title">
+        <h2 id="plain-title">Inline show more</h2>
+        <div class="demo">
+          <p>The release adds pagination, tabs and toasts.</p>
+          <details data-disclosure="plain">
+            <summary>Show the full list of changes</summary>
+            <ul>
+              <li>Twelve molecules with example pages.</li>
+              <li>Five small web components.</li>
+              <li>Four explainers for custom patterns.</li>
+            </ul>
+          </details>
+        </div>
+        <pre tabindex="0"><code>&lt;p&gt;The release adds pagination, tabs and toasts.&lt;/p&gt;
+&lt;details data-disclosure="plain"&gt;
+  &lt;summary&gt;Show the full list of changes&lt;/summary&gt;
+  &lt;ul&gt;
+    &lt;li&gt;Twelve molecules with example pages.&lt;/li&gt;
+    &lt;li&gt;Five small web components.&lt;/li&gt;
+    &lt;li&gt;Four explainers for custom patterns.&lt;/li&gt;
+  &lt;/ul&gt;
+&lt;/details&gt;</code></pre>
+      </section>
+
+      <section aria-labelledby="specs-title">
+        <h2 id="specs-title">Specs and guidance</h2>
+        <ul>
+          <li><a href="https://html.spec.whatwg.org/multipage/interactive-elements.html#the-details-element">WHATWG: the details element</a></li>
+          <li><a href="https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/details">MDN: details (including the name attribute)</a></li>
+          <li><a href="https://www.w3.org/WAI/ARIA/apg/patterns/disclosure/">APG: Disclosure pattern</a></li>
+          <li><a href="https://www.w3.org/WAI/ARIA/apg/patterns/accordion/">APG: Accordion pattern</a></li>
+          <li><a href="https://www.w3.org/TR/html-aam-1.0/#el-summary">HTML-AAM: summary mapping</a></li>
+        </ul>
+      </section>
+    </main>
+
+    <footer>
+      <p><small>domestic-ui packages existing standards and well-known patterns. MIT licensed.</small></p>
+    </footer>
+  </body>
+</html>

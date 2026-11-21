@@ -1,0 +1,221 @@
+/*
+ * Molecule: alert and toast
+ *
+ * Messages about the state of the page: an inline alert with a tone
+ * (info, success, warning, danger), live regions that announce new
+ * messages to screen readers, and a toast region that stacks short
+ * messages at the bottom inline-end corner of the viewport.
+ * https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Reference/Roles/status_role
+ * https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Reference/Roles/alert_role
+ * WCAG 4.1.3 Status Messages: https://www.w3.org/WAI/WCAG22/Understanding/status-messages.html
+ *
+ * Live regions: a message that appears without a page load must be
+ * announced without moving focus (WCAG 4.1.3). Put it in a role="status"
+ * region (polite: read when the user is idle; success and progress) or a
+ * role="alert" region (assertive: interrupts; errors that need attention
+ * now). The region MUST be in the page before the message is inserted:
+ * screen readers watch regions that exist, so inserting an element that
+ * already holds role and text is often not announced. Render the empty
+ * region with the page and put the text into it later. Static alerts that
+ * are present on load need no role; they are read with the page.
+ * https://www.w3.org/WAI/WCAG22/Techniques/aria/ARIA22
+ * https://www.w3.org/WAI/WCAG22/Techniques/aria/ARIA19
+ *
+ * Tone is never color alone (WCAG 1.4.1): the message starts with a word
+ * ("Warning:") written in the markup, so every user and screen reader gets
+ * it, and a decorative icon (CSS generated content with empty alternative
+ * text) adds a shape. Body text is --dui-color-text on the tinted surface,
+ * and the tone color is used for the prefix and the inline-start rule
+ * (4.5:1 and 3:1, tested).
+ *
+ * Toasts: data-alert="toasts" on a fixed region, plus the <dui-toaster>
+ * web component (web-components/dui-toaster.js) for a show() method and
+ * dismiss buttons. The region is role="status" and in the page from the
+ * start. Our choice: toasts never dismiss themselves, so nobody loses a
+ * message they did not have time to read (WCAG 2.2.1 Timing Adjustable);
+ * each has a Dismiss button. A toast is a status, not a dialog: it never
+ * takes focus. See explainers/toast.md.
+ * https://www.w3.org/WAI/WCAG22/Understanding/timing-adjustable.html
+ *
+ * API
+ *   data-alert="info | success | warning | danger"   an inline alert with a tone
+ *   data-alert="toasts"                               the toast region (fixed position)
+ *   data-alert="dismiss"                              a toast's dismiss button
+ *   role="status" | role="alert"                      native ARIA live regions
+ *
+ * Example
+ *   <div data-alert="warning">
+ *     <p><strong>Warning:</strong> Your trial ends in 3 days.</p>
+ *   </div>
+ *
+ *   <div role="status"></div>            (empty on load; your script fills it)
+ *
+ *   <dui-toaster data-alert="toasts" role="status"></dui-toaster>
+ *   <script type="module" src="web-components/dui-toaster.js"></script>
+ *   document.querySelector("dui-toaster").show("Draft saved.", { tone: "success" });
+ *
+ * Keyboard
+ *   Tab: reaches each toast's Dismiss button; focus never moves to a toast by itself
+ *   Enter / Space: on Dismiss, removes the toast and moves focus to the next one
+ *
+ * Specs
+ *   https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Reference/Roles/status_role
+ *   https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Reference/Roles/alert_role
+ *   https://www.w3.org/WAI/WCAG22/Understanding/status-messages.html
+ *   https://www.w3.org/WAI/WCAG22/Understanding/timing-adjustable.html
+ *   https://www.w3.org/WAI/WCAG22/Understanding/use-of-color.html
+ *   https://www.w3.org/WAI/WCAG22/Techniques/aria/ARIA22
+ *   https://www.w3.org/WAI/WCAG22/Techniques/aria/ARIA19
+ */
+
+/* Toast region: fixed at the bottom inline-end corner, newest message last. */
+[data-alert~="toasts"] {
+  position: fixed;
+  z-index: 1;
+  inset-block-end: var(--dui-space-m);
+  inset-inline-end: var(--dui-space-m);
+  display: flex;
+  flex-direction: column;
+  gap: var(--dui-space-xs);
+  inline-size: min(var(--dui-size-drawer), 100% - var(--dui-space-m) * 2);
+  max-block-size: calc(100% - var(--dui-space-m) * 2);
+  overflow: auto;
+  pointer-events: none;
+}
+
+[data-alert~="toasts"] > * {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--dui-space-s);
+  margin: 0;
+  box-shadow: var(--dui-shadow-raised);
+  pointer-events: auto;
+  transition:
+    opacity var(--dui-duration-normal) var(--dui-easing-standard),
+    translate var(--dui-duration-normal) var(--dui-easing-standard);
+}
+
+@starting-style {
+  [data-alert~="toasts"] > * {
+    opacity: 0;
+    translate: 0 var(--dui-space-s);
+  }
+}
+
+[data-alert~="toasts"] > * > :not([data-alert~="dismiss"]) {
+  flex: 1;
+  margin: 0;
+}
+
+[data-alert~="dismiss"] {
+  flex-shrink: 0;
+  margin-block: calc(var(--dui-space-2xs) * -1);
+}
+
+:is([data-alert~="info"], [data-alert~="success"], [data-alert~="warning"], [data-alert~="danger"]) {
+  position: relative;
+  padding: var(--dui-space-s) var(--dui-space-m);
+  padding-inline-start: calc(var(--dui-space-m) + var(--dui-size-check) + var(--dui-space-s));
+  background-color: var(--dui-color-surface-raised);
+  color: var(--dui-color-text);
+  border: var(--dui-border-width) solid var(--dui-color-border);
+  border-inline-start-width: var(--dui-border-width-emphasis);
+  border-radius: var(--dui-radius-surface);
+}
+
+:is([data-alert~="info"], [data-alert~="success"], [data-alert~="warning"], [data-alert~="danger"]) > * + * {
+  margin-block-start: var(--dui-space-xs);
+}
+
+/* Decorative icon: a filled circle with a glyph, silent for screen readers. */
+:is([data-alert~="info"], [data-alert~="success"], [data-alert~="warning"], [data-alert~="danger"])::before {
+  position: absolute;
+  inset-inline-start: var(--dui-space-m);
+  inset-block-start: calc(var(--dui-space-s) + (var(--dui-step-0) * var(--dui-line-height-body) - var(--dui-size-check)) / 2);
+  display: grid;
+  place-items: center;
+  inline-size: var(--dui-size-check);
+  block-size: var(--dui-size-check);
+  border-radius: var(--dui-radius-pill);
+  color: var(--dui-color-surface);
+  font-size: var(--dui-step--1);
+  font-weight: var(--dui-font-weight-heading);
+  line-height: 1;
+}
+
+[data-alert~="info"] {
+  background-color: var(--dui-color-info-surface);
+  border-color: color-mix(in oklab, var(--dui-color-info) var(--dui-border-tint-amount), transparent);
+  border-inline-start-color: var(--dui-color-info);
+}
+
+[data-alert~="info"]::before {
+  content: "i";
+  content: "i" / "";
+  background-color: var(--dui-color-info);
+}
+
+[data-alert~="success"] {
+  background-color: var(--dui-color-success-surface);
+  border-color: color-mix(in oklab, var(--dui-color-success) var(--dui-border-tint-amount), transparent);
+  border-inline-start-color: var(--dui-color-success);
+}
+
+[data-alert~="success"]::before {
+  content: "✓";
+  content: "✓" / "";
+  background-color: var(--dui-color-success);
+}
+
+[data-alert~="warning"] {
+  background-color: var(--dui-color-warning-surface);
+  border-color: color-mix(in oklab, var(--dui-color-warning) var(--dui-border-tint-amount), transparent);
+  border-inline-start-color: var(--dui-color-warning);
+}
+
+[data-alert~="warning"]::before {
+  content: "!";
+  content: "!" / "";
+  background-color: var(--dui-color-warning);
+}
+
+[data-alert~="danger"] {
+  background-color: var(--dui-color-danger-surface);
+  border-color: color-mix(in oklab, var(--dui-color-danger) var(--dui-border-tint-amount), transparent);
+  border-inline-start-color: var(--dui-color-danger);
+}
+
+[data-alert~="danger"]::before {
+  content: "×";
+  content: "×" / "";
+  background-color: var(--dui-color-danger);
+}
+
+/* The prefix word ("Warning:") in the tone color. */
+[data-alert~="info"] > :first-child > strong:first-child {
+  color: var(--dui-color-info);
+}
+
+[data-alert~="success"] > :first-child > strong:first-child {
+  color: var(--dui-color-success);
+}
+
+[data-alert~="warning"] > :first-child > strong:first-child {
+  color: var(--dui-color-warning);
+}
+
+[data-alert~="danger"] > :first-child > strong:first-child {
+  color: var(--dui-color-danger);
+}
+
+@media (forced-colors: active) {
+  :is([data-alert~="info"], [data-alert~="success"], [data-alert~="warning"], [data-alert~="danger"]) {
+    border-color: canvastext;
+  }
+
+  :is([data-alert~="info"], [data-alert~="success"], [data-alert~="warning"], [data-alert~="danger"])::before {
+    forced-color-adjust: none;
+    background-color: canvastext;
+    color: canvas;
+  }
+}

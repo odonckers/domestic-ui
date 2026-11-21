@@ -59,6 +59,7 @@
           <li><a href="base.html">Base elements</a></li>
           <li><a href="theming.html" aria-current="page">Theming</a></li>
           <li><a href="atoms/index.html">Atoms</a></li>
+          <li><a href="molecules/index.html">Molecules</a></li>
         </ul>
       </nav>
     </header>
@@ -85,13 +86,21 @@
         Links, focus rings, button hover colors and the tinted badge backgrounds follow <code>--dui-color-accent</code>
         and <code>--dui-color-surface</code> automatically, because those tokens are re-derived on every
         <code>[data-theme]</code> scope. The <a href="atoms/index.html">atoms</a> in each panel (badges, a field with a hint
-        and an error, a switch and button variants) pick up the theme with no extra CSS.
+        and an error, a switch and button variants) and the <a href="molecules/index.html">molecules</a> (a breadcrumb, an alert,
+        tabs and a card) pick up the theme with no extra CSS.
         Both themes follow your system light or dark preference through
         <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/color_value/light-dark"><code>light-dark()</code></a>.
       </p>
 
       <div class="grid" style="--grid-min: 20rem">
         <section class="panel stack" aria-labelledby="default-title">
+          <nav aria-label="Breadcrumb, default theme" data-breadcrumb>
+            <ol>
+              <li><a href="base.html">Home</a></li>
+              <li><a href="#default-title">Releases</a></li>
+              <li><a href="#default-title" aria-current="page">Release notes</a></li>
+            </ol>
+          </nav>
           <h2 id="default-title">Default theme</h2>
           <p>Release notes are ready for review. <a href="#default-title">Read the summary</a> before the meeting.</p>
           <p class="cluster">
@@ -115,6 +124,29 @@
               <button type="button" data-button="quiet">Discard</button>
             </div>
           </form>
+          <div data-alert="warning">
+            <p><strong>Warning:</strong> Two checks are still running.</p>
+          </div>
+          <dui-tabs>
+            <nav aria-label="Release, default theme">
+              <ul>
+                <li><a href="#default-tab-notes">Notes</a></li>
+                <li><a href="#default-tab-checks">Checks</a></li>
+              </ul>
+            </nav>
+            <section id="default-tab-notes">
+              <h3>Notes</h3>
+              <p>Two bug fixes and a new token.</p>
+            </section>
+            <section id="default-tab-checks">
+              <h3>Checks</h3>
+              <p>Lint passed. Tests are running.</p>
+            </section>
+          </dui-tabs>
+          <article data-card="link">
+            <h3><a href="#default-title">Upgrade guide</a></h3>
+            <p>What to change when you update.</p>
+          </article>
           <details>
             <summary>What changed?</summary>
             <p>Two bug fixes and a new <code>--dui-color-success</code> token.</p>
@@ -122,6 +154,13 @@
         </section>
 
         <section class="panel stack" data-theme="forest" aria-labelledby="forest-title">
+          <nav aria-label="Breadcrumb, forest theme" data-breadcrumb>
+            <ol>
+              <li><a href="base.html">Home</a></li>
+              <li><a href="#forest-title">Releases</a></li>
+              <li><a href="#forest-title" aria-current="page">Release notes</a></li>
+            </ol>
+          </nav>
           <h2 id="forest-title">Forest theme</h2>
           <p>Release notes are ready for review. <a href="#forest-title">Read the summary</a> before the meeting.</p>
           <p class="cluster">
@@ -145,6 +184,29 @@
               <button type="button" data-button="quiet">Discard</button>
             </div>
           </form>
+          <div data-alert="warning">
+            <p><strong>Warning:</strong> Two checks are still running.</p>
+          </div>
+          <dui-tabs>
+            <nav aria-label="Release, forest theme">
+              <ul>
+                <li><a href="#forest-tab-notes">Notes</a></li>
+                <li><a href="#forest-tab-checks">Checks</a></li>
+              </ul>
+            </nav>
+            <section id="forest-tab-notes">
+              <h3>Notes</h3>
+              <p>Two bug fixes and a new token.</p>
+            </section>
+            <section id="forest-tab-checks">
+              <h3>Checks</h3>
+              <p>Lint passed. Tests are running.</p>
+            </section>
+          </dui-tabs>
+          <article data-card="link">
+            <h3><a href="#forest-title">Upgrade guide</a></h3>
+            <p>What to change when you update.</p>
+          </article>
           <details>
             <summary>What changed?</summary>
             <p>Two bug fixes and a new <code>--dui-color-success</code> token.</p>
@@ -156,5 +218,6 @@
     <footer>
       <p><small>Every color pair in both themes meets WCAG 2.2 AA in light and dark. <code>npm test</code> checks it.</small></p>
     </footer>
+    <script type="module" src="../web-components/dui-tabs.js"></script>
   </body>
 </html>

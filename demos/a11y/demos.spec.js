@@ -20,12 +20,6 @@ const summarize = (violations) =>
   violations.map((v) => `${v.id} (${v.impact}): ${v.help}\n    ${v.nodes.map((n) => n.target.join(" ")).join("\n    ")}`).join("\n");
 
 /**
- * Views expected to overflow at small sizes until a core fix lands.
- * dashboard: the chores table needs css/'s data-scroll="inline" region.
- */
-const PENDING_TABLE_OVERFLOW = new Set(["dashboard"]);
-
-/**
  * Elements wider than the viewport, and whether the page scrolls sideways.
  * Checks both the root scroller and body (WCAG 1.4.10 Reflow).
  * @param {import("@playwright/test").Page} page
@@ -94,11 +88,6 @@ for (const name of selectedApps()) {
         const size = `${viewport.width}x${viewport.height}`;
 
         test(`fits ${size} without horizontal overflow`, async ({ page }) => {
-          // The dashboard's chores table is wider than a phone; it overflows until
-          // css/ ships the data-scroll="inline" region for wide tables (core
-          // hotfix). Then wrap the table per its docs and delete this marker:
-          // test.fail() errors as soon as the view stops overflowing.
-          test.fail(PENDING_TABLE_OVERFLOW.has(view), "Waiting on the data-scroll=\"inline\" hotfix in css/");
           await page.setViewportSize(viewport);
           await page.goto(path, { waitUntil: "networkidle" });
 
