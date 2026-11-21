@@ -1183,6 +1183,8 @@ Pattern: "The Cluster", Every Layout, built with flex-wrap and gap.
 
 The custom properties do not inherit, so nested clusters keep their defaults.
 
+Live examples are in examples/base.html#layout.
+
 ### Accessibility
 
 - No notes beyond the accessibility baseline.
@@ -1236,6 +1238,8 @@ class="grid"
 No media queries. Pattern: "RAM" (repeat, auto-fit, minmax), see and "The Grid", Every Layout.
 
 The custom properties do not inherit, so nested grids keep their defaults.
+
+Live examples are in examples/base.html#layout.
 
 ### Accessibility
 
@@ -1310,11 +1314,11 @@ data-scroll="inline"   scroll along the inline axis (left/right in English)
 
 ### Specifications
 
-- [WCAG Reflow](https://www.w3.org/WAI/WCAG22/Understanding/reflow.html)
-- [MDN `overflow-x`](https://developer.mozilla.org/en-US/docs/Web/CSS/overflow-x)
 - [Deque University scrollable region focusable](https://dequeuniversity.com/rules/axe/4.10/scrollable-region-focusable)
 - [W3C el section](https://www.w3.org/TR/html-aam-1.0/#el-section)
 - [Adrian Roselli tables css display properties and aria](https://adrianroselli.com/2018/02/tables-css-display-properties-and-aria.html)
+- [WCAG Reflow](https://www.w3.org/WAI/WCAG22/Understanding/reflow.html)
+- [MDN `overflow-x`](https://developer.mozilla.org/en-US/docs/Web/CSS/overflow-x)
 
 ### See also
 
@@ -1351,6 +1355,8 @@ class="stack"
 Pattern: "The Stack", Every Layout, built with flexbox gap.
 
 --stack-gap does not inherit, so nested stacks keep their own default.
+
+Live examples are in examples/base.html#layout.
 
 ### Accessibility
 
@@ -1871,6 +1877,8 @@ role="switch"   on <input type="checkbox">; no class needed.
 - [ARIA in HTML](https://www.w3.org/TR/html-aria/#el-input-checkbox)
 - [MDN `switch` role](https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Reference/Roles/switch_role)
 - [MDN `forced-colors`](https://developer.mozilla.org/en-US/docs/Web/CSS/@media/forced-colors)
+- [WCAG Use of color](https://www.w3.org/WAI/WCAG22/Understanding/use-of-color.html)
+- [WCAG Non text contrast](https://www.w3.org/WAI/WCAG22/Understanding/non-text-contrast.html)
 
 ### See also
 
@@ -1970,6 +1978,7 @@ data-field="error"      on the error message
 - [MDN `aria-describedby`](https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Reference/Attributes/aria-describedby)
 - [MDN `aria-invalid`](https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Reference/Attributes/aria-invalid)
 - [MDN `:user-invalid`](https://developer.mozilla.org/en-US/docs/Web/CSS/:user-invalid)
+- [WCAG Use of color](https://www.w3.org/WAI/WCAG22/Understanding/use-of-color.html)
 
 ### See also
 

@@ -8,6 +8,12 @@
  * https://html.spec.whatwg.org/multipage/form-elements.html#the-button-element
  * APG button pattern: https://www.w3.org/WAI/ARIA/apg/patterns/button/
  *
+ * Accessibility: a link styled as a button keeps link semantics.
+ * aria-disabled="true" stays focusable so a description can explain why;
+ * your script must ignore activation. Every variant keeps the base
+ * :focus-visible outline (WCAG 1.4.11, 2.4.13), and small buttons are 32px
+ * tall, above the 24px minimum of WCAG 2.5.8.
+ *
  * API
  *   data-button="[primary | secondary | quiet] [small | large]"
  *   A space-separated list: at most one variant word and one size word.
@@ -40,6 +46,15 @@
  * buttons add an inner ring in their text color, so the indicator contrasts
  * with the fill as well as with the surface (WCAG 1.4.11, 2.4.13).
  * https://www.w3.org/WAI/WCAG22/Understanding/focus-appearance.html
+ *
+ * Specs
+ *   https://html.spec.whatwg.org/multipage/form-elements.html#the-button-element
+ *   https://www.w3.org/WAI/ARIA/apg/patterns/button/
+ *   https://www.w3.org/WAI/ARIA/apg/practices/keyboard-interface/#focusabilityofdisabledcontrols
+ *   https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Reference/Attributes/aria-disabled
+ *   https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Reference/Attributes/aria-busy
+ *   https://www.w3.org/WAI/WCAG22/Understanding/target-size-minimum.html
+ *   https://www.w3.org/WAI/WCAG22/Understanding/focus-appearance.html
  */
 
 /* Links that look like buttons: the box that base gives <button>. */

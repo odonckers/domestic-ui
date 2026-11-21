@@ -20,6 +20,12 @@
  *   Keyboard                        indented block = keyboard notes
  *     Tab: moves focus into the widget
  *
+ *   Accessibility: named by <label>. paragraph (or heading over an
+ *                                   indented block) = accessibility notes
+ *
+ *   Specs                           indented block of URLs, read only
+ *     https://…                     for its URLs (see below)
+ *
  *   States                          any other one-word heading over an
  *     disabled   Native. …          indented block, or a paragraph that
  *                                   opens with "Word: ", is a labelled
@@ -40,7 +46,7 @@ import { firstSentence } from "./util.mjs";
  * @property {{ key: string, action: string }[]} keyboard lines of the Keyboard block
  * @property {{ label: string, text: string }[]} blocks other labelled blocks (States, Sizes, Focus, …), verbatim
  * @property {string[]} urls      every URL, in order, without duplicates
- * @property {string[]} a11y      prose sentences about accessibility
+ * @property {string[]} a11y      sentences of the Accessibility block, and prose sentences about accessibility
  */
 
 const URL_RE = /https?:\/\/[^\s<>"'`]+/g;
@@ -110,6 +116,8 @@ export function parseHeader(text, others = []) {
   /** @type {{ label: string, text: string }[]} */
   const blocks = [];
   const prose = [];
+  /** @type {string[]} */
+  const a11y = [];
   for (const lines of paragraphs) {
     const head = lines[0].trim();
     const block = head.match(BLOCK_HEAD_RE);
@@ -117,12 +125,20 @@ export function parseHeader(text, others = []) {
     if (/^API:?$/.test(head)) api = dedent(lines.slice(1)).text;
     else if (/^Examples?:?$/.test(head)) example = dedent(lines.slice(1)).text;
     else if (/^Keyboard:?$/.test(head)) keyboard = parseKeyboard(lines.slice(1));
+    else if (/^Specs:?(?:\s|$)/.test(head)) continue; // its URLs are collected below
+    else if (/^Accessibility:?(?:\s|$)/.test(head)) {
+      const text = lines.map((l) => l.trim()).join(" ").replace(/^Accessibility:?\s*/, "").trim();
+      a11y.push(...sentences(text.charAt(0).toUpperCase() + text.slice(1)));
+    }
     else if (block && lines.length > 1 && lines.slice(1).every((l) => !l.trim() || /^\s/.test(l))) blocks.push({ label: block[1], text: dedent(lines.slice(1)).text });
     else if (inlineBlock && lines[0] !== label) blocks.push({ label: inlineBlock[1], text: [inlineBlock[2], ...lines.slice(1)].join("\n") });
-    else if (!/^API:\s/.test(head) && !(label && lines.length === 1 && lines[0] === label)) prose.push(lines.map((l) => l.trim()).join(" "));
+    else if (!/^API:\s/.test(head) && !(label && lines.length === 1 && lines[0] === label)) {
+      const paragraph = lines.map((l) => l.trim()).join(" ");
+      prose.push(paragraph);
+      a11y.push(...sentences(paragraph).filter((s) => A11Y_RE.test(s)));
+    }
   }
   const apiInline = [text, ...others].flatMap((c) => [...c.matchAll(/^\s*API:\s+(.+)$/gm)].map((m) => m[1].trim()));
-  const a11y = prose.flatMap(sentences).filter((s) => A11Y_RE.test(s));
   return {
     label,
     summary: prose.length ? firstSentence(prose[0]) : label.replace(/^[^:]+:\s*/, ""),

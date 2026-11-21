@@ -11,6 +11,12 @@
  * https://www.w3.org/TR/html-aria/#el-input-checkbox
  * MDN: https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Reference/Roles/switch_role
  *
+ * Accessibility: the native checkbox brings focus, Space to toggle and form
+ * submission; role="switch" makes assistive technology announce on and off.
+ * State is not color alone (WCAG 1.4.1), track border and thumb are 3:1
+ * against the surface (WCAG 1.4.11), and both states stay visible in forced
+ * colors.
+ *
  * API
  *   role="switch"   on <input type="checkbox">; no class needed.
  *
@@ -26,6 +32,13 @@
  * fills. Track border and thumb are 3:1 against the surface (WCAG 1.4.11).
  * Forced colors: system colors are set explicitly so both states stay visible.
  * https://developer.mozilla.org/en-US/docs/Web/CSS/@media/forced-colors
+ *
+ * Specs
+ *   https://www.w3.org/WAI/ARIA/apg/patterns/switch/
+ *   https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Reference/Roles/switch_role
+ *   https://www.w3.org/WAI/WCAG22/Understanding/use-of-color.html
+ *   https://www.w3.org/WAI/WCAG22/Understanding/non-text-contrast.html
+ *   https://developer.mozilla.org/en-US/docs/Web/CSS/@media/forced-colors
  */
 
 input[type="checkbox"][role="switch"] {

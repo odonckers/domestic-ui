@@ -13,6 +13,12 @@
  * APG Menu: https://www.w3.org/WAI/ARIA/apg/patterns/menubar/
  * https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Reference/Roles/menu_role
  *
+ * Accessibility: <dui-menu> adds aria-haspopup, aria-expanded, role="menu",
+ * role="menuitem" and the APG keyboard behavior; with JavaScript off, every
+ * action is a plain button in the tab order. Items are at least
+ * --dui-size-target tall (WCAG 2.5.8) and show the base focus outline
+ * (WCAG 2.4.7).
+ *
  * When not to use it: if the items are links to other pages, use a
  * disclosure (a <details> or a popover of links, see nav.css and
  * popover.css) instead. role="menu" tells screen readers to expect an

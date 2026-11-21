@@ -8,6 +8,10 @@
  * https://www.w3.org/WAI/WCAG22/Understanding/use-of-color.html
  * https://html.spec.whatwg.org/multipage/text-level-semantics.html#the-a-element
  *
+ * Accessibility: the link keeps its underline, so color is never the only
+ * cue (WCAG 1.4.1). It takes the surrounding text color, which already
+ * meets 4.5:1.
+ *
  * API
  *   data-link="quiet"   on <a href>
  *
@@ -16,6 +20,10 @@
  *
  * Visited links keep the surrounding color too. The surrounding text color
  * already meets 4.5:1, so the link does as well.
+ *
+ * Specs
+ *   https://html.spec.whatwg.org/multipage/text-level-semantics.html#the-a-element
+ *   https://www.w3.org/WAI/WCAG22/Understanding/use-of-color.html
  */
 
 a[data-link~="quiet"],

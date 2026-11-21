@@ -11,10 +11,9 @@
  *   --cluster-justify   justify-content value (default: flex-start)
  *   --cluster-align     align-items value     (default: center)
  *
- * Example
- *   <ul class="cluster" style="--cluster-justify: space-between">…</ul>
- *
  * The custom properties do not inherit, so nested clusters keep their defaults.
+ *
+ * Live examples are in examples/base.html#layout.
  */
 
 @property --cluster-gap {

@@ -9,10 +9,9 @@
  *   class="stack"
  *   --stack-gap   space between children (default: var(--dui-space-m))
  *
- * Example
- *   <div class="stack" style="--stack-gap: var(--dui-space-s)">…</div>
- *
  * --stack-gap does not inherit, so nested stacks keep their own default.
+ *
+ * Live examples are in examples/base.html#layout.
  */
 
 @property --stack-gap {

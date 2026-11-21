@@ -12,10 +12,9 @@
  *   --grid-min   minimum column width (default: var(--dui-size-column-min))
  *   --grid-gap   gap between cells    (default: var(--dui-space-l))
  *
- * Example
- *   <div class="grid" style="--grid-min: 12rem">…</div>
- *
  * The custom properties do not inherit, so nested grids keep their defaults.
+ *
+ * Live examples are in examples/base.html#layout.
  */
 
 @property --grid-min {
