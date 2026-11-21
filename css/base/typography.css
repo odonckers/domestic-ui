@@ -139,20 +139,43 @@ pre {
 }
 
 /*
- * Long identifiers and attribute lists wrap too, for the same reason as
- * links above. <pre> has its own rule below.
+ * Long identifiers and attribute lists wrap too. <pre> has its own rule
+ * below.
+ * https://developer.mozilla.org/en-US/docs/Web/CSS/overflow-wrap
+ * Our choice: break-word by default, so a token such as data-theme breaks
+ * only when it alone is wider than its line, never mid-word where the whole
+ * token fits on the next line.
  */
 code,
 kbd,
 samp {
+  overflow-wrap: break-word;
+}
+
+/*
+ * Our choice: anywhere in a bare table cell and on narrow screens, where
+ * a long token must also lower the min-content width so a cell or flex
+ * item shrinks and nothing scrolls sideways at 320 CSS pixels (WCAG 1.4.10,
+ * https://www.w3.org/WAI/WCAG22/Understanding/reflow.html). 30em (480px
+ * at the default font size) covers 320px with room to spare; a media
+ * query cannot read a custom property, so it is a length.
+ */
+:is(td, th) :is(code, kbd, samp) {
   overflow-wrap: anywhere;
+}
+
+@media (width < 30em) {
+  code,
+  kbd,
+  samp {
+    overflow-wrap: anywhere;
+  }
 }
 
 /*
  * Our choice: in a table inside data-scroll="inline" (css/layout/scroll.css),
  * code keeps whole tokens (break-word only splits a token that alone is wider
- * than the cell), because the region scrolls instead. A bare table keeps
- * overflow-wrap: anywhere, so it still fits a narrow viewport.
+ * than the cell), because the region scrolls instead.
  */
 [data-scroll~="inline"] :is(td, th) :is(code, kbd, samp) {
   overflow-wrap: break-word;
