@@ -12,6 +12,13 @@ is set, `.cluster` is flex, `.visually-hidden` hides the skip link), and that th
 (a `data-text` lead and footer, a tinted `data-badge` on the dashboard, the `role="switch"`
 checkboxes drawn with `appearance: none` on settings).
 
+Small screens: every view also loads at 320×640 and 375×812. It must not scroll sideways
+(`scrollWidth > clientWidth` on `<html>` or `<body>`, closed and with `<details>` open; the failure
+lists the elements that stick out), and axe runs again at both sizes in light and dark.
+The dashboard's overflow check is marked `test.fail()` until `css/` ships the
+`data-scroll="inline"` region for wide tables; once the table is wrapped, delete the
+`PENDING_TABLE_OVERFLOW` entry in `demos.spec.js`.
+
 - `apps.js`: where each app's static output lives and the URL of each view.
 - `serve.mjs`: tiny zero-dependency static server (`--root`, `--port`, `--spa` for a fallback to
   `/index.html`). `/foo/` serves `/foo/index.html`.
