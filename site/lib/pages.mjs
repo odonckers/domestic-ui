@@ -9,7 +9,7 @@
  * relative in HTML, absolute in Markdown (see ./templates.mjs).
  */
 import { specName } from "./css-comments.mjs";
-import { demoSourceUrl, demoViewMd } from "./demo-views.mjs";
+import { demoAppLinksMd, demoViewMd } from "./demo-views.mjs";
 import { COMPONENT_GROUPS, LEVELS } from "./discovery.mjs";
 import { inline, plainText, shiftHeadings, tokenize } from "./markdown.mjs";
 import { previewKind } from "./tokens.mjs";
@@ -820,9 +820,8 @@ function demosLine(model, sitePath) {
 }
 
 /**
- * The Views table on demos.html: one row per view, one column per app
- * linking its source. In a named, focusable scroll region, as wide tables
- * are elsewhere on the site; the Markdown twin gets a plain table.
+ * The Views section on demos.html: one item per view, in the format of the
+ * app list, with each app's source on GitHub.
  * @param {Model} model
  * @returns {Block[]}
  */
@@ -830,43 +829,8 @@ function demoViewsBlocks(model) {
   const data = model.demoViews;
   if (!data) return [];
   const note = `The demos are not published on GitHub Pages; run them locally as [\`demos/README.md\`](${BLOB_URL}demos/README.md) explains.`;
-  const link = (/** @type {import("./demo-views.mjs").DemoView} */ v, /** @type {string} */ app) => demoSourceUrl(model.root, v.paths[app]);
-  // The file name, or the directory name with a trailing slash.
-  const name = (/** @type {import("./demo-views.mjs").DemoView} */ v, /** @type {string} */ app) => `${v.paths[app].split("/").pop()}${link(v, app).includes("/tree/") ? "/" : ""}`;
-  const head = ["View", "Shows", ...data.apps.map((a) => a.title)];
-  const caption = "Views";
-  const tableMd = [
-    `| ${head.join(" | ")} |`,
-    `| ${head.map(() => "---").join(" | ")} |`,
-    ...data.views.map((v) => `| ${[v.title, v.description, ...data.apps.map((a) => `[\`${name(v, a.id)}\`](${link(v, a.id)})`)].map(escapeMdCell).join(" | ")} |`),
-  ].join("\n");
-  return [
-    {
-      md: `## Views\n\n${note}\n\n${tableMd}`,
-      html: (/** @type {HtmlContext} */ ctx) => {
-        const rows = data.views.map(
-          (v) =>
-            `<tr><th scope="row">${escapeHtml(v.title)}</th><td>${escapeHtml(v.description)}</td>${data.apps
-              .map((a) => `<td><a href="${escapeHtml(link(v, a.id))}"><code>${escapeHtml(name(v, a.id))}</code></a></td>`)
-              .join("")}</tr>`,
-        );
-        return `${ctx.heading(2, caption)}
-<p>${inline(note)}</p>
-<!-- [html-validate-disable-next prefer-native-element: the data-scroll="inline" API is a div with role="region"] -->
-<div data-scroll="inline" tabindex="0" role="region" aria-label="${caption} (scrolls horizontally)">
-<table>
-<caption>${caption}</caption>
-<thead>
-<tr>${head.map((h) => `<th scope="col">${escapeHtml(h)}</th>`).join("")}</tr>
-</thead>
-<tbody>
-${rows.join("\n")}
-</tbody>
-</table>
-</div>`;
-      },
-    },
-  ];
+  const items = data.views.map((v) => `- **${v.title}**: ${v.description} Source: ${demoAppLinksMd(model.root, data, v)}.`);
+  return [md(`## Views\n\n${note}\n\n${items.join("\n")}`)];
 }
 
 /** @param {Model} model @returns {Page} */

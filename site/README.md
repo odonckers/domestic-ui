@@ -137,7 +137,7 @@ level index).
 | `site/content/guides/<slug>.md` | `guides/<slug>.html`, listed on `guides/index.html` |
 | `examples/*.html`, `examples/*/*.html` | Not published. Their snippets go on docs pages, each rendered from `live/` (see [Snippet convention](#snippet-convention)); their old URLs redirect (see [Render pages and redirects](#render-pages-and-redirects)). |
 | `demos/README.md`, first paragraph; `demos/<name>/README.md`, its H1 and the first sentence of its first paragraph | `demos.html`: each demo by name (the H1 without "domestic-ui demo: "), with a link to `demos/<name>` on GitHub; also in `README.md` and `llms.txt`. With no demos the page says "Coming in M5." Demos are not copied into `_site/`. |
-| `site/data/demo-views.json` | `demos.html#views`: a table with one row per view and one column per app linking the view's source on GitHub; a "Views" line in `README.md` and `llms.txt`; a "Demos:" line under See also on each page a view uses (see [Demo views](#demo-views)) |
+| `site/data/demo-views.json` | `demos.html#views`: one list item per view, in the app list's format (title, description, then "Source:" with each app linking the view's source on GitHub); a "Views" line in `README.md` and `llms.txt`; a "Demos:" line under See also on each page a view uses (see [Demo views](#demo-views)) |
 | `CONTRIBUTING.md`, `CHANGELOG.md` | `contributing.html`, `changelog.html`: read-only, H1 as the page heading, relative links rewritten to site pages or GitHub, with a link to edit the file on GitHub |
 
 The component API convention is on the Getting started page (`index.html#component-api`). The

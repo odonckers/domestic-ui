@@ -2,7 +2,7 @@
 /*
  * The demo views (dashboard, account settings, orders), read from
  * site/data/demo-views.json: each view's source file per app, and the docs
- * pages it uses. demos.html gets a table of them; each listed page gets a
+ * pages it uses. demos.html lists them; each listed page gets a
  * "Demos:" line under See also. The build fails on a path that does not
  * exist, so a renamed demo file cannot leave a dead link.
  */
@@ -64,7 +64,15 @@ export function loadDemoViews(root) {
  * @param {string} root
  * @param {string} path
  */
-export const demoSourceUrl = (root, path) => `${REPO_URL}/${statSync(join(root, path)).isDirectory() ? "tree" : "blob"}/main/${path}`;
+const demoSourceUrl = (root, path) => `${REPO_URL}/${statSync(join(root, path)).isDirectory() ? "tree" : "blob"}/main/${path}`;
+
+/**
+ * "[Plain HTML](…), [React](…), …": each app linking the view's source.
+ * @param {string} root
+ * @param {DemoViews} data
+ * @param {DemoView} view
+ */
+export const demoAppLinksMd = (root, data, view) => data.apps.map((a) => `[${a.title}](${demoSourceUrl(root, view.paths[a.id])})`).join(", ");
 
 /**
  * "Dashboard view ([Plain HTML](…), [React](…), …)"
@@ -75,5 +83,5 @@ export const demoSourceUrl = (root, path) => `${REPO_URL}/${statSync(join(root, 
  */
 export const demoViewMd = (root, data, view, page) => {
   const note = page && view.notes?.[page] ? `, ${view.notes[page]}` : "";
-  return `${view.title} view${note} (${data.apps.map((a) => `[${a.title}](${demoSourceUrl(root, view.paths[a.id])})`).join(", ")})`;
+  return `${view.title} view${note} (${demoAppLinksMd(root, data, view)})`;
 };
