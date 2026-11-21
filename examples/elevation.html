@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Elevation · domestic-ui</title>
+    <meta name="description" content="Elevation levels 0 to 4 in light and dark, each a shadow paired with a surface, and the role names components use.">
+    <link rel="stylesheet" href="../css/domestic.css">
+    <style>
+      /* Page-only layout, written with semantic tokens like any consumer would. */
+      body > :is(header, main, footer) {
+        max-inline-size: 72rem;
+        margin-inline: auto;
+        padding-inline: var(--dui-space-l);
+      }
+
+      body > header {
+        padding-block: var(--dui-space-m);
+        border-block-end: var(--dui-border-width) solid var(--dui-color-border);
+      }
+
+      body > main {
+        padding-block: var(--dui-space-2xl);
+      }
+
+      body > footer {
+        padding-block: var(--dui-space-l);
+        border-block-start: var(--dui-border-width) solid var(--dui-color-border);
+        color: var(--dui-color-text-muted);
+      }
+
+      /* Wrap long lines of example markup instead of scrolling them. */
+      pre {
+        white-space: pre-wrap;
+        overflow-wrap: anywhere;
+      }
+
+      .demo,
+      .panel {
+        padding: var(--dui-space-l);
+        border: var(--dui-border-width) solid var(--dui-color-border);
+        border-radius: var(--dui-radius-surface);
+      }
+    </style>
+    <!-- dui:snippet name="Level swatch CSS" page="principles/elevation" -->
+    <style>
+      /* One swatch per level: its shadow and its surface, from two custom properties. */
+      .level {
+        display: flex;
+        flex-direction: column;
+        gap: var(--dui-space-3xs);
+        padding: var(--dui-space-m);
+        background-color: var(--level-surface);
+        color: var(--dui-color-text);
+        border: var(--dui-border-width) solid var(--dui-color-border);
+        border-radius: var(--dui-radius-surface);
+        box-shadow: var(--level-shadow);
+      }
+
+      .level-note {
+        color: var(--dui-color-text-muted);
+      }
+
+      @media (forced-colors: active) {
+        .level {
+          border-color: canvastext;
+        }
+      }
+    </style>
+    <!-- /dui:snippet -->
+  </head>
+  <body>
+    <a class="visually-hidden" href="#main">Skip to main content</a>
+
+    <header class="cluster" style="--cluster-justify: space-between">
+      <p><strong>domestic-ui</strong></p>
+      <nav aria-label="Examples">
+        <ul class="cluster">
+          <li><a href="base.html">Base elements</a></li>
+          <li><a href="theming.html">Theming</a></li>
+          <li><a href="motion.html">Motion</a></li>
+          <li><a href="elevation.html" aria-current="page">Elevation</a></li>
+          <li><a href="atoms/index.html">Atoms</a></li>
+          <li><a href="molecules/index.html">Molecules</a></li>
+        </ul>
+      </nav>
+    </header>
+
+    <main id="main">
+      <h1>Elevation</h1>
+      <p>
+        Five levels, <code>--dui-elevation-0</code> to <code>--dui-elevation-4</code>, each a shadow paired with a surface
+        (<code>--dui-elevation-0-surface</code> to <code>--dui-elevation-4-surface</code>). In the light scheme the shadow does the work.
+        In the dark scheme shadows barely show, so each level also mixes a little more of the text color into its surface.
+        Source: <a href="../css/tokens/semantic.css"><code>css/tokens/semantic.css</code></a>.
+      </p>
+
+      <section aria-labelledby="levels-title">
+        <h2 id="levels-title">Levels in light and dark</h2>
+        <p>The same five swatches, forced to each scheme with <code>data-color-scheme</code>. Text, muted text and links meet 4.5:1 on every surface.</p>
+        <!-- dui:snippet name="Levels in light and dark" page="principles/elevation" -->
+        <div class="grid">
+          <section class="panel stack" data-color-scheme="light" aria-labelledby="light-title">
+            <h3 id="light-title">Light</h3>
+            <ol class="stack" aria-label="Elevation levels, light">
+              <li class="level" style="--level-shadow: var(--dui-elevation-0); --level-surface: var(--dui-elevation-0-surface)">
+                <strong>Level 0: flat</strong>
+                <span class="level-note">The page itself and content on it. <a href="#levels-title">Link</a></span>
+              </li>
+              <li class="level" style="--level-shadow: var(--dui-elevation-1); --level-surface: var(--dui-elevation-1-surface)">
+                <strong>Level 1: raised</strong>
+                <span class="level-note">Cards. <a href="#levels-title">Link</a></span>
+              </li>
+              <li class="level" style="--level-shadow: var(--dui-elevation-2); --level-surface: var(--dui-elevation-2-surface)">
+                <strong>Level 2: overlay</strong>
+                <span class="level-note">Toasts and other non-modal layers. <a href="#levels-title">Link</a></span>
+              </li>
+              <li class="level" style="--level-shadow: var(--dui-elevation-3); --level-surface: var(--dui-elevation-3-surface)">
+                <strong>Level 3: popover</strong>
+                <span class="level-note">Popovers, menus, tooltips, nav dropdowns. <a href="#levels-title">Link</a></span>
+              </li>
+              <li class="level" style="--level-shadow: var(--dui-elevation-4); --level-surface: var(--dui-elevation-4-surface)">
+                <strong>Level 4: dialog</strong>
+                <span class="level-note">Dialogs and drawers. <a href="#levels-title">Link</a></span>
+              </li>
+            </ol>
+          </section>
+          <section class="panel stack" data-color-scheme="dark" aria-labelledby="dark-title">
+            <h3 id="dark-title">Dark</h3>
+            <ol class="stack" aria-label="Elevation levels, dark">
+              <li class="level" style="--level-shadow: var(--dui-elevation-0); --level-surface: var(--dui-elevation-0-surface)">
+                <strong>Level 0: flat</strong>
+                <span class="level-note">The page itself and content on it. <a href="#levels-title">Link</a></span>
+              </li>
+              <li class="level" style="--level-shadow: var(--dui-elevation-1); --level-surface: var(--dui-elevation-1-surface)">
+                <strong>Level 1: raised</strong>
+                <span class="level-note">Cards. <a href="#levels-title">Link</a></span>
+              </li>
+              <li class="level" style="--level-shadow: var(--dui-elevation-2); --level-surface: var(--dui-elevation-2-surface)">
+                <strong>Level 2: overlay</strong>
+                <span class="level-note">Toasts and other non-modal layers. <a href="#levels-title">Link</a></span>
+              </li>
+              <li class="level" style="--level-shadow: var(--dui-elevation-3); --level-surface: var(--dui-elevation-3-surface)">
+                <strong>Level 3: popover</strong>
+                <span class="level-note">Popovers, menus, tooltips, nav dropdowns. <a href="#levels-title">Link</a></span>
+              </li>
+              <li class="level" style="--level-shadow: var(--dui-elevation-4); --level-surface: var(--dui-elevation-4-surface)">
+                <strong>Level 4: dialog</strong>
+                <span class="level-note">Dialogs and drawers. <a href="#levels-title">Link</a></span>
+              </li>
+            </ol>
+          </section>
+        </div>
+        <!-- /dui:snippet -->
+      </section>
+
+      <section aria-labelledby="roles-title">
+        <h2 id="roles-title">By role</h2>
+        <p>
+          Components use the role names, never the numbers: <code>--dui-elevation-raised</code> for cards,
+          <code>--dui-elevation-overlay</code> for toasts, <code>--dui-elevation-popover</code> for popovers, menus and tooltips,
+          <code>--dui-elevation-dialog</code> for dialogs and drawers, each with a matching <code>-surface</code> token.
+        </p>
+        <div class="demo">
+          <!-- dui:snippet name="Components by role" page="principles/elevation" -->
+          <div class="stack">
+            <article data-card>
+              <h3>Raised: a card</h3>
+              <p>Level 1. <a href="#roles-title">A link on the card</a>.</p>
+            </article>
+            <div class="cluster">
+              <button type="button" popovertarget="role-popover">Popover</button>
+              <div id="role-popover" popover data-popover>
+                <p>Level 3, the popover level.</p>
+              </div>
+              <dui-menu>
+                <button type="button" popovertarget="role-menu">Menu</button>
+                <div id="role-menu" popover data-popover>
+                  <button type="button">Rename</button>
+                  <button type="button">Archive</button>
+                </div>
+              </dui-menu>
+              <button type="button" commandfor="role-dialog" command="show-modal">Dialog</button>
+              <button type="button" data-toast="info">Toast</button>
+            </div>
+            <dialog id="role-dialog" data-dialog aria-labelledby="role-dialog-title">
+              <header>
+                <h2 id="role-dialog-title">Level 4: dialog</h2>
+              </header>
+              <p>The highest level, with the lightest surface in the dark scheme.</p>
+              <form method="dialog">
+                <footer>
+                  <button type="submit" autofocus>Close</button>
+                </footer>
+              </form>
+            </dialog>
+            <dui-toaster data-alert="toasts" role="status"></dui-toaster>
+          </div>
+          <!-- /dui:snippet -->
+        </div>
+      </section>
+
+      <section aria-labelledby="forced-title">
+        <h2 id="forced-title">Forced colors</h2>
+        <p>
+          In forced colors mode (Windows High Contrast and similar) browsers drop <code>box-shadow</code>
+          and replace surface colors with the system <code>Canvas</code>. Every elevated component keeps a border,
+          drawn in <code>CanvasText</code> under <code>@media (forced-colors: active)</code>, so each layer still has a visible edge.
+          The swatches above do the same.
+        </p>
+      </section>
+    </main>
+
+    <footer>
+      <p><small>domestic-ui packages existing standards and well-known patterns. MIT licensed.</small></p>
+    </footer>
+    <script type="module" src="../web-components/dui-menu.js"></script>
+    <script type="module" src="../web-components/dui-toaster.js"></script>
+    <script>
+      // Fallback for browsers without invoker commands (commandfor/command).
+      // https://developer.mozilla.org/en-US/docs/Web/API/Invoker_Commands_API
+      if (!("command" in HTMLButtonElement.prototype)) {
+        document.addEventListener("click", (event) => {
+          const button = event.target.closest("button[commandfor]");
+          const dialog = button && document.getElementById(button.getAttribute("commandfor"));
+          if (!(dialog instanceof HTMLDialogElement)) return;
+          const command = button.getAttribute("command");
+          if (command === "show-modal") dialog.showModal();
+          if (command === "close") dialog.close();
+        });
+      }
+
+      // Demo only: the <dui-toaster> element builds the message and its Dismiss button.
+      document.addEventListener("click", (event) => {
+        const toast = event.target.closest("[data-toast]");
+        if (toast) document.querySelector("dui-toaster").show("Toasts sit at the overlay level.", { tone: toast.dataset.toast });
+      });
+    </script>
+  </body>
+</html>

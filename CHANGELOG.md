@@ -91,12 +91,54 @@ Semantic token names and file paths under `css/` are public API; primitive token
   token; scoped theming of molecules. The axe test now also checks open popovers and menus, every tab,
   shown tooltips and toasts, and waits for transitions to finish.
 - `PRINCIPLES.md`: molecule choices, new semantic tokens, and "Web components" and "Explainers" sections.
+- Motion tokens: `--dui-motion-scale` (multiplies every duration), `--dui-motion-movement` (1 lets things
+  slide, lift and zoom; 0 keeps fades only), `--dui-motion-enabled` (0 under `data-motion="none"`),
+  `--dui-motion-duration-fast | normal | slow`, `--dui-motion-easing-standard | enter | exit`,
+  `--dui-motion-distance` and `--dui-motion-zoom`; new primitives `--dui-duration-350`,
+  `--dui-easing-decelerate`, `--dui-easing-accelerate`, `--dui-factor-0`, `--dui-factor-1` and `--dui-ratio-95`.
+- `data-motion="reduced"` (same as `prefers-reduced-motion: reduce`) and `data-motion="none"` (every
+  duration `0s`) on any element; an empty `data-motion` scopes your own `--dui-motion-*` overrides.
+- View transitions started by your own script use the motion tokens (inside `@supports`); domestic-ui
+  starts none.
+- Elevation scale: `--dui-elevation-0` to `--dui-elevation-4` (shadows) and `--dui-elevation-0-surface` to
+  `--dui-elevation-4-surface` (lighter tonal surfaces in the dark scheme via `light-dark()` and
+  `color-mix()`), role tokens `--dui-elevation-flat | raised | overlay | popover | dialog` and their
+  `-surface` twins, and theme knobs `--dui-elevation-shadow-color`, `--dui-elevation-strength` and
+  `--dui-elevation-surface-step`; new shadow-geometry primitives `--dui-shadow-1-key` … `--dui-shadow-4-ambient`,
+  `--dui-shadow-none`, `--dui-mix-3` and `--dui-mix-100`.
+- `examples/motion.html` and `examples/elevation.html`, linked from the example navigation, with docs pages
+  `principles/motion.html` and `principles/elevation.html`.
+- `PRINCIPLES.md`: "Motion" and "Elevation" sections (later sections renumbered) and the new semantic tokens.
+- Tests (`tests/motion-elevation.spec.js` and additions to `tests/tokens.spec.js`): every element on every
+  example page has `0s` transition and animation durations under `data-motion="none"`, with dialogs,
+  drawers, popovers, menus, details and toasts open; reduced motion (media query and `data-motion="reduced"`)
+  has no movement transition but keeps the fades; `--dui-motion-scale` multiplies durations on a
+  descendant scope; axe on the new pages; contrast of text, muted text, links, control borders and the
+  focus ring on every elevation surface in light and dark, default and forest themes; borders in forced
+  colors; `--dui-shadow-raised` equals level 1.
 
 ### Changed
+
+- Components adopt the motion and elevation tokens: card uses the raised level (shadow added, surface
+  `--dui-elevation-raised-surface`), popovers, menus, tooltips and nav dropdowns the popover level, toasts
+  the overlay level, dialogs and drawers the dialog level (including the sticky drawer header). No
+  component uses a literal duration, easing or shadow.
+- Reduced motion now keeps opacity and color transitions and drops movement, instead of setting every
+  duration to `0s`. Popovers and menus also grow from `--dui-motion-zoom`; drawers fade as they slide (and
+  only fade with reduced motion); enter and exit use their own easings.
+- Text fields no longer animate their border, so the invalid state shows at once.
+- Smooth in-page scrolling is also off under `data-motion="reduced" | "none"` on the root.
 
 - CI: lint, html-validate, the token check and `node site/build.mjs --check` run as a `lint` job, and the
   Playwright suite is split across eight shards (`--shard=i/8`) in the Playwright container. A final job
   named `ci` passes only when all of them pass, so the required check keeps its name.
+
+### Deprecated
+
+- `--dui-shadow-raised` (now `var(--dui-elevation-1)`; use `--dui-elevation-raised`),
+  `--dui-duration-fast` (use `--dui-motion-duration-fast`), `--dui-duration-normal` (use
+  `--dui-motion-duration-normal`) and `--dui-easing-standard` (use `--dui-motion-easing-standard`). Each is
+  an alias of its replacement and is removed in the next release.
 
 ### Fixed
 

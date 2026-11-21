@@ -53,7 +53,7 @@ Every example must pass, and every token pair is tested against, these criteria:
 | Focus not obscured | `scroll-padding` keeps focused elements clear of sticky edges | [2.4.11 Focus Not Obscured (Minimum)](https://www.w3.org/WAI/WCAG22/Understanding/focus-not-obscured-minimum.html) |
 | Focus appearance (AAA, optional) | The default 2px solid outline with a 2px offset aims to meet it | [2.4.13 Focus Appearance](https://www.w3.org/WAI/WCAG22/Understanding/focus-appearance.html) |
 | Target size | Controls are at least 44px tall, above the 24px minimum | [2.5.8 Target Size (Minimum)](https://www.w3.org/WAI/WCAG22/Understanding/target-size-minimum.html) |
-| Reduced motion | Duration tokens become `0s` under `prefers-reduced-motion: reduce` | [MDN `prefers-reduced-motion`](https://developer.mozilla.org/en-US/docs/Web/CSS/@media/prefers-reduced-motion), [2.3.3 Animation from Interactions](https://www.w3.org/WAI/WCAG22/Understanding/animation-from-interactions.html) |
+| Reduced motion | Under `prefers-reduced-motion: reduce` movement stops and fades stay; `data-motion="none"` turns transitions off (see [Motion](PRINCIPLES.md#6-motion)) | [MDN `prefers-reduced-motion`](https://developer.mozilla.org/en-US/docs/Web/CSS/@media/prefers-reduced-motion), [2.3.3 Animation from Interactions](https://www.w3.org/WAI/WCAG22/Understanding/animation-from-interactions.html) |
 | Color scheme | `color-scheme: light dark` plus [`light-dark()`](https://developer.mozilla.org/en-US/docs/Web/CSS/color_value/light-dark) in every semantic color | [MDN `color-scheme`](https://developer.mozilla.org/en-US/docs/Web/CSS/color-scheme) |
 | Forced colors | Borders and outlines switch to system colors | [MDN `forced-colors`](https://developer.mozilla.org/en-US/docs/Web/CSS/@media/forced-colors) |
 
@@ -212,9 +212,14 @@ may change. Fluid `--dui-step-*` values are `clamp()` expressions; see `primitiv
 | `--dui-underline-thickness-hover` | Link underline on hover | `underline-2` (0.125em) |
 | `--dui-focus-width` | Focus outline width | `border-2` (2px) |
 | `--dui-focus-offset` | Focus outline offset | `border-2` (2px) |
-| `--dui-duration-fast` | Hover transitions (0s with reduced motion) | `duration-150` (150ms) |
-| `--dui-duration-normal` | Larger transitions (0s with reduced motion) | `duration-250` (250ms) |
-| `--dui-easing-standard` | Easing curve (linear with reduced motion) | `--dui-easing-ease-out` |
+| `--dui-motion-scale` | Multiplies every motion duration | `factor-1` (1) |
+| `--dui-motion-movement` | Lets things slide, lift and zoom (1) or not (0); `0` with reduced motion | `factor-1` (1) |
+| `--dui-motion-enabled` | `0` with `data-motion="none"`: every duration is `0s`, whatever scale is set inside | `factor-1` (1) |
+| `--dui-motion-easing-standard` | State changes that stay on screen: hover, press, switch | `easing-ease-out` (`cubic-bezier(0.2, 0, 0, 1)`) |
+| `--dui-motion-easing-enter` | Things arriving: dialogs, drawers, popovers, toasts | `easing-decelerate` (`cubic-bezier(0, 0, 0, 1)`) |
+| `--dui-motion-easing-exit` | Things leaving | `easing-accelerate` (`cubic-bezier(0.3, 0, 1, 1)`) |
+| `--dui-elevation-strength` | How much of `--dui-color-shadow` each shadow uses (0% to 100%) | `mix-100` (100%) |
+| `--dui-elevation-surface-step` | Dark scheme: text color mixed into the surface per level | `mix-3` (3%) |
 | `--dui-opacity-disabled` | Disabled controls, `disabled` and `aria-disabled="true"` | `opacity-60` (0.6) |
 | `--dui-tint-amount` | How much of a tone goes into a tinted surface | `mix-8` (8%) |
 | `--dui-border-tint-amount` | How much of the text color goes into a tinted border (badges) | `mix-35` (35%) |
@@ -222,7 +227,6 @@ may change. Fluid `--dui-step-*` values are `clamp()` expressions; see `primitiv
 | `--dui-color-focus` | Focus ring (3:1 against surfaces) | `--dui-color-accent` |
 | `--dui-color-accent-hover` | Primary button hover | `color-mix()` of 82% `--dui-color-accent` with `--dui-color-text` |
 | `--dui-font-heading` | Heading font stack | `--dui-font-body` |
-| `--dui-shadow-raised` | dialog shadow | two-layer shadow using `--dui-color-shadow` |
 | `--dui-color-accent-surface` | Accent badge background | `color-mix()` of `--dui-tint-amount` `--dui-color-accent` into `--dui-color-surface` |
 | `--dui-color-success-surface` | Success badge background | same, with `--dui-color-success` |
 | `--dui-color-warning-surface` | Warning badge background | same, with `--dui-color-warning` |
@@ -230,14 +234,127 @@ may change. Fluid `--dui-step-*` values are `clamp()` expressions; see `primitiv
 | `--dui-color-info-surface` | Info alert background | same, with `--dui-color-info` |
 | `--dui-color-surface-inverse` | Tooltip background | `--dui-color-text` |
 | `--dui-color-text-inverse` | Tooltip text | `--dui-color-surface` |
+| `--dui-motion-duration-fast` | Hover, press, switch, popovers and menus | `duration-150` (150ms) × `--dui-motion-scale` × `--dui-motion-enabled` |
+| `--dui-motion-duration-normal` | Dialogs and toasts | `duration-250` (250ms) × `--dui-motion-scale` × `--dui-motion-enabled` |
+| `--dui-motion-duration-slow` | The drawer | `duration-350` (350ms) × `--dui-motion-scale` × `--dui-motion-enabled` |
+| `--dui-motion-distance` | How far a dialog or toast lifts as it fades in | `space-4` (0.75rem) × `--dui-motion-movement` |
+| `--dui-motion-zoom` | Scale a popover or menu grows from | 0.95, or 1 when `--dui-motion-movement` is 0 |
+| `--dui-elevation-shadow-color` | Shadow color after strength | `color-mix()` of `--dui-color-shadow` at `--dui-elevation-strength` |
+| `--dui-elevation-0` … `--dui-elevation-4` | Shadow per level | `none`, then two layers (key and ambient) growing with the level |
+| `--dui-elevation-0-surface` … `--dui-elevation-4-surface` | Surface per level | light: `--dui-color-surface`<br>dark: `--dui-color-surface` with N × `--dui-elevation-surface-step` of `--dui-color-text` |
+| `--dui-elevation-flat`, `-raised`, `-overlay`, `-popover`, `-dialog` | Shadow by role | levels 0, 1, 2, 3, 4 |
+| `--dui-elevation-flat-surface`, `-raised-surface`, `-overlay-surface`, `-popover-surface`, `-dialog-surface` | Surface by role | level 0 to 4 surfaces |
+| `--dui-shadow-raised` | **Deprecated**, removed in the next release: use `--dui-elevation-raised` | `--dui-elevation-1` |
+| `--dui-duration-fast` | **Deprecated**, removed in the next release | `--dui-motion-duration-fast` |
+| `--dui-duration-normal` | **Deprecated**, removed in the next release | `--dui-motion-duration-normal` |
+| `--dui-easing-standard` | **Deprecated**, removed in the next release | `--dui-motion-easing-standard` |
 
-Derived (re-resolved on each theme scope): `--dui-color-link`, `--dui-color-focus`,
-`--dui-color-accent-hover`, `--dui-font-heading`, `--dui-shadow-raised`,
-`--dui-color-accent-surface`, `--dui-color-success-surface`, `--dui-color-warning-surface`,
-`--dui-color-danger-surface`, `--dui-color-info-surface`, `--dui-color-surface-inverse`,
-`--dui-color-text-inverse`.
+Derived (re-resolved on each theme scope and on every `[data-motion]` element): `--dui-color-link`,
+`--dui-color-focus`, `--dui-color-accent-hover`, `--dui-font-heading`, `--dui-color-accent-surface`,
+`--dui-color-success-surface`, `--dui-color-warning-surface`, `--dui-color-danger-surface`,
+`--dui-color-info-surface`, `--dui-color-surface-inverse`, `--dui-color-text-inverse`, every
+`--dui-motion-duration-*`, `--dui-motion-distance`, `--dui-motion-zoom`, every `--dui-elevation-*`
+except the two knobs, and the deprecated aliases.
 
-## 6. Opinions we hold
+## 6. Motion
+
+Motion is CSS-first, token-driven and close to platform behavior: short fades, a drawer that
+slides from its edge, popovers and menus that grow a little as they appear, and color changes on
+buttons, links and the switch. Nothing waits on a transition to work.
+
+- **Transitions only, no keyframe animations.** Every component uses
+  [`transition`](https://developer.mozilla.org/en-US/docs/Web/CSS/transition). Dialogs, drawers and
+  popovers animate in and out of the top layer with
+  [`@starting-style`](https://developer.mozilla.org/en-US/docs/Web/CSS/@starting-style) and
+  [`transition-behavior: allow-discrete`](https://developer.mozilla.org/en-US/docs/Web/CSS/transition-behavior)
+  ([CSS Transitions 2](https://drafts.csswg.org/css-transitions-2/#transition-behavior-property)).
+  An engine without them opens and closes the element with no transition.
+- **Tokens drive every duration and easing.** `--dui-motion-duration-fast`, `-normal` and `-slow`
+  are primitives times `--dui-motion-scale` (default `1`), so one value on `:root` makes all motion
+  slower (`2`) or off (`0`). Easings: `--dui-motion-easing-standard` for state changes,
+  `--dui-motion-easing-enter` for things arriving, `--dui-motion-easing-exit` for things leaving.
+- **Movement is a separate knob.** `--dui-motion-movement` is `1` by default. Distances
+  (`--dui-motion-distance`, `--dui-motion-zoom`, the drawer's off-screen offset) and the duration of
+  every [`translate`](https://developer.mozilla.org/en-US/docs/Web/CSS/translate) or
+  [`scale`](https://developer.mozilla.org/en-US/docs/Web/CSS/scale) transition are multiplied by it.
+- **Reduced motion keeps fades and drops movement.** Under
+  [`prefers-reduced-motion: reduce`](https://developer.mozilla.org/en-US/docs/Web/CSS/@media/prefers-reduced-motion)
+  ([Media Queries 5](https://www.w3.org/TR/mediaqueries-5/#prefers-reduced-motion)) movement becomes `0`:
+  the drawer fades in place, popovers fade without growing, the switch thumb jumps while its color
+  still fades. This is what [2.3.3 Animation from Interactions](https://www.w3.org/WAI/WCAG22/Understanding/animation-from-interactions.html)
+  asks for: motion animation triggered by interaction can be disabled. **Our choice:** keep opacity
+  and color transitions under reduced motion, because a fade is not motion animation and it still
+  shows where a change came from.
+- **`data-motion` on any element.** `data-motion="reduced"` behaves exactly like the media query for
+  everything inside; `data-motion="none"` sets `--dui-motion-enabled` to `0`, so every duration is `0s`
+  even where a `--dui-motion-scale` is set inside it. An empty `data-motion` is a scope
+  for your own `--dui-motion-*` overrides: motion tokens are re-declared on it, as theme tokens are on
+  `[data-theme]` ([CSS Variables](https://www.w3.org/TR/css-variables-1/#cycles)).
+  **Our choice:** no `data-motion="full"`, so a page can never override a user's reduced-motion setting.
+- **Essential feedback never animates.** Focus indicators, validation errors and `aria-invalid`,
+  alert and live-region text, and loading state (`aria-busy`) change at once. **Our choice:** text
+  fields do not animate their border at all, because the same border shows the invalid state.
+- **View transitions are progressive enhancement only.** domestic-ui starts none and nothing depends on
+  one. When your script calls `document.startViewTransition()`
+  ([View Transition API](https://developer.mozilla.org/en-US/docs/Web/API/View_Transition_API),
+  [CSS View Transitions](https://drafts.csswg.org/css-view-transitions-1/)), the base layer gives its
+  pseudo-elements the motion tokens inside `@supports`, so they follow the scale and reduced motion too.
+
+| Transition | Components | Duration | Moves |
+| --- | --- | --- | --- |
+| Fade and lift | Dialog, toast | `--dui-motion-duration-normal` | `translate` by `--dui-motion-distance` |
+| Slide and fade | Drawer | `--dui-motion-duration-slow` | `translate` by 100% of its width |
+| Scale and fade | Popover, menu | `--dui-motion-duration-fast` | `scale` from `--dui-motion-zoom` |
+| Color | Buttons, links, switch track | `--dui-motion-duration-fast` | No |
+| Thumb slide | Switch | `--dui-motion-duration-fast` | `translate` |
+
+**Our choice:** 150, 250 and 350ms, longer for larger surfaces, with a decelerating enter and an
+accelerating exit, because short transitions keep the UI responsive and the curves match how things
+arrive and leave. [`examples/motion.html`](examples/motion.html) shows each transition, the scale, and reduced
+and no-motion scopes side by side.
+
+## 7. Elevation
+
+Elevation says which layer is on top. Five levels, each a
+[`box-shadow`](https://developer.mozilla.org/en-US/docs/Web/CSS/box-shadow) paired with a surface color:
+
+| Level | Role token | Used by |
+| --- | --- | --- |
+| `--dui-elevation-0` | `--dui-elevation-flat` | The page and content on it |
+| `--dui-elevation-1` | `--dui-elevation-raised` | Cards |
+| `--dui-elevation-2` | `--dui-elevation-overlay` | Toasts |
+| `--dui-elevation-3` | `--dui-elevation-popover` | Popovers, menus, tooltips, nav dropdowns |
+| `--dui-elevation-4` | `--dui-elevation-dialog` | Dialogs and drawers |
+
+Each has a `-surface` twin (`--dui-elevation-2-surface`, `--dui-elevation-overlay-surface`).
+**Components use the role tokens only**, never the numbers, so a theme can move a role to another level.
+
+- **Light scheme: the shadow does the work.** Every level keeps `--dui-color-surface`; shadows grow
+  with the level (a tight key shadow and a wide ambient one).
+- **Dark scheme: lighter surfaces.** Shadows barely show on a dark page, so each level mixes
+  `--dui-elevation-surface-step` more of the text color into the surface with
+  [`color-mix()`](https://developer.mozilla.org/en-US/docs/Web/CSS/color_value/color-mix)
+  ([CSS Color 5](https://www.w3.org/TR/css-color-5/#color-mix)), picked per scheme by
+  [`light-dark()`](https://developer.mozilla.org/en-US/docs/Web/CSS/color_value/light-dark).
+  Text, muted text, links, control borders and the focus ring meet
+  [4.5:1](https://www.w3.org/WAI/WCAG22/Understanding/contrast-minimum.html) and
+  [3:1](https://www.w3.org/WAI/WCAG22/Understanding/non-text-contrast.html) on every level, in light and
+  dark, in the default and forest themes; `tests/tokens.spec.js` checks it.
+- **Theme knobs.** `--dui-color-shadow` (shadow color), `--dui-elevation-strength` (0% to 100% of it) and
+  `--dui-elevation-surface-step` (dark-scheme step per level). The levels are re-derived on every theme
+  scope, like the other dependent tokens.
+- **Forced colors: borders, not shadows.** In [forced colors mode](https://developer.mozilla.org/en-US/docs/Web/CSS/@media/forced-colors)
+  `box-shadow` computes to `none` ([CSS Color Adjustment](https://www.w3.org/TR/css-color-adjust-1/#forced-colors-properties)),
+  so every elevated component keeps a border, drawn in `CanvasText` there.
+- **Our choice:** toasts sit at the overlay level, below popovers and dialogs, because they are
+  non-modal and must not cover an open menu or dialog.
+- **Our choice:** the dark-scheme step mixes in the text color rather than white, so a theme's tint
+  carries into its raised surfaces.
+
+`--dui-shadow-raised` is deprecated: it now points at `--dui-elevation-1` and is removed in the next
+release. [`examples/elevation.html`](examples/elevation.html) shows every level in light and dark side by side.
+
+## 8. Opinions we hold
 
 Each of these is a choice between valid options, not a standard.
 
@@ -279,7 +396,7 @@ Each of these is a choice between valid options, not a standard.
   [`@property`](https://developer.mozilla.org/en-US/docs/Web/CSS/@property) as non-inheriting,
   so a nested primitive keeps its own default.
 
-## 7. Layout primitives
+## 9. Layout primitives
 
 | Class | What it does | Custom properties |
 | --- | --- | --- |
@@ -317,7 +434,7 @@ semantics in some browsers ([Adrian Roselli](https://adrianroselli.com/2018/02/t
 A `<pre>` already scrolls (`overflow-x: auto`); authors MUST give every `<pre>` (and any
 `data-scroll="inline"` container) `tabindex="0"` so it can be scrolled from the keyboard.
 
-## 8. Web components
+## 10. Web components
 
 HTML still has no element for tabs, menus, roving focus in a toolbar, hover tooltips or a toast
 stack. For those, and only those, [`web-components/`](web-components/README.md) has one small
@@ -333,7 +450,7 @@ custom element each: `<dui-tabs>`, `<dui-menu>`, `<dui-toolbar>`, `<dui-tooltip>
   [web components index](web-components/README.md) lists them. Each one is a plain ES module with no
   dependencies and no build: `<script type="module" src="web-components/dui-tabs.js"></script>`.
 
-## 9. Explainers
+## 11. Explainers
 
 A pattern with no native element and no APG pattern is written up like a platform proposal in
 [`explainers/`](explainers/README.md): problem, use cases, goals and non-goals, markup and API,
@@ -342,7 +459,7 @@ text in [RFC 2119](https://www.rfc-editor.org/rfc/rfc2119) keywords. The card, p
 and toast molecules have one. Names follow HTML and ARIA conventions, so a pattern could map onto
 a future native element or attribute.
 
-## 10. Tooling
+## 12. Tooling
 
 `npm test` runs, in order, and fails if any step fails:
 

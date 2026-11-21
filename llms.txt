@@ -16,6 +16,8 @@ Link `css/domestic.css` (copy `css/` from https://github.com/odonckers/domestic-
 - [Accessibility baseline: WCAG 2.2 AA](https://odonckers.github.io/domestic-ui/principles/accessibility-baseline-wcag-22-aa.md): Every example must pass, and every token pair is tested against, these criteria.
 - [Cascade layers](https://odonckers.github.io/domestic-ui/principles/cascade-layers.md): css/domestic.css declares the order once, before anything else (@layer on MDN, CSS Cascade 5).
 - [Theming](https://odonckers.github.io/domestic-ui/principles/theming.md): All tokens are custom properties on :root with the --dui- prefix.
+- [Motion](https://odonckers.github.io/domestic-ui/principles/motion.md): Motion is CSS-first, token-driven and close to platform behavior: short fades, a drawer that slides from its edge, popovers and menus that grow a little as they appear, and color changes on buttons, links and the switch.
+- [Elevation](https://odonckers.github.io/domestic-ui/principles/elevation.md): Elevation says which layer is on top.
 - [Opinions we hold](https://odonckers.github.io/domestic-ui/principles/opinions-we-hold.md): Each of these is a choice between valid options, not a standard.
 - [Layout primitives](https://odonckers.github.io/domestic-ui/principles/layout-primitives.md): Class: .stack, .cluster, .grid, [data-scroll="inline"].
 - [Web components](https://odonckers.github.io/domestic-ui/principles/web-components.md): HTML still has no element for tabs, menus, roving focus in a toolbar, hover tooltips or a toast stack.
@@ -24,9 +26,9 @@ Link `css/domestic.css` (copy `css/` from https://github.com/odonckers/domestic-
 
 ## Tokens
 
-- [Tokens](https://odonckers.github.io/domestic-ui/tokens/index.md): The two tiers of domestic-ui design tokens: 168 custom properties with their light and dark values.
-- [Primitive tokens](https://odonckers.github.io/domestic-ui/tokens/primitives.md): All 87 primitive tokens in css/tokens/primitives.css (internal), with resolved light and dark values.
-- [Semantic tokens](https://odonckers.github.io/domestic-ui/tokens/semantic.md): All 81 semantic tokens in css/tokens/semantic.css (public theming API), with resolved light and dark values.
+- [Tokens](https://odonckers.github.io/domestic-ui/tokens/index.md): The two tiers of domestic-ui design tokens: 219 custom properties with their light and dark values.
+- [Primitive tokens](https://odonckers.github.io/domestic-ui/tokens/primitives.md): All 104 primitive tokens in css/tokens/primitives.css (internal), with resolved light and dark values.
+- [Semantic tokens](https://odonckers.github.io/domestic-ui/tokens/semantic.md): All 115 semantic tokens in css/tokens/semantic.css (public theming API), with resolved light and dark values.
 
 ## Base
 

@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Motion · domestic-ui</title>
+    <meta name="description" content="The named transitions (fade, slide, scale, color), the motion scale multiplier, and reduced and no-motion scopes side by side.">
+    <link rel="stylesheet" href="../css/domestic.css">
+    <style>
+      /* Page-only layout, written with semantic tokens like any consumer would. */
+      body > :is(header, main, footer) {
+        max-inline-size: 72rem;
+        margin-inline: auto;
+        padding-inline: var(--dui-space-l);
+      }
+
+      body > header {
+        padding-block: var(--dui-space-m);
+        border-block-end: var(--dui-border-width) solid var(--dui-color-border);
+      }
+
+      body > main {
+        padding-block: var(--dui-space-2xl);
+      }
+
+      body > footer {
+        padding-block: var(--dui-space-l);
+        border-block-start: var(--dui-border-width) solid var(--dui-color-border);
+        color: var(--dui-color-text-muted);
+      }
+
+      /* Wrap long lines of example markup instead of scrolling them. */
+      pre {
+        white-space: pre-wrap;
+        overflow-wrap: anywhere;
+      }
+
+      .demo,
+      .panel {
+        padding: var(--dui-space-l);
+        border: var(--dui-border-width) solid var(--dui-color-border);
+        border-radius: var(--dui-radius-surface);
+      }
+    </style>
+  </head>
+  <body>
+    <a class="visually-hidden" href="#main">Skip to main content</a>
+
+    <header class="cluster" style="--cluster-justify: space-between">
+      <p><strong>domestic-ui</strong></p>
+      <nav aria-label="Examples">
+        <ul class="cluster">
+          <li><a href="base.html">Base elements</a></li>
+          <li><a href="theming.html">Theming</a></li>
+          <li><a href="motion.html" aria-current="page">Motion</a></li>
+          <li><a href="elevation.html">Elevation</a></li>
+          <li><a href="atoms/index.html">Atoms</a></li>
+          <li><a href="molecules/index.html">Molecules</a></li>
+        </ul>
+      </nav>
+    </header>
+
+    <main id="main">
+      <h1>Motion</h1>
+      <p>
+        Every transition reads its duration and easing from <code>--dui-motion-*</code> tokens.
+        <code>--dui-motion-scale</code> multiplies every duration, and <code>--dui-motion-movement</code>
+        turns slides, lifts and zooms on (1) or off (0). With <code>prefers-reduced-motion: reduce</code>, or inside
+        <code>data-motion="reduced"</code>, movement stops and fades stay. Inside <code>data-motion="none"</code>
+        nothing transitions. Focus rings, validation errors, alert text and loading states always change at once.
+        Source: <a href="../css/tokens/semantic.css"><code>css/tokens/semantic.css</code></a>.
+      </p>
+
+      <section aria-labelledby="fade-title">
+        <h2 id="fade-title">Fade: dialog</h2>
+        <p>Fades and lifts by <code>--dui-motion-distance</code> over <code>--dui-motion-duration-normal</code>; the backdrop fades with it.</p>
+        <div class="demo">
+          <!-- dui:snippet name="Fade: dialog" page="principles/motion" -->
+          <button type="button" commandfor="fade-dialog" command="show-modal">Open dialog</button>
+          <dialog id="fade-dialog" data-dialog aria-labelledby="fade-dialog-title">
+            <header>
+              <h2 id="fade-dialog-title">Fade in, fade out</h2>
+            </header>
+            <p>Enters with <code>--dui-motion-easing-enter</code> and leaves with <code>--dui-motion-easing-exit</code>.</p>
+            <form method="dialog">
+              <footer>
+                <button type="submit" autofocus>Close</button>
+              </footer>
+            </form>
+          </dialog>
+          <!-- /dui:snippet -->
+        </div>
+      </section>
+
+      <section aria-labelledby="slide-title">
+        <h2 id="slide-title">Slide: drawer</h2>
+        <p>Slides from the inline-end edge over <code>--dui-motion-duration-slow</code>. With reduced motion it fades in place.</p>
+        <div class="demo">
+          <!-- dui:snippet name="Slide: drawer" page="principles/motion" -->
+          <button type="button" commandfor="slide-drawer" command="show-modal">Open drawer</button>
+          <dialog id="slide-drawer" data-dialog="drawer end" closedby="any" aria-labelledby="slide-drawer-title">
+            <header>
+              <h2 id="slide-drawer-title">Drawer</h2>
+              <button type="button" commandfor="slide-drawer" command="close" data-button="quiet small">Close</button>
+            </header>
+            <p>The off-screen offset is 100% times <code>--dui-motion-movement</code>.</p>
+          </dialog>
+          <!-- /dui:snippet -->
+        </div>
+      </section>
+
+      <section aria-labelledby="scale-title">
+        <h2 id="scale-title">Scale: popover and menu</h2>
+        <p>Grows from <code>--dui-motion-zoom</code> while it fades, over <code>--dui-motion-duration-fast</code>.</p>
+        <div class="demo">
+          <!-- dui:snippet name="Scale: popover and menu" page="principles/motion" -->
+          <div class="cluster">
+            <button type="button" popovertarget="scale-popover">Popover</button>
+            <div id="scale-popover" popover data-popover>
+              <p>Grows and fades in.</p>
+            </div>
+            <dui-menu>
+              <button type="button" popovertarget="scale-menu">Menu</button>
+              <div id="scale-menu" popover data-popover>
+                <button type="button">Rename</button>
+                <button type="button">Duplicate</button>
+              </div>
+            </dui-menu>
+          </div>
+          <!-- /dui:snippet -->
+        </div>
+      </section>
+
+      <section aria-labelledby="state-title">
+        <h2 id="state-title">Color and state: buttons, links, switch</h2>
+        <p>Colors fade over <code>--dui-motion-duration-fast</code> with <code>--dui-motion-easing-standard</code>. The switch thumb slides; with reduced motion it jumps and the color still fades.</p>
+        <div class="demo">
+          <!-- dui:snippet name="Color and state" page="principles/motion" -->
+          <div class="cluster">
+            <button type="button">Hover me</button>
+            <button type="button" data-button="primary">Primary</button>
+            <a href="#state-title">A link</a>
+            <label><input type="checkbox" role="switch" name="state-switch"> Switch</label>
+          </div>
+          <!-- /dui:snippet -->
+        </div>
+      </section>
+
+      <section aria-labelledby="toast-title">
+        <h2 id="toast-title">Toast</h2>
+        <p>A new toast fades in and lifts by <code>--dui-motion-distance</code>. Its text is announced at once; only the box moves.</p>
+        <div class="demo">
+          <!-- dui:snippet name="Toast" page="principles/motion" -->
+          <button type="button" data-toast="success">Save</button>
+          <dui-toaster data-alert="toasts" role="status"></dui-toaster>
+          <!-- /dui:snippet -->
+        </div>
+      </section>
+
+      <section aria-labelledby="scale-knob-title">
+        <h2 id="scale-knob-title">Motion scale</h2>
+        <p>
+          <code>--dui-motion-scale: 3</code> on a scope makes everything inside three times slower.
+          Set it on <code>:root</code> for the page, or on an element with <code>data-motion</code> (empty) or
+          <code>data-theme</code>, where the derived durations are re-declared.
+        </p>
+        <!-- dui:snippet name="Motion scale" page="principles/motion" -->
+        <div class="panel cluster" data-motion style="--dui-motion-scale: 3">
+          <button type="button">Hover me</button>
+          <label><input type="checkbox" role="switch" name="slow-switch"> Slow switch</label>
+          <button type="button" popovertarget="slow-popover">Slow popover</button>
+          <div id="slow-popover" popover data-popover>
+            <p>Three times the normal duration.</p>
+          </div>
+        </div>
+        <!-- /dui:snippet -->
+      </section>
+
+      <section aria-labelledby="scopes-title">
+        <h2 id="scopes-title">Reduced and no motion</h2>
+        <p>
+          <code>data-motion="reduced"</code> behaves like <code>prefers-reduced-motion: reduce</code>: fades and color changes stay,
+          movement goes. <code>data-motion="none"</code> sets every duration to <code>0s</code>.
+        </p>
+        <!-- dui:snippet name="Reduced and no motion" page="principles/motion" -->
+        <div class="grid">
+          <section class="panel stack" data-motion="reduced" aria-labelledby="reduced-title">
+            <h3 id="reduced-title">data-motion="reduced"</h3>
+            <label><input type="checkbox" role="switch" name="reduced-switch"> Switch</label>
+            <div class="cluster">
+              <button type="button" popovertarget="reduced-popover">Popover</button>
+              <div id="reduced-popover" popover data-popover>
+                <p>Fades without growing.</p>
+              </div>
+              <button type="button" commandfor="reduced-drawer" command="show-modal">Drawer</button>
+            </div>
+            <dialog id="reduced-drawer" data-dialog="drawer end" closedby="any" aria-labelledby="reduced-drawer-title">
+              <header>
+                <h2 id="reduced-drawer-title">Reduced motion</h2>
+                <button type="button" commandfor="reduced-drawer" command="close" data-button="quiet small">Close</button>
+              </header>
+              <p>Fades in place instead of sliding.</p>
+            </dialog>
+          </section>
+          <section class="panel stack" data-motion="none" aria-labelledby="none-title">
+            <h3 id="none-title">data-motion="none"</h3>
+            <label><input type="checkbox" role="switch" name="none-switch"> Switch</label>
+            <div class="cluster">
+              <button type="button" popovertarget="none-popover">Popover</button>
+              <div id="none-popover" popover data-popover>
+                <p>Appears at once.</p>
+              </div>
+              <button type="button" commandfor="none-drawer" command="show-modal">Drawer</button>
+            </div>
+            <dialog id="none-drawer" data-dialog="drawer end" closedby="any" aria-labelledby="none-drawer-title">
+              <header>
+                <h2 id="none-drawer-title">No motion</h2>
+                <button type="button" commandfor="none-drawer" command="close" data-button="quiet small">Close</button>
+              </header>
+              <p>Appears at once.</p>
+            </dialog>
+          </section>
+        </div>
+        <!-- /dui:snippet -->
+      </section>
+
+      <section aria-labelledby="view-transition-title">
+        <h2 id="view-transition-title">View transition (progressive enhancement)</h2>
+        <p>
+          Where <code>document.startViewTransition()</code> exists, reversing the list animates each item to its new place;
+          elsewhere the list simply changes. The base layer gives view transitions the motion tokens, so they follow
+          <code>--dui-motion-scale</code>, reduced motion and <code>data-motion</code> on the root like everything else.
+        </p>
+        <div class="demo">
+          <!-- dui:snippet name="View transition" page="principles/motion" -->
+          <div class="stack">
+            <ol id="vt-list" class="stack" style="--stack-gap: var(--dui-space-2xs)">
+              <li>Draft</li>
+              <li>Review</li>
+              <li>Publish</li>
+            </ol>
+            <p><button type="button" data-reverse="vt-list">Reverse the list</button></p>
+          </div>
+          <!-- /dui:snippet -->
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <p><small>domestic-ui packages existing standards and well-known patterns. MIT licensed.</small></p>
+    </footer>
+    <script type="module" src="../web-components/dui-menu.js"></script>
+    <script type="module" src="../web-components/dui-toaster.js"></script>
+    <script>
+      // Fallback for browsers without invoker commands (commandfor/command).
+      // https://developer.mozilla.org/en-US/docs/Web/API/Invoker_Commands_API
+      if (!("command" in HTMLButtonElement.prototype)) {
+        document.addEventListener("click", (event) => {
+          const button = event.target.closest("button[commandfor]");
+          const dialog = button && document.getElementById(button.getAttribute("commandfor"));
+          if (!(dialog instanceof HTMLDialogElement)) return;
+          const command = button.getAttribute("command");
+          if (command === "show-modal") dialog.showModal();
+          if (command === "close") dialog.close();
+        });
+      }
+
+      document.addEventListener("click", (event) => {
+        // Demo only: the <dui-toaster> element builds the message and its Dismiss button.
+        const toast = event.target.closest("[data-toast]");
+        if (toast) toast.parentElement.querySelector("dui-toaster").show("Saved.", { tone: "success" });
+
+        // View transition as progressive enhancement: the list changes either way.
+        // https://developer.mozilla.org/en-US/docs/Web/API/View_Transition_API
+        const reverse = event.target.closest("[data-reverse]");
+        if (!reverse) return;
+        const list = document.getElementById(reverse.dataset.reverse);
+        const items = [...list.children];
+        items.forEach((item, i) => (item.style.viewTransitionName ||= `vt-item-${i}`));
+        const update = () => list.append(...items.reverse());
+        if (document.startViewTransition) document.startViewTransition(update);
+        else update();
+      });
+    </script>
+  </body>
+</html>

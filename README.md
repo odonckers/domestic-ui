@@ -25,11 +25,13 @@ Components: one `data-<component>` attribute of space-separated words matched wi
 3. [Accessibility baseline: WCAG 2.2 AA](https://odonckers.github.io/domestic-ui/principles/accessibility-baseline-wcag-22-aa.html)
 4. [Cascade layers](https://odonckers.github.io/domestic-ui/principles/cascade-layers.html)
 5. [Theming](https://odonckers.github.io/domestic-ui/principles/theming.html)
-6. [Opinions we hold](https://odonckers.github.io/domestic-ui/principles/opinions-we-hold.html)
-7. [Layout primitives](https://odonckers.github.io/domestic-ui/principles/layout-primitives.html)
-8. [Web components](https://odonckers.github.io/domestic-ui/principles/web-components.html)
-9. [Explainers](https://odonckers.github.io/domestic-ui/principles/explainers.html)
-10. [Tooling](https://odonckers.github.io/domestic-ui/principles/tooling.html)
+6. [Motion](https://odonckers.github.io/domestic-ui/principles/motion.html)
+7. [Elevation](https://odonckers.github.io/domestic-ui/principles/elevation.html)
+8. [Opinions we hold](https://odonckers.github.io/domestic-ui/principles/opinions-we-hold.html)
+9. [Layout primitives](https://odonckers.github.io/domestic-ui/principles/layout-primitives.html)
+10. [Web components](https://odonckers.github.io/domestic-ui/principles/web-components.html)
+11. [Explainers](https://odonckers.github.io/domestic-ui/principles/explainers.html)
+12. [Tooling](https://odonckers.github.io/domestic-ui/principles/tooling.html)
 
 ## Components
 
