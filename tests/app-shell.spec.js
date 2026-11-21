@@ -282,6 +282,51 @@ test.describe("narrow: drawers", () => {
   });
 });
 
+test.describe("first layout", () => {
+  // A module script in <head> can run before the page's style sheets apply (WebKit does it
+  // when a sheet is slow): the shell has no box yet and clientWidth is 0. That must not count
+  // as narrow, or a wide shell starts with its sidebar hidden for a frame.
+  const HEAD_MODULE = `<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Module in head</title>
+    <link rel="stylesheet" href="../css/domestic.css">
+    <script type="module" src="../web-components/dui-app-shell.js"></script>
+  </head>
+  <body>
+    <dui-app-shell data-app-shell>
+      <header><button type="button" aria-controls="nav" aria-expanded="true" hidden>Menu</button></header>
+      <nav id="nav" aria-label="Main" data-nav="vertical"><ul><li><a href="#main">Home</a></li></ul></nav>
+      <main id="main"><h1>Page</h1></main>
+    </dui-app-shell>
+  </body>
+</html>`;
+
+  for (const [name, viewport, hidden] of /** @type {const} */ ([["wide", { width: 1280, height: 720 }, false], ["narrow", NARROW, true]])) {
+    test(`${name}: the sidebar is ${hidden ? "a drawer" : "shown"} at DOMContentLoaded, even when the style sheet comes late`, async ({ page }) => {
+      await page.setViewportSize(viewport);
+      await page.route("**/examples/head-module.html", (route) => route.fulfill({ contentType: "text/html", body: HEAD_MODULE }));
+      await page.route("**/css/domestic.css", async (route) => {
+        await new Promise((resolve) => setTimeout(resolve, 400));
+        await route.continue();
+      });
+      // Recorded from outside the page: an inline script would wait for the style sheet itself.
+      await page.addInitScript(() => {
+        document.addEventListener("DOMContentLoaded", () => {
+          /** @type {any} */ (window).navHiddenAtLoad = document.getElementById("nav")?.hidden;
+        });
+      });
+      const errors = /** @type {string[]} */ ([]);
+      page.on("pageerror", (error) => errors.push(error.message));
+      await page.goto("examples/head-module.html");
+      if (!hidden) expect(await page.evaluate(() => /** @type {any} */ (window).navHiddenAtLoad)).toBe(false);
+      await expect(page.locator("#nav")).toHaveJSProperty("hidden", hidden);
+      expect(errors).toEqual([]);
+    });
+  }
+});
+
 test.describe("the shell follows its own width, not the viewport", () => {
   test.use({ viewport: WIDE });
   test.beforeEach(async ({ page }) => withoutMotion(page));

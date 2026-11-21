@@ -131,6 +131,8 @@ class DuiAppShell extends HTMLElement {
     }
     if (!this.#sidebars.length) return;
     this.#layout();
+    // No width yet: try again at the start of the first frame, which runs layout before it paints.
+    if (this.#sidebars.some((s) => s.docked === null)) this.#frame = requestAnimationFrame(() => this.#layout());
     // Re-check on the next frame, not inside the observer: hiding a sidebar resizes the shell again.
     this.#observer = new ResizeObserver(() => {
       cancelAnimationFrame(this.#frame);
@@ -186,6 +188,11 @@ class DuiAppShell extends HTMLElement {
   #layout() {
     const rem = parseFloat(getComputedStyle(document.documentElement).fontSize) || 16;
     const width = this.clientWidth;
+    // 0 means the shell has no box yet (WebKit can run a module script before the page's
+    // style sheets apply, when the element is still display: inline). The width is unknown:
+    // leave the sidebars as the markup has them until the first frame or the ResizeObserver has one.
+    // https://drafts.csswg.org/cssom-view/#dom-element-clientwidth
+    if (width === 0) return;
     for (const sidebar of this.#sidebars) {
       const docked = width >= BREAKPOINTS[sidebar.edge] * rem;
       if (docked === sidebar.docked) continue;
