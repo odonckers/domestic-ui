@@ -244,6 +244,14 @@ may change. Fluid `--dui-step-*` values are `clamp()` expressions; see `primitiv
 | `--dui-color-mark-text` | Text on mark | light: `color-gray-900` (#12151b)<br>dark: `color-gray-900` (#12151b) |
 | `--dui-color-backdrop` | dialog::backdrop | light: `color-black-a40` (rgb(0 0 0 / 40%))<br>dark: `color-black-a60` (rgb(0 0 0 / 60%)) |
 | `--dui-color-shadow` | Shadow color | light: `color-black-a10` (rgb(0 0 0 / 10%))<br>dark: `color-black-a40` (rgb(0 0 0 / 40%)) |
+| `--dui-color-code-keyword` | JS keywords and CSS at-rules in highlighted code (4.5:1 on surface-sunken) | light: `color-purple-700` (#6b2fb3)<br>dark: `color-purple-300` (#d2a8ff) |
+| `--dui-color-code-string` | Strings and HTML attribute values in highlighted code (4.5:1 on surface-sunken) | light: `color-green-700` (#17773a)<br>dark: `color-green-300` (#5fd38d) |
+| `--dui-color-code-comment` | Comments in highlighted code (4.5:1 on surface-sunken) | light: `color-gray-600` (#545b68)<br>dark: `color-gray-400` (#a3aab6) |
+| `--dui-color-code-tag` | HTML tag names and CSS selectors in highlighted code (4.5:1 on surface-sunken) | light: `color-blue-700` (#2b43b0)<br>dark: `color-blue-300` (#a8b7ff) |
+| `--dui-color-code-attribute` | HTML attribute names in highlighted code (4.5:1 on surface-sunken) | light: `color-amber-700` (#8a5a00)<br>dark: `color-amber-300` (#f2c14e) |
+| `--dui-color-code-property` | CSS and JS properties in highlighted code (4.5:1 on surface-sunken) | light: `color-teal-700` (#0b6e75)<br>dark: `color-teal-300` (#5cc8d1) |
+| `--dui-color-code-number` | Numbers and units in highlighted code (4.5:1 on surface-sunken) | light: `color-red-700` (#b42318)<br>dark: `color-red-300` (#ff8a80) |
+| `--dui-color-code-punctuation` | Brackets, braces and separators in highlighted code (4.5:1 on surface-sunken) | light: `color-gray-700` (#3a404b)<br>dark: `color-gray-300` (#c4c9d2) |
 | `--dui-font-body` | Body font stack | `--dui-font-stack-system-ui` (`system-ui, sans-serif`) |
 | `--dui-font-mono` | Code font stack | `--dui-font-stack-monospace` (`ui-monospace`, …, `monospace`) |
 | `--dui-font-weight-body` | Body weight | `font-weight-400` (400) |
@@ -757,7 +765,6 @@ In the `<head>` of the live example above.
 
 ```html
 <style>
-  /* One swatch per level: its shadow and its surface, from two custom properties. */
   .level {
     display: flex;
     flex-direction: column;
@@ -1070,7 +1077,7 @@ Primitives are NOT public API: they may be renamed, added or removed in any rele
 
 Custom properties: <https://developer.mozilla.org/en-US/docs/Web/CSS/--*>
 
-107 tokens in [`css/tokens/primitives.css`](https://github.com/odonckers/domestic-ui/blob/main/css/tokens/primitives.css). **Light** and **Dark** resolve every `var()` and take one side of [`light-dark()`](https://developer.mozilla.org/en-US/docs/Web/CSS/color_value/light-dark). Previews are decorative.
+109 tokens in [`css/tokens/primitives.css`](https://github.com/odonckers/domestic-ui/blob/main/css/tokens/primitives.css). **Light** and **Dark** resolve every `var()` and take one side of [`light-dark()`](https://developer.mozilla.org/en-US/docs/Web/CSS/color_value/light-dark). Previews are decorative.
 
 ### Neutral gray, cool tint
 
@@ -1107,6 +1114,8 @@ Custom properties: <https://developer.mozilla.org/en-US/docs/Web/CSS/--*>
 | `--dui-color-yellow-300` | `#e3c84f` | `#e3c84f` | No description yet. |
 | `--dui-color-amber-300` | `#f2c14e` | `#f2c14e` | No description yet. |
 | `--dui-color-amber-700` | `#8a5a00` | `#8a5a00` | No description yet. |
+| `--dui-color-teal-300` | `#5cc8d1` | `#5cc8d1` | No description yet. |
+| `--dui-color-teal-700` | `#0b6e75` | `#0b6e75` | No description yet. |
 
 ### Translucent black, for overlays and shadows
 
@@ -1277,7 +1286,7 @@ A theme is an override of these tokens on :root or on a scoped element. No rebui
 
 Colors use light-dark(), which picks a value from the used color-scheme of the element where the token is read. <https://developer.mozilla.org/en-US/docs/Web/CSS/color_value/light-dark>
 
-128 tokens in [`css/tokens/semantic.css`](https://github.com/odonckers/domestic-ui/blob/main/css/tokens/semantic.css). **Light** and **Dark** resolve every `var()` and take one side of [`light-dark()`](https://developer.mozilla.org/en-US/docs/Web/CSS/color_value/light-dark). Previews are decorative. † marks a description taken from the semantic token table in [Theming](https://odonckers.github.io/domestic-ui/principles/theming.md).
+136 tokens in [`css/tokens/semantic.css`](https://github.com/odonckers/domestic-ui/blob/main/css/tokens/semantic.css). **Light** and **Dark** resolve every `var()` and take one side of [`light-dark()`](https://developer.mozilla.org/en-US/docs/Web/CSS/color_value/light-dark). Previews are decorative. † marks a description taken from the semantic token table in [Theming](https://odonckers.github.io/domestic-ui/principles/theming.md).
 
 ### Surfaces and text
 
@@ -1313,6 +1322,19 @@ Decorative hairlines vs. control boundaries (3:1, WCAG 1.4.11).
 | `--dui-color-mark-text` | `#12151b` | `#12151b` | Text on mark † |
 | `--dui-color-backdrop` | `rgb(0 0 0 / 40%)` | `rgb(0 0 0 / 60%)` | dialog::backdrop † |
 | `--dui-color-shadow` | `rgb(0 0 0 / 10%)` | `rgb(0 0 0 / 40%)` | Shadow color † |
+
+### Code highlighting (css/base/typography.css, explainers/code-highlighting.md). Each meets 4.5:1 on --dui-color-surface-sunken, the <pre> background (WCAG 1.4.3)
+
+| Token | Light | Dark | Description |
+| --- | --- | --- | --- |
+| `--dui-color-code-keyword` | `#6b2fb3` | `#d2a8ff` | JS keywords and CSS at-rules: const, return, @layer |
+| `--dui-color-code-string` | `#17773a` | `#5fd38d` | Quoted strings in JS and CSS, and HTML attribute values |
+| `--dui-color-code-comment` | `#545b68` | `#a3aab6` | Comments in HTML, CSS and JS |
+| `--dui-color-code-tag` | `#2b43b0` | `#a8b7ff` | HTML tag names and CSS selectors |
+| `--dui-color-code-attribute` | `#8a5a00` | `#f2c14e` | HTML attribute names |
+| `--dui-color-code-property` | `#0b6e75` | `#5cc8d1` | CSS properties and custom properties, JS object properties |
+| `--dui-color-code-number` | `#b42318` | `#ff8a80` | Numbers with their units: 0.5rem, 100%, 42 |
+| `--dui-color-code-punctuation` | `#3a404b` | `#c4c9d2` | Brackets, braces, angle brackets, colons, semicolons, commas |
 
 ### Type
 
@@ -1602,11 +1624,13 @@ Native HTML elements styled by the base layer, with no classes.
 #### Preformatted code
 
 ```html
-        <pre tabindex="0"><code>&lt;link rel="stylesheet" href="css/domestic.css"&gt;
+        <pre><code>&lt;link rel="stylesheet" href="css/domestic.css"&gt;
 
 :root {
   --dui-color-accent: light-dark(#7a2e8c, #e2a8f0);
+  --dui-font-heading: charter, "Bitstream Charter", "Sitka Text", cambria, serif;
 }</code></pre>
+        <pre data-scroll="inline" tabindex="0" aria-label="Copy the CSS into a project"><code>git clone --depth 1 https://github.com/odonckers/domestic-ui.git &amp;&amp; cp -R domestic-ui/css public/css &amp;&amp; rm -rf domestic-ui</code></pre>
 ```
 
 #### Media
@@ -1733,8 +1757,12 @@ None: write semantic HTML.
 - [MDN `overflow-wrap`](https://developer.mozilla.org/en-US/docs/Web/CSS/overflow-wrap)
 - [W3C corner shaping](https://www.w3.org/TR/css-backgrounds-3/#corner-shaping)
 - [WHATWG the code element](https://html.spec.whatwg.org/multipage/text-level-semantics.html#the-code-element)
+- [MDN `white-space`](https://developer.mozilla.org/en-US/docs/Web/CSS/white-space)
+- [WCAG Reflow](https://www.w3.org/WAI/WCAG22/Understanding/reflow.html)
 - [Deque University scrollable region focusable](https://dequeuniversity.com/rules/axe/4.10/scrollable-region-focusable)
 - [WCAG Keyboard](https://www.w3.org/WAI/WCAG22/Understanding/keyboard.html)
+- [MDN `CSS_Custom_Highlight_API`](https://developer.mozilla.org/en-US/docs/Web/API/CSS_Custom_Highlight_API)
+- [W3C css highlight api 1](https://drafts.csswg.org/css-highlight-api-1/)
 
 ### See also
 

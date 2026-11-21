@@ -26,9 +26,9 @@ Link `css/domestic.css` (copy `css/` from https://github.com/odonckers/domestic-
 
 ## Tokens
 
-- [Tokens](https://odonckers.github.io/domestic-ui/tokens/index.md): The two tiers of domestic-ui design tokens: 235 custom properties with their light and dark values.
-- [Primitive tokens](https://odonckers.github.io/domestic-ui/tokens/primitives.md): All 107 primitive tokens in css/tokens/primitives.css (internal), with resolved light and dark values.
-- [Semantic tokens](https://odonckers.github.io/domestic-ui/tokens/semantic.md): All 128 semantic tokens in css/tokens/semantic.css (public theming API), with resolved light and dark values.
+- [Tokens](https://odonckers.github.io/domestic-ui/tokens/index.md): The two tiers of domestic-ui design tokens: 245 custom properties with their light and dark values.
+- [Primitive tokens](https://odonckers.github.io/domestic-ui/tokens/primitives.md): All 109 primitive tokens in css/tokens/primitives.css (internal), with resolved light and dark values.
+- [Semantic tokens](https://odonckers.github.io/domestic-ui/tokens/semantic.md): All 136 semantic tokens in css/tokens/semantic.css (public theming API), with resolved light and dark values.
 
 ## Base
 
