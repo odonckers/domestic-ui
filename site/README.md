@@ -32,6 +32,8 @@ indexes, which is why every docs link points at a file (`principles/index.html`,
 | `site/lib/pages.mjs` | Defines every page as blocks of Markdown, or custom HTML plus its Markdown equivalent. |
 | `site/lib/templates.mjs` | The HTML page frame (skip link, header, sidebar, main, footer) and the Markdown twin. |
 | `site/lib/outputs.mjs` | `README.md`, `llms.txt`, `llms-full.txt` and `_site/search-index.json`. |
+| `site/lib/other-systems.mjs` | Validates `site/data/other-systems.json` and adds its section to each page (see [How other systems do it](#how-other-systems-do-it)). |
+| `site/check-other-systems.mjs` | Dead-link check for that file; run by `npm test`. |
 | `site/assets/site.css` | Docs layout only, with semantic `--dui-*` tokens and the layout primitives. |
 | `site/assets/site.js` | Progressive enhancement only: closes the Docs menu on narrow screens, runs the token filter. |
 
@@ -133,6 +135,8 @@ No site change is needed. Add the files below and run `node site/build.mjs`:
   not a component; it is listed on `examples.html` only, as "<Group> showcase".
 - A row in the index table of `css/components/<group>/README.md`, if the group has one. A CSS file
   missing from the table still gets a page (from its header comment alone), so nothing is dropped.
+- An entry in `site/data/other-systems.json` (see [How other systems do it](#how-other-systems-do-it)).
+  Without one the page builds, and the build prints a warning naming it.
 
 ### Group README
 
@@ -282,6 +286,76 @@ Until a file lands, the page shows only the summary, the standard or Our choice 
 in M3." (or M3b): no demo, no markup, no keyboard table. `README.md` lists every pattern with its
 status and adds available ones to the components table at their level; `llms.txt` links available
 patterns to their `.md` twin and names planned ones with their milestone.
+
+## How other systems do it
+
+Base, component and pattern pages end with links to how Apple, Material and Geist handle the same
+thing, from `site/data/other-systems.json`. Planned pattern pages have them too. The section is the
+last on the page, after the spec links (and the keyboard notes), in the HTML page, its Markdown twin
+and `llms-full.txt`; not in `llms.txt` or `README.md`.
+
+Rules:
+
+- **Comparison only.** The section opens with "For comparison only; these are not the standard this
+  system follows." The standards a page follows are its spec links.
+- **Links only.** Never copy text, descriptions, images or visuals from those systems. A link's label
+  is the system name and the page title from the data file, nothing else.
+- **`null` means "No equivalent".** Use it when the system has no page for the same thing; every
+  entry lists all three systems.
+- **Plain links**, no `target="_blank"`.
+
+Format:
+
+```json
+{
+  "systems": {
+    "apple": { "name": "Apple Human Interface Guidelines", "home": "https://…" },
+    "material": { "name": "Material Design 3", "home": "https://…" },
+    "geist": { "name": "Vercel Geist", "home": "https://…", "soft404Title": "Geist Design System" }
+  },
+  "pages": {
+    "patterns/tabs": {
+      "apple": { "url": "https://…", "title": "Tab views" },
+      "material": { "url": "https://…", "title": "Tabs" },
+      "geist": null
+    }
+  }
+}
+```
+
+- `systems`: exactly `apple`, `material` and `geist` (listed in that order on each page), each with a
+  display `name`, an optional `home` page and an optional `soft404Title`.
+- `pages`: keyed by site page path without `.html` (`components/base`, `components/atoms/button`,
+  `patterns/tabs`). Each value has all three systems, each `null` or `{ "url", "title" }` with an
+  `https` URL and the page's title as that system writes it.
+- `soft404Title`: some sites answer 200 for pages that do not exist (Geist does, with a generic
+  `<title>`). The link check fetches that system's page URLs with GET and fails any whose `<title>` is
+  exactly this.
+
+The build fails, naming each problem, when a key is not a built page, a system is unknown or missing,
+or a value is not `null` or `{ url, title }` with an `https` URL. It prints a warning (and still
+builds) for each base, component or pattern page with no entry.
+
+To add an entry when an M3 component or pattern lands: add its key under `pages` with all three
+systems, check each URL in a browser and copy only the page title, then run `node site/build.mjs`
+(no warning left) and `node site/check-other-systems.mjs`.
+
+### Link check
+
+`node site/check-other-systems.mjs` requests every unique URL (pages and homes), redirects followed,
+HEAD first and GET when HEAD answers 405, 501 or any 4xx/5xx other than 404 and 410. It prints one
+row per URL and exits 1 on any failure:
+
+| Final response | Result |
+| --- | --- |
+| 2xx | ok, unless the system's `soft404Title` matches (failure: soft 404) |
+| 404, 410, any other 4xx | failure |
+| 403, 429, 5xx | warning: bot walls and rate limits do not prove a page is gone |
+| Timeout or network error, after one retry | warning |
+
+`tests/docs-other-systems.spec.js` runs it in `npm test` (Chromium project only): failures fail the
+test, warnings are printed and attached as annotations. The same spec tests each rule against a
+local server.
 
 ## Tokens
 

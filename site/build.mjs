@@ -15,6 +15,7 @@ import { fileURLToPath, pathToFileURL } from "node:url";
 import { loadModel } from "./lib/discovery.mjs";
 import { NAV, navEntryOf, navTree } from "./lib/nav.mjs";
 import { generateLlms, generateLlmsFull, generateReadme, searchIndex } from "./lib/outputs.mjs";
+import { addOtherSystems, loadOtherSystems } from "./lib/other-systems.mjs";
 import { buildPages } from "./lib/pages.mjs";
 import { renderHtml, renderMarkdown } from "./lib/templates.mjs";
 
@@ -53,7 +54,9 @@ function dedupeTitles(pages) {
  */
 export function generate(root = ROOT) {
   const model = loadModel(root);
-  const pages = dedupeTitles(buildPages(model));
+  // Throws on invalid site/data/other-systems.json; warns about comparable pages with no entry.
+  const { pages: withOthers, warnings } = addOtherSystems(buildPages(model), model, loadOtherSystems(root));
+  const pages = dedupeTitles(withOthers);
   for (const entry of NAV) if (!pages.some((p) => p.path === entry.path)) throw new Error(`The Docs sidebar entry "${entry.title}" links ${entry.path}, which no page builds`);
   const twins = new Set(pages.map((p) => p.path));
   const tree = navTree(pages, model.examples);
@@ -61,6 +64,8 @@ export function generate(root = ROOT) {
     model,
     pages,
     tree,
+    /** Non-fatal problems, printed by the CLI. */
+    warnings,
     files: {
       "README.md": generateReadme(model),
       "llms.txt": generateLlms(model, pages),
@@ -118,7 +123,10 @@ export function stale(root = ROOT) {
 }
 
 if (process.argv[1] && import.meta.url === pathToFileURL(resolve(process.argv[1])).href) {
+  /** @param {string[]} warnings */
+  const warn = (warnings) => warnings.forEach((w) => console.warn(`Warning: ${w}`));
   if (process.argv.includes("--check")) {
+    warn(generate().warnings);
     const files = stale();
     if (files.length) {
       for (const name of files) console.error(`${name} is stale; run node site/build.mjs`);
@@ -126,7 +134,8 @@ if (process.argv[1] && import.meta.url === pathToFileURL(resolve(process.argv[1]
     }
     console.log(`${GENERATED.join(", ")} are up to date.`);
   } else {
-    const { pages } = build();
+    const { pages, warnings } = build();
+    warn(warnings);
     console.log(`Built ${pages.length} pages into _site/ and wrote ${GENERATED.join(", ")}.`);
   }
 }

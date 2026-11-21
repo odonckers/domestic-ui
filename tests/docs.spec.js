@@ -7,7 +7,8 @@ import { tmpdir } from "node:os";
 import { dirname, join, posix } from "node:path";
 import { GENERATED, NAV, ROOT, build, extractSnippets, generate } from "../site/build.mjs";
 import { parseTokenFile, resolveTokens, resolveValue } from "../site/lib/tokens.mjs";
-import { unescapeHtml } from "../site/lib/util.mjs";
+import { validateOtherSystems } from "../site/lib/other-systems.mjs";
+import { escapeHtml, unescapeHtml } from "../site/lib/util.mjs";
 import { SITE_DIR, WCAG_TAGS, builtPages, summarize } from "./docs-helpers.js";
 import { blockExternalRequests, schemes } from "./helpers.js";
 
@@ -119,6 +120,110 @@ test.describe("docs build", () => {
         expect(llmsFences, `llms-full.txt has the ${s.source} snippet`).toContain(s.code);
         expect(htmlFences(read(join(SITE_DIR, page.path.replace(/\.html$/, ".md")))), `${page.path} Markdown twin`).toContain(s.code);
       }
+    }
+  });
+});
+
+test.describe("how other systems do it", () => {
+  test.beforeEach(({ browserName }) => test.skip(browserName !== "chromium", "browser-independent; run once"));
+
+  // Read the data here, independently of the build's renderer.
+  const data = JSON.parse(read(join(ROOT, "site/data/other-systems.json")));
+  const order = ["apple", "material", "geist"];
+  const NOTE = "For comparison only; these are not the standard this system follows.";
+  /** The expected Markdown section for one key, with its heading at `hashes`. @param {string} key @param {string} hashes */
+  const expectedMd = (key, hashes) =>
+    [
+      `${hashes} How other systems do it`,
+      "",
+      NOTE,
+      "",
+      ...order.map((s) => {
+        const link = data.pages[key][s];
+        return link ? `- [${data.systems[s].name}: ${link.title}](${link.url})` : `- ${data.systems[s].name}: No equivalent`;
+      }),
+    ].join("\n");
+
+  test("every entry is the last section of its page, Markdown twin and llms-full.txt part, after the spec links", () => {
+    const keys = Object.keys(data.pages);
+    expect(keys.length).toBeGreaterThan(0);
+    const full = read(join(SITE_DIR, "llms-full.txt"));
+    for (const key of keys) {
+      const html = read(join(SITE_DIR, `${key}.html`));
+      const main = html.slice(html.indexOf("<main"), html.indexOf("</main>"));
+      const headings = [...main.matchAll(/<h2 id="([^"]*)">/g)].map((m) => m[1]);
+      expect(headings.at(-1), `${key}: last h2`).toBe("how-other-systems-do-it");
+      expect(headings.filter((h) => h === "how-other-systems-do-it"), `${key}: once`).toHaveLength(1);
+      // After the spec links: "Specs" on built pages, "Standard" on planned pattern pages; and after Keyboard.
+      const specs = headings.includes("specs") ? "specs" : "standard";
+      expect(headings, `${key}: has spec links`).toContain(specs);
+      expect(headings.indexOf("how-other-systems-do-it")).toBeGreaterThan(headings.indexOf(specs));
+      if (headings.includes("keyboard")) expect(headings.indexOf("how-other-systems-do-it")).toBeGreaterThan(headings.indexOf("keyboard"));
+
+      const section = main.slice(main.indexOf('<h2 id="how-other-systems-do-it">'));
+      expect(section, key).toContain(`How other systems do it</h2>\n<p>${NOTE}</p>\n<ul>\n`);
+      const items = [...section.matchAll(/<li>([\s\S]*?)<\/li>/g)].map((m) => m[1]);
+      expect(items, key).toEqual(
+        order.map((s) => {
+          const link = data.pages[key][s];
+          const name = escapeHtml(data.systems[s].name);
+          return link ? `<a href="${escapeHtml(link.url)}">${name}: ${escapeHtml(link.title)}</a>` : `${name}: No equivalent`;
+        }),
+      );
+      expect(section, `${key}: plain links`).not.toContain("target=");
+
+      const md = read(join(SITE_DIR, `${key}.md`));
+      expect(md.endsWith(`\n\n${expectedMd(key, "##")}\n`), `${key}.md ends with the section`).toBe(true);
+
+      const start = full.indexOf(`\nPage: https://odonckers.github.io/domestic-ui/${key}.html\n`);
+      expect(start, `${key} in llms-full.txt`).toBeGreaterThan(0);
+      const next = full.indexOf("\nPage: ", start + 1);
+      const part = full.slice(start, next < 0 ? undefined : full.lastIndexOf("\n## ", next));
+      expect(part.trimEnd().endsWith(`\n\n${expectedMd(key, "###")}`), `${key}: llms-full.txt part ends with the section`).toBe(true);
+    }
+    expect(site.files["llms.txt"]).not.toContain("How other systems do it");
+    expect(site.files["README.md"]).toContain("for comparison only");
+    for (const name of Object.values(data.systems).map((s) => /** @type {any} */ (s).name)) expect(site.files["README.md"]).not.toContain(name);
+  });
+
+  test("pages with no entry get no section", () => {
+    const keys = new Set(Object.keys(data.pages));
+    for (const page of site.pages.filter((p) => !keys.has(p.path.replace(/\.html$/, "")))) {
+      expect(read(join(SITE_DIR, page.path)), page.path).not.toContain("How other systems do it");
+    }
+    expect(site.warnings, "every comparable page has an entry").toEqual([]);
+  });
+
+  test("the build rejects invalid data and warns about comparable pages with no entry", () => {
+    const paths = site.pages.map((p) => p.path);
+    expect(validateOtherSystems(data, paths)).toEqual([]);
+    const tabs = data.pages["patterns/tabs"];
+    const bad = (/** @type {any} */ pages, systems = data.systems) => validateOtherSystems({ systems, pages }, paths);
+    expect(bad({ "patterns/nope": tabs })).toEqual(['pages["patterns/nope"]: no built page patterns/nope.html']);
+    expect(bad({ "patterns/tabs": { ...tabs, carbon: null } })).toEqual(['pages["patterns/tabs"].carbon: unknown system; expected one of apple, material, geist']);
+    expect(bad({ "patterns/tabs": { apple: null, material: null } })).toEqual(['pages["patterns/tabs"]: missing "geist" (use null for no equivalent)']);
+    for (const value of [{ url: "http://example.com/", title: "T" }, { url: "https://example.com/" }, { url: "https://example.com/", title: "T", note: "x" }, "https://example.com/", false]) {
+      expect(bad({ "patterns/tabs": { ...tabs, geist: value } }), JSON.stringify(value)).toEqual(['pages["patterns/tabs"].geist: must be null or { "url": "https://…", "title": "…" }']);
+    }
+    expect(bad({}, { ...data.systems, carbon: { name: "Carbon" } })).toEqual(["systems.carbon: unknown system; expected one of apple, material, geist"]);
+
+    // End to end, with the fixture approach below: a bad key fails the build with a clear message.
+    const fixture = mkdtempSync(join(tmpdir(), "dui-docs-other-"));
+    try {
+      for (const path of ["PRINCIPLES.md", "css", "examples", "site/content", "site/data"]) cpSync(join(ROOT, path), join(fixture, path), { recursive: true });
+      const file = join(fixture, "site/data/other-systems.json");
+      // A new atom with no entry builds, with a warning naming it.
+      cpSync(join(ROOT, "css/components/atoms/badge.css"), join(fixture, "css/components/atoms/demo.css"));
+      const warned = generate(fixture);
+      expect(warned.warnings).toEqual([`site/data/other-systems.json has no entry for: components/atoms/demo. Add one (null for no equivalent) to list how other systems do it.`]);
+      expect(warned.pages.find((p) => p.path === "components/atoms/demo.html")?.blocks.some((b) => b.md.includes("How other systems do it"))).toBe(false);
+
+      writeFileSync(file, JSON.stringify({ ...data, pages: { ...data.pages, "patterns/nope": tabs } }));
+      expect(() => generate(fixture)).toThrow('site/data/other-systems.json is invalid:\n  pages["patterns/nope"]: no built page patterns/nope.html');
+      writeFileSync(file, "{");
+      expect(() => generate(fixture)).toThrow(/site\/data\/other-systems\.json: not valid JSON/);
+    } finally {
+      rmSync(fixture, { recursive: true, force: true });
     }
   });
 });
