@@ -293,7 +293,8 @@ screen reader users hear what that focus stop is. **Our choice:** `<section>` ra
 may scroll sideways under [1.4.10 Reflow](https://www.w3.org/WAI/WCAG22/Understanding/reflow.html);
 the page itself must not. Never set `display: block` on the `<table>` instead: it can drop table
 semantics in some browsers ([Adrian Roselli](https://adrianroselli.com/2018/02/tables-css-display-properties-and-aria.html)).
-A `<pre>` already scrolls (`overflow-x: auto`); give one that can overflow `tabindex="0"` too.
+A `<pre>` already scrolls (`overflow-x: auto`); authors MUST give every `<pre>` (and any
+`data-scroll="inline"` container) `tabindex="0"` so it can be scrolled from the keyboard.
 
 ## 8. Tooling
 

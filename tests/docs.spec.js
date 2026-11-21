@@ -110,7 +110,7 @@ test.describe("docs build", () => {
         if (s.from === "pre") {
           // Rule (b): the example's own <pre><code> content, unescaped, byte for byte.
           const main = source.slice(source.indexOf("<main"), source.lastIndexOf("</main>"));
-          const examplePre = [...main.matchAll(/<pre><code>([\s\S]*?)<\/code><\/pre>/g)].map((m) => unescapeHtml(m[1]));
+          const examplePre = [...main.matchAll(/<pre\b[^>]*><code>([\s\S]*?)<\/code><\/pre>/g)].map((m) => unescapeHtml(m[1]));
           expect(examplePre, `${page.path}: ${s.name} is a <pre><code> of ${s.source}`).toContain(s.code);
         } else {
           const decoration = s.from === "css-comment" ? /^\s*\*?\s*$/ : /^[ \t]*$/;
@@ -149,7 +149,7 @@ test.describe("atoms from the group README", () => {
       expect(md, `${title}: specs`).toMatch(/## Specs\n\n- \*\*/);
       // Copy-paste markup: one named block per <pre><code> in the example, byte for byte.
       const source = read(join(ROOT, exampleFile));
-      const pre = [...source.matchAll(/<pre><code>([\s\S]*?)<\/code><\/pre>/g)].map((m) => unescapeHtml(m[1]));
+      const pre = [...source.matchAll(/<pre\b[^>]*><code>([\s\S]*?)<\/code><\/pre>/g)].map((m) => unescapeHtml(m[1]));
       expect(snippetBlocks(html), title).toEqual(pre);
       expect(page.snippets.every((/** @type {any} */ s) => s.from === "pre" && s.name), `${title}: every snippet is named`).toBe(true);
       for (const s of page.snippets) expect(html).toMatch(new RegExp(`<h3 id="[^"]*">${s.name.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}</h3>\\n<pre data-snippet=`));

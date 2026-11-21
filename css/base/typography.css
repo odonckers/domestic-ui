@@ -136,12 +136,12 @@ samp {
 }
 
 /*
- * Our choice: inside table cells, code keeps whole tokens (break-word only
- * splits a token that alone is wider than the cell). Wide tables go in
- * data-scroll="inline" (css/layout/scroll.css) and scroll instead of
- * splitting `<select>` across lines.
+ * Our choice: in a table inside data-scroll="inline" (css/layout/scroll.css),
+ * code keeps whole tokens (break-word only splits a token that alone is wider
+ * than the cell), because the region scrolls instead. A bare table keeps
+ * overflow-wrap: anywhere, so it still fits a narrow viewport.
  */
-:is(td, th) :is(code, kbd, samp) {
+[data-scroll~="inline"] :is(td, th) :is(code, kbd, samp) {
   overflow-wrap: break-word;
 }
 
@@ -160,6 +160,13 @@ kbd {
   padding-inline: var(--dui-space-2xs);
 }
 
+/*
+ * <pre> scrolls sideways instead of wrapping. Authors MUST give every <pre>
+ * (and any data-scroll="inline" container) tabindex="0" so it can be scrolled
+ * from the keyboard: axe scrollable-region-focusable,
+ * https://dequeuniversity.com/rules/axe/4.10/scrollable-region-focusable, and
+ * WCAG 2.1.1 Keyboard, https://www.w3.org/WAI/WCAG22/Understanding/keyboard.html
+ */
 pre {
   background-color: var(--dui-color-surface-sunken);
   border: var(--dui-border-width) solid var(--dui-color-border);

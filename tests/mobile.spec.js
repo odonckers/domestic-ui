@@ -38,6 +38,29 @@ for (const viewport of viewports) {
           expect(scrollWidth, `wider than ${clientWidth}px:\n  ${offenders.join("\n  ")}`).toBeLessThanOrEqual(clientWidth);
         });
 
+        // WCAG 2.1.1 Keyboard: https://www.w3.org/WAI/WCAG22/Understanding/keyboard.html
+        test("every scrollable region is keyboard-focusable", async ({ page }) => {
+          await page.goto(path);
+          const { scrolling, pres } = await page.evaluate(() => {
+            const describe = (el) => {
+              const id = el.id ? `#${el.id}` : "";
+              const text = (el.textContent ?? "").trim().replace(/\s+/g, " ").slice(0, 40);
+              return `${el.localName}${id}: "${text}"`;
+            };
+            const scrolling = [...document.querySelectorAll("pre, [data-scroll]")]
+              .filter((el) => el.scrollWidth > el.clientWidth)
+              .filter((el) => /** @type {HTMLElement} */ (el).tabIndex < 0)
+              .map(describe);
+            // Every <pre> may overflow at some viewport, so each needs tabindex="0" regardless of size.
+            const pres = [...document.querySelectorAll("pre")]
+              .filter((el) => el.getAttribute("tabindex") !== "0")
+              .map(describe);
+            return { scrolling, pres };
+          });
+          expect(scrolling, `scrollable but not focusable:\n  ${scrolling.join("\n  ")}`).toEqual([]);
+          expect(pres, `<pre> without tabindex="0":\n  ${pres.join("\n  ")}`).toEqual([]);
+        });
+
         for (const colorScheme of schemes) {
           test(`has no axe violations (${colorScheme})`, async ({ page }) => {
             await page.emulateMedia({ colorScheme });

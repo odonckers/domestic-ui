@@ -58,7 +58,10 @@ Semantic token names and file paths under `css/` are public API; primitive token
   and links in running text wrap with `overflow-wrap: anywhere`, long words in headings break,
   `.cluster` and `.grid` children get `min-inline-size: 0`, badges wrap (a wrapped badge keeps
   rounded corners), table cells use `--dui-space-xs` padding on every side, and every example
-  table sits in a `data-scroll="inline"` region. The scrolling `<pre>` in `examples/base.html`
-  and `examples/theming.html` is now keyboard-focusable (axe `scrollable-region-focusable`).
+  table sits in a `data-scroll="inline"` region. Every example `<pre>` block (in
+  `examples/base.html`, `examples/theming.html` and `examples/atoms/`) now has `tabindex="0"`
+  and is keyboard-focusable (axe `scrollable-region-focusable`).
 
 - Base button hover and press styles no longer apply to buttons with `aria-disabled="true"`.
+
+[Unreleased]: https://github.com/odonckers/domestic-ui/commits/main

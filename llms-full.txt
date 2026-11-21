@@ -2,7 +2,7 @@
 
 > domestic-ui is a design system built on native HTML, CSS custom properties and cascade layers. Link one stylesheet and plain semantic HTML gets its look in light and dark, with WCAG 2.2 AA as the accessibility baseline; theme it by overriding semantic tokens. It packages existing web standards and well-known patterns: nothing here is original.
 
-To use it, link `css/domestic.css` (copy the `css/` folder or clone https://github.com/odonckers/domestic-ui). Plain semantic HTML then gets the full look with no classes. Each component exposes one `data-<component>` attribute whose value is space-separated words matched with `~=`, such as `data-button="primary small"`, never classes; state is carried by native attributes and ARIA (`disabled`, `aria-disabled`, `aria-busy`, `aria-invalid`). Layout primitives and utilities are classes (`.cluster`, `.grid`, `.stack`, `.visually-hidden`), tuned with custom properties. Theme only by overriding semantic `--dui-*` tokens; primitive tokens are internal and may change.
+To use it, link `css/domestic.css` (copy the `css/` folder or clone https://github.com/odonckers/domestic-ui). Plain semantic HTML then gets the full look with no classes. Each component exposes one `data-<component>` attribute whose value is space-separated words matched with `~=`, such as `data-button="primary small"`, never classes; state is carried by native attributes and ARIA (`disabled`, `aria-disabled`, `aria-busy`, `aria-invalid`). Layout primitives and utilities are classes (`.cluster`, `.grid`, `.scroll`, `.stack`, `.visually-hidden`), tuned with custom properties. Theme only by overriding semantic `--dui-*` tokens; primitive tokens are internal and may change.
 
 ## domestic-ui
 
@@ -45,7 +45,7 @@ Each component exposes one `data-<component>` attribute. Its value is a list of 
 
 **Our choice:** One attribute is one API to learn, it reads as a sentence (`data-button="primary small"`), and it cannot pile up like modifier classes.
 
-Layout primitives and utilities from M1 are classes: `.cluster`, `.grid`, `.stack`, `.visually-hidden`. Base elements need no API: write semantic HTML.
+Layout primitives and utilities from M1 are classes: `.cluster`, `.grid`, `.scroll`, `.stack`, `.visually-hidden`. Base elements need no API: write semantic HTML.
 
 ### What is in these docs
 
@@ -54,7 +54,7 @@ The Docs menu lists every page. In order:
 - [Principles](https://odonckers.github.io/domestic-ui/principles/index.md): 8 sections, one page each.
 - [Tokens](https://odonckers.github.io/domestic-ui/tokens/index.md): all 158 custom properties with their light and dark values.
 - [Base](https://odonckers.github.io/domestic-ui/components/base.md): native elements styled with no classes, and the `.visually-hidden` utility.
-- [Layout](https://odonckers.github.io/domestic-ui/layouts/index.md): the layout primitives `.cluster`, `.grid`, `.stack`.
+- [Layout](https://odonckers.github.io/domestic-ui/layouts/index.md): the layout primitives `.cluster`, `.grid`, `.scroll`, `.stack`.
 - [Atoms](https://odonckers.github.io/domestic-ui/atoms/index.md): 7 components.
 - [Molecules](https://odonckers.github.io/domestic-ui/molecules/index.md): coming in M3.
 - [Organisms](https://odonckers.github.io/domestic-ui/organisms/index.md): coming in M3b.
@@ -194,7 +194,7 @@ unlayered CSS beats all of them**, so overriding never needs `!important` or spe
 | `reset` | A modest reset: `box-sizing`, zero margins, block media, inherited form fonts |
 | `tokens` | Primitive and semantic custom properties |
 | `base` | Native elements: typography, lists, tables, forms, buttons, dialog, details, focus |
-| `layout` | `.stack`, `.cluster`, `.grid` |
+| `layout` | `.stack`, `.cluster`, `.grid`, `[data-scroll]` |
 | `components` | Atoms in `css/components/atoms/` (M2); molecules and organisms later. See the [atoms index](https://github.com/odonckers/domestic-ui/blob/main/css/components/atoms/README.md) |
 | `utilities` | Single-purpose helpers such as `.visually-hidden`; last so they always apply |
 
@@ -384,12 +384,36 @@ Page: https://odonckers.github.io/domestic-ui/principles/layout-primitives.html
 | `.stack` | Vertical flow with a gap | `--stack-gap` |
 | `.cluster` | Wrapping inline group | `--cluster-gap`, `--cluster-justify`, `--cluster-align` |
 | `.grid` | Auto-fit responsive grid, no media queries | `--grid-min`, `--grid-gap` |
+| `[data-scroll="inline"]` | Scroll container for content wider than the screen, such as a data table | None |
 
 ```html
 <div class="grid" style="--grid-min: 12rem">…</div>
 ```
 
 On a `ul` or `ol`, the primitive also removes list markers and padding.
+
+Wrap any table that may not fit a 320px screen in `data-scroll="inline"`, named by its caption:
+
+```html
+<section data-scroll="inline" aria-labelledby="orders-caption" tabindex="0">
+  <table>
+    <caption id="orders-caption">Recent orders</caption>
+    …
+  </table>
+</section>
+```
+
+`tabindex="0"` makes it scrollable from the keyboard
+([2.1.1 Keyboard](https://www.w3.org/WAI/WCAG22/Understanding/keyboard.html), axe
+[`scrollable-region-focusable`](https://dequeuniversity.com/rules/axe/4.10/scrollable-region-focusable)),
+and a named `<section>` is a [region landmark](https://www.w3.org/TR/html-aam-1.0/#el-section), so
+screen reader users hear what that focus stop is. **Our choice:** `<section>` rather than
+`<div role="region">`, because the native element already has the role. Data tables
+may scroll sideways under [1.4.10 Reflow](https://www.w3.org/WAI/WCAG22/Understanding/reflow.html);
+the page itself must not. Never set `display: block` on the `<table>` instead: it can drop table
+semantics in some browsers ([Adrian Roselli](https://adrianroselli.com/2018/02/tables-css-display-properties-and-aria.html)).
+A `<pre>` already scrolls (`overflow-x: auto`); authors MUST give every `<pre>` (and any
+`data-scroll="inline"` container) `tabindex="0"` so it can be scrolled from the keyboard.
 
 ## Tooling
 
@@ -402,7 +426,7 @@ Page: https://odonckers.github.io/domestic-ui/principles/tooling.html
 | `lint:html` | [html-validate](https://html-validate.org/) | `examples/**/*.html` against `html-validate:recommended` |
 | `lint:css` | [Stylelint](https://stylelint.io/) | `css/**/*.css` against `stylelint-config-standard` |
 | `lint:tokens` | `scripts/check-tokens.mjs` | Semantic-only tokens and no literal colors or sizes outside `css/tokens/` |
-| `test:a11y` | [Playwright](https://playwright.dev/) + [axe-core](https://github.com/dequelabs/axe-core) | Every `examples/**/*.html` (atoms included) in light and dark, in Chromium, Firefox and WebKit, with tags `wcag2a`, `wcag2aa`, `wcag21a`, `wcag21aa`, `wcag22aa`, including open dialogs and details; no external requests; token contrast pairs (atoms included) in the default and forest themes; rendered focus-ring contrast on every button variant; atom states through accessibility APIs; scoped theming of atoms |
+| `test:a11y` | [Playwright](https://playwright.dev/) + [axe-core](https://github.com/dequelabs/axe-core) | Every `examples/**/*.html` (atoms included) in light and dark, in Chromium, Firefox and WebKit, with tags `wcag2a`, `wcag2aa`, `wcag21a`, `wcag21aa`, `wcag22aa`, including open dialogs and details; no horizontal page overflow and no axe violations at 320×640 and 375×812; no external requests; token contrast pairs (atoms included) in the default and forest themes; rendered focus-ring contrast on every button variant; atom states through accessibility APIs; scoped theming of atoms |
 
 Preview locally with `npm run serve` (a zero-dependency static server) and open
 <http://127.0.0.1:4173/examples/base.html>. To run tests from two checkouts at once, give each its own port, e.g. `PORT=4273 npm test`.
@@ -857,7 +881,10 @@ Each point below is stated in a `css/base/` comment or in [PRINCIPLES.md](https:
 - **W3C**: [www.w3.org/WAI/tutorials/tables/](https://www.w3.org/WAI/tutorials/tables/)
 - **WHATWG**: [html.spec.whatwg.org/multipage/text-level-semantics.html](https://html.spec.whatwg.org/multipage/text-level-semantics.html)
 - **WCAG**: [www.w3.org/WAI/WCAG22/Understanding/use-of-color.html](https://www.w3.org/WAI/WCAG22/Understanding/use-of-color.html)
+- **MDN**: [developer.mozilla.org/en-US/docs/Web/CSS/overflow-wrap](https://developer.mozilla.org/en-US/docs/Web/CSS/overflow-wrap)
 - **WHATWG**: [html.spec.whatwg.org/multipage/text-level-semantics.html#the-code-element](https://html.spec.whatwg.org/multipage/text-level-semantics.html#the-code-element)
+- **Other**: [dequeuniversity.com/rules/axe/4.10/scrollable-region-focusable](https://dequeuniversity.com/rules/axe/4.10/scrollable-region-focusable)
+- **WCAG**: [www.w3.org/WAI/WCAG22/Understanding/keyboard.html](https://www.w3.org/WAI/WCAG22/Understanding/keyboard.html)
 
 ### Source
 
@@ -915,6 +942,7 @@ Layout primitives arrange their children and nothing else; see [Layout primitive
 
 - [Cluster](https://odonckers.github.io/domestic-ui/layouts/cluster.md): An inline group that wraps onto new lines (buttons, tags, nav links).
 - [Grid](https://odonckers.github.io/domestic-ui/layouts/grid.md): A responsive grid: as many columns as fit, each at least --grid-min wide, never wider than the container.
+- [Scroll](https://odonckers.github.io/domestic-ui/layouts/scroll.md): A scroll container for content wider than the screen (data tables, long code, wide media), so it scrolls on its own instead of widening the page (WCAG 1.4.10 Reflow allows two-dimensional scrolling for data tables: <https://www.w3.org/WAI/WCAG22/Understanding/reflow.html>).
 - [Stack](https://odonckers.github.io/domestic-ui/layouts/stack.md): Vertical flow with a consistent gap between children.
 - [App shell](https://odonckers.github.io/domestic-ui/patterns/app-shell.md): The frame of an application: header, primary sidebar, main content and an optional auxiliary sidebar. Coming in M3b.
 - [Dashboard](https://odonckers.github.io/domestic-ui/patterns/dashboard.md): A grid of summary sections, each with a heading, that reflows to fit the screen. Coming in M3b.
@@ -1014,6 +1042,61 @@ The CSS header comment has no accessibility notes. See the spec links below and 
 ### Source
 
 - [`css/layout/grid.css`](https://github.com/odonckers/domestic-ui/blob/main/css/layout/grid.css)
+
+## Scroll
+
+Page: https://odonckers.github.io/domestic-ui/layouts/scroll.html
+
+A scroll container for content wider than the screen (data tables, long code, wide media), so it scrolls on its own instead of widening the page (WCAG 1.4.10 Reflow allows two-dimensional scrolling for data tables: <https://www.w3.org/WAI/WCAG22/Understanding/reflow.html>).
+
+### API
+
+```text
+data-scroll="inline"   scroll along the inline axis (left/right in English)
+```
+
+Layout primitives and utilities are classes, not `data-*` attributes; see the [component API convention](https://odonckers.github.io/domestic-ui/index.md#component-api).
+
+### Live example
+
+There is no standalone example page for scroll yet. These example pages use it: [Base elements](https://odonckers.github.io/domestic-ui/examples/base.html), [Badge](https://odonckers.github.io/domestic-ui/examples/atoms/badge.html), [Atoms showcase](https://odonckers.github.io/domestic-ui/examples/atoms/index.html), [Quiet link](https://odonckers.github.io/domestic-ui/examples/atoms/link.html).
+
+### Markup
+
+From the `Example` block in [`css/layout/scroll.css`](https://github.com/odonckers/domestic-ui/blob/main/css/layout/scroll.css):
+
+```html
+<section data-scroll="inline" aria-labelledby="orders-caption" tabindex="0">
+  <table>
+    <caption id="orders-caption">Recent orders</caption>
+    …
+  </table>
+</section>
+```
+
+### Notes
+
+Built on overflow-x: <https://developer.mozilla.org/en-US/docs/Web/CSS/overflow-x>
+
+tabindex="0" lets keyboard users scroll it with the arrow keys (WCAG 2.1.1 Keyboard, axe rule scrollable-region-focusable: <https://dequeuniversity.com/rules/axe/4.10/scrollable-region-focusable>). A \<section> named with aria-labelledby is a region landmark (<https://www.w3.org/TR/html-aam-1.0/#el-section>), so screen readers announce what the focus stop is. Our choice: \<section> over \<div role="region">, because the native element already has the role. Any element works if it has role="region" and a name. The table itself keeps display: table. Changing a table's display can drop its table semantics in some browsers (Adrian Roselli, "Tables, CSS Display Properties, and ARIA": <https://adrianroselli.com/2018/02/tables-css-display-properties-and-aria.html>).
+
+### Accessibility
+
+From the CSS header comment: A scroll container for content wider than the screen (data tables, long code, wide media), so it scrolls on its own instead of widening the page (WCAG 1.4.10 Reflow allows two-dimensional scrolling for data tables: <https://www.w3.org/WAI/WCAG22/Understanding/reflow.html>). tabindex="0" lets keyboard users scroll it with the arrow keys (WCAG 2.1.1 Keyboard, axe rule scrollable-region-focusable: <https://dequeuniversity.com/rules/axe/4.10/scrollable-region-focusable>). A \<section> named with aria-labelledby is a region landmark (<https://www.w3.org/TR/html-aam-1.0/#el-section>), so screen readers announce what the focus stop is. Changing a table's display can drop its table semantics in some browsers (Adrian Roselli, "Tables, CSS Display Properties, and ARIA": <https://adrianroselli.com/2018/02/tables-css-display-properties-and-aria.html>).
+
+See also the spec links below and the [Accessibility baseline](https://odonckers.github.io/domestic-ui/principles/accessibility-baseline-wcag-22-aa.md) principle.
+
+### Specs
+
+- **WCAG**: [www.w3.org/WAI/WCAG22/Understanding/reflow.html](https://www.w3.org/WAI/WCAG22/Understanding/reflow.html)
+- **MDN**: [developer.mozilla.org/en-US/docs/Web/CSS/overflow-x](https://developer.mozilla.org/en-US/docs/Web/CSS/overflow-x)
+- **Other**: [dequeuniversity.com/rules/axe/4.10/scrollable-region-focusable](https://dequeuniversity.com/rules/axe/4.10/scrollable-region-focusable)
+- **W3C**: [www.w3.org/TR/html-aam-1.0/#el-section](https://www.w3.org/TR/html-aam-1.0/#el-section)
+- **Other**: [adrianroselli.com/2018/02/tables-css-display-properties-and-aria.html](https://adrianroselli.com/2018/02/tables-css-display-properties-and-aria.html)
+
+### Source
+
+- [`css/layout/scroll.css`](https://github.com/odonckers/domestic-ui/blob/main/css/layout/scroll.css)
 
 ## Stack
 
@@ -1202,16 +1285,18 @@ The `<pre><code>` blocks in [`examples/atoms/link.html`](https://github.com/odon
 #### In a table
 
 ```html
-<table>
-  <caption>Recent orders</caption>
-  <thead>
-    <tr><th scope="col">Order</th><th scope="col">Customer</th><th scope="col">Total</th></tr>
-  </thead>
-  <tbody>
-    <tr><td><a href="#table-title" data-link="quiet">#1042</a></td><td>Ada Lovelace</td><td>€120.00</td></tr>
-    <tr><td><a href="#table-title" data-link="quiet">#1041</a></td><td>Alan Turing</td><td>€48.50</td></tr>
-  </tbody>
-</table>
+<section data-scroll="inline" aria-labelledby="orders-caption" tabindex="0">
+  <table>
+    <caption id="orders-caption">Recent orders</caption>
+    <thead>
+      <tr><th scope="col">Order</th><th scope="col">Customer</th><th scope="col">Total</th></tr>
+    </thead>
+    <tbody>
+      <tr><td><a href="#table-title" data-link="quiet">#1042</a></td><td>Ada Lovelace</td><td>€120.00</td></tr>
+      <tr><td><a href="#table-title" data-link="quiet">#1041</a></td><td>Alan Turing</td><td>€48.50</td></tr>
+    </tbody>
+  </table>
+</section>
 ```
 
 #### In muted metadata
@@ -1795,16 +1880,18 @@ The `<pre><code>` blocks in [`examples/atoms/badge.html`](https://github.com/odo
 #### In context
 
 ```html
-<table>
-  <caption>Invoices</caption>
-  <thead>
-    <tr><th scope="col">Invoice</th><th scope="col">Status</th></tr>
-  </thead>
-  <tbody>
-    <tr><td>INV-031</td><td><span data-badge="success">Paid</span></td></tr>
-    <tr><td>INV-032</td><td><span data-badge="danger">Overdue</span></td></tr>
-  </tbody>
-</table>
+<section data-scroll="inline" aria-labelledby="invoices-caption" tabindex="0">
+  <table>
+    <caption id="invoices-caption">Invoices</caption>
+    <thead>
+      <tr><th scope="col">Invoice</th><th scope="col">Status</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>INV-031</td><td><span data-badge="success">Paid</span></td></tr>
+      <tr><td>INV-032</td><td><span data-badge="danger">Overdue</span></td></tr>
+    </tbody>
+  </table>
+</section>
 ```
 
 ### Notes
@@ -2267,6 +2354,7 @@ Write semantic HTML and link `css/domestic.css`. Headings, paragraphs, lists, li
 
 - [Cluster](https://odonckers.github.io/domestic-ui/layouts/cluster.md): An inline group that wraps onto new lines (buttons, tags, nav links).
 - [Grid](https://odonckers.github.io/domestic-ui/layouts/grid.md): A responsive grid: as many columns as fit, each at least --grid-min wide, never wider than the container.
+- [Scroll](https://odonckers.github.io/domestic-ui/layouts/scroll.md): A scroll container for content wider than the screen (data tables, long code, wide media), so it scrolls on its own instead of widening the page (WCAG 1.4.10 Reflow allows two-dimensional scrolling for data tables: <https://www.w3.org/WAI/WCAG22/Understanding/reflow.html>).
 - [Stack](https://odonckers.github.io/domestic-ui/layouts/stack.md): Vertical flow with a consistent gap between children.
 
 Theme by overriding semantic tokens; see [Tokens](https://odonckers.github.io/domestic-ui/tokens/index.md) and the [theming example](https://odonckers.github.io/domestic-ui/examples/theming.html).
@@ -2433,7 +2521,21 @@ Semantic token names and file paths under `css/` are public API; primitive token
 - Tests: atom states through Playwright accessibility APIs, rendered focus-ring contrast on every
   button variant, contrast pairs for every new token, and scoped theming of atoms.
 - Firefox and WebKit Playwright projects alongside Chromium, installed in CI.
+- `layout` layer: `data-scroll="inline"` (`css/layout/scroll.css`), a keyboard-focusable scroll
+  container for wide content such as data tables, used on a `<section>` named by the table caption (a region landmark).
+- Tests: `tests/mobile.spec.js` checks every example at 320×640 and 375×812 in Chromium, Firefox
+  and WebKit for horizontal page overflow and axe violations.
 
 #### Fixed
 
+- Pages no longer scroll sideways on small screens (320px and up). Inline `code`, `kbd`, `samp`
+  and links in running text wrap with `overflow-wrap: anywhere`, long words in headings break,
+  `.cluster` and `.grid` children get `min-inline-size: 0`, badges wrap (a wrapped badge keeps
+  rounded corners), table cells use `--dui-space-xs` padding on every side, and every example
+  table sits in a `data-scroll="inline"` region. Every example `<pre>` block (in
+  `examples/base.html`, `examples/theming.html` and `examples/atoms/`) now has `tabindex="0"`
+  and is keyboard-focusable (axe `scrollable-region-focusable`).
+
 - Base button hover and press styles no longer apply to buttons with `aria-disabled="true"`.
+
+[Unreleased]: https://github.com/odonckers/domestic-ui/commits/main

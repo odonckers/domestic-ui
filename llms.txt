@@ -2,7 +2,7 @@
 
 > domestic-ui is a design system built on native HTML, CSS custom properties and cascade layers. Link one stylesheet and plain semantic HTML gets its look in light and dark, with WCAG 2.2 AA as the accessibility baseline; theme it by overriding semantic tokens. It packages existing web standards and well-known patterns: nothing here is original.
 
-To use it, link `css/domestic.css` (copy the `css/` folder or clone https://github.com/odonckers/domestic-ui). Plain semantic HTML then gets the full look with no classes. Each component exposes one `data-<component>` attribute whose value is space-separated words matched with `~=`, such as `data-button="primary small"`, never classes; state is carried by native attributes and ARIA (`disabled`, `aria-disabled`, `aria-busy`, `aria-invalid`). Layout primitives and utilities are classes (`.cluster`, `.grid`, `.stack`, `.visually-hidden`), tuned with custom properties. Theme only by overriding semantic `--dui-*` tokens; primitive tokens are internal and may change.
+To use it, link `css/domestic.css` (copy the `css/` folder or clone https://github.com/odonckers/domestic-ui). Plain semantic HTML then gets the full look with no classes. Each component exposes one `data-<component>` attribute whose value is space-separated words matched with `~=`, such as `data-button="primary small"`, never classes; state is carried by native attributes and ARIA (`disabled`, `aria-disabled`, `aria-busy`, `aria-invalid`). Layout primitives and utilities are classes (`.cluster`, `.grid`, `.scroll`, `.stack`, `.visually-hidden`), tuned with custom properties. Theme only by overriding semantic `--dui-*` tokens; primitive tokens are internal and may change.
 
 ## Getting started
 
@@ -28,7 +28,7 @@ To use it, link `css/domestic.css` (copy the `css/` folder or clone https://gith
 - [Cascade layers](https://odonckers.github.io/domestic-ui/principles/cascade-layers.md): css/domestic.css declares the order once, before anything else (@layer on MDN, CSS Cascade 5).
 - [Theming](https://odonckers.github.io/domestic-ui/principles/theming.md): All tokens are custom properties on :root with the --dui- prefix.
 - [Opinions we hold](https://odonckers.github.io/domestic-ui/principles/opinions-we-hold.md): Each of these is a choice between valid options, not a standard.
-- [Layout primitives](https://odonckers.github.io/domestic-ui/principles/layout-primitives.md): Class: .stack, .cluster, .grid.
+- [Layout primitives](https://odonckers.github.io/domestic-ui/principles/layout-primitives.md): Class: .stack, .cluster, .grid, [data-scroll="inline"].
 - [Tooling](https://odonckers.github.io/domestic-ui/principles/tooling.md): npm test runs, in order, and fails if any step fails.
 
 ## Tokens
@@ -47,6 +47,7 @@ To use it, link `css/domestic.css` (copy the `css/` folder or clone https://gith
 - [Layouts](https://odonckers.github.io/domestic-ui/layouts/index.md): Layout primitives and planned page layouts of domestic-ui.
 - [Cluster](https://odonckers.github.io/domestic-ui/layouts/cluster.md): An inline group that wraps onto new lines (buttons, tags, nav links).
 - [Grid](https://odonckers.github.io/domestic-ui/layouts/grid.md): A responsive grid: as many columns as fit, each at least --grid-min wide, never wider than the container.
+- [Scroll](https://odonckers.github.io/domestic-ui/layouts/scroll.md): A scroll container for content wider than the screen (data tables, long code, wide media), so it scrolls on its own instead of widening the page (WCAG 1.4.10 Reflow allows two-dimensional scrolling for data tables: https://www.w3.org/WAI/WCAG22/Understanding/reflow.html).
 - [Stack](https://odonckers.github.io/domestic-ui/layouts/stack.md): Vertical flow with a consistent gap between children.
 
 ## Atoms

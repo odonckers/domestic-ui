@@ -45,7 +45,7 @@ Each component exposes one `data-<component>` attribute. Its value is a list of 
 
 **Our choice:** One attribute is one API to learn, it reads as a sentence (`data-button="primary small"`), and it cannot pile up like modifier classes.
 
-Layout primitives and utilities from M1 are classes: `.cluster`, `.grid`, `.stack`, `.visually-hidden`. Base elements need no API: write semantic HTML.
+Layout primitives and utilities from M1 are classes: `.cluster`, `.grid`, `.scroll`, `.stack`, `.visually-hidden`. Base elements need no API: write semantic HTML.
 
 ## Principles
 
@@ -119,6 +119,7 @@ Each of these is a choice between valid options, not a standard.
 | `.stack` | Vertical flow with a gap | `--stack-gap` |
 | `.cluster` | Wrapping inline group | `--cluster-gap`, `--cluster-justify`, `--cluster-align` |
 | `.grid` | Auto-fit responsive grid, no media queries | `--grid-min`, `--grid-gap` |
+| `[data-scroll="inline"]` | Scroll container for content wider than the screen, such as a data table | None |
 
 ### 8. [Tooling](https://odonckers.github.io/domestic-ui/principles/tooling.html)
 
@@ -129,7 +130,7 @@ Each of these is a choice between valid options, not a standard.
 | `lint:html` | [html-validate](https://html-validate.org/) | `examples/**/*.html` against `html-validate:recommended` |
 | `lint:css` | [Stylelint](https://stylelint.io/) | `css/**/*.css` against `stylelint-config-standard` |
 | `lint:tokens` | `scripts/check-tokens.mjs` | Semantic-only tokens and no literal colors or sizes outside `css/tokens/` |
-| `test:a11y` | [Playwright](https://playwright.dev/) + [axe-core](https://github.com/dequelabs/axe-core) | Every `examples/**/*.html` (atoms included) in light and dark, in Chromium, Firefox and WebKit, with tags `wcag2a`, `wcag2aa`, `wcag21a`, `wcag21aa`, `wcag22aa`, including open dialogs and details; no external requests; token contrast pairs (atoms included) in the default and forest themes; rendered focus-ring contrast on every button variant; atom states through accessibility APIs; scoped theming of atoms |
+| `test:a11y` | [Playwright](https://playwright.dev/) + [axe-core](https://github.com/dequelabs/axe-core) | Every `examples/**/*.html` (atoms included) in light and dark, in Chromium, Firefox and WebKit, with tags `wcag2a`, `wcag2aa`, `wcag21a`, `wcag21aa`, `wcag22aa`, including open dialogs and details; no horizontal page overflow and no axe violations at 320×640 and 375×812; no external requests; token contrast pairs (atoms included) in the default and forest themes; rendered focus-ring contrast on every button variant; atom states through accessibility APIs; scoped theming of atoms |
 
 ## Tokens
 
@@ -148,6 +149,7 @@ By level ([Base](https://odonckers.github.io/domestic-ui/components/base.html), 
 | Base (utility) | Visually hidden | `class="visually-hidden"` | [Visually hidden](https://odonckers.github.io/domestic-ui/components/utilities/visually-hidden.html) |
 | Layout | Cluster | `class="cluster"`, `--cluster-gap`, `--cluster-justify`, `--cluster-align` | [Cluster](https://odonckers.github.io/domestic-ui/layouts/cluster.html) |
 | Layout | Grid | `class="grid"`, `--grid-min`, `--grid-gap` | [Grid](https://odonckers.github.io/domestic-ui/layouts/grid.html) |
+| Layout | Scroll | `data-scroll="inline"` | [Scroll](https://odonckers.github.io/domestic-ui/layouts/scroll.html) |
 | Layout | Stack | `class="stack"`, `--stack-gap` | [Stack](https://odonckers.github.io/domestic-ui/layouts/stack.html) |
 | Atoms | Text helpers | `data-text="lead \| small \| muted"` (combinable) | [Text helpers](https://odonckers.github.io/domestic-ui/components/atoms/text.html) |
 | Atoms | Quiet link | `data-link="quiet"` on `<a href>` | [Quiet link](https://odonckers.github.io/domestic-ui/components/atoms/link.html) |
