@@ -1,4 +1,4 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 180" role="img" aria-labelledby="diagram-field-title diagram-field-desc">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 180" role="img" aria-labelledby="diagram-field-title" aria-describedby="diagram-field-desc">
   <title id="diagram-field-title">Where a field is used</title>
   <desc id="diagram-field-desc">A field is one form entry in the content area: the label, the control, then a hint and an error message under it.</desc>
   <!-- Frame -->

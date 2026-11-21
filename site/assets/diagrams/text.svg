@@ -1,4 +1,4 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 180" role="img" aria-labelledby="diagram-text-title diagram-text-desc">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 180" role="img" aria-labelledby="diagram-text-title" aria-describedby="diagram-text-desc">
   <title id="diagram-text-title">Where text helpers are used</title>
   <desc id="diagram-text-desc">The lead paragraph sits right under a page's heading in larger text, and small muted text holds metadata such as a last-updated line at the end.</desc>
   <!-- Frame -->

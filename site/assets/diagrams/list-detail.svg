@@ -1,4 +1,4 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 180" role="img" aria-labelledby="diagram-list-detail-title diagram-list-detail-desc">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 180" role="img" aria-labelledby="diagram-list-detail-title" aria-describedby="diagram-list-detail-desc">
   <title id="diagram-list-detail-title">Where list-detail is used</title>
   <desc id="diagram-list-detail-desc">List-detail splits the content area into a list of items and, beside it, the details of the selected one.</desc>
   <!-- Frame -->

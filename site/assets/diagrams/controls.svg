@@ -1,4 +1,4 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 180" role="img" aria-labelledby="diagram-controls-title diagram-controls-desc">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 180" role="img" aria-labelledby="diagram-controls-title" aria-describedby="diagram-controls-desc">
   <title id="diagram-controls-title">Where form controls are used</title>
   <desc id="diagram-controls-desc">Form controls are the inputs of a form in the content area: text fields, a select, and checkboxes in a fieldset, each under its label.</desc>
   <!-- Frame -->

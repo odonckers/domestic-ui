@@ -1,4 +1,4 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 180" role="img" aria-labelledby="diagram-page-header-title diagram-page-header-desc">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 180" role="img" aria-labelledby="diagram-page-header-title" aria-describedby="diagram-page-header-desc">
   <title id="diagram-page-header-title">Where the page header is used</title>
   <desc id="diagram-page-header-desc">The page header is the top of the content area: a breadcrumb, the page title with its actions beside it, and a short description.</desc>
   <!-- Frame -->

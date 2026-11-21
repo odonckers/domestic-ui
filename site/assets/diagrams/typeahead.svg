@@ -1,4 +1,4 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 180" role="img" aria-labelledby="diagram-typeahead-title diagram-typeahead-desc">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 180" role="img" aria-labelledby="diagram-typeahead-title" aria-describedby="diagram-typeahead-desc">
   <title id="diagram-typeahead-title">Where a typeahead is used</title>
   <desc id="diagram-typeahead-desc">A typeahead is a text field in a form whose list of suggestions opens right under it as you type.</desc>
   <!-- Frame -->

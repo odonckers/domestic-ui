@@ -1,4 +1,4 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 180" role="img" aria-labelledby="diagram-scroll-title diagram-scroll-desc">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 180" role="img" aria-labelledby="diagram-scroll-title" aria-describedby="diagram-scroll-desc">
   <title id="diagram-scroll-title">Where a scroll region is used</title>
   <desc id="diagram-scroll-desc">A scroll region holds a data table wider than the content area, so the table scrolls sideways on its own and the page does not.</desc>
   <!-- Frame -->

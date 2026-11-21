@@ -1,4 +1,4 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 180" role="img" aria-labelledby="diagram-density-title diagram-density-desc">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 180" role="img" aria-labelledby="diagram-density-title" aria-describedby="diagram-density-desc">
   <title id="diagram-density-title">Where compact density is used</title>
   <desc id="diagram-density-desc">Compact density tightens a data-heavy area such as a table, so it shows more rows in the same height than a comfortable table beside it.</desc>
   <!-- Frame -->

@@ -1,4 +1,4 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 180" role="img" aria-labelledby="diagram-card-title diagram-card-desc">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 180" role="img" aria-labelledby="diagram-card-title" aria-describedby="diagram-card-desc">
   <title id="diagram-card-title">Where cards are used</title>
   <desc id="diagram-card-desc">Cards sit in a grid in the content area, each a raised box with a heading link and a short text.</desc>
   <!-- Frame -->

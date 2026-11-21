@@ -1,4 +1,4 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 180" role="img" aria-labelledby="diagram-toolbar-title diagram-toolbar-desc">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 180" role="img" aria-labelledby="diagram-toolbar-title" aria-describedby="diagram-toolbar-desc">
   <title id="diagram-toolbar-title">Where a toolbar is used</title>
   <desc id="diagram-toolbar-desc">A toolbar is a row of related buttons at the top of the area it acts on, such as the formatting buttons above a text editor.</desc>
   <!-- Frame -->

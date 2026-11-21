@@ -1,4 +1,4 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 180" role="img" aria-labelledby="diagram-app-shell-title diagram-app-shell-desc">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 180" role="img" aria-labelledby="diagram-app-shell-title" aria-describedby="diagram-app-shell-desc">
   <title id="diagram-app-shell-title">Where the app shell is used</title>
   <desc id="diagram-app-shell-desc">The app shell is the whole frame of an app: the app bar across the top, the primary sidebar, the main content and an optional auxiliary sidebar.</desc>
   <!-- Frame -->

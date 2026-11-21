@@ -1,4 +1,4 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 180" role="img" aria-labelledby="diagram-breadcrumb-title diagram-breadcrumb-desc">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 180" role="img" aria-labelledby="diagram-breadcrumb-title" aria-describedby="diagram-breadcrumb-desc">
   <title id="diagram-breadcrumb-title">Where the breadcrumb is used</title>
   <desc id="diagram-breadcrumb-desc">The breadcrumb is the row of links above the page heading in the content area, from the top section to the current page.</desc>
   <!-- Frame -->

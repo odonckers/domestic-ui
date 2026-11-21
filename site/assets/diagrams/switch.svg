@@ -1,4 +1,4 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 180" role="img" aria-labelledby="diagram-switch-title diagram-switch-desc">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 180" role="img" aria-labelledby="diagram-switch-title" aria-describedby="diagram-switch-desc">
   <title id="diagram-switch-title">Where switches are used</title>
   <desc id="diagram-switch-desc">Switches sit at the start of each row in a settings fieldset, each turning one option on or off, with its label beside it.</desc>
   <!-- Frame -->

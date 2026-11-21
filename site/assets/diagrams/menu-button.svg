@@ -1,4 +1,4 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 180" role="img" aria-labelledby="diagram-menu-button-title diagram-menu-button-desc">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 180" role="img" aria-labelledby="diagram-menu-button-title" aria-describedby="diagram-menu-button-desc">
   <title id="diagram-menu-button-title">Where a menu button is used</title>
   <desc id="diagram-menu-button-desc">A menu button is the Actions button at the end of a table row, opening a list of actions under it.</desc>
   <!-- Frame -->

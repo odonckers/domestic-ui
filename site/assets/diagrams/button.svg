@@ -1,4 +1,4 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 180" role="img" aria-labelledby="diagram-button-title diagram-button-desc">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 180" role="img" aria-labelledby="diagram-button-title" aria-describedby="diagram-button-desc">
   <title id="diagram-button-title">Where buttons are used</title>
   <desc id="diagram-button-desc">Buttons sit at the end of a form in the content area: the primary submit button first, with a secondary button beside it.</desc>
   <!-- Frame -->

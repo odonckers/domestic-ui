@@ -1,4 +1,4 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 180" role="img" aria-labelledby="diagram-search-title diagram-search-desc">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 180" role="img" aria-labelledby="diagram-search-title" aria-describedby="diagram-search-desc">
   <title id="diagram-search-title">Where search is used</title>
   <desc id="diagram-search-desc">Site search sits in the app bar as a search input with a Search button; a labelled search form can also head a page of results.</desc>
   <!-- Frame -->

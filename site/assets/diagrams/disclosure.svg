@@ -1,4 +1,4 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 180" role="img" aria-labelledby="diagram-disclosure-title diagram-disclosure-desc">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 180" role="img" aria-labelledby="diagram-disclosure-title" aria-describedby="diagram-disclosure-desc">
   <title id="diagram-disclosure-title">Where disclosures are used</title>
   <desc id="diagram-disclosure-desc">Disclosures are summary rows in the content area, such as an accordion of questions, that each open to show their content below.</desc>
   <!-- Frame -->

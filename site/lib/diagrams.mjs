@@ -6,9 +6,10 @@
  * The build fails when a reference page has no diagram, a diagram has no
  * page, or a file breaks the rules below: one root <svg> with
  * viewBox="0 0 320 180" and no width or height, role="img" labelled by its
- * <title> ("Where … is used") and <desc> (one sentence), and colours only as
- * currentColor, none, transparent or a semantic var(--dui-…) token. No
- * scripts, styles, classes or links, so the file is safe to inline.
+ * <title> ("Where … is used") and described by its <desc> (one sentence),
+ * and colours only as currentColor, none, transparent or a semantic
+ * var(--dui-…) token. No scripts, styles, classes or links, so the file
+ * is safe to inline.
  */
 import { existsSync, readdirSync, readFileSync } from "node:fs";
 import { join } from "node:path";
@@ -89,7 +90,11 @@ export function diagramProblems(d, names, tokens) {
   if (attr("role") !== "img") problems.push('the root svg needs role="img"');
   if (/\saria-hidden=/.test(attrs)) problems.push("must not be aria-hidden");
   const ids = { title: `diagram-${d.name}-title`, desc: `diagram-${d.name}-desc` };
-  if (attr("aria-labelledby") !== `${ids.title} ${ids.desc}`) problems.push(`the root svg needs aria-labelledby="${ids.title} ${ids.desc}"`);
+  // SVG-AAM: the name is the <title> alone, the description the <desc> (https://www.w3.org/TR/svg-aam-1.0/#mapping_additional_nd).
+  const labelledby = attr("aria-labelledby");
+  if (labelledby !== ids.title) problems.push(`the root svg needs aria-labelledby="${ids.title}" (the title id alone; it is ${labelledby === undefined ? "missing" : `"${labelledby}"`})`);
+  const describedby = attr("aria-describedby");
+  if (describedby !== ids.desc) problems.push(`the root svg needs aria-describedby="${ids.desc}" (the desc id; it is ${describedby === undefined ? "missing" : `"${describedby}"`})`);
   if (!new RegExp(`<title id="${ids.title}">`).test(svg)) problems.push(`needs <title id="${ids.title}">`);
   if (!new RegExp(`<desc id="${ids.desc}">`).test(svg)) problems.push(`needs <desc id="${ids.desc}">`);
   const subject = d.title.match(/^Where (.+) (?:is|are) used$/)?.[1]?.toLowerCase();

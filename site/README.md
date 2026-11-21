@@ -198,8 +198,11 @@ before Live example. The Markdown twin and `llms-full.txt` get one line instead 
 has no page, or a file breaks these rules:
 
 - One root `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 180" role="img"
-  aria-labelledby="diagram-<slug>-title diagram-<slug>-desc">`, no `width` or `height`: site.css
-  sizes it to the content column.
+  aria-labelledby="diagram-<slug>-title" aria-describedby="diagram-<slug>-desc">`, no `width` or
+  `height`: site.css sizes it to the content column. The
+  accessible name is the title alone and the accessible description is the desc
+  ([SVG-AAM](https://www.w3.org/TR/svg-aam-1.0/#mapping_additional_nd)); the build fails when
+  `aria-labelledby` is anything but the title id or `aria-describedby` is not the desc id.
 - `<title id="diagram-<slug>-title">Where … is used</title>` naming the page ("Where buttons are
   used", "Where a data table is used"), and `<desc id="diagram-<slug>-desc">`: one sentence, what it
   is and where it sits. Base it on the page's own text and examples.

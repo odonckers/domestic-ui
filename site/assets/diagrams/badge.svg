@@ -1,4 +1,4 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 180" role="img" aria-labelledby="diagram-badge-title diagram-badge-desc">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 180" role="img" aria-labelledby="diagram-badge-title" aria-describedby="diagram-badge-desc">
   <title id="diagram-badge-title">Where badges are used</title>
   <desc id="diagram-badge-desc">Badges label the status of each row in a table's Status column, such as Paid or Overdue.</desc>
   <!-- Frame -->

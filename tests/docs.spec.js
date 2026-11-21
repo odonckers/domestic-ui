@@ -30,7 +30,7 @@ const diagramPages = site.pages.filter((p) => p.diagram);
  * @param {string} name the page's slug
  * @param {string} title "Where … is used"
  */
-const fixtureDiagram = (name, title) => `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 180" role="img" aria-labelledby="diagram-${name}-title diagram-${name}-desc">
+const fixtureDiagram = (name, title) => `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 180" role="img" aria-labelledby="diagram-${name}-title" aria-describedby="diagram-${name}-desc">
   <title id="diagram-${name}-title">${title}</title>
   <desc id="diagram-${name}-desc">A fixture element in the content area.</desc>
   <rect x="92" y="40" width="100" height="20" rx="3" fill="var(--dui-color-accent-surface)" stroke="var(--dui-color-accent)" stroke-width="2"/>
@@ -129,6 +129,10 @@ test.describe("docs build", () => {
       ["viewBox", good.replace("0 0 320 180", "0 0 100 100"), /viewBox="0 0 320 180"/],
       ["width", good.replace('role="img"', 'width="320" role="img"'), /must not have width or height/],
       ["hidden", good.replace('role="img"', 'role="img" aria-hidden="true"'), /aria-hidden/],
+      ["name with desc", good.replace('aria-labelledby="diagram-demo-title"', 'aria-labelledby="diagram-demo-title diagram-demo-desc"'), /aria-labelledby="diagram-demo-title" \(the title id alone; it is "diagram-demo-title diagram-demo-desc"\)/],
+      ["no name", good.replace(' aria-labelledby="diagram-demo-title"', ""), /aria-labelledby="diagram-demo-title" \(the title id alone; it is missing\)/],
+      ["no description", good.replace(' aria-describedby="diagram-demo-desc"', ""), /aria-describedby="diagram-demo-desc" \(the desc id; it is missing\)/],
+      ["description not the desc", good.replace('aria-describedby="diagram-demo-desc"', 'aria-describedby="diagram-demo-title"'), /aria-describedby="diagram-demo-desc"/],
       ["title", good.replace("Where a demo is used", "A demo"), /<title> must be "Where … is used"/],
       ["desc", good.replace("A fixture element in the content area.", ""), /<desc> must be one sentence/],
       ["script", good.replace("</svg>", "<script>alert(1)</script></svg>"), /<script>/],
@@ -659,10 +663,15 @@ test.describe("docs pages in the browser", () => {
           return Boolean(h1 && h2 && h1.compareDocumentPosition(el) & Node.DOCUMENT_POSITION_FOLLOWING && el.compareDocumentPosition(h2) & Node.DOCUMENT_POSITION_FOLLOWING);
         });
         expect(placed, `${p.path}: after the h1, before the first h2`).toBe(true);
-        // aria-labelledby names it by its <title> then its <desc>: "Where … used" and one sentence.
+        // SVG-AAM: aria-labelledby names it by its <title> alone ("Where … used"); aria-describedby describes it by its <desc> (one sentence).
+        const title = (await svg.locator("title").textContent())?.trim() ?? "";
         const desc = (await svg.locator("desc").textContent())?.trim() ?? "";
+        expect(title, p.path).toMatch(/^Where .+ used$/);
         expect(desc, p.path).toMatch(/^[A-Z].+\.$/);
-        await expect(svg, p.path).toHaveAccessibleName(new RegExp(`^Where .+ used ${desc.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}$`));
+        await expect(svg, p.path).toHaveAccessibleName(title);
+        const described = await svg.evaluate((el) => document.getElementById(el.getAttribute("aria-describedby") ?? "")?.textContent?.trim());
+        expect(described, `${p.path}: aria-describedby points at the <desc>`).toBe(desc);
+        await expect(svg, p.path).toHaveAccessibleDescription(desc);
         await expect(svg).not.toHaveAttribute("aria-hidden", /.*/);
         // The accent is a token: its computed colour changes with the colour scheme.
         strokes.push(await svg.locator('g[stroke="var(--dui-color-accent)"]').first().evaluate((g) => getComputedStyle(g).stroke));
@@ -971,7 +980,7 @@ test("discovery picks up a new component with no site changes", async ({ browser
 
     const page = out("components/atoms/demo.html");
     expect(page).toContain("<h1>Demo</h1>");
-    expect(page, "the new page's diagram is inlined").toContain('aria-labelledby="diagram-demo-title diagram-demo-desc"');
+    expect(page, "the new page's diagram is inlined").toContain('aria-labelledby="diagram-demo-title" aria-describedby="diagram-demo-desc"');
     expect(page).toContain('src="../../live/atoms/demo--plain.html"');
     expect(page).toContain('src="../../live/atoms/demo--with-a-link.html"');
     expect(page).toContain('<a href="https://www.w3.org/WAI/WCAG22/Understanding/focus-visible.html">');

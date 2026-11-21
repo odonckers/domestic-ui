@@ -1,4 +1,4 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 180" role="img" aria-labelledby="diagram-grid-title diagram-grid-desc">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 180" role="img" aria-labelledby="diagram-grid-title" aria-describedby="diagram-grid-desc">
   <title id="diagram-grid-title">Where a grid is used</title>
   <desc id="diagram-grid-desc">A grid lays out cards or panels in the content area in as many equal columns as fit, here three columns and two rows.</desc>
   <!-- Frame -->

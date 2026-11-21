@@ -1,4 +1,4 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 180" role="img" aria-labelledby="diagram-link-title diagram-link-desc">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 180" role="img" aria-labelledby="diagram-link-title" aria-describedby="diagram-link-desc">
   <title id="diagram-link-title">Where quiet links are used</title>
   <desc id="diagram-link-desc">Quiet links sit in dense parts of the content: the order numbers in a table's first column and names in a muted metadata line.</desc>
   <!-- Frame -->

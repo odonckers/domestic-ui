@@ -1,4 +1,4 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 180" role="img" aria-labelledby="diagram-dashboard-title diagram-dashboard-desc">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 180" role="img" aria-labelledby="diagram-dashboard-title" aria-describedby="diagram-dashboard-desc">
   <title id="diagram-dashboard-title">Where a dashboard is used</title>
   <desc id="diagram-dashboard-desc">A dashboard fills the content area with a grid of headed summary sections, such as totals and a chart, that reflow to fit.</desc>
   <!-- Frame -->

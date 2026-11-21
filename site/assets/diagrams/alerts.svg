@@ -1,4 +1,4 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 180" role="img" aria-labelledby="diagram-alerts-title diagram-alerts-desc">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 180" role="img" aria-labelledby="diagram-alerts-title" aria-describedby="diagram-alerts-desc">
   <title id="diagram-alerts-title">Where alerts are used</title>
   <desc id="diagram-alerts-desc">An alert is a notice at the top of the content area under the heading, and a toast appears in the bottom corner at the end of the window.</desc>
   <!-- Frame -->

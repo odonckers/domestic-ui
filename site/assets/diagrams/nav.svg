@@ -1,4 +1,4 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 180" role="img" aria-labelledby="diagram-nav-title diagram-nav-desc">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 180" role="img" aria-labelledby="diagram-nav-title" aria-describedby="diagram-nav-desc">
   <title id="diagram-nav-title">Where site navigation is used</title>
   <desc id="diagram-nav-desc">Site navigation is the list of main links in the sidebar, with the current page marked, or a short row of links in the app bar.</desc>
   <!-- Frame -->

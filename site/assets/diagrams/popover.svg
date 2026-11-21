@@ -1,4 +1,4 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 180" role="img" aria-labelledby="diagram-popover-title diagram-popover-desc">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 180" role="img" aria-labelledby="diagram-popover-title" aria-describedby="diagram-popover-desc">
   <title id="diagram-popover-title">Where popovers are used</title>
   <desc id="diagram-popover-desc">A popover opens from a button, such as Share beside the page heading, as a small panel on top of the page under the button.</desc>
   <!-- Frame -->
