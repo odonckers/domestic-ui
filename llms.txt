@@ -26,9 +26,9 @@ Link `css/domestic.css` (copy `css/` from https://github.com/odonckers/domestic-
 
 ## Tokens
 
-- [Tokens](https://odonckers.github.io/domestic-ui/tokens/index.md): The two tiers of domestic-ui design tokens: 219 custom properties with their light and dark values.
-- [Primitive tokens](https://odonckers.github.io/domestic-ui/tokens/primitives.md): All 104 primitive tokens in css/tokens/primitives.css (internal), with resolved light and dark values.
-- [Semantic tokens](https://odonckers.github.io/domestic-ui/tokens/semantic.md): All 115 semantic tokens in css/tokens/semantic.css (public theming API), with resolved light and dark values.
+- [Tokens](https://odonckers.github.io/domestic-ui/tokens/index.md): The two tiers of domestic-ui design tokens: 229 custom properties with their light and dark values.
+- [Primitive tokens](https://odonckers.github.io/domestic-ui/tokens/primitives.md): All 105 primitive tokens in css/tokens/primitives.css (internal), with resolved light and dark values.
+- [Semantic tokens](https://odonckers.github.io/domestic-ui/tokens/semantic.md): All 124 semantic tokens in css/tokens/semantic.css (public theming API), with resolved light and dark values.
 
 ## Base
 
@@ -77,9 +77,9 @@ Link `css/domestic.css` (copy `css/` from https://github.com/odonckers/domestic-
 - [Site navigation](https://odonckers.github.io/domestic-ui/patterns/nav.md): Available. The main links of a site in a `<nav>` landmark, with the current page marked. Follows [HTML `<nav>` element](https://html.spec.whatwg.org/multipage/sections.html#the-nav-element), [APG Landmark regions](https://www.w3.org/WAI/ARIA/apg/practices/landmark-regions/), [APG Disclosure navigation example](https://www.w3.org/WAI/ARIA/apg/patterns/disclosure/examples/disclosure-navigation/).
 - [Tabs](https://odonckers.github.io/domestic-ui/patterns/tabs.md): Available. Sections of content shown one at a time, chosen from a list of tabs. Follows [APG Tabs pattern](https://www.w3.org/WAI/ARIA/apg/patterns/tabs/).
 - [Toolbar](https://odonckers.github.io/domestic-ui/patterns/toolbar.md): Available. A row of related controls that is one stop in the tab order. Follows [APG Toolbar pattern](https://www.w3.org/WAI/ARIA/apg/patterns/toolbar/).
-- Typeahead: Coming in M3. A text field that suggests values as you type: `<datalist>` first, an APG combobox where it falls short. Follows [HTML `<datalist>` element](https://html.spec.whatwg.org/multipage/form-elements.html#the-datalist-element), [APG Combobox pattern](https://www.w3.org/WAI/ARIA/apg/patterns/combobox/).
+- [Typeahead](https://odonckers.github.io/domestic-ui/patterns/typeahead.md): Available. A text field that suggests values as you type: `<datalist>` first, an APG combobox where it falls short. Follows [HTML `<datalist>` element](https://html.spec.whatwg.org/multipage/form-elements.html#the-datalist-element), [APG Combobox pattern](https://www.w3.org/WAI/ARIA/apg/patterns/combobox/).
 - App shell: Coming in M3b. The frame of an application: header, primary sidebar, main content and an optional auxiliary sidebar. **Our choice:** No standard defines an app shell: the landmarks `<header>`, `<nav>`, `<main>` and `<aside>`, placed with CSS grid.
-- Compact density: Coming in M3b. A compact density token that tightens spacing for data-heavy screens. **Our choice:** No standard exists: one semantic token override; targets stay at least 24 by 24 CSS pixels.
+- [Compact density](https://odonckers.github.io/domestic-ui/patterns/density.md): Available. A compact density token that tightens spacing for data-heavy screens. **Our choice:** No standard exists: `data-density="compact"` on any ancestor re-derives the density tokens; text size never changes and targets stay at least 24 by 24 CSS pixels.
 - Dashboard: Coming in M3b. A grid of summary sections, each with a heading, that reflows to fit the screen. **Our choice:** No standard exists: a CSS grid of headed `<section>` elements that reflows without media queries.
 - Data table: Coming in M3b. Rows of records in a native `<table>` with a caption, header cells and optional sorting. Follows [HTML `<table>` element](https://html.spec.whatwg.org/multipage/tables.html#the-table-element), [APG Table pattern](https://www.w3.org/WAI/ARIA/apg/patterns/table/).
 - Filter bar: Coming in M3b. A row of native form controls that narrows a list or table. **Our choice:** No standard exists: a `<form>` in `<search>` with labelled controls, and the result count as a status message.

@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Combobox (typeahead) · domestic-ui</title>
+    <meta name="description" content="A text field that suggests values as you type: a native input with a datalist, upgraded to the APG Combobox list autocomplete pattern by a small light-DOM web component.">
+    <link rel="stylesheet" href="../../css/domestic.css">
+    <style>
+      /* Page-only layout, written with semantic tokens like any consumer would. */
+      body > :is(header, main, footer) {
+        max-inline-size: var(--dui-size-page);
+        margin-inline: auto;
+        padding-inline: var(--dui-space-l);
+      }
+
+      body > header {
+        padding-block: var(--dui-space-m);
+        border-block-end: var(--dui-border-width) solid var(--dui-color-border);
+      }
+
+      body > main {
+        padding-block: var(--dui-space-2xl);
+      }
+
+      body > footer {
+        padding-block: var(--dui-space-l);
+        border-block-start: var(--dui-border-width) solid var(--dui-color-border);
+        color: var(--dui-color-text-muted);
+      }
+
+      /* Wrap long lines of example markup instead of scrolling them. */
+      pre {
+        white-space: pre-wrap;
+        overflow-wrap: anywhere;
+      }
+
+      .demo {
+        padding: var(--dui-space-l);
+        border: var(--dui-border-width) solid var(--dui-color-border);
+        border-radius: var(--dui-radius-surface);
+      }
+
+      /* Room below each field for its open list of suggestions. */
+      .demo:has(dui-combobox) {
+        padding-block-end: calc(var(--dui-size-target) * 6);
+      }
+    </style>
+  </head>
+  <body>
+    <a class="visually-hidden" href="#main">Skip to main content</a>
+
+    <header class="cluster" style="--cluster-justify: space-between">
+      <p><strong>domestic-ui</strong></p>
+      <nav aria-label="Examples">
+        <ul class="cluster">
+          <li><a href="../base.html">Base elements</a></li>
+          <li><a href="../theming.html">Theming</a></li>
+          <li><a href="../motion.html">Motion</a></li>
+          <li><a href="../elevation.html">Elevation</a></li>
+          <li><a href="../patterns/density.html">Density</a></li>
+          <li><a href="../atoms/index.html">Atoms</a></li>
+          <li><a href="index.html">Molecules</a></li>
+        </ul>
+      </nav>
+    </header>
+
+    <main id="main">
+      <h1>Combobox (typeahead)</h1>
+      <!--
+        Keyboard
+          Down Arrow: opens the list and moves to the next option (the first if none)
+          Up Arrow: opens the list and moves to the previous option (the last if none)
+          Alt+Down Arrow: opens the list without moving to an option
+          Enter: accepts the active option and closes the list
+          Escape: closes the list; if it is already closed, clears the input
+          Home / End: moves the caret to the start or end of the input; the list loses its active option
+          Typing: filters the options
+          Tab: closes the list without accepting an option
+      -->
+      <p data-text="lead">A text field that suggests values as you type: a native <code>&lt;input list&gt;</code> and <code>&lt;datalist&gt;</code>, upgraded to the APG Combobox list autocomplete pattern.</p>
+      <p>API: <code>&lt;dui-combobox&gt;</code> around a <code>&lt;label&gt;</code>, an <code>&lt;input list&gt;</code> and its <code>&lt;datalist&gt;</code>. Source: <a href="../../css/components/molecules/combobox.css"><code>css/components/molecules/combobox.css</code></a>.</p>
+      <p>
+        With JavaScript off the browser suggests the datalist values itself. <code>&lt;dui-combobox&gt;</code>
+        (<a href="../../web-components/dui-combobox.js"><code>web-components/dui-combobox.js</code></a>) keeps the same input,
+        removes its <code>list</code> attribute, builds a listbox from the options and adds the
+        <a href="https://www.w3.org/WAI/ARIA/apg/patterns/combobox/">APG Combobox</a> keys. Options match when they contain what you type.
+        See the <a href="../../explainers/combobox.md">combobox explainer</a>.
+      </p>
+
+      <section aria-labelledby="basic-title">
+        <h2 id="basic-title">Suggestions from a datalist</h2>
+        <div class="demo">
+          <!-- dui:snippet name="Typeahead" page="patterns/typeahead" -->
+          <dui-combobox>
+            <label for="city">City</label>
+            <input type="text" id="city" name="city" list="city-options">
+            <datalist id="city-options">
+              <option value="Amsterdam"></option>
+              <option value="Athens"></option>
+              <option value="Berlin"></option>
+              <option value="Bern"></option>
+              <option value="Brussels"></option>
+              <option value="Copenhagen"></option>
+              <option value="Dublin"></option>
+              <option value="Lisbon"></option>
+              <option value="Madrid"></option>
+              <option value="Oslo"></option>
+              <option value="Paris"></option>
+              <option value="Rome"></option>
+              <option value="Vienna"></option>
+            </datalist>
+          </dui-combobox>
+          <!-- /dui:snippet -->
+        </div>
+      </section>
+
+      <section aria-labelledby="form-title">
+        <h2 id="form-title">In a form</h2>
+        <p>The input is the form control, so its name and value are submitted as usual. Accepting an option fires <code>change</code> on the input.</p>
+        <div class="demo">
+          <!-- dui:snippet name="Typeahead in a form" page="patterns/typeahead" -->
+          <form id="ship-form" class="stack">
+            <dui-combobox>
+              <label for="carrier">Carrier</label>
+              <input type="text" id="carrier" name="carrier" list="carrier-options" required>
+              <datalist id="carrier-options">
+                <option value="DHL Express" label="Next day"></option>
+                <option value="DPD Classic" label="2 to 3 days"></option>
+                <option value="FedEx International" label="Next day"></option>
+                <option value="PostNL Parcel" label="1 to 2 days"></option>
+                <option value="UPS Standard" label="2 to 5 days"></option>
+              </datalist>
+            </dui-combobox>
+            <p><button type="submit">Ship order</button></p>
+            <p role="status" id="ship-result"></p>
+          </form>
+          <!-- /dui:snippet -->
+        </div>
+      </section>
+
+      <section aria-labelledby="async-title">
+        <h2 id="async-title">Options loaded by the page</h2>
+        <p>
+          Cancel the <code>dui-combobox-filter</code> event to filter elsewhere, such as on a server, then hand the results to
+          <code>setOptions()</code>. This demo searches a local list after a short delay; there is no network request.
+        </p>
+        <div class="demo">
+          <!-- dui:snippet name="Options loaded by the page" page="patterns/typeahead" -->
+          <dui-combobox id="country-combobox">
+            <label for="country">Country</label>
+            <input type="text" id="country" name="country" list="country-options">
+            <datalist id="country-options"></datalist>
+          </dui-combobox>
+          <!-- /dui:snippet -->
+        </div>
+      </section>
+
+      <section aria-labelledby="specs-title">
+        <h2 id="specs-title">Specs and guidance</h2>
+        <ul>
+          <li><a href="https://www.w3.org/WAI/ARIA/apg/patterns/combobox/">APG: Combobox pattern</a></li>
+          <li><a href="https://www.w3.org/WAI/ARIA/apg/patterns/combobox/examples/combobox-autocomplete-list/">APG: Editable combobox with list autocomplete</a></li>
+          <li><a href="https://html.spec.whatwg.org/multipage/form-elements.html#the-datalist-element">WHATWG: the datalist element</a></li>
+          <li><a href="https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Reference/Roles/combobox_role">MDN: combobox role</a></li>
+          <li><a href="https://www.w3.org/WAI/WCAG22/Understanding/status-messages.html">WCAG 2.2: 4.1.3 Status Messages</a></li>
+        </ul>
+      </section>
+    </main>
+
+    <footer>
+      <p><small>domestic-ui packages existing standards and well-known patterns. MIT licensed.</small></p>
+    </footer>
+    <script type="module" src="../../web-components/dui-combobox.js"></script>
+    <script>
+      // Demo only: show what the form would submit, in the status region above.
+      document.getElementById("ship-form")?.addEventListener("submit", (event) => {
+        event.preventDefault();
+        const data = new FormData(event.target);
+        document.getElementById("ship-result").textContent = `Submitted carrier: ${data.get("carrier")}.`;
+      });
+
+      // Demo only: a stand-in for a server search. A local list and a delay, no network request.
+      const countries = ["Austria", "Belgium", "Bulgaria", "Croatia", "Cyprus", "Czechia", "Denmark", "Estonia", "Finland", "France", "Germany", "Greece", "Hungary", "Ireland", "Italy", "Latvia", "Lithuania", "Luxembourg", "Malta", "Netherlands", "Poland", "Portugal", "Romania", "Slovakia", "Slovenia", "Spain", "Sweden"];
+      let pending;
+      document.getElementById("country-combobox")?.addEventListener("dui-combobox-filter", (event) => {
+        event.preventDefault();
+        const combobox = event.currentTarget;
+        const query = event.detail.query.trim().toLowerCase();
+        clearTimeout(pending);
+        pending = setTimeout(() => {
+          const matches = query ? countries.filter((c) => c.toLowerCase().includes(query)) : [];
+          combobox.setOptions(matches.slice(0, 8));
+        }, 300);
+      });
+    </script>
+  </body>
+</html>

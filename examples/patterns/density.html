@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Density · domestic-ui</title>
+    <meta name="description" content="The same form, table and toolbar at comfortable and compact density side by side: data-density changes space and control heights, never type size, and keeps every target at least 24 by 24 CSS pixels.">
+    <link rel="stylesheet" href="../../css/domestic.css">
+    <style>
+      /* Page-only layout, written with semantic tokens like any consumer would. */
+      body > :is(header, main, footer) {
+        max-inline-size: var(--dui-size-page);
+        margin-inline: auto;
+        padding-inline: var(--dui-space-l);
+      }
+
+      body > header {
+        padding-block: var(--dui-space-m);
+        border-block-end: var(--dui-border-width) solid var(--dui-color-border);
+      }
+
+      body > main {
+        padding-block: var(--dui-space-2xl);
+      }
+
+      body > footer {
+        padding-block: var(--dui-space-l);
+        border-block-start: var(--dui-border-width) solid var(--dui-color-border);
+        color: var(--dui-color-text-muted);
+      }
+
+      /* Wrap long lines of example markup instead of scrolling them. */
+      pre {
+        white-space: pre-wrap;
+        overflow-wrap: anywhere;
+      }
+
+      .panel {
+        padding: var(--dui-space-m);
+        border: var(--dui-border-width) solid var(--dui-color-border);
+        border-radius: var(--dui-radius-surface);
+      }
+    </style>
+  </head>
+  <body>
+    <a class="visually-hidden" href="#main">Skip to main content</a>
+
+    <header class="cluster" style="--cluster-justify: space-between">
+      <p><strong>domestic-ui</strong></p>
+      <nav aria-label="Examples">
+        <ul class="cluster">
+          <li><a href="../base.html">Base elements</a></li>
+          <li><a href="../theming.html">Theming</a></li>
+          <li><a href="../motion.html">Motion</a></li>
+          <li><a href="../elevation.html">Elevation</a></li>
+          <li><a href="density.html" aria-current="page">Density</a></li>
+          <li><a href="../atoms/index.html">Atoms</a></li>
+          <li><a href="../molecules/index.html">Molecules</a></li>
+        </ul>
+      </nav>
+    </header>
+
+    <main id="main">
+      <h1>Density</h1>
+      <p data-text="lead">The same toolbar, form and table at comfortable and compact density, side by side.</p>
+      <p>
+        API: <code>data-density="compact"</code> on any element tightens everything inside it; <code>data-density="comfortable"</code> is the
+        default and restores it inside a compact area. Density changes control heights, padding and gaps, never the size of text.
+        Compact controls stay at least 32px tall, above the 24 by 24 CSS pixels of
+        <a href="https://www.w3.org/WAI/WCAG22/Understanding/target-size-minimum.html">WCAG 2.5.8 Target Size (Minimum)</a>.
+        Source: the density tokens in <a href="../../css/tokens/semantic.css"><code>css/tokens/semantic.css</code></a>; see the
+        <a href="../../explainers/density.md">density explainer</a>.
+      </p>
+
+      <section aria-labelledby="compare-title">
+        <h2 id="compare-title">Comfortable and compact</h2>
+        <!-- dui:snippet name="Comfortable and compact" page="patterns/density" -->
+        <div class="grid" style="--grid-min: 20rem">
+          <section data-density="comfortable" class="panel stack" aria-labelledby="comfortable-title">
+            <h3 id="comfortable-title">Comfortable (default)</h3>
+            <dui-toolbar role="toolbar" aria-label="Order actions (comfortable)">
+              <button type="button">New order</button>
+              <button type="button">Export</button>
+              <hr>
+              <button type="button" aria-pressed="false">Show archived</button>
+            </dui-toolbar>
+            <form class="stack" aria-labelledby="comfortable-form-title comfortable-title">
+              <h4 id="comfortable-form-title">Edit order</h4>
+              <div data-field>
+                <label for="comfortable-customer">Customer</label>
+                <input type="text" id="comfortable-customer" name="customer" value="Ada Lovelace" autocomplete="off">
+              </div>
+              <div data-field>
+                <label for="comfortable-status">Status</label>
+                <select id="comfortable-status" name="status">
+                  <option>Open</option>
+                  <option selected>Shipped</option>
+                  <option>Delivered</option>
+                </select>
+              </div>
+              <dui-combobox>
+                <label for="comfortable-carrier">Carrier</label>
+                <input type="text" id="comfortable-carrier" name="carrier" list="comfortable-carriers">
+                <datalist id="comfortable-carriers">
+                  <option value="DHL Express"></option>
+                  <option value="DPD Classic"></option>
+                  <option value="PostNL Parcel"></option>
+                  <option value="UPS Standard"></option>
+                </datalist>
+              </dui-combobox>
+              <label><input type="checkbox" name="notify" checked> Email the customer</label>
+              <label><input type="checkbox" role="switch" name="priority"> Priority</label>
+              <p class="cluster">
+                <button type="submit">Save</button>
+                <button type="reset">Reset</button>
+              </p>
+            </form>
+            <section data-scroll="inline" aria-labelledby="comfortable-orders comfortable-title" tabindex="0">
+              <table>
+                <caption id="comfortable-orders">Recent orders</caption>
+                <thead>
+                  <tr><th scope="col">Order</th><th scope="col">Customer</th><th scope="col">Status</th><th scope="col">Total</th></tr>
+                </thead>
+                <tbody>
+                  <tr><td>1042</td><td>Ada Lovelace</td><td>Shipped</td><td>€120.00</td></tr>
+                  <tr><td>1041</td><td>Alan Turing</td><td>Open</td><td>€48.50</td></tr>
+                  <tr><td>1040</td><td>Grace Hopper</td><td>Delivered</td><td>€310.25</td></tr>
+                  <tr><td>1039</td><td>Katherine Johnson</td><td>Delivered</td><td>€72.00</td></tr>
+                </tbody>
+              </table>
+            </section>
+          </section>
+          <section data-density="compact" class="panel stack" aria-labelledby="compact-title">
+            <h3 id="compact-title">Compact</h3>
+            <dui-toolbar role="toolbar" aria-label="Order actions (compact)">
+              <button type="button">New order</button>
+              <button type="button">Export</button>
+              <hr>
+              <button type="button" aria-pressed="false">Show archived</button>
+            </dui-toolbar>
+            <form class="stack" aria-labelledby="compact-form-title compact-title">
+              <h4 id="compact-form-title">Edit order</h4>
+              <div data-field>
+                <label for="compact-customer">Customer</label>
+                <input type="text" id="compact-customer" name="customer" value="Ada Lovelace" autocomplete="off">
+              </div>
+              <div data-field>
+                <label for="compact-status">Status</label>
+                <select id="compact-status" name="status">
+                  <option>Open</option>
+                  <option selected>Shipped</option>
+                  <option>Delivered</option>
+                </select>
+              </div>
+              <dui-combobox>
+                <label for="compact-carrier">Carrier</label>
+                <input type="text" id="compact-carrier" name="carrier" list="compact-carriers">
+                <datalist id="compact-carriers">
+                  <option value="DHL Express"></option>
+                  <option value="DPD Classic"></option>
+                  <option value="PostNL Parcel"></option>
+                  <option value="UPS Standard"></option>
+                </datalist>
+              </dui-combobox>
+              <label><input type="checkbox" name="notify" checked> Email the customer</label>
+              <label><input type="checkbox" role="switch" name="priority"> Priority</label>
+              <p class="cluster">
+                <button type="submit">Save</button>
+                <button type="reset">Reset</button>
+              </p>
+            </form>
+            <section data-scroll="inline" aria-labelledby="compact-orders compact-title" tabindex="0">
+              <table>
+                <caption id="compact-orders">Recent orders</caption>
+                <thead>
+                  <tr><th scope="col">Order</th><th scope="col">Customer</th><th scope="col">Status</th><th scope="col">Total</th></tr>
+                </thead>
+                <tbody>
+                  <tr><td>1042</td><td>Ada Lovelace</td><td>Shipped</td><td>€120.00</td></tr>
+                  <tr><td>1041</td><td>Alan Turing</td><td>Open</td><td>€48.50</td></tr>
+                  <tr><td>1040</td><td>Grace Hopper</td><td>Delivered</td><td>€310.25</td></tr>
+                  <tr><td>1039</td><td>Katherine Johnson</td><td>Delivered</td><td>€72.00</td></tr>
+                </tbody>
+              </table>
+            </section>
+          </section>
+        </div>
+        <!-- /dui:snippet -->
+      </section>
+
+      <section aria-labelledby="nested-title">
+        <h2 id="nested-title">Comfortable inside compact</h2>
+        <p>Density is inherited, so a nested <code>data-density="comfortable"</code> brings back the default sizes for one part of a compact screen.</p>
+        <!-- dui:snippet name="Comfortable inside compact" page="patterns/density" -->
+        <div data-density="compact" class="panel stack">
+          <p class="cluster">
+            <button type="button">Compact button</button>
+            <span data-density="comfortable"><button type="button">Comfortable button</button></span>
+          </p>
+        </div>
+        <!-- /dui:snippet -->
+      </section>
+
+      <section aria-labelledby="specs-title">
+        <h2 id="specs-title">Specs and guidance</h2>
+        <ul>
+          <li><a href="https://www.w3.org/WAI/WCAG22/Understanding/target-size-minimum.html">WCAG 2.2: 2.5.8 Target Size (Minimum)</a></li>
+          <li><a href="https://www.w3.org/WAI/WCAG22/Understanding/resize-text.html">WCAG 2.2: 1.4.4 Resize Text</a></li>
+          <li><a href="https://developer.mozilla.org/en-US/docs/Web/CSS/Using_CSS_custom_properties">MDN: Using CSS custom properties</a></li>
+        </ul>
+      </section>
+    </main>
+
+    <footer>
+      <p><small>domestic-ui packages existing standards and well-known patterns. MIT licensed.</small></p>
+    </footer>
+    <script type="module" src="../../web-components/dui-toolbar.js"></script>
+    <script type="module" src="../../web-components/dui-combobox.js"></script>
+    <script>
+      // Demo only: nothing is saved, and the toggle flips aria-pressed.
+      document.addEventListener("submit", (event) => event.preventDefault());
+      document.addEventListener("click", (event) => {
+        const button = event.target.closest("[role='toolbar'] [aria-pressed]");
+        if (button) button.setAttribute("aria-pressed", String(button.getAttribute("aria-pressed") !== "true"));
+      });
+    </script>
+  </body>
+</html>

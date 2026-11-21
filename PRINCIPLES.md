@@ -52,7 +52,7 @@ Every example must pass, and every token pair is tested against, these criteria:
 | Focus visible | Every focusable element shows a `:focus-visible` outline | [2.4.7 Focus Visible](https://www.w3.org/WAI/WCAG22/Understanding/focus-visible.html) |
 | Focus not obscured | `scroll-padding` keeps focused elements clear of sticky edges | [2.4.11 Focus Not Obscured (Minimum)](https://www.w3.org/WAI/WCAG22/Understanding/focus-not-obscured-minimum.html) |
 | Focus appearance (AAA, optional) | The default 2px solid outline with a 2px offset aims to meet it | [2.4.13 Focus Appearance](https://www.w3.org/WAI/WCAG22/Understanding/focus-appearance.html) |
-| Target size | Controls are at least 44px tall, above the 24px minimum | [2.5.8 Target Size (Minimum)](https://www.w3.org/WAI/WCAG22/Understanding/target-size-minimum.html) |
+| Target size | Controls are at least 44px tall (32px with `data-density="compact"`, see [Density](explainers/density.md)), above the 24px minimum | [2.5.8 Target Size (Minimum)](https://www.w3.org/WAI/WCAG22/Understanding/target-size-minimum.html) |
 | Reduced motion | Under `prefers-reduced-motion: reduce` movement stops and fades stay; `data-motion="none"` turns transitions off (see [Motion](PRINCIPLES.md#6-motion)) | [MDN `prefers-reduced-motion`](https://developer.mozilla.org/en-US/docs/Web/CSS/@media/prefers-reduced-motion), [2.3.3 Animation from Interactions](https://www.w3.org/WAI/WCAG22/Understanding/animation-from-interactions.html) |
 | Color scheme | `color-scheme: light dark` plus [`light-dark()`](https://developer.mozilla.org/en-US/docs/Web/CSS/color_value/light-dark) in every semantic color | [MDN `color-scheme`](https://developer.mozilla.org/en-US/docs/Web/CSS/color-scheme) |
 | Forced colors | Borders and outlines switch to system colors | [MDN `forced-colors`](https://developer.mozilla.org/en-US/docs/Web/CSS/@media/forced-colors) |
@@ -201,6 +201,7 @@ may change. Fluid `--dui-step-*` values are `clamp()` expressions; see `primitiv
 | `--dui-size-column-min` | Default .grid min column width | `size-16` (16rem) |
 | `--dui-size-menu-min` | Min width of menus and nav dropdowns | `size-12` (12rem) |
 | `--dui-size-drawer` | Drawer width (all of the viewport when narrower) | `size-24` (24rem) |
+| `--dui-size-page` | Max inline size of a page's content column (the examples' header, main and footer) | `size-72` (72rem) |
 | `--dui-radius-control` | Controls, buttons, inline code | `radius-2` (0.375rem) |
 | `--dui-radius-surface` | Panels, pre, dialog, details, media | `radius-3` (0.625rem) |
 | `--dui-radius-pill` | Fully rounded ends | `radius-round` (999rem) |
@@ -220,6 +221,7 @@ may change. Fluid `--dui-step-*` values are `clamp()` expressions; see `primitiv
 | `--dui-motion-easing-exit` | Things leaving | `easing-accelerate` (`cubic-bezier(0.3, 0, 1, 1)`) |
 | `--dui-elevation-strength` | How much of `--dui-color-shadow` each shadow uses (0% to 100%) | `mix-100` (100%) |
 | `--dui-elevation-surface-step` | Dark scheme: text color mixed into the surface per level | `mix-3` (3%) |
+| `--dui-density-scale` | Density knob: `1` comfortable, `0` compact (`data-density`); in between interpolates, never below `0` | `factor-1` (1) |
 | `--dui-opacity-disabled` | Disabled controls, `disabled` and `aria-disabled="true"` | `opacity-60` (0.6) |
 | `--dui-tint-amount` | How much of a tone goes into a tinted surface | `mix-8` (8%) |
 | `--dui-border-tint-amount` | How much of the text color goes into a tinted border (badges) | `mix-35` (35%) |
@@ -240,6 +242,13 @@ may change. Fluid `--dui-step-*` values are `clamp()` expressions; see `primitiv
 | `--dui-motion-distance` | How far a dialog or toast lifts as it fades in | `space-4` (0.75rem) × `--dui-motion-movement` |
 | `--dui-motion-zoom` | Scale a popover or menu grows from | 0.95, or 1 when `--dui-motion-movement` is 0 |
 | `--dui-elevation-shadow-color` | Shadow color after strength | `color-mix()` of `--dui-color-shadow` at `--dui-elevation-strength` |
+| `--dui-size-control` | Min block size of controls, buttons, check labels and nav, menu and listbox items | `--dui-size-target` (44px), `--dui-size-target-small` (32px) when compact |
+| `--dui-space-control-block` | Block padding of controls, buttons and items | `space-3` (0.5rem), `space-2` (0.25rem) when compact |
+| `--dui-space-control-inline` | Inline padding of text fields and items | `space-4` (0.75rem), `space-3` (0.5rem) when compact |
+| `--dui-space-button-inline` | Inline padding of buttons and tabs | `space-5` (1rem), `space-4` (0.75rem) when compact |
+| `--dui-space-gap` | Gap between the parts of a control (icon and label, check and label) | `space-3` (0.5rem), `space-2` (0.25rem) when compact |
+| `--dui-space-gap-tight` | Gap and padding in groups of controls: field, toolbar, pagination, menu | `space-2` (0.25rem), `space-1` (0.125rem) when compact |
+| `--dui-space-cell` | Table cell padding | `space-3` (0.5rem), `space-2` (0.25rem) when compact |
 | `--dui-elevation-0` … `--dui-elevation-4` | Shadow per level | `none`, then two layers (key and ambient) growing with the level |
 | `--dui-elevation-0-surface` … `--dui-elevation-4-surface` | Surface per level | light: `--dui-color-surface`<br>dark: `--dui-color-surface` with N × `--dui-elevation-surface-step` of `--dui-color-text` |
 | `--dui-elevation-flat`, `-raised`, `-overlay`, `-popover`, `-dialog` | Shadow by role | levels 0, 1, 2, 3, 4 |
@@ -249,12 +258,33 @@ may change. Fluid `--dui-step-*` values are `clamp()` expressions; see `primitiv
 | `--dui-duration-normal` | **Deprecated**, removed in the next release | `--dui-motion-duration-normal` |
 | `--dui-easing-standard` | **Deprecated**, removed in the next release | `--dui-motion-easing-standard` |
 
-Derived (re-resolved on each theme scope and on every `[data-motion]` element): `--dui-color-link`,
+Derived (re-resolved on each theme scope and on every `[data-motion]` and `[data-density]` element): `--dui-color-link`,
 `--dui-color-focus`, `--dui-color-accent-hover`, `--dui-font-heading`, `--dui-color-accent-surface`,
 `--dui-color-success-surface`, `--dui-color-warning-surface`, `--dui-color-danger-surface`,
 `--dui-color-info-surface`, `--dui-color-surface-inverse`, `--dui-color-text-inverse`, every
 `--dui-motion-duration-*`, `--dui-motion-distance`, `--dui-motion-zoom`, every `--dui-elevation-*`
-except the two knobs, and the deprecated aliases.
+except the two knobs, the seven density tokens (`--dui-size-control` and the `--dui-space-control-*`,
+`-button-inline`, `-gap*` and `-cell` spaces), and the deprecated aliases.
+
+### Density
+
+`data-density="compact"` on any element tightens every component inside it; `data-density="comfortable"`
+is the default and restores it inside a compact area. Density changes space only: control heights
+(44px to 32px), padding, gaps and table cells. Text size never changes, and every target stays at least
+24 by 24 CSS pixels ([2.5.8 Target Size (Minimum)](https://www.w3.org/WAI/WCAG22/Understanding/target-size-minimum.html)).
+
+- The attribute sets one knob, `--dui-density-scale` (`1` comfortable, `0` compact). Components read the
+  density tokens above, each derived from the knob between its comfortable and compact value, and
+  re-declared on every `[data-density]` element like the theme tokens, so nesting works both ways.
+- Comfortable values point at other semantic tokens (`--dui-size-target`, the space scale), so a theme
+  that changes those moves density with it. `small` and `large` buttons keep their sizes at every density.
+- **Our choice:** an attribute on any ancestor, not a media query, because density follows the task (a data
+  table, a toolbar), not the device, and one page often mixes both.
+- **Our choice:** no [`zoom`](https://developer.mozilla.org/en-US/docs/Web/CSS/zoom) or font-size scaling,
+  because both shrink text against the user's text size and scale targets below 24px.
+
+[`examples/patterns/density.html`](examples/patterns/density.html) shows the same form, table and toolbar at
+both densities side by side; [`explainers/density.md`](explainers/density.md) has the full contract.
 
 ## 6. Motion
 
@@ -391,6 +421,13 @@ Each of these is a choice between valid options, not a standard.
   - **Our choice:** a clickable card links its heading and stretches that link over the card, so the
     accessible name stays the heading ([explainer](explainers/card.md)).
   - **Our choice:** toasts never dismiss themselves and never take focus ([explainer](explainers/toast.md)).
+  - **Our choice:** the typeahead (`<dui-combobox>`) upgrades a native `<input list>` + `<datalist>`, not a
+    `<select>`, because the value is free text and the upgrade reuses the same input and options. It
+    follows the [APG Combobox](https://www.w3.org/WAI/ARIA/apg/patterns/combobox/) list autocomplete
+    variant, filters by "contains" like the native
+    [`<datalist>`](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/datalist) popups
+    in Chromium and Firefox, and positions its listbox under the input rather than in the top layer, so
+    it is never wider than the field ([explainer](explainers/combobox.md)).
 - **Our choice:** layout primitives come from [Every Layout](https://every-layout.dev/)'s
   Stack, Cluster and Grid. Their custom properties are registered with
   [`@property`](https://developer.mozilla.org/en-US/docs/Web/CSS/@property) as non-inheriting,
@@ -438,7 +475,9 @@ A `<pre>` already scrolls (`overflow-x: auto`); authors MUST give every `<pre>` 
 
 HTML still has no element for tabs, menus, roving focus in a toolbar, hover tooltips or a toast
 stack. For those, and only those, [`web-components/`](web-components/README.md) has one small
-custom element each: `<dui-tabs>`, `<dui-menu>`, `<dui-toolbar>`, `<dui-tooltip>` and `<dui-toaster>`.
+custom element each: `<dui-tabs>`, `<dui-menu>`, `<dui-combobox>`, `<dui-toolbar>`, `<dui-tooltip>` and
+`<dui-toaster>`. HTML does have `<datalist>`, but its popup cannot be styled and differs between engines,
+so `<dui-combobox>` upgrades it to a listbox the page owns.
 
 - **Light DOM.** No shadow root: the molecule CSS and your CSS style the markup directly.
 - **Progressive enhancement.** The markup works before the script runs and with JavaScript off:
@@ -456,7 +495,8 @@ A pattern with no native element and no APG pattern is written up like a platfor
 [`explainers/`](explainers/README.md): problem, use cases, goals and non-goals, markup and API,
 keyboard, accessibility mappings, alternatives, prior art and open questions, with normative
 text in [RFC 2119](https://www.rfc-editor.org/rfc/rfc2119) keywords. The card, pagination, drawer
-and toast molecules have one. Names follow HTML and ARIA conventions, so a pattern could map onto
+and toast molecules have one, and so do density and the combobox, which record the choices their
+standards leave open. Names follow HTML and ARIA conventions, so a pattern could map onto
 a future native element or attribute.
 
 ## 12. Tooling

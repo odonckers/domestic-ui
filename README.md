@@ -60,8 +60,10 @@ Components: one `data-<component>` attribute of space-separated words matched wi
 | Molecules | Search | `<search> > <form> with an <input type="search">`, `the label and any hint span the full width, the input and the submit`, `button share the row below.` | [Search](https://odonckers.github.io/domestic-ui/patterns/search.html) |
 | Molecules | Tabs | `<dui-tabs>`, `<a href="#panel-id"> links, then the panels`, `activation="manual"`, `Space selects (default: automatic)`, `aria-current="true"`, `tab named in the URL fragment, else the first).`, `The component swaps it for aria-selected;`, `aria-selected is not allowed on a link.`, `role="tablist" \| "tab" \| "tabpanel" (added by the component; styled here)` | [Tabs](https://odonckers.github.io/domestic-ui/patterns/tabs.html) |
 | Molecules | Toolbar | `role="toolbar" aria-label="…"`, `aria-orientation="vertical"`, `aria-pressed="true \| false"`, `<hr>` | [Toolbar](https://odonckers.github.io/domestic-ui/patterns/toolbar.html) |
+| Molecules | Typeahead | `<dui-combobox>`, `<option value="…" label="…">`, `dui-combobox-filter`, `element.setOptions([...])` | [Typeahead](https://odonckers.github.io/domestic-ui/patterns/typeahead.html) |
 | Organisms | Dialog and drawer | `data-dialog`, `and the open transition`, `data-dialog="drawer [start \| end]"`, `edge (end is the default)`, `closedby="any \| closerequest \| none"`, `Children: an optional <header> (heading and close button) and <footer>`, `(actions, end-aligned); everything else is the body.` | [Dialog and drawer](https://odonckers.github.io/domestic-ui/patterns/dialog.html) |
 | Organisms | Site navigation | `data-nav="vertical \| horizontal"`, `aria-current="page"`, `<details> / <summary>`, `open to expand it on load, name for`, `one-at-a-time` | [Site navigation](https://odonckers.github.io/domestic-ui/patterns/nav.html) |
+| Tokens | Compact density | see the pattern page | [Compact density](https://odonckers.github.io/domestic-ui/patterns/density.html) |
 
 Docs pages also link how other design systems handle the same thing, for comparison only.
 
@@ -83,9 +85,9 @@ Each follows a native element or WAI-ARIA APG pattern where one exists ([Pattern
 | [Site navigation](https://odonckers.github.io/domestic-ui/patterns/nav.html) | M3 | Available |
 | [Tabs](https://odonckers.github.io/domestic-ui/patterns/tabs.html) | M3 | Available |
 | [Toolbar](https://odonckers.github.io/domestic-ui/patterns/toolbar.html) | M3 | Available |
-| [Typeahead](https://odonckers.github.io/domestic-ui/patterns/typeahead.html) | M3 | Coming in M3 |
+| [Typeahead](https://odonckers.github.io/domestic-ui/patterns/typeahead.html) | M3 | Available |
 | [App shell](https://odonckers.github.io/domestic-ui/patterns/app-shell.html) | M3b | Coming in M3b |
-| [Compact density](https://odonckers.github.io/domestic-ui/patterns/density.html) | M3b | Coming in M3b |
+| [Compact density](https://odonckers.github.io/domestic-ui/patterns/density.html) | M3b | Available |
 | [Dashboard](https://odonckers.github.io/domestic-ui/patterns/dashboard.html) | M3b | Coming in M3b |
 | [Data table](https://odonckers.github.io/domestic-ui/patterns/data-table.html) | M3b | Coming in M3b |
 | [Filter bar](https://odonckers.github.io/domestic-ui/patterns/filter-bar.html) | M3b | Coming in M3b |

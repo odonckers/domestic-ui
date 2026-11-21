@@ -116,8 +116,35 @@ Semantic token names and file paths under `css/` are public API; primitive token
   descendant scope; axe on the new pages; contrast of text, muted text, links, control borders and the
   focus ring on every elevation surface in light and dark, default and forest themes; borders in forced
   colors; `--dui-shadow-raised` equals level 1.
+- Combobox (typeahead) molecule: `<dui-combobox>` (`web-components/dui-combobox.js`) upgrades a native
+  `<input list>` + `<datalist>` to the APG Combobox list autocomplete pattern (`role="combobox"`,
+  `aria-expanded`, `aria-controls`, `aria-activedescendant`, a `role="listbox"` built from the datalist
+  options), keeping the same input; case-insensitive "contains" filtering; a polite `role="status"` result
+  count; a cancelable `dui-combobox-filter` event and `setOptions()` for options loaded by the page;
+  `change` on the input when an option is accepted. Styles in `css/components/molecules/combobox.css`
+  (popover elevation, fade and zoom with the motion tokens, forced colors). `examples/molecules/combobox.html`,
+  `explainers/combobox.md`; the typeahead docs page now shows it live.
+- Density: `data-density="compact"` on any element tightens control heights (44px to 32px), padding, gaps and
+  table cells inside it, with the same text size and every target at least 24 by 24 CSS pixels;
+  `data-density="comfortable"` (the default) restores them. Semantic tokens `--dui-density-scale` (the knob),
+  `--dui-size-control`, `--dui-space-control-block`, `--dui-space-control-inline`, `--dui-space-button-inline`,
+  `--dui-space-gap`, `--dui-space-gap-tight` and `--dui-space-cell`, re-derived on every `[data-density]`
+  scope. `examples/patterns/density.html` (linked from the example navigation), `explainers/density.md`;
+  the density docs page now shows it live.
+- `--dui-size-page`: the max inline size of a page's content column, `72rem` (primitive `--dui-size-72`).
+- Tests: `tests/combobox.spec.js` (APG keyboard and ARIA, filtering, live region, filter event and
+  `setOptions()`, form submission, no-JavaScript fallback, axe with the list open, 320px, motion) and
+  `tests/density.spec.js` (compact vs comfortable computed sizes, 24px targets, unchanged font sizes,
+  nested scopes, `--dui-size-page`). The axe and `data-motion="none"` checks now also open every combobox.
 
 ### Changed
+
+- Examples use `max-inline-size: var(--dui-size-page)` instead of a hard-coded `72rem`.
+- Components read the density tokens instead of `--dui-size-target` and fixed spaces: text fields, selects,
+  textareas, color inputs, check and switch labels, buttons and `a[data-button]`, `<summary>`, table
+  cells, field gaps, tabs, nav, menu, pagination and toolbar. Values are unchanged at the default
+  (comfortable) density.
+- The molecules index no longer lists the combobox under "Not shipped".
 
 - Components adopt the motion and elevation tokens: card uses the raised level (shadow added, surface
   `--dui-elevation-raised-surface`), popovers, menus, tooltips and nav dropdowns the popover level, toasts

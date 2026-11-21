@@ -9,7 +9,7 @@
     <style>
       /* Page-only layout, written with semantic tokens like any consumer would. */
       body > :is(header, main, footer) {
-        max-inline-size: 72rem;
+        max-inline-size: var(--dui-size-page);
         margin-inline: auto;
         padding-inline: var(--dui-space-l);
       }
@@ -53,6 +53,7 @@
           <li><a href="../theming.html">Theming</a></li>
           <li><a href="../motion.html">Motion</a></li>
           <li><a href="../elevation.html">Elevation</a></li>
+          <li><a href="../patterns/density.html">Density</a></li>
           <li><a href="../atoms/index.html">Atoms</a></li>
           <li><a href="index.html" aria-current="page">Molecules</a></li>
         </ul>
@@ -92,6 +93,7 @@
           <tr><td><a href="toolbar.html">Toolbar</a></td><td><code>role="toolbar"</code>, <code>&lt;dui-toolbar&gt;</code></td><td>APG Toolbar</td></tr>
           <tr><td><a href="pagination.html">Pagination</a></td><td><code>data-pagination</code>, <code>aria-current</code></td><td>Our choice (<a href="../../explainers/pagination.md">explainer</a>)</td></tr>
           <tr><td><a href="search.html">Search field</a></td><td>None: <code>&lt;search&gt;</code></td><td>WHATWG <code>&lt;search&gt;</code></td></tr>
+          <tr><td><a href="combobox.html">Combobox (typeahead)</a></td><td><code>&lt;dui-combobox&gt;</code> around <code>&lt;input list&gt;</code> and <code>&lt;datalist&gt;</code> (roles added)</td><td>APG Combobox, WHATWG <code>&lt;datalist&gt;</code> (<a href="../../explainers/combobox.md">explainer</a>)</td></tr>
           <tr><td><a href="card.html">Card</a></td><td><code>data-card="[link]"</code></td><td>Our choice (<a href="../../explainers/card.md">explainer</a>)</td></tr>
           <tr><td><a href="alerts.html">Alert and toast</a></td><td><code>data-alert="info | success | warning | danger | toasts"</code>, <code>&lt;dui-toaster&gt;</code></td><td>ARIA live regions, WCAG 4.1.3; toast region is Our choice (<a href="../../explainers/toast.md">explainer</a>)</td></tr>
         </tbody>
