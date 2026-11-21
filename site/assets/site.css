@@ -1,28 +1,23 @@
 /*
  * Docs site layout. Loaded after css/domestic.css, unlayered, so it wins
- * where it needs to. It uses only semantic --dui-* tokens and the layout
- * primitives, like any consumer would; the base layer provides the look,
- * focus styles, color-scheme and forced-colors handling.
- *
- * The one literal is the wide-screen breakpoint (64em): custom properties
- * cannot be used in media queries. site.js uses the same query.
+ * where it needs to. It uses only semantic --dui-* tokens, the layout
+ * primitives and components, like any consumer would; the base layer
+ * provides the look, focus styles, color-scheme and forced-colors handling.
  */
 
-.site-header,
-.site-body,
-.site-footer {
-  max-inline-size: calc(var(--dui-size-column-min) * 5);
-  margin-inline: auto;
-  padding-inline: var(--dui-space-l);
-}
-
-.site-header {
-  padding-block: var(--dui-space-m);
-  border-block-end: var(--dui-border-width) solid var(--dui-color-border);
-}
-
-.site-name {
+/*
+ * The frame is the app shell (css/layout/app-shell.css, <dui-app-shell>):
+ * app bar, Docs sidebar, main, "On this page" and footer. The 64rem
+ * container queries below are app-shell.css's auxiliary-sidebar breakpoint
+ * (a container query cannot read a custom property).
+ */
+.docs-name {
   font-weight: var(--dui-font-weight-heading);
+  text-decoration-line: none;
+}
+
+.docs-github {
+  margin-inline-start: auto;
 }
 
 /* Skip link: hidden by .visually-hidden until focused, then pinned top-left. */
@@ -37,113 +32,48 @@
   border-radius: var(--dui-radius-control);
 }
 
-/*
- * One column on narrow screens: the Docs menu (a disclosure) above main.
- * On wide screens: a sidebar column beside main.
- * minmax(0, 1fr) lets main shrink below its content's min-content width,
- * so wide content scrolls in its own region instead of widening the page.
- */
-.site-body {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr);
-  gap: var(--dui-space-xl);
-  align-items: start;
-  padding-block: var(--dui-space-l) var(--dui-space-2xl);
-}
-
-.site-body > * + * {
-  margin-block-start: 0;
-}
-
-/*
- * The Docs menu: native <details>, open by default (works without
- * JavaScript). The base layer styles it as a disclosure with a 44px summary.
- */
-
-.docs-nav ul {
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-
-.docs-nav :is(ul, li) > * + * {
-  margin-block-start: 0;
-}
-
-.docs-nav ul ul {
-  padding-inline-start: var(--dui-space-s);
-}
-
-.docs-nav a {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  column-gap: var(--dui-space-2xs);
-  min-block-size: var(--dui-size-target);
-  padding-inline: var(--dui-space-xs);
-  border-inline-start: var(--dui-border-width-emphasis) solid transparent;
-  overflow-wrap: anywhere;
-  text-decoration: none;
-}
-
-.docs-nav a:hover {
-  text-decoration: underline;
-}
-
-/* Top-level entries. */
-.docs-nav > ul > li > a {
-  font-weight: var(--dui-font-weight-strong);
-}
-
-/* The entry that holds the current page: a tinted band and an edge line. */
-.docs-nav li[data-current-section] {
-  background-color: var(--dui-color-surface-raised);
-  border-inline-start: var(--dui-border-width) solid var(--dui-color-border-control);
-  border-radius: var(--dui-radius-control);
-}
-
-/* The current page: heavier text and a thick accent edge, not color alone. */
-.docs-nav a[aria-current="page"] {
-  border-inline-start-color: var(--dui-color-accent);
-  color: var(--dui-color-text);
-  font-weight: var(--dui-font-weight-heading);
-}
-
 .docs-nav-note {
   color: var(--dui-color-text-muted);
   font-size: var(--dui-step--1);
   font-weight: var(--dui-font-weight-body);
 }
 
-@media (min-width: 64em) {
-  .site-body {
-    grid-template-columns: var(--dui-size-column-min) minmax(0, 1fr);
-  }
+/* One content column: prose, tables, code and live frames share one right edge. */
+.docs-content {
+  max-inline-size: var(--dui-measure);
+}
 
-  /*
-   * A sticky sidebar that scrolls on its own when it is taller than the
-   * viewport. It holds links, so it is reachable and scrollable by keyboard;
-   * it never traps focus.
-   */
-  .docs-menu {
-    position: sticky;
-    inset-block-start: 0;
-    max-block-size: 100dvh;
-    overflow-y: auto;
-    padding: var(--dui-space-s) 0;
-    border: 0;
-  }
+/* "On this page": a plain list of in-page links. */
+.docs-toc ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
 
-  /* Open (the default, and kept open by site.js): no summary needed. */
-  .docs-menu[open] > summary {
+.docs-toc li + li {
+  margin-block-start: var(--dui-space-2xs);
+}
+
+/*
+ * Narrow shells: the section links leave the app bar (the sidebar, a
+ * drawer from the Menu button, links every page) and "On this page" is
+ * left out (its links are the h2s just below).
+ */
+@container dui-app-shell (inline-size < 64rem) {
+  .docs-sections,
+  .docs-toc {
     display: none;
   }
 }
 
-.site-footer {
-  padding-block: var(--dui-space-l);
-  border-block-start: var(--dui-border-width) solid var(--dui-color-border);
-  color: var(--dui-color-text-muted);
+/* Previous and next, after the page: at the two ends of the row. */
+.docs-content + [data-pagination] {
+  max-inline-size: var(--dui-measure);
+  margin-block-start: var(--dui-space-2xl);
+}
+
+.docs-content + [data-pagination] > ul {
+  justify-content: space-between;
 }
 
 /*

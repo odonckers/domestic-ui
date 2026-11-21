@@ -1,34 +1,54 @@
 // @ts-check
 /*
- * The Docs sidebar: one navigation for the whole site. Its top-level
- * entries are fixed, in this order; each lists the pages of its sections,
- * in page order (see buildPages()).
+ * The Docs navigation, used three ways on every page:
  *
- * To add a page, give it one of the sections below; it appears under that
- * entry. To add an entry, add it here (and a section to Page["section"]).
+ * - App bar: the top sections (TOP), a data-nav="horizontal" list of links
+ *   (css/components/molecules/nav.css), aria-current on the current one.
+ * - Sidebar: the entries (NAV), a data-nav="vertical" list. An entry with
+ *   pages is a native <details> group, the APG Disclosure Navigation pattern
+ *   (https://www.w3.org/WAI/ARIA/apg/patterns/disclosure/examples/disclosure-navigation/):
+ *   only the group that holds the current page has open in the markup, so it
+ *   is right without JavaScript. Site links, not an ARIA menu.
+ * - Wayfinding: a breadcrumb (breadcrumb.css) and previous and next links,
+ *   in sidebar order.
+ *
+ * Each entry lists the pages of its sections, in page order (see
+ * buildPages()). To add a page, give it one of the sections below; it
+ * appears under that entry. To add an entry, add it here (and a section to
+ * Page["section"]).
  */
 import { escapeHtml } from "./util.mjs";
 
 /**
  * @typedef {import("./pages.mjs").Page} Page
  * @typedef {import("./pages.mjs").Section} Section
- * @typedef {{ title: string, path: string, sections: readonly Section[] }} NavEntry
+ * @typedef {{ title: string, path: string, sections: readonly Section[], top: string }} NavEntry
+ * @typedef {{ title: string, path: string }} TopSection
  */
+
+/** The app bar's sections, in order. Each links its first entry's page. @type {readonly TopSection[]} */
+export const TOP = [
+  { title: "Get started", path: "index.html" },
+  { title: "Foundations", path: "principles/index.html" },
+  { title: "Components", path: "atoms/index.html" },
+  { title: "Patterns & guides", path: "patterns/index.html" },
+  { title: "Demos", path: "demos.html" },
+];
 
 /** @type {readonly NavEntry[]} */
 export const NAV = [
-  { title: "Getting started", path: "index.html", sections: ["home"] },
-  { title: "Principles", path: "principles/index.html", sections: ["principles"] },
-  { title: "Tokens", path: "tokens/index.html", sections: ["tokens"] },
-  { title: "Base", path: "components/base.html", sections: ["base"] },
-  { title: "Layout", path: "layouts/index.html", sections: ["layouts"] },
-  { title: "Atoms", path: "atoms/index.html", sections: ["atoms"] },
-  { title: "Molecules", path: "molecules/index.html", sections: ["molecules"] },
-  { title: "Organisms", path: "organisms/index.html", sections: ["organisms"] },
-  { title: "Patterns and guides", path: "patterns/index.html", sections: ["patterns", "guides"] },
-  { title: "Demos", path: "demos.html", sections: ["demos"] },
-  { title: "Contributing", path: "contributing.html", sections: ["contributing"] },
-  { title: "Changelog", path: "changelog.html", sections: ["changelog"] },
+  { title: "Getting started", path: "index.html", sections: ["home"], top: "Get started" },
+  { title: "Principles", path: "principles/index.html", sections: ["principles"], top: "Foundations" },
+  { title: "Tokens", path: "tokens/index.html", sections: ["tokens"], top: "Foundations" },
+  { title: "Base", path: "components/base.html", sections: ["base"], top: "Foundations" },
+  { title: "Layout", path: "layouts/index.html", sections: ["layouts"], top: "Foundations" },
+  { title: "Atoms", path: "atoms/index.html", sections: ["atoms"], top: "Components" },
+  { title: "Molecules", path: "molecules/index.html", sections: ["molecules"], top: "Components" },
+  { title: "Organisms", path: "organisms/index.html", sections: ["organisms"], top: "Components" },
+  { title: "Patterns and guides", path: "patterns/index.html", sections: ["patterns", "guides"], top: "Patterns & guides" },
+  { title: "Demos", path: "demos.html", sections: ["demos"], top: "Demos" },
+  { title: "Contributing", path: "contributing.html", sections: ["contributing"], top: "Get started" },
+  { title: "Changelog", path: "changelog.html", sections: ["changelog"], top: "Get started" },
 ];
 
 /** The entry a page belongs to. @param {Page} page */
@@ -46,14 +66,20 @@ export function navTree(pages) {
   }));
 }
 
+/** @typedef {ReturnType<typeof navTree>} NavTree */
+
+/** Every sidebar link in order: each entry's page, then its children. @param {NavTree} tree */
+export const navOrder = (tree) => tree.flatMap((e) => [{ path: e.path, label: e.title }, ...e.children.map((c) => ({ path: c.path, label: c.label }))]);
+
+/** The sidebar link text of an entry's own page inside its group. @param {NavEntry} entry */
+export const overviewLabel = (entry) => `${entry.title} overview`;
+
 /**
- * The sidebar HTML for one page. Exactly one link has aria-current="page";
- * the entry that holds it gets data-current-section for a visible marker.
- * Native <details open>: without JavaScript the menu is open at every
- * width; site.js closes it on narrow viewports on load.
- * https://html.spec.whatwg.org/multipage/interactive-elements.html#the-details-element
+ * The sidebar HTML for one page: <nav id="docs-nav">, the app shell's
+ * primary sidebar. Exactly one link has aria-current="page"; only the
+ * group that holds it is open.
  * @param {Page} page
- * @param {ReturnType<typeof navTree>} tree
+ * @param {NavTree} tree
  * @param {(target: string) => string} link
  */
 export function renderNav(page, tree, link) {
@@ -63,18 +89,81 @@ export function renderNav(page, tree, link) {
     return `<a href="${escapeHtml(link(path))}"${current}>${escapeHtml(label)}${extra}</a>`;
   };
   const entries = tree.map((e) => {
+    if (!e.children.length) return `            <li>${a(e.path, e.title, "")}</li>`;
     const here = e.path === page.path || e.children.some((c) => c.path === page.path);
-    const children = e.children.length
-      ? `\n            <ul>\n${e.children.map((c) => `              <li>${a(c.path, c.label, c.note)}</li>`).join("\n")}\n            </ul>\n          `
-      : "";
-    return `          <li${here ? " data-current-section" : ""}>${a(e.path, e.title, "")}${children}</li>`;
+    const links = [a(e.path, overviewLabel(e), ""), ...e.children.map((c) => a(c.path, c.label, c.note))];
+    return `            <li>
+              <details${here ? " open" : ""}>
+                <summary>${escapeHtml(e.title)}</summary>
+                <ul>
+${links.map((l) => `                  <li>${l}</li>`).join("\n")}
+                </ul>
+              </details>
+            </li>`;
   });
-  return `<details class="docs-menu" open data-docs-menu>
-        <summary>Docs menu</summary>
-        <nav class="docs-nav" aria-label="Docs">
+  return `<nav id="docs-nav" aria-label="Docs" data-nav="vertical">
           <ul>
 ${entries.join("\n")}
           </ul>
-        </nav>
-      </details>`;
+        </nav>`;
+}
+
+/**
+ * The app bar's section links. The current section's link has
+ * aria-current: "page" on its own page, "true" on the pages under it.
+ * @param {Page} page
+ * @param {(target: string) => string} link
+ */
+export function renderSections(page, link) {
+  const top = navEntryOf(page)?.top;
+  const items = TOP.map((s) => {
+    const current = s.title === top ? (s.path === page.path ? ' aria-current="page"' : ' aria-current="true"') : "";
+    return `            <li><a href="${escapeHtml(link(s.path))}"${current}>${escapeHtml(s.title)}</a></li>`;
+  });
+  return `<nav aria-label="Sections" data-nav="horizontal" class="docs-sections">
+          <ul>
+${items.join("\n")}
+          </ul>
+        </nav>`;
+}
+
+/**
+ * The breadcrumb above the h1: top section (text: sections have no page of
+ * their own), the entry's page, then the page itself with aria-current.
+ * Empty on the home page.
+ * @param {Page} page
+ * @param {(target: string) => string} link
+ */
+export function renderBreadcrumb(page, link) {
+  const entry = navEntryOf(page);
+  if (!entry || page.path === "index.html") return "";
+  const items = [`<li><span>${escapeHtml(entry.top)}</span></li>`];
+  if (entry.path !== page.path) items.push(`<li><a href="${escapeHtml(link(entry.path))}">${escapeHtml(entry.title)}</a></li>`);
+  items.push(`<li><a href="${escapeHtml(link(page.path))}" aria-current="page">${escapeHtml(page.navLabel ?? page.title)}</a></li>`);
+  return `<nav aria-label="Breadcrumb" data-breadcrumb>
+<ol>
+${items.join("\n")}
+</ol>
+</nav>`;
+}
+
+/**
+ * Previous and next links in sidebar order, for the footer.
+ * @param {Page} page
+ * @param {NavTree} tree
+ * @param {(target: string) => string} link
+ */
+export function renderPrevNext(page, tree, link) {
+  const order = navOrder(tree);
+  const i = order.findIndex((o) => o.path === page.path);
+  if (i < 0) return "";
+  const prev = order[i - 1];
+  const next = order[i + 1];
+  const item = (/** @type {{ path: string, label: string } | undefined} */ o, /** @type {"prev" | "next"} */ rel) =>
+    o ? `<li><a href="${escapeHtml(link(o.path))}" rel="${rel}">${rel === "prev" ? "Previous" : "Next"}: ${escapeHtml(o.label)}</a></li>` : "";
+  return `<nav aria-label="Previous and next" data-pagination>
+<ul>
+${[item(prev, "prev"), item(next, "next")].filter(Boolean).join("\n")}
+</ul>
+</nav>`;
 }

@@ -37,7 +37,7 @@ indexes, which is why every docs link points at a file (`principles/index.html`,
 | `site/check-other-systems.mjs` | Dead-link check for that file; run by `npm test`. |
 | `site/lib/demo-views.mjs` | Reads and validates `site/data/demo-views.json` (see [Demo views](#demo-views)). |
 | `site/assets/site.css` | Docs layout only, with semantic `--dui-*` tokens and the layout primitives. |
-| `site/assets/site.js` | Progressive enhancement only: closes the Docs menu on narrow screens, runs the token filter. |
+| `site/assets/site.js` | Progressive enhancement only: scrolls the current sidebar link into view, fits live frames, runs the token filter. |
 
 `_site/` is wiped and rebuilt each time. `css/` and `web-components/` are copied into it unchanged,
 so the docs and the render pages load the real CSS and components by relative path, at `/_site/`
@@ -75,8 +75,18 @@ or drop it.
 
 ## Sidebar
 
-Every page has one navigation: the Docs sidebar, `<nav aria-label="Docs">`. Its top-level entries
-are fixed in `NAV` in `site/lib/nav.mjs`, in this order; each links its index page and lists the
+The frame of every page is the app shell (`css/layout/app-shell.css`, `<dui-app-shell>` from
+`web-components/dui-app-shell.js`, copied into `_site/` with the rest of `web-components/`): a skip
+link, then `<header>` (the app bar), `<nav id="docs-nav" aria-label="Docs">` (the sidebar), `<main
+id="main">`, an optional `<aside>` "On this page" and `<footer>`, in that source order.
+
+- **App bar:** the site name, the top sections (`TOP` in `site/lib/nav.mjs`) as a
+  `data-nav="horizontal"` list (`aria-current="page"` on a section's own page, `"true"` on the pages
+  under it), an empty hidden slot for the M4 search, a GitHub link, and the Menu toggle
+  (`aria-controls="docs-nav"`, `hidden` until `<dui-app-shell>` shows it). Below `64rem` of shell
+  width the section links are left out: the sidebar links every page.
+- **Sidebar:** the Docs entries. Its top-level entries are fixed in `NAV` in `site/lib/nav.mjs`, in
+  this order; each links its index page ("Atoms overview") and lists the
 pages of its sections below it, in the order `buildPages()` returns them.
 
 | Entry | Links | Lists |
@@ -97,16 +107,25 @@ There is no examples section: each example is on its element's page, and the old
 redirect there.
 
 A new page goes where its `section` says (`Page["section"]` in `site/lib/pages.mjs`); there is no
-per-page nav to edit. The current page's link has `aria-current="page"` (exactly one per page); its
-entry's `<li>` gets `data-current-section`, drawn as a tinted band with an edge line, with no
-second `aria-current`. The build fails if an entry links a page that is not built.
+per-page nav to edit. The build fails if an entry links a page that is not built.
 
-The sidebar is a native `<details open>` with the summary "Docs menu". Without JavaScript it is open
-at every width. `site.js` closes it on load when the viewport is narrower than `64em` and keeps it
-open when wider (the same query as `site.css`). At `64em` and up the body is a CSS grid with the
-sidebar column (`--dui-size-column-min`) beside `main`; the sidebar is sticky, at most one viewport
-tall and scrolls on its own; the summary is hidden while the menu is open. Links and the summary
-are at least 44px tall (`--dui-size-target`).
+The sidebar is `data-nav="vertical"` (`css/components/molecules/nav.css`) on the
+[APG Disclosure Navigation](https://www.w3.org/WAI/ARIA/apg/patterns/disclosure/examples/disclosure-navigation/)
+pattern: an entry with pages is a native `<details>` group, and only the group that holds the current
+page has `open` in the markup, so it is right without JavaScript. Links, not `role="menu"`: Tab moves
+through them. The current page's link has `aria-current="page"` (once in the sidebar); nav.css draws
+it and makes its group's summary bold. Where the shell is at least `48rem` wide the sidebar sits beside
+`main`, sticky and scrolling on its own, and `site.js` scrolls the current link into view inside it
+(never the page). Narrower, the Menu button opens the same element as a modal drawer (`<dialog
+data-dialog="drawer start" closedby="any">`, built by `<dui-app-shell>`): Esc or the backdrop close it
+and focus returns to the button. Without JavaScript the sidebar stacks above `main` with its groups
+closed except the current one.
+
+- **Breadcrumb** (`data-breadcrumb`) above the `h1` on every page but the home page: the top section
+  (text), the entry's index page and the page itself with `aria-current="page"`.
+- **Previous and next** (`data-pagination`, "Previous: Badge") at the end of `main`, in sidebar order.
+- **On this page:** the `<aside>` lists the page's `h2`s when it has two or more. It is the shell's
+  auxiliary sidebar from `64rem`; narrower it is left out (the same links are just below).
 
 `llms.txt` has one H2 per sidebar entry, in the same order. `README.md` is short: the intro, links,
 install and use, the principles list, one components table (Base, Layout and the component levels),
@@ -571,16 +590,15 @@ themselves, then run `node site/build.mjs`. Two checks catch a forgotten rebuild
 
 ## Accessibility of the docs
 
-Every page has a skip link (the first focusable element), one labelled Docs nav with one
-`aria-current="page"`, one `h1`, tables with `<caption>` and `th scope`, and iframes with a `title`.
-Code blocks wrap instead of scrolling horizontally, so no `<pre>` needs `tabindex` or an accessible
-name (which ARIA 1.2 prohibits on the `pre` element's generic role). Long words, URLs and inline
-code in prose break anywhere (`overflow-wrap: anywhere`); only token tables scroll, inside their
-named `data-scroll` region.
+Every page has a skip link (the first focusable element), landmarks in source order (app shell), one
+`aria-current="page"` in the Docs nav, one `h1`, tables with `<caption>` and `th scope`, and iframes
+with a `title`. Long words, URLs and inline code in prose break anywhere (`overflow-wrap: anywhere`);
+only token tables scroll, inside their named `data-scroll` region.
 
 `tests/docs.spec.js` (Chromium) runs html-validate and axe (WCAG 2.2 AA tags, light and dark) on
-every page and every render page, blocks external requests, and checks the sidebar (one nav, order,
-every built page reachable, one `aria-current`, no example links), the snippets (see
+every page and every render page, blocks external requests, and checks the navigation (sidebar order, every built page reachable, one `aria-current` and only the
+current group open, the app bar's current section, the breadcrumb, previous and next in sidebar order,
+no ARIA menu roles, no example links), the snippets (see
 [Snippet convention](#snippet-convention)), the redirects (html-validate, axe, landing on their page),
 the web components working in their frames, the token tables and parser, the filter, and the page
 with JavaScript off.
@@ -591,5 +609,6 @@ redirects), at 320×640 and 375×812, it
 asserts `scrollWidth <= clientWidth` on the root (the failure names the widest element) and that no
 `<pre>` scrolls, and runs axe with the same tags as `tests/a11y.spec.js`. Frames are excluded from
 that axe run: their markup is `examples/` markup, checked by `tests/a11y.spec.js`. It also
-opens and closes the Docs menu with Enter and Space at 375px, tabs to the current page link, and
-checks the wide-screen sidebar. Both specs share `tests/docs-helpers.js`, which builds `_site/` once.
+opens the Docs drawer with Enter at 375px, tabs to the current page link, closes it with Esc and
+checks that focus returns to the Menu button, and checks the wide-screen sidebar (beside main, one
+open group, no ARIA menu roles). Both specs share `tests/docs-helpers.js`, which builds `_site/` once.

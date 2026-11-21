@@ -3,22 +3,23 @@
  * Page templates: the HTML document around each page, and its Markdown twin.
  *
  * Accessibility notes (WCAG 2.2 AA):
- * - The skip link is the first focusable element (2.4.1 Bypass Blocks).
- *   It reuses the .visually-hidden utility, which shows it on focus.
+ * - The frame is the app shell (css/layout/app-shell.css,
+ *   web-components/dui-app-shell.js): landmarks in source order, app bar
+ *   <header>, the Docs <nav> sidebar, <main>, an optional "On this page"
+ *   <aside>, <footer>. Narrow screens get the sidebar as a modal drawer from
+ *   the Menu button; without JavaScript it stacks above main.
+ * - The skip link comes before the shell and is the first focusable
+ *   element (2.4.1 Bypass Blocks). It reuses the .visually-hidden utility,
+ *   which shows it on focus.
  * - <main tabindex="-1"> so following the skip link moves focus there,
  *   not only the sequential focus starting point.
  * - One <h1> per page; Markdown headings start at h2.
- * - One navigation: the Docs sidebar (./nav.mjs), a native <details>
- *   disclosure on narrow screens, open by default so it works without
- *   JavaScript.
- * - Code blocks wrap instead of scrolling (site.css), so no <pre> needs
- *   tabindex or a name. A focusable <pre> would need an accessible name,
- *   which ARIA 1.2 prohibits on its generic role. Wide tables scroll in a
- *   named, focusable [data-scroll="inline"] region instead.
+ * - Wide tables and code blocks scroll in a named, focusable
+ *   [data-scroll="inline"] region (site.css).
  * - Visible focus, color-scheme and forced colors come from the base CSS.
  */
 import { markdownToHtml, uniqueId } from "./markdown.mjs";
-import { renderNav } from "./nav.mjs";
+import { renderBreadcrumb, renderNav, renderPrevNext, renderSections } from "./nav.mjs";
 import { REPO_URL, SITE_URL, BLOB_URL, escapeHtml, relativeUrl } from "./util.mjs";
 
 /** @typedef {import("./pages.mjs").Page} Page */
@@ -37,6 +38,8 @@ export function renderHtml(page, tree) {
   };
   const body = page.blocks.map((b) => (b.html ? b.html(ctx) : markdownToHtml(b.md, { resolveLink, ids, caption: page.heading }))).join("\n");
 
+  const toc = tocHtml(body);
+
   return `<!DOCTYPE html>
 <html lang="en">
   <head>
@@ -47,29 +50,57 @@ export function renderHtml(page, tree) {
     <link rel="stylesheet" href="${link("css/domestic.css")}">
     <link rel="stylesheet" href="${link("site.css")}">
     <link rel="alternate" type="text/markdown" href="${link(page.path.replace(/\.html$/, ".md"))}">
+    <script type="module" src="${link("web-components/dui-app-shell.js")}"></script>
     <script src="${link("site.js")}" defer></script>
   </head>
   <body>
     <a class="skip-link visually-hidden" href="#main">Skip to content</a>
 
-    <header class="site-header">
-      <p class="site-name"><a href="${link("index.html")}">domestic-ui</a></p>
-    </header>
-
-    <div class="site-body">
+    <dui-app-shell data-app-shell class="docs-shell">
+      <header>
+        <button type="button" aria-controls="docs-nav" aria-expanded="true" hidden>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true" focusable="false"><path d="M4 6h16M4 12h16M4 18h16"></path></svg>
+          Menu
+        </button>
+        <a class="docs-name" href="${link("index.html")}">domestic-ui</a>
+        ${renderSections(page, link)}
+        <!-- Slot for the site search (M4): search-index.json. Empty and hidden until then. -->
+        <div class="docs-search" data-docs-search hidden></div>
+        <a class="docs-github" href="${REPO_URL}">GitHub</a>
+      </header>
       ${renderNav(page, tree, link)}
       <main id="main" tabindex="-1">
+        <article class="docs-content">
+${renderBreadcrumb(page, link)}
 <h1>${escapeHtml(page.heading)}</h1>
 ${body}
-      </main>
-    </div>
-
-    <footer class="site-footer">
-      <p><small>domestic-ui is <a href="${BLOB_URL}LICENSE">MIT licensed</a>. <a href="${REPO_URL}">Source on GitHub</a>. <a href="${escapeHtml(page.source.href)}">${escapeHtml(page.source.label)}</a>. <a href="${link("llms.txt")}">llms.txt</a></small></p>
-    </footer>
+        </article>
+${renderPrevNext(page, tree, link)}
+      </main>${toc}
+      <footer>
+        <p><small>domestic-ui is <a href="${BLOB_URL}LICENSE">MIT licensed</a>. <a href="${REPO_URL}">Source on GitHub</a>. <a href="${escapeHtml(page.source.href)}">${escapeHtml(page.source.label)}</a>. <a href="${link("llms.txt")}">llms.txt</a></small></p>
+      </footer>
+    </dui-app-shell>
   </body>
 </html>
 `;
+}
+
+/**
+ * The "On this page" auxiliary sidebar: a link to each h2 of the body, or
+ * "" when there are fewer than two.
+ * @param {string} body
+ */
+function tocHtml(body) {
+  const h2s = [...body.matchAll(/<h2 id="([^"]+)">([\s\S]*?)<\/h2>/g)].map((m) => ({ id: m[1], text: m[2].replace(/<[^>]*>/g, "") }));
+  if (h2s.length < 2) return "";
+  return `
+      <aside class="docs-toc" aria-labelledby="docs-toc-title">
+        <h2 id="docs-toc-title">On this page</h2>
+        <ul>
+${h2s.map((h) => `          <li><a href="#${h.id}">${h.text}</a></li>`).join("\n")}
+        </ul>
+      </aside>`;
 }
 
 /**
