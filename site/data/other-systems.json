@@ -154,8 +154,14 @@
       }
     },
     "components/organisms/page-header": {
-      "apple": null,
-      "material": null,
+      "apple": {
+        "url": "https://developer.apple.com/design/human-interface-guidelines/toolbars",
+        "title": "Toolbars"
+      },
+      "material": {
+        "url": "https://m3.material.io/components/app-bars/overview",
+        "title": "Top app bar"
+      },
       "geist": null
     },
     "patterns/nav": {

@@ -3036,8 +3036,8 @@ condition cannot read a custom property, so it is written as a length.
 
 For comparison only; these are not the standard this system follows.
 
-- Apple Human Interface Guidelines: No equivalent
-- Material Design 3: No equivalent
+- [Apple Human Interface Guidelines: Toolbars](https://developer.apple.com/design/human-interface-guidelines/toolbars)
+- [Material Design 3: Top app bar](https://m3.material.io/components/app-bars/overview)
 - Vercel Geist: No equivalent
 
 ## Alerts
