@@ -9,6 +9,7 @@ import { existsSync, readFileSync, readdirSync } from "node:fs";
 import { join, posix } from "node:path";
 import { comments, dedent, headerComment, htmlKeyboard, parseHeader, parseKeyboard, parseLayerOrder, specLabel, specName } from "./css-comments.mjs";
 import { splitSections, tokenize, plainText } from "./markdown.mjs";
+import { loadDemoViews } from "./demo-views.mjs";
 import { parseTokenFile, resolveTokens } from "./tokens.mjs";
 import { byString, firstSentence, readTitle, slugify, unescapeHtml } from "./util.mjs";
 
@@ -661,6 +662,8 @@ export function loadModel(root) {
     readmes,
     demos,
     demosIntro,
+    // Only with demo apps present: a fixture root without demos/ has no views to link.
+    demoViews: demos.length ? loadDemoViews(root) : null,
     contributing: exists("CONTRIBUTING.md") ? read("CONTRIBUTING.md") : "",
     changelog: exists("CHANGELOG.md") ? read("CHANGELOG.md") : "",
     examples,

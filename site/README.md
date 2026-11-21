@@ -35,6 +35,7 @@ indexes, which is why every docs link points at a file (`principles/index.html`,
 | `site/lib/live.mjs` | Render pages (`live/`) and the redirects at old example URLs (see [Render pages and redirects](#render-pages-and-redirects)). |
 | `site/lib/other-systems.mjs` | Validates `site/data/other-systems.json` and adds its section to each page (see [How other systems do it](#how-other-systems-do-it)). |
 | `site/check-other-systems.mjs` | Dead-link check for that file; run by `npm test`. |
+| `site/lib/demo-views.mjs` | Reads and validates `site/data/demo-views.json` (see [Demo views](#demo-views)). |
 | `site/assets/site.css` | Docs layout only, with semantic `--dui-*` tokens and the layout primitives. |
 | `site/assets/site.js` | Progressive enhancement only: closes the Docs menu on narrow screens, runs the token filter. |
 
@@ -63,8 +64,8 @@ type follows it too:
    (`States`, `Sizes`, `Focus`), `Keyboard` and the group README's **Our choice** bullets follow.
 4. **Accessibility.** Short, concrete bullets, each borrowed fact linked to WCAG, APG, MDN or its author.
 5. **Specifications.** Labelled links: MDN, WHATWG, W3C, WCAG 2.2, WAI-ARIA APG.
-6. **See also.** The level index, the component API convention, the accessibility baseline, and the
-   source files on GitHub.
+6. **See also.** The level index, the component API convention, the accessibility baseline, the
+   source files on GitHub, and the demo views that use the page (see [Demo views](#demo-views)).
 7. **How other systems do it**, last (see below).
 
 Writing rules: be specific and direct; no preamble ("This page describes…"), no repeating the
@@ -136,11 +137,27 @@ level index).
 | `site/content/guides/<slug>.md` | `guides/<slug>.html`, listed on `guides/index.html` |
 | `examples/*.html`, `examples/*/*.html` | Not published. Their snippets go on docs pages, each rendered from `live/` (see [Snippet convention](#snippet-convention)); their old URLs redirect (see [Render pages and redirects](#render-pages-and-redirects)). |
 | `demos/README.md`, first paragraph; `demos/<name>/README.md`, its H1 and the first sentence of its first paragraph | `demos.html`: each demo by name (the H1 without "domestic-ui demo: "), with a link to `demos/<name>` on GitHub; also in `README.md` and `llms.txt`. With no demos the page says "Coming in M5." Demos are not copied into `_site/`. |
+| `site/data/demo-views.json` | `demos.html#views`: a table with one row per view and one column per app linking the view's source on GitHub; a "Views" line in `README.md` and `llms.txt`; a "Demos:" line under See also on each page a view uses (see [Demo views](#demo-views)) |
 | `CONTRIBUTING.md`, `CHANGELOG.md` | `contributing.html`, `changelog.html`: read-only, H1 as the page heading, relative links rewritten to site pages or GitHub, with a link to edit the file on GitHub |
 
 The component API convention is on the Getting started page (`index.html#component-api`). The
 all-levels overview `components/index.html` was removed in the sidebar change: its convention moved
 to Getting started and its per-level lists and Our choices are on the level index pages.
+
+## Demo views
+
+`site/data/demo-views.json` lists the apps (`id` = directory under `demos/`, `title`) and the views.
+Each view has an `id`, a `title`, a one-line plain `description`, `paths` (app id → repo path of the
+view's source; a directory links `/tree/main/`, a file `/blob/main/`), `pages` (the docs pages the
+view uses, as site paths without `.html`: `patterns/nav`, `components/organisms/page-header`) and
+optional `notes` (page → a few words shown after the view's name on that page). The build fails when
+a path does not exist or a page is not built. The file is read only when `demos/` has apps.
+
+To link a demo view from a page, add the page to the view's `pages` after reading the view's source:
+list only the patterns the markup really uses. The page's See also then gets one line, "Demos:
+Orders view (Plain HTML, React, Angular, Astro)", each app linking its source; a page several views
+use gets them on the same line, separated by semicolons. The demos are not published, so nothing
+links a demo URL on GitHub Pages.
 
 ## Component API convention
 
@@ -265,6 +282,9 @@ is shown as a list at the end of Attributes. The body replaces the derived acces
 relative links are repo-root paths, rewritten as above. Layout overrides live at
 `site/content/components/layouts/<name>.md`, whichever CSS directory the layout is in. The atoms
 and `scroll` have overrides because their comments mix usage, accessibility and URLs in one paragraph.
+A layout comment's sentence "Live examples are in examples/base.html#layout." is dropped from its
+page (`STALE_LAYOUT_NOTE` in `site/lib/pages.mjs`): `examples/` is not published, and the live
+example is on the page itself.
 
 `our-choice` is rendered under the summary as "**Our choice:** …". Use it only where no native
 element and no [WAI-ARIA APG pattern](https://www.w3.org/WAI/ARIA/apg/patterns/) exists; where one

@@ -85,7 +85,7 @@ ${patternRows.join("\n")}
 
 ## Demos
 
-${demoListMd(model)}
+${demoListMd(model)}${model.demoViews ? `\n\nViews: ${demoViewTitlesMd(model)}; [source per view and app](site:demos.html#views).` : ""}
 
 ## Contributing and license
 
@@ -93,6 +93,12 @@ ${demoListMd(model)}
 `;
   return link(md);
 }
+
+/** "Dashboard, Account settings and Orders" @param {Model} model */
+const demoViewTitlesMd = (model) => {
+  const titles = (model.demoViews?.views ?? []).map((v) => v.title);
+  return titles.length > 1 ? `${titles.slice(0, -1).join(", ")} and ${titles.at(-1)}` : titles.join("");
+};
 
 /** The header shared by llms.txt and llms-full.txt. @param {Model} model */
 function llmsHeader(model) {
@@ -124,6 +130,7 @@ export function generateLlms(model, pages) {
   const sections = NAV.map((n) => {
     const lines = pages.filter((p) => n.sections.includes(p.section)).map((p) => patterns.get(p.path) ?? entry(p));
     if (n.path === "demos.html") lines.push(...demos);
+    if (n.path === "demos.html" && model.demoViews) lines.push(`- [Views](${SITE_URL}demos.md): ${demoViewTitlesMd(model)}, with each app's source file.`);
     return `## ${n.title}\n\n${lines.join("\n")}`;
   });
   return `${llmsHeader(model)}

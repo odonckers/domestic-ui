@@ -99,6 +99,7 @@ Link `css/domestic.css` (copy `css/` from https://github.com/odonckers/domestic-
 - [Astro](https://github.com/odonckers/domestic-ui/tree/main/demos/astro): The dashboard, account settings and orders views as three static Astro pages (`src/pages/index.astro`, `src/pages/settings.astro` and `src/pages/orders.astro`) sharing `src/layouts/Base.astro`.
 - [React](https://github.com/odonckers/domestic-ui/tree/main/demos/react): The dashboard, account settings and orders views in React 19 with Vite, as a three-page [multi-page app](https://vite.dev/guide/build#multi-page-app) (`index.html`, `settings.html` and `orders.html`).
 - [Plain HTML](https://github.com/odonckers/domestic-ui/tree/main/demos/vanilla): The dashboard, account settings and orders views as three static HTML files, with no build step.
+- [Views](https://odonckers.github.io/domestic-ui/demos.md): Dashboard, Account settings and Orders, with each app's source file.
 
 ## Contributing
 

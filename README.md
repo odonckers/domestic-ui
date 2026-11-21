@@ -112,6 +112,8 @@ Each follows a native element or WAI-ARIA APG pattern where one exists ([Pattern
 - **React** ([`demos/react/`](https://github.com/odonckers/domestic-ui/tree/main/demos/react)): The dashboard, account settings and orders views in React 19 with Vite, as a three-page [multi-page app](https://vite.dev/guide/build#multi-page-app) (`index.html`, `settings.html` and `orders.html`).
 - **Plain HTML** ([`demos/vanilla/`](https://github.com/odonckers/domestic-ui/tree/main/demos/vanilla)): The dashboard, account settings and orders views as three static HTML files, with no build step.
 
+Views: Dashboard, Account settings and Orders; [source per view and app](https://odonckers.github.io/domestic-ui/demos.html#views).
+
 ## Contributing and license
 
 [Contributing](https://odonckers.github.io/domestic-ui/contributing.html), [Code of Conduct](https://github.com/odonckers/domestic-ui/blob/main/CODE_OF_CONDUCT.md), [Security](https://github.com/odonckers/domestic-ui/blob/main/SECURITY.md), [Changelog](https://odonckers.github.io/domestic-ui/changelog.html). `npm test` runs every check. [MIT](https://github.com/odonckers/domestic-ui/blob/main/LICENSE).

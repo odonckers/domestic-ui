@@ -64,6 +64,12 @@ export function generate(root = ROOT) {
     const on = pages.filter((p) => p.snippets?.includes(s)).map((p) => p.path);
     if (on.length !== 1) throw new Error(`${s.source}: snippet "${s.name}" must be on exactly one docs page; it is on ${on.join(", ") || "none"} (owner ${s.owner})`);
   }
+  // Every page a demo view names is built (site/data/demo-views.json).
+  for (const v of model.demoViews?.views ?? []) {
+    for (const page of [...v.pages, ...Object.keys(v.notes ?? {})]) {
+      if (!pages.some((p) => p.path === `${page}.html`)) throw new Error(`site/data/demo-views.json: view "${v.id}" names ${page}, which no page builds`);
+    }
+  }
   const twins = new Set(pages.map((p) => p.path));
   const tree = navTree(pages);
   const titleOf = (/** @type {string} */ path) => pages.find((p) => p.path === path)?.title ?? "domestic-ui";

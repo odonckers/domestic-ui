@@ -9,6 +9,7 @@
  * relative in HTML, absolute in Markdown (see ./templates.mjs).
  */
 import { specName } from "./css-comments.mjs";
+import { demoSourceUrl, demoViewMd } from "./demo-views.mjs";
 import { COMPONENT_GROUPS, LEVELS } from "./discovery.mjs";
 import { inline, plainText, shiftHeadings, tokenize } from "./markdown.mjs";
 import { previewKind } from "./tokens.mjs";
@@ -250,6 +251,12 @@ export function buildPages(model) {
     repoFilePage(model, "CHANGELOG.md", model.changelog, "changelog"),
   ];
 }
+
+/**
+ * A layout header comment sentence dropped from its page: examples/ is not
+ * published, and the live example is on the page itself.
+ */
+const STALE_LAYOUT_NOTE = "Live examples are in examples/base.html#layout.";
 
 /** @param {Model} model @returns {Page} */
 function homePage(model) {
@@ -736,7 +743,7 @@ function componentPage(model, c) {
       ? [c.notes.map((n) => `- ${rewriteRepoLinks(n, model)}`).join("\n")]
       : []
     : c.notes
-        .map((n) => withoutUrls(sentences(n).filter((s) => !a11ySentences.has(s)).join(" ")))
+        .map((n) => withoutUrls(sentences(n).filter((s) => !a11ySentences.has(s) && !(c.group === "layouts" && s === STALE_LAYOUT_NOTE)).join(" ")))
         .filter((n) => /\w/.test(n))
         .map(commentMd);
   blocks.push(md(`## ${isClass ? "API" : "Attributes"}\n\n${[...api, ...notes].join("\n\n")}`));
@@ -781,6 +788,7 @@ function componentPage(model, c) {
     ...(c.group === "base" ? [] : [`[Component API convention](site:${CONVENTION_LINK})`]),
     `[Accessibility baseline](site:${principleLink(model, "accessibility-baseline-wcag-22-aa")})`,
     `Source: ${sources.join(", ")}`,
+    ...demosLine(model, c.sitePath),
   ];
   blocks.push(md(`## See also\n\n${seeAlso.map((s) => `- ${s}`).join("\n")}`));
 
@@ -794,6 +802,71 @@ function componentPage(model, c) {
     blocks,
     snippets: c.snippets,
   };
+}
+
+/**
+ * The See also line naming the demo views that use a page, with each app's
+ * source file. Empty when no view lists the page.
+ * @param {Model} model
+ * @param {string} sitePath "patterns/nav.html"
+ * @returns {string[]}
+ */
+function demosLine(model, sitePath) {
+  const data = model.demoViews;
+  if (!data) return [];
+  const page = sitePath.replace(/\.html$/, "");
+  const views = data.views.filter((v) => v.pages.includes(page));
+  return views.length ? [`Demos: ${views.map((v) => demoViewMd(model.root, data, v, page)).join("; ")}`] : [];
+}
+
+/**
+ * The Views table on demos.html: one row per view, one column per app
+ * linking its source. In a named, focusable scroll region, as wide tables
+ * are elsewhere on the site; the Markdown twin gets a plain table.
+ * @param {Model} model
+ * @returns {Block[]}
+ */
+function demoViewsBlocks(model) {
+  const data = model.demoViews;
+  if (!data) return [];
+  const note = `The demos are not published on GitHub Pages; run them locally as [\`demos/README.md\`](${BLOB_URL}demos/README.md) explains.`;
+  const link = (/** @type {import("./demo-views.mjs").DemoView} */ v, /** @type {string} */ app) => demoSourceUrl(model.root, v.paths[app]);
+  // The file name, or the directory name with a trailing slash.
+  const name = (/** @type {import("./demo-views.mjs").DemoView} */ v, /** @type {string} */ app) => `${v.paths[app].split("/").pop()}${link(v, app).includes("/tree/") ? "/" : ""}`;
+  const head = ["View", "Shows", ...data.apps.map((a) => a.title)];
+  const caption = "Views";
+  const tableMd = [
+    `| ${head.join(" | ")} |`,
+    `| ${head.map(() => "---").join(" | ")} |`,
+    ...data.views.map((v) => `| ${[v.title, v.description, ...data.apps.map((a) => `[\`${name(v, a.id)}\`](${link(v, a.id)})`)].map(escapeMdCell).join(" | ")} |`),
+  ].join("\n");
+  return [
+    {
+      md: `## Views\n\n${note}\n\n${tableMd}`,
+      html: (/** @type {HtmlContext} */ ctx) => {
+        const rows = data.views.map(
+          (v) =>
+            `<tr><th scope="row">${escapeHtml(v.title)}</th><td>${escapeHtml(v.description)}</td>${data.apps
+              .map((a) => `<td><a href="${escapeHtml(link(v, a.id))}"><code>${escapeHtml(name(v, a.id))}</code></a></td>`)
+              .join("")}</tr>`,
+        );
+        return `${ctx.heading(2, caption)}
+<p>${inline(note)}</p>
+<!-- [html-validate-disable-next prefer-native-element: the data-scroll="inline" API is a div with role="region"] -->
+<div data-scroll="inline" tabindex="0" role="region" aria-label="${caption} (scrolls horizontally)">
+<table>
+<caption>${caption}</caption>
+<thead>
+<tr>${head.map((h) => `<th scope="col">${escapeHtml(h)}</th>`).join("")}</tr>
+</thead>
+<tbody>
+${rows.join("\n")}
+</tbody>
+</table>
+</div>`;
+      },
+    },
+  ];
 }
 
 /** @param {Model} model @returns {Page} */
@@ -813,6 +886,7 @@ function demosPage(model) {
           ? `${intro}Source and run instructions are on GitHub.\n\n${demoListMd(model)}`
           : "Coming in M5.",
       ),
+      ...demoViewsBlocks(model),
     ],
   };
 }
@@ -931,6 +1005,7 @@ function patternPage(model, p) {
   const seeAlso = [
     level ? `[${level.title}](site:${level.level}/index.html)` : `[Patterns](site:patterns/index.html)`,
     ...(p.available ? [`Source: ${[...p.cssPaths, ...p.examplePaths].map((s) => `[\`${s}\`](${BLOB_URL}${s})`).join(", ")}`] : []),
+    ...demosLine(model, p.sitePath),
   ];
   blocks.push(md(`## See also\n\n${seeAlso.map((s) => `- ${s}`).join("\n")}`));
 

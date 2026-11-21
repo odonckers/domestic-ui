@@ -1,0 +1,60 @@
+{
+  "apps": [
+    { "id": "vanilla", "title": "Plain HTML" },
+    { "id": "react", "title": "React" },
+    { "id": "angular", "title": "Angular" },
+    { "id": "astro", "title": "Astro" }
+  ],
+  "views": [
+    {
+      "id": "dashboard",
+      "title": "Dashboard",
+      "description": "Household chores: counts due, overdue and done, household members, and a table of upcoming chores with a filter disclosure.",
+      "paths": {
+        "vanilla": "demos/vanilla/index.html",
+        "react": "demos/react/src/DashboardPage.tsx",
+        "angular": "demos/angular/src/app/dashboard",
+        "astro": "demos/astro/src/pages/index.astro"
+      },
+      "pages": ["patterns/app-shell", "patterns/nav", "patterns/menu-button", "patterns/popover", "patterns/disclosure"]
+    },
+    {
+      "id": "settings",
+      "title": "Account settings",
+      "description": "A form in fieldsets: profile, region, email frequency, notification switches and a note for the household.",
+      "paths": {
+        "vanilla": "demos/vanilla/settings.html",
+        "react": "demos/react/src/SettingsPage.tsx",
+        "angular": "demos/angular/src/app/settings",
+        "astro": "demos/astro/src/pages/settings.astro"
+      },
+      "pages": ["patterns/app-shell", "patterns/nav", "patterns/menu-button", "patterns/popover"]
+    },
+    {
+      "id": "orders",
+      "title": "Orders",
+      "description": "A warehouse admin view: page header, filter bar with typeaheads, a data table with a density toggle, and the selected order in the auxiliary sidebar.",
+      "paths": {
+        "vanilla": "demos/vanilla/orders.html",
+        "react": "demos/react/src/OrdersPage.tsx",
+        "angular": "demos/angular/src/app/orders",
+        "astro": "demos/astro/src/pages/orders.astro"
+      },
+      "pages": [
+        "patterns/app-shell",
+        "patterns/nav",
+        "patterns/menu-button",
+        "patterns/popover",
+        "patterns/breadcrumb",
+        "patterns/filter-bar",
+        "patterns/typeahead",
+        "patterns/data-table",
+        "patterns/toolbar",
+        "patterns/density",
+        "patterns/list-detail",
+        "components/organisms/page-header"
+      ],
+      "notes": { "patterns/app-shell": "with the auxiliary sidebar" }
+    }
+  ]
+}
