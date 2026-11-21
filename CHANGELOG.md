@@ -136,6 +136,36 @@ Semantic token names and file paths under `css/` are public API; primitive token
   `setOptions()`, form submission, no-JavaScript fallback, axe with the list open, 320px, motion) and
   `tests/density.spec.js` (compact vs comfortable computed sizes, 24px targets, unchanged font sizes,
   nested scopes, `--dui-size-page`). The axe and `data-motion="none"` checks now also open every combobox.
+- Page layouts in `css/layout/` (M3b), each one attribute on a wrapper, side by side when the wrapper is
+  wide and stacked when it is narrow, switched by a container query on the wrapper:
+  - List-detail (`list-detail.css`): `data-list-detail`, a `<nav>` of links with `aria-current` on the
+    selected one beside a labelled detail that sticks and scrolls on its own when side by side (40rem).
+  - Split (`split.css`): `data-split="[1:1 | 1:2 | 2:1]"`, two regions at a ratio (40rem); no draggable
+    divider, see `explainers/split-view.md`.
+  - Dashboard (`dashboard.css`): `data-dashboard` on a grid of headed tiles on raised surfaces that reflows
+    with `repeat(auto-fit, minmax())`; `data-dashboard="wide"` (two columns when they fit) and
+    `data-dashboard="full"` on a tile.
+  - Sticky action bar (`action-bar.css`): `data-action-bar` on the last child of a `<form>`; sticks to the
+    bottom of the scroll area, and every ancestor of the form reserves its height with
+    `scroll-padding-block-end` so the focused field is never under it (WCAG 2.4.11, technique C43).
+  - A settings page composed from list-detail, form sections and the action bar (no new API).
+- Organisms in `css/components/organisms/` (M3b), imported into the `components` layer after the molecules
+  and indexed in `css/components/organisms/README.md`:
+  - Page header (`page-header.css`): `data-page-header` on a `<header>`: breadcrumb, heading, description and
+    actions that sit beside the title from 40rem and wrap under it below.
+  - Filter bar (`filter-bar.css`): `data-filter-bar` on `<search>` > `<form method="get">` with labelled
+    controls (a `<dui-combobox>` works), Apply and Reset, and a `role="status"` result count present from load.
+  - Form sections (`large-forms.css`): `data-form-sections` on a `<form>`; each `<section>` has a `<header>`
+    and one body of fields, laid out heading-beside-fields with a field grid from 48rem.
+- `--dui-size-pane`: the max block size of a pane that scrolls on its own, `100svh` (primitive `--dui-size-100svh`).
+- `examples/layouts/` (index, list-detail, split, dashboard, action-bar, settings) and `examples/organisms/`
+  (index, page-header, filter-bar, large-forms), with compact-density demos; the example navigation links
+  the two new indexes. `explainers/split-view.md`.
+- Tests: `tests/layouts.spec.js` (side by side at 1280px and stacked at 360px for every layout, split ratios,
+  dashboard spans, list-detail `aria-current` and Tab order, the detail pane, the sticky action bar and focus
+  never under it, in the page and in a scrolling pane) and `tests/organisms.spec.js` (page header, filter bar
+  status and labels, form sections, and every target at least 24 by 24 CSS pixels under
+  `data-density="compact"` on all the new pages).
 
 ### Changed
 

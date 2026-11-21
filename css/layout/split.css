@@ -1,0 +1,81 @@
+/*
+ * Layout: [data-split]
+ *
+ * Two regions side by side at a set ratio, stacked on narrow screens: a
+ * form beside its preview, an invoice beside its payment history. Side by
+ * side when the wrapper is at least 40rem wide, stacked (first region on
+ * top) when it is narrower, decided by a container query on the wrapper,
+ * so a split works the same in a page, a dialog or the main area of an
+ * app shell. Built with CSS grid; no script.
+ *
+ * Our choice: a fixed ratio from a short list of words (1:1, 1:2, 2:1)
+ * rather than a free length, because three ratios cover the use cases and
+ * keep every split on the same grid. The divider is not draggable: a
+ * resizable divider is the APG Window Splitter pattern (role="separator"
+ * with aria-valuenow and arrow keys) and needs script, so it is out of
+ * scope; see explainers/split-view.md.
+ *
+ * Accessibility: each region is a <section> named by its heading
+ * (aria-labelledby), so it is a region landmark screen reader users can
+ * jump to, or an <aside> when it is complementary. Source order is the
+ * reading and Tab order in both layouts; the ratio never reorders the
+ * regions (WCAG 1.3.2, 2.4.3). Nothing scrolls sideways at 320px
+ * (WCAG 1.4.10).
+ *
+ * Breakpoint: 40rem of the wrapper's own inline size. A container query
+ * condition cannot read a custom property, so it is written as a length;
+ * to move it, write your own @container dui-split rule.
+ *
+ * API
+ *   data-split="[1:1 | 1:2 | 2:1]"   on the wrapper of exactly two regions;
+ *                                    empty means 1:1 (equal halves)
+ *
+ * Example
+ *   <div data-split="2:1">
+ *     <section aria-labelledby="invoice-title">
+ *       <h2 id="invoice-title">Invoice INV-2024-0042</h2>
+ *       …
+ *     </section>
+ *     <section aria-labelledby="payments-title">
+ *       <h2 id="payments-title">Payments</h2>
+ *       …
+ *     </section>
+ *   </div>
+ *
+ * Specs
+ *   https://developer.mozilla.org/en-US/docs/Web/CSS/Guides/Grid_layout
+ *   https://developer.mozilla.org/en-US/docs/Web/CSS/Guides/Containment/Container_queries
+ *   https://www.w3.org/WAI/ARIA/apg/patterns/windowsplitter/
+ *   https://www.w3.org/WAI/WCAG22/Understanding/reflow.html
+ */
+
+[data-split] {
+  container: dui-split / inline-size;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--dui-space-l);
+  align-items: start;
+}
+
+[data-split~="1:2"],
+[data-split~="2:1"] {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+/* Stacked by default: each region spans every column. */
+[data-split] > * {
+  grid-column: 1 / -1;
+  min-inline-size: 0;
+  margin: 0;
+}
+
+@container dui-split (inline-size >= 40rem) {
+  [data-split] > * {
+    grid-column: auto / span 1;
+  }
+
+  [data-split~="1:2"] > :last-child,
+  [data-split~="2:1"] > :first-child {
+    grid-column: auto / span 2;
+  }
+}

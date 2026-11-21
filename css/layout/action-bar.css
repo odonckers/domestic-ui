@@ -1,0 +1,94 @@
+/*
+ * Layout: [data-action-bar]
+ *
+ * The Save and Cancel buttons of a long form, kept in view: a bar at the
+ * end of the <form> that sticks to the bottom of the scroll area while
+ * the form scrolls, and comes to rest after the last field when the end
+ * of the form is reached. Built with position: sticky, so it never leaves
+ * its form and needs no script. The buttons wrap onto a second row on
+ * narrow screens.
+ *
+ * Our choice: the bar is the last child of the <form> it submits, so its
+ * buttons submit and reset that form with no form="…" attribute, and the
+ * sticky bar stops at the form's end instead of covering what follows.
+ * Buttons sit at the inline end in source order, never reversed with CSS,
+ * so the Tab order follows the visual order (WCAG 2.4.3); put the primary
+ * action (type="submit") first.
+ *
+ * Accessibility: a sticky bar must not hide the field that has focus
+ * (WCAG 2.4.11 Focus Not Obscured (Minimum)). Every ancestor of a form
+ * with an action bar gets a scroll-padding at its block end as tall as a bar
+ * with two rows of buttons, so when Tab moves to a field under the bar, the
+ * browser scrolls it clear above the bar (WCAG technique C43). Because it is
+ * set on every ancestor, it works in whichever one scrolls: the page or a
+ * pane that scrolls on its own. Buttons keep their target size (44px, 32px compact; WCAG 2.5.8).
+ * The bar is a <footer> of the form, which is not a landmark inside a form.
+ * Give the bar no role; its buttons say what they do ("Save customer").
+ * The reserved space covers two rows of buttons: keep the bar to two or
+ * three short labels, so it never wraps to a third row at 320px; put
+ * further actions in a menu button.
+ *
+ * Elevation: --dui-elevation-overlay and its surface (level 2), with a
+ * border, so it reads as above the fields it covers and forced colors mode
+ * still draws its edge.
+ *
+ * API
+ *   data-action-bar   on a <footer> (or <div>) that is the last child of a
+ *                     <form>; holds that form's buttons
+ *
+ * Example
+ *   <form>
+ *     …fields…
+ *     <footer data-action-bar>
+ *       <button type="submit">Save customer</button>
+ *       <button type="reset">Cancel</button>
+ *     </footer>
+ *   </form>
+ *
+ * Keyboard
+ *   Tab: moves from the last field to the bar's buttons; a focused field is scrolled clear of the bar
+ *   Enter: in a text field, submits the form (native)
+ *
+ * Specs
+ *   https://developer.mozilla.org/en-US/docs/Web/CSS/position#sticky
+ *   https://developer.mozilla.org/en-US/docs/Web/CSS/scroll-padding
+ *   https://www.w3.org/WAI/WCAG22/Understanding/focus-not-obscured-minimum.html
+ *   https://www.w3.org/WAI/WCAG22/Techniques/css/C43
+ */
+
+[data-action-bar] {
+  position: sticky;
+  inset-block-end: 0;
+  z-index: 1;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--dui-space-xs);
+  padding: var(--dui-space-s) var(--dui-space-m);
+  background-color: var(--dui-elevation-overlay-surface);
+  border: var(--dui-border-width) solid var(--dui-color-border);
+  border-radius: var(--dui-radius-surface);
+  box-shadow: var(--dui-elevation-overlay);
+}
+
+[data-action-bar] > * {
+  margin: 0;
+}
+
+/*
+ * Keep focused controls clear of the bar: every ancestor of a form with an
+ * action bar reserves, at the block end of its scrollport, the height of a
+ * bar with two rows of buttons (two controls, the gap between the rows and
+ * the padding) plus a little air. scroll-padding only acts on scroll
+ * containers, so it applies to whichever one scrolls: the page or a pane.
+ */
+:where(:has(form > [data-action-bar])) {
+  scroll-padding-block-end: calc(var(--dui-size-control) * 2 + var(--dui-space-xs) + var(--dui-space-s) * 2 + var(--dui-space-m));
+}
+
+@media (forced-colors: active) {
+  [data-action-bar] {
+    border-color: canvastext;
+  }
+}

@@ -1,0 +1,111 @@
+/*
+ * Layout: [data-dashboard]
+ *
+ * A grid of headed tiles (open orders, overdue invoices, stock alerts)
+ * that reflows to fit: as many columns as fit at least
+ * --dui-size-column-min (16rem) each, one column on a phone. No media
+ * queries: the columns come from repeat(auto-fit, minmax()), and a wide
+ * tile spans two columns only when its wrapper has room for two, checked
+ * with a container query on the wrapper. Each tile is a raised surface
+ * like a card.
+ *
+ * Our choice: tiles are <section> elements named by their heading, not
+ * cards with links, because a tile summarizes a part of the screen and
+ * usually holds several links or a small table. One attribute: the
+ * wrapper takes data-dashboard, and a tile that should be wider takes
+ * data-dashboard="wide" (two columns) or data-dashboard="full" (the whole
+ * row), the way data-disclosure is used on a wrapper and on a <details>.
+ *
+ * Accessibility: each tile is a <section> with aria-labelledby pointing at
+ * its heading, so it is a region landmark and shows up in the headings
+ * list; keep the heading levels in order (an h2 per tile under the page
+ * h1). Tiles keep source order whatever the column count, so the reading
+ * and Tab order never jump (WCAG 1.3.2, 2.4.3). Figures in a tile are text,
+ * not only color (WCAG 1.4.1). Nothing scrolls sideways at 320px (WCAG
+ * 1.4.10); wrap a table in a tile in data-scroll="inline".
+ *
+ * Elevation: tiles use --dui-elevation-raised and its surface (level 1),
+ * with a border, so forced colors mode still draws the edge.
+ *
+ * Breakpoint: a wide tile spans two columns from 33.5rem of the wrapper's
+ * own inline size (two 16rem columns and the 1.5rem gap). A container query
+ * condition cannot read a custom property, so it is written as a length.
+ *
+ * API
+ *   data-dashboard          on the wrapper (a <div>, or a <ul> of tiles)
+ *   data-dashboard="wide"   on a tile: two columns when they fit, else one
+ *   data-dashboard="full"   on a tile: the whole row
+ *   Tiles: <section aria-labelledby> (or <article>, <li>) with a heading first.
+ *
+ * Example
+ *   <div data-dashboard>
+ *     <section aria-labelledby="open-orders-title">
+ *       <h2 id="open-orders-title">Open orders</h2>
+ *       <p><strong>128</strong> orders, 12 due today</p>
+ *     </section>
+ *     <section data-dashboard="wide" aria-labelledby="recent-title">
+ *       <h2 id="recent-title">Recent invoices</h2>
+ *       …
+ *     </section>
+ *   </div>
+ *
+ * Specs
+ *   https://developer.mozilla.org/en-US/docs/Web/CSS/Guides/Grid_layout
+ *   https://developer.mozilla.org/en-US/docs/Web/CSS/repeat#auto-fit
+ *   https://developer.mozilla.org/en-US/docs/Web/CSS/Guides/Containment/Container_queries
+ *   https://www.w3.org/WAI/WCAG22/Understanding/reflow.html
+ */
+
+/* The wrapper: any data-dashboard that is not a tile word. */
+[data-dashboard]:not([data-dashboard~="wide"], [data-dashboard~="full"]) {
+  container: dui-dashboard / inline-size;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(var(--dui-size-column-min), 100%), 1fr));
+  gap: var(--dui-space-l);
+  margin-inline: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* Tiles: every child of the wrapper. */
+[data-dashboard]:not([data-dashboard~="wide"], [data-dashboard~="full"]) > * {
+  display: flex;
+  flex-direction: column;
+  gap: var(--dui-space-s);
+  min-inline-size: 0;
+  max-inline-size: none;
+  margin: 0;
+  padding: var(--dui-space-l);
+  background-color: var(--dui-elevation-raised-surface);
+  color: var(--dui-color-text);
+  border: var(--dui-border-width) solid var(--dui-color-border);
+  border-radius: var(--dui-radius-surface);
+  box-shadow: var(--dui-elevation-raised);
+  overflow-wrap: break-word;
+}
+
+/* The flex gap replaces the base flow rhythm inside a tile. */
+[data-dashboard]:not([data-dashboard~="wide"], [data-dashboard~="full"]) > * > * {
+  margin: 0;
+}
+
+[data-dashboard]:not([data-dashboard~="wide"], [data-dashboard~="full"]) > * > :is(h2, h3, h4, h5, h6):first-child {
+  font-size: var(--dui-step-1);
+  letter-spacing: normal;
+}
+
+[data-dashboard] > [data-dashboard~="full"] {
+  grid-column: 1 / -1;
+}
+
+@container dui-dashboard (inline-size >= 33.5rem) {
+  [data-dashboard] > [data-dashboard~="wide"] {
+    grid-column: span 2;
+  }
+}
+
+@media (forced-colors: active) {
+  [data-dashboard]:not([data-dashboard~="wide"], [data-dashboard~="full"]) > * {
+    border-color: canvastext;
+  }
+}

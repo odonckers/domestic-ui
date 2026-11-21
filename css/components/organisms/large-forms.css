@@ -1,0 +1,135 @@
+/*
+ * Organism: form sections (large forms)
+ *
+ * A long form split into headed sections (Customer, Billing address,
+ * Payment terms), each with a short description and its fields. Under
+ * 48rem of the form's own width (container query) everything is one
+ * column: heading, description, fields. From 48rem each section has two
+ * columns: the heading and description on the inline start, the fields on
+ * the inline end, laid out as a grid of as many field columns as fit
+ * (--dui-size-column-min each). A field with a <textarea> and a nested
+ * <fieldset> (a radio group, an address block) take the whole field row.
+ *
+ * Our choice: a section is a <section> named by its heading, with the
+ * heading and description in a <header> and the fields in one body
+ * element after it, not a <fieldset> with a <legend>: a legend cannot be
+ * placed in a grid column, and a headed section is listed in the headings
+ * and landmarks of a screen reader. Controls that answer one question
+ * together (radio buttons, an address) are still grouped in a <fieldset>
+ * with a <legend> inside the body, as the WAI forms tutorial asks. The body
+ * itself MAY be that <fieldset> when the whole section is one group.
+ *
+ * Accessibility: every control has a visible <label> (WCAG 1.3.1, 3.3.2);
+ * put format hints in a data-field="hint" referenced by aria-describedby,
+ * not only in the section description, which a screen reader does not
+ * read while tabbing between fields. Sections keep source order in both
+ * layouts, so the reading and Tab order stay top to bottom (WCAG 1.3.2,
+ * 2.4.3). Put the form's buttons in a data-action-bar at the end of the form
+ * so they stay in reach. Nothing scrolls sideways at 320px (WCAG 1.4.10).
+ *
+ * Breakpoint: 48rem of the form's own inline size. A container query
+ * condition cannot read a custom property, so it is written as a length.
+ *
+ * API
+ *   data-form-sections   on the <form>; each child <section> is a section:
+ *     <header>           its heading (h2) and an optional description <p>
+ *     one body element   a <div> (or <fieldset>) of fields, after the header
+ *
+ * Example
+ *   <form data-form-sections>
+ *     <section aria-labelledby="customer-title">
+ *       <header>
+ *         <h2 id="customer-title">Customer</h2>
+ *         <p>Who the invoice is addressed to.</p>
+ *       </header>
+ *       <div>
+ *         <div data-field>
+ *           <label for="company">Company</label>
+ *           <input id="company" name="company" autocomplete="organization">
+ *         </div>
+ *         …
+ *       </div>
+ *     </section>
+ *     <footer data-action-bar>…</footer>
+ *   </form>
+ *
+ * Specs
+ *   https://html.spec.whatwg.org/multipage/forms.html#the-form-element
+ *   https://html.spec.whatwg.org/multipage/form-elements.html#the-fieldset-element
+ *   https://www.w3.org/WAI/tutorials/forms/grouping/
+ *   https://www.w3.org/WAI/WCAG22/Understanding/labels-or-instructions.html
+ *   https://developer.mozilla.org/en-US/docs/Web/CSS/Guides/Containment/Container_queries
+ */
+
+[data-form-sections] {
+  container: dui-form-sections / inline-size;
+}
+
+[data-form-sections] > section {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--dui-space-s) var(--dui-space-xl);
+  align-items: start;
+  padding-block: var(--dui-space-l);
+}
+
+[data-form-sections] > section + section {
+  border-block-start: var(--dui-border-width) solid var(--dui-color-border);
+}
+
+[data-form-sections] > * + * {
+  margin-block-start: 0;
+}
+
+[data-form-sections] > section > * {
+  min-inline-size: 0;
+  margin: 0;
+}
+
+[data-form-sections] > section > header > * {
+  margin: 0;
+}
+
+[data-form-sections] > section > header > :is(h2, h3, h4) {
+  font-size: var(--dui-step-1);
+  letter-spacing: normal;
+}
+
+[data-form-sections] > section > header > p {
+  margin-block-start: var(--dui-space-2xs);
+  color: var(--dui-color-text-muted);
+}
+
+/* The body: a grid of fields, as many columns as fit. */
+[data-form-sections] > section > :not(header) {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(var(--dui-size-column-min), 100%), 1fr));
+  gap: var(--dui-space-m);
+  align-items: start;
+}
+
+[data-form-sections] > section > fieldset:not(header) {
+  padding: var(--dui-space-s) var(--dui-space-m) var(--dui-space-m);
+}
+
+[data-form-sections] > section > :not(header) > * {
+  min-inline-size: 0;
+  max-inline-size: none;
+  margin: 0;
+}
+
+/* Long text, nested groups and full-width notes take the whole row. */
+[data-form-sections] > section > :not(header) > :is(fieldset, p, :has(textarea)) {
+  grid-column: 1 / -1;
+}
+
+/* The form's action bar keeps its distance from the last section. */
+[data-form-sections] > [data-action-bar] {
+  margin-block-start: var(--dui-space-m);
+}
+
+@container dui-form-sections (inline-size >= 48rem) {
+  [data-form-sections] > section {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 2fr);
+  }
+}

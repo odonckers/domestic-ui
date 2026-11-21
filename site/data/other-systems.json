@@ -153,6 +153,11 @@
         "title": "Badge"
       }
     },
+    "components/organisms/page-header": {
+      "apple": null,
+      "material": null,
+      "geist": null
+    },
     "patterns/nav": {
       "apple": null,
       "material": null,

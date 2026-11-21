@@ -1,0 +1,103 @@
+/*
+ * Organism: page header
+ *
+ * The top of a screen inside <main>: an optional breadcrumb, the page's
+ * <h1>, an optional one-line description, and the page's actions (buttons,
+ * a menu button). The actions sit beside the title when the header is at
+ * least 40rem wide and wrap under it when it is narrower, decided by a
+ * container query on the header itself, so it fits a full page, a split
+ * region or the main area of an app shell alike.
+ *
+ * Our choice: the layout is chosen from the children's elements (a <nav>
+ * breadcrumb, a heading, a <p> description, and a last child holding the
+ * actions), not from extra attributes, so the markup is what any page
+ * would already write. HTML has no page header element and the APG has no
+ * pattern for one; <header> inside <main> is a plain grouping element, not
+ * the banner landmark.
+ *
+ * Accessibility: the heading is the page's one <h1>, after the breadcrumb
+ * in source order, so the breadcrumb (a named <nav>) is reached first and
+ * heading navigation lands on the title. The description is a plain <p>;
+ * reference it from the main content with aria-describedby only if it is
+ * needed to understand it. Actions keep source order after the title, so
+ * the Tab order matches the reading order in both layouts (WCAG 2.4.3), and
+ * keep their target size (44px, 32px compact; WCAG 2.5.8). A <header>
+ * inside <main> has no landmark role
+ * (https://www.w3.org/TR/html-aam-1.0/#el-header).
+ *
+ * Breakpoint: 40rem of the header's own inline size. A container query
+ * condition cannot read a custom property, so it is written as a length.
+ *
+ * API
+ *   data-page-header   on a <header> inside <main>; children, in order:
+ *     <nav data-breadcrumb aria-label="Breadcrumb">   optional
+ *     <h1>                                            the title (h2 or h3 in a region)
+ *     <p>                                             optional description
+ *     <div> (or role="toolbar", <dui-menu>)           optional actions, last
+ *
+ * Example
+ *   <header data-page-header>
+ *     <nav data-breadcrumb aria-label="Breadcrumb">…</nav>
+ *     <h1>Order 1042</h1>
+ *     <p>Ada Lovelace · placed 12 March 2025 · €1,240.00</p>
+ *     <div>
+ *       <button type="button">Edit</button>
+ *       <button type="button">Print</button>
+ *     </div>
+ *   </header>
+ *
+ * Specs
+ *   https://html.spec.whatwg.org/multipage/sections.html#the-header-element
+ *   https://www.w3.org/TR/html-aam-1.0/#el-header
+ *   https://www.w3.org/WAI/ARIA/apg/patterns/breadcrumb/
+ *   https://developer.mozilla.org/en-US/docs/Web/CSS/Guides/Containment/Container_queries
+ *   https://www.w3.org/WAI/WCAG22/Understanding/focus-order.html
+ */
+
+[data-page-header] {
+  container: dui-page-header / inline-size;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: var(--dui-space-xs) var(--dui-space-l);
+  align-items: center;
+}
+
+/* Narrow: one column, every child on its own row. */
+[data-page-header] > * {
+  grid-column: 1 / -1;
+  min-inline-size: 0;
+  margin: 0;
+}
+
+[data-page-header] > :is(h1, h2, h3) {
+  overflow-wrap: break-word;
+}
+
+[data-page-header] > p {
+  color: var(--dui-color-text-muted);
+}
+
+/* The actions: a wrapping row of buttons. */
+[data-page-header] > :last-child:not(nav, h1, h2, h3, p) {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--dui-space-xs);
+}
+
+@container dui-page-header (inline-size >= 40rem) {
+  [data-page-header] > :is(h1, h2, h3, p) {
+    grid-column: 1;
+  }
+
+  /* Beside the title, on its row (row 2 when a breadcrumb takes row 1). */
+  [data-page-header] > :last-child:not(nav, h1, h2, h3, p) {
+    grid-row: 1;
+    grid-column: 2;
+    justify-content: flex-end;
+  }
+
+  [data-page-header]:has(> nav) > :last-child:not(nav, h1, h2, h3, p) {
+    grid-row: 2;
+  }
+}

@@ -202,6 +202,7 @@ may change. Fluid `--dui-step-*` values are `clamp()` expressions; see `primitiv
 | `--dui-size-menu-min` | Min width of menus and nav dropdowns | `size-12` (12rem) |
 | `--dui-size-drawer` | Drawer width (all of the viewport when narrower) | `size-24` (24rem) |
 | `--dui-size-page` | Max inline size of a page's content column (the examples' header, main and footer) | `size-72` (72rem) |
+| `--dui-size-pane` | Max block size of a pane that scrolls on its own beside others (the detail of a list-detail when side by side) | `size-100svh` (100svh, the small viewport height) |
 | `--dui-radius-control` | Controls, buttons, inline code | `radius-2` (0.375rem) |
 | `--dui-radius-surface` | Panels, pre, dialog, details, media | `radius-3` (0.625rem) |
 | `--dui-radius-pill` | Fully rounded ends | `radius-round` (999rem) |
@@ -428,6 +429,16 @@ Each of these is a choice between valid options, not a standard.
     [`<datalist>`](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/datalist) popups
     in Chromium and Firefox, and positions its listbox under the input rather than in the top layer, so
     it is never wider than the field ([explainer](explainers/combobox.md)).
+- **Our choice:** organisms (page header, filter bar, form sections) follow the same one-attribute rule
+  (`data-page-header`, `data-filter-bar`, `data-form-sections`) and take the rest of their layout from their
+  children's native elements. Their choices are listed in the
+  [organisms index](css/components/organisms/README.md#our-choices); the main ones:
+  - **Our choice:** the filter bar is a `<form method="get">` in `<search>` with an Apply button and a
+    `role="status"` result count present from page load, so filters live in the URL, work without
+    JavaScript and are announced ([4.1.3 Status Messages](https://www.w3.org/WAI/WCAG22/Understanding/status-messages.html)).
+  - **Our choice:** form sections are headed `<section>` elements with a `<header>` and one body of fields,
+    not fieldsets, because a `<legend>` cannot be placed in a grid column; related controls still go in a
+    `<fieldset>` inside the body.
 - **Our choice:** layout primitives come from [Every Layout](https://every-layout.dev/)'s
   Stack, Cluster and Grid. Their custom properties are registered with
   [`@property`](https://developer.mozilla.org/en-US/docs/Web/CSS/@property) as non-inheriting,
@@ -447,6 +458,38 @@ Each of these is a choice between valid options, not a standard.
 ```
 
 On a `ul` or `ol`, the primitive also removes list markers and padding.
+
+### Page layouts
+
+Larger layouts for application screens, each one attribute on a wrapper, live in `css/layout/` too and
+are shown in [`examples/layouts/`](examples/layouts/index.html):
+
+| Attribute | What it does |
+| --- | --- |
+| `data-list-detail` | A list of links (`aria-current` on the selected one) beside a labelled detail; the detail scrolls on its own when side by side |
+| `data-split="[1:1 \| 1:2 \| 2:1]"` | Two regions side by side at a ratio |
+| `data-dashboard`, `data-dashboard="wide \| full"` on a tile | Headed tiles on raised surfaces that reflow without media queries |
+| `data-action-bar` | A form's buttons in a bar that sticks to the bottom of the scroll area and never hides the focused field |
+
+Each one is side by side when its wrapper is wide and stacked when it is narrow, from 320px up, and keeps
+source order (the reading and Tab order) in both. A settings page needs no API of its own: it is a
+`data-list-detail` of in-page links beside `data-form-sections` with a `data-action-bar`
+([example](examples/layouts/settings.html)).
+
+- **Our choice:** layouts and [organisms](css/components/organisms/README.md) switch with a
+  [container query](https://developer.mozilla.org/en-US/docs/Web/CSS/Guides/Containment/Container_queries)
+  on their own wrapper, not a media query, because they sit in regions of any width: a page, a split, the
+  main area of an app shell. Media queries are kept for decisions about the whole viewport. A container
+  query condition cannot read a custom property, so each breakpoint is a length written in the file header.
+- **Our choice:** list-detail items are links to the item's own URL, not buttons that swap content, so
+  history, bookmarks and the no-JavaScript case work.
+- **Our choice:** the sticky action bar reserves its height as `scroll-padding-block-end` on every ancestor
+  of its form, so whichever one scrolls keeps the focused field clear of the bar
+  ([2.4.11 Focus Not Obscured (Minimum)](https://www.w3.org/WAI/WCAG22/Understanding/focus-not-obscured-minimum.html),
+  technique [C43](https://www.w3.org/WAI/WCAG22/Techniques/css/C43)).
+- **Our choice:** splits have a fixed ratio and no draggable divider; a resizable one would follow the
+  [APG Window Splitter](https://www.w3.org/WAI/ARIA/apg/patterns/windowsplitter/) pattern
+  ([explainer](explainers/split-view.md)).
 
 Wrap any table that may not fit a 320px screen in `data-scroll="inline"`, named by its caption:
 
@@ -508,7 +551,7 @@ a future native element or attribute.
 | `lint:html` | [html-validate](https://html-validate.org/) | `examples/**/*.html` against `html-validate:recommended` |
 | `lint:css` | [Stylelint](https://stylelint.io/) | `css/**/*.css` against `stylelint-config-standard` |
 | `lint:tokens` | `scripts/check-tokens.mjs` | Semantic-only tokens and no literal colors or sizes outside `css/tokens/` |
-| `test:a11y` | [Playwright](https://playwright.dev/) + [axe-core](https://github.com/dequelabs/axe-core) | Every `examples/**/*.html` (atoms and molecules included) in light and dark, in Chromium, Firefox and WebKit, with tags `wcag2a`, `wcag2aa`, `wcag21a`, `wcag21aa`, `wcag22aa`, including open dialogs and drawers, open popovers and menus, shown tooltips and toasts, every tab selected and every details expanded; no horizontal page overflow and no axe violations at 320×640 and 375×812; no external requests; token contrast pairs (atoms and molecules included) in the default and forest themes; rendered focus-ring and indicator contrast; atom and molecule states through accessibility APIs; molecule keyboard behavior against the APG; no-JavaScript fallbacks; fallbacks for engine-specific features; scoped theming of atoms and molecules |
+| `test:a11y` | [Playwright](https://playwright.dev/) + [axe-core](https://github.com/dequelabs/axe-core) | Every `examples/**/*.html` (atoms and molecules included) in light and dark, in Chromium, Firefox and WebKit, with tags `wcag2a`, `wcag2aa`, `wcag21a`, `wcag21aa`, `wcag22aa`, including open dialogs and drawers, open popovers and menus, shown tooltips and toasts, every tab selected and every details expanded; no horizontal page overflow and no axe violations at 320×640 and 375×812; no external requests; token contrast pairs (atoms and molecules included) in the default and forest themes; rendered focus-ring and indicator contrast; atom and molecule states through accessibility APIs; molecule keyboard behavior against the APG; no-JavaScript fallbacks; fallbacks for engine-specific features; scoped theming of atoms and molecules; layouts and organisms side by side when wide and stacked when narrow, the sticky action bar never covering the focused field, and 24px targets in compact density |
 
 Preview locally with `npm run serve` (a zero-dependency static server) and open
 <http://127.0.0.1:4173/examples/base.html>. To run tests from two checkouts at once, give each its own port, e.g. `PORT=4273 npm test`.
