@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Large forms · domestic-ui</title>
+    <meta name="description" content="A long invoice form split into headed sections: one column when narrow, heading and description beside a grid of fields when wide, with a sticky action bar.">
+    <link rel="stylesheet" href="../../css/domestic.css">
+    <style>
+      /* Page-only layout, written with semantic tokens like any consumer would. */
+      body > :is(header, main, footer) {
+        max-inline-size: var(--dui-size-page);
+        margin-inline: auto;
+        padding-inline: var(--dui-space-l);
+      }
+
+      body > header {
+        padding-block: var(--dui-space-m);
+        border-block-end: var(--dui-border-width) solid var(--dui-color-border);
+      }
+
+      body > main {
+        padding-block: var(--dui-space-2xl);
+      }
+
+      body > footer {
+        padding-block: var(--dui-space-l);
+        border-block-start: var(--dui-border-width) solid var(--dui-color-border);
+        color: var(--dui-color-text-muted);
+      }
+
+      /* Wrap long lines of example markup instead of scrolling them. */
+      pre {
+        white-space: pre-wrap;
+        overflow-wrap: anywhere;
+      }
+
+      .demo {
+        padding: var(--dui-space-l);
+        border: var(--dui-border-width) solid var(--dui-color-border);
+        border-radius: var(--dui-radius-surface);
+      }
+    </style>
+  </head>
+  <body>
+    <a class="visually-hidden" href="#main">Skip to main content</a>
+
+    <header class="cluster" style="--cluster-justify: space-between">
+      <p><strong>domestic-ui</strong></p>
+      <nav aria-label="Examples">
+        <ul class="cluster">
+          <li><a href="../base.html">Base elements</a></li>
+          <li><a href="../theming.html">Theming</a></li>
+          <li><a href="../motion.html">Motion</a></li>
+          <li><a href="../elevation.html">Elevation</a></li>
+          <li><a href="../patterns/density.html">Density</a></li>
+          <li><a href="../atoms/index.html">Atoms</a></li>
+          <li><a href="../molecules/index.html">Molecules</a></li>
+          <li><a href="index.html">Organisms</a></li>
+          <li><a href="../layouts/index.html">Layouts</a></li>
+          <li><a href="../app-shell.html">App shell</a></li>
+        </ul>
+      </nav>
+    </header>
+
+    <main id="main">
+      <h1>Large forms</h1>
+      <p data-text="lead">A long form split into headed sections: one column on narrow screens, the heading beside the fields on wide ones.</p>
+      <p>
+        API: <code>data-form-sections</code> on the <code>&lt;form&gt;</code>; each child <code>&lt;section&gt;</code> holds a
+        <code>&lt;header&gt;</code> (heading and description) and one body element of fields.
+        Source: <a href="../../css/components/organisms/large-forms.css"><code>css/components/organisms/large-forms.css</code></a>.
+      </p>
+      <p>
+        From 48rem of the form's own width (a container query) each section puts its heading and description beside its fields, and the
+        fields form a grid of as many columns as fit. Text areas, groups and notes take the whole row. Radio buttons and other related
+        controls stay in a <code>&lt;fieldset&gt;</code> with a <code>&lt;legend&gt;</code>. The buttons are in a
+        <a href="../layouts/action-bar.html">sticky action bar</a>.
+      </p>
+
+      <section aria-labelledby="invoice-title">
+        <h2 id="invoice-title">New invoice</h2>
+        <!-- dui:snippet name="New invoice" -->
+        <form data-form-sections aria-labelledby="invoice-title">
+          <section aria-labelledby="inv-customer-title">
+            <header>
+              <h3 id="inv-customer-title">Customer</h3>
+              <p>Who the invoice is addressed to.</p>
+            </header>
+            <div>
+              <div data-field>
+                <label for="inv-company">Company</label>
+                <input type="text" id="inv-company" name="company" value="Orbital Mechanics GmbH" autocomplete="organization">
+              </div>
+              <div data-field>
+                <label for="inv-contact">Contact email</label>
+                <input type="email" id="inv-contact" name="contact" value="accounts@orbital-mechanics.example" autocomplete="email">
+              </div>
+              <div data-field>
+                <label for="inv-vat">VAT number</label>
+                <input type="text" id="inv-vat" name="vat" value="DE 123 456 789" autocomplete="off">
+              </div>
+            </div>
+          </section>
+          <section aria-labelledby="inv-details-title">
+            <header>
+              <h3 id="inv-details-title">Invoice details</h3>
+              <p>Dates and references printed in the invoice header.</p>
+            </header>
+            <div>
+              <div data-field>
+                <label for="inv-date">Invoice date</label>
+                <input type="date" id="inv-date" name="date" value="2025-03-14">
+              </div>
+              <div data-field>
+                <label for="inv-due">Due date</label>
+                <input type="date" id="inv-due" name="due" value="2025-04-13" aria-describedby="inv-due-hint">
+                <p id="inv-due-hint" data-field="hint">30 days net, from the customer's payment terms.</p>
+              </div>
+              <div data-field>
+                <label for="inv-currency">Currency</label>
+                <select id="inv-currency" name="currency">
+                  <option selected>EUR</option>
+                  <option>GBP</option>
+                  <option>USD</option>
+                </select>
+              </div>
+              <div data-field>
+                <label for="inv-po">Customer reference</label>
+                <input type="text" id="inv-po" name="po" value="PO-OM-4471" autocomplete="off">
+              </div>
+            </div>
+          </section>
+          <section aria-labelledby="inv-address-title">
+            <header>
+              <h3 id="inv-address-title">Billing address</h3>
+              <p>Where the paper copy goes, if one is sent.</p>
+            </header>
+            <div>
+              <div data-field>
+                <label for="inv-street">Street and number</label>
+                <input type="text" id="inv-street" name="street" value="Am Fallturm 1" autocomplete="address-line1">
+              </div>
+              <div data-field>
+                <label for="inv-postcode">Postal code</label>
+                <input type="text" id="inv-postcode" name="postcode" value="28359" autocomplete="postal-code">
+              </div>
+              <div data-field>
+                <label for="inv-city">City</label>
+                <input type="text" id="inv-city" name="city" value="Bremen" autocomplete="address-level2">
+              </div>
+              <div data-field>
+                <label for="inv-country">Country</label>
+                <select id="inv-country" name="country" autocomplete="country">
+                  <option value="DE" selected>Germany</option>
+                  <option value="NL">Netherlands</option>
+                  <option value="GB">United Kingdom</option>
+                </select>
+              </div>
+            </div>
+          </section>
+          <section aria-labelledby="inv-payment-title">
+            <header>
+              <h3 id="inv-payment-title">Payment</h3>
+              <p>How the customer pays this invoice.</p>
+            </header>
+            <div>
+              <fieldset>
+                <legend>Payment method</legend>
+                <label><input type="radio" name="method" value="transfer" checked> Bank transfer</label>
+                <label><input type="radio" name="method" value="debit"> Direct debit</label>
+                <label><input type="radio" name="method" value="card"> Card payment link</label>
+              </fieldset>
+              <div data-field>
+                <label for="inv-notes">Note on the invoice</label>
+                <textarea id="inv-notes" name="notes">Please quote INV-2025-0319 with your payment.</textarea>
+              </div>
+            </div>
+          </section>
+          <footer data-action-bar>
+            <button type="submit">Create invoice</button>
+            <button type="reset">Cancel</button>
+          </footer>
+        </form>
+        <!-- /dui:snippet -->
+      </section>
+
+      <section aria-labelledby="specs-title">
+        <h2 id="specs-title">Specs and guidance</h2>
+        <ul>
+          <li><a href="https://www.w3.org/WAI/tutorials/forms/grouping/">WAI forms tutorial: grouping controls</a></li>
+          <li><a href="https://html.spec.whatwg.org/multipage/form-elements.html#the-fieldset-element">WHATWG: the fieldset element</a></li>
+          <li><a href="https://www.w3.org/WAI/WCAG22/Understanding/labels-or-instructions.html">WCAG 2.2: 3.3.2 Labels or Instructions</a></li>
+        </ul>
+      </section>
+    </main>
+
+    <footer>
+      <p><small>domestic-ui packages existing standards and well-known patterns. MIT licensed.</small></p>
+    </footer>
+    <script>
+      // Demo only: nothing is saved.
+      document.addEventListener("submit", (event) => event.preventDefault());
+    </script>
+  </body>
+</html>

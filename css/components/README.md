@@ -13,8 +13,11 @@ Following [atomic design](https://atomicdesign.bradfrost.com/chapter-2/):
   [molecules index](molecules/README.md). Where HTML cannot do the behavior, a molecule pairs
   with one small [web component](../../web-components/README.md); where there is no standard or
   APG pattern, it has an [explainer](../../explainers/README.md).
-- **Organisms** (larger sections, such as a site header or a data table with controls)
-  land in a later milestone.
+- **Organisms** live in [`organisms/`](organisms/) (M3b): larger sections of a screen: a page
+  header, a filter bar, a long form split into sections and a data table. See the
+  [organisms index](organisms/README.md). They adapt to their own width with container queries, so
+  they fit the main area of the [app shell](../layout/app-shell.css) and the other page layouts in
+  [`css/layout/`](../layout/).
 
 Each component has one documented attribute API (or a native element or ARIA role), uses only
 semantic tokens (`npm run lint:tokens` enforces this for `css/components/**`), and links to the

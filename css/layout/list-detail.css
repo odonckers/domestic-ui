@@ -1,0 +1,186 @@
+/*
+ * Layout: [data-list-detail]
+ *
+ * A list of items beside the details of the selected one: orders beside
+ * the open order, customers beside a customer record. The list is real
+ * links (or buttons), the selected one marked with aria-current, and the
+ * detail is a labelled <section> or <article>. Side by side when the
+ * wrapper is at least 40rem wide, stacked (list first) when it is
+ * narrower, decided by a container query on the wrapper, so it works the
+ * same in a full page, a split or the main area of an app shell. Built
+ * with CSS grid.
+ *
+ * Our choice: the list items are links to the detail's own URL (?order=1042
+ * or /orders/1042), not buttons that swap content in place, so the address
+ * bar, history, bookmarks, "open in new tab" and the no-JavaScript case all
+ * work. Use buttons only when the detail has no URL of its own (a picker
+ * inside a dialog), with aria-current="true" on the selected one.
+ * When side by side, the detail is a pane that scrolls on its own: it
+ * sticks to the top of the scroll area and is at most --dui-size-pane
+ * (the small viewport height) tall, so a long list scrolls past it.
+ *
+ * Accessibility: the list is a <nav> landmark with an aria-label ("Orders")
+ * holding a <ul> of links; the selected link gets aria-current="page" (or
+ * "true" on buttons; on its <li> works too). It is shown like a selected
+ * data table row: a --dui-border-width-emphasis accent bar on its leading
+ * edge, a tint and bold text, so color is not the only cue (WCAG 1.4.1) and
+ * the bar has 3:1 against the surface (WCAG 1.4.11). In forced colors mode
+ * the tint is dropped by the browser and the bar is drawn in Highlight, so
+ * the marker stays. Rows are at least
+ * --dui-size-control tall (44px, 32px compact; WCAG 2.5.8). The detail is a
+ * <section> or <article> named by its heading (aria-labelledby), so it is a
+ * region landmark. Give it tabindex="0" when it can scroll, so keyboard
+ * users can scroll it (WCAG 2.1.1). Source order is list, then detail, which
+ * is also the reading and Tab order in both layouts (WCAG 1.3.2, 2.4.3).
+ * When a link loads a new detail, move focus to the detail's heading or
+ * leave it on the link; never move it without a page load.
+ *
+ * Breakpoint: 40rem of the wrapper's own inline size. A container query
+ * condition cannot read a custom property, so it is written as a length;
+ * to move it, write your own @container dui-list-detail rule.
+ *
+ * API
+ *   data-list-detail        on the wrapper; exactly two children:
+ *     1. the list: a <nav aria-label> (or <div>) holding a <ul> or <ol> whose
+ *        items are each one <a href> (or <button>)
+ *     2. the detail: a <section> or <article> with aria-labelledby
+ *   aria-current="page"     on the selected link ("true" on a selected button),
+ *                           or on its <li>
+ *
+ * Example
+ *   <div data-list-detail>
+ *     <nav aria-label="Orders">
+ *       <ul>
+ *         <li><a href="?order=1042" aria-current="page">Order 1042 <small>Ada Lovelace</small></a></li>
+ *         <li><a href="?order=1041">Order 1041 <small>Alan Turing</small></a></li>
+ *       </ul>
+ *     </nav>
+ *     <section aria-labelledby="order-title" tabindex="0">
+ *       <h2 id="order-title">Order 1042</h2>
+ *       …
+ *     </section>
+ *   </div>
+ *
+ * Keyboard
+ *   Tab: moves through the list links, then into the detail
+ *   Enter: on a link, opens that item's detail
+ *   Arrow keys: scroll the detail pane once it has focus
+ *
+ * Specs
+ *   https://developer.mozilla.org/en-US/docs/Web/CSS/Guides/Grid_layout
+ *   https://developer.mozilla.org/en-US/docs/Web/CSS/Guides/Containment/Container_queries
+ *   https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Reference/Attributes/aria-current
+ *   https://www.w3.org/WAI/WCAG22/Understanding/reflow.html
+ *   https://www.w3.org/WAI/WCAG22/Understanding/meaningful-sequence.html
+ *   https://www.w3.org/WAI/WCAG22/Understanding/use-of-color.html
+ *   https://www.w3.org/WAI/WCAG22/Understanding/non-text-contrast.html
+ *   https://developer.mozilla.org/en-US/docs/Web/CSS/@media/forced-colors
+ */
+
+[data-list-detail] {
+  container: dui-list-detail / inline-size;
+  display: grid;
+  grid-template-columns: minmax(min(var(--dui-size-column-min), 100%), 1fr) minmax(0, 2fr);
+  gap: var(--dui-space-l);
+  align-items: start;
+}
+
+/* Stacked by default: each child spans both columns. */
+[data-list-detail] > * {
+  grid-column: 1 / -1;
+  min-inline-size: 0;
+  margin: 0;
+}
+
+/* The list: a plain column of rows. */
+[data-list-detail] > :first-child :is(ul, ol) {
+  display: flex;
+  flex-direction: column;
+  gap: var(--dui-space-3xs);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+[data-list-detail] > :first-child li {
+  margin: 0;
+  max-inline-size: none;
+}
+
+[data-list-detail] > :first-child li > :is(a, button) {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0 var(--dui-space-gap);
+  inline-size: 100%;
+  min-block-size: var(--dui-size-control);
+  padding: var(--dui-space-control-block) var(--dui-space-control-inline);
+  background-color: transparent;
+  color: var(--dui-color-text);
+  border: 0;
+  border-inline-start: var(--dui-border-width-emphasis) solid transparent;
+  border-radius: var(--dui-radius-control);
+  font-weight: var(--dui-font-weight-body);
+  line-height: var(--dui-line-height-heading);
+  text-align: start;
+  text-decoration-line: none;
+}
+
+[data-list-detail] > :first-child li > a:visited {
+  color: var(--dui-color-text);
+}
+
+[data-list-detail] > :first-child li > :is(a, button) small {
+  color: var(--dui-color-text-muted);
+}
+
+[data-list-detail] > :first-child li > :is(a, button):hover {
+  background-color: var(--dui-color-surface-sunken);
+}
+
+[data-list-detail] > :first-child li > a:hover {
+  text-decoration-line: underline;
+}
+
+/* The selected item: a bar, a tint and bold text, never color alone. */
+[data-list-detail] > :first-child li > :is(a, button)[aria-current]:not([aria-current="false"]),
+[data-list-detail] > :first-child li[aria-current]:not([aria-current="false"]) > :is(a, button) {
+  background-color: var(--dui-color-accent-surface);
+  border-inline-start-color: var(--dui-color-accent);
+  font-weight: var(--dui-font-weight-strong);
+}
+
+/* The detail never pushes the page sideways (WCAG 1.4.10). */
+[data-list-detail] > :last-child {
+  overflow-wrap: break-word;
+}
+
+/* The focus ring of a scrolling detail is drawn inside, so the pane never clips it. */
+[data-list-detail] > :last-child:focus-visible {
+  outline-offset: calc(-1 * var(--dui-focus-width));
+}
+
+@container dui-list-detail (inline-size >= 40rem) {
+  [data-list-detail] > :first-child {
+    grid-column: 1;
+  }
+
+  [data-list-detail] > :last-child {
+    position: sticky;
+    inset-block-start: 0;
+    grid-column: 2;
+    max-block-size: var(--dui-size-pane);
+    overflow-y: auto;
+
+    /* Room for the focus rings of the controls inside. */
+    padding: calc(var(--dui-focus-width) + var(--dui-focus-offset));
+  }
+}
+
+@media (forced-colors: active) {
+  [data-list-detail] > :first-child li > :is(a, button)[aria-current]:not([aria-current="false"]),
+  [data-list-detail] > :first-child li[aria-current]:not([aria-current="false"]) > :is(a, button) {
+    border-inline-start-color: highlight;
+  }
+}

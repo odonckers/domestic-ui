@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Settings page · domestic-ui</title>
+    <meta name="description" content="A settings page composed from existing APIs: a list-detail with in-page section links beside form sections and a sticky action bar.">
+    <link rel="stylesheet" href="../../css/domestic.css">
+    <style>
+      /* Page-only layout, written with semantic tokens like any consumer would. */
+      body > :is(header, main, footer) {
+        max-inline-size: var(--dui-size-page);
+        margin-inline: auto;
+        padding-inline: var(--dui-space-l);
+      }
+
+      body > header {
+        padding-block: var(--dui-space-m);
+        border-block-end: var(--dui-border-width) solid var(--dui-color-border);
+      }
+
+      body > main {
+        padding-block: var(--dui-space-2xl);
+      }
+
+      body > footer {
+        padding-block: var(--dui-space-l);
+        border-block-start: var(--dui-border-width) solid var(--dui-color-border);
+        color: var(--dui-color-text-muted);
+      }
+
+      /* Wrap long lines of example markup instead of scrolling them. */
+      pre {
+        white-space: pre-wrap;
+        overflow-wrap: anywhere;
+      }
+
+      .demo {
+        padding: var(--dui-space-l);
+        border: var(--dui-border-width) solid var(--dui-color-border);
+        border-radius: var(--dui-radius-surface);
+      }
+    </style>
+  </head>
+  <body>
+    <a class="visually-hidden" href="#main">Skip to main content</a>
+
+    <header class="cluster" style="--cluster-justify: space-between">
+      <p><strong>domestic-ui</strong></p>
+      <nav aria-label="Examples">
+        <ul class="cluster">
+          <li><a href="../base.html">Base elements</a></li>
+          <li><a href="../theming.html">Theming</a></li>
+          <li><a href="../motion.html">Motion</a></li>
+          <li><a href="../elevation.html">Elevation</a></li>
+          <li><a href="../patterns/density.html">Density</a></li>
+          <li><a href="../atoms/index.html">Atoms</a></li>
+          <li><a href="../molecules/index.html">Molecules</a></li>
+          <li><a href="../organisms/index.html">Organisms</a></li>
+          <li><a href="index.html">Layouts</a></li>
+          <li><a href="../app-shell.html">App shell</a></li>
+        </ul>
+      </nav>
+    </header>
+
+    <main id="main">
+      <h1>Settings page</h1>
+      <p data-text="lead">Settings sections listed beside the forms that edit them: a composition of list-detail, form sections and the action bar.</p>
+      <p>
+        No new API: <a href="list-detail.html"><code>data-list-detail</code></a> places a <code>&lt;nav&gt;</code> of in-page links beside a
+        pane of <a href="../organisms/large-forms.html"><code>data-form-sections</code></a>, with a
+        <a href="action-bar.html"><code>data-action-bar</code></a> at the end of the form. When side by side the pane scrolls on its own and
+        the action bar sticks to its bottom edge; the links scroll the pane to each section. When each section is its own URL, link to
+        it instead and mark the current one with <code>aria-current="page"</code>.
+      </p>
+
+      <section aria-labelledby="settings-demo-title">
+        <h2 id="settings-demo-title">Company settings</h2>
+        <!-- dui:snippet name="Settings page" page="patterns/list-detail" -->
+        <div data-list-detail>
+          <nav aria-label="Settings sections">
+            <ul>
+              <li><a href="#settings-company">Company</a></li>
+              <li><a href="#settings-invoicing">Invoicing</a></li>
+              <li><a href="#settings-notifications">Notifications</a></li>
+            </ul>
+          </nav>
+          <section aria-labelledby="settings-title" tabindex="0">
+            <h3 id="settings-title">Settings</h3>
+            <form data-form-sections aria-labelledby="settings-title">
+              <section id="settings-company" aria-labelledby="settings-company-title">
+                <header>
+                  <h4 id="settings-company-title">Company</h4>
+                  <p>Shown on invoices, quotes and delivery notes.</p>
+                </header>
+                <div>
+                    <div data-field>
+                      <label for="set-name">Legal name</label>
+                      <input type="text" id="set-name" name="name" value="Domestic Trading Ltd." autocomplete="organization">
+                    </div>
+                    <div data-field>
+                      <label for="set-vat">VAT number</label>
+                      <input type="text" id="set-vat" name="vat" value="NL 8123 4567 B01" autocomplete="off">
+                    </div>
+                    <div data-field>
+                      <label for="set-iban">IBAN</label>
+                      <input type="text" id="set-iban" name="iban" value="NL91 ABNA 0417 1643 00" autocomplete="off">
+                    </div>
+                </div>
+              </section>
+              <section id="settings-invoicing" aria-labelledby="settings-invoicing-title">
+                <header>
+                  <h4 id="settings-invoicing-title">Invoicing</h4>
+                  <p>Defaults for new invoices; each invoice can change them.</p>
+                </header>
+                <div>
+                    <div data-field>
+                      <label for="set-terms">Default payment terms</label>
+                      <select id="set-terms" name="terms">
+                        <option>14 days net</option>
+                        <option selected>30 days net</option>
+                        <option>60 days net</option>
+                      </select>
+                    </div>
+                    <div data-field>
+                      <label for="set-prefix">Invoice number prefix</label>
+                      <input type="text" id="set-prefix" name="prefix" value="INV-2025-" autocomplete="off" aria-describedby="set-prefix-hint">
+                      <p id="set-prefix-hint" data-field="hint">The next invoice is INV-2025-0319.</p>
+                    </div>
+                    <div data-field>
+                      <label for="set-footer">Invoice footer</label>
+                      <textarea id="set-footer" name="footer">Thank you for your business. Please quote the invoice number with your payment.</textarea>
+                    </div>
+                </div>
+              </section>
+              <section id="settings-notifications" aria-labelledby="settings-notifications-title">
+                <header>
+                  <h4 id="settings-notifications-title">Notifications</h4>
+                  <p>Emails sent to the finance team.</p>
+                </header>
+                <fieldset>
+                  <legend>Email me when</legend>
+                  <label><input type="checkbox" name="notify-overdue" checked> An invoice is overdue</label>
+                  <label><input type="checkbox" name="notify-paid" checked> An invoice is paid</label>
+                  <label><input type="checkbox" name="notify-credit"> A credit note is issued</label>
+                </fieldset>
+              </section>
+              <footer data-action-bar>
+                <button type="submit">Save settings</button>
+                <button type="reset">Discard changes</button>
+              </footer>
+            </form>
+          </section>
+        </div>
+        <!-- /dui:snippet -->
+      </section>
+    </main>
+
+    <footer>
+      <p><small>domestic-ui packages existing standards and well-known patterns. MIT licensed.</small></p>
+    </footer>
+    <script>
+      // Demo only: nothing is saved.
+      document.addEventListener("submit", (event) => event.preventDefault());
+    </script>
+  </body>
+</html>

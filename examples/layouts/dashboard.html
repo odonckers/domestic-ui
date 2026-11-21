@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Dashboard · domestic-ui</title>
+    <meta name="description" content="A grid of headed tiles on raised surfaces that reflows without media queries, with wide and full-row tiles.">
+    <link rel="stylesheet" href="../../css/domestic.css">
+    <style>
+      /* Page-only layout, written with semantic tokens like any consumer would. */
+      body > :is(header, main, footer) {
+        max-inline-size: var(--dui-size-page);
+        margin-inline: auto;
+        padding-inline: var(--dui-space-l);
+      }
+
+      body > header {
+        padding-block: var(--dui-space-m);
+        border-block-end: var(--dui-border-width) solid var(--dui-color-border);
+      }
+
+      body > main {
+        padding-block: var(--dui-space-2xl);
+      }
+
+      body > footer {
+        padding-block: var(--dui-space-l);
+        border-block-start: var(--dui-border-width) solid var(--dui-color-border);
+        color: var(--dui-color-text-muted);
+      }
+
+      /* Wrap long lines of example markup instead of scrolling them. */
+      pre {
+        white-space: pre-wrap;
+        overflow-wrap: anywhere;
+      }
+
+      .demo {
+        padding: var(--dui-space-l);
+        border: var(--dui-border-width) solid var(--dui-color-border);
+        border-radius: var(--dui-radius-surface);
+      }
+    </style>
+  </head>
+  <body>
+    <a class="visually-hidden" href="#main">Skip to main content</a>
+
+    <header class="cluster" style="--cluster-justify: space-between">
+      <p><strong>domestic-ui</strong></p>
+      <nav aria-label="Examples">
+        <ul class="cluster">
+          <li><a href="../base.html">Base elements</a></li>
+          <li><a href="../theming.html">Theming</a></li>
+          <li><a href="../motion.html">Motion</a></li>
+          <li><a href="../elevation.html">Elevation</a></li>
+          <li><a href="../patterns/density.html">Density</a></li>
+          <li><a href="../atoms/index.html">Atoms</a></li>
+          <li><a href="../molecules/index.html">Molecules</a></li>
+          <li><a href="../organisms/index.html">Organisms</a></li>
+          <li><a href="index.html">Layouts</a></li>
+          <li><a href="../app-shell.html">App shell</a></li>
+        </ul>
+      </nav>
+    </header>
+
+    <main id="main">
+      <h1>Dashboard</h1>
+      <p data-text="lead">A grid of headed tiles that reflows from one column on a phone to as many as fit on a wide screen.</p>
+      <p>
+        API: <code>data-dashboard</code> on the wrapper; <code>data-dashboard="wide"</code> on a tile that spans two columns when they fit,
+        <code>data-dashboard="full"</code> on a tile that spans the row. Tiles are <code>&lt;section&gt;</code> elements named by their heading.
+        Source: <a href="../../css/layout/dashboard.css"><code>css/layout/dashboard.css</code></a>.
+      </p>
+
+      <section aria-labelledby="sales-title">
+        <h2 id="sales-title">Sales overview</h2>
+        <!-- dui:snippet name="Sales overview" -->
+        <div data-dashboard>
+          <section aria-labelledby="tile-open-title">
+            <h3 id="tile-open-title">Open orders</h3>
+            <p><strong>128</strong> orders, 12 due to ship today</p>
+            <p><a href="?view=orders&amp;status=open">View open orders</a></p>
+          </section>
+          <section aria-labelledby="tile-overdue-title">
+            <h3 id="tile-overdue-title">Overdue invoices</h3>
+            <p><strong>€8,420.50</strong> across 7 invoices</p>
+            <p><span data-badge="warning">3 over 60 days</span></p>
+            <p><a href="?view=invoices&amp;status=overdue">View overdue invoices</a></p>
+          </section>
+          <section aria-labelledby="tile-revenue-title">
+            <h3 id="tile-revenue-title">Revenue in March</h3>
+            <p><strong>€142,300</strong>, up 6% on February</p>
+          </section>
+          <section aria-labelledby="tile-quotes-title">
+            <h3 id="tile-quotes-title">Quotes to approve</h3>
+            <p><strong>5</strong> quotes worth €21,700</p>
+            <p><a href="?view=quotes&amp;status=pending">Review quotes</a></p>
+          </section>
+          <section data-dashboard="wide" aria-labelledby="tile-recent-title">
+            <h3 id="tile-recent-title">Recent invoices</h3>
+            <section data-scroll="inline" aria-labelledby="recent-invoices" tabindex="0">
+              <table>
+                <caption id="recent-invoices">Last four invoices</caption>
+                <thead>
+                  <tr><th scope="col">Invoice</th><th scope="col">Customer</th><th scope="col">Status</th><th scope="col">Amount</th></tr>
+                </thead>
+                <tbody>
+                  <tr><td>INV-2025-0318</td><td>Analytical Engines Ltd.</td><td>Part paid</td><td>€1,240.00</td></tr>
+                  <tr><td>INV-2025-0317</td><td>Cobol Systems BV</td><td>Paid</td><td>€3,980.00</td></tr>
+                  <tr><td>INV-2025-0316</td><td>Orbital Mechanics GmbH</td><td>Overdue</td><td>€615.90</td></tr>
+                  <tr><td>INV-2025-0315</td><td>Bletchley Instruments</td><td>Paid</td><td>€48.50</td></tr>
+                </tbody>
+              </table>
+            </section>
+          </section>
+          <section aria-labelledby="tile-stock-title">
+            <h3 id="tile-stock-title">Stock alerts</h3>
+            <ul>
+              <li>Brass gear set: 6 left</li>
+              <li>Punch card reader: 2 left</li>
+            </ul>
+            <p><a href="?view=stock&amp;filter=low">Reorder stock</a></p>
+          </section>
+          <section aria-labelledby="tile-shipments-title">
+            <h3 id="tile-shipments-title">Shipments in transit</h3>
+            <p><strong>23</strong> parcels, 2 delayed at customs</p>
+            <p><a href="?view=shipments">Track shipments</a></p>
+          </section>
+          <section data-dashboard="full" aria-labelledby="tile-tasks-title">
+            <h3 id="tile-tasks-title">Tasks for today</h3>
+            <p>Approve credit note CN-2025-0013, call Orbital Mechanics GmbH about invoice INV-2025-0316, and confirm the April price list.</p>
+          </section>
+        </div>
+        <!-- /dui:snippet -->
+      </section>
+
+      <section aria-labelledby="specs-title">
+        <h2 id="specs-title">Specs and guidance</h2>
+        <ul>
+          <li><a href="https://developer.mozilla.org/en-US/docs/Web/CSS/repeat#auto-fit">MDN: repeat() with auto-fit</a></li>
+          <li><a href="https://developer.mozilla.org/en-US/docs/Web/CSS/Guides/Containment/Container_queries">MDN: CSS container queries</a></li>
+          <li><a href="https://www.w3.org/WAI/WCAG22/Understanding/reflow.html">WCAG 2.2: 1.4.10 Reflow</a></li>
+        </ul>
+      </section>
+    </main>
+
+    <footer>
+      <p><small>domestic-ui packages existing standards and well-known patterns. MIT licensed.</small></p>
+    </footer>
+  </body>
+</html>

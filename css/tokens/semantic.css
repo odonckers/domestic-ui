@@ -79,6 +79,10 @@
   --dui-size-menu-min: var(--dui-size-12);
   --dui-size-drawer: var(--dui-size-24);
   --dui-size-page: var(--dui-size-72); /* Max inline size of a page's content column: header, main and footer */
+  --dui-size-icon: var(--dui-size-1-25); /* Decorative icons beside a label: nav links and group summaries */
+  --dui-size-sidebar: var(--dui-size-16); /* Inline size of an app shell's primary sidebar when it sits beside main */
+  --dui-size-sidebar-aux: var(--dui-size-20); /* Inline size of an app shell's auxiliary (inline-end) sidebar when it sits beside main */
+  --dui-size-pane: var(--dui-size-100svh); /* Max block size of a pane that scrolls on its own beside others, such as the detail of a list-detail or a data-scroll="block inline" table */
 
   /* Shape */
   --dui-radius-control: var(--dui-radius-2);

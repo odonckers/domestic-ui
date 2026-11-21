@@ -136,6 +136,86 @@ Semantic token names and file paths under `css/` are public API; primitive token
   `setOptions()`, form submission, no-JavaScript fallback, axe with the list open, 320px, motion) and
   `tests/density.spec.js` (compact vs comfortable computed sizes, 24px targets, unchanged font sizes,
   nested scopes, `--dui-size-page`). The axe and `data-motion="none"` checks now also open every combobox.
+- Page layouts in `css/layout/` (M3b), each one attribute on a wrapper, side by side when the wrapper is
+  wide and stacked when it is narrow, switched by a container query on the wrapper:
+  - List-detail (`list-detail.css`): `data-list-detail`, a `<nav>` of links with `aria-current` on the
+    selected one beside a labelled detail that sticks and scrolls on its own when side by side (40rem).
+  - Split (`split.css`): `data-split="[1:1 | 1:2 | 2:1]"`, two regions at a ratio (40rem); no draggable
+    divider, see `explainers/split-view.md`.
+  - Dashboard (`dashboard.css`): `data-dashboard` on a grid of headed tiles on raised surfaces that reflows
+    with `repeat(auto-fit, minmax())`; `data-dashboard="wide"` (two columns when they fit) and
+    `data-dashboard="full"` on a tile.
+  - Sticky action bar (`action-bar.css`): `data-action-bar` on the last child of a `<form>`; sticks to the
+    bottom of the scroll area, and every ancestor of the form reserves its height with
+    `scroll-padding-block-end` so the focused field is never under it (WCAG 2.4.11, technique C43).
+  - A settings page composed from list-detail, form sections and the action bar (no new API).
+- Organisms in `css/components/organisms/` (M3b), imported into the `components` layer after the molecules
+  and indexed in `css/components/organisms/README.md`:
+  - Page header (`page-header.css`): `data-page-header` on a `<header>`: breadcrumb, heading, description and
+    actions that sit beside the title from 40rem and wrap under it below.
+  - Filter bar (`filter-bar.css`): `data-filter-bar` on `<search>` > `<form method="get">` with labelled
+    controls (a `<dui-combobox>` works), Apply and Reset, and a `role="status"` result count present from load.
+  - Form sections (`large-forms.css`): `data-form-sections` on a `<form>`; each `<section>` has a `<header>`
+    and one body of fields, laid out heading-beside-fields with a field grid from 48rem.
+- `--dui-size-pane`: the max block size of a pane that scrolls on its own, `100svh` (primitive `--dui-size-100svh`).
+- `examples/layouts/` (index, list-detail, split, dashboard, action-bar, settings) and `examples/organisms/`
+  (index, page-header, filter-bar, large-forms), with compact-density demos; the example navigation links
+  the two new indexes. `explainers/split-view.md`.
+- Tests: `tests/layouts.spec.js` (side by side at 1280px and stacked at 360px for every layout, split ratios,
+  dashboard spans, list-detail `aria-current` and Tab order, the detail pane, the sticky action bar and focus
+  never under it, in the page and in a scrolling pane) and `tests/organisms.spec.js` (page header, filter bar
+  status and labels, form sections, and every target at least 24 by 24 CSS pixels under
+  `data-density="compact"` on all the new pages).
+- Data table organism (`css/components/organisms/data-table.css`, M3b): `data-table` on a native `<table>` with
+  a caption and `th[scope]`; `data-table="sticky"` for a header that sticks to its scroll container;
+  `data-table="number"` on the cells of numeric columns (end-aligned, tabular figures); separate cell borders so
+  the header's border moves with it; row selection with a highlight that is not color alone; an empty-state row
+  (one `<td colspan>`); a loading state (`aria-busy="true"` with `aria-hidden` skeleton rows whose shimmer stops
+  under reduced motion and `data-motion="none"`).
+- `<dui-table>` (`web-components/dui-table.js`): sortable columns after the APG Sortable Table example (header
+  text upgraded to buttons, `aria-sort` on the sorted header only, a caption hint, number, ISO date and
+  `data-sort-value` aware, stable) with a cancelable `dui-table-sort` event; row selection with a "select all"
+  checkbox (mixed when some rows are selected), a count in a `role="status"` element and bulk actions in a
+  toolbar disabled while nothing is selected.
+- `data-scroll="block inline"` (`css/layout/scroll.css`): the container also scrolls vertically, at most
+  `--dui-size-pane` tall, so a sticky table header stays in view.
+- `examples/organisms/data-table.html` (sortable, selection and bulk actions, empty, loading, wide with a sticky
+  header) and a data table on the organisms index; `tests/data-table.spec.js` (sorting by click and keyboard,
+  numbers, dates, stability, the event and canceling it, no-JavaScript fallback with axe, selection count,
+  select all and its mixed state, unique checkbox names, the sticky header, loading and the shimmer under
+  `data-motion="none"` and reduced motion, 320px, axe and 24px targets in compact density).
+- App shell layout (`css/layout/app-shell.css`, M3b): `data-app-shell` on a wrapper holding a `<header>` (app bar),
+  a primary sidebar (a labelled `<nav>`, or an `<aside>` holding it), `<main>`, an optional auxiliary `<aside>` and
+  an optional `<footer>`, placed with named grid areas (`header`, `start`, `main`, `end`, `footer`) and switched by
+  container queries on the shell (primary sidebar beside main from 48rem, auxiliary from 64rem; stacked in source
+  order below). Sidebars beside main stick and scroll on their own (at most `--dui-size-pane`); collapsing animates
+  the grid columns with the motion tokens (instant under reduced motion and `data-motion="none"`). `<main>` and
+  each sidebar are named size containers (`dui-app-shell-main`, `-start`, `-end`). `data-app-shell="contained"`
+  for a shell inside a page section. Without JavaScript both sidebars are always visible and the toggles stay
+  `hidden`.
+- `<dui-app-shell>` (`web-components/dui-app-shell.js`): sidebar toggles (`aria-controls`, `aria-expanded`) that
+  collapse a sidebar beside main with `hidden`, or open it in a modal drawer (`<dialog data-dialog="drawer start |
+  end" closedby="any">` built once, with a heading and a Close button) on a narrow shell, moving the one copy of the
+  sidebar in while it is open and back when it closes; Esc and backdrop close; focus returns to the opener; the mode
+  follows the shell's own width (`ResizeObserver`); `aria-expanded="false"` in the markup starts a sidebar
+  collapsed; `show()`, `hide()`, `toggle()`, `isDrawer()` and a `dui-app-shell-toggle` event.
+- Sidebar navigation: the nav molecule (`data-nav="vertical"`) documented as the app shell's sidebar, with optional
+  decorative `<svg aria-hidden="true">` icons in links and group summaries; a note on why it is not an APG Tree View
+  (CSS header, molecules and organisms indexes, `PRINCIPLES.md`, `explainers/app-shell.md`).
+- Semantic tokens `--dui-size-icon` (1.25rem), `--dui-size-sidebar` (16rem) and `--dui-size-sidebar-aux` (20rem);
+  primitive `--dui-size-20`.
+- `examples/app-shell.html`: a full orders screen (app bar with a `<dui-combobox>` search and a user menu, sidebar
+  navigation with nested groups, page header, filter bar, sortable data table with selection and bulk actions, the
+  selected order in the auxiliary sidebar, updated on selection or when an order link is activated);
+  `examples/layouts/app-shell.html`: a contained shell. Every example page's navigation links the orders screen;
+  the layouts index lists the app shell.
+- `explainers/app-shell.md` and `explainers/aux-sidebar.md`.
+- Tests: `tests/app-shell.spec.js` (landmarks and their names, grid areas at 1440px, collapse with click, Enter and
+  Space, modal drawers at both edges with Esc and focus return, one copy of each sidebar in every mode, mode
+  switches on the shell's own width, main as a size container, no-JavaScript and blocked-module fallbacks with axe
+  and no overflow at 320px, sidebar navigation groups and current link, the orders screen's aux sidebar, combobox,
+  filter bar, sorting and compact targets, motion); `tests/a11y.spec.js` also checks every app shell drawer open
+  at 375px in light and dark; `tests/layouts.spec.js` checks the list-detail selected marker, also in forced colors.
 
 ### Changed
 
@@ -145,6 +225,15 @@ Semantic token names and file paths under `css/` are public API; primitive token
   cells, field gaps, tabs, nav, menu, pagination and toolbar. Values are unchanged at the default
   (comfortable) density.
 - The molecules index no longer lists the combobox under "Not shipped".
+- `<dui-toolbar>` keeps one Tab stop when its controls are enabled or disabled after it upgrades (a bulk-action
+  bar).
+- `--dui-size-pane` also bounds a `data-scroll="block inline"` container (description only; the value is unchanged).
+- List-detail: the selected item's bar is now `--dui-border-width-emphasis` wide (was the 3px indicator width), as on a
+  selected data table row; `aria-current` on the `<li>` marks its link too; in forced colors only the leading bar
+  turns `Highlight`.
+- The nav molecule's links have a gap between an icon and the text.
+- The organisms index no longer lists the app shell and sidebar navigation as a later session; the components
+  README lists the data table among the organisms.
 
 - Components adopt the motion and elevation tokens: card uses the raised level (shadow added, surface
   `--dui-elevation-raised-surface`), popovers, menus, tooltips and nav dropdowns the popover level, toasts

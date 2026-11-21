@@ -30,6 +30,24 @@
  * when focus leaves, which the APG example does with script; Enter or Space
  * on the summary closes it.
  *
+ * Sidebar navigation: data-nav="vertical" is also the primary sidebar of
+ * an app shell (css/layout/app-shell.css): group headings are the summary
+ * text, nested groups are <details> inside a group's list, and the group
+ * that holds the current page carries open in the markup, so the current
+ * link shows with JavaScript off. Links and summaries MAY start with a
+ * decorative icon (<svg aria-hidden="true" focusable="false">), sized
+ * --dui-size-icon; the link text stays the accessible name. Rows follow
+ * --dui-space-control-* and --dui-size-control, so they are 32px tall in
+ * data-density="compact" (over the 24px of WCAG 2.5.8).
+ *
+ * Our choice: no tree view. An APG Tree View
+ * (https://www.w3.org/WAI/ARIA/apg/patterns/treeview/) is for a hierarchy
+ * that users navigate as data, such as a file tree, with one Tab stop,
+ * roving focus and arrow keys; site navigation is a set of links, which
+ * screen reader users expect to Tab through and list as links. Disclosure
+ * groups and links are the matching semantics (APG Disclosure Navigation),
+ * and need no script.
+ *
  * Elevation: horizontal dropdowns use --dui-elevation-popover and its
  * surface, like a popover. They open at once: native details has no open
  * transition.
@@ -40,6 +58,8 @@
  *   <details> / <summary>              inside an <li> for a collapsible group;
  *                                      open to expand it on load, name for
  *                                      one-at-a-time
+ *
+ *   <svg aria-hidden="true" focusable="false">   optional icon, first in a link or summary
  *
  * Example
  *   <nav aria-label="Main" data-nav="vertical">
@@ -66,6 +86,7 @@
  *   https://html.spec.whatwg.org/multipage/sections.html#the-nav-element
  *   https://html.spec.whatwg.org/multipage/interactive-elements.html#the-details-element
  *   https://www.w3.org/WAI/ARIA/apg/patterns/disclosure/examples/disclosure-navigation/
+ *   https://www.w3.org/WAI/ARIA/apg/patterns/treeview/
  *   https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Reference/Attributes/aria-current
  *   https://www.w3.org/WAI/WCAG22/Techniques/failures/F73
  *   https://www.w3.org/WAI/WCAG22/Understanding/non-text-contrast.html
@@ -99,6 +120,7 @@
 [data-nav] a {
   display: flex;
   align-items: center;
+  gap: var(--dui-space-gap);
   border-inline-start: var(--dui-border-width-indicator) solid transparent;
   text-decoration-line: none;
 }
@@ -120,6 +142,19 @@
   border-inline-start-color: var(--dui-color-accent);
   color: var(--dui-color-text);
   font-weight: var(--dui-font-weight-strong);
+}
+
+/* Decorative icons: as tall as a line of text, never shrunk by a long label. */
+[data-nav] :is(a, summary) > svg {
+  flex: none;
+  inline-size: var(--dui-size-icon);
+  block-size: var(--dui-size-icon);
+  vertical-align: middle;
+}
+
+[data-nav] summary > svg {
+  display: inline-block;
+  margin-inline-end: var(--dui-space-gap);
 }
 
 /* Groups: drop the base details box; the summary is a row like the links. */

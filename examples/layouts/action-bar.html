@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Form page with sticky action bar · domestic-ui</title>
+    <meta name="description" content="A long form whose Save and Cancel buttons stay in a sticky bar at the bottom of the window, with scroll margins so the bar never hides the focused field (WCAG 2.4.11).">
+    <link rel="stylesheet" href="../../css/domestic.css">
+    <style>
+      /* Page-only layout, written with semantic tokens like any consumer would. */
+      body > :is(header, main, footer) {
+        max-inline-size: var(--dui-size-page);
+        margin-inline: auto;
+        padding-inline: var(--dui-space-l);
+      }
+
+      body > header {
+        padding-block: var(--dui-space-m);
+        border-block-end: var(--dui-border-width) solid var(--dui-color-border);
+      }
+
+      body > main {
+        padding-block: var(--dui-space-2xl);
+      }
+
+      body > footer {
+        padding-block: var(--dui-space-l);
+        border-block-start: var(--dui-border-width) solid var(--dui-color-border);
+        color: var(--dui-color-text-muted);
+      }
+
+      /* Wrap long lines of example markup instead of scrolling them. */
+      pre {
+        white-space: pre-wrap;
+        overflow-wrap: anywhere;
+      }
+
+      .demo {
+        padding: var(--dui-space-l);
+        border: var(--dui-border-width) solid var(--dui-color-border);
+        border-radius: var(--dui-radius-surface);
+      }
+    </style>
+  </head>
+  <body>
+    <a class="visually-hidden" href="#main">Skip to main content</a>
+
+    <header class="cluster" style="--cluster-justify: space-between">
+      <p><strong>domestic-ui</strong></p>
+      <nav aria-label="Examples">
+        <ul class="cluster">
+          <li><a href="../base.html">Base elements</a></li>
+          <li><a href="../theming.html">Theming</a></li>
+          <li><a href="../motion.html">Motion</a></li>
+          <li><a href="../elevation.html">Elevation</a></li>
+          <li><a href="../patterns/density.html">Density</a></li>
+          <li><a href="../atoms/index.html">Atoms</a></li>
+          <li><a href="../molecules/index.html">Molecules</a></li>
+          <li><a href="../organisms/index.html">Organisms</a></li>
+          <li><a href="index.html">Layouts</a></li>
+          <li><a href="../app-shell.html">App shell</a></li>
+        </ul>
+      </nav>
+    </header>
+
+    <main id="main">
+      <h1>Form page with sticky action bar</h1>
+      <!--
+        Keyboard
+          Tab: moves from field to field, then to the bar's buttons; a focused field is scrolled clear of the bar
+          Enter: in a text field, submits the form
+      -->
+      <p data-text="lead">A long form whose Save and Cancel buttons stay in view, and never hide the field that has focus.</p>
+      <p>
+        API: <code>data-action-bar</code> on a <code>&lt;footer&gt;</code> that is the last child of the <code>&lt;form&gt;</code>.
+        Source: <a href="../../css/layout/action-bar.css"><code>css/layout/action-bar.css</code></a>.
+      </p>
+      <p>
+        The bar sticks to the bottom of the window while the form scrolls and comes to rest after the last field. Every ancestor of the
+        form reserves a <code>scroll-padding</code> as tall as the bar, so <kbd>Tab</kbd> scrolls a field under the bar clear of it
+        (<a href="https://www.w3.org/WAI/WCAG22/Understanding/focus-not-obscured-minimum.html">WCAG 2.4.11 Focus Not Obscured</a>).
+        At 320px the buttons wrap onto a second row.
+      </p>
+
+      <section aria-labelledby="edit-title">
+        <h2 id="edit-title">Edit customer</h2>
+        <!-- dui:snippet name="Edit customer" -->
+        <form class="stack" aria-labelledby="edit-form-title">
+          <h3 id="edit-form-title">Analytical Engines Ltd.</h3>
+            <div data-field>
+              <label for="ab-company">Company name</label>
+              <input type="text" id="ab-company" name="company" value="Analytical Engines Ltd." autocomplete="organization">
+            </div>
+            <div data-field>
+              <label for="ab-number">Customer number</label>
+              <input type="text" id="ab-number" name="number" value="C-118" readonly>
+            </div>
+            <div data-field>
+              <label for="ab-vat">VAT number</label>
+              <input type="text" id="ab-vat" name="vat" value="GB 123 4567 89" autocomplete="off">
+            </div>
+            <div data-field>
+              <label for="ab-contact">Contact person</label>
+              <input type="text" id="ab-contact" name="contact" value="Ada Lovelace" autocomplete="name">
+            </div>
+            <div data-field>
+              <label for="ab-email">Email</label>
+              <input type="email" id="ab-email" name="email" value="ada@analytical-engines.example" autocomplete="email">
+            </div>
+            <div data-field>
+              <label for="ab-phone">Phone</label>
+              <input type="tel" id="ab-phone" name="phone" value="+44 20 7946 0018" autocomplete="tel">
+            </div>
+            <div data-field>
+              <label for="ab-street">Street and number</label>
+              <input type="text" id="ab-street" name="street" value="12 St James's Square" autocomplete="address-line1">
+            </div>
+            <div data-field>
+              <label for="ab-postcode">Postal code</label>
+              <input type="text" id="ab-postcode" name="postcode" value="SW1Y 4JH" autocomplete="postal-code">
+            </div>
+            <div data-field>
+              <label for="ab-city">City</label>
+              <input type="text" id="ab-city" name="city" value="London" autocomplete="address-level2">
+            </div>
+            <div data-field>
+              <label for="ab-country">Country</label>
+              <select id="ab-country" name="country" autocomplete="country">
+                <option value="DE">Germany</option>
+                <option value="NL">Netherlands</option>
+                <option value="GB" selected>United Kingdom</option>
+              </select>
+            </div>
+            <div data-field>
+              <label for="ab-terms">Payment terms</label>
+              <select id="ab-terms" name="terms">
+                <option>14 days net</option>
+                <option selected>30 days net</option>
+                <option>60 days net</option>
+              </select>
+            </div>
+            <div data-field>
+              <label for="ab-limit">Credit limit (€)</label>
+              <input type="number" id="ab-limit" name="limit" value="5000" min="0" step="100">
+            </div>
+            <div data-field>
+              <label for="ab-notes">Internal notes</label>
+              <textarea id="ab-notes" name="notes">Prefers delivery before noon.</textarea>
+            </div>
+            <div data-field>
+              <label for="ab-reference">Purchase order reference</label>
+              <input type="text" id="ab-reference" name="reference" value="PO-AE-2025-07" autocomplete="off">
+            </div>
+          <footer data-action-bar>
+            <button type="submit">Save customer</button>
+            <button type="reset">Cancel</button>
+          </footer>
+        </form>
+        <!-- /dui:snippet -->
+      </section>
+
+      <section aria-labelledby="specs-title">
+        <h2 id="specs-title">Specs and guidance</h2>
+        <ul>
+          <li><a href="https://www.w3.org/WAI/WCAG22/Understanding/focus-not-obscured-minimum.html">WCAG 2.2: 2.4.11 Focus Not Obscured (Minimum)</a></li>
+          <li><a href="https://www.w3.org/WAI/WCAG22/Techniques/css/C43">WCAG technique C43: Using CSS scroll-padding to un-obscure content</a></li>
+          <li><a href="https://developer.mozilla.org/en-US/docs/Web/CSS/position#sticky">MDN: position: sticky</a></li>
+        </ul>
+      </section>
+    </main>
+
+    <footer>
+      <p><small>domestic-ui packages existing standards and well-known patterns. MIT licensed.</small></p>
+    </footer>
+    <script>
+      // Demo only: nothing is saved.
+      document.addEventListener("submit", (event) => event.preventDefault());
+    </script>
+  </body>
+</html>

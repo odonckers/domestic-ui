@@ -82,8 +82,8 @@ unlayered CSS beats all of them**, so overriding never needs `!important` or spe
 | `reset` | A modest reset: `box-sizing`, zero margins, block media, inherited form fonts |
 | `tokens` | Primitive and semantic custom properties |
 | `base` | Native elements: typography, lists, tables, forms, buttons, dialog, details, focus |
-| `layout` | `.stack`, `.cluster`, `.grid`, `[data-scroll]` |
-| `components` | Atoms in `css/components/atoms/` (M2) and molecules in `css/components/molecules/` (M3a); organisms later. See the [atoms index](css/components/atoms/README.md) and the [molecules index](css/components/molecules/README.md) |
+| `layout` | `.stack`, `.cluster`, `.grid`, `[data-scroll]` and the page layouts (list-detail, split, dashboard, action bar, app shell) |
+| `components` | Atoms in `css/components/atoms/` (M2), molecules in `css/components/molecules/` (M3a) and organisms in `css/components/organisms/` (M3b). See the [atoms index](css/components/atoms/README.md), the [molecules index](css/components/molecules/README.md) and the [organisms index](css/components/organisms/README.md) |
 | `utilities` | Single-purpose helpers such as `.visually-hidden`; last so they always apply |
 
 **Our choice:** this order, because each layer only refines the ones before it, and a
@@ -202,6 +202,10 @@ may change. Fluid `--dui-step-*` values are `clamp()` expressions; see `primitiv
 | `--dui-size-menu-min` | Min width of menus and nav dropdowns | `size-12` (12rem) |
 | `--dui-size-drawer` | Drawer width (all of the viewport when narrower) | `size-24` (24rem) |
 | `--dui-size-page` | Max inline size of a page's content column (the examples' header, main and footer) | `size-72` (72rem) |
+| `--dui-size-icon` | Decorative icons beside a label: nav links and group summaries, app bar buttons | `size-1-25` (1.25rem) |
+| `--dui-size-sidebar` | Inline size of an app shell's primary sidebar beside main | `size-16` (16rem) |
+| `--dui-size-sidebar-aux` | Inline size of an app shell's auxiliary (inline-end) sidebar beside main | `size-20` (20rem) |
+| `--dui-size-pane` | Max block size of a pane that scrolls on its own beside others (the detail of a list-detail when side by side) | `size-100svh` (100svh, the small viewport height) |
 | `--dui-radius-control` | Controls, buttons, inline code | `radius-2` (0.375rem) |
 | `--dui-radius-surface` | Panels, pre, dialog, details, media | `radius-3` (0.625rem) |
 | `--dui-radius-pill` | Fully rounded ends | `radius-round` (999rem) |
@@ -428,6 +432,25 @@ Each of these is a choice between valid options, not a standard.
     [`<datalist>`](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/datalist) popups
     in Chromium and Firefox, and positions its listbox under the input rather than in the top layer, so
     it is never wider than the field ([explainer](explainers/combobox.md)).
+- **Our choice:** organisms (page header, filter bar, form sections, data table) follow the same one-attribute rule
+  (`data-page-header`, `data-filter-bar`, `data-form-sections`, `data-table`) and take the rest of their layout from their
+  children's native elements. Their choices are listed in the
+  [organisms index](css/components/organisms/README.md#our-choices); the main ones:
+  - **Our choice:** the filter bar is a `<form method="get">` in `<search>` with an Apply button and a
+    `role="status"` result count present from page load, so filters live in the URL, work without
+    JavaScript and are announced ([4.1.3 Status Messages](https://www.w3.org/WAI/WCAG22/Understanding/status-messages.html)).
+  - **Our choice:** form sections are headed `<section>` elements with a `<header>` and one body of fields,
+    not fieldsets, because a `<legend>` cannot be placed in a grid column; related controls still go in a
+    `<fieldset>` inside the body.
+  - **Our choice:** the data table (`data-table` on a native `<table>`) has sortable headers that are plain
+    text in the markup; `<dui-table>` turns them into buttons and follows the
+    [APG Sortable Table](https://www.w3.org/WAI/ARIA/apg/patterns/table/examples/sortable-table/) example
+    (`aria-sort` on the sorted header only, a visually hidden caption hint, nothing else announced), so with
+    JavaScript off there are no buttons that do nothing. A selected row shows a checked checkbox, a bar on its
+    leading edge and a tint, never color alone; the count is a `role="status"` element present from load.
+  - **Our choice:** a sticky table header sticks to the nearest scroll container, so a sticky table goes in
+    `data-scroll="block inline"` (at most `--dui-size-pane` tall) or in none; numeric columns are marked per
+    cell with the same attribute (`data-table="number"`), because words on the table cannot target a column.
 - **Our choice:** layout primitives come from [Every Layout](https://every-layout.dev/)'s
   Stack, Cluster and Grid. Their custom properties are registered with
   [`@property`](https://developer.mozilla.org/en-US/docs/Web/CSS/@property) as non-inheriting,
@@ -441,12 +464,66 @@ Each of these is a choice between valid options, not a standard.
 | `.cluster` | Wrapping inline group | `--cluster-gap`, `--cluster-justify`, `--cluster-align` |
 | `.grid` | Auto-fit responsive grid, no media queries | `--grid-min`, `--grid-gap` |
 | `[data-scroll="inline"]` | Scroll container for content wider than the screen, such as a data table | None |
+| `[data-scroll="block inline"]` | Also scrolls vertically, at most `--dui-size-pane` (the viewport) tall, so a sticky table header stays in view | None |
 
 ```html
 <div class="grid" style="--grid-min: 12rem">…</div>
 ```
 
 On a `ul` or `ol`, the primitive also removes list markers and padding.
+
+### Page layouts
+
+Larger layouts for application screens, each one attribute on a wrapper, live in `css/layout/` too and
+are shown in [`examples/layouts/`](examples/layouts/index.html):
+
+| Attribute | What it does |
+| --- | --- |
+| `data-list-detail` | A list of links (`aria-current` on the selected one) beside a labelled detail; the detail scrolls on its own when side by side |
+| `data-split="[1:1 \| 1:2 \| 2:1]"` | Two regions side by side at a ratio |
+| `data-dashboard`, `data-dashboard="wide \| full"` on a tile | Headed tiles on raised surfaces that reflow without media queries |
+| `data-action-bar` | A form's buttons in a bar that sticks to the bottom of the scroll area and never hides the focused field |
+| `data-app-shell`, `data-app-shell="contained"` | The frame of an application: `<header>`, a primary sidebar (`<nav>`), `<main>`, an optional auxiliary `<aside>` and `<footer>` in named grid areas; `<dui-app-shell>` makes the sidebars collapsible and drawers when narrow |
+
+Each one is side by side when its wrapper is wide and stacked when it is narrow, from 320px up, and keeps
+source order (the reading and Tab order) in both. A settings page needs no API of its own: it is a
+`data-list-detail` of in-page links beside `data-form-sections` with a `data-action-bar`
+([example](examples/layouts/settings.html)).
+
+- **Our choice:** layouts and [organisms](css/components/organisms/README.md) switch with a
+  [container query](https://developer.mozilla.org/en-US/docs/Web/CSS/Guides/Containment/Container_queries)
+  on their own wrapper, not a media query, because they sit in regions of any width: a page, a split, the
+  main area of an app shell. Media queries are kept for decisions about the whole viewport. A container
+  query condition cannot read a custom property, so each breakpoint is a length written in the file header.
+- **Our choice:** list-detail items are links to the item's own URL, not buttons that swap content, so
+  history, bookmarks and the no-JavaScript case work.
+- **Our choice:** the sticky action bar reserves its height as `scroll-padding-block-end` on every ancestor
+  of its form, so whichever one scrolls keeps the focused field clear of the bar
+  ([2.4.11 Focus Not Obscured (Minimum)](https://www.w3.org/WAI/WCAG22/Understanding/focus-not-obscured-minimum.html),
+  technique [C43](https://www.w3.org/WAI/WCAG22/Techniques/css/C43)).
+- **Our choice:** the app shell is the landmarks HTML already has, in source order, placed with
+  `grid-template-areas`; parts are recognized by element and position, so none needs an attribute
+  ([APG Landmark Regions](https://www.w3.org/WAI/ARIA/apg/practices/landmark-regions/),
+  [explainer](explainers/app-shell.md)). Without JavaScript both sidebars are always shown (stacked when narrow)
+  and the toggles stay `hidden`, so no button does nothing.
+- **Our choice:** one copy of each sidebar. Beside main it is a plain landmark that its toggle hides with
+  `hidden`; on a narrow shell `<dui-app-shell>` moves the same element into a modal drawer `<dialog>` while the
+  drawer is open, so screen readers hear "dialog" only while it is one and the navigation is never duplicated.
+- **Our choice:** the shell switches on its own width (container queries at 48rem for the primary sidebar
+  and 64rem for the auxiliary one, and a `ResizeObserver` in the element), and `<main>` and each sidebar are
+  named size containers, so a contained shell works anywhere and the layouts inside main follow main's width.
+- **Our choice:** the sidebar navigation is the nav molecule (`data-nav="vertical"`) with optional decorative
+  icons, not a tree view: an [APG Tree View](https://www.w3.org/WAI/ARIA/apg/patterns/treeview/) is for
+  hierarchies users navigate as data (file trees) with roving focus and arrow keys; site navigation is links,
+  so disclosure groups and links ([APG Disclosure Navigation](https://www.w3.org/WAI/ARIA/apg/patterns/disclosure/examples/disclosure-navigation/))
+  are the right semantics.
+- **Our choice:** the selected item of a list-detail is marked like a selected table row: a
+  `--dui-border-width-emphasis` bar on its leading edge, a tint and bold text, with the bar drawn in
+  `Highlight` in forced colors mode ([1.4.1](https://www.w3.org/WAI/WCAG22/Understanding/use-of-color.html),
+  [1.4.11](https://www.w3.org/WAI/WCAG22/Understanding/non-text-contrast.html)).
+- **Our choice:** splits have a fixed ratio and no draggable divider; a resizable one would follow the
+  [APG Window Splitter](https://www.w3.org/WAI/ARIA/apg/patterns/windowsplitter/) pattern
+  ([explainer](explainers/split-view.md)).
 
 Wrap any table that may not fit a 320px screen in `data-scroll="inline"`, named by its caption:
 
@@ -475,14 +552,16 @@ A `<pre>` already scrolls (`overflow-x: auto`); authors MUST give every `<pre>` 
 
 HTML still has no element for tabs, menus, roving focus in a toolbar, hover tooltips or a toast
 stack. For those, and only those, [`web-components/`](web-components/README.md) has one small
-custom element each: `<dui-tabs>`, `<dui-menu>`, `<dui-combobox>`, `<dui-toolbar>`, `<dui-tooltip>` and
-`<dui-toaster>`. HTML does have `<datalist>`, but its popup cannot be styled and differs between engines,
+custom element each: `<dui-tabs>`, `<dui-menu>`, `<dui-combobox>`, `<dui-toolbar>`, `<dui-tooltip>`,
+`<dui-toaster>`, `<dui-table>` (sorting rows and selecting them, which a `<table>` cannot do) and `<dui-app-shell>`
+(collapsing sidebars and turning them into modal drawers on a narrow shell, which a button cannot do by itself). HTML does have `<datalist>`, but its popup cannot be styled and differs between engines,
 so `<dui-combobox>` upgrades it to a listbox the page owns.
 
 - **Light DOM.** No shadow root: the molecule CSS and your CSS style the markup directly.
 - **Progressive enhancement.** The markup works before the script runs and with JavaScript off:
   tabs are a `<nav>` of in-page links and headed sections, toolbar buttons are Tab stops, a menu's
-  popover still opens, a tooltip is still the button's description.
+  popover still opens, a tooltip is still the button's description, a data table keeps the server's order
+  with plain-text headers and ordinary checkboxes, an app shell shows both sidebars and no toggles.
 - **ARIA with behavior, or not at all.** An element adds roles such as `menu` or `tab` only together
   with the keyboard support those roles promise ([APG](https://www.w3.org/WAI/ARIA/apg/)).
 - **Why each exists** is written at the top of its file, and the
@@ -495,7 +574,8 @@ A pattern with no native element and no APG pattern is written up like a platfor
 [`explainers/`](explainers/README.md): problem, use cases, goals and non-goals, markup and API,
 keyboard, accessibility mappings, alternatives, prior art and open questions, with normative
 text in [RFC 2119](https://www.rfc-editor.org/rfc/rfc2119) keywords. The card, pagination, drawer
-and toast molecules have one, and so do density and the combobox, which record the choices their
+and toast molecules have one, and so do density, the combobox, the split view, the app shell and
+its auxiliary sidebar, which record the choices their
 standards leave open. Names follow HTML and ARIA conventions, so a pattern could map onto
 a future native element or attribute.
 
@@ -508,7 +588,7 @@ a future native element or attribute.
 | `lint:html` | [html-validate](https://html-validate.org/) | `examples/**/*.html` against `html-validate:recommended` |
 | `lint:css` | [Stylelint](https://stylelint.io/) | `css/**/*.css` against `stylelint-config-standard` |
 | `lint:tokens` | `scripts/check-tokens.mjs` | Semantic-only tokens and no literal colors or sizes outside `css/tokens/` |
-| `test:a11y` | [Playwright](https://playwright.dev/) + [axe-core](https://github.com/dequelabs/axe-core) | Every `examples/**/*.html` (atoms and molecules included) in light and dark, in Chromium, Firefox and WebKit, with tags `wcag2a`, `wcag2aa`, `wcag21a`, `wcag21aa`, `wcag22aa`, including open dialogs and drawers, open popovers and menus, shown tooltips and toasts, every tab selected and every details expanded; no horizontal page overflow and no axe violations at 320×640 and 375×812; no external requests; token contrast pairs (atoms and molecules included) in the default and forest themes; rendered focus-ring and indicator contrast; atom and molecule states through accessibility APIs; molecule keyboard behavior against the APG; no-JavaScript fallbacks; fallbacks for engine-specific features; scoped theming of atoms and molecules |
+| `test:a11y` | [Playwright](https://playwright.dev/) + [axe-core](https://github.com/dequelabs/axe-core) | Every `examples/**/*.html` (atoms and molecules included) in light and dark, in Chromium, Firefox and WebKit, with tags `wcag2a`, `wcag2aa`, `wcag21a`, `wcag21aa`, `wcag22aa`, including open dialogs and drawers, open popovers and menus, shown tooltips and toasts, every tab selected and every details expanded; no horizontal page overflow and no axe violations at 320×640 and 375×812; no external requests; token contrast pairs (atoms and molecules included) in the default and forest themes; rendered focus-ring and indicator contrast; atom and molecule states through accessibility APIs; molecule keyboard behavior against the APG; no-JavaScript fallbacks; fallbacks for engine-specific features; scoped theming of atoms and molecules; layouts and organisms side by side when wide and stacked when narrow, the sticky action bar never covering the focused field, data table sorting, selection, sticky header and loading state (with and without JavaScript), and 24px targets in compact density; the app shell's landmarks and grid areas, collapse when wide, modal drawers with focus return when narrow, one copy of each sidebar, no-JavaScript fallbacks and axe with the drawers open |
 
 Preview locally with `npm run serve` (a zero-dependency static server) and open
 <http://127.0.0.1:4173/examples/base.html>. To run tests from two checkouts at once, give each its own port, e.g. `PORT=4273 npm test`.

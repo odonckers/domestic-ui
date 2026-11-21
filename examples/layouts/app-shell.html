@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>App shell · domestic-ui</title>
+    <meta name="description" content="The frame of an application: an app bar, a primary sidebar of navigation, main content and an auxiliary sidebar, placed with named grid areas and switched by the shell's own width; sidebars collapse when wide and open as drawers when narrow.">
+    <link rel="stylesheet" href="../../css/domestic.css">
+    <style>
+      /* Page-only layout, written with semantic tokens like any consumer would. */
+      body > :is(header, div, footer) {
+        max-inline-size: var(--dui-size-page);
+        margin-inline: auto;
+        padding-inline: var(--dui-space-l);
+      }
+
+      body > header {
+        padding-block: var(--dui-space-m);
+        border-block-end: var(--dui-border-width) solid var(--dui-color-border);
+      }
+
+      body > div {
+        padding-block: var(--dui-space-2xl);
+      }
+
+      body > footer {
+        padding-block: var(--dui-space-l);
+        border-block-start: var(--dui-border-width) solid var(--dui-color-border);
+        color: var(--dui-color-text-muted);
+      }
+    </style>
+  </head>
+  <body>
+    <a class="visually-hidden" href="#main">Skip to main content</a>
+
+    <header class="cluster" style="--cluster-justify: space-between" aria-label="domestic-ui examples">
+      <p><strong>domestic-ui</strong></p>
+      <nav aria-label="Examples">
+        <ul class="cluster">
+          <li><a href="../base.html">Base elements</a></li>
+          <li><a href="../theming.html">Theming</a></li>
+          <li><a href="../motion.html">Motion</a></li>
+          <li><a href="../elevation.html">Elevation</a></li>
+          <li><a href="../patterns/density.html">Density</a></li>
+          <li><a href="../atoms/index.html">Atoms</a></li>
+          <li><a href="../molecules/index.html">Molecules</a></li>
+          <li><a href="../organisms/index.html">Organisms</a></li>
+          <li><a href="index.html">Layouts</a></li>
+          <li><a href="../app-shell.html">App shell</a></li>
+        </ul>
+      </nav>
+    </header>
+
+    <div class="stack">
+      <h1>App shell</h1>
+      <!--
+        Keyboard
+          Tab: skip link, app bar, primary sidebar, main, auxiliary sidebar (source order)
+          Enter / Space: on a toggle, collapses or expands its sidebar; when the shell is narrow, opens it as a drawer
+          Esc: in a drawer, closes it and returns focus to its toggle
+      -->
+      <p data-text="lead">
+        The frame of an application: an app bar, a primary sidebar, the main content and an optional auxiliary sidebar, each a native
+        landmark placed with named grid areas.
+      </p>
+      <p>
+        API: <code>data-app-shell</code> on <code>&lt;dui-app-shell&gt;</code> (or any wrapper) holding a <code>&lt;header&gt;</code>, the primary
+        sidebar (a labelled <code>&lt;nav&gt;</code>), <code>&lt;main&gt;</code> and an optional <code>&lt;aside&gt;</code>; toggle buttons with
+        <code>aria-controls</code> and <code>aria-expanded</code>, <code>hidden</code> until the script shows them.
+        <code>data-app-shell="contained"</code> keeps the shell inside a box <code>--dui-size-pane</code> tall.
+        Source: <a href="../../css/layout/app-shell.css"><code>css/layout/app-shell.css</code></a> and
+        <a href="../../web-components/dui-app-shell.js"><code>web-components/dui-app-shell.js</code></a>.
+      </p>
+      <p>
+        The shell follows its own width, not the viewport. This one is about 69rem wide on a desktop screen, so both sidebars sit beside
+        main, and main is narrow enough that the list-detail inside it stacks. Make the window narrower: under 64rem the details sidebar
+        becomes a drawer at the end, under 48rem the navigation becomes a drawer at the start. With JavaScript off every part is always
+        visible. The full screen is in the <a href="../app-shell.html">orders example</a>.
+      </p>
+
+      <h2 id="contained-title">A contained app shell</h2>
+      <!-- dui:snippet name="Contained app shell" -->
+      <dui-app-shell data-app-shell="contained" style="--dui-size-pane: 36rem">
+        <header aria-label="Northwind">
+          <button type="button" aria-controls="demo-nav" aria-expanded="true" hidden>Menu</button>
+          <a href="?view=home" data-link="quiet"><strong>Northwind</strong></a>
+          <button type="button" aria-controls="demo-aux" aria-expanded="true" hidden>Activity</button>
+        </header>
+        <nav id="demo-nav" aria-label="Main" data-nav="vertical">
+          <ul>
+            <li><a href="?view=home">Home</a></li>
+            <li>
+              <details open>
+                <summary>Customers</summary>
+                <ul>
+                  <li><a href="?view=accounts" aria-current="page">Accounts</a></li>
+                  <li><a href="?view=contacts">Contacts</a></li>
+                </ul>
+              </details>
+            </li>
+            <li>
+              <details>
+                <summary>Sales</summary>
+                <ul>
+                  <li><a href="?view=orders">Orders</a></li>
+                  <li><a href="?view=invoices">Invoices</a></li>
+                </ul>
+              </details>
+            </li>
+          </ul>
+        </nav>
+        <main id="main" class="stack">
+          <header data-page-header>
+            <h2>Accounts</h2>
+            <p>Customers with an open balance.</p>
+            <div><a href="?view=new-account" data-button="primary">New account</a></div>
+          </header>
+          <div data-list-detail>
+            <nav aria-label="Accounts">
+              <ul>
+                <li><a href="?account=c-118" aria-current="page">Analytical Engines Ltd. <small>London</small></a></li>
+                <li><a href="?account=c-117">Bletchley Instruments <small>Milton Keynes</small></a></li>
+                <li><a href="?account=c-116">Cobol Systems BV <small>Utrecht</small></a></li>
+              </ul>
+            </nav>
+            <article aria-labelledby="account-118-title">
+              <h3 id="account-118-title">Analytical Engines Ltd.</h3>
+              <dl>
+                <dt>Contact</dt>
+                <dd>Ada Lovelace</dd>
+                <dt>Open balance</dt>
+                <dd>€1,240.00</dd>
+              </dl>
+            </article>
+          </div>
+        </main>
+        <aside id="demo-aux" aria-label="Activity">
+          <h2>Activity</h2>
+          <ol>
+            <li>Invoice INV-0318 sent, 12 March</li>
+            <li>Order 1042 shipped, 12 March</li>
+            <li>Payment received, 3 March</li>
+          </ol>
+        </aside>
+      </dui-app-shell>
+      <!-- /dui:snippet -->
+
+      <h2 id="specs-title">Specs and guidance</h2>
+      <ul>
+        <li><a href="https://www.w3.org/WAI/ARIA/apg/practices/landmark-regions/">APG: Landmark regions</a></li>
+        <li><a href="https://html.spec.whatwg.org/multipage/grouping-content.html#the-main-element">WHATWG: the main element</a></li>
+        <li><a href="https://html.spec.whatwg.org/multipage/sections.html#the-aside-element">WHATWG: the aside element</a></li>
+        <li><a href="https://developer.mozilla.org/en-US/docs/Web/CSS/grid-template-areas">MDN: grid-template-areas</a></li>
+        <li><a href="https://developer.mozilla.org/en-US/docs/Web/CSS/Guides/Containment/Container_queries">MDN: CSS container queries</a></li>
+        <li><a href="https://www.w3.org/WAI/ARIA/apg/patterns/disclosure/">APG: Disclosure pattern</a></li>
+      </ul>
+    </div>
+
+    <footer aria-label="domestic-ui">
+      <p><small>domestic-ui packages existing standards and well-known patterns. MIT licensed.</small></p>
+    </footer>
+    <script type="module" src="../../web-components/dui-app-shell.js"></script>
+  </body>
+</html>

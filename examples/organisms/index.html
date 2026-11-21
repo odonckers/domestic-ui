@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Organisms · domestic-ui</title>
+    <meta name="description" content="Every domestic-ui organism: page header, filter bar, large form sections and data table.">
+    <link rel="stylesheet" href="../../css/domestic.css">
+    <style>
+      /* Page-only layout, written with semantic tokens like any consumer would. */
+      body > :is(header, main, footer) {
+        max-inline-size: var(--dui-size-page);
+        margin-inline: auto;
+        padding-inline: var(--dui-space-l);
+      }
+
+      body > header {
+        padding-block: var(--dui-space-m);
+        border-block-end: var(--dui-border-width) solid var(--dui-color-border);
+      }
+
+      body > main {
+        padding-block: var(--dui-space-2xl);
+      }
+
+      body > footer {
+        padding-block: var(--dui-space-l);
+        border-block-start: var(--dui-border-width) solid var(--dui-color-border);
+        color: var(--dui-color-text-muted);
+      }
+
+      /* Wrap long lines of example markup instead of scrolling them. */
+      pre {
+        white-space: pre-wrap;
+        overflow-wrap: anywhere;
+      }
+
+      .demo {
+        padding: var(--dui-space-l);
+        border: var(--dui-border-width) solid var(--dui-color-border);
+        border-radius: var(--dui-radius-surface);
+      }
+    </style>
+  </head>
+  <body>
+    <a class="visually-hidden" href="#main">Skip to main content</a>
+
+    <header class="cluster" style="--cluster-justify: space-between">
+      <p><strong>domestic-ui</strong></p>
+      <nav aria-label="Examples">
+        <ul class="cluster">
+          <li><a href="../base.html">Base elements</a></li>
+          <li><a href="../theming.html">Theming</a></li>
+          <li><a href="../motion.html">Motion</a></li>
+          <li><a href="../elevation.html">Elevation</a></li>
+          <li><a href="../patterns/density.html">Density</a></li>
+          <li><a href="../atoms/index.html">Atoms</a></li>
+          <li><a href="../molecules/index.html">Molecules</a></li>
+          <li><a href="index.html" aria-current="page">Organisms</a></li>
+          <li><a href="../layouts/index.html">Layouts</a></li>
+          <li><a href="../app-shell.html">App shell</a></li>
+        </ul>
+      </nav>
+    </header>
+
+    <main id="main">
+      <h1>Organisms</h1>
+      <p data-text="lead">Larger sections of a screen built from molecules, atoms and native elements, each with one attribute API.</p>
+      <p>
+        Each organism adapts to the width of its own box with a container query, so it fits a full page, a split region or the main
+        area of an application alike. The full reference is in
+        <a href="../../css/components/organisms/README.md">css/components/organisms/README.md</a>; the page layouts they sit in are on
+        the <a href="../layouts/index.html">layouts page</a>.
+      </p>
+
+      <table>
+        <caption>Organism index</caption>
+        <thead>
+          <tr><th scope="col">Organism</th><th scope="col">API</th><th scope="col">Standard</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><a href="page-header.html">Page header</a></td><td><code>data-page-header</code> on <code>&lt;header&gt;</code></td><td>Our choice; WHATWG <code>&lt;header&gt;</code>, APG Breadcrumb</td></tr>
+          <tr><td><a href="filter-bar.html">Filter bar</a></td><td><code>data-filter-bar</code> on <code>&lt;search&gt;</code>, <code>role="status"</code></td><td>Our choice; WHATWG <code>&lt;search&gt;</code>, WCAG 4.1.3</td></tr>
+          <tr><td><a href="large-forms.html">Large forms</a></td><td><code>data-form-sections</code> on <code>&lt;form&gt;</code></td><td>WHATWG <code>&lt;form&gt;</code> and <code>&lt;fieldset&gt;</code>, WAI forms tutorial</td></tr>
+          <tr><td><a href="data-table.html">Data table</a></td><td><code>data-table</code> on <code>&lt;table&gt;</code> and cells, <code>&lt;dui-table&gt;</code> for sorting and selection</td><td>WHATWG <code>&lt;table&gt;</code>, APG Sortable Table, WAI tables tutorial</td></tr>
+        </tbody>
+      </table>
+
+      <section aria-labelledby="ix-header-title">
+        <h2 id="ix-header-title">Page header</h2>
+        <p><a href="page-header.html">Page header examples and markup</a></p>
+        <div class="demo">
+          <header data-page-header>
+            <h3>Invoices</h3>
+            <p>38 open invoices, €52,180.00 outstanding.</p>
+            <div>
+              <a href="?view=new-invoice" data-button="primary">New invoice</a>
+              <a href="?view=invoices&amp;export=csv" data-button>Export</a>
+            </div>
+          </header>
+        </div>
+      </section>
+
+      <section aria-labelledby="ix-filter-title">
+        <h2 id="ix-filter-title">Filter bar</h2>
+        <p><a href="filter-bar.html">Filter bar examples and markup</a></p>
+        <search data-filter-bar aria-label="Filter customers">
+          <form method="get">
+            <div data-field>
+              <label for="ix-q">Search customers</label>
+              <input type="search" id="ix-q" name="q">
+            </div>
+            <div data-field>
+              <label for="ix-country">Country</label>
+              <select id="ix-country" name="country">
+                <option value="">Any country</option>
+                <option value="DE">Germany</option>
+                <option value="NL">Netherlands</option>
+                <option value="GB">United Kingdom</option>
+              </select>
+            </div>
+            <div>
+              <button type="submit">Apply</button>
+              <button type="reset">Reset</button>
+            </div>
+          </form>
+          <p role="status">214 customers</p>
+        </search>
+      </section>
+
+      <section aria-labelledby="ix-forms-title">
+        <h2 id="ix-forms-title">Large forms</h2>
+        <p><a href="large-forms.html">Large form examples and markup</a></p>
+        <form data-form-sections aria-labelledby="ix-forms-title">
+          <section aria-labelledby="ix-contact-title">
+            <header>
+              <h3 id="ix-contact-title">Contact</h3>
+              <p>Who receives order confirmations.</p>
+            </header>
+            <div>
+              <div data-field>
+                <label for="ix-name">Name</label>
+                <input type="text" id="ix-name" name="name" value="Grace Hopper" autocomplete="name">
+              </div>
+              <div data-field>
+                <label for="ix-email">Email</label>
+                <input type="email" id="ix-email" name="email" value="grace@cobol-systems.example" autocomplete="email">
+              </div>
+            </div>
+          </section>
+          <footer data-action-bar>
+            <button type="submit">Save contact</button>
+          </footer>
+        </form>
+      </section>
+      <section aria-labelledby="ix-table-title">
+        <h2 id="ix-table-title">Data table</h2>
+        <p><a href="data-table.html">Data table examples and markup</a></p>
+        <section data-scroll="inline" aria-labelledby="ix-table-caption" tabindex="0">
+          <table data-table>
+            <caption id="ix-table-caption">Unpaid invoices</caption>
+            <thead>
+              <tr><th scope="col">Invoice</th><th scope="col">Customer</th><th scope="col">Due</th><th scope="col" data-table="number">Amount</th></tr>
+            </thead>
+            <tbody>
+              <tr><th scope="row">INV-2051</th><td>Cobol Systems BV</td><td><time datetime="2025-03-31">31 Mar 2025</time></td><td data-table="number">€4,820.00</td></tr>
+              <tr><th scope="row">INV-2049</th><td>Lovelace Analytics</td><td><time datetime="2025-03-21">21 Mar 2025</time></td><td data-table="number">€15,064.50</td></tr>
+              <tr><th scope="row">INV-2048</th><td>Bletchley Instruments</td><td><time datetime="2025-03-14">14 Mar 2025</time></td><td data-table="number">€58.69</td></tr>
+            </tbody>
+          </table>
+        </section>
+      </section>
+    </main>
+
+    <footer>
+      <p><small>domestic-ui packages existing standards and well-known patterns. MIT licensed.</small></p>
+    </footer>
+    <script>
+      // Demo only: nothing is saved.
+      document.addEventListener("submit", (event) => event.preventDefault());
+    </script>
+  </body>
+</html>

@@ -1,0 +1,623 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Data table · domestic-ui</title>
+    <meta name="description" content="Orders in a native table with a caption and row headers: sortable columns following the APG Sortable Table example, row selection with bulk actions, empty and loading states, and a sticky header in a scroll container.">
+    <link rel="stylesheet" href="../../css/domestic.css">
+    <style>
+      /* Page-only layout, written with semantic tokens like any consumer would. */
+      body > :is(header, main, footer) {
+        max-inline-size: var(--dui-size-page);
+        margin-inline: auto;
+        padding-inline: var(--dui-space-l);
+      }
+
+      body > header {
+        padding-block: var(--dui-space-m);
+        border-block-end: var(--dui-border-width) solid var(--dui-color-border);
+      }
+
+      body > main {
+        padding-block: var(--dui-space-2xl);
+      }
+
+      body > footer {
+        padding-block: var(--dui-space-l);
+        border-block-start: var(--dui-border-width) solid var(--dui-color-border);
+        color: var(--dui-color-text-muted);
+      }
+
+      /* Wrap long lines of example markup instead of scrolling them. */
+      pre {
+        white-space: pre-wrap;
+        overflow-wrap: anywhere;
+      }
+    </style>
+  </head>
+  <body>
+    <a class="visually-hidden" href="#main">Skip to main content</a>
+
+    <header class="cluster" style="--cluster-justify: space-between">
+      <p><strong>domestic-ui</strong></p>
+      <nav aria-label="Examples">
+        <ul class="cluster">
+          <li><a href="../base.html">Base elements</a></li>
+          <li><a href="../theming.html">Theming</a></li>
+          <li><a href="../motion.html">Motion</a></li>
+          <li><a href="../elevation.html">Elevation</a></li>
+          <li><a href="../patterns/density.html">Density</a></li>
+          <li><a href="../atoms/index.html">Atoms</a></li>
+          <li><a href="../molecules/index.html">Molecules</a></li>
+          <li><a href="index.html">Organisms</a></li>
+          <li><a href="../layouts/index.html">Layouts</a></li>
+          <li><a href="../app-shell.html">App shell</a></li>
+        </ul>
+      </nav>
+    </header>
+
+    <main id="main">
+      <h1>Data table</h1>
+      <!--
+        Keyboard
+          Tab: moves to the scroll container, then each sort button and checkbox
+          Enter / Space: on a sort button, sorts by that column (again: reverses)
+          Space: on a checkbox, selects or deselects the row (or every row)
+          Arrow keys: scroll the focused scroll container
+      -->
+      <p data-text="lead">Records in a native <code>&lt;table&gt;</code> with a caption and row headers, plus sorting, selection, empty and loading states.</p>
+      <p>
+        API: <code>data-table</code> on the <code>&lt;table&gt;</code> (<code>data-table="sticky"</code> for a sticky header), and on cells
+        <code>data-table="number"</code> for numeric columns and <code>data-table="sortable"</code> for sortable headers.
+        Source: <a href="../../css/components/organisms/data-table.css"><code>css/components/organisms/data-table.css</code></a>.
+      </p>
+      <p>
+        Sorting and selection come from <code>&lt;dui-table&gt;</code>
+        (<a href="../../web-components/dui-table.js"><code>web-components/dui-table.js</code></a>), which follows the
+        <a href="https://www.w3.org/WAI/ARIA/apg/patterns/table/examples/sortable-table/">APG Sortable Table example</a>. With JavaScript off
+        the headers are plain text, the rows keep the server's order, and the checkboxes are ordinary form controls.
+      </p>
+
+      <section aria-labelledby="sort-title">
+        <h2 id="sort-title">Sortable columns</h2>
+        <p>
+          Each sortable header becomes a button. The sorted column has <code>aria-sort</code>; the arrow is hidden from screen readers.
+          Totals sort as numbers and dates by their <code>datetime</code>.
+        </p>
+        <!-- dui:snippet name="Sortable table" -->
+        <dui-table>
+          <section data-scroll="inline" aria-labelledby="sort-caption" tabindex="0">
+            <table data-table id="sort-table">
+              <caption id="sort-caption">Recent orders</caption>
+              <thead>
+                <tr>
+                  <th scope="col" data-table="sortable">Order</th>
+                  <th scope="col" data-table="sortable">Customer</th>
+                  <th scope="col" data-table="sortable">Placed</th>
+                  <th scope="col" data-table="sortable">Status</th>
+                  <th scope="col" data-table="sortable number">Total</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <th scope="row">1042</th>
+                  <td>Analytical Engines Ltd.</td>
+                  <td><time datetime="2025-03-12">12 Mar 2025</time></td>
+                  <td><span data-badge="accent">Shipped</span></td>
+                  <td data-table="number">€1,240.00</td>
+                </tr>
+                <tr>
+                  <th scope="row">1041</th>
+                  <td>Bletchley Instruments</td>
+                  <td><time datetime="2025-03-10">10 Mar 2025</time></td>
+                  <td><span data-badge="success">Delivered</span></td>
+                  <td data-table="number">€48.50</td>
+                </tr>
+                <tr>
+                  <th scope="row">1040</th>
+                  <td>Cobol Systems BV</td>
+                  <td><time datetime="2025-03-09">9 Mar 2025</time></td>
+                  <td><span data-badge="neutral">Open</span></td>
+                  <td data-table="number">€3,980.00</td>
+                </tr>
+                <tr>
+                  <th scope="row">1039</th>
+                  <td>Orbital Mechanics GmbH</td>
+                  <td><time datetime="2025-03-07">7 Mar 2025</time></td>
+                  <td><span data-badge="warning">On hold</span></td>
+                  <td data-table="number">€615.90</td>
+                </tr>
+                <tr>
+                  <th scope="row">1038</th>
+                  <td>Difference Engine Works</td>
+                  <td><time datetime="2025-02-27">27 Feb 2025</time></td>
+                  <td><span data-badge="success">Delivered</span></td>
+                  <td data-table="number">€310.25</td>
+                </tr>
+                <tr>
+                  <th scope="row">1037</th>
+                  <td>Hollerith Tabulating Co.</td>
+                  <td><time datetime="2025-03-01">1 Mar 2025</time></td>
+                  <td><span data-badge="danger">Cancelled</span></td>
+                  <td data-table="number">€72.00</td>
+                </tr>
+                <tr>
+                  <th scope="row">1036</th>
+                  <td>Lovelace Analytics</td>
+                  <td><time datetime="2025-02-24">24 Feb 2025</time></td>
+                  <td><span data-badge="accent">Shipped</span></td>
+                  <td data-table="number">€12,450.00</td>
+                </tr>
+                <tr>
+                  <th scope="row">1035</th>
+                  <td>Turing Logistics</td>
+                  <td><time datetime="2025-02-28">28 Feb 2025</time></td>
+                  <td><span data-badge="neutral">Open</span></td>
+                  <td data-table="number">€905.10</td>
+                </tr>
+              </tbody>
+            </table>
+          </section>
+        </dui-table>
+        <!-- /dui:snippet -->
+      </section>
+
+      <section aria-labelledby="select-title">
+        <h2 id="select-title">Selection and bulk actions</h2>
+        <p>
+          Each checkbox is named after its row. The checkbox in the header selects every row and is mixed when some are selected; the count is
+          a status message, and the bulk actions are enabled only while rows are selected.
+        </p>
+        <!-- dui:snippet name="Selection and bulk actions" -->
+        <form id="bulk-form" method="post" action="?">
+          <dui-table id="bulk-orders" class="stack" select-all-label="Select all open orders" style="--stack-gap: var(--dui-space-s)">
+            <div class="cluster">
+              <dui-toolbar role="toolbar" aria-label="Bulk actions">
+                <button type="submit" name="action" value="ship" data-button="secondary" id="bulk-ship">Mark as shipped</button>
+                <button type="submit" name="action" value="print" data-button="secondary" id="bulk-print">Print packing slips</button>
+                <button type="submit" name="action" value="export" data-button="secondary" id="bulk-export">Export</button>
+              </dui-toolbar>
+              <p role="status" id="selection-count"></p>
+            </div>
+            <section data-scroll="inline" aria-labelledby="select-caption" tabindex="0">
+              <table data-table id="select-table">
+                <caption id="select-caption">Open orders</caption>
+                <thead>
+                  <tr>
+                    <td></td>
+                    <th scope="col">Order</th>
+                    <th scope="col">Customer</th>
+                    <th scope="col">Placed</th>
+                    <th scope="col">Status</th>
+                    <th scope="col" data-table="number">Total</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><label><input type="checkbox" name="orders[]" value="1042"><span class="visually-hidden">Select order 1042</span></label></td>
+                    <th scope="row">1042</th>
+                    <td>Analytical Engines Ltd.</td>
+                    <td><time datetime="2025-03-12">12 Mar 2025</time></td>
+                    <td><span data-badge="accent">Shipped</span></td>
+                    <td data-table="number">€1,240.00</td>
+                  </tr>
+                  <tr>
+                    <td><label><input type="checkbox" name="orders[]" value="1041"><span class="visually-hidden">Select order 1041</span></label></td>
+                    <th scope="row">1041</th>
+                    <td>Bletchley Instruments</td>
+                    <td><time datetime="2025-03-10">10 Mar 2025</time></td>
+                    <td><span data-badge="success">Delivered</span></td>
+                    <td data-table="number">€48.50</td>
+                  </tr>
+                  <tr>
+                    <td><label><input type="checkbox" name="orders[]" value="1040"><span class="visually-hidden">Select order 1040</span></label></td>
+                    <th scope="row">1040</th>
+                    <td>Cobol Systems BV</td>
+                    <td><time datetime="2025-03-09">9 Mar 2025</time></td>
+                    <td><span data-badge="neutral">Open</span></td>
+                    <td data-table="number">€3,980.00</td>
+                  </tr>
+                  <tr>
+                    <td><label><input type="checkbox" name="orders[]" value="1039"><span class="visually-hidden">Select order 1039</span></label></td>
+                    <th scope="row">1039</th>
+                    <td>Orbital Mechanics GmbH</td>
+                    <td><time datetime="2025-03-07">7 Mar 2025</time></td>
+                    <td><span data-badge="warning">On hold</span></td>
+                    <td data-table="number">€615.90</td>
+                  </tr>
+                  <tr>
+                    <td><label><input type="checkbox" name="orders[]" value="1038"><span class="visually-hidden">Select order 1038</span></label></td>
+                    <th scope="row">1038</th>
+                    <td>Difference Engine Works</td>
+                    <td><time datetime="2025-02-27">27 Feb 2025</time></td>
+                    <td><span data-badge="success">Delivered</span></td>
+                    <td data-table="number">€310.25</td>
+                  </tr>
+                  <tr>
+                    <td><label><input type="checkbox" name="orders[]" value="1037"><span class="visually-hidden">Select order 1037</span></label></td>
+                    <th scope="row">1037</th>
+                    <td>Hollerith Tabulating Co.</td>
+                    <td><time datetime="2025-03-01">1 Mar 2025</time></td>
+                    <td><span data-badge="danger">Cancelled</span></td>
+                    <td data-table="number">€72.00</td>
+                  </tr>
+                </tbody>
+              </table>
+            </section>
+          </dui-table>
+        </form>
+        <p role="status" id="bulk-result"></p>
+        <!-- /dui:snippet -->
+      </section>
+
+      <section aria-labelledby="empty-title">
+        <h2 id="empty-title">Empty state</h2>
+        <p>One cell spans every column with a message and, when there is one, the way out.</p>
+        <!-- dui:snippet name="Empty state" -->
+        <section data-scroll="inline" aria-labelledby="empty-caption" tabindex="0">
+          <table data-table>
+            <caption id="empty-caption">Orders on hold</caption>
+            <thead>
+              <tr>
+                <th scope="col">Order</th>
+                <th scope="col">Customer</th>
+                <th scope="col">Placed</th>
+                <th scope="col">Status</th>
+                <th scope="col" data-table="number">Total</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td colspan="5">
+                  <p>No orders match these filters</p>
+                  <p>Try another status or date, or <a href="?">clear the filters</a>.</p>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+        <!-- /dui:snippet -->
+      </section>
+
+      <section aria-labelledby="loading-title">
+        <h2 id="loading-title">Loading state</h2>
+        <p>
+          While rows load the table has <code>aria-busy="true"</code> and skeleton rows that are hidden from screen readers; a status message
+          says what is happening. The shimmer stops under reduced motion and <code>data-motion="none"</code>.
+        </p>
+        <!-- dui:snippet name="Loading state" -->
+        <p><button type="button" id="loading-toggle" aria-pressed="false" hidden>Show loading state</button></p>
+        <p role="status" id="loading-status"></p>
+        <section data-scroll="inline" aria-labelledby="loading-caption" tabindex="0">
+          <table data-table id="loading-table">
+            <caption id="loading-caption">Invoices</caption>
+            <thead>
+              <tr><th scope="col">Invoice</th><th scope="col">Customer</th><th scope="col">Due</th><th scope="col" data-table="number">Amount</th></tr>
+            </thead>
+            <tbody>
+                <tr><th scope="row">INV-2051</th><td>Cobol Systems BV</td><td><time datetime="2025-03-31">31 Mar 2025</time></td><td data-table="number">€4,820.00</td></tr>
+                <tr><th scope="row">INV-2050</th><td>Turing Logistics</td><td><time datetime="2025-03-28">28 Mar 2025</time></td><td data-table="number">€1,105.40</td></tr>
+                <tr><th scope="row">INV-2049</th><td>Lovelace Analytics</td><td><time datetime="2025-03-21">21 Mar 2025</time></td><td data-table="number">€15,064.50</td></tr>
+                <tr><th scope="row">INV-2048</th><td>Bletchley Instruments</td><td><time datetime="2025-03-14">14 Mar 2025</time></td><td data-table="number">€58.69</td></tr>
+            </tbody>
+          </table>
+        </section>
+        <template id="loading-skeleton">
+            <tr aria-hidden="true"><td></td><td></td><td></td><td></td></tr>
+            <tr aria-hidden="true"><td></td><td></td><td></td><td></td></tr>
+            <tr aria-hidden="true"><td></td><td></td><td></td><td></td></tr>
+        </template>
+        <!-- /dui:snippet -->
+      </section>
+
+      <section aria-labelledby="wide-title">
+        <h2 id="wide-title">Wide table with a sticky header</h2>
+        <p>
+          In <code>data-scroll="block inline"</code> the table scrolls both ways inside a box at most as tall as the viewport, and with
+          <code>data-table="sticky"</code> its header stays at the top of that box. The page itself never scrolls sideways, even at 320 pixels.
+        </p>
+        <!-- dui:snippet name="Wide table with a sticky header" -->
+        <section data-scroll="block inline" aria-labelledby="wide-caption" tabindex="0" id="wide-scroll">
+          <table data-table="sticky" id="wide-table">
+            <caption id="wide-caption">Order lines, February</caption>
+            <thead>
+              <tr>
+                <th scope="col">Order</th>
+                <th scope="col">Customer</th>
+                <th scope="col">Placed</th>
+                <th scope="col">Ship by</th>
+                <th scope="col">Status</th>
+                <th scope="col">Carrier</th>
+                <th scope="col">Warehouse</th>
+                <th scope="col" data-table="number">Items</th>
+                <th scope="col" data-table="number">Net</th>
+                <th scope="col" data-table="number">VAT</th>
+                <th scope="col" data-table="number">Total</th>
+              </tr>
+            </thead>
+            <tbody>
+                <tr>
+                  <th scope="row">1034</th>
+                  <td>Analytical Engines Ltd.</td>
+                  <td><time datetime="2025-02-26">26 Feb 2025</time></td>
+                  <td><time datetime="2025-03-09">9 Mar 2025</time></td>
+                  <td><span data-badge="neutral">Open</span></td>
+                  <td>DHL Express</td>
+                  <td>Rotterdam</td>
+                  <td data-table="number">21</td>
+                  <td data-table="number">€8,532.87</td>
+                  <td data-table="number">€1,791.90</td>
+                  <td data-table="number">€10,324.77</td>
+                </tr>
+                <tr>
+                  <th scope="row">1033</th>
+                  <td>Bletchley Instruments</td>
+                  <td><time datetime="2025-02-25">25 Feb 2025</time></td>
+                  <td><time datetime="2025-03-08">8 Mar 2025</time></td>
+                  <td><span data-badge="accent">Shipped</span></td>
+                  <td>DPD Classic</td>
+                  <td>Leipzig</td>
+                  <td data-table="number">26</td>
+                  <td data-table="number">€5,872.37</td>
+                  <td data-table="number">€1,233.20</td>
+                  <td data-table="number">€7,105.57</td>
+                </tr>
+                <tr>
+                  <th scope="row">1032</th>
+                  <td>Cobol Systems BV</td>
+                  <td><time datetime="2025-02-24">24 Feb 2025</time></td>
+                  <td><time datetime="2025-03-07">7 Mar 2025</time></td>
+                  <td><span data-badge="success">Delivered</span></td>
+                  <td>PostNL Parcel</td>
+                  <td>Lyon</td>
+                  <td data-table="number">5</td>
+                  <td data-table="number">€7,398.62</td>
+                  <td data-table="number">€1,553.71</td>
+                  <td data-table="number">€8,952.33</td>
+                </tr>
+                <tr>
+                  <th scope="row">1031</th>
+                  <td>Orbital Mechanics GmbH</td>
+                  <td><time datetime="2025-02-23">23 Feb 2025</time></td>
+                  <td><time datetime="2025-03-06">6 Mar 2025</time></td>
+                  <td><span data-badge="warning">On hold</span></td>
+                  <td>UPS Standard</td>
+                  <td>Milan</td>
+                  <td data-table="number">7</td>
+                  <td data-table="number">€3,316.57</td>
+                  <td data-table="number">€696.48</td>
+                  <td data-table="number">€4,013.05</td>
+                </tr>
+                <tr>
+                  <th scope="row">1030</th>
+                  <td>Difference Engine Works</td>
+                  <td><time datetime="2025-02-22">22 Feb 2025</time></td>
+                  <td><time datetime="2025-03-05">5 Mar 2025</time></td>
+                  <td><span data-badge="neutral">Open</span></td>
+                  <td>FedEx International</td>
+                  <td>Rotterdam</td>
+                  <td data-table="number">4</td>
+                  <td data-table="number">€8,190.95</td>
+                  <td data-table="number">€1,720.10</td>
+                  <td data-table="number">€9,911.05</td>
+                </tr>
+                <tr>
+                  <th scope="row">1029</th>
+                  <td>Hollerith Tabulating Co.</td>
+                  <td><time datetime="2025-02-21">21 Feb 2025</time></td>
+                  <td><time datetime="2025-03-04">4 Mar 2025</time></td>
+                  <td><span data-badge="accent">Shipped</span></td>
+                  <td>DHL Express</td>
+                  <td>Leipzig</td>
+                  <td data-table="number">14</td>
+                  <td data-table="number">€375.96</td>
+                  <td data-table="number">€78.95</td>
+                  <td data-table="number">€454.91</td>
+                </tr>
+                <tr>
+                  <th scope="row">1028</th>
+                  <td>Lovelace Analytics</td>
+                  <td><time datetime="2025-02-20">20 Feb 2025</time></td>
+                  <td><time datetime="2025-03-03">3 Mar 2025</time></td>
+                  <td><span data-badge="success">Delivered</span></td>
+                  <td>DPD Classic</td>
+                  <td>Lyon</td>
+                  <td data-table="number">28</td>
+                  <td data-table="number">€3,786.82</td>
+                  <td data-table="number">€795.23</td>
+                  <td data-table="number">€4,582.05</td>
+                </tr>
+                <tr>
+                  <th scope="row">1027</th>
+                  <td>Turing Logistics</td>
+                  <td><time datetime="2025-02-19">19 Feb 2025</time></td>
+                  <td><time datetime="2025-03-02">2 Mar 2025</time></td>
+                  <td><span data-badge="warning">On hold</span></td>
+                  <td>PostNL Parcel</td>
+                  <td>Milan</td>
+                  <td data-table="number">16</td>
+                  <td data-table="number">€852.79</td>
+                  <td data-table="number">€179.09</td>
+                  <td data-table="number">€1,031.88</td>
+                </tr>
+                <tr>
+                  <th scope="row">1026</th>
+                  <td>Analytical Engines Ltd.</td>
+                  <td><time datetime="2025-02-18">18 Feb 2025</time></td>
+                  <td><time datetime="2025-03-01">1 Mar 2025</time></td>
+                  <td><span data-badge="neutral">Open</span></td>
+                  <td>UPS Standard</td>
+                  <td>Rotterdam</td>
+                  <td data-table="number">28</td>
+                  <td data-table="number">€569.63</td>
+                  <td data-table="number">€119.62</td>
+                  <td data-table="number">€689.25</td>
+                </tr>
+                <tr>
+                  <th scope="row">1025</th>
+                  <td>Bletchley Instruments</td>
+                  <td><time datetime="2025-02-17">17 Feb 2025</time></td>
+                  <td><time datetime="2025-03-09">9 Mar 2025</time></td>
+                  <td><span data-badge="accent">Shipped</span></td>
+                  <td>FedEx International</td>
+                  <td>Leipzig</td>
+                  <td data-table="number">37</td>
+                  <td data-table="number">€1,149.27</td>
+                  <td data-table="number">€241.35</td>
+                  <td data-table="number">€1,390.62</td>
+                </tr>
+                <tr>
+                  <th scope="row">1024</th>
+                  <td>Cobol Systems BV</td>
+                  <td><time datetime="2025-02-16">16 Feb 2025</time></td>
+                  <td><time datetime="2025-03-08">8 Mar 2025</time></td>
+                  <td><span data-badge="success">Delivered</span></td>
+                  <td>DHL Express</td>
+                  <td>Lyon</td>
+                  <td data-table="number">15</td>
+                  <td data-table="number">€5,690.41</td>
+                  <td data-table="number">€1,194.99</td>
+                  <td data-table="number">€6,885.40</td>
+                </tr>
+                <tr>
+                  <th scope="row">1023</th>
+                  <td>Orbital Mechanics GmbH</td>
+                  <td><time datetime="2025-02-15">15 Feb 2025</time></td>
+                  <td><time datetime="2025-03-07">7 Mar 2025</time></td>
+                  <td><span data-badge="warning">On hold</span></td>
+                  <td>DPD Classic</td>
+                  <td>Milan</td>
+                  <td data-table="number">38</td>
+                  <td data-table="number">€8,531.47</td>
+                  <td data-table="number">€1,791.61</td>
+                  <td data-table="number">€10,323.08</td>
+                </tr>
+                <tr>
+                  <th scope="row">1022</th>
+                  <td>Difference Engine Works</td>
+                  <td><time datetime="2025-02-14">14 Feb 2025</time></td>
+                  <td><time datetime="2025-03-06">6 Mar 2025</time></td>
+                  <td><span data-badge="neutral">Open</span></td>
+                  <td>PostNL Parcel</td>
+                  <td>Rotterdam</td>
+                  <td data-table="number">37</td>
+                  <td data-table="number">€5,286.45</td>
+                  <td data-table="number">€1,110.15</td>
+                  <td data-table="number">€6,396.60</td>
+                </tr>
+                <tr>
+                  <th scope="row">1021</th>
+                  <td>Hollerith Tabulating Co.</td>
+                  <td><time datetime="2025-02-13">13 Feb 2025</time></td>
+                  <td><time datetime="2025-03-05">5 Mar 2025</time></td>
+                  <td><span data-badge="accent">Shipped</span></td>
+                  <td>UPS Standard</td>
+                  <td>Leipzig</td>
+                  <td data-table="number">4</td>
+                  <td data-table="number">€8,787.25</td>
+                  <td data-table="number">€1,845.32</td>
+                  <td data-table="number">€10,632.57</td>
+                </tr>
+                <tr>
+                  <th scope="row">1020</th>
+                  <td>Lovelace Analytics</td>
+                  <td><time datetime="2025-02-12">12 Feb 2025</time></td>
+                  <td><time datetime="2025-03-04">4 Mar 2025</time></td>
+                  <td><span data-badge="success">Delivered</span></td>
+                  <td>FedEx International</td>
+                  <td>Lyon</td>
+                  <td data-table="number">3</td>
+                  <td data-table="number">€5,027.72</td>
+                  <td data-table="number">€1,055.82</td>
+                  <td data-table="number">€6,083.54</td>
+                </tr>
+                <tr>
+                  <th scope="row">1019</th>
+                  <td>Turing Logistics</td>
+                  <td><time datetime="2025-02-11">11 Feb 2025</time></td>
+                  <td><time datetime="2025-03-03">3 Mar 2025</time></td>
+                  <td><span data-badge="warning">On hold</span></td>
+                  <td>DHL Express</td>
+                  <td>Milan</td>
+                  <td data-table="number">9</td>
+                  <td data-table="number">€2,634.90</td>
+                  <td data-table="number">€553.33</td>
+                  <td data-table="number">€3,188.23</td>
+                </tr>
+            </tbody>
+          </table>
+        </section>
+        <!-- /dui:snippet -->
+      </section>
+
+      <section aria-labelledby="specs-title">
+        <h2 id="specs-title">Specs and guidance</h2>
+        <ul>
+          <li><a href="https://html.spec.whatwg.org/multipage/tables.html#the-table-element">WHATWG: the table element</a></li>
+          <li><a href="https://www.w3.org/WAI/tutorials/tables/">W3C WAI: Tables tutorial</a></li>
+          <li><a href="https://www.w3.org/WAI/ARIA/apg/patterns/table/">APG: Table pattern</a></li>
+          <li><a href="https://www.w3.org/WAI/ARIA/apg/patterns/table/examples/sortable-table/">APG: Sortable Table example</a></li>
+          <li><a href="https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Reference/Attributes/aria-sort">MDN: aria-sort</a></li>
+          <li><a href="https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Reference/Attributes/aria-busy">MDN: aria-busy</a></li>
+          <li><a href="https://www.w3.org/WAI/WCAG22/Understanding/status-messages.html">WCAG 2.2: 4.1.3 Status Messages</a></li>
+          <li><a href="https://www.w3.org/WAI/WCAG22/Understanding/focus-not-obscured-minimum.html">WCAG 2.2: 2.4.11 Focus Not Obscured (Minimum)</a></li>
+        </ul>
+      </section>
+    </main>
+
+    <footer>
+      <p><small>domestic-ui packages existing standards and well-known patterns. MIT licensed.</small></p>
+    </footer>
+    <script type="module" src="../../web-components/dui-table.js"></script>
+    <script type="module" src="../../web-components/dui-toolbar.js"></script>
+    <script>
+      // Demo only: bulk actions change the selected rows in place and report it in a status message. Nothing is saved.
+      const bulk = document.getElementById("bulk-orders");
+      const report = (text) => {
+        const result = document.getElementById("bulk-result");
+        if (result) result.textContent = text;
+      };
+      const selectedRows = () => bulk?.selectedRows ?? [...document.querySelectorAll("#select-table tbody input:checked")].map((box) => box.closest("tr"));
+      const orders = (count) => `${count} ${count === 1 ? "order" : "orders"}`;
+      // Without this script the form posts the checked rows with action=ship, print or export to the server.
+      document.getElementById("bulk-form")?.addEventListener("submit", (event) => {
+        event.preventDefault();
+        const rows = selectedRows();
+        const action = event.submitter?.value;
+        if (action === "ship") {
+          for (const row of rows) {
+            const badge = row.querySelector("[data-badge]");
+            badge.dataset.badge = "accent";
+            badge.textContent = "Shipped";
+          }
+          report(`${orders(rows.length)} marked as shipped.`);
+        } else if (action === "print") report(`Packing slips for ${orders(rows.length)} sent to the printer.`);
+        else if (action === "export") report(`${orders(rows.length)} exported.`);
+      });
+
+      // Demo only: swap the invoice rows for skeleton rows and back, as a page would while it fetches.
+      const toggle = document.getElementById("loading-toggle");
+      const table = document.getElementById("loading-table");
+      const skeleton = document.getElementById("loading-skeleton");
+      let loadedRows = [];
+      // The toggle only makes sense with this script, so it starts hidden.
+      if (toggle) toggle.hidden = false;
+      toggle?.addEventListener("click", () => {
+        const loading = toggle.getAttribute("aria-pressed") !== "true";
+        toggle.setAttribute("aria-pressed", String(loading));
+        const body = table.tBodies[0];
+        if (loading) {
+          loadedRows = [...body.rows];
+          table.setAttribute("aria-busy", "true");
+          body.replaceChildren(skeleton.content.cloneNode(true));
+          document.getElementById("loading-status").textContent = "Loading invoices…";
+        } else {
+          body.replaceChildren(...loadedRows);
+          table.removeAttribute("aria-busy");
+          document.getElementById("loading-status").textContent = `${loadedRows.length} invoices loaded.`;
+        }
+      });
+    </script>
+  </body>
+</html>

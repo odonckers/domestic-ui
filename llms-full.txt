@@ -2,7 +2,7 @@
 
 > domestic-ui is a CSS design system built on native HTML, custom properties and cascade layers. Link one stylesheet and semantic HTML is styled in light and dark, with WCAG 2.2 AA as the baseline. Theme it by overriding semantic tokens. It packages existing web standards and patterns; nothing here is original.
 
-Link `css/domestic.css` (copy `css/` from https://github.com/odonckers/domestic-ui); semantic HTML needs no classes. Components: one `data-<component>` attribute of space-separated words matched with `~=` (`data-button="primary small"`), no classes; state via native attributes and ARIA. Layout primitives and utilities: `.cluster`, `.grid`, `data-scroll`, `.stack`, `.visually-hidden`. Theme only with semantic `--dui-*` tokens; primitives are internal.
+Link `css/domestic.css` (copy `css/` from https://github.com/odonckers/domestic-ui); semantic HTML needs no classes. Components: one `data-<component>` attribute of space-separated words matched with `~=` (`data-button="primary small"`), no classes; state via native attributes and ARIA. Layout primitives and utilities: `data-action-bar`, `.cluster`, `.grid`, `data-scroll`, `.stack`, `.visually-hidden`. Theme only with semantic `--dui-*` tokens; primitives are internal.
 
 ## domestic-ui
 
@@ -38,7 +38,7 @@ Each component exposes one `data-<component>` attribute. Its value is space-sepa
 
 **Our choice:** One attribute is one API to learn, it reads as a sentence (`data-button="primary small"`), and it cannot pile up like modifier classes.
 
-Layout primitives and utilities: `.cluster`, `.grid`, `data-scroll`, `.stack`, `.visually-hidden`. Base elements need no API.
+Layout primitives and utilities: `data-action-bar`, `.cluster`, `.grid`, `data-scroll`, `.stack`, `.visually-hidden`. Base elements need no API.
 
 ### How these docs are organized
 
@@ -157,8 +157,8 @@ unlayered CSS beats all of them**, so overriding never needs `!important` or spe
 | `reset` | A modest reset: `box-sizing`, zero margins, block media, inherited form fonts |
 | `tokens` | Primitive and semantic custom properties |
 | `base` | Native elements: typography, lists, tables, forms, buttons, dialog, details, focus |
-| `layout` | `.stack`, `.cluster`, `.grid`, `[data-scroll]` |
-| `components` | Atoms in `css/components/atoms/` (M2) and molecules in `css/components/molecules/` (M3a); organisms later. See the [atoms index](https://github.com/odonckers/domestic-ui/blob/main/css/components/atoms/README.md) and the [molecules index](https://github.com/odonckers/domestic-ui/blob/main/css/components/molecules/README.md) |
+| `layout` | `.stack`, `.cluster`, `.grid`, `[data-scroll]` and the page layouts (list-detail, split, dashboard, action bar, app shell) |
+| `components` | Atoms in `css/components/atoms/` (M2), molecules in `css/components/molecules/` (M3a) and organisms in `css/components/organisms/` (M3b). See the [atoms index](https://github.com/odonckers/domestic-ui/blob/main/css/components/atoms/README.md), the [molecules index](https://github.com/odonckers/domestic-ui/blob/main/css/components/molecules/README.md) and the [organisms index](https://github.com/odonckers/domestic-ui/blob/main/css/components/organisms/README.md) |
 | `utilities` | Single-purpose helpers such as `.visually-hidden`; last so they always apply |
 
 **Our choice:** this order, because each layer only refines the ones before it, and a
@@ -279,6 +279,10 @@ may change. Fluid `--dui-step-*` values are `clamp()` expressions; see `primitiv
 | `--dui-size-menu-min` | Min width of menus and nav dropdowns | `size-12` (12rem) |
 | `--dui-size-drawer` | Drawer width (all of the viewport when narrower) | `size-24` (24rem) |
 | `--dui-size-page` | Max inline size of a page's content column (the examples' header, main and footer) | `size-72` (72rem) |
+| `--dui-size-icon` | Decorative icons beside a label: nav links and group summaries, app bar buttons | `size-1-25` (1.25rem) |
+| `--dui-size-sidebar` | Inline size of an app shell's primary sidebar beside main | `size-16` (16rem) |
+| `--dui-size-sidebar-aux` | Inline size of an app shell's auxiliary (inline-end) sidebar beside main | `size-20` (20rem) |
+| `--dui-size-pane` | Max block size of a pane that scrolls on its own beside others (the detail of a list-detail when side by side) | `size-100svh` (100svh, the small viewport height) |
 | `--dui-radius-control` | Controls, buttons, inline code | `radius-2` (0.375rem) |
 | `--dui-radius-surface` | Panels, pre, dialog, details, media | `radius-3` (0.625rem) |
 | `--dui-radius-pill` | Fully rounded ends | `radius-round` (999rem) |
@@ -862,6 +866,25 @@ Each of these is a choice between valid options, not a standard.
     [`<datalist>`](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/datalist) popups
     in Chromium and Firefox, and positions its listbox under the input rather than in the top layer, so
     it is never wider than the field ([explainer](https://github.com/odonckers/domestic-ui/blob/main/explainers/combobox.md)).
+- **Our choice:** organisms (page header, filter bar, form sections, data table) follow the same one-attribute rule
+  (`data-page-header`, `data-filter-bar`, `data-form-sections`, `data-table`) and take the rest of their layout from their
+  children's native elements. Their choices are listed in the
+  [organisms index](https://github.com/odonckers/domestic-ui/blob/main/css/components/organisms/README.md#our-choices); the main ones:
+  - **Our choice:** the filter bar is a `<form method="get">` in `<search>` with an Apply button and a
+    `role="status"` result count present from page load, so filters live in the URL, work without
+    JavaScript and are announced ([4.1.3 Status Messages](https://www.w3.org/WAI/WCAG22/Understanding/status-messages.html)).
+  - **Our choice:** form sections are headed `<section>` elements with a `<header>` and one body of fields,
+    not fieldsets, because a `<legend>` cannot be placed in a grid column; related controls still go in a
+    `<fieldset>` inside the body.
+  - **Our choice:** the data table (`data-table` on a native `<table>`) has sortable headers that are plain
+    text in the markup; `<dui-table>` turns them into buttons and follows the
+    [APG Sortable Table](https://www.w3.org/WAI/ARIA/apg/patterns/table/examples/sortable-table/) example
+    (`aria-sort` on the sorted header only, a visually hidden caption hint, nothing else announced), so with
+    JavaScript off there are no buttons that do nothing. A selected row shows a checked checkbox, a bar on its
+    leading edge and a tint, never color alone; the count is a `role="status"` element present from load.
+  - **Our choice:** a sticky table header sticks to the nearest scroll container, so a sticky table goes in
+    `data-scroll="block inline"` (at most `--dui-size-pane` tall) or in none; numeric columns are marked per
+    cell with the same attribute (`data-table="number"`), because words on the table cannot target a column.
 - **Our choice:** layout primitives come from [Every Layout](https://every-layout.dev/)'s
   Stack, Cluster and Grid. Their custom properties are registered with
   [`@property`](https://developer.mozilla.org/en-US/docs/Web/CSS/@property) as non-inheriting,
@@ -877,12 +900,66 @@ Page: https://odonckers.github.io/domestic-ui/principles/layout-primitives.html
 | `.cluster` | Wrapping inline group | `--cluster-gap`, `--cluster-justify`, `--cluster-align` |
 | `.grid` | Auto-fit responsive grid, no media queries | `--grid-min`, `--grid-gap` |
 | `[data-scroll="inline"]` | Scroll container for content wider than the screen, such as a data table | None |
+| `[data-scroll="block inline"]` | Also scrolls vertically, at most `--dui-size-pane` (the viewport) tall, so a sticky table header stays in view | None |
 
 ```html
 <div class="grid" style="--grid-min: 12rem">…</div>
 ```
 
 On a `ul` or `ol`, the primitive also removes list markers and padding.
+
+### Page layouts
+
+Larger layouts for application screens, each one attribute on a wrapper, live in `css/layout/` too and
+are shown in [`examples/layouts/`](https://odonckers.github.io/domestic-ui/index.md):
+
+| Attribute | What it does |
+| --- | --- |
+| `data-list-detail` | A list of links (`aria-current` on the selected one) beside a labelled detail; the detail scrolls on its own when side by side |
+| `data-split="[1:1 \| 1:2 \| 2:1]"` | Two regions side by side at a ratio |
+| `data-dashboard`, `data-dashboard="wide \| full"` on a tile | Headed tiles on raised surfaces that reflow without media queries |
+| `data-action-bar` | A form's buttons in a bar that sticks to the bottom of the scroll area and never hides the focused field |
+| `data-app-shell`, `data-app-shell="contained"` | The frame of an application: `<header>`, a primary sidebar (`<nav>`), `<main>`, an optional auxiliary `<aside>` and `<footer>` in named grid areas; `<dui-app-shell>` makes the sidebars collapsible and drawers when narrow |
+
+Each one is side by side when its wrapper is wide and stacked when it is narrow, from 320px up, and keeps
+source order (the reading and Tab order) in both. A settings page needs no API of its own: it is a
+`data-list-detail` of in-page links beside `data-form-sections` with a `data-action-bar`
+([example](https://odonckers.github.io/domestic-ui/patterns/list-detail.md)).
+
+- **Our choice:** layouts and [organisms](https://github.com/odonckers/domestic-ui/blob/main/css/components/organisms/README.md) switch with a
+  [container query](https://developer.mozilla.org/en-US/docs/Web/CSS/Guides/Containment/Container_queries)
+  on their own wrapper, not a media query, because they sit in regions of any width: a page, a split, the
+  main area of an app shell. Media queries are kept for decisions about the whole viewport. A container
+  query condition cannot read a custom property, so each breakpoint is a length written in the file header.
+- **Our choice:** list-detail items are links to the item's own URL, not buttons that swap content, so
+  history, bookmarks and the no-JavaScript case work.
+- **Our choice:** the sticky action bar reserves its height as `scroll-padding-block-end` on every ancestor
+  of its form, so whichever one scrolls keeps the focused field clear of the bar
+  ([2.4.11 Focus Not Obscured (Minimum)](https://www.w3.org/WAI/WCAG22/Understanding/focus-not-obscured-minimum.html),
+  technique [C43](https://www.w3.org/WAI/WCAG22/Techniques/css/C43)).
+- **Our choice:** the app shell is the landmarks HTML already has, in source order, placed with
+  `grid-template-areas`; parts are recognized by element and position, so none needs an attribute
+  ([APG Landmark Regions](https://www.w3.org/WAI/ARIA/apg/practices/landmark-regions/),
+  [explainer](https://github.com/odonckers/domestic-ui/blob/main/explainers/app-shell.md)). Without JavaScript both sidebars are always shown (stacked when narrow)
+  and the toggles stay `hidden`, so no button does nothing.
+- **Our choice:** one copy of each sidebar. Beside main it is a plain landmark that its toggle hides with
+  `hidden`; on a narrow shell `<dui-app-shell>` moves the same element into a modal drawer `<dialog>` while the
+  drawer is open, so screen readers hear "dialog" only while it is one and the navigation is never duplicated.
+- **Our choice:** the shell switches on its own width (container queries at 48rem for the primary sidebar
+  and 64rem for the auxiliary one, and a `ResizeObserver` in the element), and `<main>` and each sidebar are
+  named size containers, so a contained shell works anywhere and the layouts inside main follow main's width.
+- **Our choice:** the sidebar navigation is the nav molecule (`data-nav="vertical"`) with optional decorative
+  icons, not a tree view: an [APG Tree View](https://www.w3.org/WAI/ARIA/apg/patterns/treeview/) is for
+  hierarchies users navigate as data (file trees) with roving focus and arrow keys; site navigation is links,
+  so disclosure groups and links ([APG Disclosure Navigation](https://www.w3.org/WAI/ARIA/apg/patterns/disclosure/examples/disclosure-navigation/))
+  are the right semantics.
+- **Our choice:** the selected item of a list-detail is marked like a selected table row: a
+  `--dui-border-width-emphasis` bar on its leading edge, a tint and bold text, with the bar drawn in
+  `Highlight` in forced colors mode ([1.4.1](https://www.w3.org/WAI/WCAG22/Understanding/use-of-color.html),
+  [1.4.11](https://www.w3.org/WAI/WCAG22/Understanding/non-text-contrast.html)).
+- **Our choice:** splits have a fixed ratio and no draggable divider; a resizable one would follow the
+  [APG Window Splitter](https://www.w3.org/WAI/ARIA/apg/patterns/windowsplitter/) pattern
+  ([explainer](https://github.com/odonckers/domestic-ui/blob/main/explainers/split-view.md)).
 
 Wrap any table that may not fit a 320px screen in `data-scroll="inline"`, named by its caption:
 
@@ -913,14 +990,16 @@ Page: https://odonckers.github.io/domestic-ui/principles/web-components.html
 
 HTML still has no element for tabs, menus, roving focus in a toolbar, hover tooltips or a toast
 stack. For those, and only those, [`web-components/`](https://github.com/odonckers/domestic-ui/blob/main/web-components/README.md) has one small
-custom element each: `<dui-tabs>`, `<dui-menu>`, `<dui-combobox>`, `<dui-toolbar>`, `<dui-tooltip>` and
-`<dui-toaster>`. HTML does have `<datalist>`, but its popup cannot be styled and differs between engines,
+custom element each: `<dui-tabs>`, `<dui-menu>`, `<dui-combobox>`, `<dui-toolbar>`, `<dui-tooltip>`,
+`<dui-toaster>`, `<dui-table>` (sorting rows and selecting them, which a `<table>` cannot do) and `<dui-app-shell>`
+(collapsing sidebars and turning them into modal drawers on a narrow shell, which a button cannot do by itself). HTML does have `<datalist>`, but its popup cannot be styled and differs between engines,
 so `<dui-combobox>` upgrades it to a listbox the page owns.
 
 - **Light DOM.** No shadow root: the molecule CSS and your CSS style the markup directly.
 - **Progressive enhancement.** The markup works before the script runs and with JavaScript off:
   tabs are a `<nav>` of in-page links and headed sections, toolbar buttons are Tab stops, a menu's
-  popover still opens, a tooltip is still the button's description.
+  popover still opens, a tooltip is still the button's description, a data table keeps the server's order
+  with plain-text headers and ordinary checkboxes, an app shell shows both sidebars and no toggles.
 - **ARIA with behavior, or not at all.** An element adds roles such as `menu` or `tab` only together
   with the keyboard support those roles promise ([APG](https://www.w3.org/WAI/ARIA/apg/)).
 - **Why each exists** is written at the top of its file, and the
@@ -935,7 +1014,8 @@ A pattern with no native element and no APG pattern is written up like a platfor
 [`explainers/`](https://github.com/odonckers/domestic-ui/blob/main/explainers/README.md): problem, use cases, goals and non-goals, markup and API,
 keyboard, accessibility mappings, alternatives, prior art and open questions, with normative
 text in [RFC 2119](https://www.rfc-editor.org/rfc/rfc2119) keywords. The card, pagination, drawer
-and toast molecules have one, and so do density and the combobox, which record the choices their
+and toast molecules have one, and so do density, the combobox, the split view, the app shell and
+its auxiliary sidebar, which record the choices their
 standards leave open. Names follow HTML and ARIA conventions, so a pattern could map onto
 a future native element or attribute.
 
@@ -950,7 +1030,7 @@ Page: https://odonckers.github.io/domestic-ui/principles/tooling.html
 | `lint:html` | [html-validate](https://html-validate.org/) | `examples/**/*.html` against `html-validate:recommended` |
 | `lint:css` | [Stylelint](https://stylelint.io/) | `css/**/*.css` against `stylelint-config-standard` |
 | `lint:tokens` | `scripts/check-tokens.mjs` | Semantic-only tokens and no literal colors or sizes outside `css/tokens/` |
-| `test:a11y` | [Playwright](https://playwright.dev/) + [axe-core](https://github.com/dequelabs/axe-core) | Every `examples/**/*.html` (atoms and molecules included) in light and dark, in Chromium, Firefox and WebKit, with tags `wcag2a`, `wcag2aa`, `wcag21a`, `wcag21aa`, `wcag22aa`, including open dialogs and drawers, open popovers and menus, shown tooltips and toasts, every tab selected and every details expanded; no horizontal page overflow and no axe violations at 320×640 and 375×812; no external requests; token contrast pairs (atoms and molecules included) in the default and forest themes; rendered focus-ring and indicator contrast; atom and molecule states through accessibility APIs; molecule keyboard behavior against the APG; no-JavaScript fallbacks; fallbacks for engine-specific features; scoped theming of atoms and molecules |
+| `test:a11y` | [Playwright](https://playwright.dev/) + [axe-core](https://github.com/dequelabs/axe-core) | Every `examples/**/*.html` (atoms and molecules included) in light and dark, in Chromium, Firefox and WebKit, with tags `wcag2a`, `wcag2aa`, `wcag21a`, `wcag21aa`, `wcag22aa`, including open dialogs and drawers, open popovers and menus, shown tooltips and toasts, every tab selected and every details expanded; no horizontal page overflow and no axe violations at 320×640 and 375×812; no external requests; token contrast pairs (atoms and molecules included) in the default and forest themes; rendered focus-ring and indicator contrast; atom and molecule states through accessibility APIs; molecule keyboard behavior against the APG; no-JavaScript fallbacks; fallbacks for engine-specific features; scoped theming of atoms and molecules; layouts and organisms side by side when wide and stacked when narrow, the sticky action bar never covering the focused field, data table sorting, selection, sticky header and loading state (with and without JavaScript), and 24px targets in compact density; the app shell's landmarks and grid areas, collapse when wide, modal drawers with focus return when narrow, one copy of each sidebar, no-JavaScript fallbacks and axe with the drawers open |
 
 Preview locally with `npm run serve` (a zero-dependency static server) and open
 <http://127.0.0.1:4173/examples/base.html>. To run tests from two checkouts at once, give each its own port, e.g. `PORT=4273 npm test`.
@@ -990,7 +1070,7 @@ Primitives are NOT public API: they may be renamed, added or removed in any rele
 
 Custom properties: <https://developer.mozilla.org/en-US/docs/Web/CSS/--*>
 
-105 tokens in [`css/tokens/primitives.css`](https://github.com/odonckers/domestic-ui/blob/main/css/tokens/primitives.css). **Light** and **Dark** resolve every `var()` and take one side of [`light-dark()`](https://developer.mozilla.org/en-US/docs/Web/CSS/color_value/light-dark). Previews are decorative.
+107 tokens in [`css/tokens/primitives.css`](https://github.com/odonckers/domestic-ui/blob/main/css/tokens/primitives.css). **Light** and **Dark** resolve every `var()` and take one side of [`light-dark()`](https://developer.mozilla.org/en-US/docs/Web/CSS/color_value/light-dark). Previews are decorative.
 
 ### Neutral gray, cool tint
 
@@ -1107,9 +1187,11 @@ Rem, so it follows the user's font size setting.
 | `--dui-size-12` | `12rem` | `12rem` | No description yet. |
 | `--dui-size-3-25` | `3.25rem` | `3.25rem` | No description yet. |
 | `--dui-size-16` | `16rem` | `16rem` | No description yet. |
+| `--dui-size-20` | `20rem` | `20rem` | No description yet. |
 | `--dui-size-24` | `24rem` | `24rem` | No description yet. |
 | `--dui-size-65ch` | `65ch` | `65ch` | No description yet. |
 | `--dui-size-72` | `72rem` | `72rem` | No description yet. |
+| `--dui-size-100svh` | `100svh` | `100svh` | The small viewport height: the viewport with the browser's toolbars shown |
 
 ### Radii
 
@@ -1195,7 +1277,7 @@ A theme is an override of these tokens on :root or on a scoped element. No rebui
 
 Colors use light-dark(), which picks a value from the used color-scheme of the element where the token is read. <https://developer.mozilla.org/en-US/docs/Web/CSS/color_value/light-dark>
 
-124 tokens in [`css/tokens/semantic.css`](https://github.com/odonckers/domestic-ui/blob/main/css/tokens/semantic.css). **Light** and **Dark** resolve every `var()` and take one side of [`light-dark()`](https://developer.mozilla.org/en-US/docs/Web/CSS/color_value/light-dark). Previews are decorative. † marks a description taken from the semantic token table in [Theming](https://odonckers.github.io/domestic-ui/principles/theming.md).
+128 tokens in [`css/tokens/semantic.css`](https://github.com/odonckers/domestic-ui/blob/main/css/tokens/semantic.css). **Light** and **Dark** resolve every `var()` and take one side of [`light-dark()`](https://developer.mozilla.org/en-US/docs/Web/CSS/color_value/light-dark). Previews are decorative. † marks a description taken from the semantic token table in [Theming](https://odonckers.github.io/domestic-ui/principles/theming.md).
 
 ### Surfaces and text
 
@@ -1281,6 +1363,10 @@ Decorative hairlines vs. control boundaries (3:1, WCAG 1.4.11).
 | `--dui-size-menu-min` | `12rem` | `12rem` | Min width of menus and nav dropdowns † |
 | `--dui-size-drawer` | `24rem` | `24rem` | Drawer width (all of the viewport when narrower) † |
 | `--dui-size-page` | `72rem` | `72rem` | Max inline size of a page's content column: header, main and footer |
+| `--dui-size-icon` | `1.25rem` | `1.25rem` | Decorative icons beside a label: nav links and group summaries |
+| `--dui-size-sidebar` | `16rem` | `16rem` | Inline size of an app shell's primary sidebar when it sits beside main |
+| `--dui-size-sidebar-aux` | `20rem` | `20rem` | Inline size of an app shell's auxiliary (inline-end) sidebar when it sits beside main |
+| `--dui-size-pane` | `100svh` | `100svh` | Max block size of a pane that scrolls on its own beside others, such as the detail of a list-detail or a data-scroll="block inline" table |
 
 ### Shape
 
@@ -1700,6 +1786,141 @@ class="visually-hidden"
 - [Accessibility baseline](https://odonckers.github.io/domestic-ui/principles/accessibility-baseline-wcag-22-aa.md)
 - Source: [`css/utilities/visually-hidden.css`](https://github.com/odonckers/domestic-ui/blob/main/css/utilities/visually-hidden.css), [`examples/base.html`](https://github.com/odonckers/domestic-ui/blob/main/examples/base.html)
 
+## Action bar
+
+Page: https://odonckers.github.io/domestic-ui/layouts/action-bar.html
+
+A long form whose Save and Cancel buttons stay in a sticky bar at the bottom of the window, with scroll margins so the bar never hides the focused field (WCAG 2.4.11).
+
+### Live example
+
+#### Edit customer
+
+```html
+<form class="stack" aria-labelledby="edit-form-title">
+  <h3 id="edit-form-title">Analytical Engines Ltd.</h3>
+    <div data-field>
+      <label for="ab-company">Company name</label>
+      <input type="text" id="ab-company" name="company" value="Analytical Engines Ltd." autocomplete="organization">
+    </div>
+    <div data-field>
+      <label for="ab-number">Customer number</label>
+      <input type="text" id="ab-number" name="number" value="C-118" readonly>
+    </div>
+    <div data-field>
+      <label for="ab-vat">VAT number</label>
+      <input type="text" id="ab-vat" name="vat" value="GB 123 4567 89" autocomplete="off">
+    </div>
+    <div data-field>
+      <label for="ab-contact">Contact person</label>
+      <input type="text" id="ab-contact" name="contact" value="Ada Lovelace" autocomplete="name">
+    </div>
+    <div data-field>
+      <label for="ab-email">Email</label>
+      <input type="email" id="ab-email" name="email" value="ada@analytical-engines.example" autocomplete="email">
+    </div>
+    <div data-field>
+      <label for="ab-phone">Phone</label>
+      <input type="tel" id="ab-phone" name="phone" value="+44 20 7946 0018" autocomplete="tel">
+    </div>
+    <div data-field>
+      <label for="ab-street">Street and number</label>
+      <input type="text" id="ab-street" name="street" value="12 St James's Square" autocomplete="address-line1">
+    </div>
+    <div data-field>
+      <label for="ab-postcode">Postal code</label>
+      <input type="text" id="ab-postcode" name="postcode" value="SW1Y 4JH" autocomplete="postal-code">
+    </div>
+    <div data-field>
+      <label for="ab-city">City</label>
+      <input type="text" id="ab-city" name="city" value="London" autocomplete="address-level2">
+    </div>
+    <div data-field>
+      <label for="ab-country">Country</label>
+      <select id="ab-country" name="country" autocomplete="country">
+        <option value="DE">Germany</option>
+        <option value="NL">Netherlands</option>
+        <option value="GB" selected>United Kingdom</option>
+      </select>
+    </div>
+    <div data-field>
+      <label for="ab-terms">Payment terms</label>
+      <select id="ab-terms" name="terms">
+        <option>14 days net</option>
+        <option selected>30 days net</option>
+        <option>60 days net</option>
+      </select>
+    </div>
+    <div data-field>
+      <label for="ab-limit">Credit limit (€)</label>
+      <input type="number" id="ab-limit" name="limit" value="5000" min="0" step="100">
+    </div>
+    <div data-field>
+      <label for="ab-notes">Internal notes</label>
+      <textarea id="ab-notes" name="notes">Prefers delivery before noon.</textarea>
+    </div>
+    <div data-field>
+      <label for="ab-reference">Purchase order reference</label>
+      <input type="text" id="ab-reference" name="reference" value="PO-AE-2025-07" autocomplete="off">
+    </div>
+  <footer data-action-bar>
+    <button type="submit">Save customer</button>
+    <button type="reset">Cancel</button>
+  </footer>
+</form>
+```
+
+### API
+
+```text
+data-action-bar   on a <footer> (or <div>) that is the last child of a
+                  <form>; holds that form's buttons
+```
+
+The Save and Cancel buttons of a long form, kept in view: a bar at the end of the \<form> that sticks to the bottom of the scroll area while the form scrolls, and comes to rest after the last field when the end of the form is reached. Built with position: sticky, so it never leaves its form and needs no script. The buttons wrap onto a second row on narrow screens.
+
+Our choice: the bar is the last child of the \<form> it submits, so its buttons submit and reset that form with no form="…" attribute, and the sticky bar stops at the form's end instead of covering what follows.
+
+### Elevation
+
+```text
+--dui-elevation-overlay and its surface (level 2), with a
+border, so it reads as above the fields it covers and forced colors mode
+still draws its edge.
+```
+
+### Keyboard
+
+| Key | Action |
+| --- | --- |
+| <kbd>Tab</kbd> | moves from the last field to the bar's buttons; a focused field is scrolled clear of the bar |
+| <kbd>Enter</kbd> | in a text field, submits the form (native) |
+
+### Accessibility
+
+- Buttons sit at the inline end in source order, never reversed with CSS, so the Tab order follows the visual order (WCAG 2.4.3); put the primary action (type="submit") first.
+- A sticky bar must not hide the field that has focus (WCAG 2.4.11 Focus Not Obscured (Minimum)).
+- Every ancestor of a form with an action bar gets a scroll-padding at its block end as tall as a bar with two rows of buttons, so when Tab moves to a field under the bar, the browser scrolls it clear above the bar (WCAG technique C43).
+- Because it is set on every ancestor, it works in whichever one scrolls: the page or a pane that scrolls on its own.
+- Buttons keep their target size (44px, 32px compact; WCAG 2.5.8).
+- The bar is a \<footer> of the form, which is not a landmark inside a form.
+- Give the bar no role; its buttons say what they do ("Save customer").
+- The reserved space covers two rows of buttons: keep the bar to two or three short labels, so it never wraps to a third row at 320px; put further actions in a menu button.
+
+### Specifications
+
+- [MDN `sticky`](https://developer.mozilla.org/en-US/docs/Web/CSS/position#sticky)
+- [MDN `scroll-padding`](https://developer.mozilla.org/en-US/docs/Web/CSS/scroll-padding)
+- [WCAG Focus not obscured minimum](https://www.w3.org/WAI/WCAG22/Understanding/focus-not-obscured-minimum.html)
+- [WCAG C43](https://www.w3.org/WAI/WCAG22/Techniques/css/C43)
+
+### See also
+
+- [Layouts](https://odonckers.github.io/domestic-ui/layouts/index.md)
+- [Component API convention](https://odonckers.github.io/domestic-ui/index.md#component-api)
+- [Accessibility baseline](https://odonckers.github.io/domestic-ui/principles/accessibility-baseline-wcag-22-aa.md)
+- Source: [`css/layout/action-bar.css`](https://github.com/odonckers/domestic-ui/blob/main/css/layout/action-bar.css), [`examples/layouts/action-bar.html`](https://github.com/odonckers/domestic-ui/blob/main/examples/layouts/action-bar.html)
+
 ## Cluster
 
 Page: https://odonckers.github.io/domestic-ui/layouts/cluster.html
@@ -1851,7 +2072,11 @@ A scroll container for content wider than the screen, such as a data table, so i
 ### API
 
 ```text
-data-scroll="inline"   scroll along the inline axis (left/right in English)
+data-scroll="inline"         scroll along the inline axis (left/right in English)
+data-scroll="block inline"   also scroll along the block axis, at most
+                             --dui-size-pane (the viewport) tall, so a
+                             sticky table header stays in view
+                             (css/components/organisms/data-table.css)
 ```
 
 - Add `tabindex="0"` so keyboard users can scroll it ([WCAG 2.1.1](https://www.w3.org/WAI/WCAG22/Understanding/keyboard.html), [axe rule](https://dequeuniversity.com/rules/axe/4.10/scrollable-region-focusable)).
@@ -2660,7 +2885,7 @@ From [`css/components/molecules/README.md`](https://github.com/odonckers/domesti
 - **Our choice:** `<dui-combobox>` upgrades a native `<input list>` + `<datalist>`, not a `<select>`, because the value is free text and the upgrade reuses the same input and options. Its listbox is positioned under the input inside the component (not a top-layer popover), so it is never wider than the field. Options are filtered by "contains", case-insensitive, like the native datalist popups in Chromium and Firefox. See [combobox.md](https://github.com/odonckers/domestic-ui/blob/main/explainers/combobox.md).
 - **Our choice:** `<dui-toolbar>` keeps `role="toolbar"` in the markup, because a labelled group of Tab stops is still correct without the script; only the roving focus is added.
 - **Our choice:** navigation lists (nav, tabs, pagination) drop the link underline, because their role is clear from the list ([F73](https://www.w3.org/WAI/WCAG22/Techniques/failures/F73) is about links in running text); hover brings it back. Breadcrumb links keep it, because they read as text.
-- **Our choice:** "current" is never color alone: the nav item gets an accent bar, a tint and bold text; the current page in pagination is filled and bold; the selected tab gets a bar and full-strength text.
+- **Our choice:** "current" is never color alone: the nav item gets an accent bar, a tint and bold text (in a sidebar too: the nav molecule is the app shell's sidebar navigation, extended with decorative icons rather than forked into an organism, so there is one navigation API); the current page in pagination is filled and bold; the selected tab gets a bar and full-strength text.
 - **Our choice:** the current page in pagination stays a link with `aria-current="page"`, and a disabled Previous or Next is an `<a>` with no `href`, which HTML defines as a placeholder: not focusable and not a link. See [pagination.md](https://github.com/odonckers/domestic-ui/blob/main/explainers/pagination.md).
 - **Our choice:** a clickable card puts the link on its heading and stretches the link's hit area with a pseudo-element, so the card's accessible name is the heading and secondary actions in the footer stay separate links. See [card.md](https://github.com/odonckers/domestic-ui/blob/main/explainers/card.md).
 - **Our choice:** alert tones start with a word in the markup ("Warning:"), like the field's "Error:", and add a decorative icon drawn in CSS with empty alternative text.
@@ -2676,8 +2901,144 @@ From [`css/components/molecules/README.md`](https://github.com/odonckers/domesti
 | Vertical tabs | Not added. The APG allows them (`aria-orientation="vertical"`), but they need a different layout and Up/Down keys; add them with a real use case. |
 | Menubar, submenus | Not added. Application menubars are rare on the web, and submenus are hard to use; a menu button covers actions. |
 | Arrow-key navigation between accordion headers | Not added. It is optional in the APG Accordion pattern, and native `<details>` gives every summary a Tab stop. |
+| Tree view for navigation | Not used. An [APG Tree View](https://www.w3.org/WAI/ARIA/apg/patterns/treeview/) is for hierarchies users navigate as data (file trees), with one Tab stop and arrow keys; site navigation is links, so the sidebar navigation is disclosure groups and links ([APG Disclosure Navigation](https://www.w3.org/WAI/ARIA/apg/patterns/disclosure/examples/disclosure-navigation/)). |
 | Auto-dismissing toasts | Not added on purpose; see Our choices and [toast.md](https://github.com/odonckers/domestic-ui/blob/main/explainers/toast.md). |
 | `interestfor` tooltips | Not used yet. It is the coming standard for hover and focus invokers but ships only in Chromium; `<dui-tooltip>` does the job until it is interoperable. |
+
+## Organisms
+
+Page: https://odonckers.github.io/domestic-ui/organisms/index.html
+
+Larger sections of an interface built from molecules and atoms. A level of [Atomic Design](https://atomicdesign.bradfrost.com/); APIs follow the [component API convention](https://odonckers.github.io/domestic-ui/index.md#component-api).
+
+### Our choices
+
+From [`css/components/organisms/README.md`](https://github.com/odonckers/domestic-ui/blob/main/css/components/organisms/README.md).
+
+- **Our choice:** the page header takes its layout from its children's elements (a `<nav>` breadcrumb, a heading, a `<p>`, and a last child of actions) rather than extra attributes, so it is the markup any page already writes; `<header>` inside `<main>` is not the banner landmark.
+- **Our choice:** the filter bar is a plain `<form method="get">` in `<search>` with an Apply button, so the filters live in the URL, work with JavaScript off, and do not interrupt screen reader users while they set several; the result count is a `role="status"` element present from page load, so changes are announced.
+- **Our choice:** form sections are `<section>` elements with a `<header>` and one body, not fieldsets with legends, because a legend cannot be placed in a grid column and headed sections show up in the headings list; related controls are still grouped in a `<fieldset>` inside the body.
+- **Our choice:** the data table's sortable headers are plain text in the markup and `<dui-table>` turns them into buttons, so with JavaScript off there are no buttons that do nothing; following the [APG Sortable Table](https://www.w3.org/WAI/ARIA/apg/patterns/table/examples/sortable-table/) example, `aria-sort` is on the sorted header only, the arrow is hidden from assistive technology and the caption gets a visually hidden hint once the buttons exist.
+- **Our choice:** a selected row is marked by its checked checkbox, a bar on its leading edge and a tint, never color alone; the count is a `role="status"` element in the page from load, and the bulk actions are disabled until a row is selected. The "select all" checkbox is added by the script, since it would do nothing without it.
+- **Our choice:** a sticky table header sticks to the nearest scroll container: put the table in `data-scroll="block inline"` (at most `--dui-size-pane` tall), or in no scroll container to stick to the viewport. In `data-scroll="inline"` alone it cannot stick.
+- **Our choice:** numeric columns are marked per cell (`data-table="number"`), the same attribute as the table, because words on the table cannot target a column.
+- **Our choice:** every organism and layout switches with a container query on its own box, not a media query, because it sits in regions of any width (a split, an app shell's main area). Container query conditions cannot read custom properties, so each breakpoint is a length written in the file header.
+
+### Not shipped, and why
+
+| Candidate | Decision |
+| --- | --- |
+| Filters that apply on every keystroke | Not built in. A page MAY apply on change, but the default is a submit button, so several filters can be set without interruptions and the form works without JavaScript. |
+| A `<fieldset>` as the top-level form section | Not used. A `<legend>` cannot be placed in a grid column; sections are headed `<section>` elements, with fieldsets for groups inside them. |
+| App shell, sidebar navigation | Not organisms. The app shell is a layout ([`app-shell.css`](https://odonckers.github.io/domestic-ui/patterns/app-shell.md), with [`<dui-app-shell>`](https://github.com/odonckers/domestic-ui/blob/main/web-components/dui-app-shell.js)) and the sidebar navigation is the [nav molecule](https://odonckers.github.io/domestic-ui/patterns/nav.md) (`data-nav="vertical"`); see [app-shell.md](https://github.com/odonckers/domestic-ui/blob/main/explainers/app-shell.md). |
+| Tree view for navigation | Not used. An [APG Tree View](https://www.w3.org/WAI/ARIA/apg/patterns/treeview/) is for hierarchies users navigate as data; site navigation is disclosure groups and links. |
+| Editable cells, arrow keys between cells | Not in the data table. Cells that are edited in place make the table an [APG Grid](https://www.w3.org/WAI/ARIA/apg/patterns/grid/), a different widget with its own keyboard model. |
+| Announcing the new order after a sort | Not done. As in the APG Sortable Table example, `aria-sort` on the header is the announcement; a caption hint says which headers sort. |
+| Sorting several columns at once, resizing or hiding columns | Not built in. Cancel `dui-table-sort` and sort on the server for multi-column orders. |
+
+## Page header
+
+Page: https://odonckers.github.io/domestic-ui/components/organisms/page-header.html
+
+The top of a screen: an optional breadcrumb, the title, a description and actions that sit beside the title when there is room and wrap under it when not.
+
+### Live example
+
+#### Order page
+
+```html
+<header data-page-header>
+  <nav aria-label="Breadcrumb" data-breadcrumb>
+    <ol>
+      <li><a href="?view=sales">Sales</a></li>
+      <li><a href="?view=orders">Orders</a></li>
+      <li><a href="?order=1042" aria-current="page">Order 1042</a></li>
+    </ol>
+  </nav>
+  <h3>Order 1042</h3>
+  <p>Analytical Engines Ltd. · placed on 12 March 2025 · €1,240.00</p>
+  <div>
+    <a href="?order=1042&amp;view=edit" data-button>Edit order</a>
+    <a href="?order=1042&amp;view=print" data-button>Print</a>
+    <dui-menu>
+      <button type="button" popovertarget="order-more">More actions</button>
+      <div id="order-more" popover data-popover>
+        <button type="button">Duplicate order</button>
+        <button type="button">Create credit note</button>
+        <hr>
+        <button type="button">Cancel order</button>
+      </div>
+    </dui-menu>
+  </div>
+</header>
+```
+
+#### List page
+
+```html
+<header data-page-header>
+  <h3>Customers</h3>
+  <p>214 customers, 12 with an overdue invoice.</p>
+  <div>
+    <a href="?view=new-customer" data-button="primary">New customer</a>
+    <a href="?view=import-customers" data-button>Import</a>
+  </div>
+</header>
+```
+
+### Attributes
+
+`data-page-header` on a `<header>` inside `<main>`: optional breadcrumb `<nav>`, heading, optional `<p>`, actions last
+
+```text
+data-page-header   on a <header> inside <main>; children, in order:
+  <nav data-breadcrumb aria-label="Breadcrumb">   optional
+  <h1>                                            the title (h2 or h3 in a region)
+  <p>                                             optional description
+  <div> (or role="toolbar", <dui-menu>)           optional actions, last
+```
+
+The top of a screen inside \<main>: an optional breadcrumb, the page's \<h1>, an optional one-line description, and the page's actions (buttons, a menu button). The actions sit beside the title when the header is at least 40rem wide and wrap under it when it is narrower, decided by a container query on the header itself, so it fits a full page, a split region or the main area of an app shell alike.
+
+Our choice: the layout is chosen from the children's elements (a \<nav> breadcrumb, a heading, a \<p> description, and a last child holding the actions), not from extra attributes, so the markup is what any page would already write.
+
+### Breakpoint
+
+```text
+40rem of the header's own inline size. A container query
+condition cannot read a custom property, so it is written as a length.
+```
+
+### Accessibility
+
+- HTML has no page header element and the APG has no pattern for one; \<header> inside \<main> is a plain grouping element, not the banner landmark.
+- The heading is the page's one \<h1>, after the breadcrumb in source order, so the breadcrumb (a named \<nav>) is reached first and heading navigation lands on the title.
+- The description is a plain \<p>; reference it from the main content with aria-describedby only if it is needed to understand it.
+- Actions keep source order after the title, so the Tab order matches the reading order in both layouts (WCAG 2.4.3), and keep their target size (44px, 32px compact; WCAG 2.5.8).
+- A \<header> inside \<main> has no landmark role.
+
+### Specifications
+
+- [WHATWG `header`](https://html.spec.whatwg.org/multipage/sections.html#the-header-element)
+- [APG Breadcrumb](https://www.w3.org/WAI/ARIA/apg/patterns/breadcrumb/)
+- [W3C el header](https://www.w3.org/TR/html-aam-1.0/#el-header)
+- [MDN `Container_queries`](https://developer.mozilla.org/en-US/docs/Web/CSS/Guides/Containment/Container_queries)
+- [WCAG Focus order](https://www.w3.org/WAI/WCAG22/Understanding/focus-order.html)
+
+### See also
+
+- [Organisms](https://odonckers.github.io/domestic-ui/organisms/index.md)
+- [Component API convention](https://odonckers.github.io/domestic-ui/index.md#component-api)
+- [Accessibility baseline](https://odonckers.github.io/domestic-ui/principles/accessibility-baseline-wcag-22-aa.md)
+- Source: [`css/components/organisms/page-header.css`](https://github.com/odonckers/domestic-ui/blob/main/css/components/organisms/page-header.css), [`examples/organisms/page-header.html`](https://github.com/odonckers/domestic-ui/blob/main/examples/organisms/page-header.html)
+
+### How other systems do it
+
+For comparison only; these are not the standard this system follows.
+
+- Apple Human Interface Guidelines: No equivalent
+- Material Design 3: No equivalent
+- Vercel Geist: No equivalent
 
 ## Alerts
 
@@ -3604,6 +3965,7 @@ aria-current="page"                on the current link (native ARIA)
 - [MDN `aria-current`](https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Reference/Attributes/aria-current)
 - [MDN `nav`](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/nav)
 - [WCAG F73](https://www.w3.org/WAI/WCAG22/Techniques/failures/F73)
+- [APG treeview](https://www.w3.org/WAI/ARIA/apg/patterns/treeview/)
 - [WHATWG the details element](https://html.spec.whatwg.org/multipage/interactive-elements.html#the-details-element)
 - [WCAG Non text contrast](https://www.w3.org/WAI/WCAG22/Understanding/non-text-contrast.html)
 
@@ -3961,7 +4323,209 @@ The frame of an application: header, primary sidebar, main content and an option
 
 **Our choice:** No standard defines an app shell: the landmarks `<header>`, `<nav>`, `<main>` and `<aside>`, placed with CSS grid.
 
-Coming in M3b.
+### Live example
+
+#### Sidebar navigation with icons
+
+```html
+<nav id="app-nav" aria-label="Main" data-nav="vertical">
+  <ul>
+    <li>
+      <a href="?view=home">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 11.5 12 4l9 7.5M5 10v10h14V10"></path></svg>
+        Home
+      </a>
+    </li>
+    <li>
+      <details open>
+        <summary>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 4h2l2.5 11h11L21 7H6.2"></path><circle cx="9" cy="19.5" r="1.5"></circle><circle cx="17" cy="19.5" r="1.5"></circle></svg>
+          Sales
+        </summary>
+        <ul>
+          <li><a href="?view=orders" aria-current="page">Orders</a></li>
+          <li><a href="?view=quotes">Quotes</a></li>
+          <li><a href="?view=invoices">Invoices</a></li>
+        </ul>
+      </details>
+    </li>
+    <li>
+      <details>
+        <summary>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 7.5 12 3l9 4.5v9L12 21l-9-4.5zM3 7.5 12 12l9-4.5M12 12v9"></path></svg>
+          Inventory
+        </summary>
+        <ul>
+          <li><a href="?view=products">Products</a></li>
+          <li><a href="?view=warehouses">Warehouses</a></li>
+          <li><a href="?view=stock-moves">Stock moves</a></li>
+        </ul>
+      </details>
+    </li>
+    <li>
+      <details>
+        <summary>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="8" r="3.5"></circle><path d="M2.5 20c0-3.5 3-6 6.5-6s6.5 2.5 6.5 6M16 4.5a3.5 3.5 0 0 1 0 7M18 14c2 .6 3.5 2.8 3.5 6"></path></svg>
+          Customers
+        </summary>
+        <ul>
+          <li><a href="?view=accounts">Accounts</a></li>
+          <li><a href="?view=contacts">Contacts</a></li>
+        </ul>
+      </details>
+    </li>
+    <li>
+      <details>
+        <summary>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 4v16h16M8 16v-5M12 16V8M16 16v-3"></path></svg>
+          Reports
+        </summary>
+        <ul>
+          <li><a href="?view=sales-by-month">Sales by month</a></li>
+          <li><a href="?view=stock-levels">Stock levels</a></li>
+        </ul>
+      </details>
+    </li>
+    <li>
+      <a href="?view=settings">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 6h10M4 12h4M12 12h8M4 18h12"></path><circle cx="16" cy="6" r="2"></circle><circle cx="10" cy="12" r="2"></circle><circle cx="18" cy="18" r="2"></circle></svg>
+        Settings
+      </a>
+    </li>
+  </ul>
+</nav>
+```
+
+#### Auxiliary sidebar: the selected order
+
+```html
+<aside id="app-aux" aria-label="Order details" class="stack">
+  <h2 id="aux-title">Order 1042</h2>
+  <p><span data-badge="accent" id="aux-status">Shipped</span></p>
+  <dl>
+    <dt>Customer</dt>
+    <dd id="aux-customer">Analytical Engines Ltd.</dd>
+    <dt>Placed</dt>
+    <dd id="aux-placed"><time datetime="2025-03-12">12 Mar 2025</time></dd>
+    <dt>Total</dt>
+    <dd id="aux-total">€1,240.00</dd>
+    <dt>Ship to</dt>
+    <dd id="aux-ship">12 St James's Square, London</dd>
+    <dt>Carrier</dt>
+    <dd id="aux-carrier">DHL Express</dd>
+  </dl>
+  <p class="cluster">
+    <a href="?order=1042&amp;view=edit" id="aux-open" data-button>Open order</a>
+    <a href="?order=1042&amp;view=print" id="aux-print" data-button>Print</a>
+  </p>
+  <p role="status" class="visually-hidden" id="aux-announce"></p>
+</aside>
+```
+
+#### Contained app shell
+
+```html
+<dui-app-shell data-app-shell="contained" style="--dui-size-pane: 36rem">
+  <header aria-label="Northwind">
+    <button type="button" aria-controls="demo-nav" aria-expanded="true" hidden>Menu</button>
+    <a href="?view=home" data-link="quiet"><strong>Northwind</strong></a>
+    <button type="button" aria-controls="demo-aux" aria-expanded="true" hidden>Activity</button>
+  </header>
+  <nav id="demo-nav" aria-label="Main" data-nav="vertical">
+    <ul>
+      <li><a href="?view=home">Home</a></li>
+      <li>
+        <details open>
+          <summary>Customers</summary>
+          <ul>
+            <li><a href="?view=accounts" aria-current="page">Accounts</a></li>
+            <li><a href="?view=contacts">Contacts</a></li>
+          </ul>
+        </details>
+      </li>
+      <li>
+        <details>
+          <summary>Sales</summary>
+          <ul>
+            <li><a href="?view=orders">Orders</a></li>
+            <li><a href="?view=invoices">Invoices</a></li>
+          </ul>
+        </details>
+      </li>
+    </ul>
+  </nav>
+  <main id="main" class="stack">
+    <header data-page-header>
+      <h2>Accounts</h2>
+      <p>Customers with an open balance.</p>
+      <div><a href="?view=new-account" data-button="primary">New account</a></div>
+    </header>
+    <div data-list-detail>
+      <nav aria-label="Accounts">
+        <ul>
+          <li><a href="?account=c-118" aria-current="page">Analytical Engines Ltd. <small>London</small></a></li>
+          <li><a href="?account=c-117">Bletchley Instruments <small>Milton Keynes</small></a></li>
+          <li><a href="?account=c-116">Cobol Systems BV <small>Utrecht</small></a></li>
+        </ul>
+      </nav>
+      <article aria-labelledby="account-118-title">
+        <h3 id="account-118-title">Analytical Engines Ltd.</h3>
+        <dl>
+          <dt>Contact</dt>
+          <dd>Ada Lovelace</dd>
+          <dt>Open balance</dt>
+          <dd>€1,240.00</dd>
+        </dl>
+      </article>
+    </div>
+  </main>
+  <aside id="demo-aux" aria-label="Activity">
+    <h2>Activity</h2>
+    <ol>
+      <li>Invoice INV-0318 sent, 12 March</li>
+      <li>Order 1042 shipped, 12 March</li>
+      <li>Payment received, 3 March</li>
+    </ol>
+  </aside>
+</dui-app-shell>
+```
+
+### Attributes
+
+```text
+data-app-shell                on a wrapper (or <dui-app-shell>), after the skip link
+data-app-shell="contained"    the shell is --dui-size-pane tall and scrolls inside
+                              its own box (a shell inside a page section)
+Children, in source order:
+  <header>                    the app bar: app name, toggles, search, user menu
+  <nav aria-label> or <aside aria-label>   the primary sidebar (before <main>)
+  <main id>                   the content
+  <aside aria-label>          optional auxiliary sidebar (after <main>)
+  <footer>                    optional
+<button type="button" aria-controls="sidebar-id" aria-expanded="true" hidden>
+                              a sidebar's toggle; <dui-app-shell> shows it.
+                              aria-expanded="false" in the markup starts the
+                              sidebar collapsed when it sits beside main
+--dui-size-sidebar, --dui-size-sidebar-aux   sidebar widths beside main
+--dui-size-pane               max block size of a sidebar beside main; the
+                              block size of a contained shell
+```
+
+### Accessibility
+
+- Without JavaScript both are always visible: stacked above and below main when narrow, beside it when wide.
+- Toggle buttons are native buttons with aria-controls and aria-expanded (APG Disclosure); they carry the hidden attribute in the markup and the script shows them, so there is never a button that does nothing.
+- A collapsed sidebar has the hidden attribute, so it is gone for assistive technology and the Tab order as well.
+- Sidebars that sit beside main stick to the top of the scroll area and scroll on their own, at most --dui-size-pane tall; they are not focus traps and hold focusable links, so the keyboard reaches everything in them (WCAG 2.1.1).
+- Nothing scrolls sideways at 320px (WCAG 1.4.10): the app bar wraps, the search taking its own row.
+
+### Keyboard
+
+| Key | Action |
+| --- | --- |
+| <kbd>Tab</kbd> | skip link, app bar, primary sidebar, main, auxiliary sidebar (source order) |
+| <kbd>Enter</kbd> / <kbd>Space</kbd> | on a toggle, collapses or expands its sidebar; when the shell is narrow, opens it as a drawer |
+| <kbd>Esc</kbd> | in a drawer, closes it and returns focus to its toggle |
 
 ### Specifications
 
@@ -3969,10 +4533,15 @@ Coming in M3b.
 - [HTML `<main>` element](https://html.spec.whatwg.org/multipage/grouping-content.html#the-main-element)
 - [HTML `<aside>` element](https://html.spec.whatwg.org/multipage/sections.html#the-aside-element)
 - [WCAG 1.4.10 Reflow](https://www.w3.org/WAI/WCAG22/Understanding/reflow.html)
+- [MDN `grid-template-areas`](https://developer.mozilla.org/en-US/docs/Web/CSS/grid-template-areas)
+- [MDN `Container_queries`](https://developer.mozilla.org/en-US/docs/Web/CSS/Guides/Containment/Container_queries)
+- [APG disclosure](https://www.w3.org/WAI/ARIA/apg/patterns/disclosure/)
+- [WCAG Bypass blocks](https://www.w3.org/WAI/WCAG22/Understanding/bypass-blocks.html)
 
 ### See also
 
 - [Layouts](https://odonckers.github.io/domestic-ui/layouts/index.md)
+- Source: [`css/layout/app-shell.css`](https://github.com/odonckers/domestic-ui/blob/main/css/layout/app-shell.css), [`examples/layouts/app-shell.html`](https://github.com/odonckers/domestic-ui/blob/main/examples/layouts/app-shell.html)
 
 ### How other systems do it
 
@@ -4147,16 +4716,99 @@ A grid of summary sections, each with a heading, that reflows to fit the screen.
 
 **Our choice:** No standard exists: a CSS grid of headed `<section>` elements that reflows without media queries.
 
-Coming in M3b.
+### Live example
+
+#### Sales overview
+
+```html
+<div data-dashboard>
+  <section aria-labelledby="tile-open-title">
+    <h3 id="tile-open-title">Open orders</h3>
+    <p><strong>128</strong> orders, 12 due to ship today</p>
+    <p><a href="?view=orders&amp;status=open">View open orders</a></p>
+  </section>
+  <section aria-labelledby="tile-overdue-title">
+    <h3 id="tile-overdue-title">Overdue invoices</h3>
+    <p><strong>€8,420.50</strong> across 7 invoices</p>
+    <p><span data-badge="warning">3 over 60 days</span></p>
+    <p><a href="?view=invoices&amp;status=overdue">View overdue invoices</a></p>
+  </section>
+  <section aria-labelledby="tile-revenue-title">
+    <h3 id="tile-revenue-title">Revenue in March</h3>
+    <p><strong>€142,300</strong>, up 6% on February</p>
+  </section>
+  <section aria-labelledby="tile-quotes-title">
+    <h3 id="tile-quotes-title">Quotes to approve</h3>
+    <p><strong>5</strong> quotes worth €21,700</p>
+    <p><a href="?view=quotes&amp;status=pending">Review quotes</a></p>
+  </section>
+  <section data-dashboard="wide" aria-labelledby="tile-recent-title">
+    <h3 id="tile-recent-title">Recent invoices</h3>
+    <section data-scroll="inline" aria-labelledby="recent-invoices" tabindex="0">
+      <table>
+        <caption id="recent-invoices">Last four invoices</caption>
+        <thead>
+          <tr><th scope="col">Invoice</th><th scope="col">Customer</th><th scope="col">Status</th><th scope="col">Amount</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>INV-2025-0318</td><td>Analytical Engines Ltd.</td><td>Part paid</td><td>€1,240.00</td></tr>
+          <tr><td>INV-2025-0317</td><td>Cobol Systems BV</td><td>Paid</td><td>€3,980.00</td></tr>
+          <tr><td>INV-2025-0316</td><td>Orbital Mechanics GmbH</td><td>Overdue</td><td>€615.90</td></tr>
+          <tr><td>INV-2025-0315</td><td>Bletchley Instruments</td><td>Paid</td><td>€48.50</td></tr>
+        </tbody>
+      </table>
+    </section>
+  </section>
+  <section aria-labelledby="tile-stock-title">
+    <h3 id="tile-stock-title">Stock alerts</h3>
+    <ul>
+      <li>Brass gear set: 6 left</li>
+      <li>Punch card reader: 2 left</li>
+    </ul>
+    <p><a href="?view=stock&amp;filter=low">Reorder stock</a></p>
+  </section>
+  <section aria-labelledby="tile-shipments-title">
+    <h3 id="tile-shipments-title">Shipments in transit</h3>
+    <p><strong>23</strong> parcels, 2 delayed at customs</p>
+    <p><a href="?view=shipments">Track shipments</a></p>
+  </section>
+  <section data-dashboard="full" aria-labelledby="tile-tasks-title">
+    <h3 id="tile-tasks-title">Tasks for today</h3>
+    <p>Approve credit note CN-2025-0013, call Orbital Mechanics GmbH about invoice INV-2025-0316, and confirm the April price list.</p>
+  </section>
+</div>
+```
+
+### Attributes
+
+```text
+data-dashboard          on the wrapper (a <div>, or a <ul> of tiles)
+data-dashboard="wide"   on a tile: two columns when they fit, else one
+data-dashboard="full"   on a tile: the whole row
+Tiles: <section aria-labelledby> (or <article>, <li>) with a heading first.
+```
+
+### Accessibility
+
+- Tiles keep source order whatever the column count, so the reading and Tab order never jump (WCAG 1.3.2, 2.4.3).
+- Figures in a tile are text, not only color (WCAG 1.4.1).
+- Nothing scrolls sideways at 320px (WCAG 1.4.10); wrap a table in a tile in data-scroll="inline".
+
+### Keyboard
+
+See the [Accessibility baseline](https://odonckers.github.io/domestic-ui/principles/accessibility-baseline-wcag-22-aa.md).
 
 ### Specifications
 
 - [MDN CSS grid layout](https://developer.mozilla.org/en-US/docs/Web/CSS/Guides/Grid_layout)
 - [WCAG 1.4.10 Reflow](https://www.w3.org/WAI/WCAG22/Understanding/reflow.html)
+- [MDN `auto-fit`](https://developer.mozilla.org/en-US/docs/Web/CSS/repeat#auto-fit)
+- [MDN `Container_queries`](https://developer.mozilla.org/en-US/docs/Web/CSS/Guides/Containment/Container_queries)
 
 ### See also
 
 - [Layouts](https://odonckers.github.io/domestic-ui/layouts/index.md)
+- Source: [`css/layout/dashboard.css`](https://github.com/odonckers/domestic-ui/blob/main/css/layout/dashboard.css), [`examples/layouts/dashboard.html`](https://github.com/odonckers/domestic-ui/blob/main/examples/layouts/dashboard.html)
 
 ### How other systems do it
 
@@ -4172,7 +4824,489 @@ Page: https://odonckers.github.io/domestic-ui/patterns/data-table.html
 
 Rows of records in a native `<table>` with a caption, header cells and optional sorting.
 
-Coming in M3b.
+### Live example
+
+#### Sortable table
+
+```html
+<dui-table>
+  <section data-scroll="inline" aria-labelledby="sort-caption" tabindex="0">
+    <table data-table id="sort-table">
+      <caption id="sort-caption">Recent orders</caption>
+      <thead>
+        <tr>
+          <th scope="col" data-table="sortable">Order</th>
+          <th scope="col" data-table="sortable">Customer</th>
+          <th scope="col" data-table="sortable">Placed</th>
+          <th scope="col" data-table="sortable">Status</th>
+          <th scope="col" data-table="sortable number">Total</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <th scope="row">1042</th>
+          <td>Analytical Engines Ltd.</td>
+          <td><time datetime="2025-03-12">12 Mar 2025</time></td>
+          <td><span data-badge="accent">Shipped</span></td>
+          <td data-table="number">€1,240.00</td>
+        </tr>
+        <tr>
+          <th scope="row">1041</th>
+          <td>Bletchley Instruments</td>
+          <td><time datetime="2025-03-10">10 Mar 2025</time></td>
+          <td><span data-badge="success">Delivered</span></td>
+          <td data-table="number">€48.50</td>
+        </tr>
+        <tr>
+          <th scope="row">1040</th>
+          <td>Cobol Systems BV</td>
+          <td><time datetime="2025-03-09">9 Mar 2025</time></td>
+          <td><span data-badge="neutral">Open</span></td>
+          <td data-table="number">€3,980.00</td>
+        </tr>
+        <tr>
+          <th scope="row">1039</th>
+          <td>Orbital Mechanics GmbH</td>
+          <td><time datetime="2025-03-07">7 Mar 2025</time></td>
+          <td><span data-badge="warning">On hold</span></td>
+          <td data-table="number">€615.90</td>
+        </tr>
+        <tr>
+          <th scope="row">1038</th>
+          <td>Difference Engine Works</td>
+          <td><time datetime="2025-02-27">27 Feb 2025</time></td>
+          <td><span data-badge="success">Delivered</span></td>
+          <td data-table="number">€310.25</td>
+        </tr>
+        <tr>
+          <th scope="row">1037</th>
+          <td>Hollerith Tabulating Co.</td>
+          <td><time datetime="2025-03-01">1 Mar 2025</time></td>
+          <td><span data-badge="danger">Cancelled</span></td>
+          <td data-table="number">€72.00</td>
+        </tr>
+        <tr>
+          <th scope="row">1036</th>
+          <td>Lovelace Analytics</td>
+          <td><time datetime="2025-02-24">24 Feb 2025</time></td>
+          <td><span data-badge="accent">Shipped</span></td>
+          <td data-table="number">€12,450.00</td>
+        </tr>
+        <tr>
+          <th scope="row">1035</th>
+          <td>Turing Logistics</td>
+          <td><time datetime="2025-02-28">28 Feb 2025</time></td>
+          <td><span data-badge="neutral">Open</span></td>
+          <td data-table="number">€905.10</td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+</dui-table>
+```
+
+#### Selection and bulk actions
+
+```html
+<form id="bulk-form" method="post" action="?">
+  <dui-table id="bulk-orders" class="stack" select-all-label="Select all open orders" style="--stack-gap: var(--dui-space-s)">
+    <div class="cluster">
+      <dui-toolbar role="toolbar" aria-label="Bulk actions">
+        <button type="submit" name="action" value="ship" data-button="secondary" id="bulk-ship">Mark as shipped</button>
+        <button type="submit" name="action" value="print" data-button="secondary" id="bulk-print">Print packing slips</button>
+        <button type="submit" name="action" value="export" data-button="secondary" id="bulk-export">Export</button>
+      </dui-toolbar>
+      <p role="status" id="selection-count"></p>
+    </div>
+    <section data-scroll="inline" aria-labelledby="select-caption" tabindex="0">
+      <table data-table id="select-table">
+        <caption id="select-caption">Open orders</caption>
+        <thead>
+          <tr>
+            <td></td>
+            <th scope="col">Order</th>
+            <th scope="col">Customer</th>
+            <th scope="col">Placed</th>
+            <th scope="col">Status</th>
+            <th scope="col" data-table="number">Total</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><label><input type="checkbox" name="orders[]" value="1042"><span class="visually-hidden">Select order 1042</span></label></td>
+            <th scope="row">1042</th>
+            <td>Analytical Engines Ltd.</td>
+            <td><time datetime="2025-03-12">12 Mar 2025</time></td>
+            <td><span data-badge="accent">Shipped</span></td>
+            <td data-table="number">€1,240.00</td>
+          </tr>
+          <tr>
+            <td><label><input type="checkbox" name="orders[]" value="1041"><span class="visually-hidden">Select order 1041</span></label></td>
+            <th scope="row">1041</th>
+            <td>Bletchley Instruments</td>
+            <td><time datetime="2025-03-10">10 Mar 2025</time></td>
+            <td><span data-badge="success">Delivered</span></td>
+            <td data-table="number">€48.50</td>
+          </tr>
+          <tr>
+            <td><label><input type="checkbox" name="orders[]" value="1040"><span class="visually-hidden">Select order 1040</span></label></td>
+            <th scope="row">1040</th>
+            <td>Cobol Systems BV</td>
+            <td><time datetime="2025-03-09">9 Mar 2025</time></td>
+            <td><span data-badge="neutral">Open</span></td>
+            <td data-table="number">€3,980.00</td>
+          </tr>
+          <tr>
+            <td><label><input type="checkbox" name="orders[]" value="1039"><span class="visually-hidden">Select order 1039</span></label></td>
+            <th scope="row">1039</th>
+            <td>Orbital Mechanics GmbH</td>
+            <td><time datetime="2025-03-07">7 Mar 2025</time></td>
+            <td><span data-badge="warning">On hold</span></td>
+            <td data-table="number">€615.90</td>
+          </tr>
+          <tr>
+            <td><label><input type="checkbox" name="orders[]" value="1038"><span class="visually-hidden">Select order 1038</span></label></td>
+            <th scope="row">1038</th>
+            <td>Difference Engine Works</td>
+            <td><time datetime="2025-02-27">27 Feb 2025</time></td>
+            <td><span data-badge="success">Delivered</span></td>
+            <td data-table="number">€310.25</td>
+          </tr>
+          <tr>
+            <td><label><input type="checkbox" name="orders[]" value="1037"><span class="visually-hidden">Select order 1037</span></label></td>
+            <th scope="row">1037</th>
+            <td>Hollerith Tabulating Co.</td>
+            <td><time datetime="2025-03-01">1 Mar 2025</time></td>
+            <td><span data-badge="danger">Cancelled</span></td>
+            <td data-table="number">€72.00</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+  </dui-table>
+</form>
+<p role="status" id="bulk-result"></p>
+```
+
+#### Empty state
+
+```html
+<section data-scroll="inline" aria-labelledby="empty-caption" tabindex="0">
+  <table data-table>
+    <caption id="empty-caption">Orders on hold</caption>
+    <thead>
+      <tr>
+        <th scope="col">Order</th>
+        <th scope="col">Customer</th>
+        <th scope="col">Placed</th>
+        <th scope="col">Status</th>
+        <th scope="col" data-table="number">Total</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td colspan="5">
+          <p>No orders match these filters</p>
+          <p>Try another status or date, or <a href="?">clear the filters</a>.</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</section>
+```
+
+#### Loading state
+
+```html
+<p><button type="button" id="loading-toggle" aria-pressed="false" hidden>Show loading state</button></p>
+<p role="status" id="loading-status"></p>
+<section data-scroll="inline" aria-labelledby="loading-caption" tabindex="0">
+  <table data-table id="loading-table">
+    <caption id="loading-caption">Invoices</caption>
+    <thead>
+      <tr><th scope="col">Invoice</th><th scope="col">Customer</th><th scope="col">Due</th><th scope="col" data-table="number">Amount</th></tr>
+    </thead>
+    <tbody>
+        <tr><th scope="row">INV-2051</th><td>Cobol Systems BV</td><td><time datetime="2025-03-31">31 Mar 2025</time></td><td data-table="number">€4,820.00</td></tr>
+        <tr><th scope="row">INV-2050</th><td>Turing Logistics</td><td><time datetime="2025-03-28">28 Mar 2025</time></td><td data-table="number">€1,105.40</td></tr>
+        <tr><th scope="row">INV-2049</th><td>Lovelace Analytics</td><td><time datetime="2025-03-21">21 Mar 2025</time></td><td data-table="number">€15,064.50</td></tr>
+        <tr><th scope="row">INV-2048</th><td>Bletchley Instruments</td><td><time datetime="2025-03-14">14 Mar 2025</time></td><td data-table="number">€58.69</td></tr>
+    </tbody>
+  </table>
+</section>
+<template id="loading-skeleton">
+    <tr aria-hidden="true"><td></td><td></td><td></td><td></td></tr>
+    <tr aria-hidden="true"><td></td><td></td><td></td><td></td></tr>
+    <tr aria-hidden="true"><td></td><td></td><td></td><td></td></tr>
+</template>
+```
+
+#### Wide table with a sticky header
+
+```html
+<section data-scroll="block inline" aria-labelledby="wide-caption" tabindex="0" id="wide-scroll">
+  <table data-table="sticky" id="wide-table">
+    <caption id="wide-caption">Order lines, February</caption>
+    <thead>
+      <tr>
+        <th scope="col">Order</th>
+        <th scope="col">Customer</th>
+        <th scope="col">Placed</th>
+        <th scope="col">Ship by</th>
+        <th scope="col">Status</th>
+        <th scope="col">Carrier</th>
+        <th scope="col">Warehouse</th>
+        <th scope="col" data-table="number">Items</th>
+        <th scope="col" data-table="number">Net</th>
+        <th scope="col" data-table="number">VAT</th>
+        <th scope="col" data-table="number">Total</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <th scope="row">1034</th>
+          <td>Analytical Engines Ltd.</td>
+          <td><time datetime="2025-02-26">26 Feb 2025</time></td>
+          <td><time datetime="2025-03-09">9 Mar 2025</time></td>
+          <td><span data-badge="neutral">Open</span></td>
+          <td>DHL Express</td>
+          <td>Rotterdam</td>
+          <td data-table="number">21</td>
+          <td data-table="number">€8,532.87</td>
+          <td data-table="number">€1,791.90</td>
+          <td data-table="number">€10,324.77</td>
+        </tr>
+        <tr>
+          <th scope="row">1033</th>
+          <td>Bletchley Instruments</td>
+          <td><time datetime="2025-02-25">25 Feb 2025</time></td>
+          <td><time datetime="2025-03-08">8 Mar 2025</time></td>
+          <td><span data-badge="accent">Shipped</span></td>
+          <td>DPD Classic</td>
+          <td>Leipzig</td>
+          <td data-table="number">26</td>
+          <td data-table="number">€5,872.37</td>
+          <td data-table="number">€1,233.20</td>
+          <td data-table="number">€7,105.57</td>
+        </tr>
+        <tr>
+          <th scope="row">1032</th>
+          <td>Cobol Systems BV</td>
+          <td><time datetime="2025-02-24">24 Feb 2025</time></td>
+          <td><time datetime="2025-03-07">7 Mar 2025</time></td>
+          <td><span data-badge="success">Delivered</span></td>
+          <td>PostNL Parcel</td>
+          <td>Lyon</td>
+          <td data-table="number">5</td>
+          <td data-table="number">€7,398.62</td>
+          <td data-table="number">€1,553.71</td>
+          <td data-table="number">€8,952.33</td>
+        </tr>
+        <tr>
+          <th scope="row">1031</th>
+          <td>Orbital Mechanics GmbH</td>
+          <td><time datetime="2025-02-23">23 Feb 2025</time></td>
+          <td><time datetime="2025-03-06">6 Mar 2025</time></td>
+          <td><span data-badge="warning">On hold</span></td>
+          <td>UPS Standard</td>
+          <td>Milan</td>
+          <td data-table="number">7</td>
+          <td data-table="number">€3,316.57</td>
+          <td data-table="number">€696.48</td>
+          <td data-table="number">€4,013.05</td>
+        </tr>
+        <tr>
+          <th scope="row">1030</th>
+          <td>Difference Engine Works</td>
+          <td><time datetime="2025-02-22">22 Feb 2025</time></td>
+          <td><time datetime="2025-03-05">5 Mar 2025</time></td>
+          <td><span data-badge="neutral">Open</span></td>
+          <td>FedEx International</td>
+          <td>Rotterdam</td>
+          <td data-table="number">4</td>
+          <td data-table="number">€8,190.95</td>
+          <td data-table="number">€1,720.10</td>
+          <td data-table="number">€9,911.05</td>
+        </tr>
+        <tr>
+          <th scope="row">1029</th>
+          <td>Hollerith Tabulating Co.</td>
+          <td><time datetime="2025-02-21">21 Feb 2025</time></td>
+          <td><time datetime="2025-03-04">4 Mar 2025</time></td>
+          <td><span data-badge="accent">Shipped</span></td>
+          <td>DHL Express</td>
+          <td>Leipzig</td>
+          <td data-table="number">14</td>
+          <td data-table="number">€375.96</td>
+          <td data-table="number">€78.95</td>
+          <td data-table="number">€454.91</td>
+        </tr>
+        <tr>
+          <th scope="row">1028</th>
+          <td>Lovelace Analytics</td>
+          <td><time datetime="2025-02-20">20 Feb 2025</time></td>
+          <td><time datetime="2025-03-03">3 Mar 2025</time></td>
+          <td><span data-badge="success">Delivered</span></td>
+          <td>DPD Classic</td>
+          <td>Lyon</td>
+          <td data-table="number">28</td>
+          <td data-table="number">€3,786.82</td>
+          <td data-table="number">€795.23</td>
+          <td data-table="number">€4,582.05</td>
+        </tr>
+        <tr>
+          <th scope="row">1027</th>
+          <td>Turing Logistics</td>
+          <td><time datetime="2025-02-19">19 Feb 2025</time></td>
+          <td><time datetime="2025-03-02">2 Mar 2025</time></td>
+          <td><span data-badge="warning">On hold</span></td>
+          <td>PostNL Parcel</td>
+          <td>Milan</td>
+          <td data-table="number">16</td>
+          <td data-table="number">€852.79</td>
+          <td data-table="number">€179.09</td>
+          <td data-table="number">€1,031.88</td>
+        </tr>
+        <tr>
+          <th scope="row">1026</th>
+          <td>Analytical Engines Ltd.</td>
+          <td><time datetime="2025-02-18">18 Feb 2025</time></td>
+          <td><time datetime="2025-03-01">1 Mar 2025</time></td>
+          <td><span data-badge="neutral">Open</span></td>
+          <td>UPS Standard</td>
+          <td>Rotterdam</td>
+          <td data-table="number">28</td>
+          <td data-table="number">€569.63</td>
+          <td data-table="number">€119.62</td>
+          <td data-table="number">€689.25</td>
+        </tr>
+        <tr>
+          <th scope="row">1025</th>
+          <td>Bletchley Instruments</td>
+          <td><time datetime="2025-02-17">17 Feb 2025</time></td>
+          <td><time datetime="2025-03-09">9 Mar 2025</time></td>
+          <td><span data-badge="accent">Shipped</span></td>
+          <td>FedEx International</td>
+          <td>Leipzig</td>
+          <td data-table="number">37</td>
+          <td data-table="number">€1,149.27</td>
+          <td data-table="number">€241.35</td>
+          <td data-table="number">€1,390.62</td>
+        </tr>
+        <tr>
+          <th scope="row">1024</th>
+          <td>Cobol Systems BV</td>
+          <td><time datetime="2025-02-16">16 Feb 2025</time></td>
+          <td><time datetime="2025-03-08">8 Mar 2025</time></td>
+          <td><span data-badge="success">Delivered</span></td>
+          <td>DHL Express</td>
+          <td>Lyon</td>
+          <td data-table="number">15</td>
+          <td data-table="number">€5,690.41</td>
+          <td data-table="number">€1,194.99</td>
+          <td data-table="number">€6,885.40</td>
+        </tr>
+        <tr>
+          <th scope="row">1023</th>
+          <td>Orbital Mechanics GmbH</td>
+          <td><time datetime="2025-02-15">15 Feb 2025</time></td>
+          <td><time datetime="2025-03-07">7 Mar 2025</time></td>
+          <td><span data-badge="warning">On hold</span></td>
+          <td>DPD Classic</td>
+          <td>Milan</td>
+          <td data-table="number">38</td>
+          <td data-table="number">€8,531.47</td>
+          <td data-table="number">€1,791.61</td>
+          <td data-table="number">€10,323.08</td>
+        </tr>
+        <tr>
+          <th scope="row">1022</th>
+          <td>Difference Engine Works</td>
+          <td><time datetime="2025-02-14">14 Feb 2025</time></td>
+          <td><time datetime="2025-03-06">6 Mar 2025</time></td>
+          <td><span data-badge="neutral">Open</span></td>
+          <td>PostNL Parcel</td>
+          <td>Rotterdam</td>
+          <td data-table="number">37</td>
+          <td data-table="number">€5,286.45</td>
+          <td data-table="number">€1,110.15</td>
+          <td data-table="number">€6,396.60</td>
+        </tr>
+        <tr>
+          <th scope="row">1021</th>
+          <td>Hollerith Tabulating Co.</td>
+          <td><time datetime="2025-02-13">13 Feb 2025</time></td>
+          <td><time datetime="2025-03-05">5 Mar 2025</time></td>
+          <td><span data-badge="accent">Shipped</span></td>
+          <td>UPS Standard</td>
+          <td>Leipzig</td>
+          <td data-table="number">4</td>
+          <td data-table="number">€8,787.25</td>
+          <td data-table="number">€1,845.32</td>
+          <td data-table="number">€10,632.57</td>
+        </tr>
+        <tr>
+          <th scope="row">1020</th>
+          <td>Lovelace Analytics</td>
+          <td><time datetime="2025-02-12">12 Feb 2025</time></td>
+          <td><time datetime="2025-03-04">4 Mar 2025</time></td>
+          <td><span data-badge="success">Delivered</span></td>
+          <td>FedEx International</td>
+          <td>Lyon</td>
+          <td data-table="number">3</td>
+          <td data-table="number">€5,027.72</td>
+          <td data-table="number">€1,055.82</td>
+          <td data-table="number">€6,083.54</td>
+        </tr>
+        <tr>
+          <th scope="row">1019</th>
+          <td>Turing Logistics</td>
+          <td><time datetime="2025-02-11">11 Feb 2025</time></td>
+          <td><time datetime="2025-03-03">3 Mar 2025</time></td>
+          <td><span data-badge="warning">On hold</span></td>
+          <td>DHL Express</td>
+          <td>Milan</td>
+          <td data-table="number">9</td>
+          <td data-table="number">€2,634.90</td>
+          <td data-table="number">€553.33</td>
+          <td data-table="number">€3,188.23</td>
+        </tr>
+    </tbody>
+  </table>
+</section>
+```
+
+### Attributes
+
+```text
+data-table               on the <table>: header surface, sort buttons, selection, empty and loading states
+data-table="sticky"      on the <table>: the header row sticks to the nearest scroll container
+data-table="number"      on every <th> and <td> of a numeric column: end-aligned, tabular, no wrapping
+data-table="sortable"    on a <thead> <th>: <dui-table> turns its text into a sort button
+aria-sort="ascending | descending"   on the sorted <th> only (native ARIA)
+aria-busy="true"         on the <table> while rows load
+```
+
+### Accessibility
+
+- Our choice: sortable headers are plain text in the markup and the script turns them into buttons, so with JavaScript off there are no buttons that do nothing; the rows keep the server's order, which aria-sort in the markup can state.
+- Our choice: a selected row is marked by its checked checkbox, a bar on its leading edge and a tinted background, so selection never relies on color alone (WCAG 1.4.1).
+- The rows stay rows of a table, not a grid: aria-selected is only allowed on rows of a grid or treegrid, so the checkbox carries the state.
+- The scroll container (or the page) gets a scroll-padding-block-start the height of the header, so a focused checkbox is never hidden under it (WCAG 2.4.11).
+- Each row checkbox has a name that says which row it selects ("Select order 1042"), from a visually hidden label text; the selection count is a role="status" region present from page load, so changes are announced politely (WCAG 4.1.3).
+- A loading table has aria-busy="true" and its skeleton rows have aria-hidden="true", so a screen reader hears the caption, the column headers and the page's status message ("Loading orders"), not blank cells.
+- The skeleton shimmer stops under reduced motion and data-motion="none".
+- Header buttons and checkbox labels are --dui-size-control tall (44px, 32px compact), above the 24px of WCAG 2.5.8.
+- Those make the table an APG Grid, which this is not.
+
+### Keyboard
+
+| Key | Action |
+| --- | --- |
+| <kbd>Tab</kbd> | moves to the scroll container, then each sort button and checkbox |
+| <kbd>Enter</kbd> / <kbd>Space</kbd> | on a sort button, sorts by that column (again: reverses) |
+| <kbd>Space</kbd> | on a checkbox, selects or deselects the row (or every row) |
+| <kbd>Arrow keys</kbd> | scroll the focused scroll container |
 
 ### Specifications
 
@@ -4180,10 +5314,17 @@ Coming in M3b.
 - [APG Table pattern](https://www.w3.org/WAI/ARIA/apg/patterns/table/)
 - [WAI Tables tutorial](https://www.w3.org/WAI/tutorials/tables/)
 - [APG Grid pattern, only if cells become interactive](https://www.w3.org/WAI/ARIA/apg/patterns/grid/)
+- [APG sortable table](https://www.w3.org/WAI/ARIA/apg/patterns/table/examples/sortable-table/)
+- [MDN `aria-sort`](https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Reference/Attributes/aria-sort)
+- [MDN `aria-busy`](https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Reference/Attributes/aria-busy)
+- [MDN `sticky_positioning`](https://developer.mozilla.org/en-US/docs/Web/CSS/position#sticky_positioning)
+- [WCAG Status messages](https://www.w3.org/WAI/WCAG22/Understanding/status-messages.html)
+- [WCAG Focus not obscured minimum](https://www.w3.org/WAI/WCAG22/Understanding/focus-not-obscured-minimum.html)
 
 ### See also
 
 - [Organisms](https://odonckers.github.io/domestic-ui/organisms/index.md)
+- Source: [`css/components/organisms/data-table.css`](https://github.com/odonckers/domestic-ui/blob/main/css/components/organisms/data-table.css), [`examples/organisms/data-table.html`](https://github.com/odonckers/domestic-ui/blob/main/examples/organisms/data-table.html)
 
 ### How other systems do it
 
@@ -4201,16 +5342,128 @@ A row of native form controls that narrows a list or table.
 
 **Our choice:** No standard exists: a `<form>` in `<search>` with labelled controls, and the result count as a status message.
 
-Coming in M3b.
+### Live example
+
+#### Filter orders
+
+```html
+<search data-filter-bar aria-label="Filter orders">
+  <form method="get" id="order-filters">
+    <div data-field>
+      <label for="filter-q">Search orders</label>
+      <input type="search" id="filter-q" name="q" placeholder="Order number">
+    </div>
+    <div data-field>
+      <label for="filter-status">Status</label>
+      <select id="filter-status" name="status">
+        <option value="">Any status</option>
+        <option>Open</option>
+        <option>Shipped</option>
+        <option>Delivered</option>
+      </select>
+    </div>
+    <dui-combobox>
+      <label for="filter-customer">Customer</label>
+      <input type="text" id="filter-customer" name="customer" list="filter-customers">
+      <datalist id="filter-customers">
+        <option value="Analytical Engines Ltd."></option>
+        <option value="Bletchley Instruments"></option>
+        <option value="Cobol Systems BV"></option>
+        <option value="Orbital Mechanics GmbH"></option>
+      </datalist>
+    </dui-combobox>
+    <div data-field>
+      <label for="filter-from">Placed on or after</label>
+      <input type="date" id="filter-from" name="from">
+    </div>
+    <div>
+      <button type="submit">Apply</button>
+      <button type="reset">Reset</button>
+    </div>
+  </form>
+  <p role="status" id="order-count">6 orders</p>
+</search>
+<section data-scroll="inline" aria-labelledby="orders-caption" tabindex="0">
+  <table id="order-table">
+    <caption id="orders-caption">Orders</caption>
+    <thead>
+      <tr><th scope="col">Order</th><th scope="col">Customer</th><th scope="col">Status</th><th scope="col">Placed</th><th scope="col">Total</th></tr>
+    </thead>
+    <tbody>
+        <tr><td>1042</td><td>Analytical Engines Ltd.</td><td>Shipped</td><td><time datetime="2025-03-12">2025-03-12</time></td><td>€1,240.00</td></tr>
+        <tr><td>1041</td><td>Bletchley Instruments</td><td>Delivered</td><td><time datetime="2025-03-10">2025-03-10</time></td><td>€48.50</td></tr>
+        <tr><td>1040</td><td>Cobol Systems BV</td><td>Open</td><td><time datetime="2025-03-09">2025-03-09</time></td><td>€3,980.00</td></tr>
+        <tr><td>1039</td><td>Orbital Mechanics GmbH</td><td>Open</td><td><time datetime="2025-03-07">2025-03-07</time></td><td>€615.90</td></tr>
+        <tr><td>1038</td><td>Analytical Engines Ltd.</td><td>Delivered</td><td><time datetime="2025-03-04">2025-03-04</time></td><td>€310.25</td></tr>
+        <tr><td>1037</td><td>Cobol Systems BV</td><td>Shipped</td><td><time datetime="2025-03-01">2025-03-01</time></td><td>€72.00</td></tr>
+    </tbody>
+  </table>
+</section>
+```
+
+#### Compact filter bar
+
+```html
+<div data-density="compact">
+  <search data-filter-bar aria-label="Filter invoices">
+    <form method="get">
+      <div data-field>
+        <label for="invoice-q">Search invoices</label>
+        <input type="search" id="invoice-q" name="q" placeholder="Invoice number">
+      </div>
+      <div data-field>
+        <label for="invoice-status">Status</label>
+        <select id="invoice-status" name="status">
+          <option value="">Any status</option>
+          <option>Draft</option>
+          <option>Sent</option>
+          <option>Overdue</option>
+          <option>Paid</option>
+        </select>
+      </div>
+      <div>
+        <button type="submit">Apply</button>
+        <button type="reset">Reset</button>
+      </div>
+    </form>
+    <p role="status">42 invoices</p>
+  </search>
+</div>
+```
+
+### Attributes
+
+```text
+data-filter-bar    on a <search> (aria-label when the page has several)
+Children: a <form> of fields (each a data-field, or a <dui-combobox>)
+whose last child holds the buttons, then a role="status" element with
+the result count.
+```
+
+### Accessibility
+
+- The status text says what changed ("24 orders match"), and is announced politely without moving focus (WCAG 4.1.3 Status Messages).
+- Controls keep their size (44px, 32px compact: above the 24px of WCAG 2.5.8).
+
+### Keyboard
+
+| Key | Action |
+| --- | --- |
+| <kbd>Tab</kbd> | moves through the filters, then Apply and Reset |
+| <kbd>Enter</kbd> | in a text field, applies the filters |
 
 ### Specifications
 
 - [HTML `<search>` element](https://html.spec.whatwg.org/multipage/grouping-content.html#the-search-element)
 - [WCAG 4.1.3 Status Messages](https://www.w3.org/WAI/WCAG22/Understanding/status-messages.html)
+- [MDN `search`](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/search)
+- [MDN `status_role`](https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Reference/Roles/status_role)
+- [WCAG Labels or instructions](https://www.w3.org/WAI/WCAG22/Understanding/labels-or-instructions.html)
 
 ### See also
 
 - [Organisms](https://odonckers.github.io/domestic-ui/organisms/index.md)
+- Source: [`css/components/organisms/filter-bar.css`](https://github.com/odonckers/domestic-ui/blob/main/css/components/organisms/filter-bar.css), [`examples/organisms/filter-bar.html`](https://github.com/odonckers/domestic-ui/blob/main/examples/organisms/filter-bar.html)
 
 ### How other systems do it
 
@@ -4226,7 +5479,131 @@ Page: https://odonckers.github.io/domestic-ui/patterns/large-forms.html
 
 Long forms split into labelled groups, in one or more columns.
 
-Coming in M3b.
+### Live example
+
+#### New invoice
+
+```html
+<form data-form-sections aria-labelledby="invoice-title">
+  <section aria-labelledby="inv-customer-title">
+    <header>
+      <h3 id="inv-customer-title">Customer</h3>
+      <p>Who the invoice is addressed to.</p>
+    </header>
+    <div>
+      <div data-field>
+        <label for="inv-company">Company</label>
+        <input type="text" id="inv-company" name="company" value="Orbital Mechanics GmbH" autocomplete="organization">
+      </div>
+      <div data-field>
+        <label for="inv-contact">Contact email</label>
+        <input type="email" id="inv-contact" name="contact" value="accounts@orbital-mechanics.example" autocomplete="email">
+      </div>
+      <div data-field>
+        <label for="inv-vat">VAT number</label>
+        <input type="text" id="inv-vat" name="vat" value="DE 123 456 789" autocomplete="off">
+      </div>
+    </div>
+  </section>
+  <section aria-labelledby="inv-details-title">
+    <header>
+      <h3 id="inv-details-title">Invoice details</h3>
+      <p>Dates and references printed in the invoice header.</p>
+    </header>
+    <div>
+      <div data-field>
+        <label for="inv-date">Invoice date</label>
+        <input type="date" id="inv-date" name="date" value="2025-03-14">
+      </div>
+      <div data-field>
+        <label for="inv-due">Due date</label>
+        <input type="date" id="inv-due" name="due" value="2025-04-13" aria-describedby="inv-due-hint">
+        <p id="inv-due-hint" data-field="hint">30 days net, from the customer's payment terms.</p>
+      </div>
+      <div data-field>
+        <label for="inv-currency">Currency</label>
+        <select id="inv-currency" name="currency">
+          <option selected>EUR</option>
+          <option>GBP</option>
+          <option>USD</option>
+        </select>
+      </div>
+      <div data-field>
+        <label for="inv-po">Customer reference</label>
+        <input type="text" id="inv-po" name="po" value="PO-OM-4471" autocomplete="off">
+      </div>
+    </div>
+  </section>
+  <section aria-labelledby="inv-address-title">
+    <header>
+      <h3 id="inv-address-title">Billing address</h3>
+      <p>Where the paper copy goes, if one is sent.</p>
+    </header>
+    <div>
+      <div data-field>
+        <label for="inv-street">Street and number</label>
+        <input type="text" id="inv-street" name="street" value="Am Fallturm 1" autocomplete="address-line1">
+      </div>
+      <div data-field>
+        <label for="inv-postcode">Postal code</label>
+        <input type="text" id="inv-postcode" name="postcode" value="28359" autocomplete="postal-code">
+      </div>
+      <div data-field>
+        <label for="inv-city">City</label>
+        <input type="text" id="inv-city" name="city" value="Bremen" autocomplete="address-level2">
+      </div>
+      <div data-field>
+        <label for="inv-country">Country</label>
+        <select id="inv-country" name="country" autocomplete="country">
+          <option value="DE" selected>Germany</option>
+          <option value="NL">Netherlands</option>
+          <option value="GB">United Kingdom</option>
+        </select>
+      </div>
+    </div>
+  </section>
+  <section aria-labelledby="inv-payment-title">
+    <header>
+      <h3 id="inv-payment-title">Payment</h3>
+      <p>How the customer pays this invoice.</p>
+    </header>
+    <div>
+      <fieldset>
+        <legend>Payment method</legend>
+        <label><input type="radio" name="method" value="transfer" checked> Bank transfer</label>
+        <label><input type="radio" name="method" value="debit"> Direct debit</label>
+        <label><input type="radio" name="method" value="card"> Card payment link</label>
+      </fieldset>
+      <div data-field>
+        <label for="inv-notes">Note on the invoice</label>
+        <textarea id="inv-notes" name="notes">Please quote INV-2025-0319 with your payment.</textarea>
+      </div>
+    </div>
+  </section>
+  <footer data-action-bar>
+    <button type="submit">Create invoice</button>
+    <button type="reset">Cancel</button>
+  </footer>
+</form>
+```
+
+### Attributes
+
+```text
+data-form-sections   on the <form>; each child <section> is a section:
+  <header>           its heading (h2) and an optional description <p>
+  one body element   a <div> (or <fieldset>) of fields, after the header
+```
+
+### Accessibility
+
+- Sections keep source order in both layouts, so the reading and Tab order stay top to bottom (WCAG 1.3.2, 2.4.3).
+- Put the form's buttons in a data-action-bar at the end of the form so they stay in reach.
+- Nothing scrolls sideways at 320px (WCAG 1.4.10).
+
+### Keyboard
+
+Native keyboard behavior; see [HTML `<form>` element](https://html.spec.whatwg.org/multipage/forms.html#the-form-element).
 
 ### Specifications
 
@@ -4234,10 +5611,13 @@ Coming in M3b.
 - [HTML `<fieldset>` element](https://html.spec.whatwg.org/multipage/form-elements.html#the-fieldset-element)
 - [WAI Forms tutorial](https://www.w3.org/WAI/tutorials/forms/)
 - [WCAG 3.3.2 Labels or Instructions](https://www.w3.org/WAI/WCAG22/Understanding/labels-or-instructions.html)
+- [W3C grouping](https://www.w3.org/WAI/tutorials/forms/grouping/)
+- [MDN `Container_queries`](https://developer.mozilla.org/en-US/docs/Web/CSS/Guides/Containment/Container_queries)
 
 ### See also
 
 - [Organisms](https://odonckers.github.io/domestic-ui/organisms/index.md)
+- Source: [`css/components/organisms/large-forms.css`](https://github.com/odonckers/domestic-ui/blob/main/css/components/organisms/large-forms.css), [`examples/organisms/large-forms.html`](https://github.com/odonckers/domestic-ui/blob/main/examples/organisms/large-forms.html)
 
 ### How other systems do it
 
@@ -4255,16 +5635,205 @@ A list of items beside the details of the selected one, stacked on narrow screen
 
 **Our choice:** No standard exists: real links beside a detail region, placed with CSS grid, so history and URLs keep working.
 
-Coming in M3b.
+### Live example
+
+#### Orders and the selected order
+
+```html
+<div data-list-detail>
+  <nav aria-label="Orders">
+    <ul>
+      <li><a href="?order=1042" aria-current="page">Order 1042 <small>Ada Lovelace · €1,240.00</small></a></li>
+      <li><a href="?order=1041">Order 1041 <small>Alan Turing · €48.50</small></a></li>
+      <li><a href="?order=1040">Order 1040 <small>Grace Hopper · €310.25</small></a></li>
+      <li><a href="?order=1039">Order 1039 <small>Katherine Johnson · €72.00</small></a></li>
+      <li><a href="?order=1038">Order 1038 <small>Hedy Lamarr · €615.90</small></a></li>
+      <li><a href="?order=1037">Order 1037 <small>Margaret Hamilton · €2,105.00</small></a></li>
+    </ul>
+  </nav>
+  <section aria-labelledby="order-1042-title" tabindex="0">
+    <h3 id="order-1042-title">Order 1042</h3>
+    <p><span data-badge="success">Shipped</span> Placed on 12 March 2025 by Ada Lovelace, Analytical Engines Ltd.</p>
+    <dl>
+      <dt>Ship to</dt>
+      <dd>12 St James's Square, London SW1Y 4JH</dd>
+      <dt>Carrier</dt>
+      <dd>DHL Express, tracking 4207 1893 22</dd>
+      <dt>Payment</dt>
+      <dd>Invoice INV-2025-0318, due 11 April 2025</dd>
+    </dl>
+    <section data-scroll="inline" aria-labelledby="order-1042-lines" tabindex="0">
+      <table>
+        <caption id="order-1042-lines">Order lines</caption>
+        <thead>
+          <tr><th scope="col">Item</th><th scope="col">Quantity</th><th scope="col">Price</th><th scope="col">Total</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Brass gear set</td><td>4</td><td>€180.00</td><td>€720.00</td></tr>
+          <tr><td>Punch card reader</td><td>1</td><td>€440.00</td><td>€440.00</td></tr>
+          <tr><td>Shipping</td><td>1</td><td>€80.00</td><td>€80.00</td></tr>
+        </tbody>
+      </table>
+    </section>
+    <p class="cluster">
+      <a href="?order=1042&amp;view=new-invoice" data-button>Create invoice</a>
+      <a href="?order=1042&amp;view=packing-slip" data-button>Print packing slip</a>
+    </p>
+  </section>
+</div>
+```
+
+#### Customers, compact
+
+```html
+<div data-list-detail data-density="compact">
+  <nav aria-label="Customers">
+    <ul>
+      <li><a href="?customer=c-118" aria-current="page">Analytical Engines Ltd. <small>London</small></a></li>
+      <li><a href="?customer=c-117">Bletchley Instruments <small>Milton Keynes</small></a></li>
+      <li><a href="?customer=c-116">Cobol Systems BV <small>Utrecht</small></a></li>
+      <li><a href="?customer=c-115">Orbital Mechanics GmbH <small>Bremen</small></a></li>
+    </ul>
+  </nav>
+  <article aria-labelledby="customer-118-title">
+    <h3 id="customer-118-title">Analytical Engines Ltd.</h3>
+    <dl>
+      <dt>Contact</dt>
+      <dd>Ada Lovelace, ada@analytical-engines.example</dd>
+      <dt>Payment terms</dt>
+      <dd>30 days net</dd>
+      <dt>Open balance</dt>
+      <dd>€1,240.00 (one invoice)</dd>
+    </dl>
+    <p><a href="?customer=c-118&amp;view=orders">All orders from Analytical Engines Ltd.</a></p>
+  </article>
+</div>
+```
+
+#### Settings page
+
+```html
+<div data-list-detail>
+  <nav aria-label="Settings sections">
+    <ul>
+      <li><a href="#settings-company">Company</a></li>
+      <li><a href="#settings-invoicing">Invoicing</a></li>
+      <li><a href="#settings-notifications">Notifications</a></li>
+    </ul>
+  </nav>
+  <section aria-labelledby="settings-title" tabindex="0">
+    <h3 id="settings-title">Settings</h3>
+    <form data-form-sections aria-labelledby="settings-title">
+      <section id="settings-company" aria-labelledby="settings-company-title">
+        <header>
+          <h4 id="settings-company-title">Company</h4>
+          <p>Shown on invoices, quotes and delivery notes.</p>
+        </header>
+        <div>
+            <div data-field>
+              <label for="set-name">Legal name</label>
+              <input type="text" id="set-name" name="name" value="Domestic Trading Ltd." autocomplete="organization">
+            </div>
+            <div data-field>
+              <label for="set-vat">VAT number</label>
+              <input type="text" id="set-vat" name="vat" value="NL 8123 4567 B01" autocomplete="off">
+            </div>
+            <div data-field>
+              <label for="set-iban">IBAN</label>
+              <input type="text" id="set-iban" name="iban" value="NL91 ABNA 0417 1643 00" autocomplete="off">
+            </div>
+        </div>
+      </section>
+      <section id="settings-invoicing" aria-labelledby="settings-invoicing-title">
+        <header>
+          <h4 id="settings-invoicing-title">Invoicing</h4>
+          <p>Defaults for new invoices; each invoice can change them.</p>
+        </header>
+        <div>
+            <div data-field>
+              <label for="set-terms">Default payment terms</label>
+              <select id="set-terms" name="terms">
+                <option>14 days net</option>
+                <option selected>30 days net</option>
+                <option>60 days net</option>
+              </select>
+            </div>
+            <div data-field>
+              <label for="set-prefix">Invoice number prefix</label>
+              <input type="text" id="set-prefix" name="prefix" value="INV-2025-" autocomplete="off" aria-describedby="set-prefix-hint">
+              <p id="set-prefix-hint" data-field="hint">The next invoice is INV-2025-0319.</p>
+            </div>
+            <div data-field>
+              <label for="set-footer">Invoice footer</label>
+              <textarea id="set-footer" name="footer">Thank you for your business. Please quote the invoice number with your payment.</textarea>
+            </div>
+        </div>
+      </section>
+      <section id="settings-notifications" aria-labelledby="settings-notifications-title">
+        <header>
+          <h4 id="settings-notifications-title">Notifications</h4>
+          <p>Emails sent to the finance team.</p>
+        </header>
+        <fieldset>
+          <legend>Email me when</legend>
+          <label><input type="checkbox" name="notify-overdue" checked> An invoice is overdue</label>
+          <label><input type="checkbox" name="notify-paid" checked> An invoice is paid</label>
+          <label><input type="checkbox" name="notify-credit"> A credit note is issued</label>
+        </fieldset>
+      </section>
+      <footer data-action-bar>
+        <button type="submit">Save settings</button>
+        <button type="reset">Discard changes</button>
+      </footer>
+    </form>
+  </section>
+</div>
+```
+
+### Attributes
+
+```text
+data-list-detail        on the wrapper; exactly two children:
+  1. the list: a <nav aria-label> (or <div>) holding a <ul> or <ol> whose
+     items are each one <a href> (or <button>)
+  2. the detail: a <section> or <article> with aria-labelledby
+aria-current="page"     on the selected link ("true" on a selected button),
+                        or on its <li>
+```
+
+### Accessibility
+
+- Use buttons only when the detail has no URL of its own (a picker inside a dialog), with aria-current="true" on the selected one.
+- It is shown like a selected data table row: a --dui-border-width-emphasis accent bar on its leading edge, a tint and bold text, so color is not the only cue (WCAG 1.4.1) and the bar has 3:1 against the surface (WCAG 1.4.11).
+- In forced colors mode the tint is dropped by the browser and the bar is drawn in Highlight, so the marker stays.
+- Rows are at least --dui-size-control tall (44px, 32px compact; WCAG 2.5.8).
+- Give it tabindex="0" when it can scroll, so keyboard users can scroll it (WCAG 2.1.1).
+- Source order is list, then detail, which is also the reading and Tab order in both layouts (WCAG 1.3.2, 2.4.3).
+- When a link loads a new detail, move focus to the detail's heading or leave it on the link; never move it without a page load.
+
+### Keyboard
+
+| Key | Action |
+| --- | --- |
+| <kbd>Tab</kbd> | moves through the list links, then into the detail pane |
+| <kbd>Enter</kbd> | on a link, opens that item's detail |
+| <kbd>Arrow keys</kbd> | scroll the detail pane once it has focus |
 
 ### Specifications
 
 - [MDN CSS grid layout](https://developer.mozilla.org/en-US/docs/Web/CSS/Guides/Grid_layout)
 - [WCAG 1.4.10 Reflow](https://www.w3.org/WAI/WCAG22/Understanding/reflow.html)
+- [MDN `Container_queries`](https://developer.mozilla.org/en-US/docs/Web/CSS/Guides/Containment/Container_queries)
+- [MDN `aria-current`](https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Reference/Attributes/aria-current)
+- [WCAG Meaningful sequence](https://www.w3.org/WAI/WCAG22/Understanding/meaningful-sequence.html)
+- [WCAG Use of color](https://www.w3.org/WAI/WCAG22/Understanding/use-of-color.html)
+- [WCAG Non text contrast](https://www.w3.org/WAI/WCAG22/Understanding/non-text-contrast.html)
+- [MDN `forced-colors`](https://developer.mozilla.org/en-US/docs/Web/CSS/@media/forced-colors)
 
 ### See also
 
 - [Layouts](https://odonckers.github.io/domestic-ui/layouts/index.md)
+- Source: [`css/layout/list-detail.css`](https://github.com/odonckers/domestic-ui/blob/main/css/layout/list-detail.css), [`examples/layouts/list-detail.html`](https://github.com/odonckers/domestic-ui/blob/main/examples/layouts/list-detail.html)
 
 ### How other systems do it
 
@@ -4282,16 +5851,118 @@ Two regions side by side at a set ratio, stacked on narrow screens.
 
 **Our choice:** No standard exists for a fixed split: two regions in a CSS grid. A draggable divider would follow the APG Window Splitter pattern.
 
-Coming in M3b.
+### Live example
+
+#### Invoice and payments (2:1)
+
+```html
+<div data-split="2:1">
+  <section aria-labelledby="invoice-title">
+    <h3 id="invoice-title">Invoice INV-2025-0318</h3>
+    <p>Analytical Engines Ltd., issued 12 March 2025, due 11 April 2025.</p>
+    <section data-scroll="inline" aria-labelledby="invoice-lines" tabindex="0">
+      <table>
+        <caption id="invoice-lines">Invoice lines</caption>
+        <thead>
+          <tr><th scope="col">Description</th><th scope="col">Quantity</th><th scope="col">Amount</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Brass gear set</td><td>4</td><td>€720.00</td></tr>
+          <tr><td>Punch card reader</td><td>1</td><td>€440.00</td></tr>
+          <tr><td>Shipping</td><td>1</td><td>€80.00</td></tr>
+        </tbody>
+      </table>
+    </section>
+  </section>
+  <aside aria-labelledby="payments-title">
+    <h3 id="payments-title">Payments</h3>
+    <ul>
+      <li>14 March 2025: €500.00 by bank transfer</li>
+      <li>28 March 2025: €400.00 by bank transfer</li>
+    </ul>
+    <p><strong>Open: €340.00</strong></p>
+    <p><a href="?invoice=INV-2025-0318&amp;view=reminder">Send a payment reminder</a></p>
+  </aside>
+</div>
+```
+
+#### Shipping and billing (1:1)
+
+```html
+<div data-split>
+  <section aria-labelledby="ship-title">
+    <h3 id="ship-title">Ship to</h3>
+    <address>
+      Analytical Engines Ltd.<br>
+      12 St James's Square<br>
+      London SW1Y 4JH<br>
+      United Kingdom
+    </address>
+  </section>
+  <section aria-labelledby="bill-title">
+    <h3 id="bill-title">Bill to</h3>
+    <address>
+      Analytical Engines Ltd., Accounts payable<br>
+      PO Box 1815<br>
+      London EC1A 1BB<br>
+      United Kingdom
+    </address>
+  </section>
+</div>
+```
+
+#### Customer and activity (1:2)
+
+```html
+<div data-split="1:2">
+  <section aria-labelledby="summary-title">
+    <h3 id="summary-title">Bletchley Instruments</h3>
+    <dl>
+      <dt>Customer since</dt>
+      <dd>2019</dd>
+      <dt>Orders this year</dt>
+      <dd>18</dd>
+    </dl>
+  </section>
+  <section aria-labelledby="activity-title">
+    <h3 id="activity-title">Recent activity</h3>
+    <ol>
+      <li>Order 1041 shipped by PostNL, 11 March 2025</li>
+      <li>Invoice INV-2025-0301 paid in full, 4 March 2025</li>
+      <li>Credit note CN-2025-0012 issued for a damaged reader, 27 February 2025</li>
+    </ol>
+  </section>
+</div>
+```
+
+### Attributes
+
+```text
+data-split="[1:1 | 1:2 | 2:1]"   on the wrapper of exactly two regions;
+                                 empty means 1:1 (equal halves)
+```
+
+### Accessibility
+
+- The divider is not draggable: a resizable divider is the APG Window Splitter pattern (role="separator" with aria-valuenow and arrow keys) and needs script, so it is out of scope; see explainers/split-view.md.
+- Source order is the reading and Tab order in both layouts; the ratio never reorders the regions (WCAG 1.3.2, 2.4.3).
+- Nothing scrolls sideways at 320px (WCAG 1.4.10).
+
+### Keyboard
+
+See the [Accessibility baseline](https://odonckers.github.io/domestic-ui/principles/accessibility-baseline-wcag-22-aa.md).
 
 ### Specifications
 
 - [APG Window Splitter pattern](https://www.w3.org/WAI/ARIA/apg/patterns/windowsplitter/)
 - [WCAG 1.4.10 Reflow](https://www.w3.org/WAI/WCAG22/Understanding/reflow.html)
+- [MDN `Grid_layout`](https://developer.mozilla.org/en-US/docs/Web/CSS/Guides/Grid_layout)
+- [MDN `Container_queries`](https://developer.mozilla.org/en-US/docs/Web/CSS/Guides/Containment/Container_queries)
 
 ### See also
 
 - [Layouts](https://odonckers.github.io/domestic-ui/layouts/index.md)
+- Source: [`css/layout/split.css`](https://github.com/odonckers/domestic-ui/blob/main/css/layout/split.css), [`examples/layouts/split.html`](https://github.com/odonckers/domestic-ui/blob/main/examples/layouts/split.html)
 
 ### How other systems do it
 

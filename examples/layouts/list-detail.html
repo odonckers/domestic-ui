@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>List-detail · domestic-ui</title>
+    <meta name="description" content="A list of real links beside the details of the selected item: side by side when the wrapper is wide, stacked when it is narrow, with aria-current on the selected link.">
+    <link rel="stylesheet" href="../../css/domestic.css">
+    <style>
+      /* Page-only layout, written with semantic tokens like any consumer would. */
+      body > :is(header, main, footer) {
+        max-inline-size: var(--dui-size-page);
+        margin-inline: auto;
+        padding-inline: var(--dui-space-l);
+      }
+
+      body > header {
+        padding-block: var(--dui-space-m);
+        border-block-end: var(--dui-border-width) solid var(--dui-color-border);
+      }
+
+      body > main {
+        padding-block: var(--dui-space-2xl);
+      }
+
+      body > footer {
+        padding-block: var(--dui-space-l);
+        border-block-start: var(--dui-border-width) solid var(--dui-color-border);
+        color: var(--dui-color-text-muted);
+      }
+
+      /* Wrap long lines of example markup instead of scrolling them. */
+      pre {
+        white-space: pre-wrap;
+        overflow-wrap: anywhere;
+      }
+
+      .demo {
+        padding: var(--dui-space-l);
+        border: var(--dui-border-width) solid var(--dui-color-border);
+        border-radius: var(--dui-radius-surface);
+      }
+    </style>
+  </head>
+  <body>
+    <a class="visually-hidden" href="#main">Skip to main content</a>
+
+    <header class="cluster" style="--cluster-justify: space-between">
+      <p><strong>domestic-ui</strong></p>
+      <nav aria-label="Examples">
+        <ul class="cluster">
+          <li><a href="../base.html">Base elements</a></li>
+          <li><a href="../theming.html">Theming</a></li>
+          <li><a href="../motion.html">Motion</a></li>
+          <li><a href="../elevation.html">Elevation</a></li>
+          <li><a href="../patterns/density.html">Density</a></li>
+          <li><a href="../atoms/index.html">Atoms</a></li>
+          <li><a href="../molecules/index.html">Molecules</a></li>
+          <li><a href="../organisms/index.html">Organisms</a></li>
+          <li><a href="index.html">Layouts</a></li>
+          <li><a href="../app-shell.html">App shell</a></li>
+        </ul>
+      </nav>
+    </header>
+
+    <main id="main">
+      <h1>List-detail</h1>
+      <!--
+        Keyboard
+          Tab: moves through the list links, then into the detail pane
+          Enter: on a link, opens that item's detail
+          Arrow keys: scroll the detail pane once it has focus
+      -->
+      <p data-text="lead">A list of orders beside the selected order: side by side when the wrapper is wide, stacked when it is narrow.</p>
+      <p>
+        API: <code>data-list-detail</code> on a wrapper of two children, the list (a <code>&lt;nav aria-label&gt;</code> holding a list of
+        links) and the detail (a <code>&lt;section&gt;</code> named by its heading); <code>aria-current="page"</code> on the selected link.
+        Source: <a href="../../css/layout/list-detail.css"><code>css/layout/list-detail.css</code></a>.
+      </p>
+      <p>
+        Each item is a real link to the order's own URL, so history, bookmarks and "open in new tab" work, and the page works with
+        JavaScript off. In this demo every link opens this page; an application renders the chosen order. The layout follows the
+        width of its wrapper (a container query), not the viewport, so it also works inside a split or an app shell.
+      </p>
+
+      <section aria-labelledby="orders-title">
+        <h2 id="orders-title">Orders and the selected order</h2>
+        <!-- dui:snippet name="Orders and the selected order" -->
+        <div data-list-detail>
+          <nav aria-label="Orders">
+            <ul>
+              <li><a href="?order=1042" aria-current="page">Order 1042 <small>Ada Lovelace · €1,240.00</small></a></li>
+              <li><a href="?order=1041">Order 1041 <small>Alan Turing · €48.50</small></a></li>
+              <li><a href="?order=1040">Order 1040 <small>Grace Hopper · €310.25</small></a></li>
+              <li><a href="?order=1039">Order 1039 <small>Katherine Johnson · €72.00</small></a></li>
+              <li><a href="?order=1038">Order 1038 <small>Hedy Lamarr · €615.90</small></a></li>
+              <li><a href="?order=1037">Order 1037 <small>Margaret Hamilton · €2,105.00</small></a></li>
+            </ul>
+          </nav>
+          <section aria-labelledby="order-1042-title" tabindex="0">
+            <h3 id="order-1042-title">Order 1042</h3>
+            <p><span data-badge="success">Shipped</span> Placed on 12 March 2025 by Ada Lovelace, Analytical Engines Ltd.</p>
+            <dl>
+              <dt>Ship to</dt>
+              <dd>12 St James's Square, London SW1Y 4JH</dd>
+              <dt>Carrier</dt>
+              <dd>DHL Express, tracking 4207 1893 22</dd>
+              <dt>Payment</dt>
+              <dd>Invoice INV-2025-0318, due 11 April 2025</dd>
+            </dl>
+            <section data-scroll="inline" aria-labelledby="order-1042-lines" tabindex="0">
+              <table>
+                <caption id="order-1042-lines">Order lines</caption>
+                <thead>
+                  <tr><th scope="col">Item</th><th scope="col">Quantity</th><th scope="col">Price</th><th scope="col">Total</th></tr>
+                </thead>
+                <tbody>
+                  <tr><td>Brass gear set</td><td>4</td><td>€180.00</td><td>€720.00</td></tr>
+                  <tr><td>Punch card reader</td><td>1</td><td>€440.00</td><td>€440.00</td></tr>
+                  <tr><td>Shipping</td><td>1</td><td>€80.00</td><td>€80.00</td></tr>
+                </tbody>
+              </table>
+            </section>
+            <p class="cluster">
+              <a href="?order=1042&amp;view=new-invoice" data-button>Create invoice</a>
+              <a href="?order=1042&amp;view=packing-slip" data-button>Print packing slip</a>
+            </p>
+          </section>
+        </div>
+        <!-- /dui:snippet -->
+      </section>
+
+      <section aria-labelledby="compact-title">
+        <h2 id="compact-title">Customers, compact</h2>
+        <p>Inside <code>data-density="compact"</code> the rows are 32px tall instead of 44px; text keeps its size.</p>
+        <!-- dui:snippet name="Customers, compact" -->
+        <div data-list-detail data-density="compact">
+          <nav aria-label="Customers">
+            <ul>
+              <li><a href="?customer=c-118" aria-current="page">Analytical Engines Ltd. <small>London</small></a></li>
+              <li><a href="?customer=c-117">Bletchley Instruments <small>Milton Keynes</small></a></li>
+              <li><a href="?customer=c-116">Cobol Systems BV <small>Utrecht</small></a></li>
+              <li><a href="?customer=c-115">Orbital Mechanics GmbH <small>Bremen</small></a></li>
+            </ul>
+          </nav>
+          <article aria-labelledby="customer-118-title">
+            <h3 id="customer-118-title">Analytical Engines Ltd.</h3>
+            <dl>
+              <dt>Contact</dt>
+              <dd>Ada Lovelace, ada@analytical-engines.example</dd>
+              <dt>Payment terms</dt>
+              <dd>30 days net</dd>
+              <dt>Open balance</dt>
+              <dd>€1,240.00 (one invoice)</dd>
+            </dl>
+            <p><a href="?customer=c-118&amp;view=orders">All orders from Analytical Engines Ltd.</a></p>
+          </article>
+        </div>
+        <!-- /dui:snippet -->
+      </section>
+
+      <section aria-labelledby="specs-title">
+        <h2 id="specs-title">Specs and guidance</h2>
+        <ul>
+          <li><a href="https://developer.mozilla.org/en-US/docs/Web/CSS/Guides/Containment/Container_queries">MDN: CSS container queries</a></li>
+          <li><a href="https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Reference/Attributes/aria-current">MDN: aria-current</a></li>
+          <li><a href="https://www.w3.org/WAI/WCAG22/Understanding/reflow.html">WCAG 2.2: 1.4.10 Reflow</a></li>
+        </ul>
+      </section>
+    </main>
+
+    <footer>
+      <p><small>domestic-ui packages existing standards and well-known patterns. MIT licensed.</small></p>
+    </footer>
+  </body>
+</html>

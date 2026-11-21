@@ -2,7 +2,7 @@
 
 > domestic-ui is a CSS design system built on native HTML, custom properties and cascade layers. Link one stylesheet and semantic HTML is styled in light and dark, with WCAG 2.2 AA as the baseline. Theme it by overriding semantic tokens. It packages existing web standards and patterns; nothing here is original.
 
-Link `css/domestic.css` (copy `css/` from https://github.com/odonckers/domestic-ui); semantic HTML needs no classes. Components: one `data-<component>` attribute of space-separated words matched with `~=` (`data-button="primary small"`), no classes; state via native attributes and ARIA. Layout primitives and utilities: `.cluster`, `.grid`, `data-scroll`, `.stack`, `.visually-hidden`. Theme only with semantic `--dui-*` tokens; primitives are internal.
+Link `css/domestic.css` (copy `css/` from https://github.com/odonckers/domestic-ui); semantic HTML needs no classes. Components: one `data-<component>` attribute of space-separated words matched with `~=` (`data-button="primary small"`), no classes; state via native attributes and ARIA. Layout primitives and utilities: `data-action-bar`, `.cluster`, `.grid`, `data-scroll`, `.stack`, `.visually-hidden`. Theme only with semantic `--dui-*` tokens; primitives are internal.
 
 ## Getting started
 
@@ -19,16 +19,16 @@ Link `css/domestic.css` (copy `css/` from https://github.com/odonckers/domestic-
 - [Motion](https://odonckers.github.io/domestic-ui/principles/motion.md): Motion is CSS-first, token-driven and close to platform behavior: short fades, a drawer that slides from its edge, popovers and menus that grow a little as they appear, and color changes on buttons, links and the switch.
 - [Elevation](https://odonckers.github.io/domestic-ui/principles/elevation.md): Elevation says which layer is on top.
 - [Opinions we hold](https://odonckers.github.io/domestic-ui/principles/opinions-we-hold.md): Each of these is a choice between valid options, not a standard.
-- [Layout primitives](https://odonckers.github.io/domestic-ui/principles/layout-primitives.md): Class: .stack, .cluster, .grid, [data-scroll="inline"].
+- [Layout primitives](https://odonckers.github.io/domestic-ui/principles/layout-primitives.md): Class: .stack, .cluster, .grid, [data-scroll="inline"], [data-scroll="block inline"].
 - [Web components](https://odonckers.github.io/domestic-ui/principles/web-components.md): HTML still has no element for tabs, menus, roving focus in a toolbar, hover tooltips or a toast stack.
 - [Explainers](https://odonckers.github.io/domestic-ui/principles/explainers.md): A pattern with no native element and no APG pattern is written up like a platform proposal in explainers/: problem, use cases, goals and non-goals, markup and API, keyboard, accessibility mappings, alternatives, prior art and open questions, with normative text in RFC 2119 keywords.
 - [Tooling](https://odonckers.github.io/domestic-ui/principles/tooling.md): npm test runs, in order, and fails if any step fails.
 
 ## Tokens
 
-- [Tokens](https://odonckers.github.io/domestic-ui/tokens/index.md): The two tiers of domestic-ui design tokens: 229 custom properties with their light and dark values.
-- [Primitive tokens](https://odonckers.github.io/domestic-ui/tokens/primitives.md): All 105 primitive tokens in css/tokens/primitives.css (internal), with resolved light and dark values.
-- [Semantic tokens](https://odonckers.github.io/domestic-ui/tokens/semantic.md): All 124 semantic tokens in css/tokens/semantic.css (public theming API), with resolved light and dark values.
+- [Tokens](https://odonckers.github.io/domestic-ui/tokens/index.md): The two tiers of domestic-ui design tokens: 235 custom properties with their light and dark values.
+- [Primitive tokens](https://odonckers.github.io/domestic-ui/tokens/primitives.md): All 107 primitive tokens in css/tokens/primitives.css (internal), with resolved light and dark values.
+- [Semantic tokens](https://odonckers.github.io/domestic-ui/tokens/semantic.md): All 128 semantic tokens in css/tokens/semantic.css (public theming API), with resolved light and dark values.
 
 ## Base
 
@@ -38,6 +38,7 @@ Link `css/domestic.css` (copy `css/` from https://github.com/odonckers/domestic-
 ## Layout
 
 - [Layouts](https://odonckers.github.io/domestic-ui/layouts/index.md): Layout primitives and planned page layouts of domestic-ui.
+- [Action bar](https://odonckers.github.io/domestic-ui/layouts/action-bar.md): A long form whose Save and Cancel buttons stay in a sticky bar at the bottom of the window, with scroll margins so the bar never hides the focused field (WCAG 2.4.11).
 - [Cluster](https://odonckers.github.io/domestic-ui/layouts/cluster.md): An inline group that wraps onto new lines (buttons, tags, nav links).
 - [Grid](https://odonckers.github.io/domestic-ui/layouts/grid.md): A responsive grid: as many columns as fit, each at least --grid-min wide, never wider than the container.
 - [Scroll](https://odonckers.github.io/domestic-ui/layouts/scroll.md): A scroll container for content wider than the screen, such as a data table, so it scrolls on its own instead of widening the page.
@@ -61,6 +62,7 @@ Link `css/domestic.css` (copy `css/` from https://github.com/odonckers/domestic-
 ## Organisms
 
 - [Organisms](https://odonckers.github.io/domestic-ui/organisms/index.md): Every organism in domestic-ui, with the patterns planned at this level.
+- [Page header](https://odonckers.github.io/domestic-ui/components/organisms/page-header.md): The top of a screen: an optional breadcrumb, the title, a description and actions that sit beside the title when there is room and wrap under it when not.
 
 ## Patterns and guides
 
@@ -78,14 +80,14 @@ Link `css/domestic.css` (copy `css/` from https://github.com/odonckers/domestic-
 - [Tabs](https://odonckers.github.io/domestic-ui/patterns/tabs.md): Available. Sections of content shown one at a time, chosen from a list of tabs. Follows [APG Tabs pattern](https://www.w3.org/WAI/ARIA/apg/patterns/tabs/).
 - [Toolbar](https://odonckers.github.io/domestic-ui/patterns/toolbar.md): Available. A row of related controls that is one stop in the tab order. Follows [APG Toolbar pattern](https://www.w3.org/WAI/ARIA/apg/patterns/toolbar/).
 - [Typeahead](https://odonckers.github.io/domestic-ui/patterns/typeahead.md): Available. A text field that suggests values as you type: `<datalist>` first, an APG combobox where it falls short. Follows [HTML `<datalist>` element](https://html.spec.whatwg.org/multipage/form-elements.html#the-datalist-element), [APG Combobox pattern](https://www.w3.org/WAI/ARIA/apg/patterns/combobox/).
-- App shell: Coming in M3b. The frame of an application: header, primary sidebar, main content and an optional auxiliary sidebar. **Our choice:** No standard defines an app shell: the landmarks `<header>`, `<nav>`, `<main>` and `<aside>`, placed with CSS grid.
+- [App shell](https://odonckers.github.io/domestic-ui/patterns/app-shell.md): Available. The frame of an application: header, primary sidebar, main content and an optional auxiliary sidebar. **Our choice:** No standard defines an app shell: the landmarks `<header>`, `<nav>`, `<main>` and `<aside>`, placed with CSS grid.
 - [Compact density](https://odonckers.github.io/domestic-ui/patterns/density.md): Available. A compact density token that tightens spacing for data-heavy screens. **Our choice:** No standard exists: `data-density="compact"` on any ancestor re-derives the density tokens; text size never changes and targets stay at least 24 by 24 CSS pixels.
-- Dashboard: Coming in M3b. A grid of summary sections, each with a heading, that reflows to fit the screen. **Our choice:** No standard exists: a CSS grid of headed `<section>` elements that reflows without media queries.
-- Data table: Coming in M3b. Rows of records in a native `<table>` with a caption, header cells and optional sorting. Follows [HTML `<table>` element](https://html.spec.whatwg.org/multipage/tables.html#the-table-element), [APG Table pattern](https://www.w3.org/WAI/ARIA/apg/patterns/table/).
-- Filter bar: Coming in M3b. A row of native form controls that narrows a list or table. **Our choice:** No standard exists: a `<form>` in `<search>` with labelled controls, and the result count as a status message.
-- Large forms: Coming in M3b. Long forms split into labelled groups, in one or more columns. Follows [HTML `<form>` element](https://html.spec.whatwg.org/multipage/forms.html#the-form-element), [HTML `<fieldset>` element](https://html.spec.whatwg.org/multipage/form-elements.html#the-fieldset-element).
-- List-detail: Coming in M3b. A list of items beside the details of the selected one, stacked on narrow screens. **Our choice:** No standard exists: real links beside a detail region, placed with CSS grid, so history and URLs keep working.
-- Split: Coming in M3b. Two regions side by side at a set ratio, stacked on narrow screens. **Our choice:** No standard exists for a fixed split: two regions in a CSS grid. A draggable divider would follow the APG Window Splitter pattern.
+- [Dashboard](https://odonckers.github.io/domestic-ui/patterns/dashboard.md): Available. A grid of summary sections, each with a heading, that reflows to fit the screen. **Our choice:** No standard exists: a CSS grid of headed `<section>` elements that reflows without media queries.
+- [Data table](https://odonckers.github.io/domestic-ui/patterns/data-table.md): Available. Rows of records in a native `<table>` with a caption, header cells and optional sorting. Follows [HTML `<table>` element](https://html.spec.whatwg.org/multipage/tables.html#the-table-element), [APG Table pattern](https://www.w3.org/WAI/ARIA/apg/patterns/table/).
+- [Filter bar](https://odonckers.github.io/domestic-ui/patterns/filter-bar.md): Available. A row of native form controls that narrows a list or table. **Our choice:** No standard exists: a `<form>` in `<search>` with labelled controls, and the result count as a status message.
+- [Large forms](https://odonckers.github.io/domestic-ui/patterns/large-forms.md): Available. Long forms split into labelled groups, in one or more columns. Follows [HTML `<form>` element](https://html.spec.whatwg.org/multipage/forms.html#the-form-element), [HTML `<fieldset>` element](https://html.spec.whatwg.org/multipage/form-elements.html#the-fieldset-element).
+- [List-detail](https://odonckers.github.io/domestic-ui/patterns/list-detail.md): Available. A list of items beside the details of the selected one, stacked on narrow screens. **Our choice:** No standard exists: real links beside a detail region, placed with CSS grid, so history and URLs keep working.
+- [Split](https://odonckers.github.io/domestic-ui/patterns/split.md): Available. Two regions side by side at a set ratio, stacked on narrow screens. **Our choice:** No standard exists for a fixed split: two regions in a CSS grid. A draggable divider would follow the APG Window Splitter pattern.
 - [Guides](https://odonckers.github.io/domestic-ui/guides/index.md): Step-by-step guides for building with domestic-ui.
 - [From a simple site to an ERP app](https://odonckers.github.io/domestic-ui/guides/simple-site-to-erp-app.md): Five steps from a plain content page to a dense business application, with what is available today.
 

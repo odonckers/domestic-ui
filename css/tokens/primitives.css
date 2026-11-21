@@ -103,9 +103,11 @@
   --dui-size-12: 12rem;
   --dui-size-3-25: 3.25rem;
   --dui-size-16: 16rem;
+  --dui-size-20: 20rem;
   --dui-size-24: 24rem;
   --dui-size-65ch: 65ch;
   --dui-size-72: 72rem;
+  --dui-size-100svh: 100svh; /* The small viewport height: the viewport with the browser's toolbars shown */
 
   /* Radii */
   --dui-radius-0: 0;

@@ -1,0 +1,128 @@
+/*
+ * Organism: filter bar
+ *
+ * A row of native form controls that narrows a list or table: a search
+ * field, a few selects or a typeahead, Apply and Reset, and the number of
+ * results. A <search> landmark holds a <form> (method="get", so the filters
+ * live in the URL and work without JavaScript) and a status message with
+ * the result count. Controls wrap onto new rows as the bar gets narrower;
+ * under 30rem of the bar's own width (container query) every control and
+ * the button group take a full row.
+ *
+ * Our choice: a plain <form> in <search> with a submit button, rather than
+ * filters that apply on every keystroke, so screen reader and keyboard users
+ * are not interrupted while they set several filters, and the form works
+ * with JavaScript off. A page MAY also apply filters on change; then it
+ * MUST still update the status message. The result count is a role="status"
+ * element present in the page from the start (it is only announced when
+ * its text changes inside an existing live region).
+ *
+ * Accessibility: name the <search> with aria-label ("Filter orders") when a
+ * page has more than one search landmark. Every control has a visible
+ * <label> (WCAG 1.3.1, 3.3.2); a typeahead is a <dui-combobox>. The status
+ * text says what changed ("24 orders match"), and is announced politely
+ * without moving focus (WCAG 4.1.3 Status Messages). Controls keep their
+ * size (44px, 32px compact: above the 24px of WCAG 2.5.8).
+ * https://html.spec.whatwg.org/multipage/grouping-content.html#the-search-element
+ *
+ * Breakpoint: 30rem of the bar's own inline size. A container query
+ * condition cannot read a custom property, so it is written as a length.
+ *
+ * API
+ *   data-filter-bar    on a <search> (aria-label when the page has several)
+ *   Children: a <form> of fields (each a data-field, or a <dui-combobox>)
+ *   whose last child holds the buttons, then a role="status" element with
+ *   the result count.
+ *
+ * Example
+ *   <search data-filter-bar aria-label="Filter orders">
+ *     <form action="/orders" method="get">
+ *       <div data-field>
+ *         <label for="q">Search orders</label>
+ *         <input type="search" id="q" name="q">
+ *       </div>
+ *       <div data-field>
+ *         <label for="status">Status</label>
+ *         <select id="status" name="status">…</select>
+ *       </div>
+ *       <div>
+ *         <button type="submit">Apply</button>
+ *         <button type="reset">Reset</button>
+ *       </div>
+ *     </form>
+ *     <p role="status">24 orders match</p>
+ *   </search>
+ *
+ * Keyboard
+ *   Tab: moves through the controls, then Apply and Reset
+ *   Enter: in a text field, applies the filters (submits the form)
+ *
+ * Specs
+ *   https://html.spec.whatwg.org/multipage/grouping-content.html#the-search-element
+ *   https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/search
+ *   https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Reference/Roles/status_role
+ *   https://www.w3.org/WAI/WCAG22/Understanding/status-messages.html
+ *   https://www.w3.org/WAI/WCAG22/Understanding/labels-or-instructions.html
+ */
+
+[data-filter-bar] {
+  container: dui-filter-bar / inline-size;
+  display: flex;
+  flex-direction: column;
+  gap: var(--dui-space-s);
+  padding: var(--dui-space-m);
+  background-color: var(--dui-color-surface-raised);
+  border: var(--dui-border-width) solid var(--dui-color-border);
+  border-radius: var(--dui-radius-surface);
+}
+
+[data-filter-bar] > * {
+  margin: 0;
+}
+
+[data-filter-bar] > form {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: var(--dui-space-s) var(--dui-space-m);
+}
+
+/* Fields share the row, at least --dui-size-menu-min wide each. */
+[data-filter-bar] > form > * {
+  flex: 1 1 var(--dui-size-menu-min);
+  min-inline-size: 0;
+  max-inline-size: none;
+  margin: 0;
+}
+
+/* The button group: as wide as its buttons. */
+[data-filter-bar] > form > :last-child:has(> button) {
+  display: flex;
+  flex: 0 0 auto;
+  flex-wrap: wrap;
+  gap: var(--dui-space-xs);
+}
+
+[data-filter-bar] > [role="status"] {
+  color: var(--dui-color-text-muted);
+}
+
+@container dui-filter-bar (inline-size < 30rem) {
+  [data-filter-bar] > form > * {
+    flex-basis: 100%;
+  }
+
+  [data-filter-bar] > form > :last-child:has(> button) {
+    flex: 1 1 100%;
+  }
+
+  [data-filter-bar] > form > :last-child:has(> button) > button {
+    flex: 1 1 0;
+  }
+}
+
+@media (forced-colors: active) {
+  [data-filter-bar] {
+    border-color: canvastext;
+  }
+}

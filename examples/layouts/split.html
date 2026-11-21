@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Split · domestic-ui</title>
+    <meta name="description" content="Two regions side by side at a 1:1, 1:2 or 2:1 ratio, stacked when the wrapper is narrow; a container query decides, so it works in any column.">
+    <link rel="stylesheet" href="../../css/domestic.css">
+    <style>
+      /* Page-only layout, written with semantic tokens like any consumer would. */
+      body > :is(header, main, footer) {
+        max-inline-size: var(--dui-size-page);
+        margin-inline: auto;
+        padding-inline: var(--dui-space-l);
+      }
+
+      body > header {
+        padding-block: var(--dui-space-m);
+        border-block-end: var(--dui-border-width) solid var(--dui-color-border);
+      }
+
+      body > main {
+        padding-block: var(--dui-space-2xl);
+      }
+
+      body > footer {
+        padding-block: var(--dui-space-l);
+        border-block-start: var(--dui-border-width) solid var(--dui-color-border);
+        color: var(--dui-color-text-muted);
+      }
+
+      /* Wrap long lines of example markup instead of scrolling them. */
+      pre {
+        white-space: pre-wrap;
+        overflow-wrap: anywhere;
+      }
+
+      .demo {
+        padding: var(--dui-space-l);
+        border: var(--dui-border-width) solid var(--dui-color-border);
+        border-radius: var(--dui-radius-surface);
+      }
+    </style>
+  </head>
+  <body>
+    <a class="visually-hidden" href="#main">Skip to main content</a>
+
+    <header class="cluster" style="--cluster-justify: space-between">
+      <p><strong>domestic-ui</strong></p>
+      <nav aria-label="Examples">
+        <ul class="cluster">
+          <li><a href="../base.html">Base elements</a></li>
+          <li><a href="../theming.html">Theming</a></li>
+          <li><a href="../motion.html">Motion</a></li>
+          <li><a href="../elevation.html">Elevation</a></li>
+          <li><a href="../patterns/density.html">Density</a></li>
+          <li><a href="../atoms/index.html">Atoms</a></li>
+          <li><a href="../molecules/index.html">Molecules</a></li>
+          <li><a href="../organisms/index.html">Organisms</a></li>
+          <li><a href="index.html">Layouts</a></li>
+          <li><a href="../app-shell.html">App shell</a></li>
+        </ul>
+      </nav>
+    </header>
+
+    <main id="main">
+      <h1>Split</h1>
+      <p data-text="lead">Two regions side by side at a set ratio, stacked when the wrapper is narrow.</p>
+      <p>
+        API: <code>data-split="[1:1 | 1:2 | 2:1]"</code> on a wrapper of exactly two regions; empty means equal halves.
+        Source: <a href="../../css/layout/split.css"><code>css/layout/split.css</code></a>.
+      </p>
+      <p>
+        The regions keep their source order at every width. The divider is fixed: a draggable one would follow the
+        <a href="https://www.w3.org/WAI/ARIA/apg/patterns/windowsplitter/">APG Window Splitter pattern</a> and is out of scope; see the
+        <a href="../../explainers/split-view.md">split view explainer</a>.
+      </p>
+
+      <section aria-labelledby="two-one-title">
+        <h2 id="two-one-title">Invoice and payments (2:1)</h2>
+        <!-- dui:snippet name="Invoice and payments (2:1)" -->
+        <div data-split="2:1">
+          <section aria-labelledby="invoice-title">
+            <h3 id="invoice-title">Invoice INV-2025-0318</h3>
+            <p>Analytical Engines Ltd., issued 12 March 2025, due 11 April 2025.</p>
+            <section data-scroll="inline" aria-labelledby="invoice-lines" tabindex="0">
+              <table>
+                <caption id="invoice-lines">Invoice lines</caption>
+                <thead>
+                  <tr><th scope="col">Description</th><th scope="col">Quantity</th><th scope="col">Amount</th></tr>
+                </thead>
+                <tbody>
+                  <tr><td>Brass gear set</td><td>4</td><td>€720.00</td></tr>
+                  <tr><td>Punch card reader</td><td>1</td><td>€440.00</td></tr>
+                  <tr><td>Shipping</td><td>1</td><td>€80.00</td></tr>
+                </tbody>
+              </table>
+            </section>
+          </section>
+          <aside aria-labelledby="payments-title">
+            <h3 id="payments-title">Payments</h3>
+            <ul>
+              <li>14 March 2025: €500.00 by bank transfer</li>
+              <li>28 March 2025: €400.00 by bank transfer</li>
+            </ul>
+            <p><strong>Open: €340.00</strong></p>
+            <p><a href="?invoice=INV-2025-0318&amp;view=reminder">Send a payment reminder</a></p>
+          </aside>
+        </div>
+        <!-- /dui:snippet -->
+      </section>
+
+      <section aria-labelledby="halves-title">
+        <h2 id="halves-title">Shipping and billing (1:1)</h2>
+        <!-- dui:snippet name="Shipping and billing (1:1)" -->
+        <div data-split>
+          <section aria-labelledby="ship-title">
+            <h3 id="ship-title">Ship to</h3>
+            <address>
+              Analytical Engines Ltd.<br>
+              12 St James's Square<br>
+              London SW1Y 4JH<br>
+              United Kingdom
+            </address>
+          </section>
+          <section aria-labelledby="bill-title">
+            <h3 id="bill-title">Bill to</h3>
+            <address>
+              Analytical Engines Ltd., Accounts payable<br>
+              PO Box 1815<br>
+              London EC1A 1BB<br>
+              United Kingdom
+            </address>
+          </section>
+        </div>
+        <!-- /dui:snippet -->
+      </section>
+
+      <section aria-labelledby="one-two-title">
+        <h2 id="one-two-title">Customer and activity (1:2)</h2>
+        <!-- dui:snippet name="Customer and activity (1:2)" -->
+        <div data-split="1:2">
+          <section aria-labelledby="summary-title">
+            <h3 id="summary-title">Bletchley Instruments</h3>
+            <dl>
+              <dt>Customer since</dt>
+              <dd>2019</dd>
+              <dt>Orders this year</dt>
+              <dd>18</dd>
+            </dl>
+          </section>
+          <section aria-labelledby="activity-title">
+            <h3 id="activity-title">Recent activity</h3>
+            <ol>
+              <li>Order 1041 shipped by PostNL, 11 March 2025</li>
+              <li>Invoice INV-2025-0301 paid in full, 4 March 2025</li>
+              <li>Credit note CN-2025-0012 issued for a damaged reader, 27 February 2025</li>
+            </ol>
+          </section>
+        </div>
+        <!-- /dui:snippet -->
+      </section>
+
+      <section aria-labelledby="specs-title">
+        <h2 id="specs-title">Specs and guidance</h2>
+        <ul>
+          <li><a href="https://developer.mozilla.org/en-US/docs/Web/CSS/Guides/Grid_layout">MDN: CSS grid layout</a></li>
+          <li><a href="https://www.w3.org/WAI/ARIA/apg/patterns/windowsplitter/">APG: Window Splitter pattern</a></li>
+          <li><a href="https://www.w3.org/WAI/WCAG22/Understanding/reflow.html">WCAG 2.2: 1.4.10 Reflow</a></li>
+        </ul>
+      </section>
+    </main>
+
+    <footer>
+      <p><small>domestic-ui packages existing standards and well-known patterns. MIT licensed.</small></p>
+    </footer>
+  </body>
+</html>

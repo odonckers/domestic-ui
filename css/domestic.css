@@ -25,6 +25,11 @@
 @import url("layout/cluster.css") layer(layout);
 @import url("layout/grid.css") layer(layout);
 @import url("layout/scroll.css") layer(layout);
+@import url("layout/list-detail.css") layer(layout);
+@import url("layout/split.css") layer(layout);
+@import url("layout/dashboard.css") layer(layout);
+@import url("layout/action-bar.css") layer(layout);
+@import url("layout/app-shell.css") layer(layout);
 @import url("components/atoms/text.css") layer(components);
 @import url("components/atoms/link.css") layer(components);
 @import url("components/atoms/button.css") layer(components);
@@ -44,4 +49,8 @@
 @import url("components/molecules/combobox.css") layer(components);
 @import url("components/molecules/card.css") layer(components);
 @import url("components/molecules/alerts.css") layer(components);
+@import url("components/organisms/page-header.css") layer(components);
+@import url("components/organisms/filter-bar.css") layer(components);
+@import url("components/organisms/large-forms.css") layer(components);
+@import url("components/organisms/data-table.css") layer(components);
 @import url("utilities/visually-hidden.css") layer(utilities);
