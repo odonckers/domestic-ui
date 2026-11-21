@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Molecules · domestic-ui</title>
+    <meta name="description" content="Every domestic-ui molecule: disclosure, dialog and drawer, popover and tooltip, navigation, breadcrumb, tabs, menu button, toolbar, pagination, search, card, alert and toast.">
+    <link rel="stylesheet" href="../../css/domestic.css">
+    <style>
+      /* Page-only layout, written with semantic tokens like any consumer would. */
+      body > :is(header, main, footer) {
+        max-inline-size: 72rem;
+        margin-inline: auto;
+        padding-inline: var(--dui-space-l);
+      }
+
+      body > header {
+        padding-block: var(--dui-space-m);
+        border-block-end: var(--dui-border-width) solid var(--dui-color-border);
+      }
+
+      body > main {
+        padding-block: var(--dui-space-2xl);
+      }
+
+      body > footer {
+        padding-block: var(--dui-space-l);
+        border-block-start: var(--dui-border-width) solid var(--dui-color-border);
+        color: var(--dui-color-text-muted);
+      }
+
+      /* Wrap long lines of example markup instead of scrolling them. */
+      pre {
+        white-space: pre-wrap;
+        overflow-wrap: anywhere;
+      }
+
+      .demo {
+        padding: var(--dui-space-l);
+        border: var(--dui-border-width) solid var(--dui-color-border);
+        border-radius: var(--dui-radius-surface);
+      }
+    </style>
+  </head>
+  <body>
+    <a class="visually-hidden" href="#main">Skip to main content</a>
+
+    <header class="cluster" style="--cluster-justify: space-between">
+      <p><strong>domestic-ui</strong></p>
+      <nav aria-label="Examples">
+        <ul class="cluster">
+          <li><a href="../base.html">Base elements</a></li>
+          <li><a href="../theming.html">Theming</a></li>
+          <li><a href="../atoms/index.html">Atoms</a></li>
+          <li><a href="index.html" aria-current="page">Molecules</a></li>
+        </ul>
+      </nav>
+    </header>
+
+    <main id="main">
+      <h1>Molecules</h1>
+      <!--
+        Keyboard
+          See each molecule's page for its full keyboard table.
+          Tabs: Left Arrow / Right Arrow, Home / End
+          Menu button: Enter / Space / Down Arrow opens, Esc closes
+          Toolbar: Left Arrow / Right Arrow, Home / End
+          Dialog: Esc closes
+      -->
+      <p data-text="lead">Small groups of atoms and native elements, each with one attribute API or one small web component.</p>
+      <p>
+        Native elements come first; where HTML has no element, the molecule follows its APG pattern, and where there is no
+        pattern either, it has an <a href="../../explainers/README.md">explainer</a>. The full reference is in
+        <a href="../../css/components/molecules/README.md">css/components/molecules/README.md</a>.
+      </p>
+
+      <table>
+        <caption>Molecule index</caption>
+        <thead>
+          <tr><th scope="col">Molecule</th><th scope="col">API</th><th scope="col">Standard</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><a href="disclosure.html">Disclosure and accordion</a></td><td><code>data-disclosure="accordion | plain"</code>, native <code>name</code></td><td>WHATWG <code>&lt;details&gt;</code>, APG Disclosure</td></tr>
+          <tr><td><a href="dialog.html">Dialog and drawer</a></td><td><code>data-dialog="[drawer] [start | end]"</code></td><td>WHATWG <code>&lt;dialog&gt;</code>, APG Dialog (Modal) (<a href="../../explainers/drawer.md">explainer</a>)</td></tr>
+          <tr><td><a href="popover.html">Popover and tooltip</a></td><td><code>data-popover</code>, <code>role="tooltip"</code>, <code>&lt;dui-tooltip&gt;</code></td><td>WHATWG popover, CSS anchor positioning, APG Tooltip, WCAG 1.4.13</td></tr>
+          <tr><td><a href="nav.html">Navigation list</a></td><td><code>data-nav="vertical | horizontal"</code>, <code>aria-current</code></td><td>APG Disclosure Navigation</td></tr>
+          <tr><td><a href="breadcrumb.html">Breadcrumb</a></td><td><code>data-breadcrumb</code>, <code>aria-current</code></td><td>APG Breadcrumb</td></tr>
+          <tr><td><a href="tabs.html">Tabs</a></td><td><code>&lt;dui-tabs&gt;</code> (roles added)</td><td>APG Tabs</td></tr>
+          <tr><td><a href="menu-button.html">Menu button</a></td><td><code>&lt;dui-menu&gt;</code>, <code>popovertarget</code></td><td>APG Menu Button</td></tr>
+          <tr><td><a href="toolbar.html">Toolbar</a></td><td><code>role="toolbar"</code>, <code>&lt;dui-toolbar&gt;</code></td><td>APG Toolbar</td></tr>
+          <tr><td><a href="pagination.html">Pagination</a></td><td><code>data-pagination</code>, <code>aria-current</code></td><td>Our choice (<a href="../../explainers/pagination.md">explainer</a>)</td></tr>
+          <tr><td><a href="search.html">Search field</a></td><td>None: <code>&lt;search&gt;</code></td><td>WHATWG <code>&lt;search&gt;</code></td></tr>
+          <tr><td><a href="card.html">Card</a></td><td><code>data-card="[link]"</code></td><td>Our choice (<a href="../../explainers/card.md">explainer</a>)</td></tr>
+          <tr><td><a href="alerts.html">Alert and toast</a></td><td><code>data-alert="info | success | warning | danger | toasts"</code>, <code>&lt;dui-toaster&gt;</code></td><td>ARIA live regions, WCAG 4.1.3; toast region is Our choice (<a href="../../explainers/toast.md">explainer</a>)</td></tr>
+        </tbody>
+      </table>
+
+      <section aria-labelledby="ix-disclosure-title">
+        <h2 id="ix-disclosure-title">Disclosure and accordion</h2>
+        <p><a href="disclosure.html">Disclosure and accordion examples and markup</a></p>
+        <div class="demo">
+          <div data-disclosure="accordion">
+            <details name="ix-faq" open>
+              <summary>Shipping</summary>
+              <p>Orders ship within two working days.</p>
+            </details>
+            <details name="ix-faq">
+              <summary>Returns</summary>
+              <p>Return unused items within 30 days.</p>
+            </details>
+          </div>
+        </div>
+      </section>
+
+      <section aria-labelledby="ix-dialog-title">
+        <h2 id="ix-dialog-title">Dialog and drawer</h2>
+        <p><a href="dialog.html">Dialog and drawer examples and markup</a></p>
+        <div class="demo">
+          <div class="cluster">
+            <button type="button" commandfor="ix-dialog" command="show-modal">Open dialog</button>
+            <button type="button" commandfor="ix-drawer" command="show-modal">Open drawer</button>
+          </div>
+          <dialog id="ix-dialog" data-dialog aria-labelledby="ix-dialog-heading">
+            <header>
+              <h2 id="ix-dialog-heading">Discard changes?</h2>
+            </header>
+            <p>Your edits since the last save will be lost.</p>
+            <form method="dialog">
+              <footer>
+                <button type="submit" value="keep" data-button="secondary" autofocus>Keep editing</button>
+                <button type="submit" value="discard">Discard</button>
+              </footer>
+            </form>
+          </dialog>
+          <dialog id="ix-drawer" data-dialog="drawer end" closedby="any" aria-labelledby="ix-drawer-heading">
+            <header>
+              <h2 id="ix-drawer-heading">Details</h2>
+              <button type="button" commandfor="ix-drawer" command="close" data-button="quiet small">Close</button>
+            </header>
+            <p>Drawers are dialogs at an inline edge of the viewport.</p>
+          </dialog>
+        </div>
+      </section>
+
+      <section aria-labelledby="ix-popover-title">
+        <h2 id="ix-popover-title">Popover and tooltip</h2>
+        <p><a href="popover.html">Popover and tooltip examples and markup</a></p>
+        <div class="demo">
+          <div class="cluster">
+            <button type="button" popovertarget="ix-popover">Share</button>
+            <div id="ix-popover" popover data-popover>
+              <p>Anyone with the link can view.</p>
+            </div>
+            <dui-tooltip>
+              <button type="button" aria-describedby="ix-tip">Save</button>
+              <span id="ix-tip" popover="hint" role="tooltip">Shortcut: Ctrl+S</span>
+            </dui-tooltip>
+          </div>
+        </div>
+      </section>
+
+      <section aria-labelledby="ix-nav-title">
+        <h2 id="ix-nav-title">Navigation list</h2>
+        <p><a href="nav.html">Navigation list examples and markup</a></p>
+        <div class="demo">
+          <nav aria-label="Index sidebar example" data-nav>
+            <ul>
+              <li><a href="#ix-nav-title" aria-current="page">Overview</a></li>
+              <li>
+                <details>
+                  <summary>Projects</summary>
+                  <ul>
+                    <li><a href="#ix-nav-title">Active</a></li>
+                    <li><a href="#ix-nav-title">Archived</a></li>
+                  </ul>
+                </details>
+              </li>
+            </ul>
+          </nav>
+        </div>
+      </section>
+
+      <section aria-labelledby="ix-breadcrumb-title">
+        <h2 id="ix-breadcrumb-title">Breadcrumb</h2>
+        <p><a href="breadcrumb.html">Breadcrumb examples and markup</a></p>
+        <div class="demo">
+          <nav aria-label="Breadcrumb" data-breadcrumb>
+            <ol>
+              <li><a href="../base.html">Home</a></li>
+              <li><a href="index.html" aria-current="page">Molecules</a></li>
+            </ol>
+          </nav>
+        </div>
+      </section>
+
+      <section aria-labelledby="ix-tabs-title">
+        <h2 id="ix-tabs-title">Tabs</h2>
+        <p><a href="tabs.html">Tabs examples and markup</a></p>
+        <div class="demo">
+          <dui-tabs>
+            <nav aria-label="Index tabs example">
+              <ul>
+                <li><a href="#ix-tab-one">Summary</a></li>
+                <li><a href="#ix-tab-two">History</a></li>
+              </ul>
+            </nav>
+            <section id="ix-tab-one">
+              <h3>Summary</h3>
+              <p>Three open issues, one in review.</p>
+            </section>
+            <section id="ix-tab-two">
+              <h3>History</h3>
+              <p>Created on 2 May, last changed today.</p>
+            </section>
+          </dui-tabs>
+        </div>
+      </section>
+
+      <section aria-labelledby="ix-menu-title">
+        <h2 id="ix-menu-title">Menu button</h2>
+        <p><a href="menu-button.html">Menu button examples and markup</a></p>
+        <div class="demo">
+          <dui-menu>
+            <button type="button" popovertarget="ix-menu">Actions</button>
+            <div id="ix-menu" popover data-popover>
+              <button type="button">Rename</button>
+              <button type="button">Move</button>
+              <hr>
+              <button type="button">Delete</button>
+            </div>
+          </dui-menu>
+        </div>
+      </section>
+
+      <section aria-labelledby="ix-toolbar-title">
+        <h2 id="ix-toolbar-title">Toolbar</h2>
+        <p><a href="toolbar.html">Toolbar examples and markup</a></p>
+        <div class="demo">
+          <dui-toolbar role="toolbar" aria-label="Index toolbar example">
+            <button type="button" aria-pressed="true">Bold</button>
+            <button type="button" aria-pressed="false">Italic</button>
+            <hr>
+            <button type="button">Clear</button>
+          </dui-toolbar>
+        </div>
+      </section>
+
+      <section aria-labelledby="ix-pagination-title">
+        <h2 id="ix-pagination-title">Pagination</h2>
+        <p><a href="pagination.html">Pagination examples and markup</a></p>
+        <div class="demo">
+          <nav aria-label="Pagination" data-pagination>
+            <ul>
+              <li><a href="?page=1" rel="prev">Previous<span class="visually-hidden"> page</span></a></li>
+              <li><a href="?page=1"><span class="visually-hidden">Page </span>1</a></li>
+              <li><a href="?page=2" aria-current="page"><span class="visually-hidden">Page </span>2</a></li>
+              <li><a href="?page=3"><span class="visually-hidden">Page </span>3</a></li>
+              <li><a href="?page=3" rel="next">Next<span class="visually-hidden"> page</span></a></li>
+            </ul>
+          </nav>
+        </div>
+      </section>
+
+      <section aria-labelledby="ix-search-title">
+        <h2 id="ix-search-title">Search field</h2>
+        <p><a href="search.html">Search field examples and markup</a></p>
+        <div class="demo">
+          <search>
+            <form action="search.html" method="get">
+              <label for="ix-search">Search the guides</label>
+              <input id="ix-search" type="search" name="q" autocomplete="off">
+              <button type="submit">Search</button>
+            </form>
+          </search>
+        </div>
+      </section>
+
+      <section aria-labelledby="ix-card-title">
+        <h2 id="ix-card-title">Card</h2>
+        <p><a href="card.html">Card examples and markup</a></p>
+        <div class="demo">
+          <div class="grid" style="--grid-min: 14rem">
+            <article data-card="link">
+              <h3><a href="card.html">Clickable card</a></h3>
+              <p>The heading link covers the card.</p>
+              <footer><a href="card.html#grid-title" data-button="secondary small">Secondary action</a></footer>
+            </article>
+            <article data-card>
+              <h3>Plain card</h3>
+              <p>A heading, a body and a footer.</p>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section aria-labelledby="ix-alerts-title">
+        <h2 id="ix-alerts-title">Alert and toast</h2>
+        <p><a href="alerts.html">Alert and toast examples and markup</a></p>
+        <div class="demo">
+          <div class="stack">
+            <div data-alert="success">
+              <p><strong>Success:</strong> Your changes were published.</p>
+            </div>
+            <div data-alert="warning">
+              <p><strong>Warning:</strong> Your trial ends in 3 days.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <p><small>domestic-ui packages existing standards and well-known patterns. MIT licensed.</small></p>
+    </footer>
+    <script type="module" src="../../web-components/dui-tabs.js"></script>
+    <script type="module" src="../../web-components/dui-menu.js"></script>
+    <script type="module" src="../../web-components/dui-toolbar.js"></script>
+    <script type="module" src="../../web-components/dui-tooltip.js"></script>
+    <script>
+      // Fallback for browsers without invoker commands (commandfor/command).
+      // https://developer.mozilla.org/en-US/docs/Web/API/Invoker_Commands_API
+      if (!("command" in HTMLButtonElement.prototype)) {
+        document.addEventListener("click", (event) => {
+          const button = event.target.closest("button[commandfor]");
+          const dialog = button && document.getElementById(button.getAttribute("commandfor"));
+          if (!(dialog instanceof HTMLDialogElement)) return;
+          const command = button.getAttribute("command");
+          if (command === "show-modal") dialog.showModal();
+          if (command === "close") dialog.close();
+        });
+      }
+    </script>
+  </body>
+</html>
