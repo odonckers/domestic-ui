@@ -115,3 +115,20 @@ test("at 1280px the Docs sidebar sits beside main, only the current group is ope
   expect(await nav.evaluate((n) => n.scrollTop), "the sidebar scrolled").toBeGreaterThan(0);
   expect(await page.evaluate(() => scrollY)).toBe(0);
 });
+
+// Owen's rule: an accent edge on the leading side is straight (nav.css, alerts and anything site.css draws).
+test("coloured leading edges are straight: no start-side radius on a thick start border, no exceptions", async ({ page }) => {
+  for (const path of ["index.html", "components/atoms/button.html", "patterns/alerts.html", "tokens/semantic.html"]) {
+    await page.goto(`_site/${path}`);
+    const curved = await page.evaluate(() =>
+      [...document.querySelectorAll("body *")].flatMap((el) => {
+        const s = getComputedStyle(el);
+        if (!(parseFloat(s.borderInlineStartWidth) > 1) || s.borderInlineStartStyle === "none") return [];
+        if (s.borderInlineStartColor === "transparent" || /rgba\(.*,\s*0\)$/.test(s.borderInlineStartColor)) return [];
+        if (s.borderStartStartRadius === "0px" && s.borderEndStartRadius === "0px") return [];
+        return [`<${el.localName}${el.className ? `.${String(el.className).trim().split(/\s+/).join(".")}` : ""}> radii ${s.borderStartStartRadius} / ${s.borderEndStartRadius}`];
+      }),
+    );
+    expect(curved, path).toEqual([]);
+  }
+});

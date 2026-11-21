@@ -702,25 +702,6 @@ test.describe("docs pages in the browser", () => {
     await expect(page.locator('nav[aria-label="Previous and next"] a[rel="prev"]')).toHaveText(/^Previous: /);
   });
 
-  test("coloured leading edges are straight: no start-side radius on a thick start border", async ({ page }) => {
-    // Owned by css/ and reported to the Lead (nav.css rounds the current link's accent edge); remove when fixed there.
-    const KNOWN = ['[data-nav] a[aria-current="page"]'];
-    for (const path of ["index.html", "components/atoms/button.html", "patterns/alerts.html", "tokens/semantic.html"]) {
-      await page.goto(`_site/${path}`);
-      const curved = await page.evaluate((known) =>
-        [...document.querySelectorAll("body *")].flatMap((el) => {
-          const s = getComputedStyle(el);
-          if (!(parseFloat(s.borderInlineStartWidth) > 1) || s.borderInlineStartStyle === "none") return [];
-          if (s.borderInlineStartColor === "transparent" || /rgba\(.*,\s*0\)$/.test(s.borderInlineStartColor)) return [];
-          if (s.borderStartStartRadius === "0px" && s.borderEndStartRadius === "0px") return [];
-          if (known.some((k) => el.matches(k))) return [];
-          return [`<${el.localName}${el.className ? `.${String(el.className).trim().split(/\s+/).join(".")}` : ""}> radii ${s.borderStartStartRadius} / ${s.borderEndStartRadius}`];
-        }),
-      KNOWN);
-      expect(curved, path).toEqual([]);
-    }
-  });
-
   test("the token filter hides rows and groups that do not match and says how many are shown", async ({ page }) => {
     await page.goto("_site/tokens/semantic.html");
     const input = page.getByRole("searchbox", { name: "Filter tokens" });
