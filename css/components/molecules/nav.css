@@ -1,0 +1,198 @@
+/*
+ * Molecule: nav list with collapsible groups
+ *
+ * Site or section navigation: a <nav> landmark with an accessible name,
+ * a list of links, aria-current="page" on the link to the current page,
+ * and optional collapsible groups made with <details> and <summary>.
+ * Vertical (sidebar) and horizontal (top bar with dropdowns) layouts.
+ * No JavaScript.
+ * https://html.spec.whatwg.org/multipage/sections.html#the-nav-element
+ * https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/nav
+ *
+ * Accessibility: this is the APG Disclosure Navigation Menu
+ * (https://www.w3.org/WAI/ARIA/apg/patterns/disclosure/examples/disclosure-navigation/)
+ * with native <details> in place of scripted buttons: <summary> is exposed
+ * as a button with aria-expanded, and Tab moves through the links, so it is
+ * not an ARIA menu (role="menu" is for application actions, not site links;
+ * see the APG note on that example). aria-current="page" tells screen
+ * readers which link is the current page
+ * (https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Reference/Attributes/aria-current);
+ * visually it gets a 3:1 accent bar, a tinted background and bold text, so
+ * color is not the only cue (WCAG 1.4.1, 1.4.11). A group that contains the
+ * current page is bold too; open it on load with the open attribute.
+ * Give each <nav> a distinct aria-label when a page has more than one.
+ * Links in a navigation list drop their underline: their role is clear from
+ * the list, and WCAG failure F73 is about links inside running text
+ * (https://www.w3.org/WAI/WCAG22/Techniques/failures/F73). Hover brings the
+ * underline back. Items are at least --dui-size-target tall (WCAG 2.5.8).
+ * Horizontal groups open as dropdowns; give their <details> a shared name so
+ * opening one closes the others. Native <details> does not close on Esc or
+ * when focus leaves, which the APG example does with script; Enter or Space
+ * on the summary closes it.
+ *
+ * API
+ *   data-nav="vertical | horizontal"   on <nav> (empty means vertical)
+ *   aria-current="page"                on the current link (native ARIA)
+ *   <details> / <summary>              inside an <li> for a collapsible group;
+ *                                      open to expand it on load, name for
+ *                                      one-at-a-time
+ *
+ * Example
+ *   <nav aria-label="Main" data-nav="vertical">
+ *     <ul>
+ *       <li><a href="/">Overview</a></li>
+ *       <li>
+ *         <details open>
+ *           <summary>Projects</summary>
+ *           <ul>
+ *             <li><a href="/projects/active" aria-current="page">Active</a></li>
+ *             <li><a href="/projects/archived">Archived</a></li>
+ *           </ul>
+ *         </details>
+ *       </li>
+ *     </ul>
+ *   </nav>
+ *
+ * Keyboard
+ *   Tab: moves to the next link or group summary / Shift+Tab: previous
+ *   Enter / Space: on a summary, opens or closes the group
+ *   Enter: on a link, follows it
+ *
+ * Specs
+ *   https://html.spec.whatwg.org/multipage/sections.html#the-nav-element
+ *   https://html.spec.whatwg.org/multipage/interactive-elements.html#the-details-element
+ *   https://www.w3.org/WAI/ARIA/apg/patterns/disclosure/examples/disclosure-navigation/
+ *   https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Reference/Attributes/aria-current
+ *   https://www.w3.org/WAI/WCAG22/Techniques/failures/F73
+ *   https://www.w3.org/WAI/WCAG22/Understanding/non-text-contrast.html
+ */
+
+[data-nav] :is(ul, ol) {
+  display: flex;
+  flex-direction: column;
+  gap: var(--dui-space-3xs);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+[data-nav] :is(li, details, summary) {
+  margin: 0;
+  max-inline-size: none;
+}
+
+/* Links and group summaries share one row style. */
+[data-nav] :is(a, summary) {
+  align-content: center;
+  min-block-size: var(--dui-size-target);
+  padding: var(--dui-space-xs) var(--dui-space-s);
+  border-radius: var(--dui-radius-control);
+  color: var(--dui-color-text);
+  font-weight: var(--dui-font-weight-body);
+  line-height: var(--dui-line-height-heading);
+}
+
+[data-nav] a {
+  display: flex;
+  align-items: center;
+  border-inline-start: var(--dui-border-width-indicator) solid transparent;
+  text-decoration-line: none;
+}
+
+[data-nav] a:visited {
+  color: var(--dui-color-text);
+}
+
+[data-nav] :is(a, summary):hover {
+  background-color: var(--dui-color-surface-sunken);
+}
+
+[data-nav] a:hover {
+  text-decoration-line: underline;
+}
+
+[data-nav] a[aria-current="page"] {
+  background-color: var(--dui-color-accent-surface);
+  border-inline-start-color: var(--dui-color-accent);
+  color: var(--dui-color-text);
+  font-weight: var(--dui-font-weight-strong);
+}
+
+/* Groups: drop the base details box; the summary is a row like the links. */
+[data-nav] details {
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background-color: transparent;
+}
+
+/* Top-level summaries get the same (transparent) bar as the links, so the row lines up. */
+[data-nav~="horizontal"] > :is(ul, ol) > li > details > summary {
+  border-block-end: var(--dui-border-width-indicator) solid transparent;
+  border-end-start-radius: 0;
+  border-end-end-radius: 0;
+}
+
+[data-nav] details[open] > summary {
+  margin-inline: 0;
+  padding-inline: var(--dui-space-s);
+  border-block-end-color: transparent;
+}
+
+[data-nav] details:has([aria-current="page"]) > summary {
+  font-weight: var(--dui-font-weight-strong);
+}
+
+[data-nav] details > :is(ul, ol) {
+  padding-inline-start: var(--dui-space-m);
+  padding-block-start: var(--dui-space-3xs);
+}
+
+/* Horizontal: a wrapping row; groups open as dropdowns below their summary. */
+[data-nav~="horizontal"] > :is(ul, ol) {
+  flex-flow: row wrap;
+  align-items: center;
+}
+
+[data-nav~="horizontal"] > :is(ul, ol) > li {
+  position: relative;
+}
+
+[data-nav~="horizontal"] > :is(ul, ol) > li > a:any-link {
+  border-inline-start: 0;
+  border-block-end: var(--dui-border-width-indicator) solid transparent;
+  border-end-start-radius: 0;
+  border-end-end-radius: 0;
+}
+
+[data-nav~="horizontal"] > :is(ul, ol) > li > a[aria-current="page"] {
+  border-block-end-color: var(--dui-color-accent);
+}
+
+[data-nav~="horizontal"] > :is(ul, ol) > li > details:has([aria-current="page"]) > summary {
+  border-block-end-color: var(--dui-color-accent);
+}
+
+[data-nav~="horizontal"] details > :is(ul, ol) {
+  position: absolute;
+  z-index: 1;
+  inset-block-start: 100%;
+  inset-inline-start: 0;
+  min-inline-size: var(--dui-size-menu-min);
+  margin-block-start: var(--dui-space-2xs);
+  padding: var(--dui-space-2xs);
+  background-color: var(--dui-color-surface);
+  border: var(--dui-border-width) solid var(--dui-color-border);
+  border-radius: var(--dui-radius-surface);
+  box-shadow: var(--dui-shadow-raised);
+}
+
+@media (forced-colors: active) {
+  [data-nav] a[aria-current="page"] {
+    border-color: highlight;
+  }
+
+  [data-nav~="horizontal"] details > :is(ul, ol) {
+    border-color: canvastext;
+  }
+}

@@ -1,0 +1,74 @@
+/*
+ * Molecule: breadcrumb
+ *
+ * The trail of pages leading to the current one: a <nav> named
+ * "Breadcrumb", an ordered list of links, and aria-current="page" on the
+ * last one, as in the APG Breadcrumb pattern.
+ * APG: https://www.w3.org/WAI/ARIA/apg/patterns/breadcrumb/
+ * https://html.spec.whatwg.org/multipage/sections.html#the-nav-element
+ *
+ * Accessibility: the landmark name lets screen reader users find the trail;
+ * the ordered list announces "list, 3 items"; aria-current="page" marks the
+ * current page (https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Reference/Attributes/aria-current).
+ * Separators are drawn by CSS with empty alternative text
+ * (content: "/" / ""), so they are not read out; engines without the
+ * alternative-text syntax keep the plain "/" and some screen readers may
+ * read it (https://developer.mozilla.org/en-US/docs/Web/CSS/content#alternative_text).
+ * The current page keeps its underline but uses the text color and bold
+ * weight, so it differs from the other links by more than color (WCAG 1.4.1).
+ * Links are at least 24px tall (WCAG 2.5.8).
+ *
+ * API
+ *   data-breadcrumb       on <nav aria-label="Breadcrumb">
+ *   aria-current="page"   on the last link (native ARIA)
+ *
+ * Example
+ *   <nav aria-label="Breadcrumb" data-breadcrumb>
+ *     <ol>
+ *       <li><a href="/">Home</a></li>
+ *       <li><a href="/guides/">Guides</a></li>
+ *       <li><a href="/guides/theming/" aria-current="page">Theming</a></li>
+ *     </ol>
+ *   </nav>
+ *
+ * Specs
+ *   https://www.w3.org/WAI/ARIA/apg/patterns/breadcrumb/
+ *   https://html.spec.whatwg.org/multipage/sections.html#the-nav-element
+ *   https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Reference/Attributes/aria-current
+ *   https://developer.mozilla.org/en-US/docs/Web/CSS/content#alternative_text
+ *   https://www.w3.org/WAI/WCAG22/Understanding/use-of-color.html
+ */
+
+[data-breadcrumb] > :is(ol, ul) {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--dui-space-2xs);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+[data-breadcrumb] li {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--dui-space-2xs);
+  margin: 0;
+}
+
+[data-breadcrumb] li + li::before {
+  content: "/";
+  content: "/" / "";
+  color: var(--dui-color-text-muted);
+}
+
+[data-breadcrumb] a {
+  display: inline-flex;
+  align-items: center;
+  min-block-size: var(--dui-size-target-small);
+}
+
+[data-breadcrumb] a[aria-current="page"] {
+  color: var(--dui-color-text);
+  font-weight: var(--dui-font-weight-strong);
+}

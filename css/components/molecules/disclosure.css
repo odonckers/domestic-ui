@@ -1,0 +1,108 @@
+/*
+ * Molecule: disclosure and accordion
+ *
+ * Show and hide a section with the native <details> and <summary>; join
+ * several into an accordion, and make it exclusive (one open at a time)
+ * with the HTML name attribute. No JavaScript: the browser gives the
+ * button role, the expanded state, Enter and Space, and find-in-page.
+ * The base layer already styles a single <details> (css/base/interactive.css);
+ * this file adds the grouped accordion look and a borderless inline variant.
+ * https://html.spec.whatwg.org/multipage/interactive-elements.html#the-details-element
+ * https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/details
+ *
+ * Accessibility: <summary> is exposed as a button with aria-expanded
+ * (HTML-AAM), which is the APG Disclosure pattern with no ARIA to write.
+ * APG Disclosure: https://www.w3.org/WAI/ARIA/apg/patterns/disclosure/
+ * HTML-AAM summary mapping: https://www.w3.org/TR/html-aam-1.0/#el-summary
+ * How it differs from the APG Accordion pattern
+ * (https://www.w3.org/WAI/ARIA/apg/patterns/accordion/): the headers are
+ * not inside heading elements and there is no optional Up/Down/Home/End
+ * navigation between headers; users move between them with Tab, as with
+ * any group of buttons. Both are optional in the APG pattern. If the
+ * section titles belong in the document outline, put a heading inside
+ * <summary> (it keeps the button role; some screen readers then announce
+ * the heading level as well) or use separate headings outside.
+ * Exclusive groups: opening one <details name="x"> closes the others with the
+ * same name. Do not use an exclusive group when people need to compare
+ * sections side by side.
+ * https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/details#name
+ *
+ * API
+ *   data-disclosure="accordion"   on a wrapper around several <details>:
+ *                                 joins them into one bordered block
+ *   data-disclosure="plain"       on a <details>: no box, for "Show more"
+ *                                 text inside prose
+ *   name="group"                  on each <details> (native): only one open
+ *   open                          on a <details> (native): open on load
+ *
+ * Example
+ *   <div data-disclosure="accordion">
+ *     <details name="faq" open>
+ *       <summary>Shipping</summary>
+ *       <p>Orders ship within two working days.</p>
+ *     </details>
+ *     <details name="faq">
+ *       <summary>Returns</summary>
+ *       <p>Return unused items within 30 days.</p>
+ *     </details>
+ *   </div>
+ *
+ *   <details data-disclosure="plain">
+ *     <summary>Show the full changelog</summary>
+ *     <ul>…</ul>
+ *   </details>
+ *
+ * Keyboard
+ *   Tab: moves to the next summary / Shift+Tab: previous
+ *   Enter / Space: opens or closes the focused section
+ *
+ * Specs
+ *   https://html.spec.whatwg.org/multipage/interactive-elements.html#the-details-element
+ *   https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/details
+ *   https://www.w3.org/WAI/ARIA/apg/patterns/disclosure/
+ *   https://www.w3.org/WAI/ARIA/apg/patterns/accordion/
+ *   https://www.w3.org/TR/html-aam-1.0/#el-summary
+ */
+
+/* Accordion: one block with dividers instead of separate boxes. */
+[data-disclosure~="accordion"] {
+  border: var(--dui-border-width) solid var(--dui-color-border);
+  border-radius: var(--dui-radius-surface);
+  background-color: var(--dui-color-surface);
+}
+
+[data-disclosure~="accordion"] > details {
+  border: 0;
+  border-radius: 0;
+  background-color: transparent;
+}
+
+[data-disclosure~="accordion"] > details + details {
+  margin-block-start: 0;
+  border-block-start: var(--dui-border-width) solid var(--dui-color-border);
+}
+
+/* Plain: an inline "show more" with no box. */
+details[data-disclosure~="plain"] {
+  border: 0;
+  padding: 0;
+  background-color: transparent;
+}
+
+details[data-disclosure~="plain"] > summary {
+  inline-size: fit-content;
+  color: var(--dui-color-link);
+}
+
+details[data-disclosure~="plain"][open] > summary {
+  border-block-end: 0;
+  margin-inline: 0;
+  padding-inline: 0;
+}
+
+@media (forced-colors: active) {
+  [data-disclosure~="accordion"],
+  [data-disclosure~="accordion"] > details + details {
+    border-color: canvastext;
+  }
+}

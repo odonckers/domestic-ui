@@ -31,4 +31,16 @@
 @import url("components/atoms/switch.css") layer(components);
 @import url("components/atoms/field.css") layer(components);
 @import url("components/atoms/badge.css") layer(components);
+@import url("components/molecules/disclosure.css") layer(components);
+@import url("components/molecules/dialog.css") layer(components);
+@import url("components/molecules/popover.css") layer(components);
+@import url("components/molecules/nav.css") layer(components);
+@import url("components/molecules/breadcrumb.css") layer(components);
+@import url("components/molecules/tabs.css") layer(components);
+@import url("components/molecules/menu-button.css") layer(components);
+@import url("components/molecules/toolbar.css") layer(components);
+@import url("components/molecules/pagination.css") layer(components);
+@import url("components/molecules/search.css") layer(components);
+@import url("components/molecules/card.css") layer(components);
+@import url("components/molecules/alerts.css") layer(components);
 @import url("utilities/visually-hidden.css") layer(utilities);

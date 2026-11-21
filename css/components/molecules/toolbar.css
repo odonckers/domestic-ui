@@ -1,0 +1,107 @@
+/*
+ * Molecule: toolbar
+ *
+ * A labelled row (or column) of controls, such as text formatting
+ * buttons, following the APG Toolbar pattern: role="toolbar" with
+ * aria-label, one Tab stop for the whole group, and arrow keys between the
+ * controls (roving tabindex). HTML has no toolbar element and cannot do
+ * roving focus, so the <dui-toolbar> web component
+ * (web-components/dui-toolbar.js) adds the keyboard behavior. With
+ * JavaScript off every control stays a normal Tab stop.
+ * APG: https://www.w3.org/WAI/ARIA/apg/patterns/toolbar/
+ * https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Reference/Roles/toolbar_role
+ *
+ * Accessibility: use a toolbar for three or more controls; fewer do not
+ * need one. Toggle buttons use aria-pressed (APG Button pattern), shown with
+ * a tinted fill, accent text and a doubled border, so the state does not
+ * rely on color alone (WCAG 1.4.1). aria-orientation="vertical" stacks the
+ * controls and switches the arrow keys to Up and Down. Separators are <hr>
+ * (role separator). Controls keep the 44px target size and focus ring.
+ * https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Reference/Attributes/aria-pressed
+ *
+ * API
+ *   role="toolbar" aria-label="…"     on the container (<dui-toolbar> or any element)
+ *   aria-orientation="vertical"       optional; default horizontal
+ *   aria-pressed="true | false"       on toggle buttons (native ARIA)
+ *   <hr>                              a separator between groups of controls
+ *
+ * Example
+ *   <dui-toolbar role="toolbar" aria-label="Text formatting">
+ *     <button type="button" aria-pressed="true">Bold</button>
+ *     <button type="button" aria-pressed="false">Italic</button>
+ *     <hr>
+ *     <button type="button">Clear formatting</button>
+ *   </dui-toolbar>
+ *   <script type="module" src="web-components/dui-toolbar.js"></script>
+ *
+ * Keyboard
+ *   Tab: moves into the toolbar (to the last focused control), then out of it
+ *   Right Arrow / Left Arrow: next or previous control, wrapping (swapped in right-to-left)
+ *   Down Arrow / Up Arrow: the same, when aria-orientation="vertical"
+ *   Home / End: first or last control
+ *   Enter / Space: activates the focused button
+ *
+ * Specs
+ *   https://www.w3.org/WAI/ARIA/apg/patterns/toolbar/
+ *   https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Reference/Roles/toolbar_role
+ *   https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Reference/Attributes/aria-pressed
+ *   https://www.w3.org/WAI/ARIA/apg/practices/keyboard-interface/#kbd_roving_tabindex
+ */
+
+[role="toolbar"] {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--dui-space-2xs);
+  inline-size: fit-content;
+  max-inline-size: 100%;
+  padding: var(--dui-space-2xs);
+  background-color: var(--dui-color-surface);
+  border: var(--dui-border-width) solid var(--dui-color-border);
+  border-radius: var(--dui-radius-surface);
+}
+
+[role="toolbar"][aria-orientation="vertical"] {
+  flex-direction: column;
+  align-items: stretch;
+}
+
+[role="toolbar"] > * {
+  margin: 0;
+}
+
+[role="toolbar"] > hr {
+  align-self: stretch;
+  margin-inline: var(--dui-space-3xs);
+  border: 0;
+  border-inline-start: var(--dui-border-width) solid var(--dui-color-border);
+}
+
+[role="toolbar"][aria-orientation="vertical"] > hr {
+  margin-block: var(--dui-space-3xs);
+  margin-inline: 0;
+  border-inline-start: 0;
+  border-block-start: var(--dui-border-width) solid var(--dui-color-border);
+}
+
+[role="toolbar"] [aria-pressed="true"] {
+  background-color: var(--dui-color-accent-surface);
+  color: var(--dui-color-accent);
+  border-color: var(--dui-color-accent);
+  box-shadow: inset 0 0 0 var(--dui-border-width) var(--dui-color-accent);
+}
+
+[role="toolbar"] [aria-pressed="true"]:hover:not(:disabled, [aria-disabled="true"]) {
+  background-color: var(--dui-color-accent-surface);
+}
+
+@media (forced-colors: active) {
+  [role="toolbar"],
+  [role="toolbar"] > hr {
+    border-color: canvastext;
+  }
+
+  [role="toolbar"] [aria-pressed="true"] {
+    border-color: highlight;
+  }
+}

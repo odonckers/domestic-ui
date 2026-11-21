@@ -1,0 +1,130 @@
+/*
+ * Molecule: card
+ *
+ * A self-contained summary of one thing (an article, a product, a
+ * project) that links to more: an <article> with a heading, optional
+ * media, body text and a footer of actions, and a variant where the whole
+ * card is clickable. HTML has no card element and the APG has no card
+ * pattern, so the contract is written up in explainers/card.md.
+ * https://html.spec.whatwg.org/multipage/sections.html#the-article-element
+ *
+ * Accessibility: use <article> when the card makes sense on its own (it can
+ * be syndicated or listed elsewhere), <section> or <li> when it does not.
+ * Every card has a heading, so screen reader users can move between cards
+ * by heading. Images need alt text, or alt="" when they only decorate.
+ * Clickable cards (data-card="link"): the link is the heading's own <a>,
+ * so the card's accessible name is the heading text, not the whole card's
+ * text. A pseudo-element stretches that link's hit area over the card
+ * ("block link" or "redundant click event" technique, Inclusive Components:
+ * https://inclusive-components.design/cards/). Secondary actions go in the
+ * card's <footer>, which sits above the overlay so it stays clickable and
+ * in the tab order. The focus ring moves from the heading link to the whole
+ * card (WCAG 2.4.7). Trade-off: text in a clickable card cannot be selected
+ * with the mouse; see the explainer.
+ *
+ * API
+ *   data-card          on <article> (or <section>, <li>): the card
+ *   data-card="link"   the whole card follows the link in its heading
+ *   Children: an optional first <img> (or <picture>, <video>) as media,
+ *   a heading, body content, and an optional <footer> for actions.
+ *
+ * Example
+ *   <article data-card="link">
+ *     <img src="cover.jpg" alt="" width="640" height="360">
+ *     <h3><a href="/guides/theming/">Theming guide</a></h3>
+ *     <p>Override semantic tokens to make a theme.</p>
+ *     <footer>
+ *       <a href="/guides/theming/edit">Edit</a>
+ *     </footer>
+ *   </article>
+ *
+ * Keyboard
+ *   Tab: moves to the card's heading link, then to each footer action
+ *   Enter: follows the focused link
+ *
+ * Specs
+ *   https://html.spec.whatwg.org/multipage/sections.html#the-article-element
+ *   https://inclusive-components.design/cards/
+ *   https://www.w3.org/WAI/WCAG22/Understanding/link-purpose-in-context.html
+ *   https://www.w3.org/WAI/WCAG22/Understanding/focus-visible.html
+ *   https://www.w3.org/WAI/tutorials/images/
+ */
+
+[data-card] {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: var(--dui-space-s);
+  padding: var(--dui-space-l);
+  background-color: var(--dui-color-surface-raised);
+  color: var(--dui-color-text);
+  border: var(--dui-border-width) solid var(--dui-color-border);
+  border-radius: var(--dui-radius-surface);
+}
+
+/* The gap replaces the base flow rhythm inside a card. */
+[data-card] > * {
+  margin: 0;
+}
+
+/* Media bleeds to the card's edges at the top. */
+[data-card] > :is(img, picture, video):first-child {
+  inline-size: calc(100% + var(--dui-space-l) * 2);
+  max-inline-size: none;
+  margin: calc(var(--dui-space-l) * -1) calc(var(--dui-space-l) * -1) 0;
+  border-radius: var(--dui-radius-surface) var(--dui-radius-surface) 0 0;
+  object-fit: cover;
+}
+
+[data-card] > :is(h2, h3, h4, h5, h6) {
+  font-size: var(--dui-step-1);
+  letter-spacing: normal;
+}
+
+/* Actions sit at the bottom, so cards of different lengths line up in a grid. */
+[data-card] > footer {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--dui-space-xs);
+  margin-block-start: auto;
+  padding-block-start: var(--dui-space-xs);
+}
+
+/* Clickable card: the heading link's hit area covers the card. */
+[data-card~="link"] > :is(h2, h3, h4, h5, h6) a::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: var(--dui-radius-surface);
+}
+
+[data-card~="link"]:has(> :is(h2, h3, h4, h5, h6) a:hover) {
+  border-color: var(--dui-color-border-control);
+}
+
+/* Move the focus ring from the heading text to the whole card. */
+[data-card~="link"] > :is(h2, h3, h4, h5, h6) a:focus-visible {
+  outline: 0;
+}
+
+[data-card~="link"] > :is(h2, h3, h4, h5, h6) a:focus-visible::after {
+  outline: var(--dui-focus-width) solid var(--dui-color-focus);
+  outline-offset: var(--dui-focus-offset);
+}
+
+/* Secondary actions stay above the overlay. */
+[data-card~="link"] > footer {
+  position: relative;
+  z-index: 1;
+}
+
+@media (forced-colors: active) {
+  [data-card] {
+    border-color: canvastext;
+  }
+
+  [data-card~="link"] > :is(h2, h3, h4, h5, h6) a:focus-visible::after {
+    outline-color: highlight;
+  }
+}
