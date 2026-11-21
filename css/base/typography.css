@@ -135,6 +135,16 @@ samp {
   overflow-wrap: anywhere;
 }
 
+/*
+ * Our choice: inside table cells, code keeps whole tokens (break-word only
+ * splits a token that alone is wider than the cell). Wide tables go in
+ * data-scroll="inline" (css/layout/scroll.css) and scroll instead of
+ * splitting `<select>` across lines.
+ */
+:is(td, th) :is(code, kbd, samp) {
+  overflow-wrap: break-word;
+}
+
 :not(pre) > code,
 samp {
   background-color: var(--dui-color-surface-sunken);
