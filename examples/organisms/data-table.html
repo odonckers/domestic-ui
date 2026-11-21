@@ -52,6 +52,7 @@
           <li><a href="../molecules/index.html">Molecules</a></li>
           <li><a href="index.html">Organisms</a></li>
           <li><a href="../layouts/index.html">Layouts</a></li>
+          <li><a href="../app-shell.html">App shell</a></li>
         </ul>
       </nav>
     </header>
@@ -169,81 +170,83 @@
           a status message, and the bulk actions are enabled only while rows are selected.
         </p>
         <!-- dui:snippet name="Selection and bulk actions" -->
-        <dui-table id="bulk-orders" class="stack" select-all-label="Select all open orders" style="--stack-gap: var(--dui-space-s)">
-          <div class="cluster">
-            <dui-toolbar role="toolbar" aria-label="Bulk actions">
-              <button type="button" id="bulk-ship">Mark as shipped</button>
-              <button type="button" id="bulk-print">Print packing slips</button>
-              <button type="button" id="bulk-export">Export</button>
-            </dui-toolbar>
-            <p role="status" id="selection-count"></p>
-          </div>
-          <section data-scroll="inline" aria-labelledby="select-caption" tabindex="0">
-            <table data-table id="select-table">
-              <caption id="select-caption">Open orders</caption>
-              <thead>
-                <tr>
-                  <td></td>
-                  <th scope="col">Order</th>
-                  <th scope="col">Customer</th>
-                  <th scope="col">Placed</th>
-                  <th scope="col">Status</th>
-                  <th scope="col" data-table="number">Total</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td><label><input type="checkbox"><span class="visually-hidden">Select order 1042</span></label></td>
-                  <th scope="row">1042</th>
-                  <td>Analytical Engines Ltd.</td>
-                  <td><time datetime="2025-03-12">12 Mar 2025</time></td>
-                  <td><span data-badge="accent">Shipped</span></td>
-                  <td data-table="number">€1,240.00</td>
-                </tr>
-                <tr>
-                  <td><label><input type="checkbox"><span class="visually-hidden">Select order 1041</span></label></td>
-                  <th scope="row">1041</th>
-                  <td>Bletchley Instruments</td>
-                  <td><time datetime="2025-03-10">10 Mar 2025</time></td>
-                  <td><span data-badge="success">Delivered</span></td>
-                  <td data-table="number">€48.50</td>
-                </tr>
-                <tr>
-                  <td><label><input type="checkbox"><span class="visually-hidden">Select order 1040</span></label></td>
-                  <th scope="row">1040</th>
-                  <td>Cobol Systems BV</td>
-                  <td><time datetime="2025-03-09">9 Mar 2025</time></td>
-                  <td><span data-badge="neutral">Open</span></td>
-                  <td data-table="number">€3,980.00</td>
-                </tr>
-                <tr>
-                  <td><label><input type="checkbox"><span class="visually-hidden">Select order 1039</span></label></td>
-                  <th scope="row">1039</th>
-                  <td>Orbital Mechanics GmbH</td>
-                  <td><time datetime="2025-03-07">7 Mar 2025</time></td>
-                  <td><span data-badge="warning">On hold</span></td>
-                  <td data-table="number">€615.90</td>
-                </tr>
-                <tr>
-                  <td><label><input type="checkbox"><span class="visually-hidden">Select order 1038</span></label></td>
-                  <th scope="row">1038</th>
-                  <td>Difference Engine Works</td>
-                  <td><time datetime="2025-02-27">27 Feb 2025</time></td>
-                  <td><span data-badge="success">Delivered</span></td>
-                  <td data-table="number">€310.25</td>
-                </tr>
-                <tr>
-                  <td><label><input type="checkbox"><span class="visually-hidden">Select order 1037</span></label></td>
-                  <th scope="row">1037</th>
-                  <td>Hollerith Tabulating Co.</td>
-                  <td><time datetime="2025-03-01">1 Mar 2025</time></td>
-                  <td><span data-badge="danger">Cancelled</span></td>
-                  <td data-table="number">€72.00</td>
-                </tr>
-              </tbody>
-            </table>
-          </section>
-        </dui-table>
+        <form id="bulk-form" method="post" action="?">
+          <dui-table id="bulk-orders" class="stack" select-all-label="Select all open orders" style="--stack-gap: var(--dui-space-s)">
+            <div class="cluster">
+              <dui-toolbar role="toolbar" aria-label="Bulk actions">
+                <button type="submit" name="action" value="ship" data-button="secondary" id="bulk-ship">Mark as shipped</button>
+                <button type="submit" name="action" value="print" data-button="secondary" id="bulk-print">Print packing slips</button>
+                <button type="submit" name="action" value="export" data-button="secondary" id="bulk-export">Export</button>
+              </dui-toolbar>
+              <p role="status" id="selection-count"></p>
+            </div>
+            <section data-scroll="inline" aria-labelledby="select-caption" tabindex="0">
+              <table data-table id="select-table">
+                <caption id="select-caption">Open orders</caption>
+                <thead>
+                  <tr>
+                    <td></td>
+                    <th scope="col">Order</th>
+                    <th scope="col">Customer</th>
+                    <th scope="col">Placed</th>
+                    <th scope="col">Status</th>
+                    <th scope="col" data-table="number">Total</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><label><input type="checkbox" name="orders[]" value="1042"><span class="visually-hidden">Select order 1042</span></label></td>
+                    <th scope="row">1042</th>
+                    <td>Analytical Engines Ltd.</td>
+                    <td><time datetime="2025-03-12">12 Mar 2025</time></td>
+                    <td><span data-badge="accent">Shipped</span></td>
+                    <td data-table="number">€1,240.00</td>
+                  </tr>
+                  <tr>
+                    <td><label><input type="checkbox" name="orders[]" value="1041"><span class="visually-hidden">Select order 1041</span></label></td>
+                    <th scope="row">1041</th>
+                    <td>Bletchley Instruments</td>
+                    <td><time datetime="2025-03-10">10 Mar 2025</time></td>
+                    <td><span data-badge="success">Delivered</span></td>
+                    <td data-table="number">€48.50</td>
+                  </tr>
+                  <tr>
+                    <td><label><input type="checkbox" name="orders[]" value="1040"><span class="visually-hidden">Select order 1040</span></label></td>
+                    <th scope="row">1040</th>
+                    <td>Cobol Systems BV</td>
+                    <td><time datetime="2025-03-09">9 Mar 2025</time></td>
+                    <td><span data-badge="neutral">Open</span></td>
+                    <td data-table="number">€3,980.00</td>
+                  </tr>
+                  <tr>
+                    <td><label><input type="checkbox" name="orders[]" value="1039"><span class="visually-hidden">Select order 1039</span></label></td>
+                    <th scope="row">1039</th>
+                    <td>Orbital Mechanics GmbH</td>
+                    <td><time datetime="2025-03-07">7 Mar 2025</time></td>
+                    <td><span data-badge="warning">On hold</span></td>
+                    <td data-table="number">€615.90</td>
+                  </tr>
+                  <tr>
+                    <td><label><input type="checkbox" name="orders[]" value="1038"><span class="visually-hidden">Select order 1038</span></label></td>
+                    <th scope="row">1038</th>
+                    <td>Difference Engine Works</td>
+                    <td><time datetime="2025-02-27">27 Feb 2025</time></td>
+                    <td><span data-badge="success">Delivered</span></td>
+                    <td data-table="number">€310.25</td>
+                  </tr>
+                  <tr>
+                    <td><label><input type="checkbox" name="orders[]" value="1037"><span class="visually-hidden">Select order 1037</span></label></td>
+                    <th scope="row">1037</th>
+                    <td>Hollerith Tabulating Co.</td>
+                    <td><time datetime="2025-03-01">1 Mar 2025</time></td>
+                    <td><span data-badge="danger">Cancelled</span></td>
+                    <td data-table="number">€72.00</td>
+                  </tr>
+                </tbody>
+              </table>
+            </section>
+          </dui-table>
+        </form>
         <p role="status" id="bulk-result"></p>
         <!-- /dui:snippet -->
       </section>
@@ -284,7 +287,7 @@
           says what is happening. The shimmer stops under reduced motion and <code>data-motion="none"</code>.
         </p>
         <!-- dui:snippet name="Loading state" -->
-        <p><button type="button" id="loading-toggle" aria-pressed="false">Show loading state</button></p>
+        <p><button type="button" id="loading-toggle" aria-pressed="false" hidden>Show loading state</button></p>
         <p role="status" id="loading-status"></p>
         <section data-scroll="inline" aria-labelledby="loading-caption" tabindex="0">
           <table data-table id="loading-table">
@@ -577,23 +580,29 @@
       };
       const selectedRows = () => bulk?.selectedRows ?? [...document.querySelectorAll("#select-table tbody input:checked")].map((box) => box.closest("tr"));
       const orders = (count) => `${count} ${count === 1 ? "order" : "orders"}`;
-      document.getElementById("bulk-ship")?.addEventListener("click", () => {
+      // Without this script the form posts the checked rows with action=ship, print or export to the server.
+      document.getElementById("bulk-form")?.addEventListener("submit", (event) => {
+        event.preventDefault();
         const rows = selectedRows();
-        for (const row of rows) {
-          const badge = row.querySelector("[data-badge]");
-          badge.dataset.badge = "accent";
-          badge.textContent = "Shipped";
-        }
-        report(`${orders(rows.length)} marked as shipped.`);
+        const action = event.submitter?.value;
+        if (action === "ship") {
+          for (const row of rows) {
+            const badge = row.querySelector("[data-badge]");
+            badge.dataset.badge = "accent";
+            badge.textContent = "Shipped";
+          }
+          report(`${orders(rows.length)} marked as shipped.`);
+        } else if (action === "print") report(`Packing slips for ${orders(rows.length)} sent to the printer.`);
+        else if (action === "export") report(`${orders(rows.length)} exported.`);
       });
-      document.getElementById("bulk-print")?.addEventListener("click", () => report(`Packing slips for ${orders(selectedRows().length)} sent to the printer.`));
-      document.getElementById("bulk-export")?.addEventListener("click", () => report(`${orders(selectedRows().length)} exported.`));
 
       // Demo only: swap the invoice rows for skeleton rows and back, as a page would while it fetches.
       const toggle = document.getElementById("loading-toggle");
       const table = document.getElementById("loading-table");
       const skeleton = document.getElementById("loading-skeleton");
       let loadedRows = [];
+      // The toggle only makes sense with this script, so it starts hidden.
+      if (toggle) toggle.hidden = false;
       toggle?.addEventListener("click", () => {
         const loading = toggle.getAttribute("aria-pressed") !== "true";
         toggle.setAttribute("aria-pressed", String(loading));

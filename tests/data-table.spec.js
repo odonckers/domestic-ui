@@ -128,6 +128,37 @@ test.describe("sorting", () => {
   });
 });
 
+/**
+ * Visible buttons that would do nothing without JavaScript: type="button" with no popovertarget or commandfor.
+ * @param {import("@playwright/test").Page} page
+ */
+const deadButtons = (page) =>
+  page.locator("button[type='button']:not([popovertarget], [commandfor])").evaluateAll((all) =>
+    all.filter((b) => b.checkVisibility()).map((b) => (b.textContent ?? "").trim().replace(/\s+/g, " ")),
+  );
+
+/**
+ * The bulk-action buttons: submit buttons of a form that holds every row checkbox.
+ * @param {import("@playwright/test").Page} page
+ * @param {string} toolbar
+ * @param {string} table
+ */
+const bulkActionsSubmit = (page, toolbar, table) =>
+  page.evaluate(
+    ([toolbarSelector, tableSelector]) => {
+      const buttons = /** @type {HTMLButtonElement[]} */ ([...document.querySelectorAll(`${toolbarSelector} button`)]);
+      const boxes = /** @type {HTMLInputElement[]} */ ([...document.querySelectorAll(`${tableSelector} tbody input[type='checkbox']`)]);
+      return {
+        buttons: buttons.length,
+        boxes: boxes.length,
+        submit: buttons.every((b) => b.type === "submit" && b.form !== null && b.name === "action" && Boolean(b.value)),
+        sameForm: buttons.every((b) => boxes.every((box) => box.form === b.form && box.name !== "")),
+        method: buttons[0]?.form?.method ?? "",
+      };
+    },
+    [toolbar, table],
+  );
+
 test.describe("without JavaScript", () => {
   test("headers stay plain text, nothing is a dead control, and the page passes axe", async ({ page }) => {
     await page.route(MODULE, (route) => route.abort());
@@ -142,6 +173,20 @@ test.describe("without JavaScript", () => {
     await expect(page.getByRole("checkbox", { name: "Select order 1040" })).toBeChecked();
     const { violations } = await new AxeBuilder({ page }).withTags(WCAG_TAGS).analyze();
     expect(violations, summarize(violations)).toEqual([]);
+  });
+});
+
+test.describe("with JavaScript off", () => {
+  test.use({ javaScriptEnabled: false });
+
+  test("no visible button needs the script: bulk actions submit a POST form with the row checkboxes", async ({ page }) => {
+    for (const viewport of [{ width: 1280, height: 800 }, { width: 375, height: 812 }]) {
+      await page.setViewportSize(viewport);
+      await page.goto(PAGE);
+      expect(await deadButtons(page), `${viewport.width}px`).toEqual([]);
+    }
+    await expect(page.locator("#loading-toggle")).toBeHidden();
+    expect(await bulkActionsSubmit(page, "#bulk-orders [role='toolbar']", "#select-table")).toEqual({ buttons: 3, boxes: 6, submit: true, sameForm: true, method: "post" });
   });
 });
 

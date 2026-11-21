@@ -29,6 +29,7 @@
 @import url("layout/split.css") layer(layout);
 @import url("layout/dashboard.css") layer(layout);
 @import url("layout/action-bar.css") layer(layout);
+@import url("layout/app-shell.css") layer(layout);
 @import url("components/atoms/text.css") layer(components);
 @import url("components/atoms/link.css") layer(components);
 @import url("components/atoms/button.css") layer(components);

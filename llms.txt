@@ -26,9 +26,9 @@ Link `css/domestic.css` (copy `css/` from https://github.com/odonckers/domestic-
 
 ## Tokens
 
-- [Tokens](https://odonckers.github.io/domestic-ui/tokens/index.md): The two tiers of domestic-ui design tokens: 231 custom properties with their light and dark values.
-- [Primitive tokens](https://odonckers.github.io/domestic-ui/tokens/primitives.md): All 106 primitive tokens in css/tokens/primitives.css (internal), with resolved light and dark values.
-- [Semantic tokens](https://odonckers.github.io/domestic-ui/tokens/semantic.md): All 125 semantic tokens in css/tokens/semantic.css (public theming API), with resolved light and dark values.
+- [Tokens](https://odonckers.github.io/domestic-ui/tokens/index.md): The two tiers of domestic-ui design tokens: 235 custom properties with their light and dark values.
+- [Primitive tokens](https://odonckers.github.io/domestic-ui/tokens/primitives.md): All 107 primitive tokens in css/tokens/primitives.css (internal), with resolved light and dark values.
+- [Semantic tokens](https://odonckers.github.io/domestic-ui/tokens/semantic.md): All 128 semantic tokens in css/tokens/semantic.css (public theming API), with resolved light and dark values.
 
 ## Base
 
@@ -80,7 +80,7 @@ Link `css/domestic.css` (copy `css/` from https://github.com/odonckers/domestic-
 - [Tabs](https://odonckers.github.io/domestic-ui/patterns/tabs.md): Available. Sections of content shown one at a time, chosen from a list of tabs. Follows [APG Tabs pattern](https://www.w3.org/WAI/ARIA/apg/patterns/tabs/).
 - [Toolbar](https://odonckers.github.io/domestic-ui/patterns/toolbar.md): Available. A row of related controls that is one stop in the tab order. Follows [APG Toolbar pattern](https://www.w3.org/WAI/ARIA/apg/patterns/toolbar/).
 - [Typeahead](https://odonckers.github.io/domestic-ui/patterns/typeahead.md): Available. A text field that suggests values as you type: `<datalist>` first, an APG combobox where it falls short. Follows [HTML `<datalist>` element](https://html.spec.whatwg.org/multipage/form-elements.html#the-datalist-element), [APG Combobox pattern](https://www.w3.org/WAI/ARIA/apg/patterns/combobox/).
-- App shell: Coming in M3b. The frame of an application: header, primary sidebar, main content and an optional auxiliary sidebar. **Our choice:** No standard defines an app shell: the landmarks `<header>`, `<nav>`, `<main>` and `<aside>`, placed with CSS grid.
+- [App shell](https://odonckers.github.io/domestic-ui/patterns/app-shell.md): Available. The frame of an application: header, primary sidebar, main content and an optional auxiliary sidebar. **Our choice:** No standard defines an app shell: the landmarks `<header>`, `<nav>`, `<main>` and `<aside>`, placed with CSS grid.
 - [Compact density](https://odonckers.github.io/domestic-ui/patterns/density.md): Available. A compact density token that tightens spacing for data-heavy screens. **Our choice:** No standard exists: `data-density="compact"` on any ancestor re-derives the density tokens; text size never changes and targets stay at least 24 by 24 CSS pixels.
 - [Dashboard](https://odonckers.github.io/domestic-ui/patterns/dashboard.md): Available. A grid of summary sections, each with a heading, that reflows to fit the screen. **Our choice:** No standard exists: a CSS grid of headed `<section>` elements that reflows without media queries.
 - [Data table](https://odonckers.github.io/domestic-ui/patterns/data-table.md): Available. Rows of records in a native `<table>` with a caption, header cells and optional sorting. Follows [HTML `<table>` element](https://html.spec.whatwg.org/multipage/tables.html#the-table-element), [APG Table pattern](https://www.w3.org/WAI/ARIA/apg/patterns/table/).

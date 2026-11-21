@@ -1,0 +1,300 @@
+/*
+ * Layout: [data-app-shell]
+ *
+ * The frame of an application: an app bar, a primary sidebar of
+ * navigation, the main content and an optional auxiliary sidebar for
+ * context (the selected record, filters, activity), with an optional
+ * footer. Every part is a native landmark placed with CSS grid and named
+ * grid areas (header, start, main, end, footer). The shell is a container:
+ * the sidebars sit beside main when the shell is wide enough and stack
+ * above and below it when it is not, decided by container queries on the
+ * shell, so a shell inside a docs page or a dialog behaves like one that
+ * fills the window. <main> and each sidebar are named size containers
+ * too, so layouts and organisms inside them respond to the space they have.
+ *
+ * Our choice: no standard defines an app shell; this one is the landmarks
+ * HTML already has (<header>, <nav>, <main>, <aside>, <footer>) in source
+ * order, placed with grid-template-areas, so the reading and Tab order is
+ * the source order at every width. The primary sidebar is a labelled <nav>
+ * (or an <aside> holding the primary <nav> when it holds more than links);
+ * the auxiliary sidebar is an <aside> after <main>. Parts are recognized by
+ * element and source order, so no part needs an attribute of its own.
+ *
+ * Our choice: the shell keeps one copy of each sidebar. Without
+ * JavaScript both are always visible: stacked above and below main when
+ * narrow, beside it when wide. <dui-app-shell> adds the toggle buttons'
+ * behavior: when a sidebar sits beside main its toggle hides it (the
+ * hidden attribute) and main takes the space; when the shell is too narrow
+ * the same sidebar element moves into a modal drawer <dialog> while it is
+ * open and back when it closes, so screen readers never hear "dialog"
+ * around a sidebar that is part of the page (explainers/app-shell.md).
+ *
+ * Accessibility: the parts are landmarks (APG Landmark Regions): the
+ * <header> is the banner, the primary <nav> a navigation landmark, <main>
+ * the main landmark, the <aside> a complementary landmark and the <footer>
+ * the contentinfo. Label every <nav> and <aside> (aria-label or
+ * aria-labelledby) with a name that does not repeat its role, and give
+ * each landmark of a kind a different name. Put a skip link to <main>
+ * before the shell (WCAG 2.4.1). Toggle buttons are native buttons with
+ * aria-controls and aria-expanded (APG Disclosure); they carry the hidden
+ * attribute in the markup and the script shows them, so there is never a
+ * button that does nothing. A collapsed sidebar has the hidden attribute,
+ * so it is gone for assistive technology and the Tab order as well.
+ * Sidebars that sit beside main stick to the top of the scroll area and
+ * scroll on their own, at most --dui-size-pane tall; they are not focus
+ * traps and hold focusable links, so the keyboard reaches everything in
+ * them (WCAG 2.1.1). Nothing scrolls sideways at 320px (WCAG 1.4.10): the
+ * app bar wraps, the search taking its own row.
+ *
+ * Motion: collapsing and expanding a sidebar beside main animates the
+ * grid columns for --dui-motion-duration-slow times --dui-motion-movement,
+ * so reduced motion and data-motion="none" make it instant (WCAG 2.3.3);
+ * the drawer is dialog.css's drawer and moves like it. Elevation: the app
+ * bar and sidebars are on the page (flat) and separated by hairlines; the
+ * drawer is at the dialog level.
+ *
+ * Breakpoints: the primary sidebar sits beside main from 48rem of the
+ * shell's own inline size, the auxiliary sidebar from 64rem (between the
+ * two it stacks under main, or is a drawer with the script). A container
+ * query condition cannot read a custom property, so both are lengths;
+ * web-components/dui-app-shell.js uses the same two numbers.
+ *
+ * API
+ *   data-app-shell                on a wrapper (or <dui-app-shell>), after the skip link
+ *   data-app-shell="contained"    the shell is --dui-size-pane tall and scrolls inside
+ *                                 its own box (a shell inside a page section)
+ *   Children, in source order:
+ *     <header>                    the app bar: app name, toggles, search, user menu
+ *     <nav aria-label> or <aside aria-label>   the primary sidebar (before <main>)
+ *     <main id>                   the content
+ *     <aside aria-label>          optional auxiliary sidebar (after <main>)
+ *     <footer>                    optional
+ *   <button type="button" aria-controls="sidebar-id" aria-expanded="true" hidden>
+ *                                 a sidebar's toggle; <dui-app-shell> shows it.
+ *                                 aria-expanded="false" in the markup starts the
+ *                                 sidebar collapsed when it sits beside main
+ *   --dui-size-sidebar, --dui-size-sidebar-aux   sidebar widths beside main
+ *   --dui-size-pane               max block size of a sidebar beside main; the
+ *                                 block size of a contained shell
+ *
+ * Example
+ *   <a class="visually-hidden" href="#main">Skip to main content</a>
+ *   <dui-app-shell data-app-shell>
+ *     <header>
+ *       <button type="button" aria-controls="app-nav" aria-expanded="true" hidden>Menu</button>
+ *       <a href="/">Operations</a>
+ *     </header>
+ *     <nav id="app-nav" aria-label="Main" data-nav="vertical">…</nav>
+ *     <main id="main">…</main>
+ *     <aside id="app-aux" aria-labelledby="aux-title">…</aside>
+ *   </dui-app-shell>
+ *   <script type="module" src="web-components/dui-app-shell.js"></script>
+ *
+ * Keyboard
+ *   Tab: skip link, app bar, primary sidebar, main, auxiliary sidebar, footer (source order)
+ *   Enter / Space: on a toggle, collapses or expands its sidebar, or opens it as a drawer when narrow
+ *   Esc: in a drawer, closes it and returns focus to the toggle
+ *
+ * Specs
+ *   https://www.w3.org/WAI/ARIA/apg/practices/landmark-regions/
+ *   https://html.spec.whatwg.org/multipage/grouping-content.html#the-main-element
+ *   https://html.spec.whatwg.org/multipage/sections.html#the-aside-element
+ *   https://developer.mozilla.org/en-US/docs/Web/CSS/grid-template-areas
+ *   https://developer.mozilla.org/en-US/docs/Web/CSS/Guides/Containment/Container_queries
+ *   https://www.w3.org/WAI/ARIA/apg/patterns/disclosure/
+ *   https://www.w3.org/WAI/WCAG22/Understanding/bypass-blocks.html
+ *   https://www.w3.org/WAI/WCAG22/Understanding/reflow.html
+ */
+
+[data-app-shell] {
+  container: dui-app-shell / inline-size;
+  display: grid;
+
+  /*
+   * Rows 2 to 4 hold the sidebars and main; when stacked, main takes row 3
+   * (the 1fr row). A sidebar column is as wide as its sidebar while it is
+   * shown (below), 0 while it is hidden or absent.
+   */
+  grid-template:
+    "header header header" auto
+    "start main end" auto
+    "start main end" 1fr
+    "start main end" auto
+    "footer footer footer" auto
+    / minmax(0, 0) minmax(0, 1fr) minmax(0, 0);
+  min-block-size: var(--dui-size-pane);
+  overflow-x: clip;
+  transition: grid-template-columns calc(var(--dui-motion-duration-slow) * var(--dui-motion-movement)) var(--dui-motion-easing-standard);
+}
+
+/* A shell that fills the page takes no flow margin from the skip link before it. */
+[data-app-shell]:not([data-app-shell~="contained"]) {
+  margin-block: 0;
+}
+
+[data-app-shell]:has(> :is(nav, aside):not([hidden]) ~ main) {
+  grid-template-columns: minmax(0, var(--dui-size-sidebar)) minmax(0, 1fr) minmax(0, 0);
+}
+
+[data-app-shell]:has(> main ~ aside:not([hidden])) {
+  grid-template-columns: minmax(0, 0) minmax(0, 1fr) minmax(0, var(--dui-size-sidebar-aux));
+}
+
+[data-app-shell]:has(> :is(nav, aside):not([hidden]) ~ main):has(> main ~ aside:not([hidden])) {
+  grid-template-columns: minmax(0, var(--dui-size-sidebar)) minmax(0, 1fr) minmax(0, var(--dui-size-sidebar-aux));
+}
+
+/* A shell inside a page section: its own scroll area, --dui-size-pane tall. */
+[data-app-shell~="contained"] {
+  block-size: var(--dui-size-pane);
+  overflow: hidden auto;
+  border: var(--dui-border-width) solid var(--dui-color-border);
+  border-radius: var(--dui-radius-surface);
+}
+
+/* Stacked by default: every part spans the full width, in source order. */
+[data-app-shell] > :not(dialog) {
+  grid-column: 1 / -1;
+  min-inline-size: 0;
+  max-inline-size: none;
+  margin: 0;
+}
+
+/* The app bar: one wrapping row; the search grows and takes its own row when there is no room. */
+[data-app-shell] > header {
+  grid-area: header;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--dui-space-xs) var(--dui-space-s);
+  padding: var(--dui-space-xs) var(--dui-space-m);
+  background-color: var(--dui-elevation-flat-surface);
+  border-block-end: var(--dui-border-width) solid var(--dui-color-border);
+}
+
+[data-app-shell] > header > * {
+  flex: 0 1 auto;
+  min-inline-size: 0;
+  margin: 0;
+}
+
+[data-app-shell] > header > search {
+  flex: 1 1 var(--dui-size-column-min);
+}
+
+/* A search form in the app bar: the field grows, its button keeps its size. */
+[data-app-shell] > header > search > form {
+  display: flex;
+  align-items: flex-end;
+  gap: var(--dui-space-xs);
+}
+
+[data-app-shell] > header > search > form > :not(button) {
+  flex: 1 1 auto;
+  min-inline-size: 0;
+  margin: 0;
+}
+
+/* Decorative icons in the app bar's buttons and links, as in the nav. */
+[data-app-shell] > header svg {
+  flex: none;
+  inline-size: var(--dui-size-icon);
+  block-size: var(--dui-size-icon);
+}
+
+/* The primary sidebar: before main in the source. */
+[data-app-shell] > :is(nav, aside):has(~ main) {
+  container: dui-app-shell-start / inline-size;
+  grid-row: 2;
+  padding: var(--dui-space-s) var(--dui-space-m);
+  background-color: var(--dui-color-surface-raised);
+  border-block-end: var(--dui-border-width) solid var(--dui-color-border);
+}
+
+[data-app-shell] > main {
+  container: dui-app-shell-main / inline-size;
+  grid-row: 3;
+  padding: var(--dui-space-m);
+}
+
+/* The auxiliary sidebar: after main in the source. */
+[data-app-shell] > main ~ aside {
+  container: dui-app-shell-end / inline-size;
+  grid-row: 4;
+  padding: var(--dui-space-m);
+  background-color: var(--dui-color-surface-raised);
+  border-block-start: var(--dui-border-width) solid var(--dui-color-border);
+}
+
+/* Sidebar headings: a step smaller than a page title. */
+[data-app-shell] > :is(nav, aside) > :is(h2, h3):first-child {
+  font-size: var(--dui-step-2);
+}
+
+[data-app-shell] > footer {
+  grid-area: footer;
+  padding: var(--dui-space-s) var(--dui-space-m);
+  border-block-start: var(--dui-border-width) solid var(--dui-color-border);
+  color: var(--dui-color-text-muted);
+}
+
+/* Sidebars beside main stick to the top of the scroll area and scroll on their own. */
+@container dui-app-shell (inline-size >= 48rem) {
+  [data-app-shell] > :is(nav, aside):has(~ main) {
+    position: sticky;
+    inset-block-start: 0;
+    grid-area: start;
+    max-block-size: var(--dui-size-pane);
+    overflow: hidden auto;
+    overscroll-behavior: contain;
+    border-block-end: 0;
+    border-inline-end: var(--dui-border-width) solid var(--dui-color-border);
+
+    /* Stays drawn while its column closes, then hides (no transition where unsupported). */
+    transition: display calc(var(--dui-motion-duration-slow) * var(--dui-motion-movement)) allow-discrete;
+  }
+
+  /* The content keeps its width while the column opens or closes, so it never rewraps mid-way. */
+  [data-app-shell] > :is(nav, aside):has(~ main) > * {
+    min-inline-size: calc(var(--dui-size-sidebar) - var(--dui-space-m) * 2 - var(--dui-border-width));
+  }
+
+  /* Between the two breakpoints main also takes the auxiliary column; the aside stacks under it. */
+  [data-app-shell] > main {
+    grid-row: 2 / 4;
+    grid-column: main-start / -1;
+    padding: var(--dui-space-l);
+  }
+
+  [data-app-shell] > main ~ aside {
+    grid-row: 4;
+    grid-column: main-start / -1;
+  }
+}
+
+@container dui-app-shell (inline-size >= 64rem) {
+  [data-app-shell] > main {
+    grid-area: main;
+  }
+
+  [data-app-shell] > main ~ aside {
+    position: sticky;
+    inset-block-start: 0;
+    grid-area: end;
+    max-block-size: var(--dui-size-pane);
+    overflow: hidden auto;
+    overscroll-behavior: contain;
+    border-block-start: 0;
+    border-inline-start: var(--dui-border-width) solid var(--dui-color-border);
+    transition: display calc(var(--dui-motion-duration-slow) * var(--dui-motion-movement)) allow-discrete;
+  }
+
+  [data-app-shell] > main ~ aside > * {
+    min-inline-size: calc(var(--dui-size-sidebar-aux) - var(--dui-space-m) * 2 - var(--dui-border-width));
+  }
+}
+
+/* The drawer <dui-app-shell> opens on narrow shells: dialog.css's drawer, a sidebar moved inside. */
+dui-app-shell dialog[data-dialog~="drawer"] > :is(nav, aside) {
+  margin-block-start: var(--dui-space-s);
+}

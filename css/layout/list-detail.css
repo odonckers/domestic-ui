@@ -21,8 +21,12 @@
  *
  * Accessibility: the list is a <nav> landmark with an aria-label ("Orders")
  * holding a <ul> of links; the selected link gets aria-current="page" (or
- * "true" on buttons), shown with an accent bar, a tint and bold text so
- * color is not the only cue (WCAG 1.4.1, 1.4.11). Rows are at least
+ * "true" on buttons; on its <li> works too). It is shown like a selected
+ * data table row: a --dui-border-width-emphasis accent bar on its leading
+ * edge, a tint and bold text, so color is not the only cue (WCAG 1.4.1) and
+ * the bar has 3:1 against the surface (WCAG 1.4.11). In forced colors mode
+ * the tint is dropped by the browser and the bar is drawn in Highlight, so
+ * the marker stays. Rows are at least
  * --dui-size-control tall (44px, 32px compact; WCAG 2.5.8). The detail is a
  * <section> or <article> named by its heading (aria-labelledby), so it is a
  * region landmark. Give it tabindex="0" when it can scroll, so keyboard
@@ -40,7 +44,8 @@
  *     1. the list: a <nav aria-label> (or <div>) holding a <ul> or <ol> whose
  *        items are each one <a href> (or <button>)
  *     2. the detail: a <section> or <article> with aria-labelledby
- *   aria-current="page"     on the selected link ("true" on a selected button)
+ *   aria-current="page"     on the selected link ("true" on a selected button),
+ *                           or on its <li>
  *
  * Example
  *   <div data-list-detail>
@@ -67,6 +72,9 @@
  *   https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Reference/Attributes/aria-current
  *   https://www.w3.org/WAI/WCAG22/Understanding/reflow.html
  *   https://www.w3.org/WAI/WCAG22/Understanding/meaningful-sequence.html
+ *   https://www.w3.org/WAI/WCAG22/Understanding/use-of-color.html
+ *   https://www.w3.org/WAI/WCAG22/Understanding/non-text-contrast.html
+ *   https://developer.mozilla.org/en-US/docs/Web/CSS/@media/forced-colors
  */
 
 [data-list-detail] {
@@ -111,7 +119,7 @@
   background-color: transparent;
   color: var(--dui-color-text);
   border: 0;
-  border-inline-start: var(--dui-border-width-indicator) solid transparent;
+  border-inline-start: var(--dui-border-width-emphasis) solid transparent;
   border-radius: var(--dui-radius-control);
   font-weight: var(--dui-font-weight-body);
   line-height: var(--dui-line-height-heading);
@@ -136,7 +144,8 @@
 }
 
 /* The selected item: a bar, a tint and bold text, never color alone. */
-[data-list-detail] > :first-child li > [aria-current]:not([aria-current="false"]) {
+[data-list-detail] > :first-child li > :is(a, button)[aria-current]:not([aria-current="false"]),
+[data-list-detail] > :first-child li[aria-current]:not([aria-current="false"]) > :is(a, button) {
   background-color: var(--dui-color-accent-surface);
   border-inline-start-color: var(--dui-color-accent);
   font-weight: var(--dui-font-weight-strong);
@@ -170,7 +179,8 @@
 }
 
 @media (forced-colors: active) {
-  [data-list-detail] > :first-child li > [aria-current]:not([aria-current="false"]) {
-    border-color: highlight;
+  [data-list-detail] > :first-child li > :is(a, button)[aria-current]:not([aria-current="false"]),
+  [data-list-detail] > :first-child li[aria-current]:not([aria-current="false"]) > :is(a, button) {
+    border-inline-start-color: highlight;
   }
 }

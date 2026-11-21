@@ -184,6 +184,38 @@ Semantic token names and file paths under `css/` are public API; primitive token
   numbers, dates, stability, the event and canceling it, no-JavaScript fallback with axe, selection count,
   select all and its mixed state, unique checkbox names, the sticky header, loading and the shimmer under
   `data-motion="none"` and reduced motion, 320px, axe and 24px targets in compact density).
+- App shell layout (`css/layout/app-shell.css`, M3b): `data-app-shell` on a wrapper holding a `<header>` (app bar),
+  a primary sidebar (a labelled `<nav>`, or an `<aside>` holding it), `<main>`, an optional auxiliary `<aside>` and
+  an optional `<footer>`, placed with named grid areas (`header`, `start`, `main`, `end`, `footer`) and switched by
+  container queries on the shell (primary sidebar beside main from 48rem, auxiliary from 64rem; stacked in source
+  order below). Sidebars beside main stick and scroll on their own (at most `--dui-size-pane`); collapsing animates
+  the grid columns with the motion tokens (instant under reduced motion and `data-motion="none"`). `<main>` and
+  each sidebar are named size containers (`dui-app-shell-main`, `-start`, `-end`). `data-app-shell="contained"`
+  for a shell inside a page section. Without JavaScript both sidebars are always visible and the toggles stay
+  `hidden`.
+- `<dui-app-shell>` (`web-components/dui-app-shell.js`): sidebar toggles (`aria-controls`, `aria-expanded`) that
+  collapse a sidebar beside main with `hidden`, or open it in a modal drawer (`<dialog data-dialog="drawer start |
+  end" closedby="any">` built once, with a heading and a Close button) on a narrow shell, moving the one copy of the
+  sidebar in while it is open and back when it closes; Esc and backdrop close; focus returns to the opener; the mode
+  follows the shell's own width (`ResizeObserver`); `aria-expanded="false"` in the markup starts a sidebar
+  collapsed; `show()`, `hide()`, `toggle()`, `isDrawer()` and a `dui-app-shell-toggle` event.
+- Sidebar navigation: the nav molecule (`data-nav="vertical"`) documented as the app shell's sidebar, with optional
+  decorative `<svg aria-hidden="true">` icons in links and group summaries; a note on why it is not an APG Tree View
+  (CSS header, molecules and organisms indexes, `PRINCIPLES.md`, `explainers/app-shell.md`).
+- Semantic tokens `--dui-size-icon` (1.25rem), `--dui-size-sidebar` (16rem) and `--dui-size-sidebar-aux` (20rem);
+  primitive `--dui-size-20`.
+- `examples/app-shell.html`: a full orders screen (app bar with a `<dui-combobox>` search and a user menu, sidebar
+  navigation with nested groups, page header, filter bar, sortable data table with selection and bulk actions, the
+  selected order in the auxiliary sidebar, updated on selection or when an order link is activated);
+  `examples/layouts/app-shell.html`: a contained shell. Every example page's navigation links the orders screen;
+  the layouts index lists the app shell.
+- `explainers/app-shell.md` and `explainers/aux-sidebar.md`.
+- Tests: `tests/app-shell.spec.js` (landmarks and their names, grid areas at 1440px, collapse with click, Enter and
+  Space, modal drawers at both edges with Esc and focus return, one copy of each sidebar in every mode, mode
+  switches on the shell's own width, main as a size container, no-JavaScript and blocked-module fallbacks with axe
+  and no overflow at 320px, sidebar navigation groups and current link, the orders screen's aux sidebar, combobox,
+  filter bar, sorting and compact targets, motion); `tests/a11y.spec.js` also checks every app shell drawer open
+  at 375px in light and dark; `tests/layouts.spec.js` checks the list-detail selected marker, also in forced colors.
 
 ### Changed
 
@@ -196,6 +228,12 @@ Semantic token names and file paths under `css/` are public API; primitive token
 - `<dui-toolbar>` keeps one Tab stop when its controls are enabled or disabled after it upgrades (a bulk-action
   bar).
 - `--dui-size-pane` also bounds a `data-scroll="block inline"` container (description only; the value is unchanged).
+- List-detail: the selected item's bar is now `--dui-border-width-emphasis` wide (was the 3px indicator width), as on a
+  selected data table row; `aria-current` on the `<li>` marks its link too; in forced colors only the leading bar
+  turns `Highlight`.
+- The nav molecule's links have a gap between an icon and the text.
+- The organisms index no longer lists the app shell and sidebar navigation as a later session; the components
+  README lists the data table among the organisms.
 
 - Components adopt the motion and elevation tokens: card uses the raised level (shadow added, surface
   `--dui-elevation-raised-surface`), popovers, menus, tooltips and nav dropdowns the popover level, toasts

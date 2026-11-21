@@ -127,6 +127,41 @@ test.describe("list-detail", () => {
     expect(selected.background).not.toBe(other.background);
   });
 
+  // WCAG 1.4.1 Use of Color and 1.4.11 Non-text Contrast: a bar on the leading edge and bold text, not a tint alone,
+  // and the bar is still drawn (in Highlight) in forced colors mode, where backgrounds are dropped.
+  for (const forcedColors of /** @type {const} */ (["none", "active"])) {
+    test(`the selected item has a leading bar the others lack (forced colors: ${forcedColors})`, async ({ page }) => {
+      await page.emulateMedia({ forcedColors });
+      await page.goto(PAGES[0]);
+      const list = page.getByRole("navigation", { name: "Orders" });
+      const read = (/** @type {import("@playwright/test").Locator} */ l) =>
+        l.evaluate((a) => {
+          const s = getComputedStyle(a);
+          return { width: parseFloat(s.borderInlineStartWidth), style: s.borderInlineStartStyle, color: s.borderInlineStartColor, weight: s.fontWeight };
+        });
+      const selected = await read(list.locator("a[aria-current='page']"));
+      const other = await read(list.locator("a:not([aria-current])").first());
+      expect(selected.width).toBeGreaterThanOrEqual(3);
+      expect(selected.style).toBe("solid");
+      expect(selected.color).not.toMatch(/^(transparent|rgba\(0, 0, 0, 0\))$/);
+      expect(selected.color).not.toBe(other.color);
+      expect(selected.weight).not.toBe(other.weight);
+    });
+  }
+
+  test("aria-current on the list item marks its link too", async ({ page }) => {
+    await page.goto(PAGES[0]);
+    const list = page.getByRole("navigation", { name: "Orders" });
+    const second = list.locator("li").nth(1);
+    const before = await second.locator("a").evaluate((a) => getComputedStyle(a).borderInlineStartColor);
+    await second.evaluate((li) => {
+      li.closest("ul")?.querySelector("[aria-current]")?.removeAttribute("aria-current");
+      li.setAttribute("aria-current", "true");
+    });
+    const after = await second.locator("a").evaluate((a) => getComputedStyle(a).borderInlineStartColor);
+    expect(after).not.toBe(before);
+  });
+
   test("Tab moves through every list link, then into the detail", async ({ page }) => {
     await page.setViewportSize(WIDE);
     await page.goto(PAGES[0]);

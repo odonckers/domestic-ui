@@ -58,6 +58,7 @@
           <li><a href="../molecules/index.html">Molecules</a></li>
           <li><a href="index.html" aria-current="page">Organisms</a></li>
           <li><a href="../layouts/index.html">Layouts</a></li>
+          <li><a href="../app-shell.html">App shell</a></li>
         </ul>
       </nav>
     </header>
@@ -93,8 +94,8 @@
             <h3>Invoices</h3>
             <p>38 open invoices, €52,180.00 outstanding.</p>
             <div>
-              <button type="button" data-button="primary">New invoice</button>
-              <button type="button">Export</button>
+              <a href="?view=new-invoice" data-button="primary">New invoice</a>
+              <a href="?view=invoices&amp;export=csv" data-button>Export</a>
             </div>
           </header>
         </div>

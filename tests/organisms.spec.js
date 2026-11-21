@@ -17,7 +17,7 @@ import { examples, withoutMotion } from "./helpers.js";
 const WIDE = { width: 1280, height: 800 };
 const NARROW = { width: 360, height: 800 };
 const ORGANISMS = ["index", "page-header", "filter-bar", "large-forms", "data-table"].map((n) => `examples/organisms/${n}.html`);
-const LAYOUTS = ["index", "list-detail", "split", "dashboard", "action-bar", "settings"].map((n) => `examples/layouts/${n}.html`);
+const LAYOUTS = ["index", "list-detail", "split", "dashboard", "action-bar", "settings", "app-shell"].map((n) => `examples/layouts/${n}.html`);
 
 test("the organism examples are picked up by every per-page check", () => {
   for (const path of ORGANISMS) expect(examples).toContain(path);

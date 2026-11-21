@@ -44,8 +44,9 @@ Components: one `data-<component>` attribute of space-separated words matched wi
 | Layout | Grid | `class="grid"`, `--grid-min`, `--grid-gap` | [Grid](https://odonckers.github.io/domestic-ui/layouts/grid.html) |
 | Layout | Scroll | `data-scroll="inline"`, `data-scroll="block inline"`, `--dui-size-pane (the viewport) tall, so a`, `sticky table header stays in view`, `(css/components/organisms/data-table.css)` | [Scroll](https://odonckers.github.io/domestic-ui/layouts/scroll.html) |
 | Layout | Stack | `class="stack"`, `--stack-gap` | [Stack](https://odonckers.github.io/domestic-ui/layouts/stack.html) |
+| Layout | App shell | `data-app-shell`, `data-app-shell="contained"`, `its own box (a shell inside a page section)`, `Children, in source order:`, `<header>`, `<nav aria-label> or <aside aria-label>`, `<main id>`, `<aside aria-label>`, `<footer>`, `<button type="button" aria-controls="sidebar-id" aria-expanded="true" hidden>`, `a sidebar's toggle; <dui-app-shell> shows it.`, `aria-expanded="false" in the markup starts the`, `sidebar collapsed when it sits beside main`, `--dui-size-sidebar, --dui-size-sidebar-aux`, `--dui-size-pane`, `block size of a contained shell` | [App shell](https://odonckers.github.io/domestic-ui/patterns/app-shell.html) |
 | Layout | Dashboard | `data-dashboard`, `data-dashboard="wide"`, `data-dashboard="full"`, `Tiles: <section aria-labelledby> (or <article>, <li>) with a heading first.` | [Dashboard](https://odonckers.github.io/domestic-ui/patterns/dashboard.html) |
-| Layout | List-detail | `data-list-detail`, `1. the list: a <nav aria-label> (or <div>) holding a <ul> or <ol> whose`, `items are each one <a href> (or <button>)`, `2. the detail: a <section> or <article> with aria-labelledby`, `aria-current="page"` | [List-detail](https://odonckers.github.io/domestic-ui/patterns/list-detail.html) |
+| Layout | List-detail | `data-list-detail`, `1. the list: a <nav aria-label> (or <div>) holding a <ul> or <ol> whose`, `items are each one <a href> (or <button>)`, `2. the detail: a <section> or <article> with aria-labelledby`, `aria-current="page"`, `or on its <li>` | [List-detail](https://odonckers.github.io/domestic-ui/patterns/list-detail.html) |
 | Layout | Split | `data-split="[1:1 \| 1:2 \| 2:1]"`, `empty means 1:1 (equal halves)` | [Split](https://odonckers.github.io/domestic-ui/patterns/split.html) |
 | Atoms | Text helpers | `data-text="lead \| small \| muted"` (combinable) | [Text helpers](https://odonckers.github.io/domestic-ui/components/atoms/text.html) |
 | Atoms | Quiet link | `data-link="quiet"` on `<a href>` | [Quiet link](https://odonckers.github.io/domestic-ui/components/atoms/link.html) |
@@ -94,7 +95,7 @@ Each follows a native element or WAI-ARIA APG pattern where one exists ([Pattern
 | [Tabs](https://odonckers.github.io/domestic-ui/patterns/tabs.html) | M3 | Available |
 | [Toolbar](https://odonckers.github.io/domestic-ui/patterns/toolbar.html) | M3 | Available |
 | [Typeahead](https://odonckers.github.io/domestic-ui/patterns/typeahead.html) | M3 | Available |
-| [App shell](https://odonckers.github.io/domestic-ui/patterns/app-shell.html) | M3b | Coming in M3b |
+| [App shell](https://odonckers.github.io/domestic-ui/patterns/app-shell.html) | M3b | Available |
 | [Compact density](https://odonckers.github.io/domestic-ui/patterns/density.html) | M3b | Available |
 | [Dashboard](https://odonckers.github.io/domestic-ui/patterns/dashboard.html) | M3b | Available |
 | [Data table](https://odonckers.github.io/domestic-ui/patterns/data-table.html) | M3b | Available |

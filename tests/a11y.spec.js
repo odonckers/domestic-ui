@@ -97,6 +97,26 @@ for (const path of examples) {
           expect(filled.violations, summarize(filled.violations)).toEqual([]);
         }
 
+        // App shell drawers: on a narrow screen each sidebar toggle opens a modal drawer; check it open, then close it.
+        const sidebarIds = await page.locator("dui-app-shell > :is(nav, aside)[id]").evaluateAll((all) => all.map((el) => el.id));
+        const toggles = page.locator(sidebarIds.map((id) => `dui-app-shell button[aria-controls="${id}"]`).join(", ") || "dui-app-shell > nothing");
+        if (await toggles.count()) {
+          const size = page.viewportSize();
+          await page.setViewportSize({ width: 375, height: 812 });
+          for (const toggle of await toggles.all()) {
+            await expect(toggle).toHaveAttribute("aria-expanded", "false");
+            await toggle.click();
+            await expect(page.locator("dialog[open]")).toHaveCount(1);
+            await settle(page);
+            const open = await axe(page);
+            expect(open.violations, `${await toggle.getAttribute("aria-controls")} drawer\n${summarize(open.violations)}`).toEqual([]);
+            await page.keyboard.press("Escape");
+            await expect(page.locator("dialog[open]")).toHaveCount(0);
+            await expect(toggle).toBeFocused();
+          }
+          if (size) await page.setViewportSize(size);
+        }
+
         // Every details element open at once. Drop name first, or exclusive groups would close all but one.
         await page.locator("details").evaluateAll((all) =>
           all.forEach((d) => {

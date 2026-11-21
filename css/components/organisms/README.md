@@ -37,7 +37,7 @@ Every organism:
 | Data table | [`data-table.css`](data-table.css) | `data-table="[sticky]"` on a `<table>` with a `<caption>` and `th[scope]`; `data-table="number"` and `data-table="sortable"` on cells; `aria-sort`, `aria-busy`; `<dui-table>` adds sorting and selection | [data-table.html](../../../examples/organisms/data-table.html) | [WHATWG `table`](https://html.spec.whatwg.org/multipage/tables.html#the-table-element), [APG Sortable Table](https://www.w3.org/WAI/ARIA/apg/patterns/table/examples/sortable-table/), [WAI tables tutorial](https://www.w3.org/WAI/tutorials/tables/) |
 
 All organisms together: [examples/organisms/index.html](../../../examples/organisms/index.html). The page
-layouts they sit in (list-detail, split, dashboard, the sticky action bar) are in [`css/layout/`](../../layout/).
+layouts they sit in (list-detail, split, dashboard, the sticky action bar, the app shell) are in [`css/layout/`](../../layout/).
 
 ## Not shipped, and why
 
@@ -45,7 +45,8 @@ layouts they sit in (list-detail, split, dashboard, the sticky action bar) are i
 | --- | --- |
 | Filters that apply on every keystroke | Not built in. A page MAY apply on change, but the default is a submit button, so several filters can be set without interruptions and the form works without JavaScript. |
 | A `<fieldset>` as the top-level form section | Not used. A `<legend>` cannot be placed in a grid column; sections are headed `<section>` elements, with fieldsets for groups inside them. |
-| App shell, sidebar navigation | A later session of M3b. |
+| App shell, sidebar navigation | Not organisms. The app shell is a layout ([`app-shell.css`](../../layout/app-shell.css), with [`<dui-app-shell>`](../../../web-components/dui-app-shell.js)) and the sidebar navigation is the [nav molecule](../molecules/nav.css) (`data-nav="vertical"`); see [app-shell.md](../../../explainers/app-shell.md). |
+| Tree view for navigation | Not used. An [APG Tree View](https://www.w3.org/WAI/ARIA/apg/patterns/treeview/) is for hierarchies users navigate as data; site navigation is disclosure groups and links. |
 | Editable cells, arrow keys between cells | Not in the data table. Cells that are edited in place make the table an [APG Grid](https://www.w3.org/WAI/ARIA/apg/patterns/grid/), a different widget with its own keyboard model. |
 | Announcing the new order after a sort | Not done. As in the APG Sortable Table example, `aria-sort` on the header is the announcement; a caption hint says which headers sort. |
 | Sorting several columns at once, resizing or hiding columns | Not built in. Cancel `dui-table-sort` and sort on the server for multi-column orders. |
