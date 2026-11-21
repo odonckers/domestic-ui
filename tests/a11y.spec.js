@@ -50,6 +50,19 @@ for (const path of examples) {
           await expect(popover).toBeHidden();
         }
 
+        // Comboboxes: open each list with an option active, check, close.
+        for (const combobox of await page.locator("dui-combobox [role='combobox']").all()) {
+          await combobox.focus();
+          await page.keyboard.press("Alt+ArrowDown");
+          if ((await combobox.getAttribute("aria-expanded")) !== "true") continue; // no options yet (loaded by the page)
+          await page.keyboard.press("ArrowDown");
+          await settle(page);
+          const open = await axe(page);
+          expect(open.violations, `#${await combobox.getAttribute("id")}\n${summarize(open.violations)}`).toEqual([]);
+          await page.keyboard.press("Escape");
+          await expect(combobox).toHaveAttribute("aria-expanded", "false");
+        }
+
         // Tabs: select every tab once (the selected panel is the only one shown).
         for (const tab of await page.getByRole("tab").all()) {
           await tab.click();

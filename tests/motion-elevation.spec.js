@@ -118,6 +118,14 @@ test.describe('data-motion="none"', () => {
         await popover.evaluate((el) => /** @type {HTMLElement} */ (el).hidePopover());
       }
 
+      for (const combobox of await page.locator("dui-combobox [role='combobox']").all()) {
+        await combobox.focus();
+        await page.keyboard.press("Alt+ArrowDown");
+        if ((await combobox.getAttribute("aria-expanded")) !== "true") continue; // no options yet (loaded by the page)
+        await check(`combobox #${await combobox.getAttribute("id")}`);
+        await page.keyboard.press("Escape");
+      }
+
       for (const trigger of await page.locator("dui-tooltip [aria-describedby]").all()) {
         await trigger.focus();
         await expect(page.locator("[role='tooltip']:popover-open")).toHaveCount(1);
