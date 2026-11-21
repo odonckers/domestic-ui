@@ -1,0 +1,306 @@
+{
+  "$comment": "Links to how other design systems handle the same thing. For comparison only; not normative. Links only: never copy text or visuals from these systems. Keys are site page paths without .html. Each system is {url, title} or null (rendered as 'No equivalent'). Checked by tests/docs-other-systems.spec.js. A system's optional soft404Title marks a page that answers 200 but is really missing (Geist returns 200 with that generic <title> for unknown slugs); the checker GETs those pages and treats that title as a 404.",
+  "systems": {
+    "apple": {
+      "name": "Apple Human Interface Guidelines",
+      "home": "https://developer.apple.com/design/human-interface-guidelines/"
+    },
+    "material": {
+      "name": "Material Design 3",
+      "home": "https://m3.material.io/"
+    },
+    "geist": {
+      "name": "Vercel Geist",
+      "home": "https://vercel.com/geist/introduction",
+      "soft404Title": "Geist Design System"
+    }
+  },
+  "pages": {
+    "components/base": {
+      "apple": null,
+      "material": null,
+      "geist": null
+    },
+    "components/atoms/text": {
+      "apple": {
+        "url": "https://developer.apple.com/design/human-interface-guidelines/typography",
+        "title": "Typography"
+      },
+      "material": {
+        "url": "https://m3.material.io/styles/typography/overview",
+        "title": "Typography"
+      },
+      "geist": {
+        "url": "https://vercel.com/geist/typography",
+        "title": "Typography"
+      }
+    },
+    "components/atoms/link": {
+      "apple": null,
+      "material": null,
+      "geist": null
+    },
+    "components/atoms/button": {
+      "apple": {
+        "url": "https://developer.apple.com/design/human-interface-guidelines/buttons",
+        "title": "Buttons"
+      },
+      "material": {
+        "url": "https://m3.material.io/components/buttons/overview",
+        "title": "Buttons"
+      },
+      "geist": {
+        "url": "https://vercel.com/geist/button",
+        "title": "Button"
+      }
+    },
+    "components/atoms/controls": {
+      "apple": {
+        "url": "https://developer.apple.com/design/human-interface-guidelines/text-fields",
+        "title": "Text fields"
+      },
+      "material": {
+        "url": "https://m3.material.io/components/text-fields/overview",
+        "title": "Text fields"
+      },
+      "geist": {
+        "url": "https://vercel.com/geist/input",
+        "title": "Input"
+      }
+    },
+    "components/atoms/switch": {
+      "apple": {
+        "url": "https://developer.apple.com/design/human-interface-guidelines/toggles",
+        "title": "Toggles"
+      },
+      "material": {
+        "url": "https://m3.material.io/components/switch/overview",
+        "title": "Switch"
+      },
+      "geist": {
+        "url": "https://vercel.com/geist/switch",
+        "title": "Switch"
+      }
+    },
+    "components/atoms/field": {
+      "apple": null,
+      "material": null,
+      "geist": null
+    },
+    "components/atoms/badge": {
+      "apple": null,
+      "material": null,
+      "geist": {
+        "url": "https://vercel.com/geist/badge",
+        "title": "Badge"
+      }
+    },
+    "patterns/nav": {
+      "apple": null,
+      "material": null,
+      "geist": null
+    },
+    "patterns/breadcrumb": {
+      "apple": {
+        "url": "https://developer.apple.com/design/human-interface-guidelines/path-controls",
+        "title": "Path controls"
+      },
+      "material": null,
+      "geist": {
+        "url": "https://vercel.com/geist/breadcrumbs",
+        "title": "Breadcrumbs"
+      }
+    },
+    "patterns/tabs": {
+      "apple": {
+        "url": "https://developer.apple.com/design/human-interface-guidelines/tab-views",
+        "title": "Tab views"
+      },
+      "material": {
+        "url": "https://m3.material.io/components/tabs/overview",
+        "title": "Tabs"
+      },
+      "geist": {
+        "url": "https://vercel.com/geist/tabs",
+        "title": "Tabs"
+      }
+    },
+    "patterns/menu-button": {
+      "apple": {
+        "url": "https://developer.apple.com/design/human-interface-guidelines/pull-down-buttons",
+        "title": "Pull-down buttons"
+      },
+      "material": {
+        "url": "https://m3.material.io/components/menus/overview",
+        "title": "Menus"
+      },
+      "geist": {
+        "url": "https://vercel.com/geist/menu",
+        "title": "Menu"
+      }
+    },
+    "patterns/disclosure": {
+      "apple": {
+        "url": "https://developer.apple.com/design/human-interface-guidelines/disclosure-controls",
+        "title": "Disclosure controls"
+      },
+      "material": null,
+      "geist": {
+        "url": "https://vercel.com/geist/collapse",
+        "title": "Collapse"
+      }
+    },
+    "patterns/dialog": {
+      "apple": {
+        "url": "https://developer.apple.com/design/human-interface-guidelines/modality",
+        "title": "Modality"
+      },
+      "material": {
+        "url": "https://m3.material.io/components/dialogs/overview",
+        "title": "Dialogs"
+      },
+      "geist": {
+        "url": "https://vercel.com/geist/modal",
+        "title": "Modal"
+      }
+    },
+    "patterns/popover": {
+      "apple": {
+        "url": "https://developer.apple.com/design/human-interface-guidelines/popovers",
+        "title": "Popovers"
+      },
+      "material": null,
+      "geist": null
+    },
+    "patterns/toolbar": {
+      "apple": {
+        "url": "https://developer.apple.com/design/human-interface-guidelines/toolbars",
+        "title": "Toolbars"
+      },
+      "material": {
+        "url": "https://m3.material.io/components/toolbars/overview",
+        "title": "Toolbars"
+      },
+      "geist": null
+    },
+    "patterns/pagination": {
+      "apple": null,
+      "material": null,
+      "geist": {
+        "url": "https://vercel.com/geist/pagination",
+        "title": "Pagination"
+      }
+    },
+    "patterns/search": {
+      "apple": {
+        "url": "https://developer.apple.com/design/human-interface-guidelines/search-fields",
+        "title": "Search fields"
+      },
+      "material": {
+        "url": "https://m3.material.io/components/search/overview",
+        "title": "Search"
+      },
+      "geist": {
+        "url": "https://vercel.com/geist/search-input",
+        "title": "Search Input"
+      }
+    },
+    "patterns/card": {
+      "apple": null,
+      "material": {
+        "url": "https://m3.material.io/components/cards/overview",
+        "title": "Cards"
+      },
+      "geist": null
+    },
+    "patterns/alerts": {
+      "apple": {
+        "url": "https://developer.apple.com/design/human-interface-guidelines/feedback",
+        "title": "Feedback"
+      },
+      "material": null,
+      "geist": {
+        "url": "https://vercel.com/geist/note",
+        "title": "Note"
+      }
+    },
+    "patterns/typeahead": {
+      "apple": {
+        "url": "https://developer.apple.com/design/human-interface-guidelines/combo-boxes",
+        "title": "Combo boxes"
+      },
+      "material": null,
+      "geist": {
+        "url": "https://vercel.com/geist/combobox",
+        "title": "Combobox"
+      }
+    },
+    "patterns/app-shell": {
+      "apple": {
+        "url": "https://developer.apple.com/design/human-interface-guidelines/sidebars",
+        "title": "Sidebars"
+      },
+      "material": {
+        "url": "https://m3.material.io/foundations/layout/scaffold/overview",
+        "title": "Scaffold"
+      },
+      "geist": null
+    },
+    "patterns/list-detail": {
+      "apple": {
+        "url": "https://developer.apple.com/design/human-interface-guidelines/split-views",
+        "title": "Split views"
+      },
+      "material": {
+        "url": "https://m3.material.io/foundations/layout/canonical-examples/list-detail",
+        "title": "Canonical layout examples: List-detail"
+      },
+      "geist": null
+    },
+    "patterns/split": {
+      "apple": {
+        "url": "https://developer.apple.com/design/human-interface-guidelines/split-views",
+        "title": "Split views"
+      },
+      "material": {
+        "url": "https://m3.material.io/foundations/layout/scaffold/panes",
+        "title": "Scaffold: Panes"
+      },
+      "geist": null
+    },
+    "patterns/dashboard": {
+      "apple": null,
+      "material": null,
+      "geist": null
+    },
+    "patterns/data-table": {
+      "apple": {
+        "url": "https://developer.apple.com/design/human-interface-guidelines/lists-and-tables",
+        "title": "Lists and tables"
+      },
+      "material": null,
+      "geist": {
+        "url": "https://vercel.com/geist/table",
+        "title": "Table"
+      }
+    },
+    "patterns/filter-bar": {
+      "apple": null,
+      "material": null,
+      "geist": null
+    },
+    "patterns/large-forms": {
+      "apple": null,
+      "material": null,
+      "geist": null
+    },
+    "patterns/density": {
+      "apple": null,
+      "material": {
+        "url": "https://m3.material.io/foundations/layout/grids-spacing/density",
+        "title": "Grids & spacing: Density"
+      },
+      "geist": null
+    }
+  }
+}

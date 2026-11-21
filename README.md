@@ -159,6 +159,8 @@ By level ([Base](https://odonckers.github.io/domestic-ui/components/base.html), 
 | Molecules | Coming in M3 | | [components README](https://github.com/odonckers/domestic-ui/blob/main/css/components/README.md) |
 | Organisms | Coming in M3b | | [components README](https://github.com/odonckers/domestic-ui/blob/main/css/components/README.md) |
 
+Component and pattern pages in the docs end with links to how other design systems handle the same thing, for comparison only.
+
 ## Patterns and guides
 
 Where a standard exists (a native HTML element or a WAI-ARIA APG pattern), the pattern follows it and links to it. Where none exists, it is labeled **Our choice:** with one line on why ([Patterns](https://odonckers.github.io/domestic-ui/patterns/index.html)).

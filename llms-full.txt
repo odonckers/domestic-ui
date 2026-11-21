@@ -865,6 +865,14 @@ Each point below is stated in a `css/base/` comment or in [PRINCIPLES.md](https:
 - [`examples/base.html`](https://github.com/odonckers/domestic-ui/blob/main/examples/base.html)
 - [`site/content/components/base.md`](https://github.com/odonckers/domestic-ui/blob/main/site/content/components/base.md)
 
+### How other systems do it
+
+For comparison only; these are not the standard this system follows.
+
+- Apple Human Interface Guidelines: No equivalent
+- Material Design 3: No equivalent
+- Vercel Geist: No equivalent
+
 ## Visually hidden
 
 Page: https://odonckers.github.io/domestic-ui/components/utilities/visually-hidden.html
@@ -1171,6 +1179,14 @@ See also the spec links below and the [Accessibility baseline](https://odonckers
 - [`examples/atoms/text.html`](https://github.com/odonckers/domestic-ui/blob/main/examples/atoms/text.html)
 - [`css/components/atoms/README.md`](https://github.com/odonckers/domestic-ui/blob/main/css/components/atoms/README.md)
 
+### How other systems do it
+
+For comparison only; these are not the standard this system follows.
+
+- [Apple Human Interface Guidelines: Typography](https://developer.apple.com/design/human-interface-guidelines/typography)
+- [Material Design 3: Typography](https://m3.material.io/styles/typography/overview)
+- [Vercel Geist: Typography](https://vercel.com/geist/typography)
+
 ## Quiet link
 
 Page: https://odonckers.github.io/domestic-ui/components/atoms/link.html
@@ -1242,6 +1258,14 @@ See also the spec links below and the [Accessibility baseline](https://odonckers
 - [`css/components/atoms/link.css`](https://github.com/odonckers/domestic-ui/blob/main/css/components/atoms/link.css)
 - [`examples/atoms/link.html`](https://github.com/odonckers/domestic-ui/blob/main/examples/atoms/link.html)
 - [`css/components/atoms/README.md`](https://github.com/odonckers/domestic-ui/blob/main/css/components/atoms/README.md)
+
+### How other systems do it
+
+For comparison only; these are not the standard this system follows.
+
+- Apple Human Interface Guidelines: No equivalent
+- Material Design 3: No equivalent
+- Vercel Geist: No equivalent
 
 ## Buttons
 
@@ -1417,6 +1441,14 @@ The header comment's `States`, `Sizes`, `Focus` blocks are shown above under the
 - [`examples/atoms/button.html`](https://github.com/odonckers/domestic-ui/blob/main/examples/atoms/button.html)
 - [`css/components/atoms/README.md`](https://github.com/odonckers/domestic-ui/blob/main/css/components/atoms/README.md)
 
+### How other systems do it
+
+For comparison only; these are not the standard this system follows.
+
+- [Apple Human Interface Guidelines: Buttons](https://developer.apple.com/design/human-interface-guidelines/buttons)
+- [Material Design 3: Buttons](https://m3.material.io/components/buttons/overview)
+- [Vercel Geist: Button](https://vercel.com/geist/button)
+
 ## Form controls
 
 Page: https://odonckers.github.io/domestic-ui/components/atoms/controls.html
@@ -1551,6 +1583,14 @@ There is no CSS file of its own: [`css/base/forms.css`](https://github.com/odonc
 - [`examples/atoms/controls.html`](https://github.com/odonckers/domestic-ui/blob/main/examples/atoms/controls.html)
 - [`css/components/atoms/README.md`](https://github.com/odonckers/domestic-ui/blob/main/css/components/atoms/README.md)
 
+### How other systems do it
+
+For comparison only; these are not the standard this system follows.
+
+- [Apple Human Interface Guidelines: Text fields](https://developer.apple.com/design/human-interface-guidelines/text-fields)
+- [Material Design 3: Text fields](https://m3.material.io/components/text-fields/overview)
+- [Vercel Geist: Input](https://vercel.com/geist/input)
+
 ## Switch
 
 Page: https://odonckers.github.io/domestic-ui/components/atoms/switch.html
@@ -1631,6 +1671,14 @@ See also the spec links below and the [Accessibility baseline](https://odonckers
 - [`css/components/atoms/switch.css`](https://github.com/odonckers/domestic-ui/blob/main/css/components/atoms/switch.css)
 - [`examples/atoms/switch.html`](https://github.com/odonckers/domestic-ui/blob/main/examples/atoms/switch.html)
 - [`css/components/atoms/README.md`](https://github.com/odonckers/domestic-ui/blob/main/css/components/atoms/README.md)
+
+### How other systems do it
+
+For comparison only; these are not the standard this system follows.
+
+- [Apple Human Interface Guidelines: Toggles](https://developer.apple.com/design/human-interface-guidelines/toggles)
+- [Material Design 3: Switch](https://m3.material.io/components/switch/overview)
+- [Vercel Geist: Switch](https://vercel.com/geist/switch)
 
 ## Field
 
@@ -1745,6 +1793,14 @@ See also the spec links below and the [Accessibility baseline](https://odonckers
 - [`examples/atoms/field.html`](https://github.com/odonckers/domestic-ui/blob/main/examples/atoms/field.html)
 - [`css/components/atoms/README.md`](https://github.com/odonckers/domestic-ui/blob/main/css/components/atoms/README.md)
 
+### How other systems do it
+
+For comparison only; these are not the standard this system follows.
+
+- Apple Human Interface Guidelines: No equivalent
+- Material Design 3: No equivalent
+- Vercel Geist: No equivalent
+
 ## Badge
 
 Page: https://odonckers.github.io/domestic-ui/components/atoms/badge.html
@@ -1830,6 +1886,14 @@ See also the spec links below and the [Accessibility baseline](https://odonckers
 - [`css/components/atoms/badge.css`](https://github.com/odonckers/domestic-ui/blob/main/css/components/atoms/badge.css)
 - [`examples/atoms/badge.html`](https://github.com/odonckers/domestic-ui/blob/main/examples/atoms/badge.html)
 - [`css/components/atoms/README.md`](https://github.com/odonckers/domestic-ui/blob/main/css/components/atoms/README.md)
+
+### How other systems do it
+
+For comparison only; these are not the standard this system follows.
+
+- Apple Human Interface Guidelines: No equivalent
+- Material Design 3: No equivalent
+- [Vercel Geist: Badge](https://vercel.com/geist/badge)
 
 ## Molecules
 
@@ -1920,6 +1984,14 @@ This pattern follows:
 
 Level: molecule. Milestone: M3: Molecules and navigation patterns.
 
+### How other systems do it
+
+For comparison only; these are not the standard this system follows.
+
+- [Apple Human Interface Guidelines: Feedback](https://developer.apple.com/design/human-interface-guidelines/feedback)
+- Material Design 3: No equivalent
+- [Vercel Geist: Note](https://vercel.com/geist/note)
+
 ## Breadcrumb
 
 Page: https://odonckers.github.io/domestic-ui/patterns/breadcrumb.html
@@ -1936,6 +2008,14 @@ This pattern follows:
 
 Level: molecule. Milestone: M3: Molecules and navigation patterns.
 
+### How other systems do it
+
+For comparison only; these are not the standard this system follows.
+
+- [Apple Human Interface Guidelines: Path controls](https://developer.apple.com/design/human-interface-guidelines/path-controls)
+- Material Design 3: No equivalent
+- [Vercel Geist: Breadcrumbs](https://vercel.com/geist/breadcrumbs)
+
 ## Card
 
 Page: https://odonckers.github.io/domestic-ui/patterns/card.html
@@ -1951,6 +2031,14 @@ Coming in M3.
 No native element or WAI-ARIA APG pattern covers this.
 
 Level: molecule. Milestone: M3: Molecules and navigation patterns.
+
+### How other systems do it
+
+For comparison only; these are not the standard this system follows.
+
+- Apple Human Interface Guidelines: No equivalent
+- [Material Design 3: Cards](https://m3.material.io/components/cards/overview)
+- Vercel Geist: No equivalent
 
 ## Dialog and drawer
 
@@ -1969,6 +2057,14 @@ This pattern follows:
 
 Level: organism. Milestone: M3: Molecules and navigation patterns.
 
+### How other systems do it
+
+For comparison only; these are not the standard this system follows.
+
+- [Apple Human Interface Guidelines: Modality](https://developer.apple.com/design/human-interface-guidelines/modality)
+- [Material Design 3: Dialogs](https://m3.material.io/components/dialogs/overview)
+- [Vercel Geist: Modal](https://vercel.com/geist/modal)
+
 ## Disclosure
 
 Page: https://odonckers.github.io/domestic-ui/patterns/disclosure.html
@@ -1986,6 +2082,14 @@ This pattern follows:
 
 Level: molecule. Milestone: M3: Molecules and navigation patterns.
 
+### How other systems do it
+
+For comparison only; these are not the standard this system follows.
+
+- [Apple Human Interface Guidelines: Disclosure controls](https://developer.apple.com/design/human-interface-guidelines/disclosure-controls)
+- Material Design 3: No equivalent
+- [Vercel Geist: Collapse](https://vercel.com/geist/collapse)
+
 ## Menu button
 
 Page: https://odonckers.github.io/domestic-ui/patterns/menu-button.html
@@ -2002,6 +2106,14 @@ This pattern follows:
 
 Level: molecule. Milestone: M3: Molecules and navigation patterns.
 
+### How other systems do it
+
+For comparison only; these are not the standard this system follows.
+
+- [Apple Human Interface Guidelines: Pull-down buttons](https://developer.apple.com/design/human-interface-guidelines/pull-down-buttons)
+- [Material Design 3: Menus](https://m3.material.io/components/menus/overview)
+- [Vercel Geist: Menu](https://vercel.com/geist/menu)
+
 ## Pagination
 
 Page: https://odonckers.github.io/domestic-ui/patterns/pagination.html
@@ -2017,6 +2129,14 @@ Coming in M3.
 No native element or WAI-ARIA APG pattern covers this.
 
 Level: molecule. Milestone: M3: Molecules and navigation patterns.
+
+### How other systems do it
+
+For comparison only; these are not the standard this system follows.
+
+- Apple Human Interface Guidelines: No equivalent
+- Material Design 3: No equivalent
+- [Vercel Geist: Pagination](https://vercel.com/geist/pagination)
 
 ## Popover
 
@@ -2035,6 +2155,14 @@ This pattern follows:
 
 Level: molecule. Milestone: M3: Molecules and navigation patterns.
 
+### How other systems do it
+
+For comparison only; these are not the standard this system follows.
+
+- [Apple Human Interface Guidelines: Popovers](https://developer.apple.com/design/human-interface-guidelines/popovers)
+- Material Design 3: No equivalent
+- Vercel Geist: No equivalent
+
 ## Search
 
 Page: https://odonckers.github.io/domestic-ui/patterns/search.html
@@ -2051,6 +2179,14 @@ This pattern follows:
 - [MDN `<input type="search">`](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/input/search)
 
 Level: molecule. Milestone: M3: Molecules and navigation patterns.
+
+### How other systems do it
+
+For comparison only; these are not the standard this system follows.
+
+- [Apple Human Interface Guidelines: Search fields](https://developer.apple.com/design/human-interface-guidelines/search-fields)
+- [Material Design 3: Search](https://m3.material.io/components/search/overview)
+- [Vercel Geist: Search Input](https://vercel.com/geist/search-input)
 
 ## Site navigation
 
@@ -2070,6 +2206,14 @@ This pattern follows:
 
 Level: organism. Milestone: M3: Molecules and navigation patterns.
 
+### How other systems do it
+
+For comparison only; these are not the standard this system follows.
+
+- Apple Human Interface Guidelines: No equivalent
+- Material Design 3: No equivalent
+- Vercel Geist: No equivalent
+
 ## Tabs
 
 Page: https://odonckers.github.io/domestic-ui/patterns/tabs.html
@@ -2086,6 +2230,14 @@ This pattern follows:
 
 Level: molecule. Milestone: M3: Molecules and navigation patterns.
 
+### How other systems do it
+
+For comparison only; these are not the standard this system follows.
+
+- [Apple Human Interface Guidelines: Tab views](https://developer.apple.com/design/human-interface-guidelines/tab-views)
+- [Material Design 3: Tabs](https://m3.material.io/components/tabs/overview)
+- [Vercel Geist: Tabs](https://vercel.com/geist/tabs)
+
 ## Toolbar
 
 Page: https://odonckers.github.io/domestic-ui/patterns/toolbar.html
@@ -2101,6 +2253,14 @@ This pattern follows:
 - [APG Toolbar pattern](https://www.w3.org/WAI/ARIA/apg/patterns/toolbar/)
 
 Level: molecule. Milestone: M3: Molecules and navigation patterns.
+
+### How other systems do it
+
+For comparison only; these are not the standard this system follows.
+
+- [Apple Human Interface Guidelines: Toolbars](https://developer.apple.com/design/human-interface-guidelines/toolbars)
+- [Material Design 3: Toolbars](https://m3.material.io/components/toolbars/overview)
+- Vercel Geist: No equivalent
 
 ## Typeahead
 
@@ -2119,6 +2279,14 @@ This pattern follows:
 
 Level: molecule. Milestone: M3: Molecules and navigation patterns.
 
+### How other systems do it
+
+For comparison only; these are not the standard this system follows.
+
+- [Apple Human Interface Guidelines: Combo boxes](https://developer.apple.com/design/human-interface-guidelines/combo-boxes)
+- Material Design 3: No equivalent
+- [Vercel Geist: Combobox](https://vercel.com/geist/combobox)
+
 ## App shell
 
 Page: https://odonckers.github.io/domestic-ui/patterns/app-shell.html
@@ -2134,6 +2302,14 @@ Coming in M3b.
 No native element or WAI-ARIA APG pattern covers this.
 
 Level: layout. Milestone: M3b: App shell, complex layouts and organisms.
+
+### How other systems do it
+
+For comparison only; these are not the standard this system follows.
+
+- [Apple Human Interface Guidelines: Sidebars](https://developer.apple.com/design/human-interface-guidelines/sidebars)
+- [Material Design 3: Scaffold](https://m3.material.io/foundations/layout/scaffold/overview)
+- Vercel Geist: No equivalent
 
 ## Compact density
 
@@ -2151,6 +2327,14 @@ No native element or WAI-ARIA APG pattern covers this.
 
 Level: token. Milestone: M3b: App shell, complex layouts and organisms.
 
+### How other systems do it
+
+For comparison only; these are not the standard this system follows.
+
+- Apple Human Interface Guidelines: No equivalent
+- [Material Design 3: Grids & spacing: Density](https://m3.material.io/foundations/layout/grids-spacing/density)
+- Vercel Geist: No equivalent
+
 ## Dashboard
 
 Page: https://odonckers.github.io/domestic-ui/patterns/dashboard.html
@@ -2166,6 +2350,14 @@ Coming in M3b.
 No native element or WAI-ARIA APG pattern covers this.
 
 Level: layout. Milestone: M3b: App shell, complex layouts and organisms.
+
+### How other systems do it
+
+For comparison only; these are not the standard this system follows.
+
+- Apple Human Interface Guidelines: No equivalent
+- Material Design 3: No equivalent
+- Vercel Geist: No equivalent
 
 ## Data table
 
@@ -2184,6 +2376,14 @@ This pattern follows:
 
 Level: organism. Milestone: M3b: App shell, complex layouts and organisms.
 
+### How other systems do it
+
+For comparison only; these are not the standard this system follows.
+
+- [Apple Human Interface Guidelines: Lists and tables](https://developer.apple.com/design/human-interface-guidelines/lists-and-tables)
+- Material Design 3: No equivalent
+- [Vercel Geist: Table](https://vercel.com/geist/table)
+
 ## Filter bar
 
 Page: https://odonckers.github.io/domestic-ui/patterns/filter-bar.html
@@ -2199,6 +2399,14 @@ Coming in M3b.
 No native element or WAI-ARIA APG pattern covers this.
 
 Level: organism. Milestone: M3b: App shell, complex layouts and organisms.
+
+### How other systems do it
+
+For comparison only; these are not the standard this system follows.
+
+- Apple Human Interface Guidelines: No equivalent
+- Material Design 3: No equivalent
+- Vercel Geist: No equivalent
 
 ## Large forms
 
@@ -2217,6 +2425,14 @@ This pattern follows:
 
 Level: organism. Milestone: M3b: App shell, complex layouts and organisms.
 
+### How other systems do it
+
+For comparison only; these are not the standard this system follows.
+
+- Apple Human Interface Guidelines: No equivalent
+- Material Design 3: No equivalent
+- Vercel Geist: No equivalent
+
 ## List-detail
 
 Page: https://odonckers.github.io/domestic-ui/patterns/list-detail.html
@@ -2233,6 +2449,14 @@ No native element or WAI-ARIA APG pattern covers this.
 
 Level: layout. Milestone: M3b: App shell, complex layouts and organisms.
 
+### How other systems do it
+
+For comparison only; these are not the standard this system follows.
+
+- [Apple Human Interface Guidelines: Split views](https://developer.apple.com/design/human-interface-guidelines/split-views)
+- [Material Design 3: Canonical layout examples: List-detail](https://m3.material.io/foundations/layout/canonical-examples/list-detail)
+- Vercel Geist: No equivalent
+
 ## Split
 
 Page: https://odonckers.github.io/domestic-ui/patterns/split.html
@@ -2248,6 +2472,14 @@ Coming in M3b.
 No native element or WAI-ARIA APG pattern covers this.
 
 Level: layout. Milestone: M3b: App shell, complex layouts and organisms.
+
+### How other systems do it
+
+For comparison only; these are not the standard this system follows.
+
+- [Apple Human Interface Guidelines: Split views](https://developer.apple.com/design/human-interface-guidelines/split-views)
+- [Material Design 3: Scaffold: Panes](https://m3.material.io/foundations/layout/scaffold/panes)
+- Vercel Geist: No equivalent
 
 ## Guides
 

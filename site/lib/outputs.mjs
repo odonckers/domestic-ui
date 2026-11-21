@@ -121,6 +121,8 @@ By level ([Base](site:${model.base.sitePath}), [Layout](site:layouts/index.html)
 | --- | --- | --- | --- |
 ${rows.join("\n")}
 
+Component and pattern pages in the docs end with links to how other design systems handle the same thing, for comparison only.
+
 ## Patterns and guides
 
 Where a standard exists (a native HTML element or a WAI-ARIA APG pattern), the pattern follows it and links to it. Where none exists, it is labeled **Our choice:** with one line on why ([Patterns](site:patterns/index.html)).
