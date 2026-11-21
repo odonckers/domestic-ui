@@ -73,7 +73,8 @@ Semantic token names and file paths under `css/` are public API; primitive token
   - Alert and toast (`alerts.css`): `data-alert="info | success | warning | danger"` with a text prefix and
     an icon; `data-alert="toasts"` region; live region guidance.
 - Web components in `web-components/`, light DOM, progressive enhancement, no dependencies:
-  `<dui-tabs>` (APG Tabs from in-page links and sections; automatic or manual activation; RTL),
+  `<dui-tabs>` (APG Tabs from in-page links and sections; `aria-current="true"` on the link selected on
+  load, swapped for `aria-selected` on upgrade; automatic or manual activation; RTL),
   `<dui-menu>` (APG Menu Button keyboard on a popover), `<dui-toolbar>` (roving tabindex),
   `<dui-tooltip>` (show on hover and focus, Esc to hide; stands in for `interestfor`) and
   `<dui-toaster>` (`show()` and `dismiss()` for a toast region, no auto-dismiss).

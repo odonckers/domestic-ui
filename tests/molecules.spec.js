@@ -1,5 +1,6 @@
 // @ts-check
 import { test, expect } from "@playwright/test";
+import AxeBuilder from "@axe-core/playwright";
 import { schemes } from "./helpers.js";
 
 /*
@@ -460,7 +461,8 @@ test.describe("tabs", () => {
   test("manual activation: arrows move focus only; Enter and Space select", async ({ page }) => {
     const list = page.getByRole("tablist", { name: "Report period" });
     const tab = (name) => list.getByRole("tab", { name });
-    await expect(tab("Month")).toHaveAttribute("aria-selected", "true"); // from the markup
+    await expect(tab("Month")).toHaveAttribute("aria-selected", "true"); // from aria-current="true" in the markup
+    await expect(tab("Month")).not.toHaveAttribute("aria-current");
     await tab("Month").focus();
     await page.keyboard.press("ArrowRight");
     await expect(tab("Year")).toBeFocused();
@@ -633,9 +635,9 @@ test.describe("toolbar", () => {
     await page.keyboard.press("ArrowRight");
     await page.keyboard.press("ArrowRight");
     await expect(button("Underline")).toBeFocused();
-    // Tab leaves the toolbar; Shift+Tab comes back to the last focused control.
+    // Tab leaves the toolbar (for the scrollable code example after it); Shift+Tab comes back to the last focused control.
     await page.keyboard.press("Tab");
-    await expect(page.getByRole("toolbar", { name: "Drawing tools" }).getByRole("button", { name: "Select" })).toBeFocused();
+    await expect(toolbar.locator("xpath=following::pre[1]")).toBeFocused();
     await page.keyboard.press("Shift+Tab");
     await expect(button("Underline")).toBeFocused();
     await expect(toolbar.locator('[tabindex="0"]')).toHaveCount(1);
@@ -840,6 +842,13 @@ test.describe("without JavaScript", () => {
     await expect(page.locator("#tab-notifications")).toBeInViewport();
   });
 
+  test("tabs fallback marks the initial tab with aria-current, not aria-selected", async ({ page }) => {
+    await page.goto("examples/molecules/tabs.html");
+    const period = page.getByRole("navigation", { name: "Report period" });
+    await expect(period.getByRole("link", { name: "Month" })).toHaveAttribute("aria-current", "true");
+    await expect(page.locator("dui-tabs [aria-selected]")).toHaveCount(0);
+  });
+
   test("toolbar buttons are each reachable with Tab", async ({ page }) => {
     await page.goto("examples/molecules/toolbar.html");
     const toolbar = page.getByRole("toolbar", { name: "Text formatting" });
@@ -866,6 +875,16 @@ test.describe("without JavaScript", () => {
     await page.goto("examples/molecules/popover.html");
     await expect(page.getByRole("button", { name: "Save", exact: true })).toHaveAccessibleDescription("Shortcut: Ctrl+S");
   });
+});
+
+test("tabs markup before the upgrade has no axe violations", async ({ page }) => {
+  // Block the module so <dui-tabs> is never defined; axe still needs page script, so JavaScript stays on.
+  await page.route("**/web-components/dui-tabs.js", (route) => route.abort());
+  await page.goto("examples/molecules/tabs.html");
+  await expect(page.getByRole("tab")).toHaveCount(0);
+  expect(await page.evaluate(() => customElements.get("dui-tabs"))).toBeUndefined();
+  const { violations } = await new AxeBuilder({ page }).withTags(["wcag2a", "wcag2aa", "wcag21a", "wcag21aa", "wcag22aa"]).analyze();
+  expect(violations.map((v) => `${v.id}: ${v.nodes.map((n) => n.target.join(" ")).join(", ")}`)).toEqual([]);
 });
 
 /*

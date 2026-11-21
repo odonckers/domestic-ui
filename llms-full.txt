@@ -51,14 +51,14 @@ Layout primitives and utilities from M1 are classes: `.cluster`, `.grid`, `.scro
 
 The Docs menu lists every page. In order:
 
-- [Principles](https://odonckers.github.io/domestic-ui/principles/index.md): 8 sections, one page each.
-- [Tokens](https://odonckers.github.io/domestic-ui/tokens/index.md): all 158 custom properties with their light and dark values.
+- [Principles](https://odonckers.github.io/domestic-ui/principles/index.md): 10 sections, one page each.
+- [Tokens](https://odonckers.github.io/domestic-ui/tokens/index.md): all 168 custom properties with their light and dark values.
 - [Base](https://odonckers.github.io/domestic-ui/components/base.md): native elements styled with no classes, and the `.visually-hidden` utility.
 - [Layout](https://odonckers.github.io/domestic-ui/layouts/index.md): the layout primitives `.cluster`, `.grid`, `.scroll`, `.stack`.
 - [Atoms](https://odonckers.github.io/domestic-ui/atoms/index.md): 7 components.
 - [Molecules](https://odonckers.github.io/domestic-ui/molecules/index.md): coming in M3.
 - [Organisms](https://odonckers.github.io/domestic-ui/organisms/index.md): coming in M3b.
-- [Patterns and guides](https://odonckers.github.io/domestic-ui/patterns/index.md): 21 patterns (0 available) and 1 guide.
+- [Patterns and guides](https://odonckers.github.io/domestic-ui/patterns/index.md): 21 patterns (12 available) and 1 guide.
 - [Demos](https://odonckers.github.io/domestic-ui/demos.md): 5 demo directories in `demos/`, on GitHub.
 - [Contributing](https://odonckers.github.io/domestic-ui/contributing.md) and [Changelog](https://odonckers.github.io/domestic-ui/changelog.md).
 
@@ -90,6 +90,22 @@ Standalone HTML pages that load `css/domestic.css`, nothing else. Open one, or r
 - [Switch](https://odonckers.github.io/domestic-ui/examples/atoms/switch.html) ([source](https://github.com/odonckers/domestic-ui/blob/main/examples/atoms/switch.html))
 - [Text helpers](https://odonckers.github.io/domestic-ui/examples/atoms/text.html) ([source](https://github.com/odonckers/domestic-ui/blob/main/examples/atoms/text.html))
 
+### Molecules (`examples/molecules/`)
+
+- [Molecules showcase](https://odonckers.github.io/domestic-ui/examples/molecules/index.html) ([source](https://github.com/odonckers/domestic-ui/blob/main/examples/molecules/index.html))
+- [Alert and toast](https://odonckers.github.io/domestic-ui/examples/molecules/alerts.html) ([source](https://github.com/odonckers/domestic-ui/blob/main/examples/molecules/alerts.html))
+- [Breadcrumb](https://odonckers.github.io/domestic-ui/examples/molecules/breadcrumb.html) ([source](https://github.com/odonckers/domestic-ui/blob/main/examples/molecules/breadcrumb.html))
+- [Card](https://odonckers.github.io/domestic-ui/examples/molecules/card.html) ([source](https://github.com/odonckers/domestic-ui/blob/main/examples/molecules/card.html))
+- [Dialog and drawer](https://odonckers.github.io/domestic-ui/examples/molecules/dialog.html) ([source](https://github.com/odonckers/domestic-ui/blob/main/examples/molecules/dialog.html))
+- [Disclosure and accordion](https://odonckers.github.io/domestic-ui/examples/molecules/disclosure.html) ([source](https://github.com/odonckers/domestic-ui/blob/main/examples/molecules/disclosure.html))
+- [Menu button](https://odonckers.github.io/domestic-ui/examples/molecules/menu-button.html) ([source](https://github.com/odonckers/domestic-ui/blob/main/examples/molecules/menu-button.html))
+- [Navigation list](https://odonckers.github.io/domestic-ui/examples/molecules/nav.html) ([source](https://github.com/odonckers/domestic-ui/blob/main/examples/molecules/nav.html))
+- [Pagination](https://odonckers.github.io/domestic-ui/examples/molecules/pagination.html) ([source](https://github.com/odonckers/domestic-ui/blob/main/examples/molecules/pagination.html))
+- [Popover and tooltip](https://odonckers.github.io/domestic-ui/examples/molecules/popover.html) ([source](https://github.com/odonckers/domestic-ui/blob/main/examples/molecules/popover.html))
+- [Search field](https://odonckers.github.io/domestic-ui/examples/molecules/search.html) ([source](https://github.com/odonckers/domestic-ui/blob/main/examples/molecules/search.html))
+- [Tabs](https://odonckers.github.io/domestic-ui/examples/molecules/tabs.html) ([source](https://github.com/odonckers/domestic-ui/blob/main/examples/molecules/tabs.html))
+- [Toolbar](https://odonckers.github.io/domestic-ui/examples/molecules/toolbar.html) ([source](https://github.com/odonckers/domestic-ui/blob/main/examples/molecules/toolbar.html))
+
 ## Principles
 
 Page: https://odonckers.github.io/domestic-ui/principles/index.html
@@ -111,7 +127,9 @@ options, the pick is labeled **Our choice:** with one line saying why.
 5. [Theming](https://odonckers.github.io/domestic-ui/principles/theming.md)
 6. [Opinions we hold](https://odonckers.github.io/domestic-ui/principles/opinions-we-hold.md)
 7. [Layout primitives](https://odonckers.github.io/domestic-ui/principles/layout-primitives.md)
-8. [Tooling](https://odonckers.github.io/domestic-ui/principles/tooling.md)
+8. [Web components](https://odonckers.github.io/domestic-ui/principles/web-components.md)
+9. [Explainers](https://odonckers.github.io/domestic-ui/principles/explainers.md)
+10. [Tooling](https://odonckers.github.io/domestic-ui/principles/tooling.md)
 
 ## Native element first
 
@@ -144,9 +162,10 @@ Humans and coding agents should be able to write a whole view from this document
 - **Paths are API.** `css/domestic.css` and every file under `css/` keep their paths.
   Renaming or moving a file is a breaking change.
 - **No hidden JS behavior.** CSS never depends on script. Any script an example uses is
-  inline, short, and commented.
+  inline, short, and commented, or one of the documented [web components](https://github.com/odonckers/domestic-ui/blob/main/web-components/README.md).
 - **Our choice:** class and attribute APIs over custom elements, because they work with
-  any templating language and need no JavaScript.
+  any templating language and need no JavaScript. Custom elements are used only for behavior
+  HTML cannot do, and enhance markup that already works without them.
 
 ## Accessibility baseline: WCAG 2.2 AA
 
@@ -195,7 +214,7 @@ unlayered CSS beats all of them**, so overriding never needs `!important` or spe
 | `tokens` | Primitive and semantic custom properties |
 | `base` | Native elements: typography, lists, tables, forms, buttons, dialog, details, focus |
 | `layout` | `.stack`, `.cluster`, `.grid`, `[data-scroll]` |
-| `components` | Atoms in `css/components/atoms/` (M2); molecules and organisms later. See the [atoms index](https://github.com/odonckers/domestic-ui/blob/main/css/components/atoms/README.md) |
+| `components` | Atoms in `css/components/atoms/` (M2) and molecules in `css/components/molecules/` (M3a); organisms later. See the [atoms index](https://github.com/odonckers/domestic-ui/blob/main/css/components/atoms/README.md) and the [molecules index](https://github.com/odonckers/domestic-ui/blob/main/css/components/molecules/README.md) |
 | `utilities` | Single-purpose helpers such as `.visually-hidden`; last so they always apply |
 
 **Our choice:** this order, because each layer only refines the ones before it, and a
@@ -276,6 +295,7 @@ may change. Fluid `--dui-step-*` values are `clamp()` expressions; see `primitiv
 | `--dui-color-danger` | Errors, :user-invalid borders | light: `color-red-700` (#b42318)<br>dark: `color-red-300` (#ff8a80) |
 | `--dui-color-success` | Success messages | light: `color-green-700` (#17773a)<br>dark: `color-green-300` (#5fd38d) |
 | `--dui-color-warning` | Warning badges and messages | light: `color-amber-700` (#8a5a00)<br>dark: `color-amber-300` (#f2c14e) |
+| `--dui-color-info` | Informational alerts and toasts (separate from the accent, so a brand color never reads as a status) | light: `color-blue-700` (#2b43b0)<br>dark: `color-blue-300` (#a8b7ff) |
 | `--dui-color-mark` | mark and ::selection background | light: `color-yellow-100` (#fff1a8)<br>dark: `color-yellow-300` (#e3c84f) |
 | `--dui-color-mark-text` | Text on mark | light: `color-gray-900` (#12151b)<br>dark: `color-gray-900` (#12151b) |
 | `--dui-color-backdrop` | dialog::backdrop | light: `color-black-a40` (rgb(0 0 0 / 40%))<br>dark: `color-black-a60` (rgb(0 0 0 / 60%)) |
@@ -312,11 +332,14 @@ may change. Fluid `--dui-step-*` values are `clamp()` expressions; see `primitiv
 | `--dui-size-target-large` | Large buttons | `size-3-25` (3.25rem) |
 | `--dui-size-check` | Checkbox and radio size | `size-1-25` (1.25rem) |
 | `--dui-size-column-min` | Default .grid min column width | `size-16` (16rem) |
+| `--dui-size-menu-min` | Min width of menus and nav dropdowns | `size-12` (12rem) |
+| `--dui-size-drawer` | Drawer width (all of the viewport when narrower) | `size-24` (24rem) |
 | `--dui-radius-control` | Controls, buttons, inline code | `radius-2` (0.375rem) |
 | `--dui-radius-surface` | Panels, pre, dialog, details, media | `radius-3` (0.625rem) |
 | `--dui-radius-pill` | Fully rounded ends | `radius-round` (999rem) |
 | `--dui-border-width` | Hairline width | `border-1` (1px) |
-| `--dui-border-width-emphasis` | blockquote rule | `border-4` (0.25rem) |
+| `--dui-border-width-emphasis` | blockquote rule, alert start rule, invalid field | `border-4` (0.25rem) |
+| `--dui-border-width-indicator` | Selected tab, current nav item (3:1 against the surface) | `border-3` (3px) |
 | `--dui-underline-offset` | Link underline offset | `underline-offset-015em` (0.15em) |
 | `--dui-underline-thickness` | Link underline | `underline-1` (0.0625em) |
 | `--dui-underline-thickness-hover` | Link underline on hover | `underline-2` (0.125em) |
@@ -336,12 +359,16 @@ may change. Fluid `--dui-step-*` values are `clamp()` expressions; see `primitiv
 | `--dui-color-accent-surface` | Accent badge background | `color-mix()` of `--dui-tint-amount` `--dui-color-accent` into `--dui-color-surface` |
 | `--dui-color-success-surface` | Success badge background | same, with `--dui-color-success` |
 | `--dui-color-warning-surface` | Warning badge background | same, with `--dui-color-warning` |
-| `--dui-color-danger-surface` | Danger badge background | same, with `--dui-color-danger` |
+| `--dui-color-danger-surface` | Danger badge and alert background | same, with `--dui-color-danger` |
+| `--dui-color-info-surface` | Info alert background | same, with `--dui-color-info` |
+| `--dui-color-surface-inverse` | Tooltip background | `--dui-color-text` |
+| `--dui-color-text-inverse` | Tooltip text | `--dui-color-surface` |
 
 Derived (re-resolved on each theme scope): `--dui-color-link`, `--dui-color-focus`,
 `--dui-color-accent-hover`, `--dui-font-heading`, `--dui-shadow-raised`,
 `--dui-color-accent-surface`, `--dui-color-success-surface`, `--dui-color-warning-surface`,
-`--dui-color-danger-surface`.
+`--dui-color-danger-surface`, `--dui-color-info-surface`, `--dui-color-surface-inverse`,
+`--dui-color-text-inverse`.
 
 ## Opinions we hold
 
@@ -370,6 +397,18 @@ Each of these is a choice between valid options, not a standard.
   list (`data-button="primary small"`), matched with `~=`, instead of modifier classes. The
   other atom choices (button variants, focus rings, switch, field errors, badge tints) are
   listed with their reasons in the [atoms index](https://github.com/odonckers/domestic-ui/blob/main/css/components/atoms/README.md#our-choices).
+- **Our choice:** molecules follow the same rule (`data-card="link"`, `data-dialog="drawer end"`),
+  or use the native element or ARIA role when that already says everything (`<search>`,
+  `role="toolbar"`). The molecule choices are listed with their reasons in the
+  [molecules index](https://github.com/odonckers/domestic-ui/blob/main/css/components/molecules/README.md#our-choices); the main ones:
+  - **Our choice:** tabs select on focus (automatic activation), as the
+    [APG recommends](https://www.w3.org/WAI/ARIA/apg/patterns/tabs/#deciding-when-to-make-selection-automatically-follow-focus)
+    when panels show at once; `activation="manual"` is available.
+  - **Our choice:** the drawer is a `<dialog>` variant, so the browser handles modality, focus and
+    <kbd>Esc</kbd> ([explainer](https://github.com/odonckers/domestic-ui/blob/main/explainers/drawer.md)).
+  - **Our choice:** a clickable card links its heading and stretches that link over the card, so the
+    accessible name stays the heading ([explainer](https://github.com/odonckers/domestic-ui/blob/main/explainers/card.md)).
+  - **Our choice:** toasts never dismiss themselves and never take focus ([explainer](https://github.com/odonckers/domestic-ui/blob/main/explainers/toast.md)).
 - **Our choice:** layout primitives come from [Every Layout](https://every-layout.dev/)'s
   Stack, Cluster and Grid. Their custom properties are registered with
   [`@property`](https://developer.mozilla.org/en-US/docs/Web/CSS/@property) as non-inheriting,
@@ -415,6 +454,35 @@ semantics in some browsers ([Adrian Roselli](https://adrianroselli.com/2018/02/t
 A `<pre>` already scrolls (`overflow-x: auto`); authors MUST give every `<pre>` (and any
 `data-scroll="inline"` container) `tabindex="0"` so it can be scrolled from the keyboard.
 
+## Web components
+
+Page: https://odonckers.github.io/domestic-ui/principles/web-components.html
+
+HTML still has no element for tabs, menus, roving focus in a toolbar, hover tooltips or a toast
+stack. For those, and only those, [`web-components/`](https://github.com/odonckers/domestic-ui/blob/main/web-components/README.md) has one small
+custom element each: `<dui-tabs>`, `<dui-menu>`, `<dui-toolbar>`, `<dui-tooltip>` and `<dui-toaster>`.
+
+- **Light DOM.** No shadow root: the molecule CSS and your CSS style the markup directly.
+- **Progressive enhancement.** The markup works before the script runs and with JavaScript off:
+  tabs are a `<nav>` of in-page links and headed sections, toolbar buttons are Tab stops, a menu's
+  popover still opens, a tooltip is still the button's description.
+- **ARIA with behavior, or not at all.** An element adds roles such as `menu` or `tab` only together
+  with the keyboard support those roles promise ([APG](https://www.w3.org/WAI/ARIA/apg/)).
+- **Why each exists** is written at the top of its file, and the
+  [web components index](https://github.com/odonckers/domestic-ui/blob/main/web-components/README.md) lists them. Each one is a plain ES module with no
+  dependencies and no build: `<script type="module" src="web-components/dui-tabs.js"></script>`.
+
+## Explainers
+
+Page: https://odonckers.github.io/domestic-ui/principles/explainers.html
+
+A pattern with no native element and no APG pattern is written up like a platform proposal in
+[`explainers/`](https://github.com/odonckers/domestic-ui/blob/main/explainers/README.md): problem, use cases, goals and non-goals, markup and API,
+keyboard, accessibility mappings, alternatives, prior art and open questions, with normative
+text in [RFC 2119](https://www.rfc-editor.org/rfc/rfc2119) keywords. The card, pagination, drawer
+and toast molecules have one. Names follow HTML and ARIA conventions, so a pattern could map onto
+a future native element or attribute.
+
 ## Tooling
 
 Page: https://odonckers.github.io/domestic-ui/principles/tooling.html
@@ -426,7 +494,7 @@ Page: https://odonckers.github.io/domestic-ui/principles/tooling.html
 | `lint:html` | [html-validate](https://html-validate.org/) | `examples/**/*.html` against `html-validate:recommended` |
 | `lint:css` | [Stylelint](https://stylelint.io/) | `css/**/*.css` against `stylelint-config-standard` |
 | `lint:tokens` | `scripts/check-tokens.mjs` | Semantic-only tokens and no literal colors or sizes outside `css/tokens/` |
-| `test:a11y` | [Playwright](https://playwright.dev/) + [axe-core](https://github.com/dequelabs/axe-core) | Every `examples/**/*.html` (atoms included) in light and dark, in Chromium, Firefox and WebKit, with tags `wcag2a`, `wcag2aa`, `wcag21a`, `wcag21aa`, `wcag22aa`, including open dialogs and details; no horizontal page overflow and no axe violations at 320×640 and 375×812; no external requests; token contrast pairs (atoms included) in the default and forest themes; rendered focus-ring contrast on every button variant; atom states through accessibility APIs; scoped theming of atoms |
+| `test:a11y` | [Playwright](https://playwright.dev/) + [axe-core](https://github.com/dequelabs/axe-core) | Every `examples/**/*.html` (atoms and molecules included) in light and dark, in Chromium, Firefox and WebKit, with tags `wcag2a`, `wcag2aa`, `wcag21a`, `wcag21aa`, `wcag22aa`, including open dialogs and drawers, open popovers and menus, shown tooltips and toasts, every tab selected and every details expanded; no horizontal page overflow and no axe violations at 320×640 and 375×812; no external requests; token contrast pairs (atoms and molecules included) in the default and forest themes; rendered focus-ring and indicator contrast; atom and molecule states through accessibility APIs; molecule keyboard behavior against the APG; no-JavaScript fallbacks; fallbacks for engine-specific features; scoped theming of atoms and molecules |
 
 Preview locally with `npm run serve` (a zero-dependency static server) and open
 <http://127.0.0.1:4173/examples/base.html>. To run tests from two checkouts at once, give each its own port, e.g. `PORT=4273 npm test`.
@@ -439,7 +507,16 @@ Rule relaxations, each with its reason:
   starting with `--dui-` or the documented layout properties (`--stack-*`, `--cluster-*`, `--grid-*`).
 - **Engine-specific test**: the field test also reads the `invalid` state from the accessibility
   tree through the Chrome DevTools Protocol, which only Chromium offers; Firefox and WebKit run the
-  rest of that test (attribute and accessible description). No browser is skipped.
+  rest of that test (attribute and accessible description). The molecule tests do the same for the
+  expanded state of `<summary>` and of a `popovertarget` button, which browsers expose natively but
+  Playwright's role engine does not compute; the other engines check the `open` attribute and the
+  popover's visibility instead. No browser is skipped.
+- **Feature fallbacks**: where every engine in the test run supports a feature (anchor positioning,
+  `@starting-style`, `closedby`, `popover="hint"`), the molecule tests also exercise the fallback path
+  by removing the feature in the page: deleting the `@supports` or `@starting-style` rules from the
+  CSSOM, removing the `closedby` attribute, or setting `popover="manual"` (what `hint` falls back to).
+- **Settling transitions**: axe and geometry checks wait for running CSS transitions to finish, so they
+  measure final colors and positions rather than a frame mid-fade.
 - **External-request check**: same-origin `blob:` URLs are allowed, because WebKit routes these
   in-memory objects through the request handler. Any other origin still fails the test.
 - **html-validate**: none. `html-validate:recommended` is used as-is. Inline `style` attributes
@@ -462,8 +539,8 @@ Base, layout, utility and component CSS use only semantic tokens; `npm run lint:
 
 One page per file in `css/tokens/`, grouped by its section comments, with a filter.
 
-- [Primitive tokens](https://odonckers.github.io/domestic-ui/tokens/primitives.md) (internal): 84 tokens in neutral gray, cool tint, hues, translucent black, for overlays and shadows, font stacks, font weights, fluid font sizes, line heights and tracking, spacing, sizes, radii, border widths, underline metrics, relative to the font, motion, opacity and mix amounts.
-- [Semantic tokens](https://odonckers.github.io/domestic-ui/tokens/semantic.md) (public theming API): 74 tokens in surfaces and text, borders, accent and status, type, space, sizes, shape, focus indicator, motion, state, dependent tokens, tinted surfaces for status badges.
+- [Primitive tokens](https://odonckers.github.io/domestic-ui/tokens/primitives.md) (internal): 87 tokens in neutral gray, cool tint, hues, translucent black, for overlays and shadows, font stacks, font weights, fluid font sizes, line heights and tracking, spacing, sizes, radii, border widths, underline metrics, relative to the font, motion, opacity and mix amounts.
+- [Semantic tokens](https://odonckers.github.io/domestic-ui/tokens/semantic.md) (public theming API): 81 tokens in surfaces and text, borders, accent and status, type, space, sizes, shape, focus indicator, motion, state, dependent tokens, tinted surfaces for status badges, inverse pair for small overlays on top of content (tooltips): text and surface swapped.
 
 ### Tiers
 
@@ -488,7 +565,7 @@ Primitives are NOT public API: they may be renamed, added or removed in any rele
 
 Custom properties: <https://developer.mozilla.org/en-US/docs/Web/CSS/--*>
 
-Defined in [`css/tokens/primitives.css`](https://github.com/odonckers/domestic-ui/blob/main/css/tokens/primitives.css): 84 tokens in 14 groups, one per section comment. See [Tokens](https://odonckers.github.io/domestic-ui/tokens/index.md) for the two tiers.
+Defined in [`css/tokens/primitives.css`](https://github.com/odonckers/domestic-ui/blob/main/css/tokens/primitives.css): 87 tokens in 14 groups, one per section comment. See [Tokens](https://odonckers.github.io/domestic-ui/tokens/index.md) for the two tiers.
 
 **Written as** is the value in the file. **Light** and **dark** follow every `var()` through all token files and take one side of [`light-dark()`](https://developer.mozilla.org/en-US/docs/Web/CSS/color_value/light-dark); functions such as `color-mix()` and `clamp()` are left for the browser. Overrides under a condition, such as `@media (prefers-reduced-motion: reduce)`, are listed in the description. Previews are decorative; the text in each row is the reference.
 
@@ -604,8 +681,10 @@ Rem, so it follows the user's font size setting.
 | `--dui-size-1-25` | `1.25rem` | `1.25rem` | No description yet. |
 | `--dui-size-2` | `2rem` | `2rem` | No description yet. |
 | `--dui-size-2-75` | `2.75rem` | `2.75rem` | No description yet. |
+| `--dui-size-12` | `12rem` | `12rem` | No description yet. |
 | `--dui-size-3-25` | `3.25rem` | `3.25rem` | No description yet. |
 | `--dui-size-16` | `16rem` | `16rem` | No description yet. |
+| `--dui-size-24` | `24rem` | `24rem` | No description yet. |
 | `--dui-size-65ch` | `65ch` | `65ch` | No description yet. |
 
 ### Radii
@@ -624,6 +703,7 @@ Rem, so it follows the user's font size setting.
 | --- | --- | --- | --- |
 | `--dui-border-1` | `1px` | `1px` | No description yet. |
 | `--dui-border-2` | `2px` | `2px` | No description yet. |
+| `--dui-border-3` | `3px` | `3px` | No description yet. |
 | `--dui-border-4` | `0.25rem` | `0.25rem` | No description yet. |
 
 ### Underline metrics, relative to the font
@@ -662,7 +742,7 @@ A theme is an override of these tokens on :root or on a scoped element. No rebui
 
 Colors use light-dark(), which picks a value from the used color-scheme of the element where the token is read. <https://developer.mozilla.org/en-US/docs/Web/CSS/color_value/light-dark>
 
-Defined in [`css/tokens/semantic.css`](https://github.com/odonckers/domestic-ui/blob/main/css/tokens/semantic.css): 74 tokens in 12 groups, one per section comment. See [Tokens](https://odonckers.github.io/domestic-ui/tokens/index.md) for the two tiers.
+Defined in [`css/tokens/semantic.css`](https://github.com/odonckers/domestic-ui/blob/main/css/tokens/semantic.css): 81 tokens in 13 groups, one per section comment. See [Tokens](https://odonckers.github.io/domestic-ui/tokens/index.md) for the two tiers.
 
 **Written as** is the value in the file. **Light** and **dark** follow every `var()` through all token files and take one side of [`light-dark()`](https://developer.mozilla.org/en-US/docs/Web/CSS/color_value/light-dark); functions such as `color-mix()` and `clamp()` are left for the browser. Overrides under a condition, such as `@media (prefers-reduced-motion: reduce)`, are listed in the description. Previews are decorative; the text in each row is the reference.
 
@@ -695,6 +775,7 @@ Decorative hairlines vs. control boundaries (3:1, WCAG 1.4.11).
 | `--dui-color-danger` | `#b42318` | `#ff8a80` | Errors, :user-invalid borders (from PRINCIPLES.md) |
 | `--dui-color-success` | `#17773a` | `#5fd38d` | Success messages (from PRINCIPLES.md) |
 | `--dui-color-warning` | `#8a5a00` | `#f2c14e` | Warning badges and messages (from PRINCIPLES.md) |
+| `--dui-color-info` | `#2b43b0` | `#a8b7ff` | Informational alerts and toasts (separate from the accent, so a brand color never reads as a status) (from PRINCIPLES.md) |
 | `--dui-color-mark` | `#fff1a8` | `#e3c84f` | mark and ::selection background (from PRINCIPLES.md) |
 | `--dui-color-mark-text` | `#12151b` | `#12151b` | Text on mark (from PRINCIPLES.md) |
 | `--dui-color-backdrop` | `rgb(0 0 0 / 40%)` | `rgb(0 0 0 / 60%)` | dialog::backdrop (from PRINCIPLES.md) |
@@ -746,6 +827,8 @@ Decorative hairlines vs. control boundaries (3:1, WCAG 1.4.11).
 | `--dui-size-target-large` | `3.25rem` | `3.25rem` | Large buttons (from PRINCIPLES.md) |
 | `--dui-size-check` | `1.25rem` | `1.25rem` | Checkbox and radio size (from PRINCIPLES.md) |
 | `--dui-size-column-min` | `16rem` | `16rem` | Default .grid min column width (from PRINCIPLES.md) |
+| `--dui-size-menu-min` | `12rem` | `12rem` | Min width of menus and nav dropdowns (from PRINCIPLES.md) |
+| `--dui-size-drawer` | `24rem` | `24rem` | Drawer width (all of the viewport when narrower) (from PRINCIPLES.md) |
 
 ### Shape
 
@@ -755,7 +838,8 @@ Decorative hairlines vs. control boundaries (3:1, WCAG 1.4.11).
 | `--dui-radius-surface` | `0.625rem` | `0.625rem` | Panels, pre, dialog, details, media (from PRINCIPLES.md) |
 | `--dui-radius-pill` | `999rem` | `999rem` | Fully rounded ends (from PRINCIPLES.md) |
 | `--dui-border-width` | `1px` | `1px` | Hairline width (from PRINCIPLES.md) |
-| `--dui-border-width-emphasis` | `0.25rem` | `0.25rem` | blockquote rule (from PRINCIPLES.md) |
+| `--dui-border-width-emphasis` | `0.25rem` | `0.25rem` | blockquote rule, alert start rule, invalid field (from PRINCIPLES.md) |
+| `--dui-border-width-indicator` | `3px` | `3px` | Selected tab, current nav item (3:1 against the surface) (from PRINCIPLES.md) |
 | `--dui-underline-offset` | `0.15em` | `0.15em` | Link underline offset (from PRINCIPLES.md) |
 | `--dui-underline-thickness` | `0.0625em` | `0.0625em` | Link underline (from PRINCIPLES.md) |
 | `--dui-underline-thickness-hover` | `0.125em` | `0.125em` | Link underline on hover (from PRINCIPLES.md) |
@@ -806,7 +890,15 @@ A little of the tone mixed into the surface.
 | `--dui-color-accent-surface` | `color-mix(in oklab, #3451d1 8%, #fff)` | `color-mix(in oklab, #8ea2ff 8%, #12151b)` | Accent badge background (from PRINCIPLES.md) |
 | `--dui-color-success-surface` | `color-mix(in oklab, #17773a 8%, #fff)` | `color-mix(in oklab, #5fd38d 8%, #12151b)` | Success badge background (from PRINCIPLES.md) |
 | `--dui-color-warning-surface` | `color-mix(in oklab, #8a5a00 8%, #fff)` | `color-mix(in oklab, #f2c14e 8%, #12151b)` | Warning badge background (from PRINCIPLES.md) |
-| `--dui-color-danger-surface` | `color-mix(in oklab, #b42318 8%, #fff)` | `color-mix(in oklab, #ff8a80 8%, #12151b)` | Danger badge background (from PRINCIPLES.md) |
+| `--dui-color-danger-surface` | `color-mix(in oklab, #b42318 8%, #fff)` | `color-mix(in oklab, #ff8a80 8%, #12151b)` | Danger badge and alert background (from PRINCIPLES.md) |
+| `--dui-color-info-surface` | `color-mix(in oklab, #2b43b0 8%, #fff)` | `color-mix(in oklab, #a8b7ff 8%, #12151b)` | Info alert background (from PRINCIPLES.md) |
+
+### Inverse pair for small overlays on top of content (tooltips): text and surface swapped
+
+| Token | Light | Dark | Description |
+| --- | --- | --- | --- |
+| `--dui-color-surface-inverse` | `#12151b` | `#eceef2` | Tooltip background (from PRINCIPLES.md) |
+| `--dui-color-text-inverse` | `#fff` | `#12151b` | Tooltip text (from PRINCIPLES.md) |
 
 ## Base elements
 
@@ -916,7 +1008,7 @@ Layout primitives and utilities are classes, not `data-*` attributes; see the [c
 
 ### Live example
 
-There is no standalone example page for visually hidden yet. These example pages use it: [Base elements](https://odonckers.github.io/domestic-ui/examples/base.html), [Theming](https://odonckers.github.io/domestic-ui/examples/theming.html), [Badge](https://odonckers.github.io/domestic-ui/examples/atoms/badge.html), [Buttons](https://odonckers.github.io/domestic-ui/examples/atoms/button.html), [Form controls](https://odonckers.github.io/domestic-ui/examples/atoms/controls.html), [Field](https://odonckers.github.io/domestic-ui/examples/atoms/field.html), [Atoms showcase](https://odonckers.github.io/domestic-ui/examples/atoms/index.html), [Quiet link](https://odonckers.github.io/domestic-ui/examples/atoms/link.html), [Switch](https://odonckers.github.io/domestic-ui/examples/atoms/switch.html), [Text helpers](https://odonckers.github.io/domestic-ui/examples/atoms/text.html).
+There is no standalone example page for visually hidden yet. These example pages use it: [Base elements](https://odonckers.github.io/domestic-ui/examples/base.html), [Theming](https://odonckers.github.io/domestic-ui/examples/theming.html), [Badge](https://odonckers.github.io/domestic-ui/examples/atoms/badge.html), [Buttons](https://odonckers.github.io/domestic-ui/examples/atoms/button.html), [Form controls](https://odonckers.github.io/domestic-ui/examples/atoms/controls.html), [Field](https://odonckers.github.io/domestic-ui/examples/atoms/field.html), [Atoms showcase](https://odonckers.github.io/domestic-ui/examples/atoms/index.html), [Quiet link](https://odonckers.github.io/domestic-ui/examples/atoms/link.html), [Switch](https://odonckers.github.io/domestic-ui/examples/atoms/switch.html), [Text helpers](https://odonckers.github.io/domestic-ui/examples/atoms/text.html), [Alert and toast](https://odonckers.github.io/domestic-ui/examples/molecules/alerts.html), [Breadcrumb](https://odonckers.github.io/domestic-ui/examples/molecules/breadcrumb.html), [Card](https://odonckers.github.io/domestic-ui/examples/molecules/card.html), [Dialog and drawer](https://odonckers.github.io/domestic-ui/examples/molecules/dialog.html), [Disclosure and accordion](https://odonckers.github.io/domestic-ui/examples/molecules/disclosure.html), [Molecules showcase](https://odonckers.github.io/domestic-ui/examples/molecules/index.html), [Menu button](https://odonckers.github.io/domestic-ui/examples/molecules/menu-button.html), [Navigation list](https://odonckers.github.io/domestic-ui/examples/molecules/nav.html), [Pagination](https://odonckers.github.io/domestic-ui/examples/molecules/pagination.html), [Popover and tooltip](https://odonckers.github.io/domestic-ui/examples/molecules/popover.html), [Search field](https://odonckers.github.io/domestic-ui/examples/molecules/search.html), [Tabs](https://odonckers.github.io/domestic-ui/examples/molecules/tabs.html), [Toolbar](https://odonckers.github.io/domestic-ui/examples/molecules/toolbar.html).
 
 ### Markup
 
@@ -976,7 +1068,7 @@ Layout primitives and utilities are classes, not `data-*` attributes; see the [c
 
 ### Live example
 
-There is no standalone example page for cluster yet. These example pages use it: [Base elements](https://odonckers.github.io/domestic-ui/examples/base.html), [Theming](https://odonckers.github.io/domestic-ui/examples/theming.html), [Badge](https://odonckers.github.io/domestic-ui/examples/atoms/badge.html), [Buttons](https://odonckers.github.io/domestic-ui/examples/atoms/button.html), [Form controls](https://odonckers.github.io/domestic-ui/examples/atoms/controls.html), [Field](https://odonckers.github.io/domestic-ui/examples/atoms/field.html), [Atoms showcase](https://odonckers.github.io/domestic-ui/examples/atoms/index.html), [Quiet link](https://odonckers.github.io/domestic-ui/examples/atoms/link.html), [Switch](https://odonckers.github.io/domestic-ui/examples/atoms/switch.html), [Text helpers](https://odonckers.github.io/domestic-ui/examples/atoms/text.html).
+There is no standalone example page for cluster yet. These example pages use it: [Base elements](https://odonckers.github.io/domestic-ui/examples/base.html), [Theming](https://odonckers.github.io/domestic-ui/examples/theming.html), [Badge](https://odonckers.github.io/domestic-ui/examples/atoms/badge.html), [Buttons](https://odonckers.github.io/domestic-ui/examples/atoms/button.html), [Form controls](https://odonckers.github.io/domestic-ui/examples/atoms/controls.html), [Field](https://odonckers.github.io/domestic-ui/examples/atoms/field.html), [Atoms showcase](https://odonckers.github.io/domestic-ui/examples/atoms/index.html), [Quiet link](https://odonckers.github.io/domestic-ui/examples/atoms/link.html), [Switch](https://odonckers.github.io/domestic-ui/examples/atoms/switch.html), [Text helpers](https://odonckers.github.io/domestic-ui/examples/atoms/text.html), [Alert and toast](https://odonckers.github.io/domestic-ui/examples/molecules/alerts.html), [Breadcrumb](https://odonckers.github.io/domestic-ui/examples/molecules/breadcrumb.html), [Card](https://odonckers.github.io/domestic-ui/examples/molecules/card.html), [Dialog and drawer](https://odonckers.github.io/domestic-ui/examples/molecules/dialog.html), [Disclosure and accordion](https://odonckers.github.io/domestic-ui/examples/molecules/disclosure.html), [Molecules showcase](https://odonckers.github.io/domestic-ui/examples/molecules/index.html), [Menu button](https://odonckers.github.io/domestic-ui/examples/molecules/menu-button.html), [Navigation list](https://odonckers.github.io/domestic-ui/examples/molecules/nav.html), [Pagination](https://odonckers.github.io/domestic-ui/examples/molecules/pagination.html), [Popover and tooltip](https://odonckers.github.io/domestic-ui/examples/molecules/popover.html), [Search field](https://odonckers.github.io/domestic-ui/examples/molecules/search.html), [Tabs](https://odonckers.github.io/domestic-ui/examples/molecules/tabs.html), [Toolbar](https://odonckers.github.io/domestic-ui/examples/molecules/toolbar.html).
 
 ### Markup
 
@@ -1022,7 +1114,7 @@ Layout primitives and utilities are classes, not `data-*` attributes; see the [c
 
 ### Live example
 
-There is no standalone example page for grid yet. These example pages use it: [Base elements](https://odonckers.github.io/domestic-ui/examples/base.html), [Theming](https://odonckers.github.io/domestic-ui/examples/theming.html), [Form controls](https://odonckers.github.io/domestic-ui/examples/atoms/controls.html), [Atoms showcase](https://odonckers.github.io/domestic-ui/examples/atoms/index.html).
+There is no standalone example page for grid yet. These example pages use it: [Base elements](https://odonckers.github.io/domestic-ui/examples/base.html), [Theming](https://odonckers.github.io/domestic-ui/examples/theming.html), [Form controls](https://odonckers.github.io/domestic-ui/examples/atoms/controls.html), [Atoms showcase](https://odonckers.github.io/domestic-ui/examples/atoms/index.html), [Card](https://odonckers.github.io/domestic-ui/examples/molecules/card.html), [Molecules showcase](https://odonckers.github.io/domestic-ui/examples/molecules/index.html).
 
 ### Markup
 
@@ -1123,7 +1215,7 @@ Layout primitives and utilities are classes, not `data-*` attributes; see the [c
 
 ### Live example
 
-There is no standalone example page for stack yet. These example pages use it: [Base elements](https://odonckers.github.io/domestic-ui/examples/base.html), [Theming](https://odonckers.github.io/domestic-ui/examples/theming.html), [Field](https://odonckers.github.io/domestic-ui/examples/atoms/field.html), [Switch](https://odonckers.github.io/domestic-ui/examples/atoms/switch.html).
+There is no standalone example page for stack yet. These example pages use it: [Base elements](https://odonckers.github.io/domestic-ui/examples/base.html), [Theming](https://odonckers.github.io/domestic-ui/examples/theming.html), [Field](https://odonckers.github.io/domestic-ui/examples/atoms/field.html), [Switch](https://odonckers.github.io/domestic-ui/examples/atoms/switch.html), [Alert and toast](https://odonckers.github.io/domestic-ui/examples/molecules/alerts.html), [Dialog and drawer](https://odonckers.github.io/domestic-ui/examples/molecules/dialog.html), [Molecules showcase](https://odonckers.github.io/domestic-ui/examples/molecules/index.html).
 
 ### Markup
 
@@ -1990,17 +2082,49 @@ Components use one `data-<component>` attribute each; see the [component API con
 
 ### Molecules
 
-- [Alerts](https://odonckers.github.io/domestic-ui/patterns/alerts.md): Messages about status, from notices in the page to live alerts for important, time-sensitive changes. Coming in M3.
-- [Breadcrumb](https://odonckers.github.io/domestic-ui/patterns/breadcrumb.md): The path to the current page as an ordered list of links in a labelled `<nav>`. Coming in M3.
-- [Card](https://odonckers.github.io/domestic-ui/patterns/card.md): A self-contained item, such as a product or an article teaser, on a raised surface. Coming in M3.
-- [Disclosure](https://odonckers.github.io/domestic-ui/patterns/disclosure.md): A summary that shows or hides more content, built on `<details>` and `<summary>`. Coming in M3.
-- [Menu button](https://odonckers.github.io/domestic-ui/patterns/menu-button.md): A button that opens a menu of actions. Coming in M3.
-- [Pagination](https://odonckers.github.io/domestic-ui/patterns/pagination.md): Links to the pages of a long list of results. Coming in M3.
-- [Popover](https://odonckers.github.io/domestic-ui/patterns/popover.md): Content shown on top of the page from a button, with the `popover` attribute. Coming in M3.
-- [Search](https://odonckers.github.io/domestic-ui/patterns/search.md): A search form in a `<search>` landmark with an `<input type="search">`. Coming in M3.
-- [Tabs](https://odonckers.github.io/domestic-ui/patterns/tabs.md): Sections of content shown one at a time, chosen from a list of tabs. Coming in M3.
-- [Toolbar](https://odonckers.github.io/domestic-ui/patterns/toolbar.md): A row of related controls that is one stop in the tab order. Coming in M3.
+- [Alerts](https://odonckers.github.io/domestic-ui/patterns/alerts.md): Messages about status, from notices in the page to live alerts for important, time-sensitive changes. Available.
+- [Breadcrumb](https://odonckers.github.io/domestic-ui/patterns/breadcrumb.md): The path to the current page as an ordered list of links in a labelled `<nav>`. Available.
+- [Card](https://odonckers.github.io/domestic-ui/patterns/card.md): A self-contained item, such as a product or an article teaser, on a raised surface. Available.
+- [Disclosure](https://odonckers.github.io/domestic-ui/patterns/disclosure.md): A summary that shows or hides more content, built on `<details>` and `<summary>`. Available.
+- [Menu button](https://odonckers.github.io/domestic-ui/patterns/menu-button.md): A button that opens a menu of actions. Available.
+- [Pagination](https://odonckers.github.io/domestic-ui/patterns/pagination.md): Links to the pages of a long list of results. Available.
+- [Popover](https://odonckers.github.io/domestic-ui/patterns/popover.md): Content shown on top of the page from a button, with the `popover` attribute. Available.
+- [Search](https://odonckers.github.io/domestic-ui/patterns/search.md): A search form in a `<search>` landmark with an `<input type="search">`. Available.
+- [Tabs](https://odonckers.github.io/domestic-ui/patterns/tabs.md): Sections of content shown one at a time, chosen from a list of tabs. Available.
+- [Toolbar](https://odonckers.github.io/domestic-ui/patterns/toolbar.md): A row of related controls that is one stop in the tab order. Available.
 - [Typeahead](https://odonckers.github.io/domestic-ui/patterns/typeahead.md): A text field that suggests values as you type, with `<datalist>` first and an APG combobox only where `<datalist>` falls short. Coming in M3.
+
+### Our choices
+
+From [`css/components/molecules/README.md`](https://github.com/odonckers/domestic-ui/blob/main/css/components/molecules/README.md). Each is a choice between valid options, not a standard.
+
+- **Our choice:** native first, even where it differs from the APG example. The accordion is `<details name>`, so there are no heading wrappers and no arrow keys between headers (both optional in the APG); nav groups are `<details>` rather than scripted disclosure buttons, so they do not close on <kbd>Esc</kbd>. Both work with no script and keep find-in-page.
+- **Our choice:** the drawer is a `<dialog>` variant (`data-dialog="drawer"`), not a new element or a popover, so it gets modality, inertness, focus handling and <kbd>Esc</kbd> from the browser. See [drawer.md](https://github.com/odonckers/domestic-ui/blob/main/explainers/drawer.md).
+- **Our choice:** dialog and drawer motion uses `@starting-style` and `transition-behavior: allow-discrete`, declared after a plain transition, so engines without them simply open and close instantly. Duration tokens are `0s` under reduced motion.
+- **Our choice:** anchored popovers fall back to the bottom center of the viewport where CSS anchor positioning is missing, rather than the browser's default center, so they never cover the middle of the content.
+- **Our choice:** automatic tab activation (selection follows focus), as the [APG recommends](https://www.w3.org/WAI/ARIA/apg/patterns/tabs/#deciding-when-to-make-selection-automatically-follow-focus) when panels show without delay; `activation="manual"` is one attribute away.
+- **Our choice:** tabs are written as a `<nav>` of in-page links and `<section>` panels, so they read as a table of contents with JavaScript off. Once upgraded, each panel's first heading is visually hidden (it repeats the tab label) but stays in the accessibility tree.
+- **Our choice:** `<dui-menu>` adds `role="menu"` and `role="menuitem"` itself. Without the script there are no menu roles, so assistive technology is never promised arrow keys that do not work. A list of links is never a menu; use a disclosure.
+- **Our choice:** `<dui-toolbar>` keeps `role="toolbar"` in the markup, because a labelled group of Tab stops is still correct without the script; only the roving focus is added.
+- **Our choice:** navigation lists (nav, tabs, pagination) drop the link underline, because their role is clear from the list ([F73](https://www.w3.org/WAI/WCAG22/Techniques/failures/F73) is about links in running text); hover brings it back. Breadcrumb links keep it, because they read as text.
+- **Our choice:** "current" is never color alone: the nav item gets an accent bar, a tint and bold text; the current page in pagination is filled and bold; the selected tab gets a bar and full-strength text.
+- **Our choice:** the current page in pagination stays a link with `aria-current="page"`, and a disabled Previous or Next is an `<a>` with no `href`, which HTML defines as a placeholder: not focusable and not a link. See [pagination.md](https://github.com/odonckers/domestic-ui/blob/main/explainers/pagination.md).
+- **Our choice:** a clickable card puts the link on its heading and stretches the link's hit area with a pseudo-element, so the card's accessible name is the heading and secondary actions in the footer stay separate links. See [card.md](https://github.com/odonckers/domestic-ui/blob/main/explainers/card.md).
+- **Our choice:** alert tones start with a word in the markup ("Warning:"), like the field's "Error:", and add a decorative icon drawn in CSS with empty alternative text.
+- **Our choice:** an `info` tone with its own token (`--dui-color-info`) instead of reusing the accent, so a green or red brand accent never makes an informational message look like success or danger.
+- **Our choice:** toasts never dismiss themselves and never take focus; each has a Dismiss button, and the region is a fixed element in the page (not a popover) so server-rendered messages show with JavaScript off. See [toast.md](https://github.com/odonckers/domestic-ui/blob/main/explainers/toast.md).
+- **Our choice:** the tooltip uses inverse colors (`--dui-color-surface-inverse` and `--dui-color-text-inverse`, derived from the text and surface tokens), so every theme gets a readable tooltip with no extra overrides.
+
+### Not shipped, and why
+
+| Candidate | Decision |
+| --- | --- |
+| Combobox, typeahead, datalist | Later milestone (`dui-combobox`). It needs the APG Combobox pattern and a listbox, which is a bigger piece of work. |
+| Vertical tabs | Not added. The APG allows them (`aria-orientation="vertical"`), but they need a different layout and Up/Down keys; add them with a real use case. |
+| Menubar, submenus | Not added. Application menubars are rare on the web, and submenus are hard to use; a menu button covers actions. |
+| Arrow-key navigation between accordion headers | Not added. It is optional in the APG Accordion pattern, and native `<details>` gives every summary a Tab stop. |
+| Auto-dismissing toasts | Not added on purpose; see Our choices and [toast.md](https://github.com/odonckers/domestic-ui/blob/main/explainers/toast.md). |
+| `interestfor` tooltips | Not used yet. It is the coming standard for hover and focus invokers but ships only in Chromium; `<dui-tooltip>` does the job until it is interoperable. |
 
 ## Organisms
 
@@ -2010,8 +2134,8 @@ Components use one `data-<component>` attribute each; see the [component API con
 
 ### Organisms
 
-- [Dialog and drawer](https://odonckers.github.io/domestic-ui/patterns/dialog.md): A modal `<dialog>`, either centered or as a drawer along one edge of the viewport. Coming in M3.
-- [Site navigation](https://odonckers.github.io/domestic-ui/patterns/nav.md): The main links of a site in a `<nav>` landmark, with the current page marked. Coming in M3.
+- [Dialog and drawer](https://odonckers.github.io/domestic-ui/patterns/dialog.md): A modal `<dialog>`, either centered or as a drawer along one edge of the viewport. Available.
+- [Site navigation](https://odonckers.github.io/domestic-ui/patterns/nav.md): The main links of a site in a `<nav>` landmark, with the current page marked. Available.
 - [Data table](https://odonckers.github.io/domestic-ui/patterns/data-table.md): Rows of records in a native `<table>` with a caption, header cells and optional sorting. Coming in M3b.
 - [Filter bar](https://odonckers.github.io/domestic-ui/patterns/filter-bar.md): A row of native form controls that narrows a list or table. Coming in M3b.
 - [Large forms](https://odonckers.github.io/domestic-ui/patterns/large-forms.md): Long forms split into labelled groups, in one or more columns. Coming in M3b.
@@ -2028,18 +2152,18 @@ A pattern page fills in on its own when its example page or CSS file lands. Unti
 
 | Pattern | Level | Status | Follows |
 | --- | --- | --- | --- |
-| [Alerts](https://odonckers.github.io/domestic-ui/patterns/alerts.md) | molecule | Coming in M3 | [APG Alert pattern](https://www.w3.org/WAI/ARIA/apg/patterns/alert/) |
-| [Breadcrumb](https://odonckers.github.io/domestic-ui/patterns/breadcrumb.md) | molecule | Coming in M3 | [APG Breadcrumb pattern](https://www.w3.org/WAI/ARIA/apg/patterns/breadcrumb/) |
-| [Card](https://odonckers.github.io/domestic-ui/patterns/card.md) | molecule | Coming in M3 | **Our choice:** No native element or APG pattern exists; an `<article>` with a heading, where the heading holds the one link, so the whole card is not one long link name. |
-| [Dialog and drawer](https://odonckers.github.io/domestic-ui/patterns/dialog.md) | organism | Coming in M3 | [HTML `<dialog>` element](https://html.spec.whatwg.org/multipage/interactive-elements.html#the-dialog-element), [APG Dialog (Modal) pattern](https://www.w3.org/WAI/ARIA/apg/patterns/dialog-modal/) |
-| [Disclosure](https://odonckers.github.io/domestic-ui/patterns/disclosure.md) | molecule | Coming in M3 | [HTML `<details>` element](https://html.spec.whatwg.org/multipage/interactive-elements.html#the-details-element), [APG Disclosure pattern](https://www.w3.org/WAI/ARIA/apg/patterns/disclosure/) |
-| [Menu button](https://odonckers.github.io/domestic-ui/patterns/menu-button.md) | molecule | Coming in M3 | [APG Menu Button pattern](https://www.w3.org/WAI/ARIA/apg/patterns/menu-button/) |
-| [Pagination](https://odonckers.github.io/domestic-ui/patterns/pagination.md) | molecule | Coming in M3 | **Our choice:** No native element or APG pattern exists; a labelled `<nav>` with a list of links and `aria-current="page"` on the current one, as for breadcrumbs. |
-| [Popover](https://odonckers.github.io/domestic-ui/patterns/popover.md) | molecule | Coming in M3 | [HTML `popover` attribute](https://html.spec.whatwg.org/multipage/popover.html#the-popover-attribute), [MDN Popover API](https://developer.mozilla.org/en-US/docs/Web/API/Popover_API) |
-| [Search](https://odonckers.github.io/domestic-ui/patterns/search.md) | molecule | Coming in M3 | [HTML `<search>` element](https://html.spec.whatwg.org/multipage/grouping-content.html#the-search-element), [MDN `<input type="search">`](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/input/search) |
-| [Site navigation](https://odonckers.github.io/domestic-ui/patterns/nav.md) | organism | Coming in M3 | [HTML `<nav>` element](https://html.spec.whatwg.org/multipage/sections.html#the-nav-element), [APG Landmark regions](https://www.w3.org/WAI/ARIA/apg/practices/landmark-regions/), [APG Disclosure navigation example](https://www.w3.org/WAI/ARIA/apg/patterns/disclosure/examples/disclosure-navigation/) |
-| [Tabs](https://odonckers.github.io/domestic-ui/patterns/tabs.md) | molecule | Coming in M3 | [APG Tabs pattern](https://www.w3.org/WAI/ARIA/apg/patterns/tabs/) |
-| [Toolbar](https://odonckers.github.io/domestic-ui/patterns/toolbar.md) | molecule | Coming in M3 | [APG Toolbar pattern](https://www.w3.org/WAI/ARIA/apg/patterns/toolbar/) |
+| [Alerts](https://odonckers.github.io/domestic-ui/patterns/alerts.md) | molecule | Available | [APG Alert pattern](https://www.w3.org/WAI/ARIA/apg/patterns/alert/) |
+| [Breadcrumb](https://odonckers.github.io/domestic-ui/patterns/breadcrumb.md) | molecule | Available | [APG Breadcrumb pattern](https://www.w3.org/WAI/ARIA/apg/patterns/breadcrumb/) |
+| [Card](https://odonckers.github.io/domestic-ui/patterns/card.md) | molecule | Available | **Our choice:** No native element or APG pattern exists; an `<article>` with a heading, where the heading holds the one link, so the whole card is not one long link name. |
+| [Dialog and drawer](https://odonckers.github.io/domestic-ui/patterns/dialog.md) | organism | Available | [HTML `<dialog>` element](https://html.spec.whatwg.org/multipage/interactive-elements.html#the-dialog-element), [APG Dialog (Modal) pattern](https://www.w3.org/WAI/ARIA/apg/patterns/dialog-modal/) |
+| [Disclosure](https://odonckers.github.io/domestic-ui/patterns/disclosure.md) | molecule | Available | [HTML `<details>` element](https://html.spec.whatwg.org/multipage/interactive-elements.html#the-details-element), [APG Disclosure pattern](https://www.w3.org/WAI/ARIA/apg/patterns/disclosure/) |
+| [Menu button](https://odonckers.github.io/domestic-ui/patterns/menu-button.md) | molecule | Available | [APG Menu Button pattern](https://www.w3.org/WAI/ARIA/apg/patterns/menu-button/) |
+| [Pagination](https://odonckers.github.io/domestic-ui/patterns/pagination.md) | molecule | Available | **Our choice:** No native element or APG pattern exists; a labelled `<nav>` with a list of links and `aria-current="page"` on the current one, as for breadcrumbs. |
+| [Popover](https://odonckers.github.io/domestic-ui/patterns/popover.md) | molecule | Available | [HTML `popover` attribute](https://html.spec.whatwg.org/multipage/popover.html#the-popover-attribute), [MDN Popover API](https://developer.mozilla.org/en-US/docs/Web/API/Popover_API) |
+| [Search](https://odonckers.github.io/domestic-ui/patterns/search.md) | molecule | Available | [HTML `<search>` element](https://html.spec.whatwg.org/multipage/grouping-content.html#the-search-element), [MDN `<input type="search">`](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/input/search) |
+| [Site navigation](https://odonckers.github.io/domestic-ui/patterns/nav.md) | organism | Available | [HTML `<nav>` element](https://html.spec.whatwg.org/multipage/sections.html#the-nav-element), [APG Landmark regions](https://www.w3.org/WAI/ARIA/apg/practices/landmark-regions/), [APG Disclosure navigation example](https://www.w3.org/WAI/ARIA/apg/patterns/disclosure/examples/disclosure-navigation/) |
+| [Tabs](https://odonckers.github.io/domestic-ui/patterns/tabs.md) | molecule | Available | [APG Tabs pattern](https://www.w3.org/WAI/ARIA/apg/patterns/tabs/) |
+| [Toolbar](https://odonckers.github.io/domestic-ui/patterns/toolbar.md) | molecule | Available | [APG Toolbar pattern](https://www.w3.org/WAI/ARIA/apg/patterns/toolbar/) |
 | [Typeahead](https://odonckers.github.io/domestic-ui/patterns/typeahead.md) | molecule | Coming in M3 | [HTML `<datalist>` element](https://html.spec.whatwg.org/multipage/form-elements.html#the-datalist-element), [APG Combobox pattern](https://www.w3.org/WAI/ARIA/apg/patterns/combobox/) |
 
 ### M3b: App shell, complex layouts and organisms
@@ -2061,8 +2185,6 @@ Page: https://odonckers.github.io/domestic-ui/patterns/alerts.html
 
 Messages about status, from notices in the page to live alerts for important, time-sensitive changes.
 
-Coming in M3.
-
 ### Standard
 
 This pattern follows:
@@ -2070,6 +2192,94 @@ This pattern follows:
 - [APG Alert pattern](https://www.w3.org/WAI/ARIA/apg/patterns/alert/)
 
 Level: molecule. Milestone: M3: Molecules and navigation patterns.
+
+### API
+
+```text
+data-alert="info | success | warning | danger"   an inline alert with a tone
+data-alert="toasts"                               the toast region (fixed position)
+data-alert="dismiss"                              a toast's dismiss button
+role="status" | role="alert"                      native ARIA live regions
+```
+
+### Live example
+
+- [Open the example on its own](https://odonckers.github.io/domestic-ui/examples/molecules/alerts.html)
+
+### Markup
+
+The `<pre><code>` blocks in [`examples/molecules/alerts.html`](https://github.com/odonckers/domestic-ui/blob/main/examples/molecules/alerts.html), HTML-unescaped and otherwise unchanged, each named by the heading of its section:
+
+#### Inline alerts
+
+```html
+<div class="stack">
+  <div data-alert="info">
+    <p><strong>Info:</strong> Maintenance is planned for Sunday at 02:00.</p>
+  </div>
+  <div data-alert="success">
+    <p><strong>Success:</strong> Your changes were published.</p>
+  </div>
+  <div data-alert="warning">
+    <p><strong>Warning:</strong> Your trial ends in 3 days.</p>
+    <p><a href="#inline-title">Choose a plan</a> to keep your projects.</p>
+  </div>
+  <div data-alert="danger">
+    <p><strong>Error:</strong> The file could not be uploaded. Try a file under 10 MB.</p>
+  </div>
+</div>
+```
+
+#### Live regions
+
+```html
+<div class="cluster">
+  <button type="button" data-announce="live-status">Save settings</button>
+  <button type="button" data-announce="live-alert">Send without a subject</button>
+</div>
+<div id="live-status" role="status"></div>
+<div id="live-alert" role="alert"></div>
+```
+
+#### Toasts
+
+```html
+<div class="cluster">
+  <button type="button" data-toast="success">Copy link</button>
+  <button type="button" data-toast="info">Start export</button>
+  <button type="button" data-toast="danger">Sync now</button>
+</div>
+```
+
+### Keyboard
+
+From the `Keyboard` block in [`examples/molecules/alerts.html`](https://github.com/odonckers/domestic-ui/blob/main/examples/molecules/alerts.html).
+
+| Key | Action |
+| --- | --- |
+| <kbd>Tab</kbd> | reaches each toast's Dismiss button; toasts never take focus |
+| <kbd>Enter</kbd> / <kbd>Space</kbd> | on Dismiss, removes the toast and focuses the next one |
+
+### Accessibility
+
+From the CSS header comment: Messages about the state of the page: an inline alert with a tone (info, success, warning, danger), live regions that announce new messages to screen readers, and a toast region that stacks short messages at the bottom inline-end corner of the viewport. <https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Reference/Roles/status_role> <https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Reference/Roles/alert_role> WCAG 4.1.3 Status Messages: <https://www.w3.org/WAI/WCAG22/Understanding/status-messages.html> Live regions: a message that appears without a page load must be announced without moving focus (WCAG 4.1.3). The region MUST be in the page before the message is inserted: screen readers watch regions that exist, so inserting an element that already holds role and text is often not announced. Static alerts that are present on load need no role; they are read with the page. <https://www.w3.org/WAI/WCAG22/Techniques/aria/ARIA22> <https://www.w3.org/WAI/WCAG22/Techniques/aria/ARIA19> Tone is never color alone (WCAG 1.4.1): the message starts with a word ("Warning:") written in the markup, so every user and screen reader gets it, and a decorative icon (CSS generated content with empty alternative text) adds a shape.
+
+### Specs
+
+- **APG Alert pattern**: [www.w3.org/WAI/ARIA/apg/patterns/alert/](https://www.w3.org/WAI/ARIA/apg/patterns/alert/)
+- **WCAG 4.1.3 Status Messages**: [www.w3.org/WAI/WCAG22/Understanding/status-messages.html](https://www.w3.org/WAI/WCAG22/Understanding/status-messages.html)
+- **MDN `status` role**: [developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Reference/Roles/status_role](https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Reference/Roles/status_role)
+- **MDN**: [developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Reference/Roles/alert_role](https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Reference/Roles/alert_role)
+- **WCAG**: [www.w3.org/WAI/WCAG22/Techniques/aria/ARIA22](https://www.w3.org/WAI/WCAG22/Techniques/aria/ARIA22)
+- **WCAG**: [www.w3.org/WAI/WCAG22/Techniques/aria/ARIA19](https://www.w3.org/WAI/WCAG22/Techniques/aria/ARIA19)
+- **WCAG**: [www.w3.org/WAI/WCAG22/Understanding/timing-adjustable.html](https://www.w3.org/WAI/WCAG22/Understanding/timing-adjustable.html)
+- **WCAG**: [www.w3.org/WAI/WCAG22/Understanding/use-of-color.html](https://www.w3.org/WAI/WCAG22/Understanding/use-of-color.html)
+
+### Source
+
+- [`css/components/molecules/alerts.css`](https://github.com/odonckers/domestic-ui/blob/main/css/components/molecules/alerts.css)
+- [`examples/molecules/alerts.html`](https://github.com/odonckers/domestic-ui/blob/main/examples/molecules/alerts.html)
+- [`site/content/patterns/alerts.md`](https://github.com/odonckers/domestic-ui/blob/main/site/content/patterns/alerts.md)
 
 ### How other systems do it
 
@@ -2085,8 +2295,6 @@ Page: https://odonckers.github.io/domestic-ui/patterns/breadcrumb.html
 
 The path to the current page as an ordered list of links in a labelled `<nav>`.
 
-Coming in M3.
-
 ### Standard
 
 This pattern follows:
@@ -2094,6 +2302,70 @@ This pattern follows:
 - [APG Breadcrumb pattern](https://www.w3.org/WAI/ARIA/apg/patterns/breadcrumb/)
 
 Level: molecule. Milestone: M3: Molecules and navigation patterns.
+
+### API
+
+```text
+data-breadcrumb       on <nav aria-label="Breadcrumb">
+aria-current="page"   on the last link (native ARIA)
+```
+
+### Live example
+
+- [Open the example on its own](https://odonckers.github.io/domestic-ui/examples/molecules/breadcrumb.html)
+
+### Markup
+
+The `<pre><code>` blocks in [`examples/molecules/breadcrumb.html`](https://github.com/odonckers/domestic-ui/blob/main/examples/molecules/breadcrumb.html), HTML-unescaped and otherwise unchanged, each named by the heading of its section:
+
+#### Breadcrumb
+
+```html
+<nav aria-label="Breadcrumb" data-breadcrumb>
+  <ol>
+    <li><a href="../base.html">Home</a></li>
+    <li><a href="index.html">Molecules</a></li>
+    <li><a href="breadcrumb.html" aria-current="page">Breadcrumb</a></li>
+  </ol>
+</nav>
+```
+
+#### A long trail wraps
+
+```html
+<nav aria-label="Breadcrumb for the archive" data-breadcrumb>
+  <ol>
+    <li><a href="#long-title">Home</a></li>
+    <li><a href="#long-title">Documentation</a></li>
+    <li><a href="#long-title">Components and patterns</a></li>
+    <li><a href="#long-title">Navigation</a></li>
+    <li><a href="#long-title">Archive</a></li>
+    <li><a href="#long-title" aria-current="page">Breadcrumbs in older releases</a></li>
+  </ol>
+</nav>
+```
+
+### Keyboard
+
+No keyboard notes yet. Follow the keyboard interaction section of the [APG Breadcrumb pattern](https://www.w3.org/WAI/ARIA/apg/patterns/breadcrumb/).
+
+### Accessibility
+
+From the CSS header comment: The trail of pages leading to the current one: a \<nav> named "Breadcrumb", an ordered list of links, and aria-current="page" on the last one, as in the APG Breadcrumb pattern. APG: <https://www.w3.org/WAI/ARIA/apg/patterns/breadcrumb/> <https://html.spec.whatwg.org/multipage/sections.html#the-nav-element>
+
+### Specs
+
+- **APG Breadcrumb pattern**: [www.w3.org/WAI/ARIA/apg/patterns/breadcrumb/](https://www.w3.org/WAI/ARIA/apg/patterns/breadcrumb/)
+- **HTML `<nav>` element**: [html.spec.whatwg.org/multipage/sections.html#the-nav-element](https://html.spec.whatwg.org/multipage/sections.html#the-nav-element)
+- **MDN `aria-current`**: [developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Reference/Attributes/aria-current](https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Reference/Attributes/aria-current)
+- **MDN**: [developer.mozilla.org/en-US/docs/Web/CSS/content#alternative_text](https://developer.mozilla.org/en-US/docs/Web/CSS/content#alternative_text)
+- **WCAG**: [www.w3.org/WAI/WCAG22/Understanding/use-of-color.html](https://www.w3.org/WAI/WCAG22/Understanding/use-of-color.html)
+
+### Source
+
+- [`css/components/molecules/breadcrumb.css`](https://github.com/odonckers/domestic-ui/blob/main/css/components/molecules/breadcrumb.css)
+- [`examples/molecules/breadcrumb.html`](https://github.com/odonckers/domestic-ui/blob/main/examples/molecules/breadcrumb.html)
+- [`site/content/patterns/breadcrumb.md`](https://github.com/odonckers/domestic-ui/blob/main/site/content/patterns/breadcrumb.md)
 
 ### How other systems do it
 
@@ -2111,13 +2383,84 @@ A self-contained item, such as a product or an article teaser, on a raised surfa
 
 **Our choice:** No native element or APG pattern exists; an `<article>` with a heading, where the heading holds the one link, so the whole card is not one long link name.
 
-Coming in M3.
-
 ### Standard
 
 No native element or WAI-ARIA APG pattern covers this.
 
 Level: molecule. Milestone: M3: Molecules and navigation patterns.
+
+### API
+
+```text
+data-card          on <article> (or <section>, <li>): the card
+data-card="link"   the whole card follows the link in its heading
+Children: an optional first <img> (or <picture>, <video>) as media,
+a heading, body content, and an optional <footer> for actions.
+```
+
+### Live example
+
+- [Open the example on its own](https://odonckers.github.io/domestic-ui/examples/molecules/card.html)
+
+### Markup
+
+The `<pre><code>` blocks in [`examples/molecules/card.html`](https://github.com/odonckers/domestic-ui/blob/main/examples/molecules/card.html), HTML-unescaped and otherwise unchanged, each named by the heading of its section:
+
+#### Atoms
+
+```html
+<div class="grid" style="--grid-min: 16rem">
+  <article data-card>
+    <h3>Starter plan</h3>
+    <p>For one person trying things out.</p>
+    <p data-text="small muted">Free forever.</p>
+    <footer>
+      <a href="#grid-title" data-button="primary small">Choose Starter</a>
+    </footer>
+  </article>
+  <article data-card="link">
+    <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 320 160'%3E%3Crect width='320' height='160' fill='%233451d1'/%3E%3Ccircle cx='250' cy='40' r='60' fill='%238ea2ff'/%3E%3Crect x='24' y='96' width='140' height='40' rx='8' fill='%23f6f7f9'/%3E%3C/svg%3E" alt="" width="320" height="160">
+    <h3><a href="../theming.html">Theming guide</a></h3>
+    <p>Override semantic tokens to make a theme, with no build step.</p>
+    <footer>
+      <span data-badge="accent">Guide</span>
+      <a href="../../css/tokens/semantic.css" data-button="secondary small">View tokens</a>
+    </footer>
+  </article>
+  <article data-card="link">
+    <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 320 160'%3E%3Crect width='320' height='160' fill='%2317773a'/%3E%3Cpath d='M0 160 L120 50 L200 120 L260 70 L320 120 V160Z' fill='%235fd38d'/%3E%3C/svg%3E" alt="" width="320" height="160">
+    <h3><a href="../atoms/index.html">Atoms</a></h3>
+    <p>Buttons, switches, fields and badges.</p>
+  </article>
+</div>
+```
+
+### Keyboard
+
+From the `Keyboard` block in [`examples/molecules/card.html`](https://github.com/odonckers/domestic-ui/blob/main/examples/molecules/card.html).
+
+| Key | Action |
+| --- | --- |
+| <kbd>Tab</kbd> | moves to each card's heading link, then to its footer actions |
+| <kbd>Enter</kbd> | follows the focused link |
+
+### Accessibility
+
+From the CSS header comment: HTML has no card element and the APG has no card pattern, so the contract is written up in explainers/card.md. <https://html.spec.whatwg.org/multipage/sections.html#the-article-element>
+
+### Specs
+
+- **HTML `<article>` element**: [html.spec.whatwg.org/multipage/sections.html#the-article-element](https://html.spec.whatwg.org/multipage/sections.html#the-article-element)
+- **Other**: [inclusive-components.design/cards/](https://inclusive-components.design/cards/)
+- **WCAG**: [www.w3.org/WAI/WCAG22/Understanding/link-purpose-in-context.html](https://www.w3.org/WAI/WCAG22/Understanding/link-purpose-in-context.html)
+- **WCAG**: [www.w3.org/WAI/WCAG22/Understanding/focus-visible.html](https://www.w3.org/WAI/WCAG22/Understanding/focus-visible.html)
+- **W3C**: [www.w3.org/WAI/tutorials/images/](https://www.w3.org/WAI/tutorials/images/)
+
+### Source
+
+- [`css/components/molecules/card.css`](https://github.com/odonckers/domestic-ui/blob/main/css/components/molecules/card.css)
+- [`examples/molecules/card.html`](https://github.com/odonckers/domestic-ui/blob/main/examples/molecules/card.html)
+- [`site/content/patterns/card.md`](https://github.com/odonckers/domestic-ui/blob/main/site/content/patterns/card.md)
 
 ### How other systems do it
 
@@ -2133,8 +2476,6 @@ Page: https://odonckers.github.io/domestic-ui/patterns/dialog.html
 
 A modal `<dialog>`, either centered or as a drawer along one edge of the viewport.
 
-Coming in M3.
-
 ### Standard
 
 This pattern follows:
@@ -2143,6 +2484,134 @@ This pattern follows:
 - [APG Dialog (Modal) pattern](https://www.w3.org/WAI/ARIA/apg/patterns/dialog-modal/)
 
 Level: organism. Milestone: M3: Molecules and navigation patterns.
+
+### API
+
+```text
+data-dialog                         on <dialog>: header, body and footer layout
+                                    and the open transition
+data-dialog="drawer [start | end]"  a drawer at the inline-start or inline-end
+                                    edge (end is the default)
+closedby="any | closerequest | none"  native: how the dialog can be dismissed
+Children: an optional <header> (heading and close button) and <footer>
+(actions, end-aligned); everything else is the body.
+```
+
+### Live example
+
+- [Open the example on its own](https://odonckers.github.io/domestic-ui/examples/molecules/dialog.html)
+
+### Markup
+
+The `<pre><code>` blocks in [`examples/molecules/dialog.html`](https://github.com/odonckers/domestic-ui/blob/main/examples/molecules/dialog.html), HTML-unescaped and otherwise unchanged, each named by the heading of its section:
+
+#### Delete project?
+
+```html
+<button type="button" commandfor="confirm-dialog" command="show-modal">Delete project…</button>
+<dialog id="confirm-dialog" data-dialog aria-labelledby="confirm-dialog-title">
+  <header>
+    <h2 id="confirm-dialog-title">Delete project?</h2>
+  </header>
+  <p>This deletes the project and its 12 files for everyone. You cannot undo it.</p>
+  <form method="dialog">
+    <footer>
+      <button type="submit" value="cancel" data-button="secondary" autofocus>Cancel</button>
+      <button type="submit" value="delete">Delete project</button>
+    </footer>
+  </form>
+</dialog>
+```
+
+#### Filters
+
+```html
+<button type="button" commandfor="filters-drawer" command="show-modal">Filters</button>
+<dialog id="filters-drawer" data-dialog="drawer end" closedby="any" aria-labelledby="filters-drawer-title">
+  <header>
+    <h2 id="filters-drawer-title">Filters</h2>
+    <button type="button" commandfor="filters-drawer" command="close" data-button="quiet small">Close</button>
+  </header>
+  <form method="dialog" class="stack">
+    <fieldset>
+      <legend>Status</legend>
+      <label><input type="checkbox" name="show-open" checked> Open</label>
+      <label><input type="checkbox" name="show-closed"> Closed</label>
+    </fieldset>
+    <div data-field>
+      <label for="filters-owner">Owner</label>
+      <input id="filters-owner" name="owner" type="text" autocomplete="off">
+    </div>
+    <footer>
+      <button type="submit" value="apply">Apply filters</button>
+    </footer>
+  </form>
+</dialog>
+```
+
+#### Menu
+
+```html
+<button type="button" commandfor="menu-drawer" command="show-modal">Menu</button>
+<dialog id="menu-drawer" data-dialog="drawer start" closedby="any" aria-labelledby="menu-drawer-title">
+  <header>
+    <h2 id="menu-drawer-title">Menu</h2>
+    <button type="button" commandfor="menu-drawer" command="close" data-button="quiet small">Close</button>
+  </header>
+  <nav aria-label="Drawer" data-nav>
+    <ul>
+      <li><a href="#menu-drawer-title" aria-current="page">Overview</a></li>
+      <li><a href="#drawer-start-title">Projects</a></li>
+      <li><a href="#drawer-start-title">Settings</a></li>
+    </ul>
+  </nav>
+</dialog>
+```
+
+#### Autosave is on
+
+```html
+<button type="button" data-show-dialog="note-dialog">Show a note</button>
+<dialog id="note-dialog" data-dialog closedby="closerequest" aria-labelledby="note-dialog-title">
+  <header>
+    <h2 id="note-dialog-title">Autosave is on</h2>
+    <button type="button" commandfor="note-dialog" command="close" data-button="quiet small">Close</button>
+  </header>
+  <p>Changes are saved as you type.</p>
+</dialog>
+```
+
+### Keyboard
+
+From the `Keyboard` block in [`examples/molecules/dialog.html`](https://github.com/odonckers/domestic-ui/blob/main/examples/molecules/dialog.html).
+
+| Key | Action |
+| --- | --- |
+| <kbd>Enter</kbd> / <kbd>Space</kbd> | on an opener, opens the dialog and moves focus into it |
+| <kbd>Tab</kbd> | moves to the next focusable element inside the dialog / Shift+Tab: previous |
+| <kbd>Esc</kbd> | closes the dialog and returns focus to the opener |
+
+### Accessibility
+
+From the CSS header comment: The browser makes the rest of the page inert, moves focus into the dialog, and returns focus to the invoker when it closes. <https://html.spec.whatwg.org/multipage/interactive-elements.html#the-dialog-element> <https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/dialog> <https://developer.mozilla.org/en-US/docs/Web/API/Invoker_Commands_API>
+
+### Specs
+
+- **HTML `<dialog>` element**: [html.spec.whatwg.org/multipage/interactive-elements.html#the-dialog-element](https://html.spec.whatwg.org/multipage/interactive-elements.html#the-dialog-element)
+- **APG Dialog (Modal) pattern**: [www.w3.org/WAI/ARIA/apg/patterns/dialog-modal/](https://www.w3.org/WAI/ARIA/apg/patterns/dialog-modal/)
+- **MDN `<dialog>`**: [developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/dialog](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/dialog)
+- **MDN**: [developer.mozilla.org/en-US/docs/Web/API/Invoker_Commands_API](https://developer.mozilla.org/en-US/docs/Web/API/Invoker_Commands_API)
+- **MDN**: [developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/dialog#closedby](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/dialog#closedby)
+- **MDN**: [developer.mozilla.org/en-US/docs/Web/CSS/@starting-style](https://developer.mozilla.org/en-US/docs/Web/CSS/@starting-style)
+- **MDN**: [developer.mozilla.org/en-US/docs/Web/CSS/transition-behavior](https://developer.mozilla.org/en-US/docs/Web/CSS/transition-behavior)
+- **WCAG**: [www.w3.org/WAI/WCAG22/Understanding/animation-from-interactions.html](https://www.w3.org/WAI/WCAG22/Understanding/animation-from-interactions.html)
+- **WCAG**: [www.w3.org/WAI/WCAG22/Understanding/no-keyboard-trap.html](https://www.w3.org/WAI/WCAG22/Understanding/no-keyboard-trap.html)
+
+### Source
+
+- [`css/components/molecules/dialog.css`](https://github.com/odonckers/domestic-ui/blob/main/css/components/molecules/dialog.css)
+- [`examples/molecules/dialog.html`](https://github.com/odonckers/domestic-ui/blob/main/examples/molecules/dialog.html)
+- [`site/content/patterns/dialog.md`](https://github.com/odonckers/domestic-ui/blob/main/site/content/patterns/dialog.md)
 
 ### How other systems do it
 
@@ -2158,8 +2627,6 @@ Page: https://odonckers.github.io/domestic-ui/patterns/disclosure.html
 
 A summary that shows or hides more content, built on `<details>` and `<summary>`.
 
-Coming in M3.
-
 ### Standard
 
 This pattern follows:
@@ -2168,6 +2635,106 @@ This pattern follows:
 - [APG Disclosure pattern](https://www.w3.org/WAI/ARIA/apg/patterns/disclosure/)
 
 Level: molecule. Milestone: M3: Molecules and navigation patterns.
+
+### API
+
+```text
+data-disclosure="accordion"   on a wrapper around several <details>:
+                              joins them into one bordered block
+data-disclosure="plain"       on a <details>: no box, for "Show more"
+                              text inside prose
+name="group"                  on each <details> (native): only one open
+open                          on a <details> (native): open on load
+```
+
+### Live example
+
+- [Open the example on its own](https://odonckers.github.io/domestic-ui/examples/molecules/disclosure.html)
+
+### Markup
+
+The `<pre><code>` blocks in [`examples/molecules/disclosure.html`](https://github.com/odonckers/domestic-ui/blob/main/examples/molecules/disclosure.html), HTML-unescaped and otherwise unchanged, each named by the heading of its section:
+
+#### Disclosure
+
+```html
+<details>
+  <summary>What is included in the plan?</summary>
+  <p>Unlimited projects, five collaborators and email support.</p>
+</details>
+```
+
+#### Exclusive accordion
+
+```html
+<div data-disclosure="accordion">
+  <details name="faq" open>
+    <summary>Shipping</summary>
+    <p>Orders ship within two working days.</p>
+  </details>
+  <details name="faq">
+    <summary>Returns</summary>
+    <p>Return unused items within 30 days for a full refund.</p>
+  </details>
+  <details name="faq">
+    <summary>Warranty</summary>
+    <p>Every product has a two-year warranty.</p>
+  </details>
+</div>
+```
+
+#### Accordion with several open
+
+```html
+<div data-disclosure="accordion">
+  <details>
+    <summary>Monthly plan</summary>
+    <p>Pay each month and cancel any time.</p>
+  </details>
+  <details>
+    <summary>Yearly plan</summary>
+    <p>Pay once a year and get two months free.</p>
+  </details>
+</div>
+```
+
+#### Inline show more
+
+```html
+<p>The release adds pagination, tabs and toasts.</p>
+<details data-disclosure="plain">
+  <summary>Show the full list of changes</summary>
+  <ul>
+    <li>Twelve molecules with example pages.</li>
+    <li>Five small web components.</li>
+    <li>Four explainers for custom patterns.</li>
+  </ul>
+</details>
+```
+
+### Keyboard
+
+From the `Keyboard` block in [`examples/molecules/disclosure.html`](https://github.com/odonckers/domestic-ui/blob/main/examples/molecules/disclosure.html).
+
+| Key | Action |
+| --- | --- |
+| <kbd>Tab</kbd> | moves to the next summary / Shift+Tab: previous |
+| <kbd>Enter</kbd> / <kbd>Space</kbd> | opens or closes the focused section |
+
+### Specs
+
+- **HTML `<details>` element**: [html.spec.whatwg.org/multipage/interactive-elements.html#the-details-element](https://html.spec.whatwg.org/multipage/interactive-elements.html#the-details-element)
+- **APG Disclosure pattern**: [www.w3.org/WAI/ARIA/apg/patterns/disclosure/](https://www.w3.org/WAI/ARIA/apg/patterns/disclosure/)
+- **MDN**: [developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/details](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/details)
+- **W3C**: [www.w3.org/TR/html-aam-1.0/#el-summary](https://www.w3.org/TR/html-aam-1.0/#el-summary)
+- **APG**: [www.w3.org/WAI/ARIA/apg/patterns/accordion/](https://www.w3.org/WAI/ARIA/apg/patterns/accordion/)
+- **MDN**: [developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/details#name](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/details#name)
+
+### Source
+
+- [`css/components/molecules/disclosure.css`](https://github.com/odonckers/domestic-ui/blob/main/css/components/molecules/disclosure.css)
+- [`examples/molecules/disclosure.html`](https://github.com/odonckers/domestic-ui/blob/main/examples/molecules/disclosure.html)
+- [`site/content/patterns/disclosure.md`](https://github.com/odonckers/domestic-ui/blob/main/site/content/patterns/disclosure.md)
 
 ### How other systems do it
 
@@ -2183,8 +2750,6 @@ Page: https://odonckers.github.io/domestic-ui/patterns/menu-button.html
 
 A button that opens a menu of actions.
 
-Coming in M3.
-
 ### Standard
 
 This pattern follows:
@@ -2192,6 +2757,90 @@ This pattern follows:
 - [APG Menu Button pattern](https://www.w3.org/WAI/ARIA/apg/patterns/menu-button/)
 
 Level: molecule. Milestone: M3: Molecules and navigation patterns.
+
+### API
+
+```text
+<dui-menu>                         wraps the button and its popover
+popovertarget="menu-id"            on the <button> (native)
+popover data-popover               on the menu element
+<button> or <a href> children      the actions; <hr> separates groups
+Added by the component: aria-haspopup, aria-expanded, role="menu",
+role="menuitem", tabindex="-1".
+```
+
+### Live example
+
+- [Open the example on its own](https://odonckers.github.io/domestic-ui/examples/molecules/menu-button.html)
+
+### Markup
+
+The `<pre><code>` blocks in [`examples/molecules/menu-button.html`](https://github.com/odonckers/domestic-ui/blob/main/examples/molecules/menu-button.html), HTML-unescaped and otherwise unchanged, each named by the heading of its section:
+
+#### Actions menu
+
+```html
+<dui-menu>
+  <button type="button" popovertarget="row-actions">Actions</button>
+  <div id="row-actions" popover data-popover>
+    <button type="button">Edit</button>
+    <button type="button">Duplicate</button>
+    <button type="button">Archive</button>
+    <hr>
+    <button type="button">Delete</button>
+  </div>
+</dui-menu>
+<p role="status" id="menu-result"></p>
+```
+
+#### Links are not a menu
+
+```html
+<button type="button" popovertarget="account-links">Account</button>
+<div id="account-links" popover data-popover>
+  <nav aria-label="Account" data-nav>
+    <ul>
+      <li><a href="#links-title">Profile</a></li>
+      <li><a href="#links-title">Billing</a></li>
+      <li><a href="#links-title">Sign out</a></li>
+    </ul>
+  </nav>
+</div>
+```
+
+### Keyboard
+
+From the `Keyboard` block in [`examples/molecules/menu-button.html`](https://github.com/odonckers/domestic-ui/blob/main/examples/molecules/menu-button.html).
+
+| Key | Action |
+| --- | --- |
+| <kbd>Enter</kbd> / <kbd>Space</kbd> / <kbd>Down Arrow</kbd> | on the button, opens the menu and focuses the first item |
+| <kbd>Up Arrow</kbd> | on the button, opens the menu and focuses the last item |
+| <kbd>Down Arrow</kbd> / <kbd>Up Arrow</kbd> | next or previous item, wrapping |
+| <kbd>Home</kbd> / <kbd>End</kbd> | first or last item |
+| <kbd>A letter</kbd> | next item whose label starts with it |
+| <kbd>Enter</kbd> / <kbd>Space</kbd> | activates the item and closes the menu |
+| <kbd>Esc</kbd> | closes the menu and returns focus to the button |
+| <kbd>Tab</kbd> | closes the menu and moves on |
+
+### Accessibility
+
+From the CSS header comment: A button that opens a list of actions, following the APG Menu Button pattern: aria-haspopup="menu" and aria-expanded on the button, role="menu" on the list and role="menuitem" on each action. The list is a popover opened with popovertarget, so the browser handles the top layer, light dismiss and Esc; the \<dui-menu> web component (web-components/dui-menu.js) adds the roles and the APG keyboard behavior that HTML has no element for. APG: <https://www.w3.org/WAI/ARIA/apg/patterns/menu-button/> APG Menu: <https://www.w3.org/WAI/ARIA/apg/patterns/menubar/> <https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Reference/Roles/menu_role> When not to use it: if the items are links to other pages, use a disclosure (a \<details> or a popover of links, see nav.css and popover.css) instead. role="menu" tells screen readers to expect an application menu, with arrow-key navigation and no Tab stops, which is wrong for site navigation (see the note in <https://www.w3.org/WAI/ARIA/apg/patterns/disclosure/examples/disclosure-navigation/>). Items are at least --dui-size-target tall (WCAG 2.5.8) and show the base focus outline (WCAG 2.4.7).
+
+### Specs
+
+- **APG Menu Button pattern**: [www.w3.org/WAI/ARIA/apg/patterns/menu-button/](https://www.w3.org/WAI/ARIA/apg/patterns/menu-button/)
+- **APG Menu and Menubar pattern**: [www.w3.org/WAI/ARIA/apg/patterns/menubar/](https://www.w3.org/WAI/ARIA/apg/patterns/menubar/)
+- **MDN**: [developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Reference/Roles/menu_role](https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Reference/Roles/menu_role)
+- **APG**: [www.w3.org/WAI/ARIA/apg/patterns/disclosure/examples/disclosure-navigation/](https://www.w3.org/WAI/ARIA/apg/patterns/disclosure/examples/disclosure-navigation/)
+- **MDN**: [developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Reference/Attributes/aria-haspopup](https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Reference/Attributes/aria-haspopup)
+- **WHATWG**: [html.spec.whatwg.org/multipage/popover.html](https://html.spec.whatwg.org/multipage/popover.html)
+
+### Source
+
+- [`css/components/molecules/menu-button.css`](https://github.com/odonckers/domestic-ui/blob/main/css/components/molecules/menu-button.css)
+- [`examples/molecules/menu-button.html`](https://github.com/odonckers/domestic-ui/blob/main/examples/molecules/menu-button.html)
+- [`site/content/patterns/menu-button.md`](https://github.com/odonckers/domestic-ui/blob/main/site/content/patterns/menu-button.md)
 
 ### How other systems do it
 
@@ -2209,13 +2858,88 @@ Links to the pages of a long list of results.
 
 **Our choice:** No native element or APG pattern exists; a labelled `<nav>` with a list of links and `aria-current="page"` on the current one, as for breadcrumbs.
 
-Coming in M3.
-
 ### Standard
 
 No native element or WAI-ARIA APG pattern covers this.
 
 Level: molecule. Milestone: M3: Molecules and navigation patterns.
+
+### API
+
+```text
+data-pagination        on <nav aria-label="Pagination">
+aria-current="page"    on the current page link (native ARIA)
+<a> without href       a disabled Previous or Next (native placeholder link)
+<li aria-hidden="true">…</li>   a gap in the page numbers
+```
+
+### Live example
+
+- [Open the example on its own](https://odonckers.github.io/domestic-ui/examples/molecules/pagination.html)
+
+### Markup
+
+The `<pre><code>` blocks in [`examples/molecules/pagination.html`](https://github.com/odonckers/domestic-ui/blob/main/examples/molecules/pagination.html), HTML-unescaped and otherwise unchanged, each named by the heading of its section:
+
+#### Middle of a long list
+
+```html
+<nav aria-label="Pagination" data-pagination>
+  <ul>
+    <li><a href="?page=4" rel="prev">Previous<span class="visually-hidden"> page</span></a></li>
+    <li><a href="?page=1"><span class="visually-hidden">Page </span>1</a></li>
+    <li aria-hidden="true">…</li>
+    <li><a href="?page=4"><span class="visually-hidden">Page </span>4</a></li>
+    <li><a href="?page=5" aria-current="page"><span class="visually-hidden">Page </span>5</a></li>
+    <li><a href="?page=6"><span class="visually-hidden">Page </span>6</a></li>
+    <li aria-hidden="true">…</li>
+    <li><a href="?page=10"><span class="visually-hidden">Page </span>10</a></li>
+    <li><a href="?page=6" rel="next">Next<span class="visually-hidden"> page</span></a></li>
+  </ul>
+</nav>
+```
+
+#### First page
+
+```html
+<nav aria-label="Pagination, search results" data-pagination>
+  <ul>
+    <li><a>Previous<span class="visually-hidden"> page</span></a></li>
+    <li><a href="?page=1" aria-current="page"><span class="visually-hidden">Page </span>1</a></li>
+    <li><a href="?page=2"><span class="visually-hidden">Page </span>2</a></li>
+    <li><a href="?page=3"><span class="visually-hidden">Page </span>3</a></li>
+    <li><a href="?page=2" rel="next">Next<span class="visually-hidden"> page</span></a></li>
+  </ul>
+</nav>
+```
+
+### Keyboard
+
+From the `Keyboard` block in [`examples/molecules/pagination.html`](https://github.com/odonckers/domestic-ui/blob/main/examples/molecules/pagination.html).
+
+| Key | Action |
+| --- | --- |
+| <kbd>Tab</kbd> | moves to the next page link / Shift+Tab: previous |
+| <kbd>Enter</kbd> | follows the focused link |
+
+### Accessibility
+
+From the CSS header comment: Links between the pages of a long list or search result: a \<nav> named "Pagination" with a list of links, aria-current="page" on the current page, and Previous and Next links. There is no native element and no APG pattern for pagination, so this is a styling contract written up as an explainer: explainers/pagination.md. <https://html.spec.whatwg.org/multipage/sections.html#the-nav-element> <https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Reference/Attributes/aria-current>
+
+### Specs
+
+- **HTML `<nav>` element**: [html.spec.whatwg.org/multipage/sections.html#the-nav-element](https://html.spec.whatwg.org/multipage/sections.html#the-nav-element)
+- **MDN `aria-current`**: [developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Reference/Attributes/aria-current](https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Reference/Attributes/aria-current)
+- **WCAG**: [www.w3.org/WAI/WCAG22/Understanding/link-purpose-in-context.html](https://www.w3.org/WAI/WCAG22/Understanding/link-purpose-in-context.html)
+- **WHATWG**: [html.spec.whatwg.org/multipage/links.html#link-type-next](https://html.spec.whatwg.org/multipage/links.html#link-type-next)
+- **WHATWG**: [html.spec.whatwg.org/multipage/text-level-semantics.html#the-a-element](https://html.spec.whatwg.org/multipage/text-level-semantics.html#the-a-element)
+- **WCAG**: [www.w3.org/WAI/WCAG22/Understanding/target-size-minimum.html](https://www.w3.org/WAI/WCAG22/Understanding/target-size-minimum.html)
+
+### Source
+
+- [`css/components/molecules/pagination.css`](https://github.com/odonckers/domestic-ui/blob/main/css/components/molecules/pagination.css)
+- [`examples/molecules/pagination.html`](https://github.com/odonckers/domestic-ui/blob/main/examples/molecules/pagination.html)
+- [`site/content/patterns/pagination.md`](https://github.com/odonckers/domestic-ui/blob/main/site/content/patterns/pagination.md)
 
 ### How other systems do it
 
@@ -2231,8 +2955,6 @@ Page: https://odonckers.github.io/domestic-ui/patterns/popover.html
 
 Content shown on top of the page from a button, with the `popover` attribute.
 
-Coming in M3.
-
 ### Standard
 
 This pattern follows:
@@ -2241,6 +2963,96 @@ This pattern follows:
 - [MDN Popover API](https://developer.mozilla.org/en-US/docs/Web/API/Popover_API)
 
 Level: molecule. Milestone: M3: Molecules and navigation patterns.
+
+### API
+
+```text
+data-popover                    on a [popover] element: panel look, anchored
+                                below the invoker, aligned to its start edge
+data-popover="block-start | inline-start | inline-end"
+                                place it above or beside the invoker instead
+role="tooltip"                  on a [popover] element: tooltip look,
+                                placed above the trigger
+popover="auto | manual | hint"  native: auto light-dismisses, manual does not
+```
+
+### Live example
+
+- [Open the example on its own](https://odonckers.github.io/domestic-ui/examples/molecules/popover.html)
+
+### Markup
+
+The `<pre><code>` blocks in [`examples/molecules/popover.html`](https://github.com/odonckers/domestic-ui/blob/main/examples/molecules/popover.html), HTML-unescaped and otherwise unchanged, each named by the heading of its section:
+
+#### Popover
+
+```html
+<button type="button" popovertarget="share-popover">Share</button>
+<div id="share-popover" popover data-popover>
+  <p>Anyone with the link can view this page.</p>
+</div>
+```
+
+#### Above the button, with a close button
+
+```html
+<button type="button" popovertarget="help-popover">Help</button>
+<div id="help-popover" popover="manual" data-popover="block-start">
+  <p><strong>Need a hand?</strong></p>
+  <p>Read the <a href="../../README.md">guide</a> or ask in the forum.</p>
+  <button type="button" popovertarget="help-popover" popovertargetaction="hide" data-button="small">Close</button>
+</div>
+```
+
+#### Tooltip
+
+```html
+<div class="cluster">
+  <dui-tooltip>
+    <button type="button" aria-describedby="save-tip">Save</button>
+    <span id="save-tip" popover="hint" role="tooltip">Shortcut: Ctrl+S</span>
+  </dui-tooltip>
+  <dui-tooltip>
+    <button type="button" aria-label="Copy link" aria-describedby="copy-tip" data-button="quiet">⧉</button>
+    <span id="copy-tip" popover="hint" role="tooltip">Copies the page address</span>
+  </dui-tooltip>
+</div>
+```
+
+### Keyboard
+
+From the `Keyboard` block in [`examples/molecules/popover.html`](https://github.com/odonckers/domestic-ui/blob/main/examples/molecules/popover.html).
+
+| Key | Action |
+| --- | --- |
+| <kbd>Enter</kbd> / <kbd>Space</kbd> | on a popover button, opens or closes the popover |
+| <kbd>Tab</kbd> | moves into the open popover, then on through the page |
+| <kbd>Esc</kbd> | closes an auto popover and returns focus to its button |
+| <kbd>Tab to a tooltip trigger</kbd> | shows its tooltip / Esc: hides it, focus stays |
+
+### Accessibility
+
+From the CSS header comment: A button with popovertarget="id" opens and closes the popover with no script; the browser puts it in the top layer, exposes the button's expanded state, and (for popover="auto") closes it on Esc or a click outside ("light dismiss") and returns focus to the button. <https://html.spec.whatwg.org/multipage/popover.html> <https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Global_attributes/popover> <https://developer.mozilla.org/en-US/docs/Web/API/Popover_API> \<dui-tooltip> \<button type="button" aria-describedby="save-tip">Save\</button> \<span id="save-tip" popover="hint" role="tooltip">Shortcut: Ctrl+S\</span> \</dui-tooltip>
+
+### Specs
+
+- **HTML `popover` attribute**: [html.spec.whatwg.org/multipage/popover.html#the-popover-attribute](https://html.spec.whatwg.org/multipage/popover.html#the-popover-attribute)
+- **MDN Popover API**: [developer.mozilla.org/en-US/docs/Web/API/Popover_API](https://developer.mozilla.org/en-US/docs/Web/API/Popover_API)
+- **WHATWG**: [html.spec.whatwg.org/multipage/popover.html](https://html.spec.whatwg.org/multipage/popover.html)
+- **MDN**: [developer.mozilla.org/en-US/docs/Web/HTML/Reference/Global_attributes/popover](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Global_attributes/popover)
+- **MDN**: [developer.mozilla.org/en-US/docs/Web/CSS/CSS_anchor_positioning](https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_anchor_positioning)
+- **MDN**: [developer.mozilla.org/en-US/docs/Web/CSS/position-area](https://developer.mozilla.org/en-US/docs/Web/CSS/position-area)
+- **MDN**: [developer.mozilla.org/en-US/docs/Web/CSS/position-try-fallbacks](https://developer.mozilla.org/en-US/docs/Web/CSS/position-try-fallbacks)
+- **W3C**: [drafts.csswg.org/css-anchor-position-1/](https://drafts.csswg.org/css-anchor-position-1/)
+- **APG**: [www.w3.org/WAI/ARIA/apg/patterns/tooltip/](https://www.w3.org/WAI/ARIA/apg/patterns/tooltip/)
+- **WCAG**: [www.w3.org/WAI/WCAG22/Understanding/content-on-hover-or-focus.html](https://www.w3.org/WAI/WCAG22/Understanding/content-on-hover-or-focus.html)
+- **Other**: [open-ui.org/components/interest-invokers.explainer/](https://open-ui.org/components/interest-invokers.explainer/)
+
+### Source
+
+- [`css/components/molecules/popover.css`](https://github.com/odonckers/domestic-ui/blob/main/css/components/molecules/popover.css)
+- [`examples/molecules/popover.html`](https://github.com/odonckers/domestic-ui/blob/main/examples/molecules/popover.html)
+- [`site/content/patterns/popover.md`](https://github.com/odonckers/domestic-ui/blob/main/site/content/patterns/popover.md)
 
 ### How other systems do it
 
@@ -2256,8 +3068,6 @@ Page: https://odonckers.github.io/domestic-ui/patterns/search.html
 
 A search form in a `<search>` landmark with an `<input type="search">`.
 
-Coming in M3.
-
 ### Standard
 
 This pattern follows:
@@ -2266,6 +3076,71 @@ This pattern follows:
 - [MDN `<input type="search">`](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/input/search)
 
 Level: molecule. Milestone: M3: Molecules and navigation patterns.
+
+### API
+
+```text
+<search> > <form> with an <input type="search">   no attribute needed:
+the label and any hint span the full width, the input and the submit
+button share the row below.
+```
+
+### Live example
+
+- [Open the example on its own](https://odonckers.github.io/domestic-ui/examples/molecules/search.html)
+
+### Markup
+
+The `<pre><code>` blocks in [`examples/molecules/search.html`](https://github.com/odonckers/domestic-ui/blob/main/examples/molecules/search.html), HTML-unescaped and otherwise unchanged, each named by the heading of its section:
+
+#### With a visible label
+
+```html
+<search aria-label="Guides">
+  <form action="search.html" method="get">
+    <label for="guide-search">Search the guides</label>
+    <input id="guide-search" type="search" name="q" autocomplete="off" aria-describedby="guide-search-hint">
+    <button type="submit">Search</button>
+    <p id="guide-search-hint" data-field="hint">Try "tokens" or "dialog".</p>
+  </form>
+</search>
+```
+
+#### Compact, label visually hidden
+
+```html
+<search aria-label="Site">
+  <form action="search.html" method="get">
+    <label for="site-search" class="visually-hidden">Search this site</label>
+    <input id="site-search" type="search" name="q" autocomplete="off">
+    <button type="submit" data-button="secondary">Search</button>
+  </form>
+</search>
+```
+
+### Keyboard
+
+From the `Keyboard` block in [`examples/molecules/search.html`](https://github.com/odonckers/domestic-ui/blob/main/examples/molecules/search.html).
+
+| Key | Action |
+| --- | --- |
+| <kbd>Enter</kbd> | in the field, submits the search |
+| <kbd>Esc</kbd> | in the field, clears it (in browsers that support it) |
+| <kbd>Tab</kbd> | moves from the field to the button |
+
+### Specs
+
+- **HTML `<search>` element**: [html.spec.whatwg.org/multipage/grouping-content.html#the-search-element](https://html.spec.whatwg.org/multipage/grouping-content.html#the-search-element)
+- **MDN `<input type="search">`**: [developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/input/search](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/input/search)
+- **MDN `<search>`**: [developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/search](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/search)
+- **W3C**: [www.w3.org/WAI/tutorials/forms/labels/](https://www.w3.org/WAI/tutorials/forms/labels/)
+- **WCAG**: [www.w3.org/WAI/WCAG22/Understanding/labels-or-instructions.html](https://www.w3.org/WAI/WCAG22/Understanding/labels-or-instructions.html)
+
+### Source
+
+- [`css/components/molecules/search.css`](https://github.com/odonckers/domestic-ui/blob/main/css/components/molecules/search.css)
+- [`examples/molecules/search.html`](https://github.com/odonckers/domestic-ui/blob/main/examples/molecules/search.html)
+- [`site/content/patterns/search.md`](https://github.com/odonckers/domestic-ui/blob/main/site/content/patterns/search.md)
 
 ### How other systems do it
 
@@ -2281,8 +3156,6 @@ Page: https://odonckers.github.io/domestic-ui/patterns/nav.html
 
 The main links of a site in a `<nav>` landmark, with the current page marked.
 
-Coming in M3.
-
 ### Standard
 
 This pattern follows:
@@ -2292,6 +3165,112 @@ This pattern follows:
 - [APG Disclosure navigation example](https://www.w3.org/WAI/ARIA/apg/patterns/disclosure/examples/disclosure-navigation/)
 
 Level: organism. Milestone: M3: Molecules and navigation patterns.
+
+### API
+
+```text
+data-nav="vertical | horizontal"   on <nav> (empty means vertical)
+aria-current="page"                on the current link (native ARIA)
+<details> / <summary>              inside an <li> for a collapsible group;
+                                   open to expand it on load, name for
+                                   one-at-a-time
+```
+
+### Live example
+
+- [Open the example on its own](https://odonckers.github.io/domestic-ui/examples/molecules/nav.html)
+
+### Markup
+
+The `<pre><code>` blocks in [`examples/molecules/nav.html`](https://github.com/odonckers/domestic-ui/blob/main/examples/molecules/nav.html), HTML-unescaped and otherwise unchanged, each named by the heading of its section:
+
+#### Vertical (sidebar)
+
+```html
+<nav aria-label="Sidebar example" data-nav="vertical">
+  <ul>
+    <li><a href="#vertical-title">Overview</a></li>
+    <li>
+      <details open>
+        <summary>Projects</summary>
+        <ul>
+          <li><a href="#vertical-title" aria-current="page">Active</a></li>
+          <li><a href="#vertical-title">Archived</a></li>
+        </ul>
+      </details>
+    </li>
+    <li>
+      <details>
+        <summary>Settings</summary>
+        <ul>
+          <li><a href="#vertical-title">Profile</a></li>
+          <li><a href="#vertical-title">Billing</a></li>
+        </ul>
+      </details>
+    </li>
+  </ul>
+</nav>
+```
+
+#### Horizontal (top bar)
+
+```html
+<nav aria-label="Top bar example" data-nav="horizontal">
+  <ul>
+    <li><a href="#horizontal-title" aria-current="page">Home</a></li>
+    <li>
+      <details name="top-bar">
+        <summary>Products</summary>
+        <ul>
+          <li><a href="#horizontal-title">Design system</a></li>
+          <li><a href="#horizontal-title">Icons</a></li>
+        </ul>
+      </details>
+    </li>
+    <li>
+      <details name="top-bar">
+        <summary>Company</summary>
+        <ul>
+          <li><a href="#horizontal-title">About</a></li>
+          <li><a href="#horizontal-title">Careers</a></li>
+        </ul>
+      </details>
+    </li>
+    <li><a href="#horizontal-title">Contact</a></li>
+  </ul>
+</nav>
+```
+
+### Keyboard
+
+From the `Keyboard` block in [`examples/molecules/nav.html`](https://github.com/odonckers/domestic-ui/blob/main/examples/molecules/nav.html).
+
+| Key | Action |
+| --- | --- |
+| <kbd>Tab</kbd> | moves to the next link or group summary / Shift+Tab: previous |
+| <kbd>Enter</kbd> / <kbd>Space</kbd> | on a summary, opens or closes the group |
+| <kbd>Enter</kbd> | on a link, follows it |
+
+### Accessibility
+
+From the CSS header comment: Site or section navigation: a \<nav> landmark with an accessible name, a list of links, aria-current="page" on the link to the current page, and optional collapsible groups made with \<details> and \<summary>.
+
+### Specs
+
+- **HTML `<nav>` element**: [html.spec.whatwg.org/multipage/sections.html#the-nav-element](https://html.spec.whatwg.org/multipage/sections.html#the-nav-element)
+- **APG Landmark regions**: [www.w3.org/WAI/ARIA/apg/practices/landmark-regions/](https://www.w3.org/WAI/ARIA/apg/practices/landmark-regions/)
+- **APG Disclosure navigation example**: [www.w3.org/WAI/ARIA/apg/patterns/disclosure/examples/disclosure-navigation/](https://www.w3.org/WAI/ARIA/apg/patterns/disclosure/examples/disclosure-navigation/)
+- **MDN `aria-current`**: [developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Reference/Attributes/aria-current](https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Reference/Attributes/aria-current)
+- **MDN**: [developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/nav](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/nav)
+- **WCAG**: [www.w3.org/WAI/WCAG22/Techniques/failures/F73](https://www.w3.org/WAI/WCAG22/Techniques/failures/F73)
+- **WHATWG**: [html.spec.whatwg.org/multipage/interactive-elements.html#the-details-element](https://html.spec.whatwg.org/multipage/interactive-elements.html#the-details-element)
+- **WCAG**: [www.w3.org/WAI/WCAG22/Understanding/non-text-contrast.html](https://www.w3.org/WAI/WCAG22/Understanding/non-text-contrast.html)
+
+### Source
+
+- [`css/components/molecules/nav.css`](https://github.com/odonckers/domestic-ui/blob/main/css/components/molecules/nav.css)
+- [`examples/molecules/nav.html`](https://github.com/odonckers/domestic-ui/blob/main/examples/molecules/nav.html)
+- [`site/content/patterns/nav.md`](https://github.com/odonckers/domestic-ui/blob/main/site/content/patterns/nav.md)
 
 ### How other systems do it
 
@@ -2307,8 +3286,6 @@ Page: https://odonckers.github.io/domestic-ui/patterns/tabs.html
 
 Sections of content shown one at a time, chosen from a list of tabs.
 
-Coming in M3.
-
 ### Standard
 
 This pattern follows:
@@ -2316,6 +3293,141 @@ This pattern follows:
 - [APG Tabs pattern](https://www.w3.org/WAI/ARIA/apg/patterns/tabs/)
 
 Level: molecule. Milestone: M3: Molecules and navigation patterns.
+
+### API
+
+```text
+<dui-tabs>                 wraps a <nav aria-label> with a list of
+                           <a href="#panel-id"> links, then the panels
+activation="manual"        on <dui-tabs>: arrows move focus, Enter or
+                           Space selects (default: automatic)
+aria-current="true"        on a link: the tab selected on load (else the
+                           tab named in the URL fragment, else the first).
+                           The component swaps it for aria-selected;
+                           aria-selected is not allowed on a link.
+role="tablist" | "tab" | "tabpanel" (added by the component; styled here)
+```
+
+### Live example
+
+- [Open the example on its own](https://odonckers.github.io/domestic-ui/examples/molecules/tabs.html)
+
+### Markup
+
+The `<pre><code>` blocks in [`examples/molecules/tabs.html`](https://github.com/odonckers/domestic-ui/blob/main/examples/molecules/tabs.html), HTML-unescaped and otherwise unchanged, each named by the heading of its section:
+
+#### Notifications
+
+```html
+<dui-tabs>
+  <nav aria-label="Account settings">
+    <ul>
+      <li><a href="#tab-profile">Profile</a></li>
+      <li><a href="#tab-security">Security</a></li>
+      <li><a href="#tab-notifications">Notifications</a></li>
+    </ul>
+  </nav>
+  <section id="tab-profile">
+    <h3>Profile</h3>
+    <p>Your name and photo appear on comments and shared projects.</p>
+  </section>
+  <section id="tab-security">
+    <h3>Security</h3>
+    <div data-field>
+      <label for="tab-security-code">Recovery code</label>
+      <input id="tab-security-code" name="recovery" type="text" autocomplete="off">
+    </div>
+  </section>
+  <section id="tab-notifications">
+    <h3>Notifications</h3>
+    <p>Email alerts are on. You get a weekly digest on Mondays.</p>
+  </section>
+</dui-tabs>
+```
+
+#### Year
+
+```html
+<dui-tabs activation="manual">
+  <nav aria-label="Report period">
+    <ul>
+      <li><a href="#tab-week">Week</a></li>
+      <li><a href="#tab-month" aria-current="true">Month</a></li>
+      <li><a href="#tab-year">Year</a></li>
+    </ul>
+  </nav>
+  <section id="tab-week">
+    <h3>Week</h3>
+    <p>42 orders this week.</p>
+  </section>
+  <section id="tab-month">
+    <h3>Month</h3>
+    <p>180 orders this month.</p>
+  </section>
+  <section id="tab-year">
+    <h3>Year</h3>
+    <p>2,140 orders this year.</p>
+  </section>
+</dui-tabs>
+```
+
+#### مساعدة
+
+```html
+<div dir="rtl" lang="ar">
+  <dui-tabs>
+    <nav aria-label="الإعدادات">
+      <ul>
+        <li><a href="#tab-rtl-general">عام</a></li>
+        <li><a href="#tab-rtl-privacy">الخصوصية</a></li>
+        <li><a href="#tab-rtl-help">مساعدة</a></li>
+      </ul>
+    </nav>
+    <section id="tab-rtl-general">
+      <h3>عام</h3>
+      <p>الإعدادات العامة للحساب.</p>
+    </section>
+    <section id="tab-rtl-privacy">
+      <h3>الخصوصية</h3>
+      <p>من يمكنه رؤية ملفك الشخصي.</p>
+    </section>
+    <section id="tab-rtl-help">
+      <h3>مساعدة</h3>
+      <p>الأسئلة الشائعة والدعم.</p>
+    </section>
+  </dui-tabs>
+</div>
+```
+
+### Keyboard
+
+From the `Keyboard` block in [`examples/molecules/tabs.html`](https://github.com/odonckers/domestic-ui/blob/main/examples/molecules/tabs.html).
+
+| Key | Action |
+| --- | --- |
+| <kbd>Tab</kbd> | moves into the tab list (to the selected tab), then to the panel |
+| <kbd>Right Arrow</kbd> / <kbd>Left Arrow</kbd> | next or previous tab, wrapping (swapped in right-to-left) |
+| <kbd>Home</kbd> / <kbd>End</kbd> | first or last tab |
+| <kbd>Enter</kbd> / <kbd>Space</kbd> | selects the focused tab (manual activation) |
+
+### Accessibility
+
+From the CSS header comment: Layered sections of content where one panel shows at a time, following the APG Tabs pattern (role="tablist", "tab" and "tabpanel", aria-selected, aria-controls, roving tabindex). APG: <https://www.w3.org/WAI/ARIA/apg/patterns/tabs/> <https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Reference/Roles/tab_role> The styles target the ARIA roles, so they also fit tabs rendered by a framework that follows the APG with its own script.
+
+### Specs
+
+- **APG Tabs pattern**: [www.w3.org/WAI/ARIA/apg/patterns/tabs/](https://www.w3.org/WAI/ARIA/apg/patterns/tabs/)
+- **MDN**: [developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Reference/Roles/tab_role](https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Reference/Roles/tab_role)
+- **APG**: [www.w3.org/WAI/ARIA/apg/patterns/tabs/#deciding-when-to-make-selection-automatically-follow-focus](https://www.w3.org/WAI/ARIA/apg/patterns/tabs/#deciding-when-to-make-selection-automatically-follow-focus)
+- **MDN**: [developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Reference/Roles/tabpanel_role](https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Reference/Roles/tabpanel_role)
+- **W3C**: [www.w3.org/TR/html-aria/#el-nav](https://www.w3.org/TR/html-aria/#el-nav)
+- **WCAG**: [www.w3.org/WAI/WCAG22/Understanding/non-text-contrast.html](https://www.w3.org/WAI/WCAG22/Understanding/non-text-contrast.html)
+
+### Source
+
+- [`css/components/molecules/tabs.css`](https://github.com/odonckers/domestic-ui/blob/main/css/components/molecules/tabs.css)
+- [`examples/molecules/tabs.html`](https://github.com/odonckers/domestic-ui/blob/main/examples/molecules/tabs.html)
+- [`site/content/patterns/tabs.md`](https://github.com/odonckers/domestic-ui/blob/main/site/content/patterns/tabs.md)
 
 ### How other systems do it
 
@@ -2331,8 +3443,6 @@ Page: https://odonckers.github.io/domestic-ui/patterns/toolbar.html
 
 A row of related controls that is one stop in the tab order.
 
-Coming in M3.
-
 ### Standard
 
 This pattern follows:
@@ -2340,6 +3450,75 @@ This pattern follows:
 - [APG Toolbar pattern](https://www.w3.org/WAI/ARIA/apg/patterns/toolbar/)
 
 Level: molecule. Milestone: M3: Molecules and navigation patterns.
+
+### API
+
+```text
+role="toolbar" aria-label="…"     on the container (<dui-toolbar> or any element)
+aria-orientation="vertical"       optional; default horizontal
+aria-pressed="true | false"       on toggle buttons (native ARIA)
+<hr>                              a separator between groups of controls
+```
+
+### Live example
+
+- [Open the example on its own](https://odonckers.github.io/domestic-ui/examples/molecules/toolbar.html)
+
+### Markup
+
+The `<pre><code>` blocks in [`examples/molecules/toolbar.html`](https://github.com/odonckers/domestic-ui/blob/main/examples/molecules/toolbar.html), HTML-unescaped and otherwise unchanged, each named by the heading of its section:
+
+#### Text formatting
+
+```html
+<dui-toolbar role="toolbar" aria-label="Text formatting">
+  <button type="button" aria-pressed="true">Bold</button>
+  <button type="button" aria-pressed="false">Italic</button>
+  <button type="button" aria-pressed="false">Underline</button>
+  <hr>
+  <button type="button">Insert link</button>
+  <button type="button">Clear formatting</button>
+</dui-toolbar>
+```
+
+#### Vertical
+
+```html
+<dui-toolbar role="toolbar" aria-label="Drawing tools" aria-orientation="vertical">
+  <button type="button" aria-pressed="true">Select</button>
+  <button type="button" aria-pressed="false">Pen</button>
+  <button type="button" aria-pressed="false">Eraser</button>
+</dui-toolbar>
+```
+
+### Keyboard
+
+From the `Keyboard` block in [`examples/molecules/toolbar.html`](https://github.com/odonckers/domestic-ui/blob/main/examples/molecules/toolbar.html).
+
+| Key | Action |
+| --- | --- |
+| <kbd>Tab</kbd> | moves into the toolbar (to the last focused control), then out of it |
+| <kbd>Right Arrow</kbd> / <kbd>Left Arrow</kbd> | next or previous control, wrapping (swapped in right-to-left) |
+| <kbd>Down Arrow</kbd> / <kbd>Up Arrow</kbd> | the same in a vertical toolbar |
+| <kbd>Home</kbd> / <kbd>End</kbd> | first or last control |
+| <kbd>Enter</kbd> / <kbd>Space</kbd> | activates the focused button |
+
+### Accessibility
+
+From the CSS header comment: A labelled row (or column) of controls, such as text formatting buttons, following the APG Toolbar pattern: role="toolbar" with aria-label, one Tab stop for the whole group, and arrow keys between the controls (roving tabindex). HTML has no toolbar element and cannot do roving focus, so the \<dui-toolbar> web component (web-components/dui-toolbar.js) adds the keyboard behavior. APG: <https://www.w3.org/WAI/ARIA/apg/patterns/toolbar/> <https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Reference/Roles/toolbar_role>
+
+### Specs
+
+- **APG Toolbar pattern**: [www.w3.org/WAI/ARIA/apg/patterns/toolbar/](https://www.w3.org/WAI/ARIA/apg/patterns/toolbar/)
+- **MDN**: [developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Reference/Roles/toolbar_role](https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Reference/Roles/toolbar_role)
+- **MDN**: [developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Reference/Attributes/aria-pressed](https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Reference/Attributes/aria-pressed)
+- **APG**: [www.w3.org/WAI/ARIA/apg/practices/keyboard-interface/#kbd_roving_tabindex](https://www.w3.org/WAI/ARIA/apg/practices/keyboard-interface/#kbd_roving_tabindex)
+
+### Source
+
+- [`css/components/molecules/toolbar.css`](https://github.com/odonckers/domestic-ui/blob/main/css/components/molecules/toolbar.css)
+- [`examples/molecules/toolbar.html`](https://github.com/odonckers/domestic-ui/blob/main/examples/molecules/toolbar.html)
+- [`site/content/patterns/toolbar.md`](https://github.com/odonckers/domestic-ui/blob/main/site/content/patterns/toolbar.md)
 
 ### How other systems do it
 
@@ -2595,28 +3774,28 @@ Theme by overriding semantic tokens; see [Tokens](https://odonckers.github.io/do
 
 Add the main navigation, a breadcrumb trail and a search form:
 
-- [Site navigation](https://odonckers.github.io/domestic-ui/patterns/nav.md): The main links of a site in a `<nav>` landmark, with the current page marked. Coming in M3.
-- [Breadcrumb](https://odonckers.github.io/domestic-ui/patterns/breadcrumb.md): The path to the current page as an ordered list of links in a labelled `<nav>`. Coming in M3.
-- [Search](https://odonckers.github.io/domestic-ui/patterns/search.md): A search form in a `<search>` landmark with an `<input type="search">`. Coming in M3.
-- [Pagination](https://odonckers.github.io/domestic-ui/patterns/pagination.md): Links to the pages of a long list of results. Coming in M3.
+- [Site navigation](https://odonckers.github.io/domestic-ui/patterns/nav.md): The main links of a site in a `<nav>` landmark, with the current page marked. Available.
+- [Breadcrumb](https://odonckers.github.io/domestic-ui/patterns/breadcrumb.md): The path to the current page as an ordered list of links in a labelled `<nav>`. Available.
+- [Search](https://odonckers.github.io/domestic-ui/patterns/search.md): A search form in a `<search>` landmark with an `<input type="search">`. Available.
+- [Pagination](https://odonckers.github.io/domestic-ui/patterns/pagination.md): Links to the pages of a long list of results. Available.
 
-None of these are available yet: Site navigation (M3), Breadcrumb (M3), Search (M3), Pagination (M3).
+All of these are available.
 
 ### Step 3: interactive widgets
 
 Use a native element where one exists (`<details>`, `<dialog>`, `popover`, `<datalist>`), and an APG pattern where one does not:
 
-- [Disclosure](https://odonckers.github.io/domestic-ui/patterns/disclosure.md): A summary that shows or hides more content, built on `<details>` and `<summary>`. Coming in M3.
-- [Tabs](https://odonckers.github.io/domestic-ui/patterns/tabs.md): Sections of content shown one at a time, chosen from a list of tabs. Coming in M3.
-- [Dialog and drawer](https://odonckers.github.io/domestic-ui/patterns/dialog.md): A modal `<dialog>`, either centered or as a drawer along one edge of the viewport. Coming in M3.
-- [Popover](https://odonckers.github.io/domestic-ui/patterns/popover.md): Content shown on top of the page from a button, with the `popover` attribute. Coming in M3.
-- [Menu button](https://odonckers.github.io/domestic-ui/patterns/menu-button.md): A button that opens a menu of actions. Coming in M3.
-- [Toolbar](https://odonckers.github.io/domestic-ui/patterns/toolbar.md): A row of related controls that is one stop in the tab order. Coming in M3.
+- [Disclosure](https://odonckers.github.io/domestic-ui/patterns/disclosure.md): A summary that shows or hides more content, built on `<details>` and `<summary>`. Available.
+- [Tabs](https://odonckers.github.io/domestic-ui/patterns/tabs.md): Sections of content shown one at a time, chosen from a list of tabs. Available.
+- [Dialog and drawer](https://odonckers.github.io/domestic-ui/patterns/dialog.md): A modal `<dialog>`, either centered or as a drawer along one edge of the viewport. Available.
+- [Popover](https://odonckers.github.io/domestic-ui/patterns/popover.md): Content shown on top of the page from a button, with the `popover` attribute. Available.
+- [Menu button](https://odonckers.github.io/domestic-ui/patterns/menu-button.md): A button that opens a menu of actions. Available.
+- [Toolbar](https://odonckers.github.io/domestic-ui/patterns/toolbar.md): A row of related controls that is one stop in the tab order. Available.
 - [Typeahead](https://odonckers.github.io/domestic-ui/patterns/typeahead.md): A text field that suggests values as you type, with `<datalist>` first and an APG combobox only where `<datalist>` falls short. Coming in M3.
-- [Alerts](https://odonckers.github.io/domestic-ui/patterns/alerts.md): Messages about status, from notices in the page to live alerts for important, time-sensitive changes. Coming in M3.
-- [Card](https://odonckers.github.io/domestic-ui/patterns/card.md): A self-contained item, such as a product or an article teaser, on a raised surface. Coming in M3.
+- [Alerts](https://odonckers.github.io/domestic-ui/patterns/alerts.md): Messages about status, from notices in the page to live alerts for important, time-sensitive changes. Available.
+- [Card](https://odonckers.github.io/domestic-ui/patterns/card.md): A self-contained item, such as a product or an article teaser, on a raised surface. Available.
 
-None of these are available yet: Disclosure (M3), Tabs (M3), Dialog and drawer (M3), Popover (M3), Menu button (M3), Toolbar (M3), Typeahead (M3), Alerts (M3), Card (M3).
+Not available yet: Typeahead (M3).
 
 ### Step 4: the app shell
 
@@ -2757,6 +3936,46 @@ Semantic token names and file paths under `css/` are public API; primitive token
   container for wide content such as data tables, used on a `<section>` named by the table caption (a region landmark).
 - Tests: `tests/mobile.spec.js` checks every example at 320×640 and 375×812 in Chromium, Firefox
   and WebKit for horizontal page overflow and axe violations.
+- Molecules in `css/components/molecules/`, imported into the `components` layer after the atoms,
+  each documented in its file header (API, example, keyboard, specs) and indexed in
+  `css/components/molecules/README.md`:
+  - Disclosure and accordion (`disclosure.css`): native `<details>`/`<summary>`, exclusive groups with
+    `name`; `data-disclosure="accordion | plain"`.
+  - Dialog and drawer (`dialog.css`): header/body/footer layout and open transition for `<dialog>`;
+    `data-dialog="drawer [start | end]"`; invoker commands and `closedby`; `@starting-style` with a
+    no-transition fallback.
+  - Popover and tooltip (`popover.css`): `data-popover="[block-start | inline-start | inline-end]"`,
+    anchored with CSS anchor positioning inside `@supports` (bottom-center fallback); tooltips are
+    `role="tooltip"` on `popover="hint"`.
+  - Navigation list (`nav.css`): `data-nav="vertical | horizontal"`, `aria-current="page"`, `<details>` groups.
+  - Breadcrumb (`breadcrumb.css`): `data-breadcrumb`, separators with empty alternative text.
+  - Tabs (`tabs.css`): styles for `role="tablist" | "tab" | "tabpanel"`.
+  - Menu button (`menu-button.css`): items of a `<dui-menu>` popover.
+  - Toolbar (`toolbar.css`): `role="toolbar"`, `aria-orientation`, `aria-pressed` toggles.
+  - Pagination (`pagination.css`): `data-pagination`, `aria-current="page"`, placeholder links for disabled ends.
+  - Search field (`search.css`): the native `<search>` element around a search form.
+  - Card (`card.css`): `data-card` and `data-card="link"` (heading link stretched over the card).
+  - Alert and toast (`alerts.css`): `data-alert="info | success | warning | danger"` with a text prefix and
+    an icon; `data-alert="toasts"` region; live region guidance.
+- Web components in `web-components/`, light DOM, progressive enhancement, no dependencies:
+  `<dui-tabs>` (APG Tabs from in-page links and sections; `aria-current="true"` on the link selected on
+  load, swapped for `aria-selected` on upgrade; automatic or manual activation; RTL),
+  `<dui-menu>` (APG Menu Button keyboard on a popover), `<dui-toolbar>` (roving tabindex),
+  `<dui-tooltip>` (show on hover and focus, Esc to hide; stands in for `interestfor`) and
+  `<dui-toaster>` (`show()` and `dismiss()` for a toast region, no auto-dismiss).
+- Explainers in `explainers/` for the custom patterns: card, pagination, drawer and toast, plus an index.
+- Semantic tokens: `--dui-color-info`, `--dui-color-info-surface`, `--dui-color-surface-inverse`,
+  `--dui-color-text-inverse`, `--dui-border-width-indicator`, `--dui-size-menu-min`, `--dui-size-drawer`
+  (and primitives `--dui-border-3`, `--dui-size-12`, `--dui-size-24`).
+- `examples/molecules/`: an index and one page per molecule; the theming example now shows a breadcrumb,
+  an alert, tabs and a card in both themes; "Molecules" links in the example navigation.
+- Tests (`tests/molecules.spec.js` and additions to the existing specs): APG keyboard behavior for tabs,
+  menu button, toolbar, dialog and drawer, popover, tooltip, disclosure and nav groups; ARIA states through
+  accessibility APIs; no-JavaScript fallbacks; fallback paths for anchor positioning, `@starting-style`,
+  `closedby` and `popover="hint"`; rendered indicator and focus-ring contrast; contrast pairs for every new
+  token; scoped theming of molecules. The axe test now also checks open popovers and menus, every tab,
+  shown tooltips and toasts, and waits for transitions to finish.
+- `PRINCIPLES.md`: molecule choices, new semantic tokens, and "Web components" and "Explainers" sections.
 
 #### Fixed
 

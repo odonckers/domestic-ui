@@ -537,6 +537,8 @@ test("discovery picks up a new component with no site changes", async ({ browser
   const fixture = mkdtempSync(join(tmpdir(), "dui-docs-"));
   try {
     for (const path of ["PRINCIPLES.md", "css", "examples", "site/content"]) cpSync(join(ROOT, path), join(fixture, path), { recursive: true });
+    // The fixture starts before any molecule exists (M3 "coming"); the test adds its own tabs files below.
+    for (const path of ["css/components/molecules", "examples/molecules"]) rmSync(join(fixture, path), { recursive: true, force: true });
     const put = (/** @type {string} */ path, /** @type {string} */ text) => {
       mkdirSync(dirname(join(fixture, path)), { recursive: true });
       writeFileSync(join(fixture, path), text);

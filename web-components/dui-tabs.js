@@ -16,9 +16,12 @@
  *   <dui-tabs>                  the wrapper
  *   activation="manual"         arrows move focus only; Enter or Space selects
  *                               (default: automatic, selection follows focus)
- *   aria-selected="true"        on one link: selected on load. Otherwise the
+ *   aria-current="true"         on one link: selected on load. Otherwise the
  *                               tab whose panel id is the URL fragment, else
- *                               the first tab.
+ *                               the first tab. Not aria-selected: that is not
+ *                               allowed on a link, and the links stay links
+ *                               without JavaScript.
+ *                               https://w3c.github.io/aria/#aria-current
  *   element.select(idOrTab)     selects a tab by panel id or tab element
  *   element.selectedTab         the selected tab element (read only)
  *
@@ -26,8 +29,9 @@
  *   <nav> gets role="tablist" (allowed on nav by ARIA in HTML:
  *   https://www.w3.org/TR/html-aria/#el-nav); its <ul>/<li> get role="none";
  *   each link gets role="tab", an id, aria-controls, aria-selected and a
- *   roving tabindex; each panel gets role="tabpanel", aria-labelledby, hidden
- *   when not selected, and tabindex="0" if it has nothing focusable inside.
+ *   roving tabindex, and loses aria-current; each panel gets role="tabpanel",
+ *   aria-labelledby, hidden when not selected, and tabindex="0" if it has
+ *   nothing focusable inside.
  *
  * Events
  *   dui-tabs-change   bubbles from <dui-tabs> after the selection changes;
@@ -94,8 +98,12 @@ class DuiTabs extends HTMLElement {
     list.setAttribute("role", "tablist");
     for (const wrapper of list.querySelectorAll("ul, ol, li")) wrapper.setAttribute("role", "none");
 
+    const marked = this.#tabs.find((tab) => tab.getAttribute("aria-current") === "true");
+
     for (const tab of this.#tabs) {
       const panel = /** @type {HTMLElement} */ (this.#panelFor(tab));
+      // A tab's selection is aria-selected from here on.
+      tab.removeAttribute("aria-current");
       if (!tab.id) tab.id = `${panel.id}-tab-${++uid}`;
       tab.setAttribute("role", "tab");
       tab.setAttribute("aria-controls", panel.id);
@@ -106,7 +114,7 @@ class DuiTabs extends HTMLElement {
     }
 
     const initial =
-      this.#tabs.find((tab) => tab.getAttribute("aria-selected") === "true") ??
+      marked ??
       this.#tabFor(decodeURIComponent(location.hash.slice(1))) ??
       this.#tabs[0];
     this.select(initial);

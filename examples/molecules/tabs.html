@@ -67,7 +67,7 @@
           Enter / Space: selects the focused tab (manual activation)
       -->
       <p data-text="lead">APG tabs from readable markup: a <code>&lt;nav&gt;</code> of in-page links and the sections they point at.</p>
-      <p>API: <code>&lt;dui-tabs&gt;</code> around a <code>&lt;nav aria-label&gt;</code> of <code>&lt;a href="#id"&gt;</code> links and <code>&lt;section id&gt;</code> panels; <code>activation="manual"</code> optional. Source: <a href="../../css/components/molecules/tabs.css"><code>css/components/molecules/tabs.css</code></a>.</p>
+      <p>API: <code>&lt;dui-tabs&gt;</code> around a <code>&lt;nav aria-label&gt;</code> of <code>&lt;a href="#id"&gt;</code> links and <code>&lt;section id&gt;</code> panels; <code>activation="manual"</code> optional; <code>aria-current="true"</code> on a link selects it on load. Source: <a href="../../css/components/molecules/tabs.css"><code>css/components/molecules/tabs.css</code></a>.</p>
       <p>
         <code>&lt;dui-tabs&gt;</code> (<a href="../../web-components/dui-tabs.js"><code>web-components/dui-tabs.js</code></a>) adds the
         <a href="https://www.w3.org/WAI/ARIA/apg/patterns/tabs/">APG Tabs</a> roles, states and keys. With JavaScript off, every section shows
@@ -102,7 +102,7 @@
             </section>
           </dui-tabs>
         </div>
-        <pre><code>&lt;dui-tabs&gt;
+        <pre tabindex="0"><code>&lt;dui-tabs&gt;
   &lt;nav aria-label="Account settings"&gt;
     &lt;ul&gt;
       &lt;li&gt;&lt;a href="#tab-profile"&gt;Profile&lt;/a&gt;&lt;/li&gt;
@@ -136,7 +136,7 @@
             <nav aria-label="Report period">
               <ul>
                 <li><a href="#tab-week">Week</a></li>
-                <li><a href="#tab-month" aria-selected="true">Month</a></li>
+                <li><a href="#tab-month" aria-current="true">Month</a></li>
                 <li><a href="#tab-year">Year</a></li>
               </ul>
             </nav>
@@ -154,11 +154,11 @@
             </section>
           </dui-tabs>
         </div>
-        <pre><code>&lt;dui-tabs activation="manual"&gt;
+        <pre tabindex="0"><code>&lt;dui-tabs activation="manual"&gt;
   &lt;nav aria-label="Report period"&gt;
     &lt;ul&gt;
       &lt;li&gt;&lt;a href="#tab-week"&gt;Week&lt;/a&gt;&lt;/li&gt;
-      &lt;li&gt;&lt;a href="#tab-month" aria-selected="true"&gt;Month&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href="#tab-month" aria-current="true"&gt;Month&lt;/a&gt;&lt;/li&gt;
       &lt;li&gt;&lt;a href="#tab-year"&gt;Year&lt;/a&gt;&lt;/li&gt;
     &lt;/ul&gt;
   &lt;/nav&gt;
@@ -205,7 +205,7 @@
             </dui-tabs>
           </div>
         </div>
-        <pre><code>&lt;div dir="rtl" lang="ar"&gt;
+        <pre tabindex="0"><code>&lt;div dir="rtl" lang="ar"&gt;
   &lt;dui-tabs&gt;
     &lt;nav aria-label="الإعدادات"&gt;
       &lt;ul&gt;

@@ -32,8 +32,10 @@
  *                              <a href="#panel-id"> links, then the panels
  *   activation="manual"        on <dui-tabs>: arrows move focus, Enter or
  *                              Space selects (default: automatic)
- *   aria-selected="true"       on a link: the tab selected on load (else the
- *                              tab named in the URL fragment, else the first)
+ *   aria-current="true"        on a link: the tab selected on load (else the
+ *                              tab named in the URL fragment, else the first).
+ *                              The component swaps it for aria-selected;
+ *                              aria-selected is not allowed on a link.
  *   role="tablist" | "tab" | "tabpanel" (added by the component; styled here)
  *
  * Example

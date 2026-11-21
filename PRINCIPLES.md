@@ -35,7 +35,7 @@ Humans and coding agents should be able to write a whole view from this document
 - **Paths are API.** `css/domestic.css` and every file under `css/` keep their paths.
   Renaming or moving a file is a breaking change.
 - **No hidden JS behavior.** CSS never depends on script. Any script an example uses is
-  inline, short, and commented, or one of the documented [web components](#8-web-components).
+  inline, short, and commented, or one of the documented [web components](web-components/README.md).
 - **Our choice:** class and attribute APIs over custom elements, because they work with
   any templating language and need no JavaScript. Custom elements are used only for behavior
   HTML cannot do, and enhance markup that already works without them.
