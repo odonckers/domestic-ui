@@ -36,3 +36,21 @@ export async function blockExternalRequests(page, baseURL) {
   });
   return external;
 }
+
+/**
+ * Turn every transition off (data-motion="none" on <html>) on each page the test loads,
+ * so computed colors and geometry are final as soon as a state changes. Reduced motion
+ * no longer does this: it keeps fades and color changes.
+ * @param {import("@playwright/test").Page} page
+ */
+export const withoutMotion = (page) =>
+  page.addInitScript(() => {
+    const set = () => document.documentElement.setAttribute("data-motion", "none");
+    if (document.documentElement) set();
+    else
+      new MutationObserver((_, observer) => {
+        if (!document.documentElement) return;
+        set();
+        observer.disconnect();
+      }).observe(document, { childList: true });
+  });

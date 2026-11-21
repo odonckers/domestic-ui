@@ -1,7 +1,7 @@
 // @ts-check
 import { test, expect } from "@playwright/test";
 import AxeBuilder from "@axe-core/playwright";
-import { schemes } from "./helpers.js";
+import { schemes, withoutMotion } from "./helpers.js";
 
 /*
  * Molecule behavior: keyboard interaction checked against the APG patterns,
@@ -93,7 +93,7 @@ test.describe("disclosure and accordion", () => {
 
 test.describe("dialog and drawer", () => {
   test.beforeEach(async ({ page }) => {
-    await page.emulateMedia({ reducedMotion: "reduce" });
+    await withoutMotion(page);
     await page.goto("examples/molecules/dialog.html");
   });
 
@@ -169,6 +169,7 @@ test.describe("dialog and drawer", () => {
   test("open transition: runs with motion, and the fallback without @starting-style still opens and closes", async ({ page }) => {
     await page.emulateMedia({ reducedMotion: "no-preference" });
     await page.reload();
+    await page.evaluate(() => document.documentElement.removeAttribute("data-motion"));
     const drawer = page.locator("#filters-drawer");
     expect(await drawer.evaluate((el) => getComputedStyle(el).transitionDuration)).not.toMatch(/^0s(, 0s)*$/);
 
@@ -181,7 +182,20 @@ test.describe("dialog and drawer", () => {
     await expect(drawer).toBeHidden();
   });
 
-  test("reduced motion: no transition time", async ({ page }) => {
+  test("reduced motion: the drawer fades in place, it does not slide", async ({ page }) => {
+    await page.emulateMedia({ reducedMotion: "reduce" });
+    await page.reload();
+    await page.evaluate(() => document.documentElement.removeAttribute("data-motion"));
+    const timing = await page.locator("#filters-drawer").evaluate((el) => {
+      const style = getComputedStyle(el);
+      const durations = style.transitionDuration.split(",").map((d) => Number.parseFloat(d));
+      return Object.fromEntries(style.transitionProperty.split(",").map((p, i) => [p.trim(), durations[i % durations.length]]));
+    });
+    expect(timing.translate).toBe(0);
+    expect(timing.opacity).toBeGreaterThan(0);
+  });
+
+  test("data-motion=none: no transition time", async ({ page }) => {
     const durations = await page.locator("#filters-drawer").evaluate((el) => getComputedStyle(el).transitionDuration);
     expect(durations.split(",").every((d) => Number.parseFloat(d) === 0)).toBe(true);
   });
@@ -201,7 +215,7 @@ test.describe("dialog and drawer", () => {
 
 test.describe("popover and tooltip", () => {
   test.beforeEach(async ({ page }) => {
-    await page.emulateMedia({ reducedMotion: "reduce" });
+    await withoutMotion(page);
     await page.goto("examples/molecules/popover.html");
   });
 
@@ -508,7 +522,7 @@ test.describe("tabs", () => {
 
 test.describe("menu button", () => {
   test.beforeEach(async ({ page }) => {
-    await page.emulateMedia({ reducedMotion: "reduce" });
+    await withoutMotion(page);
     await page.goto("examples/molecules/menu-button.html");
   });
 
@@ -761,7 +775,7 @@ test.describe("card", () => {
 
 test.describe("alerts and toasts", () => {
   test.beforeEach(async ({ page }) => {
-    await page.emulateMedia({ reducedMotion: "reduce" });
+    await withoutMotion(page);
     await page.goto("examples/molecules/alerts.html");
   });
 
@@ -928,7 +942,8 @@ const surfaceOf = (el) => {
 
 for (const colorScheme of schemes) {
   test(`indicators and focus rings on molecules reach 3:1 (${colorScheme})`, async ({ page }) => {
-    await page.emulateMedia({ colorScheme, reducedMotion: "reduce" });
+    await page.emulateMedia({ colorScheme });
+    await withoutMotion(page);
     const measure = async (locator, pick) => {
       const pair = await locator.evaluate(
         (el, [pickSource, surfaceSource]) => (0, eval)(`(${pickSource})`)(el, (0, eval)(`(${surfaceSource})`)),
@@ -975,7 +990,7 @@ for (const colorScheme of schemes) {
 }
 
 test("molecules in the forest panel re-theme from the token overrides alone", async ({ page }) => {
-  await page.emulateMedia({ reducedMotion: "reduce" });
+  await withoutMotion(page);
   await page.goto("examples/theming.html");
   const sample = () =>
     page.locator(".panel").evaluateAll((panels) =>

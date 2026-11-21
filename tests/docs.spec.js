@@ -532,7 +532,7 @@ test.describe("tokens from css/tokens/", () => {
     expect(primitives).toContain('<span class="token-missing">No description yet</span>');
     const semantic = read(join(SITE_DIR, "tokens/semantic.html"));
     expect(semantic).toContain('<span class="token-chip" style="--preview: #12151b"></span>');
-    expect(semantic).toMatch(/With <code>@media \(prefers-reduced-motion: reduce\)<\/code>: <code>var\(--dui-duration-0\)<\/code>, resolves to <code>0s<\/code>\./);
+    expect(semantic).toMatch(/With <code>@media \(prefers-reduced-motion: reduce\)<\/code>: <code>var\(--dui-factor-0\)<\/code>, resolves to <code>0<\/code>\./);
     expect(read(join(SITE_DIR, "tokens/index.md"))).toMatch(/Primitive.*Internal, may change in any release/);
   });
 });

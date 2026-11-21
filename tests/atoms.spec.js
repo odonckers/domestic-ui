@@ -1,6 +1,6 @@
 // @ts-check
 import { test, expect } from "@playwright/test";
-import { schemes } from "./helpers.js";
+import { schemes, withoutMotion } from "./helpers.js";
 
 /*
  * Atom behavior through the accessibility APIs Playwright exposes
@@ -111,7 +111,7 @@ test.describe("switch", () => {
 test.describe("field", () => {
   test.beforeEach(async ({ page }) => {
     // No transitions, so computed colors are final as soon as the state changes.
-    await page.emulateMedia({ reducedMotion: "reduce" });
+    await withoutMotion(page);
     await page.goto("examples/atoms/field.html");
   });
 
@@ -204,7 +204,8 @@ const focusContrast = (el) => {
 
 for (const colorScheme of schemes) {
   test(`focus ring contrasts with every button fill and the surface (${colorScheme})`, async ({ page }) => {
-    await page.emulateMedia({ colorScheme, reducedMotion: "reduce" });
+    await page.emulateMedia({ colorScheme });
+    await withoutMotion(page);
     await page.goto("examples/theming.html");
     const buttons = page.locator(".panel button");
     expect(await buttons.count()).toBe(6);
@@ -223,7 +224,7 @@ for (const colorScheme of schemes) {
 }
 
 test("atoms in the forest panel re-theme from the token overrides alone", async ({ page }) => {
-  await page.emulateMedia({ reducedMotion: "reduce" });
+  await withoutMotion(page);
   await page.goto("examples/theming.html");
   const sample = () =>
     page.locator(".panel").evaluateAll((panels) =>

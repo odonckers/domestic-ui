@@ -91,6 +91,22 @@ const PAIRS = [
   // borders on it, are above. Tooltip (popover.css): inverse text on the inverse surface.
   ["--dui-color-text-inverse", "--dui-color-surface-inverse", 4.5],
   ["--dui-color-surface-inverse", "--dui-color-surface", 3], // tooltip edge against the page
+
+  // Elevation (PRINCIPLES.md, "Elevation"): text, muted text, links, quiet-button and error text,
+  // control borders and the focus ring on every level's surface and every role's surface.
+  ...[0, 1, 2, 3, 4, "flat", "raised", "overlay", "popover", "dialog"].flatMap((level) => {
+    const surface = `--dui-elevation-${level}-surface`;
+    return [
+      ["--dui-color-text", surface, 4.5],
+      ["--dui-color-text-muted", surface, 4.5],
+      ["--dui-color-link", surface, 4.5],
+      ["--dui-color-link-visited", surface, 4.5],
+      ["--dui-color-accent", surface, 4.5],
+      ["--dui-color-danger", surface, 4.5],
+      ["--dui-color-border-control", surface, 3],
+      ["--dui-color-focus", surface, 3],
+    ];
+  }),
 ];
 
 /**
@@ -197,9 +213,13 @@ test("forest panel actually differs from the default panel", async ({ page }) =>
   expect(forestPanel.heading).not.toEqual(defaultPanel.heading);
 });
 
-test("motion tokens collapse under prefers-reduced-motion", async ({ page }) => {
+test("reduced motion keeps color transitions and stops movement", async ({ page }) => {
   await page.emulateMedia({ reducedMotion: "reduce" });
   await page.goto("examples/base.html");
-  const duration = await page.evaluate(() => getComputedStyle(document.querySelector("button")).transitionDuration);
-  expect(duration.split(",").every((d) => Number.parseFloat(d) === 0)).toBe(true);
+  const { duration, movement } = await page.evaluate(() => ({
+    duration: getComputedStyle(document.querySelector("button")).transitionDuration,
+    movement: getComputedStyle(document.documentElement).getPropertyValue("--dui-motion-movement").trim(),
+  }));
+  expect(duration.split(",").every((d) => Number.parseFloat(d) > 0)).toBe(true);
+  expect(Number(movement)).toBe(0);
 });
