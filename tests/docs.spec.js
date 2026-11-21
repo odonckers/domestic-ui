@@ -5,29 +5,19 @@ import { HtmlValidate } from "html-validate";
 import { cpSync, existsSync, mkdirSync, mkdtempSync, readFileSync, readdirSync, rmSync, statSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { dirname, join, posix } from "node:path";
-import { GENERATED, ROOT, build, extractSnippets, generate } from "../site/build.mjs";
-import { SECTIONS } from "../site/lib/pages.mjs";
+import { GENERATED, NAV, ROOT, build, extractSnippets, generate } from "../site/build.mjs";
+import { parseTokenFile, resolveTokens, resolveValue } from "../site/lib/tokens.mjs";
 import { unescapeHtml } from "../site/lib/util.mjs";
+import { SITE_DIR, WCAG_TAGS, builtPages, summarize } from "./docs-helpers.js";
 import { blockExternalRequests, schemes } from "./helpers.js";
 
 /*
- * Docs site checks. The site is built once into _site/ (without touching
- * README.md or llms*.txt, so the stale check stays meaningful) by the
- * process that collects tests; workers only read it. Building in every
- * worker would wipe _site/ while other workers load pages from it.
- * Playwright's webServer serves the repo root, so pages are at /_site/….
+ * Docs site checks. tests/docs-helpers.js builds _site/ once; see there.
+ * Mobile reflow and axe at 320 and 375 CSS pixels: tests/docs-mobile.spec.js.
  */
-if (!process.env.TEST_WORKER_INDEX || !existsSync(join(ROOT, "_site", "index.html"))) build({ writeRoot: false });
-
 const site = generate();
-const SITE_DIR = join(ROOT, "_site");
-const WCAG_TAGS = ["wcag2a", "wcag2aa", "wcag21a", "wcag21aa", "wcag22aa"];
 const read = (/** @type {string} */ path) => readFileSync(path, "utf8");
 const htmlValidate = new HtmlValidate(JSON.parse(read(join(ROOT, ".htmlvalidate.json"))));
-
-/** Readable summary of axe violations for the failure message. */
-const summarize = (violations) =>
-  violations.map((v) => `${v.id} (${v.impact}): ${v.help}\n    ${v.nodes.map((n) => n.target.join(" ")).join("\n    ")}`).join("\n");
 
 /** The markup inside every <pre data-snippet><code>, unescaped. @param {string} html */
 const snippetBlocks = (html) => [...html.matchAll(/<pre data-snippet="[^"]*"><code>([\s\S]*?)<\/code><\/pre>/g)].map((m) => unescapeHtml(m[1]));
@@ -172,30 +162,50 @@ test.describe("atoms from the group README", () => {
     expect(controls).toContain("[`css/base/forms.css`](https://github.com/odonckers/domestic-ui/blob/main/css/base/forms.css) (base layer; no CSS file of its own)");
   });
 
-  test("the components index has the API convention, every Our choice and the Not shipped table", () => {
-    const index = read(join(SITE_DIR, "components/index.md"));
-    expect(index).toContain("## Component API\n\nEach component exposes one `data-<component>` attribute.");
-    expect(index).toMatch(/\*\*Our choice:\*\* One attribute is one API to learn/);
-    const atoms = index.slice(index.indexOf("\n## Atoms\n"), index.indexOf("\n## Molecules\n"));
+  test("Getting started has the API convention; the atoms index has every Our choice and the Not shipped table", () => {
+    const home = read(join(SITE_DIR, "index.md"));
+    expect(home).toContain("## Component API\n\nEach component exposes one `data-<component>` attribute.");
+    expect(home).toMatch(/\*\*Our choice:\*\* One attribute is one API to learn/);
+    const atoms = read(join(SITE_DIR, "atoms/index.md"));
     const choices = [...readme.matchAll(/^- \*\*Our choice:\*\*/gm)].length;
     expect([...atoms.matchAll(/^- \*\*Our choice:\*\*/gm)].length).toBe(choices);
-    expect(atoms).toContain("### Not shipped, and why\n\n| Candidate | Decision |");
+    expect(atoms).toContain("## Not shipped, and why\n\n| Candidate | Decision |");
     expect(read(join(SITE_DIR, "examples.md"))).toContain("[Atoms showcase](https://odonckers.github.io/domestic-ui/examples/atoms/index.html)");
     expect(site.pages.some((p) => p.path === "components/atoms/index.html"), "the showcase is not a component").toBe(false);
+    expect(site.pages.some((p) => p.path === "components/index.html"), "the all-levels overview is gone; its parts live on Getting started and the level indexes").toBe(false);
     for (const name of ["README.md", "llms.txt", "llms-full.txt"]) expect(site.files[name], name).toContain('`data-button="primary small"`');
-    expect(site.files["llms-full.txt"]).toMatch(/\n## Component API\n\n[\s\S]*\n## Components\n\nPage: /);
+    expect(site.files["llms-full.txt"]).toContain("\n### Component API\n\nEach component exposes one `data-<component>` attribute.");
   });
 
-  test("demo apps are listed from demos/ with the first line of their README", () => {
+  test("demos.html lists demos/ by name with the first sentence of each README", () => {
     const names = readdirSync(join(ROOT, "demos"), { withFileTypes: true }).filter((e) => e.isDirectory() && existsSync(join(ROOT, "demos", e.name, "README.md")));
     expect(names.length).toBeGreaterThan(0);
+    const demos = read(join(SITE_DIR, "demos.md"));
     for (const { name } of names) {
-      const first = read(join(ROOT, "demos", name, "README.md")).split("\n")[0].replace(/^#+\s*/, "");
-      const line = `- [\`demos/${name}/\`](https://github.com/odonckers/domestic-ui/tree/main/demos/${name}): ${first}`;
-      expect(site.files["README.md"]).toContain(line);
-      expect(read(join(SITE_DIR, "index.md"))).toContain(line);
+      const text = read(join(ROOT, "demos", name, "README.md"));
+      const h1 = text.split("\n")[0].replace(/^#\s*/, "").replace(/^domestic-ui demos?:\s*/i, "");
+      // The first paragraph after the H1, up to its first sentence end.
+      const para = text.split(/\n\s*\n/)[1].replace(/\s*\n\s*/g, " ");
+      const sentence = para.match(/^.*?[.!?](?=\s|$)/)?.[0] ?? para;
+      const start = `- **${h1.charAt(0).toUpperCase()}${h1.slice(1)}** ([\`demos/${name}/\`](https://github.com/odonckers/domestic-ui/tree/main/demos/${name})): `;
+      expect(demos).toContain(start);
+      expect(site.files["README.md"]).toContain(start);
+      // Relative links in the sentence point at GitHub or the site, so compare the text up to the first link.
+      expect(demos.slice(demos.indexOf(start) + start.length).split("\n")[0].split("](")[0]).toBe(sentence.split("](")[0]);
     }
     expect(existsSync(join(SITE_DIR, "demos")), "demos are not copied into _site/").toBe(false);
+  });
+
+  test("Contributing and Changelog are rendered read-only from the repository files", () => {
+    for (const [page, file] of [["contributing", "CONTRIBUTING.md"], ["changelog", "CHANGELOG.md"]]) {
+      const md = read(join(SITE_DIR, `${page}.md`));
+      const source = read(join(ROOT, file));
+      expect(md).toContain(`# ${source.match(/^#\s+(.+)$/m)?.[1]}`);
+      expect(md).toContain(`[edit ${file} on GitHub](https://github.com/odonckers/domestic-ui/edit/main/${file})`);
+      for (const [, heading] of source.matchAll(/^##+\s+(.+)$/gm)) expect(md, `${file}: ${heading}`).toContain(heading);
+      // No relative links left: each points at a site page or GitHub.
+      expect(md).not.toMatch(/\]\((?![a-z]+:|#)[^)]*\)/);
+    }
   });
 
   test("snippet rules apply in priority order", () => {
@@ -207,6 +217,110 @@ test.describe("atoms from the group README", () => {
     ]);
     expect(extractSnippets(page(`<!-- dui:snippet -->\n<p>x</p>\n<!-- /dui:snippet -->\n${pre}`), "x.html").map((s) => s.from)).toEqual(["snippet"]);
     expect(extractSnippets(page("  <p>only</p>"), "x.html")).toEqual([{ name: "", code: "<p>only</p>", source: "x.html", from: "main" }]);
+  });
+});
+
+test.describe("tokens from css/tokens/", () => {
+  test.beforeEach(({ browserName }) => test.skip(browserName !== "chromium", "browser-independent; run once"));
+
+  const files = readdirSync(join(ROOT, "css/tokens")).filter((f) => f.endsWith(".css")).sort();
+
+  test("every custom property in every token file has exactly one row, with light and dark values", () => {
+    expect(files.length).toBeGreaterThan(1);
+    const llmsFull = site.files["llms-full.txt"];
+    for (const f of files) {
+      const css = read(join(ROOT, "css/tokens", f));
+      const names = [...new Set([...css.matchAll(/^\s*(--[\w-]+)\s*:/gm)].map((m) => m[1]))];
+      expect(names.length, f).toBeGreaterThan(0);
+      const page = f.replace(/\.css$/, "");
+      const html = read(join(SITE_DIR, `tokens/${page}.html`));
+      const md = read(join(SITE_DIR, `tokens/${page}.md`));
+      for (const name of names) {
+        expect(html.split(`<th scope="row"><code>${name}</code></th>`).length - 1, `${f}: ${name} row`).toBe(1);
+        expect(md, `${f}: ${name} in the Markdown twin`).toMatch(new RegExp(`^\\| \`${name}\` \\| \`[^\`]+\` \\| \`[^\`]+\` \\| \\S`, "m"));
+        expect(llmsFull, `${name} in llms-full.txt`).toContain(`| \`${name}\` |`);
+      }
+      expect(site.files["llms.txt"]).toContain(`(https://odonckers.github.io/domestic-ui/tokens/${page}.md)`);
+    }
+    expect(site.pages.map((p) => p.path).filter((p) => p.startsWith("tokens/"))).toEqual(["tokens/index.html", ...files.map((f) => `tokens/${f.replace(/\.css$/, ".html")}`)]);
+    expect(existsSync(join(SITE_DIR, "tokens/space.html")), "the old per-group pages are gone").toBe(false);
+  });
+
+  test("values resolve through var() and light-dark(), and descriptions come from comments", () => {
+    const values = new Map([
+      ["--a", "#fff"],
+      ["--b", "#000"],
+      ["--c", "light-dark(var(--a), var(--b))"],
+      ["--d", "color-mix(in oklab, var(--c) 10%, var(--a))"],
+      ["--loop", "var(--loop)"],
+    ]);
+    expect(resolveValue("var(--c)", "light", values)).toBe("#fff");
+    expect(resolveValue("var(--c)", "dark", values)).toBe("#000");
+    expect(resolveValue("var(--d)", "dark", values)).toBe("color-mix(in oklab, #000 10%, #fff)");
+    expect(resolveValue("var(--nope, var(--a))", "light", values)).toBe("#fff");
+    expect(resolveValue("var(--nope)", "light", values)).toBe("var(--nope)");
+    expect(resolveValue("var(--loop)", "light", values, ["--loop"])).toBe("var(--loop)");
+
+    const [file] = resolveTokens([
+      parseTokenFile(
+        `/*
+ * Example tokens (internal).
+ *
+ * Intro line.
+ */
+
+/* 1. First: the section comment. */
+:root,
+::backdrop {
+  /* Group A */
+  --x-one: 1rem; /* Trailing description */
+  /* Above, after a declaration */
+  --x-two: var(--x-one);
+
+  /* Group B */
+  /* Above, under the group heading */
+  --x-three: light-dark(red, blue);
+  --x-four: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --x-two: 0s;
+  }
+}
+`,
+        "css/tokens/example.css",
+      ),
+    ]);
+    expect([file.title, file.tier, file.intro, file.sitePath]).toEqual(["Example tokens", "internal", "Intro line.", "tokens/example.html"]);
+    expect(file.groups.map((g) => g.name)).toEqual(["Group A", "Group B"]);
+    const tokens = Object.fromEntries(file.groups.flatMap((g) => g.tokens).map((t) => [t.name, t]));
+    expect(tokens["--x-one"].description).toBe("Trailing description");
+    expect(tokens["--x-two"].description).toBe("Above, after a declaration");
+    expect(tokens["--x-two"].light).toBe("1rem");
+    expect(tokens["--x-two"].conditions).toEqual([{ condition: "@media (prefers-reduced-motion: reduce)", value: "0s", light: "0s", dark: "0s" }]);
+    expect(tokens["--x-three"].description).toBe("Above, under the group heading");
+    expect([tokens["--x-three"].light, tokens["--x-three"].dark]).toEqual(["red", "blue"]);
+    expect(tokens["--x-four"].description).toBe("");
+  });
+
+  test("token tables have a caption, column headers and a named horizontal scroll region", () => {
+    for (const f of files) {
+      const html = read(join(SITE_DIR, `tokens/${f.replace(/\.css$/, ".html")}`));
+      const tables = [...html.matchAll(/<div data-scroll="inline" tabindex="0" role="region" aria-label="([^"]+)">\n<table class="token-table">\n<caption>([^<]+)<\/caption>/g)];
+      expect(tables.length, f).toBe(html.split("<table").length - 1);
+      for (const [, label, caption] of tables) expect(label).toBe(`${caption} (scrolls horizontally)`);
+      expect(html).toContain('<th scope="col">Token</th><th scope="col">Written as</th><th scope="col">Light</th><th scope="col">Dark</th><th scope="col">Description</th><th scope="col">Preview</th>');
+      expect(html).not.toMatch(/style="[^"]*var\(/);
+      // Missing descriptions say so, never an empty cell.
+      expect(html).not.toContain("<td></td>");
+    }
+    const primitives = read(join(SITE_DIR, "tokens/primitives.html"));
+    expect(primitives).toContain('<span class="token-missing">No description yet</span>');
+    const semantic = read(join(SITE_DIR, "tokens/semantic.html"));
+    expect(semantic).toContain('<span class="token-chip" style="--preview: #12151b"></span>');
+    expect(semantic).toMatch(/With <code>@media \(prefers-reduced-motion: reduce\)<\/code>: <code>var\(--dui-duration-0\)<\/code>, resolves to <code>0s<\/code>\./);
+    expect(read(join(SITE_DIR, "tokens/index.md"))).toMatch(/Primitive.*Internal, may change in any release/);
   });
 });
 
@@ -227,22 +341,8 @@ test.describe("docs pages in the browser", () => {
     }
   }
 
-  test("pages reflow at 320 CSS pixels without horizontal scrolling", async ({ page }) => {
-    await page.setViewportSize({ width: 320, height: 640 });
-    const overflowing = [];
-    for (const p of site.pages) {
-      await page.goto(`_site/${p.path}`);
-      const result = await page.evaluate(() => ({
-        page: document.documentElement.scrollWidth > document.documentElement.clientWidth,
-        pre: [...document.querySelectorAll("pre")].filter((pre) => pre.scrollWidth > pre.clientWidth).length,
-      }));
-      if (result.page || result.pre) overflowing.push(`${p.path}: ${JSON.stringify(result)}`);
-    }
-    expect(overflowing).toEqual([]);
-  });
-
   test("the skip link is the first focusable element and moves focus to main", async ({ page }) => {
-    for (const path of ["index.html", site.pages.find((p) => p.section === "atoms" && p.snippets?.length)?.path ?? "components/index.html"]) {
+    for (const path of ["index.html", site.pages.find((p) => p.section === "atoms" && p.snippets?.length)?.path ?? "atoms/index.html"]) {
       await page.goto(`_site/${path}`);
       await page.keyboard.press("Tab");
       const skip = page.locator(":focus");
@@ -254,17 +354,76 @@ test.describe("docs pages in the browser", () => {
     }
   });
 
-  test("navigation marks the current page with aria-current", async ({ page }) => {
+  test("one Docs sidebar marks the current page once and its entry visibly", async ({ page }) => {
     for (const p of site.pages) {
       await page.goto(`_site/${p.path}`);
-      // A section index is current in both the Docs nav and its section nav.
-      const hrefs = await page.locator('a[aria-current="page"]').evaluateAll((all) => all.map((a) => /** @type {HTMLAnchorElement} */ (a).href));
-      expect(hrefs.length, p.path).toBeGreaterThan(0);
-      for (const href of hrefs) expect(href, p.path).toBe(page.url());
-      if (SECTIONS.some((s) => s.path === p.path)) {
-        await expect(page.locator('nav[aria-label="Docs"] a[aria-current="page"]'), p.path).toHaveCount(1);
-      }
+      await expect(page.locator("nav"), `${p.path}: one navigation`).toHaveCount(1);
+      await expect(page.locator('nav[aria-label="Docs"]'), p.path).toHaveCount(1);
+      const current = page.locator('a[aria-current="page"]');
+      await expect(current, p.path).toHaveCount(1);
+      expect(await current.evaluate((a) => /** @type {HTMLAnchorElement} */ (a).href), p.path).toBe(page.url());
+      await expect(page.locator("[aria-current]"), `${p.path}: no other aria-current`).toHaveCount(1);
+      // The entry that holds the current page is marked, and drawn differently from the others.
+      const entry = page.locator("li[data-current-section]");
+      await expect(entry, p.path).toHaveCount(1);
+      await expect(entry.locator('a[aria-current="page"]'), p.path).toHaveCount(1);
+      const [marked, other] = await page.evaluate(() =>
+        [document.querySelector("li[data-current-section]"), document.querySelector('nav[aria-label="Docs"] > ul > li:not([data-current-section])')].map(
+          (li) => (li ? getComputedStyle(li).backgroundColor + getComputedStyle(li).borderInlineStartStyle : ""),
+        ),
+      );
+      expect(marked, p.path).not.toBe(other);
     }
+  });
+
+  test("the Docs sidebar lists every entry in order and reaches every page", async ({ page }) => {
+    await page.goto("_site/index.html");
+    const top = await page.locator('nav[aria-label="Docs"] > ul > li > a').allTextContents();
+    expect(top).toEqual([
+      "Getting started",
+      "Principles",
+      "Tokens",
+      "Base",
+      "Layout",
+      "Atoms",
+      "Molecules",
+      "Organisms",
+      "Patterns and guides",
+      "Demos",
+      "Contributing",
+      "Changelog",
+    ]);
+    expect(top).toEqual(NAV.map((n) => n.title));
+    const linked = await page.locator('nav[aria-label="Docs"] a').evaluateAll((all) => all.map((a) => new URL(/** @type {HTMLAnchorElement} */ (a).href).pathname.replace(/^\/_site\//, "")));
+    for (const p of builtPages) expect(linked, `${p} is in the sidebar`).toContain(p);
+  });
+
+  test("the token filter hides rows and groups that do not match and says how many are shown", async ({ page }) => {
+    await page.goto("_site/tokens/semantic.html");
+    const input = page.getByRole("searchbox", { name: "Filter tokens" });
+    await expect(input).toBeVisible();
+    const total = await page.locator("tbody tr").count();
+    await input.fill("surface-raised");
+    await expect(page.getByRole("status")).toHaveText("1 token shown");
+    await expect(page.locator("tbody tr:visible")).toHaveCount(1);
+    await expect(page.locator("[data-token-group]:visible")).toHaveCount(1);
+    // Matches values and descriptions too.
+    await input.fill("#3451d1");
+    await expect(page.locator("tbody tr:visible").first()).toContainText("--dui-color-accent");
+    await input.fill("");
+    await expect(page.getByRole("status")).toHaveText(`${total} tokens shown`);
+    await expect(page.locator("tbody tr:visible")).toHaveCount(total);
+  });
+
+  test("without JavaScript the Docs menu is open and the token filter is hidden", async ({ browser, baseURL }) => {
+    const context = await browser.newContext({ javaScriptEnabled: false, baseURL, viewport: { width: 375, height: 812 } });
+    const page = await context.newPage();
+    await page.goto("_site/tokens/semantic.html");
+    await expect(page.locator("details.docs-menu")).toHaveAttribute("open", "");
+    await expect(page.locator('nav[aria-label="Docs"] a[aria-current="page"]')).toBeVisible();
+    await expect(page.locator("[data-token-filter]")).toBeHidden();
+    await expect(page.locator("tbody tr").first()).toBeVisible();
+    await context.close();
   });
 });
 
@@ -407,17 +566,20 @@ test("discovery picks up a new component with no site changes", async ({ browser
     expect(report.valid, JSON.stringify(report.results)).toBe(true);
     expect(result.pages.map((p) => p.path)).not.toContain("components/atoms/index.html");
 
-    const index = out("components/index.md");
-    const atoms = index.slice(index.indexOf("## Atoms"), index.indexOf("## Molecules"));
+    const atoms = out("atoms/index.md");
     expect(atoms).toContain("[Demo](https://odonckers.github.io/domestic-ui/components/atoms/demo.md)");
     expect(atoms).not.toMatch(/coming in M2/i);
     // demo.css is not in the README index table: it still gets a page, after the table's rows.
     const atomPaths = result.pages.filter((p) => p.path.startsWith("components/atoms/")).map((p) => p.path);
     expect(atomPaths[atomPaths.length - 1]).toBe("components/atoms/demo.html");
-    expect(out("atoms/index.md")).toContain("[Demo](https://odonckers.github.io/domestic-ui/components/atoms/demo.md)");
-    const molecules = index.slice(index.indexOf("## Molecules"), index.indexOf("## Organisms"));
+    expect(page).toMatch(/<li data-current-section><a href="..\/..\/atoms\/index.html">Atoms<\/a>[\s\S]*aria-current="page">Demo<\/a>/);
+    const molecules = out("molecules/index.md");
     expect(molecules).toContain("[Tabs](https://odonckers.github.io/domestic-ui/patterns/tabs.md): Sections of content shown one at a time, chosen from a list of tabs. Available.");
     expect(molecules).toContain("Coming in M3.");
+    expect(page, "an available pattern has no status note in the sidebar").toContain('<a href="../../patterns/tabs.html">Tabs</a>');
+    expect(page).toContain('<a href="../../patterns/disclosure.html">Disclosure <span class="docs-nav-note">(coming in M3)</span></a>');
+    // The fixture has no demos/, CONTRIBUTING.md or CHANGELOG.md: the pages still exist and say so.
+    expect(out("demos.md")).toContain("Coming in M5.");
     expect(out("examples.md")).toContain("[Atoms showcase](https://odonckers.github.io/domestic-ui/examples/atoms/index.html)");
 
     // The tabs pattern page is filled in: demo, byte-identical markup, keyboard notes from the CSS.
@@ -447,22 +609,21 @@ test("discovery picks up a new component with no site changes", async ({ browser
     // The layout lands under Layouts, from css/layouts/ with its example in examples/layouts/.
     const layoutPage = out("layouts/demo-layout.html");
     expect(layoutPage).toContain('src="../examples/layouts/demo-layout.html"');
-    expect(layoutPage).toMatch(/<nav class="section-nav" aria-label="Layouts">[\s\S]*aria-current="page">Demo layout<\/a>/);
+    expect(layoutPage).toMatch(/<li data-current-section><a href="index.html">Layout<\/a>[\s\S]*aria-current="page">Demo layout<\/a>/);
     expect(out("layouts/index.md")).toContain("- [Demo layout](https://odonckers.github.io/domestic-ui/layouts/demo-layout.md): A demo layout used by the docs discovery test.");
-    expect(index.slice(index.indexOf("## Layouts"))).toContain("[Demo layout](https://odonckers.github.io/domestic-ui/layouts/demo-layout.md)");
 
     const readme = read(join(fixture, "README.md"));
     expect(readme).toContain('| Atoms | Demo | `class="demo"` | [Demo](https://odonckers.github.io/domestic-ui/components/atoms/demo.html) |');
     expect(readme).not.toContain("| Atoms | Coming in M2 |");
     expect(readme).toContain('| Molecules | Tabs | `class="tabs"` | [Tabs](https://odonckers.github.io/domestic-ui/patterns/tabs.html) |');
     expect(readme).toContain("| [Tabs](https://odonckers.github.io/domestic-ui/patterns/tabs.html) | M3 | Available |");
-    expect(readme).toContain('| Layouts | Demo layout | `class="demo-layout"` | [Demo layout](https://odonckers.github.io/domestic-ui/layouts/demo-layout.html) |');
+    expect(readme).toContain('| Layout | Demo layout | `class="demo-layout"` | [Demo layout](https://odonckers.github.io/domestic-ui/layouts/demo-layout.html) |');
 
     const llms = read(join(fixture, "llms.txt"));
     expect(llms).toContain("- [Demo](https://odonckers.github.io/domestic-ui/components/atoms/demo.md): A demo atom used by the docs discovery test.");
     expect(llms).toContain("- [Tabs](https://odonckers.github.io/domestic-ui/patterns/tabs.md): Available.");
     expect(llms).not.toContain("- Tabs: Coming in M3.");
-    expect(llms.slice(llms.indexOf("## Layouts"), llms.indexOf("## Patterns"))).toContain("- [Demo layout](https://odonckers.github.io/domestic-ui/layouts/demo-layout.md)");
+    expect(llms.slice(llms.indexOf("## Layout\n"), llms.indexOf("## Atoms\n"))).toContain("- [Demo layout](https://odonckers.github.io/domestic-ui/layouts/demo-layout.md)");
     const full = read(join(fixture, "llms-full.txt"));
     // The snippet contains ``` so its fence must be longer.
     expect(full).toContain(`\`\`\`\`html\n${expected[0]}\n\`\`\`\``);

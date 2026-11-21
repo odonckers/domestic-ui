@@ -7,9 +7,10 @@
  */
 import { existsSync, readFileSync, readdirSync } from "node:fs";
 import { join, posix } from "node:path";
-import { comments, dedent, headerComment, htmlKeyboard, parseHeader, parseKeyboard, parseLayerOrder, parseTokenGroups, specLabel } from "./css-comments.mjs";
+import { comments, dedent, headerComment, htmlKeyboard, parseHeader, parseKeyboard, parseLayerOrder, specLabel } from "./css-comments.mjs";
 import { splitSections, tokenize, plainText } from "./markdown.mjs";
-import { byString, readTitle, slugify, unescapeHtml } from "./util.mjs";
+import { parseTokenFile, resolveTokens } from "./tokens.mjs";
+import { byString, firstSentence, readTitle, slugify, unescapeHtml } from "./util.mjs";
 
 /** Component groups under css/components/, and the milestone each lands in. */
 export const COMPONENT_GROUPS = /** @type {const} */ ([
@@ -322,10 +323,19 @@ export function loadModel(root) {
     return { ...e, html, title, showcase };
   });
 
-  // Demo apps: every demos/<name>/ with a README.md, described by its first line.
+  // Demo apps: every demos/<name>/ with a README.md: its H1 (less a "domestic-ui demo: " prefix)
+  // and the first sentence of its first paragraph, inline Markdown with repo-root links.
   const demos = dirs("demos")
     .filter((d) => exists(`demos/${d}/README.md`))
-    .map((d) => ({ name: d, path: `demos/${d}/`, description: read(`demos/${d}/README.md`).split("\n")[0].replace(/^#+\s*/, "").trim() }));
+    .map((d) => {
+      const blocks = tokenize(rootLinks(read(`demos/${d}/README.md`), `demos/${d}`));
+      const h1 = blocks.find((b) => b.type === "heading" && b.level === 1);
+      const title = h1?.type === "heading" ? plainText(h1.text).replace(/^domestic-ui demos?:\s*/i, "") : d;
+      const para = blocks.find((b) => b.type === "paragraph");
+      const description = para?.type === "paragraph" ? firstSentence(para.text) : "";
+      return { name: d, title: title.charAt(0).toUpperCase() + title.slice(1), path: `demos/${d}/`, description };
+    });
+  const demosIntro = exists("demos/README.md") ? (tokenize(rootLinks(read("demos/README.md"), "demos")).find((b) => b.type === "paragraph")?.raw ?? "") : "";
 
   // Principles: one section per "## " heading.
   const principlesMd = read("PRINCIPLES.md");
@@ -349,10 +359,10 @@ export function loadModel(root) {
       if (name && second) purposes.set(name[1], second);
     }
   }
-  const tokenGroups = parseTokenGroups(read("css/tokens/semantic.css")).map((g) => ({
-    ...g,
-    sitePath: `tokens/${g.slug}.html`,
-    tokens: g.tokens.map((t) => ({ ...t, purpose: purposes.get(t.name) ?? "" })),
+  // Every file in css/tokens/, resolved together so semantic values resolve through primitives.
+  const tokenFiles = resolveTokens(list("css/tokens", ".css").map((f) => parseTokenFile(read(`css/tokens/${f}`), `css/tokens/${f}`))).map((f) => ({
+    ...f,
+    groups: f.groups.map((g) => ({ ...g, tokens: g.tokens.map((t) => ({ ...t, purpose: purposes.get(t.name) ?? "" })) })),
   }));
 
   const override = (/** @type {string} */ key) => {
@@ -599,7 +609,7 @@ export function loadModel(root) {
     intro: read("site/content/readme-intro.md").trim(),
     layers: parseLayerOrder(read("css/domestic.css")),
     principles,
-    tokenGroups,
+    tokenFiles,
     components,
     layouts,
     utilities,
@@ -608,6 +618,9 @@ export function loadModel(root) {
     guides,
     readmes,
     demos,
+    demosIntro,
+    contributing: exists("CONTRIBUTING.md") ? read("CONTRIBUTING.md") : "",
+    changelog: exists("CHANGELOG.md") ? read("CHANGELOG.md") : "",
     examples: examples.map(({ path, group, title, showcase }) => ({ path, group, title, showcase })),
   };
 }

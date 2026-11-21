@@ -11,6 +11,7 @@
 import { specLabel } from "./css-comments.mjs";
 import { COMPONENT_GROUPS, LEVELS } from "./discovery.mjs";
 import { inline, plainText, shiftHeadings, tokenize } from "./markdown.mjs";
+import { previewKind } from "./tokens.mjs";
 import { BLOB_URL, REPO_URL, byString, escapeHtml, escapeMdCell, fence, firstSentence, mdCode, slugify } from "./util.mjs";
 
 /**
@@ -21,11 +22,12 @@ import { BLOB_URL, REPO_URL, byString, escapeHtml, escapeMdCell, fence, firstSen
  * @typedef {import("./discovery.mjs").Snippet} Snippet
  * @typedef {{ link: (target: string) => string, heading: (level: number, text: string) => string }} HtmlContext
  * @typedef {{ md: string, html?: (ctx: HtmlContext) => string }} Block
- * @typedef {"home" | "principles" | "tokens" | "components" | "atoms" | "molecules" | "organisms" | "layouts" | "patterns" | "guides" | "examples"} Section
+ * @typedef {"home" | "principles" | "tokens" | "base" | "layouts" | "atoms" | "molecules" | "organisms" | "patterns" | "guides" | "demos" | "contributing" | "changelog"} Section
  * @typedef {object} Page
- * @property {string} path         site path of the HTML page, e.g. "tokens/space.html"
- * @property {Section} section
- * @property {string} [group]      sub-heading in the section nav, e.g. "Atoms"
+ * @property {string} path         site path of the HTML page, e.g. "tokens/semantic.html"
+ * @property {Section} section     where it is listed in the Docs sidebar (see ./nav.mjs)
+ * @property {string} [navLabel]   sidebar link text, when not the title
+ * @property {string} [navNote]    shown after the sidebar link in parentheses, e.g. "coming in M3"
  * @property {string} title        used in <title>, nav and llms.txt
  * @property {string} heading      the page's h1
  * @property {string} description  meta description and llms.txt note
@@ -34,23 +36,8 @@ import { BLOB_URL, REPO_URL, byString, escapeHtml, escapeMdCell, fence, firstSen
  * @property {Snippet[]} [snippets] copy-paste markup shown on the page, in order
  */
 
-/** The Docs nav, by level. components/index.html (all levels) is reached from each level's section nav. */
-export const SECTIONS = /** @type {const} */ ([
-  { section: "home", path: "index.html", title: "Overview" },
-  { section: "principles", path: "principles/index.html", title: "Principles" },
-  { section: "tokens", path: "tokens/index.html", title: "Tokens" },
-  { section: "atoms", path: "atoms/index.html", title: "Atoms" },
-  { section: "molecules", path: "molecules/index.html", title: "Molecules" },
-  { section: "organisms", path: "organisms/index.html", title: "Organisms" },
-  { section: "layouts", path: "layouts/index.html", title: "Layouts" },
-  { section: "patterns", path: "patterns/index.html", title: "Patterns" },
-  { section: "guides", path: "guides/index.html", title: "Guides" },
-  { section: "examples", path: "examples.html", title: "Examples" },
-]);
-
-/** The overview of every level, and the level pages it links in its section nav. */
-export const COMPONENTS_INDEX = "components/index.html";
-export const LEVEL_SECTIONS = /** @type {const} */ (["atoms", "molecules", "organisms", "layouts"]);
+/** Where the component API convention is documented: the Getting started page. */
+export const CONVENTION_LINK = "index.html#component-api";
 
 /** Roadmap milestones that patterns are planned in. */
 export const MILESTONES = /** @type {Record<string, string>} */ ({
@@ -96,7 +83,10 @@ export function repoTarget(href, model) {
     }
     return "site:principles/index.html";
   }
-  if (path === "css/tokens/semantic.css") return "site:tokens/index.html";
+  if (path === "CONTRIBUTING.md") return `site:contributing.html${hash}`;
+  if (path === "CHANGELOG.md") return `site:changelog.html${hash}`;
+  const tokenFile = model.tokenFiles.find((f) => f.path === path);
+  if (tokenFile) return `site:${tokenFile.sitePath}${hash}`;
   if (path.startsWith("css/base/")) return "site:components/base.html";
   const hit = allComponents(model).find((c) => c.cssPath === path) ?? model.patterns.find((p) => p.cssPaths.includes(path));
   if (hit) return `site:${hit.sitePath}${hash}`;
@@ -183,7 +173,7 @@ export function conventionWhy(model) {
   return text.slice(firstSentence(text).length).trim();
 }
 
-/** The component API convention, for components/index.html and README.md. @param {Model} model */
+/** The component API convention, for the Getting started page and README.md. @param {Model} model */
 export function conventionMd(model) {
   const why = conventionWhy(model);
   return `Each component exposes one \`data-<component>\` attribute. Its value is a list of space-separated words matched with the [\`~=\` attribute selector](${ATTRIBUTE_SELECTORS_URL}), like [\`rel\`](${REL_URL}): \`data-button="primary small"\`. Component APIs use no classes. State is carried by native attributes and ARIA: \`disabled\`, \`aria-disabled\`, \`aria-busy\`, \`aria-invalid\`.
@@ -201,7 +191,7 @@ export const conventionShortMd = (model) =>
  * @param {Component} c
  */
 function conventionNoteMd(c) {
-  const link = `[component API convention](site:${COMPONENTS_INDEX}#component-api)`;
+  const link = `[component API convention](site:${CONVENTION_LINK})`;
   if (c.group === "layouts" || c.group === "utilities") return `Layout primitives and utilities are classes, not \`data-*\` attributes; see the ${link}.`;
   if (c.group === "base") return "";
   const attr = `${c.indexApi ?? ""}\n${c.api ?? ""}`.match(/\b(data-[a-z][\w-]*)/)?.[1];
@@ -239,7 +229,7 @@ export const followsMd = (p) => (p.standards.length ? p.standards.map(specLink).
 /** @param {Pattern} p */
 const patternLine = (p) => `- [${p.title}](site:${p.sitePath}): ${p.summary} ${patternStatus(p)}.`;
 
-/** The section-nav group of a pattern page. @param {string} milestone */
+/** "M3: Molecules and navigation patterns". @param {string} milestone */
 const milestoneLabel = (milestone) => (MILESTONES[milestone] ? `${milestone}: ${MILESTONES[milestone]}` : milestone);
 
 /* ------------------------------------------------------------------ */
@@ -248,38 +238,36 @@ const milestoneLabel = (milestone) => (MILESTONES[milestone] ? `${milestone}: ${
 
 /** @param {Model} model @returns {Page[]} */
 export function buildPages(model) {
-  // Base elements and utilities live in the Atoms section; utilities as their own nav group.
-  const levelPages = COMPONENT_GROUPS.flatMap(({ group }) => [
-    levelIndex(model, group),
-    ...(group === "atoms" ? [model.base] : []).map((c) => ({ ...componentPage(model, c), section: /** @type {Section} */ ("atoms") })),
-    ...model.components[group].map((c) => ({ ...componentPage(model, c), section: /** @type {Section} */ (group) })),
-    ...(group === "atoms" ? model.utilities : []).map((c) => ({ ...componentPage(model, c), section: /** @type {Section} */ ("atoms"), group: "Utilities" })),
-  ]);
+  // In the order of the Docs sidebar (./nav.mjs), which lists each section's pages in this order.
+  const as = (/** @type {Page} */ page, /** @type {Section} */ section) => ({ ...page, section });
   return [
     homePage(model),
+    examplesPage(model),
     principlesIndex(model),
     ...model.principles.sections.map((s) => principlePage(model, s)),
     tokensIndex(model),
-    ...model.tokenGroups.map((g) => tokenPage(g)),
-    componentsIndex(model),
-    ...levelPages,
+    ...model.tokenFiles.map((f) => tokenFilePage(model, f)),
+    as(componentPage(model, model.base), "base"),
+    ...model.utilities.map((c) => ({ ...as(componentPage(model, c), "base"), navNote: "utility" })),
     layoutsIndex(model),
-    ...model.layouts.map((c) => ({ ...componentPage(model, c), section: /** @type {Section} */ ("layouts") })),
+    ...model.layouts.map((c) => as(componentPage(model, c), "layouts")),
+    ...COMPONENT_GROUPS.flatMap(({ group }) => [levelIndex(model, group), ...model.components[group].map((c) => as(componentPage(model, c), /** @type {Section} */ (group)))]),
     patternsIndex(model),
-    ...sortedPatterns(model).map((p) => ({ ...patternPage(model, p), group: milestoneLabel(p.milestone) })),
+    ...sortedPatterns(model).map((p) => patternPage(model, p)),
     guidesIndex(model),
     ...model.guides.map((g) => guidePage(model, g)),
-    examplesPage(model),
+    demosPage(model),
+    repoFilePage(model, "CONTRIBUTING.md", model.contributing, "contributing"),
+    repoFilePage(model, "CHANGELOG.md", model.changelog, "changelog"),
   ];
 }
 
 /** @param {Model} model @returns {Page} */
 function homePage(model) {
-  const groups = componentListMd(model);
   return {
     path: "index.html",
     section: "home",
-    title: "Overview",
+    title: "Getting started",
     heading: "domestic-ui",
     description: firstSentence(plainMd(model.intro)),
     source: edit("site/content/readme-intro.md"),
@@ -288,13 +276,12 @@ function homePage(model) {
       md(`## Install and use\n\n${installMd(model)}`),
       md(`## Layer order\n\n${layersMd(model)}`),
       md(`## Theming\n\n${themingMd(model)}`),
-      md(`## Principles\n\n${principleListMd(model)}`),
-      md(`## Tokens\n\n${tokenListMd(model)}`),
-      md(`## Components by level\n\n${conventionShortMd(model)} See [Components](site:${COMPONENTS_INDEX}#component-api).\n\n${groups}`),
-      md(`## Patterns\n\n${patternIntroMd}\n\n${sortedPatterns(model).map(patternLine).join("\n")}`),
-      md(`## Guides\n\n${guideListMd(model)}`),
-      md(`## Examples\n\n${model.examples.map((e) => `- [${e.title}](site:${e.path})`).join("\n")}`),
-      md(`## Demos\n\n${demoListMd(model)}`),
+      md(`## Component API\n\n${conventionMd(model)}`),
+      md(`## What is in these docs
+
+The Docs menu lists every page. In order:
+
+${docsMapMd(model)}`),
       md(`## For coding agents
 
 - [llms.txt](site:llms.txt): an index of these docs in the [llms.txt](https://llmstxt.org/) format.
@@ -304,31 +291,39 @@ function homePage(model) {
   };
 }
 
+/** One line per sidebar entry after Getting started. @param {Model} model */
+const docsMapMd = (model) => {
+  const tokens = model.tokenFiles.map((f) => f.groups.reduce((n, g) => n + g.tokens.length, 0)).reduce((a, b) => a + b, 0);
+  const available = model.patterns.filter((p) => p.available).length;
+  return [
+    `- [Principles](site:principles/index.html): ${model.principles.sections.length} sections, one page each.`,
+    `- [Tokens](site:tokens/index.html): all ${tokens} custom properties with their light and dark values.`,
+    `- [Base](site:${model.base.sitePath}): native elements styled with no classes, and the ${model.utilities.map((u) => `\`.${u.name}\``).join(", ")} utility.`,
+    `- [Layout](site:layouts/index.html): the layout primitives ${model.layouts.map((l) => `\`.${l.name}\``).join(", ")}.`,
+    ...COMPONENT_GROUPS.map(({ group, title, milestone }) => {
+      const n = model.components[group].length;
+      return `- [${title}](site:${group}/index.html): ${n ? `${n} component${n === 1 ? "" : "s"}.` : `coming in ${milestone}.`}`;
+    }),
+    `- [Patterns and guides](site:patterns/index.html): ${model.patterns.length} patterns (${available} available) and ${model.guides.length} guide${model.guides.length === 1 ? "" : "s"}.`,
+    `- [Demos](site:demos.html): ${model.demos.length ? `${model.demos.length} demo directories in \`demos/\`, on GitHub.` : "coming in M5."}`,
+    "- [Contributing](site:contributing.html) and [Changelog](site:changelog.html).",
+  ].join("\n");
+};
+
 /** @param {Model} model */
 const principleListMd = (model) => model.principles.sections.map((s, i) => `${i + 1}. [${s.title}](site:${s.sitePath})`).join("\n");
 
-/** @param {Model} model */
+/** Token pages with their counts and groups. @param {Model} model */
 const tokenListMd = (model) =>
-  model.tokenGroups.map((g) => `- [${g.name}](site:${g.sitePath}): ${g.tokens.length} token${g.tokens.length === 1 ? "" : "s"}`).join("\n");
+  model.tokenFiles
+    .map((f) => {
+      const n = f.groups.reduce((sum, g) => sum + g.tokens.length, 0);
+      return `- [${f.title}](site:${f.sitePath})${f.tier ? ` (${f.tier})` : ""}: ${n} token${n === 1 ? "" : "s"} in ${f.groups.map((g) => g.name.toLowerCase()).join(", ")}.`;
+    })
+    .join("\n");
 
 /** @param {Component} c */
 const componentLine = (c) => `- [${c.title}](site:${c.sitePath}): ${commentMd(c.summary)}`;
-
-/**
- * Every level (Tokens, Atoms, Molecules, Organisms, Layouts), then Utilities,
- * as H3 sections. With `details`, each component group also gets its README's
- * Our choices and Not shipped table as H4 sections.
- * @param {Model} model
- * @param {boolean} [details]
- */
-function componentListMd(model, details = false) {
-  const out = LEVELS.map(({ level, title }) => {
-    const extra = details ? groupDetailsMd(model, level, 4) : "";
-    return `### ${title}\n\n${levelMd(model, level)}${extra ? `\n\n${extra}` : ""}`;
-  });
-  out.push(`### Utilities\n\n${model.utilities.map(componentLine).join("\n")}`);
-  return out.join("\n\n");
-}
 
 /**
  * A component group's README sections: every Our choices bullet, labels kept,
@@ -348,9 +343,11 @@ function groupDetailsMd(model, group, level) {
   return out.join("\n\n");
 }
 
-/** Demo apps on GitHub, each with the first line of its README. @param {Model} model */
+/** Demo apps on GitHub: name, link, and the first sentence of the README. @param {Model} model */
 export const demoListMd = (model) =>
-  model.demos.length ? model.demos.map((d) => `- [\`${d.path}\`](${REPO_URL}/tree/main/${d.path.replace(/\/$/, "")}): ${d.description}`).join("\n") : "No demo apps yet.";
+  model.demos.length
+    ? model.demos.map((d) => `- **${d.title}** ([\`${d.path}\`](${REPO_URL}/tree/main/${d.path.replace(/\/$/, "")})): ${rewriteRepoLinks(d.description.replace(/\s*\n\s*/g, " "), model)}`).join("\n")
+    : "Coming in M5.";
 
 /**
  * What exists or is planned at one level: its components (tokens: token
@@ -409,114 +406,197 @@ function principlePage(model, s) {
   };
 }
 
+/**
+ * The tier table from PRINCIPLES.md ("| Tier | File | … |"), as written,
+ * or "" when it has none.
+ * @param {Model} model
+ */
+function tierTableMd(model) {
+  for (const s of model.principles.sections) {
+    const table = tokenize(s.body).find((b) => b.type === "table" && /^tier$/i.test(b.rows[0][0]));
+    if (table) return `From [${s.title}](site:${s.sitePath}) in \`PRINCIPLES.md\`:\n\n${rewriteRepoLinks(table.raw, model)}`;
+  }
+  return "";
+}
+
+const RESOLVED_MD = `**Written as** is the value in the file. **Light** and **dark** follow every \`var()\` through all token files and take one side of [\`light-dark()\`](https://developer.mozilla.org/en-US/docs/Web/CSS/color_value/light-dark); functions such as \`color-mix()\` and \`clamp()\` are left for the browser. Overrides under a condition, such as \`@media (prefers-reduced-motion: reduce)\`, are listed in the description. Previews are decorative; the text in each row is the reference.`;
+
 /** @param {Model} model @returns {Page} */
 function tokensIndex(model) {
+  const all = model.tokenFiles.flatMap((f) => f.groups.flatMap((g) => g.tokens));
   return {
     path: "tokens/index.html",
     section: "tokens",
     title: "Tokens",
     heading: "Tokens",
-    description: "The two tiers of domestic-ui design tokens and the groups of public semantic tokens.",
-    source: edit("css/tokens/semantic.css"),
+    description: `The two tiers of domestic-ui design tokens: ${all.length} custom properties with their light and dark values.`,
+    source: { href: `${REPO_URL}/tree/main/css/tokens`, label: "Browse css/tokens/ on GitHub" },
     blocks: [
       md(`All tokens are [CSS custom properties](https://developer.mozilla.org/en-US/docs/Web/CSS/--*) on \`:root\` with the \`--dui-\` prefix, in two tiers:
 
-- **Primitive** tokens, in [\`css/tokens/primitives.css\`](${BLOB_URL}css/tokens/primitives.css), are named by what they are, such as \`--dui-color-blue-600\`. They are internal and may change in any release.
-- **Semantic** tokens, in [\`css/tokens/semantic.css\`](${BLOB_URL}css/tokens/semantic.css), are named by what they are for, such as \`--dui-color-accent\`. They are the public theming API: renaming or removing one is a breaking change.
+- **Primitive** tokens are named by what they are, such as \`--dui-color-blue-600\`. They are internal and may change in any release.
+- **Semantic** tokens are named by what they are for, such as \`--dui-color-accent\`. They are the public theming API: renaming or removing one is a breaking change.
 
 Base, layout, utility and component CSS use only semantic tokens; \`npm run lint:tokens\` enforces this. To theme, override semantic tokens: see [Theming](site:${principleLink(model, "theming")}) and the [theming example](site:examples/theming.html).`),
-      md(`## Semantic token groups\n\nThe groups follow the section comments in \`css/tokens/semantic.css\`.\n\n${tokenListMd(model)}`),
+      md(`## Token files\n\nOne page per file in \`css/tokens/\`, grouped by its section comments, with a filter.\n\n${tokenListMd(model)}`),
+      ...(tierTableMd(model) ? [md(`## Tiers\n\n${tierTableMd(model)}`)] : []),
+      md(`## How values are shown\n\n${RESOLVED_MD}`),
     ],
   };
 }
 
-/** Which visual sample a token gets, by name. @param {string} name */
-function sampleKind(name) {
-  if (/^--dui-color-/.test(name)) return "color";
-  if (/^--dui-shadow-/.test(name)) return "shadow";
-  if (/^--dui-(space|size)-|^--dui-measure$/.test(name)) return "length";
-  if (/^--dui-step-|^--dui-font-size-/.test(name)) return "font-size";
-  if (/^--dui-font-(body|mono|heading)$/.test(name)) return "font-family";
-  if (/^--dui-font-weight-/.test(name)) return "font-weight";
-  if (/^--dui-letter-spacing-/.test(name)) return "letter-spacing";
-  if (/^--dui-radius-/.test(name)) return "radius";
-  if (/^--dui-(border-width|focus-width)/.test(name)) return "border-width";
-  if (/^--dui-opacity-/.test(name)) return "opacity";
-  return "";
-}
+/** @typedef {Model["tokenFiles"][number]} TokenFile @typedef {TokenFile["groups"][number]["tokens"][number]} Token */
 
-/** @param {string} kind @param {string} name */
-function sampleHtml(kind, name) {
-  if (!kind) return "";
-  const text = /font|letter/.test(kind) ? "Aa Bb Cc" : "";
-  return `<span class="token-sample" data-sample="${kind}" style="--token-sample: var(${name})" aria-hidden="true">${text}</span>`;
-}
+/** A token's description: its comment, else its purpose in PRINCIPLES.md, else "". @param {Token} t */
+const tokenDescription = (t) => (t.description ? { text: t.description, from: "comment" } : t.purpose ? { text: t.purpose, from: "PRINCIPLES.md" } : { text: "", from: "" });
 
-/** @param {Model["tokenGroups"][number]} g @returns {Page} */
-function tokenPage(g) {
-  const caption = /\btokens$/i.test(g.name) ? g.name : `${g.name} tokens`;
-  const value = (/** @type {Model["tokenGroups"][number]["tokens"][number]} */ t) =>
-    [mdCode(t.value), ...t.conditions.map((c) => `with ${mdCode(`@media ${c.media}`)}: ${mdCode(c.value)}`)].join("; ");
-  const valueHtml = (/** @type {Model["tokenGroups"][number]["tokens"][number]} */ t) =>
-    [`<code>${escapeHtml(t.value)}</code>`, ...t.conditions.map((c) => `with <code>@media ${escapeHtml(c.media)}</code>: <code>${escapeHtml(c.value)}</code>`)].join("; ");
-  const hasPurpose = g.tokens.some((t) => t.purpose);
-  const head = ["Token", "Value in css/tokens/semantic.css", ...(hasPurpose ? ["Purpose (from PRINCIPLES.md)"] : [])];
-  const tableMd = [
-    `| ${head.join(" | ")} |`,
-    `| ${head.map(() => "---").join(" | ")} |`,
-    ...g.tokens.map((t) => `| ${[mdCode(t.name), escapeMdCell(value(t)), ...(hasPurpose ? [escapeMdCell(t.purpose)] : [])].join(" | ")} |`),
-  ].join("\n");
-  const tableHtml = () => {
-    const ths = [...head, "Sample"].map((h) => `<th scope="col">${escapeHtml(h)}</th>`).join("");
-    const rows = g.tokens.map((t) => {
-      const purpose = hasPurpose ? `<td>${inlinePurpose(t.purpose)}</td>` : "";
-      return `<tr><th scope="row"><code>${escapeHtml(t.name)}</code></th><td>${valueHtml(t)}</td>${purpose}<td>${sampleHtml(sampleKind(t.name), t.name)}</td></tr>`;
-    });
-    return `<table class="token-table">\n<caption>${escapeHtml(caption)}</caption>\n<thead>\n<tr>${ths}</tr>\n</thead>\n<tbody>\n${rows.join("\n")}\n</tbody>\n</table>`;
-  };
-  const note = g.note ? `${commentMd(g.note.charAt(0).toUpperCase() + g.note.slice(1))}\n\n` : "";
-  return {
-    path: g.sitePath,
-    section: "tokens",
-    title: caption,
-    heading: caption,
-    description: `Semantic ${caption.toLowerCase()} and their values (${g.tokens.length}).`,
-    source: edit("css/tokens/semantic.css"),
-    blocks: [
-      md(
-        `${note}Defined in [\`css/tokens/semantic.css\`](${BLOB_URL}css/tokens/semantic.css). Values are shown as written there; names inside \`var()\` that are not semantic tokens are internal primitives (see [Tokens](site:tokens/index.html)). Samples are decorative; the token name and value are the reference.`,
-      ),
-      { md: tableMd, html: tableHtml },
-    ],
-  };
-}
+/** Conditional overrides, as one line each. @param {Token} t @param {boolean} html */
+const conditionLines = (t, html) =>
+  t.conditions.map((c) => {
+    const code = (/** @type {string} */ s) => (html ? `<code>${escapeHtml(s)}</code>` : mdCode(s));
+    const resolved = c.light === c.dark ? (c.light === c.value ? "" : `, resolves to ${code(c.light)}`) : `, resolves to ${code(c.light)} (light), ${code(c.dark)} (dark)`;
+    return `With ${code(c.condition)}: ${code(c.value)}${resolved}.`;
+  });
 
-/** Purpose cells may contain inline Markdown from PRINCIPLES.md. @param {string} text */
-const inlinePurpose = (text) => inline(text);
-
-/** @param {Model} model @returns {Page} */
-function componentsIndex(model) {
-  return {
-    path: "components/index.html",
-    section: "components",
-    title: "Components",
-    heading: "Components",
-    description: "Everything in domestic-ui by level: tokens, atoms, molecules, organisms and layouts, plus utilities.",
-    source: edit("css/components/README.md"),
-    blocks: [
-      md(`Each layout primitive, utility and component has one documented API, written in the header comment of its CSS file and tuned with custom properties ([Agent-friendly by design](site:${principleLink(model, "agent-friendly-by-design")})).
-
-The levels follow [atomic design](https://atomicdesign.bradfrost.com/chapter-2/). Planned [patterns](site:patterns/index.html) are listed at their level with their status.`),
-      md(`## Component API\n\n${conventionMd(model)}`),
-      md(shiftHeadings(componentListMd(model, true), -1)),
-    ],
-  };
+/**
+ * A decorative preview of one value. Values are literal (resolved), never
+ * var(), so the dark preview shows the dark value whatever the page scheme.
+ * @param {string} kind from previewKind()
+ * @param {string} value
+ */
+function previewHtml(kind, value) {
+  // A quoted family name made of plain words is the same unquoted ("Cascadia Code" → Cascadia Code).
+  const css = kind === "font-family" ? value.replace(/"([A-Za-z][\w -]*)"/g, "$1") : value;
+  // A value that would need HTML escaping in the style attribute gets no preview (see previewable()).
+  if (kind === "text" || !previewable(css)) return "";
+  const style = `--preview: ${css}`;
+  if (kind === "color") return `<span class="token-chip" style="${style}"></span>`;
+  const text = /^font|line-height|letter-spacing/.test(kind) ? "Aa Bb Cc" : "";
+  return `<span class="token-preview" data-preview="${kind}" style="${style}">${text}</span>`;
 }
 
 /**
+ * A value as code that wraps only at spaces: words with a hyphen
+ * (var(--dui-space-3)) are kept whole, so a narrow table scrolls in its
+ * region instead of breaking names apart.
+ * @param {string} value
+ */
+const valueCode = (value) =>
+  `<code>${value
+    .split(" ")
+    .map((w) => (w.includes("-") ? `<span class="token-word">${escapeHtml(w)}</span>` : escapeHtml(w)))
+    .join(" ")}</code>`;
+
+/**
+ * True when a value can go into style="--preview: …" as-is: no character
+ * that needs an HTML entity, and no ";" (html-validate's no-inline-style
+ * splits declarations on ";", entities included).
+ * @param {string} value
+ */
+const previewable = (value) => !/[&<>"';]/.test(value);
+
+/** The preview cell: one sample, or light and dark side by side when they differ. Each with its value. @param {Token} t */
+function previewCell(t) {
+  const shown = previewKind(t);
+  const kind = previewable(shown === "font-family" ? t.light.replace(/"([A-Za-z][\w -]*)"/g, "$1") : t.light) ? shown : "text";
+  if (kind === "text") return `<span class="token-text-only">${t.light === t.dark ? "" : "Light: "}${valueCode(t.light)}${t.light === t.dark ? "" : `; dark: ${valueCode(t.dark)}`}</span>`;
+  const one = (/** @type {"light" | "dark"} */ scheme, /** @type {string} */ label) => {
+    const value = t[scheme];
+    return `<span class="token-sample" data-color-scheme="${scheme}"><span aria-hidden="true">${previewHtml(kind, value)}</span><span>${label}${valueCode(value)}</span></span>`;
+  };
+  return t.light === t.dark && kind !== "color" ? one("light", "") : `${one("light", "Light: ")}${one("dark", "Dark: ")}`;
+}
+
+/**
+ * The page of one token file: intro, filter, then one table per group.
+ * @param {Model} model
+ * @param {TokenFile} f
+ * @returns {Page}
+ */
+function tokenFilePage(model, f) {
+  const count = f.groups.reduce((n, g) => n + g.tokens.length, 0);
+  const fileLink = `[\`${f.path}\`](${BLOB_URL}${f.path})`;
+  // Token file comments write code in backticks, so keep those as code spans.
+  const prose = (/** @type {string} */ text) => text.split(/(`[^`]+`)/).map((part, i) => (i % 2 ? part : commentMd(part))).join("");
+  const intro = [f.tier ? `**${f.tier.charAt(0).toUpperCase()}${f.tier.slice(1)}.** ` : "", f.intro.split("\n\n").map(prose).join("\n\n")].join("");
+  const short = f.title.toLowerCase();
+
+  /** @type {Block} */
+  const filter = {
+    md: "",
+    html: () => `<search class="token-filter" data-token-filter hidden>
+<label for="token-filter">Filter tokens</label>
+<input type="search" id="token-filter" autocomplete="off" spellcheck="false" aria-describedby="token-filter-hint">
+<p id="token-filter-hint" data-text="small">Matches names, values and descriptions.</p>
+</search>
+<p class="token-filter-status" role="status" data-token-filter-status></p>`,
+  };
+
+  const groupBlock = (/** @type {TokenFile["groups"][number]} */ g) => {
+    const caption = `${g.name} (${short})`;
+    const note = g.note ? `${commentMd(g.note.charAt(0).toUpperCase() + g.note.slice(1)).replace(/([^.])$/, "$1.")}` : "";
+    const descMd = (/** @type {Token} */ t) => {
+      const d = tokenDescription(t);
+      return [d.text ? `${d.text}${d.from === "PRINCIPLES.md" ? " (from PRINCIPLES.md)" : ""}` : "No description yet.", ...conditionLines(t, false)].join(" ");
+    };
+    const tableMd = [
+      "| Token | Light | Dark | Description |",
+      "| --- | --- | --- | --- |",
+      ...g.tokens.map((t) => `| ${[mdCode(t.name), mdCode(t.light), mdCode(t.dark), descMd(t)].map(escapeMdCell).join(" | ")} |`),
+    ].join("\n");
+    return {
+      md: `## ${g.name}\n\n${note ? `${note}\n\n` : ""}${tableMd}`,
+      html: (/** @type {HtmlContext} */ ctx) => {
+        const rows = g.tokens.map((t) => {
+          const d = tokenDescription(t);
+          const text = d.text
+            ? `${d.from === "comment" ? inline(commentMd(d.text)) : inline(d.text)}${d.from === "PRINCIPLES.md" ? ' <span data-text="muted">(from PRINCIPLES.md)</span>' : ""}`
+            : '<span class="token-missing">No description yet</span>';
+          const conditions = conditionLines(t, true).map((l) => `<br>${l}`).join("");
+          return `<tr><th scope="row"><code>${escapeHtml(t.name)}</code></th><td>${valueCode(t.value)}</td><td>${valueCode(t.light)}</td><td>${valueCode(t.dark)}</td><td>${text}${conditions}</td><td>${previewCell(t)}</td></tr>`;
+        });
+        const head = ["Token", "Written as", "Light", "Dark", "Description", "Preview"].map((h) => `<th scope="col">${h}</th>`).join("");
+        return `<div class="token-group" data-token-group>
+${ctx.heading(2, g.name)}
+${note ? `<p>${inline(note)}</p>\n` : ""}<!-- [html-validate-disable-next prefer-native-element: the data-scroll="inline" API is a div with role="region"] -->
+<div data-scroll="inline" tabindex="0" role="region" aria-label="${escapeHtml(caption)} (scrolls horizontally)">
+<table class="token-table">
+<caption>${escapeHtml(caption)}</caption>
+<thead>
+<tr>${head}</tr>
+</thead>
+<tbody>
+${rows.join("\n")}
+</tbody>
+</table>
+</div>
+</div>`;
+      },
+    };
+  };
+
+  return {
+    path: f.sitePath,
+    section: "tokens",
+    title: f.title,
+    heading: f.title,
+    description: `All ${count} ${short} in ${f.path}${f.tier ? ` (${f.tier})` : ""}, with resolved light and dark values.`,
+    source: edit(f.path),
+    blocks: [
+      md(`${intro}\n\nDefined in ${fileLink}: ${count} tokens in ${f.groups.length} groups, one per section comment. See [Tokens](site:tokens/index.html) for the two tiers.\n\n${RESOLVED_MD}`),
+      filter,
+      ...f.groups.map(groupBlock),
+    ],
+  };
+}
+
+/** The "Coming in M3" note shown after a planned pattern's sidebar link. @param {Pattern} p */
+const patternNavNote = (p) => (p.available ? "" : `coming in ${p.milestone}`);
+
+/**
  * The index page of one component level (Atoms, Molecules, Organisms):
- * its components, with base elements and utilities under Atoms, the
- * patterns planned at that level, and the group README's choices.
+ * its components, the patterns planned at that level, and the group
+ * README's choices.
  * @param {Model} model
  * @param {string} group
  * @returns {Page}
@@ -532,12 +612,10 @@ function levelIndex(model, group) {
   /** @type {Block[]} */
   const blocks = [
     md(
-      `${group === "atoms" ? "Atoms add the minimum on top of the base layer: plain HTML already looks right, and an atom covers what a native element cannot say on its own. " : ""}Components use one \`data-<component>\` attribute each; see the [component API convention](site:${COMPONENTS_INDEX}#component-api) and [every level](site:${COMPONENTS_INDEX}).`,
+      `${group === "atoms" ? `Atoms add the minimum on top of the [base layer](site:${model.base.sitePath}): plain HTML already looks right, and an atom covers what a native element cannot say on its own. ` : ""}Components use one \`data-<component>\` attribute each; see the [component API convention](site:${CONVENTION_LINK}). The levels follow [atomic design](https://atomicdesign.bradfrost.com/chapter-2/); planned [patterns](site:patterns/index.html) are listed at their level with their status.`,
     ),
   ];
-  if (group === "atoms") blocks.push(md(`## Base elements\n\n${componentLine(model.base)}`));
   blocks.push(md(`## ${title}\n\n${[...items, ...patterns].join("\n") || `Coming in ${milestone}; see the [components README](${BLOB_URL}css/components/README.md).`}`));
-  if (group === "atoms" && model.utilities.length) blocks.push(md(`## Utilities\n\n${model.utilities.map(componentLine).join("\n")}`));
   const details = groupDetailsMd(model, group, 2);
   if (details) blocks.push(md(details));
   return {
@@ -709,7 +787,7 @@ function componentPage(model, c) {
 
   return {
     path: c.sitePath,
-    section: "components",
+    section: "atoms", // set by buildPages()
     title: c.title,
     heading: c.title,
     description: plainMd(commentMd(c.summary)),
@@ -733,12 +811,58 @@ function examplesPage(model) {
   });
   return {
     path: "examples.html",
-    section: "examples",
+    section: "home",
+    navLabel: "All example pages",
     title: "Examples",
     heading: "Examples",
     description: "Standalone example pages that load the real domestic-ui CSS.",
     source: { href: `${REPO_URL}/tree/main/examples`, label: "Browse the examples source on GitHub" },
     blocks: [md("Standalone HTML pages that load `css/domestic.css`, nothing else. Open one, or read its source on GitHub."), ...sections.map(md)],
+  };
+}
+
+/** @param {Model} model @returns {Page} */
+function demosPage(model) {
+  const intro = model.demosIntro ? `${rewriteRepoLinks(model.demosIntro, model)}\n\n` : "";
+  return {
+    path: "demos.html",
+    section: "demos",
+    title: "Demos",
+    heading: "Demos",
+    description: model.demos.length ? "Demo apps in demos/ that use domestic-ui, each with a link to its source on GitHub." : "Demo apps: coming in M5.",
+    source: { href: `${REPO_URL}/tree/main/demos`, label: "Browse demos/ on GitHub" },
+    blocks: [
+      md(
+        model.demos.length
+          ? `${intro}Each directory in [\`demos/\`](${REPO_URL}/tree/main/demos) with a \`README.md\`, by name, with the first sentence of that README. Demos are not part of this site; follow the link to read the source and how to run it.\n\n${demoListMd(model)}`
+          : "Coming in M5.",
+      ),
+    ],
+  };
+}
+
+/**
+ * A repository Markdown file rendered read-only: its H1 is the page
+ * heading, relative links go to the matching site page or GitHub.
+ * @param {Model} model
+ * @param {string} file "CONTRIBUTING.md"
+ * @param {string} text the file's content, "" when missing
+ * @param {"contributing" | "changelog"} section
+ * @returns {Page}
+ */
+function repoFilePage(model, file, text, section) {
+  const title = section === "contributing" ? "Contributing" : "Changelog";
+  const h1 = text.match(/^#\s+(.+)$/m)?.[1].trim() ?? title;
+  const body = text.replace(/^#\s+.+\n+/m, "").trim();
+  const note = `Rendered read-only from [\`${file}\`](${BLOB_URL}${file}). To change it, [edit ${file} on GitHub](${REPO_URL}/edit/main/${file}).`;
+  return {
+    path: `${section}.html`,
+    section,
+    title,
+    heading: h1,
+    description: body ? firstSentence(plainMd(tokenize(body).find((b) => b.type === "paragraph")?.text ?? title)) : `${file} is not written yet.`,
+    source: edit(file),
+    blocks: [md(note), md(body ? rewriteRepoLinks(body, model) : `There is no \`${file}\` yet.`)],
   };
 }
 
@@ -840,6 +964,7 @@ function patternPage(model, p) {
   return {
     path: p.sitePath,
     section: "patterns",
+    navNote: patternNavNote(p),
     title: p.title,
     heading: p.title,
     description: plainMd(p.summary),

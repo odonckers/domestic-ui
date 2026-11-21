@@ -39,155 +39,56 @@ Its imports use relative paths, so it works from file paths and from subpaths. F
 Override semantic `--dui-*` tokens on `:root`, or on an element with `data-theme` to scope a theme ([Theming](https://odonckers.github.io/domestic-ui/principles/theming.md), [theming example](https://odonckers.github.io/domestic-ui/examples/theming.html)).
 Force a color scheme on the page or any subtree with `data-color-scheme="light"` or `data-color-scheme="dark"`.
 
-### Principles
+### Component API
 
-1. [Native element first](https://odonckers.github.io/domestic-ui/principles/native-element-first.md)
-2. [Agent-friendly by design](https://odonckers.github.io/domestic-ui/principles/agent-friendly-by-design.md)
-3. [Accessibility baseline: WCAG 2.2 AA](https://odonckers.github.io/domestic-ui/principles/accessibility-baseline-wcag-22-aa.md)
-4. [Cascade layers](https://odonckers.github.io/domestic-ui/principles/cascade-layers.md)
-5. [Theming](https://odonckers.github.io/domestic-ui/principles/theming.md)
-6. [Opinions we hold](https://odonckers.github.io/domestic-ui/principles/opinions-we-hold.md)
-7. [Layout primitives](https://odonckers.github.io/domestic-ui/principles/layout-primitives.md)
-8. [Tooling](https://odonckers.github.io/domestic-ui/principles/tooling.md)
+Each component exposes one `data-<component>` attribute. Its value is a list of space-separated words matched with the [`~=` attribute selector](https://developer.mozilla.org/en-US/docs/Web/CSS/Attribute_selectors), like [`rel`](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Attributes/rel): `data-button="primary small"`. Component APIs use no classes. State is carried by native attributes and ARIA: `disabled`, `aria-disabled`, `aria-busy`, `aria-invalid`.
 
-### Tokens
+**Our choice:** One attribute is one API to learn, it reads as a sentence (`data-button="primary small"`), and it cannot pile up like modifier classes.
 
-- [Surfaces and text](https://odonckers.github.io/domestic-ui/tokens/surfaces-and-text.md): 5 tokens
-- [Borders](https://odonckers.github.io/domestic-ui/tokens/borders.md): 2 tokens
-- [Accent and status](https://odonckers.github.io/domestic-ui/tokens/accent-and-status.md): 10 tokens
-- [Type](https://odonckers.github.io/domestic-ui/tokens/type.md): 18 tokens
-- [Space](https://odonckers.github.io/domestic-ui/tokens/space.md): 9 tokens
-- [Sizes](https://odonckers.github.io/domestic-ui/tokens/sizes.md): 5 tokens
-- [Shape](https://odonckers.github.io/domestic-ui/tokens/shape.md): 8 tokens
-- [Focus indicator](https://odonckers.github.io/domestic-ui/tokens/focus-indicator.md): 2 tokens
-- [Motion](https://odonckers.github.io/domestic-ui/tokens/motion.md): 3 tokens
-- [State](https://odonckers.github.io/domestic-ui/tokens/state.md): 3 tokens
-- [Dependent tokens](https://odonckers.github.io/domestic-ui/tokens/dependent-tokens.md): 5 tokens
-- [Tinted surfaces for status badges](https://odonckers.github.io/domestic-ui/tokens/tinted-surfaces-for-status-badges.md): 4 tokens
+Layout primitives and utilities from M1 are classes: `.cluster`, `.grid`, `.stack`, `.visually-hidden`. Base elements need no API: write semantic HTML.
 
-### Components by level
+### What is in these docs
 
-Each component exposes one `data-<component>` attribute whose value is space-separated words matched with `~=`, such as `data-button="primary small"`, never classes; state is carried by native attributes and ARIA (`disabled`, `aria-disabled`, `aria-busy`, `aria-invalid`). Layout primitives and utilities are classes (`.cluster`, `.grid`, `.stack`, `.visually-hidden`), tuned with custom properties. See [Components](https://odonckers.github.io/domestic-ui/components/index.md#component-api).
+The Docs menu lists every page. In order:
 
-#### Tokens
-
-- [Surfaces and text](https://odonckers.github.io/domestic-ui/tokens/surfaces-and-text.md): 5 tokens
-- [Borders](https://odonckers.github.io/domestic-ui/tokens/borders.md): 2 tokens
-- [Accent and status](https://odonckers.github.io/domestic-ui/tokens/accent-and-status.md): 10 tokens
-- [Type](https://odonckers.github.io/domestic-ui/tokens/type.md): 18 tokens
-- [Space](https://odonckers.github.io/domestic-ui/tokens/space.md): 9 tokens
-- [Sizes](https://odonckers.github.io/domestic-ui/tokens/sizes.md): 5 tokens
-- [Shape](https://odonckers.github.io/domestic-ui/tokens/shape.md): 8 tokens
-- [Focus indicator](https://odonckers.github.io/domestic-ui/tokens/focus-indicator.md): 2 tokens
-- [Motion](https://odonckers.github.io/domestic-ui/tokens/motion.md): 3 tokens
-- [State](https://odonckers.github.io/domestic-ui/tokens/state.md): 3 tokens
-- [Dependent tokens](https://odonckers.github.io/domestic-ui/tokens/dependent-tokens.md): 5 tokens
-- [Tinted surfaces for status badges](https://odonckers.github.io/domestic-ui/tokens/tinted-surfaces-for-status-badges.md): 4 tokens
-- [Compact density](https://odonckers.github.io/domestic-ui/patterns/density.md): A compact density token that tightens spacing for data-heavy screens. Coming in M3b.
-
-#### Atoms
-
-- [Base elements](https://odonckers.github.io/domestic-ui/components/base.md): Native HTML elements styled by the base layer, with no classes.
-- [Text helpers](https://odonckers.github.io/domestic-ui/components/atoms/text.md): Lead, small and muted text helpers from domestic-ui, with copyable markup.
-- [Quiet link](https://odonckers.github.io/domestic-ui/components/atoms/link.md): A link that takes the surrounding text color and keeps its underline, for dense UI.
-- [Buttons](https://odonckers.github.io/domestic-ui/components/atoms/button.md): Button variants, sizes, link buttons and honest disabled and loading states.
-- [Form controls](https://odonckers.github.io/domestic-ui/components/atoms/controls.md): Native form controls as styled by the domestic-ui base layer, with copyable markup.
-- [Switch](https://odonckers.github.io/domestic-ui/components/atoms/switch.md): An on/off switch built on a native checkbox with role switch, following the APG Switch pattern.
-- [Field](https://odonckers.github.io/domestic-ui/components/atoms/field.md): Label, control, hint and error message wired with aria-describedby and aria-invalid.
-- [Badge](https://odonckers.github.io/domestic-ui/components/atoms/badge.md): Inline status labels with tone variants that meet WCAG AA contrast.
-
-#### Molecules
-
-- [Alerts](https://odonckers.github.io/domestic-ui/patterns/alerts.md): Messages about status, from notices in the page to live alerts for important, time-sensitive changes. Coming in M3.
-- [Breadcrumb](https://odonckers.github.io/domestic-ui/patterns/breadcrumb.md): The path to the current page as an ordered list of links in a labelled `<nav>`. Coming in M3.
-- [Card](https://odonckers.github.io/domestic-ui/patterns/card.md): A self-contained item, such as a product or an article teaser, on a raised surface. Coming in M3.
-- [Disclosure](https://odonckers.github.io/domestic-ui/patterns/disclosure.md): A summary that shows or hides more content, built on `<details>` and `<summary>`. Coming in M3.
-- [Menu button](https://odonckers.github.io/domestic-ui/patterns/menu-button.md): A button that opens a menu of actions. Coming in M3.
-- [Pagination](https://odonckers.github.io/domestic-ui/patterns/pagination.md): Links to the pages of a long list of results. Coming in M3.
-- [Popover](https://odonckers.github.io/domestic-ui/patterns/popover.md): Content shown on top of the page from a button, with the `popover` attribute. Coming in M3.
-- [Search](https://odonckers.github.io/domestic-ui/patterns/search.md): A search form in a `<search>` landmark with an `<input type="search">`. Coming in M3.
-- [Tabs](https://odonckers.github.io/domestic-ui/patterns/tabs.md): Sections of content shown one at a time, chosen from a list of tabs. Coming in M3.
-- [Toolbar](https://odonckers.github.io/domestic-ui/patterns/toolbar.md): A row of related controls that is one stop in the tab order. Coming in M3.
-- [Typeahead](https://odonckers.github.io/domestic-ui/patterns/typeahead.md): A text field that suggests values as you type, with `<datalist>` first and an APG combobox only where `<datalist>` falls short. Coming in M3.
-
-#### Organisms
-
-- [Dialog and drawer](https://odonckers.github.io/domestic-ui/patterns/dialog.md): A modal `<dialog>`, either centered or as a drawer along one edge of the viewport. Coming in M3.
-- [Site navigation](https://odonckers.github.io/domestic-ui/patterns/nav.md): The main links of a site in a `<nav>` landmark, with the current page marked. Coming in M3.
-- [Data table](https://odonckers.github.io/domestic-ui/patterns/data-table.md): Rows of records in a native `<table>` with a caption, header cells and optional sorting. Coming in M3b.
-- [Filter bar](https://odonckers.github.io/domestic-ui/patterns/filter-bar.md): A row of native form controls that narrows a list or table. Coming in M3b.
-- [Large forms](https://odonckers.github.io/domestic-ui/patterns/large-forms.md): Long forms split into labelled groups, in one or more columns. Coming in M3b.
-
-#### Layouts
-
-- [Cluster](https://odonckers.github.io/domestic-ui/layouts/cluster.md): An inline group that wraps onto new lines (buttons, tags, nav links).
-- [Grid](https://odonckers.github.io/domestic-ui/layouts/grid.md): A responsive grid: as many columns as fit, each at least --grid-min wide, never wider than the container.
-- [Stack](https://odonckers.github.io/domestic-ui/layouts/stack.md): Vertical flow with a consistent gap between children.
-- [App shell](https://odonckers.github.io/domestic-ui/patterns/app-shell.md): The frame of an application: header, primary sidebar, main content and an optional auxiliary sidebar. Coming in M3b.
-- [Dashboard](https://odonckers.github.io/domestic-ui/patterns/dashboard.md): A grid of summary sections, each with a heading, that reflows to fit the screen. Coming in M3b.
-- [List-detail](https://odonckers.github.io/domestic-ui/patterns/list-detail.md): A list of items beside the details of the selected one, stacked on narrow screens. Coming in M3b.
-- [Split](https://odonckers.github.io/domestic-ui/patterns/split.md): Two regions side by side at a set ratio, stacked on narrow screens. Coming in M3b.
-
-#### Utilities
-
-- [Visually hidden](https://odonckers.github.io/domestic-ui/components/utilities/visually-hidden.md): Hides content visually but keeps it in the accessibility tree.
-
-### Patterns
-
-Where a standard exists, a native HTML element or a [WAI-ARIA APG pattern](https://www.w3.org/WAI/ARIA/apg/patterns/), the pattern follows it and links to it. Where none exists, the pattern is written as close to plain HTML as possible and labeled **Our choice:** with one line on why.
-
-- [Alerts](https://odonckers.github.io/domestic-ui/patterns/alerts.md): Messages about status, from notices in the page to live alerts for important, time-sensitive changes. Coming in M3.
-- [Breadcrumb](https://odonckers.github.io/domestic-ui/patterns/breadcrumb.md): The path to the current page as an ordered list of links in a labelled `<nav>`. Coming in M3.
-- [Card](https://odonckers.github.io/domestic-ui/patterns/card.md): A self-contained item, such as a product or an article teaser, on a raised surface. Coming in M3.
-- [Dialog and drawer](https://odonckers.github.io/domestic-ui/patterns/dialog.md): A modal `<dialog>`, either centered or as a drawer along one edge of the viewport. Coming in M3.
-- [Disclosure](https://odonckers.github.io/domestic-ui/patterns/disclosure.md): A summary that shows or hides more content, built on `<details>` and `<summary>`. Coming in M3.
-- [Menu button](https://odonckers.github.io/domestic-ui/patterns/menu-button.md): A button that opens a menu of actions. Coming in M3.
-- [Pagination](https://odonckers.github.io/domestic-ui/patterns/pagination.md): Links to the pages of a long list of results. Coming in M3.
-- [Popover](https://odonckers.github.io/domestic-ui/patterns/popover.md): Content shown on top of the page from a button, with the `popover` attribute. Coming in M3.
-- [Search](https://odonckers.github.io/domestic-ui/patterns/search.md): A search form in a `<search>` landmark with an `<input type="search">`. Coming in M3.
-- [Site navigation](https://odonckers.github.io/domestic-ui/patterns/nav.md): The main links of a site in a `<nav>` landmark, with the current page marked. Coming in M3.
-- [Tabs](https://odonckers.github.io/domestic-ui/patterns/tabs.md): Sections of content shown one at a time, chosen from a list of tabs. Coming in M3.
-- [Toolbar](https://odonckers.github.io/domestic-ui/patterns/toolbar.md): A row of related controls that is one stop in the tab order. Coming in M3.
-- [Typeahead](https://odonckers.github.io/domestic-ui/patterns/typeahead.md): A text field that suggests values as you type, with `<datalist>` first and an APG combobox only where `<datalist>` falls short. Coming in M3.
-- [App shell](https://odonckers.github.io/domestic-ui/patterns/app-shell.md): The frame of an application: header, primary sidebar, main content and an optional auxiliary sidebar. Coming in M3b.
-- [Compact density](https://odonckers.github.io/domestic-ui/patterns/density.md): A compact density token that tightens spacing for data-heavy screens. Coming in M3b.
-- [Dashboard](https://odonckers.github.io/domestic-ui/patterns/dashboard.md): A grid of summary sections, each with a heading, that reflows to fit the screen. Coming in M3b.
-- [Data table](https://odonckers.github.io/domestic-ui/patterns/data-table.md): Rows of records in a native `<table>` with a caption, header cells and optional sorting. Coming in M3b.
-- [Filter bar](https://odonckers.github.io/domestic-ui/patterns/filter-bar.md): A row of native form controls that narrows a list or table. Coming in M3b.
-- [Large forms](https://odonckers.github.io/domestic-ui/patterns/large-forms.md): Long forms split into labelled groups, in one or more columns. Coming in M3b.
-- [List-detail](https://odonckers.github.io/domestic-ui/patterns/list-detail.md): A list of items beside the details of the selected one, stacked on narrow screens. Coming in M3b.
-- [Split](https://odonckers.github.io/domestic-ui/patterns/split.md): Two regions side by side at a set ratio, stacked on narrow screens. Coming in M3b.
-
-### Guides
-
-- [From a simple site to an ERP app](https://odonckers.github.io/domestic-ui/guides/simple-site-to-erp-app.md): Five steps from a plain content page to a dense business application, and which parts of each step are available today.
-
-### Examples
-
-- [Base elements](https://odonckers.github.io/domestic-ui/examples/base.html)
-- [Theming](https://odonckers.github.io/domestic-ui/examples/theming.html)
-- [Badge](https://odonckers.github.io/domestic-ui/examples/atoms/badge.html)
-- [Buttons](https://odonckers.github.io/domestic-ui/examples/atoms/button.html)
-- [Form controls](https://odonckers.github.io/domestic-ui/examples/atoms/controls.html)
-- [Field](https://odonckers.github.io/domestic-ui/examples/atoms/field.html)
-- [Atoms showcase](https://odonckers.github.io/domestic-ui/examples/atoms/index.html)
-- [Quiet link](https://odonckers.github.io/domestic-ui/examples/atoms/link.html)
-- [Switch](https://odonckers.github.io/domestic-ui/examples/atoms/switch.html)
-- [Text helpers](https://odonckers.github.io/domestic-ui/examples/atoms/text.html)
-
-### Demos
-
-- [`demos/a11y/`](https://github.com/odonckers/domestic-ui/tree/main/demos/a11y): domestic-ui demos: accessibility checker
-- [`demos/angular/`](https://github.com/odonckers/domestic-ui/tree/main/demos/angular): domestic-ui demo: Angular
-- [`demos/astro/`](https://github.com/odonckers/domestic-ui/tree/main/demos/astro): domestic-ui demo: Astro
-- [`demos/react/`](https://github.com/odonckers/domestic-ui/tree/main/demos/react): domestic-ui demo: React
-- [`demos/vanilla/`](https://github.com/odonckers/domestic-ui/tree/main/demos/vanilla): domestic-ui demo: plain HTML
+- [Principles](https://odonckers.github.io/domestic-ui/principles/index.md): 8 sections, one page each.
+- [Tokens](https://odonckers.github.io/domestic-ui/tokens/index.md): all 158 custom properties with their light and dark values.
+- [Base](https://odonckers.github.io/domestic-ui/components/base.md): native elements styled with no classes, and the `.visually-hidden` utility.
+- [Layout](https://odonckers.github.io/domestic-ui/layouts/index.md): the layout primitives `.cluster`, `.grid`, `.stack`.
+- [Atoms](https://odonckers.github.io/domestic-ui/atoms/index.md): 7 components.
+- [Molecules](https://odonckers.github.io/domestic-ui/molecules/index.md): coming in M3.
+- [Organisms](https://odonckers.github.io/domestic-ui/organisms/index.md): coming in M3b.
+- [Patterns and guides](https://odonckers.github.io/domestic-ui/patterns/index.md): 21 patterns (0 available) and 1 guide.
+- [Demos](https://odonckers.github.io/domestic-ui/demos.md): 5 demo directories in `demos/`, on GitHub.
+- [Contributing](https://odonckers.github.io/domestic-ui/contributing.md) and [Changelog](https://odonckers.github.io/domestic-ui/changelog.md).
 
 ### For coding agents
 
 - [llms.txt](https://odonckers.github.io/domestic-ui/llms.txt): an index of these docs in the [llms.txt](https://llmstxt.org/) format.
 - [llms-full.txt](https://odonckers.github.io/domestic-ui/llms-full.txt): every page in one Markdown file.
 - Every docs page has a Markdown twin at the same path with `.md` instead of `.html`.
+
+## Examples
+
+Page: https://odonckers.github.io/domestic-ui/examples.html
+
+Standalone HTML pages that load `css/domestic.css`, nothing else. Open one, or read its source on GitHub.
+
+### Pages (`examples/`)
+
+- [Base elements](https://odonckers.github.io/domestic-ui/examples/base.html) ([source](https://github.com/odonckers/domestic-ui/blob/main/examples/base.html))
+- [Theming](https://odonckers.github.io/domestic-ui/examples/theming.html) ([source](https://github.com/odonckers/domestic-ui/blob/main/examples/theming.html))
+
+### Atoms (`examples/atoms/`)
+
+- [Atoms showcase](https://odonckers.github.io/domestic-ui/examples/atoms/index.html) ([source](https://github.com/odonckers/domestic-ui/blob/main/examples/atoms/index.html))
+- [Badge](https://odonckers.github.io/domestic-ui/examples/atoms/badge.html) ([source](https://github.com/odonckers/domestic-ui/blob/main/examples/atoms/badge.html))
+- [Buttons](https://odonckers.github.io/domestic-ui/examples/atoms/button.html) ([source](https://github.com/odonckers/domestic-ui/blob/main/examples/atoms/button.html))
+- [Form controls](https://odonckers.github.io/domestic-ui/examples/atoms/controls.html) ([source](https://github.com/odonckers/domestic-ui/blob/main/examples/atoms/controls.html))
+- [Field](https://odonckers.github.io/domestic-ui/examples/atoms/field.html) ([source](https://github.com/odonckers/domestic-ui/blob/main/examples/atoms/field.html))
+- [Quiet link](https://odonckers.github.io/domestic-ui/examples/atoms/link.html) ([source](https://github.com/odonckers/domestic-ui/blob/main/examples/atoms/link.html))
+- [Switch](https://odonckers.github.io/domestic-ui/examples/atoms/switch.html) ([source](https://github.com/odonckers/domestic-ui/blob/main/examples/atoms/switch.html))
+- [Text helpers](https://odonckers.github.io/domestic-ui/examples/atoms/text.html) ([source](https://github.com/odonckers/domestic-ui/blob/main/examples/atoms/text.html))
 
 ## Principles
 
@@ -528,380 +429,360 @@ Page: https://odonckers.github.io/domestic-ui/tokens/index.html
 
 All tokens are [CSS custom properties](https://developer.mozilla.org/en-US/docs/Web/CSS/--*) on `:root` with the `--dui-` prefix, in two tiers:
 
-- **Primitive** tokens, in [`css/tokens/primitives.css`](https://github.com/odonckers/domestic-ui/blob/main/css/tokens/primitives.css), are named by what they are, such as `--dui-color-blue-600`. They are internal and may change in any release.
-- **Semantic** tokens, in [`css/tokens/semantic.css`](https://github.com/odonckers/domestic-ui/blob/main/css/tokens/semantic.css), are named by what they are for, such as `--dui-color-accent`. They are the public theming API: renaming or removing one is a breaking change.
+- **Primitive** tokens are named by what they are, such as `--dui-color-blue-600`. They are internal and may change in any release.
+- **Semantic** tokens are named by what they are for, such as `--dui-color-accent`. They are the public theming API: renaming or removing one is a breaking change.
 
 Base, layout, utility and component CSS use only semantic tokens; `npm run lint:tokens` enforces this. To theme, override semantic tokens: see [Theming](https://odonckers.github.io/domestic-ui/principles/theming.md) and the [theming example](https://odonckers.github.io/domestic-ui/examples/theming.html).
 
-### Semantic token groups
+### Token files
 
-The groups follow the section comments in `css/tokens/semantic.css`.
+One page per file in `css/tokens/`, grouped by its section comments, with a filter.
 
-- [Surfaces and text](https://odonckers.github.io/domestic-ui/tokens/surfaces-and-text.md): 5 tokens
-- [Borders](https://odonckers.github.io/domestic-ui/tokens/borders.md): 2 tokens
-- [Accent and status](https://odonckers.github.io/domestic-ui/tokens/accent-and-status.md): 10 tokens
-- [Type](https://odonckers.github.io/domestic-ui/tokens/type.md): 18 tokens
-- [Space](https://odonckers.github.io/domestic-ui/tokens/space.md): 9 tokens
-- [Sizes](https://odonckers.github.io/domestic-ui/tokens/sizes.md): 5 tokens
-- [Shape](https://odonckers.github.io/domestic-ui/tokens/shape.md): 8 tokens
-- [Focus indicator](https://odonckers.github.io/domestic-ui/tokens/focus-indicator.md): 2 tokens
-- [Motion](https://odonckers.github.io/domestic-ui/tokens/motion.md): 3 tokens
-- [State](https://odonckers.github.io/domestic-ui/tokens/state.md): 3 tokens
-- [Dependent tokens](https://odonckers.github.io/domestic-ui/tokens/dependent-tokens.md): 5 tokens
-- [Tinted surfaces for status badges](https://odonckers.github.io/domestic-ui/tokens/tinted-surfaces-for-status-badges.md): 4 tokens
+- [Primitive tokens](https://odonckers.github.io/domestic-ui/tokens/primitives.md) (internal): 84 tokens in neutral gray, cool tint, hues, translucent black, for overlays and shadows, font stacks, font weights, fluid font sizes, line heights and tracking, spacing, sizes, radii, border widths, underline metrics, relative to the font, motion, opacity and mix amounts.
+- [Semantic tokens](https://odonckers.github.io/domestic-ui/tokens/semantic.md) (public theming API): 74 tokens in surfaces and text, borders, accent and status, type, space, sizes, shape, focus indicator, motion, state, dependent tokens, tinted surfaces for status badges.
 
-## Surfaces and text tokens
+### Tiers
 
-Page: https://odonckers.github.io/domestic-ui/tokens/surfaces-and-text.html
+From [Theming](https://odonckers.github.io/domestic-ui/principles/theming.md) in `PRINCIPLES.md`:
 
-Defined in [`css/tokens/semantic.css`](https://github.com/odonckers/domestic-ui/blob/main/css/tokens/semantic.css). Values are shown as written there; names inside `var()` that are not semantic tokens are internal primitives (see [Tokens](https://odonckers.github.io/domestic-ui/tokens/index.md)). Samples are decorative; the token name and value are the reference.
+| Tier | File | Named by | Example | Public? |
+| --- | --- | --- | --- | --- |
+| Primitive | `css/tokens/primitives.css` | What it is | `--dui-color-blue-600: #3451d1;` `--dui-space-5: 1rem;` | No. Internal, may change in any release. |
+| Semantic | `css/tokens/semantic.css` | What it is for | `--dui-color-accent: light-dark(var(--dui-color-blue-600), var(--dui-color-blue-400));` | **Yes.** The stable theming API. |
 
-| Token | Value in css/tokens/semantic.css | Purpose (from PRINCIPLES.md) |
-| --- | --- | --- |
-| `--dui-color-surface` | `light-dark(var(--dui-color-gray-0), var(--dui-color-gray-900))` | Page and control background |
-| `--dui-color-surface-raised` | `light-dark(var(--dui-color-gray-50), var(--dui-color-gray-850))` | Slightly lifted areas: neutral buttons, zebra rows, cards |
-| `--dui-color-surface-sunken` | `light-dark(var(--dui-color-gray-100), var(--dui-color-gray-800))` | Recessed areas: code, button hover |
-| `--dui-color-text` | `light-dark(var(--dui-color-gray-900), var(--dui-color-gray-100))` | Body text |
-| `--dui-color-text-muted` | `light-dark(var(--dui-color-gray-600), var(--dui-color-gray-400))` | Secondary text, captions, list markers (still 4.5:1) |
+### How values are shown
 
-## Borders tokens
+**Written as** is the value in the file. **Light** and **dark** follow every `var()` through all token files and take one side of [`light-dark()`](https://developer.mozilla.org/en-US/docs/Web/CSS/color_value/light-dark); functions such as `color-mix()` and `clamp()` are left for the browser. Overrides under a condition, such as `@media (prefers-reduced-motion: reduce)`, are listed in the description. Previews are decorative; the text in each row is the reference.
 
-Page: https://odonckers.github.io/domestic-ui/tokens/borders.html
+## Primitive tokens
 
-Decorative hairlines vs. control boundaries (3:1, WCAG 1.4.11)
+Page: https://odonckers.github.io/domestic-ui/tokens/primitives.html
 
-Defined in [`css/tokens/semantic.css`](https://github.com/odonckers/domestic-ui/blob/main/css/tokens/semantic.css). Values are shown as written there; names inside `var()` that are not semantic tokens are internal primitives (see [Tokens](https://odonckers.github.io/domestic-ui/tokens/index.md)). Samples are decorative; the token name and value are the reference.
+**Internal.** Raw values named by what they are, not by what they are for. Only css/tokens/semantic.css may reference these. Base, layout, utility and component CSS must use semantic tokens instead; `npm run lint:tokens` enforces this.
 
-| Token | Value in css/tokens/semantic.css | Purpose (from PRINCIPLES.md) |
-| --- | --- | --- |
-| `--dui-color-border` | `light-dark(var(--dui-color-gray-200), var(--dui-color-gray-700))` | Decorative hairlines: tables, hr, details, fieldset |
-| `--dui-color-border-control` | `light-dark(var(--dui-color-gray-500), var(--dui-color-gray-500))` | Form control and button boundaries (3:1) |
+Primitives are NOT public API: they may be renamed, added or removed in any release. Theme with semantic tokens.
 
-## Accent and status tokens
+Custom properties: <https://developer.mozilla.org/en-US/docs/Web/CSS/--*>
 
-Page: https://odonckers.github.io/domestic-ui/tokens/accent-and-status.html
+Defined in [`css/tokens/primitives.css`](https://github.com/odonckers/domestic-ui/blob/main/css/tokens/primitives.css): 84 tokens in 14 groups, one per section comment. See [Tokens](https://odonckers.github.io/domestic-ui/tokens/index.md) for the two tiers.
 
-Defined in [`css/tokens/semantic.css`](https://github.com/odonckers/domestic-ui/blob/main/css/tokens/semantic.css). Values are shown as written there; names inside `var()` that are not semantic tokens are internal primitives (see [Tokens](https://odonckers.github.io/domestic-ui/tokens/index.md)). Samples are decorative; the token name and value are the reference.
+**Written as** is the value in the file. **Light** and **dark** follow every `var()` through all token files and take one side of [`light-dark()`](https://developer.mozilla.org/en-US/docs/Web/CSS/color_value/light-dark); functions such as `color-mix()` and `clamp()` are left for the browser. Overrides under a condition, such as `@media (prefers-reduced-motion: reduce)`, are listed in the description. Previews are decorative; the text in each row is the reference.
 
-| Token | Value in css/tokens/semantic.css | Purpose (from PRINCIPLES.md) |
-| --- | --- | --- |
-| `--dui-color-accent` | `light-dark(var(--dui-color-blue-600), var(--dui-color-blue-400))` | Brand color: primary button fill, checks, links and focus by default |
-| `--dui-color-accent-contrast` | `light-dark(var(--dui-color-gray-0), var(--dui-color-gray-900))` | Text on accent |
-| `--dui-color-link-visited` | `light-dark(var(--dui-color-purple-700), var(--dui-color-purple-300))` | Visited links |
-| `--dui-color-danger` | `light-dark(var(--dui-color-red-700), var(--dui-color-red-300))` | Errors, :user-invalid borders |
-| `--dui-color-success` | `light-dark(var(--dui-color-green-700), var(--dui-color-green-300))` | Success messages |
-| `--dui-color-warning` | `light-dark(var(--dui-color-amber-700), var(--dui-color-amber-300))` | Warning badges and messages |
-| `--dui-color-mark` | `light-dark(var(--dui-color-yellow-100), var(--dui-color-yellow-300))` | mark and ::selection background |
-| `--dui-color-mark-text` | `light-dark(var(--dui-color-gray-900), var(--dui-color-gray-900))` | Text on mark |
-| `--dui-color-backdrop` | `light-dark(var(--dui-color-black-a40), var(--dui-color-black-a60))` | dialog::backdrop |
-| `--dui-color-shadow` | `light-dark(var(--dui-color-black-a10), var(--dui-color-black-a40))` | Shadow color |
+### Neutral gray, cool tint
 
-## Type tokens
+| Token | Light | Dark | Description |
+| --- | --- | --- | --- |
+| `--dui-color-gray-0` | `#fff` | `#fff` | No description yet. |
+| `--dui-color-gray-50` | `#f6f7f9` | `#f6f7f9` | No description yet. |
+| `--dui-color-gray-100` | `#eceef2` | `#eceef2` | No description yet. |
+| `--dui-color-gray-200` | `#dde0e6` | `#dde0e6` | No description yet. |
+| `--dui-color-gray-300` | `#c4c9d2` | `#c4c9d2` | No description yet. |
+| `--dui-color-gray-400` | `#a3aab6` | `#a3aab6` | No description yet. |
+| `--dui-color-gray-500` | `#7a8291` | `#7a8291` | No description yet. |
+| `--dui-color-gray-600` | `#545b68` | `#545b68` | No description yet. |
+| `--dui-color-gray-700` | `#3a404b` | `#3a404b` | No description yet. |
+| `--dui-color-gray-800` | `#252a34` | `#252a34` | No description yet. |
+| `--dui-color-gray-850` | `#1b1f27` | `#1b1f27` | No description yet. |
+| `--dui-color-gray-900` | `#12151b` | `#12151b` | No description yet. |
 
-Page: https://odonckers.github.io/domestic-ui/tokens/type.html
+### Hues
 
-Defined in [`css/tokens/semantic.css`](https://github.com/odonckers/domestic-ui/blob/main/css/tokens/semantic.css). Values are shown as written there; names inside `var()` that are not semantic tokens are internal primitives (see [Tokens](https://odonckers.github.io/domestic-ui/tokens/index.md)). Samples are decorative; the token name and value are the reference.
+| Token | Light | Dark | Description |
+| --- | --- | --- | --- |
+| `--dui-color-blue-300` | `#a8b7ff` | `#a8b7ff` | No description yet. |
+| `--dui-color-blue-400` | `#8ea2ff` | `#8ea2ff` | No description yet. |
+| `--dui-color-blue-600` | `#3451d1` | `#3451d1` | No description yet. |
+| `--dui-color-blue-700` | `#2b43b0` | `#2b43b0` | No description yet. |
+| `--dui-color-purple-300` | `#d2a8ff` | `#d2a8ff` | No description yet. |
+| `--dui-color-purple-700` | `#6b2fb3` | `#6b2fb3` | No description yet. |
+| `--dui-color-red-300` | `#ff8a80` | `#ff8a80` | No description yet. |
+| `--dui-color-red-700` | `#b42318` | `#b42318` | No description yet. |
+| `--dui-color-green-300` | `#5fd38d` | `#5fd38d` | No description yet. |
+| `--dui-color-green-700` | `#17773a` | `#17773a` | No description yet. |
+| `--dui-color-yellow-100` | `#fff1a8` | `#fff1a8` | No description yet. |
+| `--dui-color-yellow-300` | `#e3c84f` | `#e3c84f` | No description yet. |
+| `--dui-color-amber-300` | `#f2c14e` | `#f2c14e` | No description yet. |
+| `--dui-color-amber-700` | `#8a5a00` | `#8a5a00` | No description yet. |
 
-| Token | Value in css/tokens/semantic.css | Purpose (from PRINCIPLES.md) |
-| --- | --- | --- |
-| `--dui-font-body` | `var(--dui-font-stack-system-ui)` | Body font stack |
-| `--dui-font-mono` | `var(--dui-font-stack-monospace)` | Code font stack |
-| `--dui-font-weight-body` | `var(--dui-font-weight-400)` | Body weight |
-| `--dui-font-weight-strong` | `var(--dui-font-weight-600)` | strong, labels, buttons, th |
-| `--dui-font-weight-heading` | `var(--dui-font-weight-700)` | h1–h6 |
-| `--dui-step--1` | `var(--dui-font-size-fluid--1)` | small, captions |
-| `--dui-step-0` | `var(--dui-font-size-fluid-0)` | Body text, h6 |
-| `--dui-step-1` | `var(--dui-font-size-fluid-1)` | h5 |
-| `--dui-step-2` | `var(--dui-font-size-fluid-2)` | h4 |
-| `--dui-step-3` | `var(--dui-font-size-fluid-3)` | h3 |
-| `--dui-step-4` | `var(--dui-font-size-fluid-4)` | h2 |
-| `--dui-step-5` | `var(--dui-font-size-fluid-5)` | h1 |
-| `--dui-font-size-code` | `var(--dui-font-size-relative-90)` | code, kbd, samp, pre (relative) |
-| `--dui-line-height-body` | `var(--dui-leading-160)` | Body text |
-| `--dui-line-height-heading` | `var(--dui-leading-125)` | Headings, buttons, pre |
-| `--dui-line-height-display` | `var(--dui-leading-110)` | h1 |
-| `--dui-letter-spacing-heading` | `var(--dui-tracking-tight)` | h1, h2 |
-| `--dui-measure` | `var(--dui-size-65ch)` | Max line length for prose |
+### Translucent black, for overlays and shadows
 
-## Space tokens
+| Token | Light | Dark | Description |
+| --- | --- | --- | --- |
+| `--dui-color-black-a10` | `rgb(0 0 0 / 10%)` | `rgb(0 0 0 / 10%)` | No description yet. |
+| `--dui-color-black-a40` | `rgb(0 0 0 / 40%)` | `rgb(0 0 0 / 40%)` | No description yet. |
+| `--dui-color-black-a60` | `rgb(0 0 0 / 60%)` | `rgb(0 0 0 / 60%)` | No description yet. |
 
-Page: https://odonckers.github.io/domestic-ui/tokens/space.html
+### Font stacks
 
-Defined in [`css/tokens/semantic.css`](https://github.com/odonckers/domestic-ui/blob/main/css/tokens/semantic.css). Values are shown as written there; names inside `var()` that are not semantic tokens are internal primitives (see [Tokens](https://odonckers.github.io/domestic-ui/tokens/index.md)). Samples are decorative; the token name and value are the reference.
+System fonts only, no downloads. Stacks follow <https://modernfontstacks.com/>.
 
-| Token | Value in css/tokens/semantic.css | Purpose (from PRINCIPLES.md) |
-| --- | --- | --- |
-| `--dui-space-3xs` | `var(--dui-space-1)` | Space scale |
-| `--dui-space-2xs` | `var(--dui-space-2)` | Space scale |
-| `--dui-space-xs` | `var(--dui-space-3)` | Space scale |
-| `--dui-space-s` | `var(--dui-space-4)` | Space scale |
-| `--dui-space-m` | `var(--dui-space-5)` | Space scale; default flow rhythm and .stack gap |
-| `--dui-space-l` | `var(--dui-space-6)` | Space scale; default .grid gap |
-| `--dui-space-xl` | `var(--dui-space-7)` | Space scale; space above h1–h3 |
-| `--dui-space-2xl` | `var(--dui-space-8)` | Space scale |
-| `--dui-space-3xl` | `var(--dui-space-9)` | Space scale |
+| Token | Light | Dark | Description |
+| --- | --- | --- | --- |
+| `--dui-font-stack-system-ui` | `system-ui, sans-serif` | `system-ui, sans-serif` | No description yet. |
+| `--dui-font-stack-transitional` | `charter, "Bitstream Charter", "Sitka Text", cambria, serif` | `charter, "Bitstream Charter", "Sitka Text", cambria, serif` | No description yet. |
+| `--dui-font-stack-monospace` | `ui-monospace, "Cascadia Code", "Source Code Pro", menlo, consolas, "DejaVu Sans Mono", monospace` | `ui-monospace, "Cascadia Code", "Source Code Pro", menlo, consolas, "DejaVu Sans Mono", monospace` | No description yet. |
 
-## Sizes tokens
+### Font weights
 
-Page: https://odonckers.github.io/domestic-ui/tokens/sizes.html
+| Token | Light | Dark | Description |
+| --- | --- | --- | --- |
+| `--dui-font-weight-400` | `400` | `400` | No description yet. |
+| `--dui-font-weight-500` | `500` | `500` | No description yet. |
+| `--dui-font-weight-600` | `600` | `600` | No description yet. |
+| `--dui-font-weight-700` | `700` | `700` | No description yet. |
 
-Defined in [`css/tokens/semantic.css`](https://github.com/odonckers/domestic-ui/blob/main/css/tokens/semantic.css). Values are shown as written there; names inside `var()` that are not semantic tokens are internal primitives (see [Tokens](https://odonckers.github.io/domestic-ui/tokens/index.md)). Samples are decorative; the token name and value are the reference.
+### Fluid font sizes
 
-| Token | Value in css/tokens/semantic.css | Purpose (from PRINCIPLES.md) |
-| --- | --- | --- |
-| `--dui-size-target` | `var(--dui-size-2-75)` | Min height of controls and buttons (WCAG 2.5.8 needs 24px; this gives 44px) |
-| `--dui-size-target-small` | `var(--dui-size-2)` | Small buttons (32px: under 44px, over the 24px minimum) |
-| `--dui-size-target-large` | `var(--dui-size-3-25)` | Large buttons |
-| `--dui-size-check` | `var(--dui-size-1-25)` | Checkbox and radio size |
-| `--dui-size-column-min` | `var(--dui-size-16)` | Default .grid min column width |
+A 1.2 ratio at small viewports growing to 1.25 at wide ones, interpolated with clamp(). <https://developer.mozilla.org/en-US/docs/Web/CSS/clamp>.
 
-## Shape tokens
+| Token | Light | Dark | Description |
+| --- | --- | --- | --- |
+| `--dui-font-size-fluid--1` | `clamp(0.8333rem, 0.8101rem + 0.1159vw, 0.9rem)` | `clamp(0.8333rem, 0.8101rem + 0.1159vw, 0.9rem)` | No description yet. |
+| `--dui-font-size-fluid-0` | `clamp(1rem, 0.9565rem + 0.2174vw, 1.125rem)` | `clamp(1rem, 0.9565rem + 0.2174vw, 1.125rem)` | No description yet. |
+| `--dui-font-size-fluid-1` | `clamp(1.2rem, 1.1283rem + 0.3587vw, 1.4063rem)` | `clamp(1.2rem, 1.1283rem + 0.3587vw, 1.4063rem)` | No description yet. |
+| `--dui-font-size-fluid-2` | `clamp(1.44rem, 1.3295rem + 0.5527vw, 1.7578rem)` | `clamp(1.44rem, 1.3295rem + 0.5527vw, 1.7578rem)` | No description yet. |
+| `--dui-font-size-fluid-3` | `clamp(1.728rem, 1.5648rem + 0.8161vw, 2.1973rem)` | `clamp(1.728rem, 1.5648rem + 0.8161vw, 2.1973rem)` | No description yet. |
+| `--dui-font-size-fluid-4` | `clamp(2.0736rem, 1.8395rem + 1.1704vw, 2.7466rem)` | `clamp(2.0736rem, 1.8395rem + 1.1704vw, 2.7466rem)` | No description yet. |
+| `--dui-font-size-fluid-5` | `clamp(2.4883rem, 2.1597rem + 1.6428vw, 3.4332rem)` | `clamp(2.4883rem, 2.1597rem + 1.6428vw, 3.4332rem)` | No description yet. |
+| `--dui-font-size-relative-90` | `0.9em` | `0.9em` | No description yet. |
 
-Page: https://odonckers.github.io/domestic-ui/tokens/shape.html
+### Line heights and tracking
 
-Defined in [`css/tokens/semantic.css`](https://github.com/odonckers/domestic-ui/blob/main/css/tokens/semantic.css). Values are shown as written there; names inside `var()` that are not semantic tokens are internal primitives (see [Tokens](https://odonckers.github.io/domestic-ui/tokens/index.md)). Samples are decorative; the token name and value are the reference.
+| Token | Light | Dark | Description |
+| --- | --- | --- | --- |
+| `--dui-leading-110` | `1.1` | `1.1` | No description yet. |
+| `--dui-leading-125` | `1.25` | `1.25` | No description yet. |
+| `--dui-leading-160` | `1.6` | `1.6` | No description yet. |
+| `--dui-tracking-tight` | `-0.015em` | `-0.015em` | No description yet. |
+| `--dui-tracking-normal` | `normal` | `normal` | No description yet. |
 
-| Token | Value in css/tokens/semantic.css | Purpose (from PRINCIPLES.md) |
-| --- | --- | --- |
-| `--dui-radius-control` | `var(--dui-radius-2)` | Controls, buttons, inline code |
-| `--dui-radius-surface` | `var(--dui-radius-3)` | Panels, pre, dialog, details, media |
-| `--dui-radius-pill` | `var(--dui-radius-round)` | Fully rounded ends |
-| `--dui-border-width` | `var(--dui-border-1)` | Hairline width |
-| `--dui-border-width-emphasis` | `var(--dui-border-4)` | blockquote rule |
-| `--dui-underline-offset` | `var(--dui-underline-offset-015em)` | Link underline offset |
-| `--dui-underline-thickness` | `var(--dui-underline-1)` | Link underline |
-| `--dui-underline-thickness-hover` | `var(--dui-underline-2)` | Link underline on hover |
+### Spacing
 
-## Focus indicator tokens
+Rem, so it follows the user's font size setting.
 
-Page: https://odonckers.github.io/domestic-ui/tokens/focus-indicator.html
+| Token | Light | Dark | Description |
+| --- | --- | --- | --- |
+| `--dui-space-0` | `0` | `0` | No description yet. |
+| `--dui-space-1` | `0.125rem` | `0.125rem` | No description yet. |
+| `--dui-space-2` | `0.25rem` | `0.25rem` | No description yet. |
+| `--dui-space-3` | `0.5rem` | `0.5rem` | No description yet. |
+| `--dui-space-4` | `0.75rem` | `0.75rem` | No description yet. |
+| `--dui-space-5` | `1rem` | `1rem` | No description yet. |
+| `--dui-space-6` | `1.5rem` | `1.5rem` | No description yet. |
+| `--dui-space-7` | `2rem` | `2rem` | No description yet. |
+| `--dui-space-8` | `3rem` | `3rem` | No description yet. |
+| `--dui-space-9` | `4rem` | `4rem` | No description yet. |
 
-WCAG 2.4.7, 2.4.11, 2.4.13
+### Sizes
 
-Defined in [`css/tokens/semantic.css`](https://github.com/odonckers/domestic-ui/blob/main/css/tokens/semantic.css). Values are shown as written there; names inside `var()` that are not semantic tokens are internal primitives (see [Tokens](https://odonckers.github.io/domestic-ui/tokens/index.md)). Samples are decorative; the token name and value are the reference.
+| Token | Light | Dark | Description |
+| --- | --- | --- | --- |
+| `--dui-size-1-25` | `1.25rem` | `1.25rem` | No description yet. |
+| `--dui-size-2` | `2rem` | `2rem` | No description yet. |
+| `--dui-size-2-75` | `2.75rem` | `2.75rem` | No description yet. |
+| `--dui-size-3-25` | `3.25rem` | `3.25rem` | No description yet. |
+| `--dui-size-16` | `16rem` | `16rem` | No description yet. |
+| `--dui-size-65ch` | `65ch` | `65ch` | No description yet. |
 
-| Token | Value in css/tokens/semantic.css | Purpose (from PRINCIPLES.md) |
-| --- | --- | --- |
-| `--dui-focus-width` | `var(--dui-border-2)` | Focus outline width |
-| `--dui-focus-offset` | `var(--dui-border-2)` | Focus outline offset |
+### Radii
 
-## Motion tokens
+| Token | Light | Dark | Description |
+| --- | --- | --- | --- |
+| `--dui-radius-0` | `0` | `0` | No description yet. |
+| `--dui-radius-1` | `0.125rem` | `0.125rem` | No description yet. |
+| `--dui-radius-2` | `0.375rem` | `0.375rem` | No description yet. |
+| `--dui-radius-3` | `0.625rem` | `0.625rem` | No description yet. |
+| `--dui-radius-round` | `999rem` | `999rem` | No description yet. |
 
-Page: https://odonckers.github.io/domestic-ui/tokens/motion.html
+### Border widths
 
-Defined in [`css/tokens/semantic.css`](https://github.com/odonckers/domestic-ui/blob/main/css/tokens/semantic.css). Values are shown as written there; names inside `var()` that are not semantic tokens are internal primitives (see [Tokens](https://odonckers.github.io/domestic-ui/tokens/index.md)). Samples are decorative; the token name and value are the reference.
+| Token | Light | Dark | Description |
+| --- | --- | --- | --- |
+| `--dui-border-1` | `1px` | `1px` | No description yet. |
+| `--dui-border-2` | `2px` | `2px` | No description yet. |
+| `--dui-border-4` | `0.25rem` | `0.25rem` | No description yet. |
 
-| Token | Value in css/tokens/semantic.css | Purpose (from PRINCIPLES.md) |
-| --- | --- | --- |
-| `--dui-duration-fast` | `var(--dui-duration-150)`; with `@media (prefers-reduced-motion: reduce)`: `var(--dui-duration-0)` | Hover transitions (0s with reduced motion) |
-| `--dui-duration-normal` | `var(--dui-duration-250)`; with `@media (prefers-reduced-motion: reduce)`: `var(--dui-duration-0)` | Larger transitions (0s with reduced motion) |
-| `--dui-easing-standard` | `var(--dui-easing-ease-out)`; with `@media (prefers-reduced-motion: reduce)`: `var(--dui-easing-linear)` | Easing curve (linear with reduced motion) |
+### Underline metrics, relative to the font
 
-## State tokens
+| Token | Light | Dark | Description |
+| --- | --- | --- | --- |
+| `--dui-underline-offset-015em` | `0.15em` | `0.15em` | No description yet. |
+| `--dui-underline-1` | `0.0625em` | `0.0625em` | No description yet. |
+| `--dui-underline-2` | `0.125em` | `0.125em` | No description yet. |
 
-Page: https://odonckers.github.io/domestic-ui/tokens/state.html
+### Motion
 
-Defined in [`css/tokens/semantic.css`](https://github.com/odonckers/domestic-ui/blob/main/css/tokens/semantic.css). Values are shown as written there; names inside `var()` that are not semantic tokens are internal primitives (see [Tokens](https://odonckers.github.io/domestic-ui/tokens/index.md)). Samples are decorative; the token name and value are the reference.
+| Token | Light | Dark | Description |
+| --- | --- | --- | --- |
+| `--dui-duration-0` | `0s` | `0s` | No description yet. |
+| `--dui-duration-150` | `150ms` | `150ms` | No description yet. |
+| `--dui-duration-250` | `250ms` | `250ms` | No description yet. |
+| `--dui-easing-ease-out` | `cubic-bezier(0.2, 0, 0, 1)` | `cubic-bezier(0.2, 0, 0, 1)` | No description yet. |
+| `--dui-easing-linear` | `linear` | `linear` | No description yet. |
 
-| Token | Value in css/tokens/semantic.css | Purpose (from PRINCIPLES.md) |
-| --- | --- | --- |
-| `--dui-opacity-disabled` | `var(--dui-opacity-60)` | Disabled controls, `disabled` and `aria-disabled="true"` |
-| `--dui-tint-amount` | `var(--dui-mix-8)` | How much of a tone goes into a tinted surface |
-| `--dui-border-tint-amount` | `var(--dui-mix-35)` | How much of the text color goes into a tinted border (badges) |
+### Opacity and mix amounts
 
-## Dependent tokens
+| Token | Light | Dark | Description |
+| --- | --- | --- | --- |
+| `--dui-opacity-60` | `0.6` | `0.6` | No description yet. |
+| `--dui-mix-8` | `8%` | `8%` | No description yet. |
+| `--dui-mix-35` | `35%` | `35%` | No description yet. |
 
-Page: https://odonckers.github.io/domestic-ui/tokens/dependent-tokens.html
+## Semantic tokens
 
-Defined in terms of other semantic tokens. A custom property's var() references are substituted on the element that declares it, then the result is inherited. If these lived only on :root, overriding --dui-color-accent on a scoped element would not update --dui-color-link below it. So they are re-declared on every theme scope: an element with a data-theme attribute or a theme-\* class. <https://drafts.csswg.org/css-variables/#cycles> (substitution timing) Our choice: themes are scoped with \[data-theme\] or .theme-\*, so one attribute (or class) is the whole scoping API.
+Page: https://odonckers.github.io/domestic-ui/tokens/semantic.html
 
-Defined in [`css/tokens/semantic.css`](https://github.com/odonckers/domestic-ui/blob/main/css/tokens/semantic.css). Values are shown as written there; names inside `var()` that are not semantic tokens are internal primitives (see [Tokens](https://odonckers.github.io/domestic-ui/tokens/index.md)). Samples are decorative; the token name and value are the reference.
+**Public theming API.** Named by role. Each points at a primitive (css/tokens/primitives.css) or at another semantic token. Base, layout, utility and component CSS use only these. Renaming or removing one is a breaking change.
 
-| Token | Value in css/tokens/semantic.css | Purpose (from PRINCIPLES.md) |
-| --- | --- | --- |
-| `--dui-color-link` | `var(--dui-color-accent)` | Links |
-| `--dui-color-focus` | `var(--dui-color-accent)` | Focus ring (3:1 against surfaces) |
-| `--dui-color-accent-hover` | `color-mix(in oklab, var(--dui-color-accent) 82%, var(--dui-color-text))` | Primary button hover |
-| `--dui-font-heading` | `var(--dui-font-body)` | Heading font stack |
-| `--dui-shadow-raised` | `0 var(--dui-border-1) var(--dui-space-2) var(--dui-color-shadow), 0 var(--dui-space-3) var(--dui-space-7) var(--dui-color-shadow)` | dialog shadow |
+A theme is an override of these tokens on :root or on a scoped element. No rebuild. See PRINCIPLES.md, "Theming".
 
-## Tinted surfaces for status badges tokens
+Colors use light-dark(), which picks a value from the used color-scheme of the element where the token is read. <https://developer.mozilla.org/en-US/docs/Web/CSS/color_value/light-dark>
 
-Page: https://odonckers.github.io/domestic-ui/tokens/tinted-surfaces-for-status-badges.html
+Defined in [`css/tokens/semantic.css`](https://github.com/odonckers/domestic-ui/blob/main/css/tokens/semantic.css): 74 tokens in 12 groups, one per section comment. See [Tokens](https://odonckers.github.io/domestic-ui/tokens/index.md) for the two tiers.
+
+**Written as** is the value in the file. **Light** and **dark** follow every `var()` through all token files and take one side of [`light-dark()`](https://developer.mozilla.org/en-US/docs/Web/CSS/color_value/light-dark); functions such as `color-mix()` and `clamp()` are left for the browser. Overrides under a condition, such as `@media (prefers-reduced-motion: reduce)`, are listed in the description. Previews are decorative; the text in each row is the reference.
+
+### Surfaces and text
+
+| Token | Light | Dark | Description |
+| --- | --- | --- | --- |
+| `--dui-color-surface` | `#fff` | `#12151b` | Page and control background (from PRINCIPLES.md) |
+| `--dui-color-surface-raised` | `#f6f7f9` | `#1b1f27` | Slightly lifted areas: neutral buttons, zebra rows, cards (from PRINCIPLES.md) |
+| `--dui-color-surface-sunken` | `#eceef2` | `#252a34` | Recessed areas: code, button hover (from PRINCIPLES.md) |
+| `--dui-color-text` | `#12151b` | `#eceef2` | Body text (from PRINCIPLES.md) |
+| `--dui-color-text-muted` | `#545b68` | `#a3aab6` | Secondary text, captions, list markers (still 4.5:1) (from PRINCIPLES.md) |
+
+### Borders
+
+Decorative hairlines vs. control boundaries (3:1, WCAG 1.4.11).
+
+| Token | Light | Dark | Description |
+| --- | --- | --- | --- |
+| `--dui-color-border` | `#dde0e6` | `#3a404b` | Decorative hairlines: tables, hr, details, fieldset (from PRINCIPLES.md) |
+| `--dui-color-border-control` | `#7a8291` | `#7a8291` | Form control and button boundaries (3:1) (from PRINCIPLES.md) |
+
+### Accent and status
+
+| Token | Light | Dark | Description |
+| --- | --- | --- | --- |
+| `--dui-color-accent` | `#3451d1` | `#8ea2ff` | Brand color: primary button fill, checks, links and focus by default (from PRINCIPLES.md) |
+| `--dui-color-accent-contrast` | `#fff` | `#12151b` | Text on accent (from PRINCIPLES.md) |
+| `--dui-color-link-visited` | `#6b2fb3` | `#d2a8ff` | Visited links (from PRINCIPLES.md) |
+| `--dui-color-danger` | `#b42318` | `#ff8a80` | Errors, :user-invalid borders (from PRINCIPLES.md) |
+| `--dui-color-success` | `#17773a` | `#5fd38d` | Success messages (from PRINCIPLES.md) |
+| `--dui-color-warning` | `#8a5a00` | `#f2c14e` | Warning badges and messages (from PRINCIPLES.md) |
+| `--dui-color-mark` | `#fff1a8` | `#e3c84f` | mark and ::selection background (from PRINCIPLES.md) |
+| `--dui-color-mark-text` | `#12151b` | `#12151b` | Text on mark (from PRINCIPLES.md) |
+| `--dui-color-backdrop` | `rgb(0 0 0 / 40%)` | `rgb(0 0 0 / 60%)` | dialog::backdrop (from PRINCIPLES.md) |
+| `--dui-color-shadow` | `rgb(0 0 0 / 10%)` | `rgb(0 0 0 / 40%)` | Shadow color (from PRINCIPLES.md) |
+
+### Type
+
+| Token | Light | Dark | Description |
+| --- | --- | --- | --- |
+| `--dui-font-body` | `system-ui, sans-serif` | `system-ui, sans-serif` | Body font stack (from PRINCIPLES.md) |
+| `--dui-font-mono` | `ui-monospace, "Cascadia Code", "Source Code Pro", menlo, consolas, "DejaVu Sans Mono", monospace` | `ui-monospace, "Cascadia Code", "Source Code Pro", menlo, consolas, "DejaVu Sans Mono", monospace` | Code font stack (from PRINCIPLES.md) |
+| `--dui-font-weight-body` | `400` | `400` | Body weight (from PRINCIPLES.md) |
+| `--dui-font-weight-strong` | `600` | `600` | strong, labels, buttons, th (from PRINCIPLES.md) |
+| `--dui-font-weight-heading` | `700` | `700` | h1–h6 (from PRINCIPLES.md) |
+| `--dui-step--1` | `clamp(0.8333rem, 0.8101rem + 0.1159vw, 0.9rem)` | `clamp(0.8333rem, 0.8101rem + 0.1159vw, 0.9rem)` | small, captions (from PRINCIPLES.md) |
+| `--dui-step-0` | `clamp(1rem, 0.9565rem + 0.2174vw, 1.125rem)` | `clamp(1rem, 0.9565rem + 0.2174vw, 1.125rem)` | Body text, h6 (from PRINCIPLES.md) |
+| `--dui-step-1` | `clamp(1.2rem, 1.1283rem + 0.3587vw, 1.4063rem)` | `clamp(1.2rem, 1.1283rem + 0.3587vw, 1.4063rem)` | h5 (from PRINCIPLES.md) |
+| `--dui-step-2` | `clamp(1.44rem, 1.3295rem + 0.5527vw, 1.7578rem)` | `clamp(1.44rem, 1.3295rem + 0.5527vw, 1.7578rem)` | h4 (from PRINCIPLES.md) |
+| `--dui-step-3` | `clamp(1.728rem, 1.5648rem + 0.8161vw, 2.1973rem)` | `clamp(1.728rem, 1.5648rem + 0.8161vw, 2.1973rem)` | h3 (from PRINCIPLES.md) |
+| `--dui-step-4` | `clamp(2.0736rem, 1.8395rem + 1.1704vw, 2.7466rem)` | `clamp(2.0736rem, 1.8395rem + 1.1704vw, 2.7466rem)` | h2 (from PRINCIPLES.md) |
+| `--dui-step-5` | `clamp(2.4883rem, 2.1597rem + 1.6428vw, 3.4332rem)` | `clamp(2.4883rem, 2.1597rem + 1.6428vw, 3.4332rem)` | h1 (from PRINCIPLES.md) |
+| `--dui-font-size-code` | `0.9em` | `0.9em` | code, kbd, samp, pre (relative) (from PRINCIPLES.md) |
+| `--dui-line-height-body` | `1.6` | `1.6` | Body text (from PRINCIPLES.md) |
+| `--dui-line-height-heading` | `1.25` | `1.25` | Headings, buttons, pre (from PRINCIPLES.md) |
+| `--dui-line-height-display` | `1.1` | `1.1` | h1 (from PRINCIPLES.md) |
+| `--dui-letter-spacing-heading` | `-0.015em` | `-0.015em` | h1, h2 (from PRINCIPLES.md) |
+| `--dui-measure` | `65ch` | `65ch` | Max line length for prose (from PRINCIPLES.md) |
+
+### Space
+
+| Token | Light | Dark | Description |
+| --- | --- | --- | --- |
+| `--dui-space-3xs` | `0.125rem` | `0.125rem` | Space scale (from PRINCIPLES.md) |
+| `--dui-space-2xs` | `0.25rem` | `0.25rem` | Space scale (from PRINCIPLES.md) |
+| `--dui-space-xs` | `0.5rem` | `0.5rem` | Space scale (from PRINCIPLES.md) |
+| `--dui-space-s` | `0.75rem` | `0.75rem` | Space scale (from PRINCIPLES.md) |
+| `--dui-space-m` | `1rem` | `1rem` | Space scale; default flow rhythm and .stack gap (from PRINCIPLES.md) |
+| `--dui-space-l` | `1.5rem` | `1.5rem` | Space scale; default .grid gap (from PRINCIPLES.md) |
+| `--dui-space-xl` | `2rem` | `2rem` | Space scale; space above h1–h3 (from PRINCIPLES.md) |
+| `--dui-space-2xl` | `3rem` | `3rem` | Space scale (from PRINCIPLES.md) |
+| `--dui-space-3xl` | `4rem` | `4rem` | Space scale (from PRINCIPLES.md) |
+
+### Sizes
+
+| Token | Light | Dark | Description |
+| --- | --- | --- | --- |
+| `--dui-size-target` | `2.75rem` | `2.75rem` | Min height of controls and buttons (WCAG 2.5.8 needs 24px; this gives 44px) (from PRINCIPLES.md) |
+| `--dui-size-target-small` | `2rem` | `2rem` | Small buttons (32px: under 44px, over the 24px minimum) (from PRINCIPLES.md) |
+| `--dui-size-target-large` | `3.25rem` | `3.25rem` | Large buttons (from PRINCIPLES.md) |
+| `--dui-size-check` | `1.25rem` | `1.25rem` | Checkbox and radio size (from PRINCIPLES.md) |
+| `--dui-size-column-min` | `16rem` | `16rem` | Default .grid min column width (from PRINCIPLES.md) |
+
+### Shape
+
+| Token | Light | Dark | Description |
+| --- | --- | --- | --- |
+| `--dui-radius-control` | `0.375rem` | `0.375rem` | Controls, buttons, inline code (from PRINCIPLES.md) |
+| `--dui-radius-surface` | `0.625rem` | `0.625rem` | Panels, pre, dialog, details, media (from PRINCIPLES.md) |
+| `--dui-radius-pill` | `999rem` | `999rem` | Fully rounded ends (from PRINCIPLES.md) |
+| `--dui-border-width` | `1px` | `1px` | Hairline width (from PRINCIPLES.md) |
+| `--dui-border-width-emphasis` | `0.25rem` | `0.25rem` | blockquote rule (from PRINCIPLES.md) |
+| `--dui-underline-offset` | `0.15em` | `0.15em` | Link underline offset (from PRINCIPLES.md) |
+| `--dui-underline-thickness` | `0.0625em` | `0.0625em` | Link underline (from PRINCIPLES.md) |
+| `--dui-underline-thickness-hover` | `0.125em` | `0.125em` | Link underline on hover (from PRINCIPLES.md) |
+
+### Focus indicator
+
+WCAG 2.4.7, 2.4.11, 2.4.13.
+
+| Token | Light | Dark | Description |
+| --- | --- | --- | --- |
+| `--dui-focus-width` | `2px` | `2px` | Focus outline width (from PRINCIPLES.md) |
+| `--dui-focus-offset` | `2px` | `2px` | Focus outline offset (from PRINCIPLES.md) |
+
+### Motion
+
+| Token | Light | Dark | Description |
+| --- | --- | --- | --- |
+| `--dui-duration-fast` | `150ms` | `150ms` | Hover transitions (0s with reduced motion) (from PRINCIPLES.md) With `@media (prefers-reduced-motion: reduce)`: `var(--dui-duration-0)`, resolves to `0s`. |
+| `--dui-duration-normal` | `250ms` | `250ms` | Larger transitions (0s with reduced motion) (from PRINCIPLES.md) With `@media (prefers-reduced-motion: reduce)`: `var(--dui-duration-0)`, resolves to `0s`. |
+| `--dui-easing-standard` | `cubic-bezier(0.2, 0, 0, 1)` | `cubic-bezier(0.2, 0, 0, 1)` | Easing curve (linear with reduced motion) (from PRINCIPLES.md) With `@media (prefers-reduced-motion: reduce)`: `var(--dui-easing-linear)`, resolves to `linear`. |
+
+### State
+
+| Token | Light | Dark | Description |
+| --- | --- | --- | --- |
+| `--dui-opacity-disabled` | `0.6` | `0.6` | Disabled controls, `disabled` and `aria-disabled="true"` (from PRINCIPLES.md) |
+| `--dui-tint-amount` | `8%` | `8%` | How much of a tone goes into a tinted surface (from PRINCIPLES.md) |
+| `--dui-border-tint-amount` | `35%` | `35%` | How much of the text color goes into a tinted border (badges) (from PRINCIPLES.md) |
+
+### Dependent tokens
+
+Defined in terms of other semantic tokens.
+
+| Token | Light | Dark | Description |
+| --- | --- | --- | --- |
+| `--dui-color-link` | `#3451d1` | `#8ea2ff` | Links (from PRINCIPLES.md) |
+| `--dui-color-focus` | `#3451d1` | `#8ea2ff` | Focus ring (3:1 against surfaces) (from PRINCIPLES.md) |
+| `--dui-color-accent-hover` | `color-mix(in oklab, #3451d1 82%, #12151b)` | `color-mix(in oklab, #8ea2ff 82%, #eceef2)` | Primary button hover (from PRINCIPLES.md) |
+| `--dui-font-heading` | `system-ui, sans-serif` | `system-ui, sans-serif` | Heading font stack (from PRINCIPLES.md) |
+| `--dui-shadow-raised` | `0 1px 0.25rem rgb(0 0 0 / 10%), 0 0.5rem 2rem rgb(0 0 0 / 10%)` | `0 1px 0.25rem rgb(0 0 0 / 40%), 0 0.5rem 2rem rgb(0 0 0 / 40%)` | dialog shadow (from PRINCIPLES.md) |
+
+### Tinted surfaces for status badges
 
 A little of the tone mixed into the surface.
 
-Defined in [`css/tokens/semantic.css`](https://github.com/odonckers/domestic-ui/blob/main/css/tokens/semantic.css). Values are shown as written there; names inside `var()` that are not semantic tokens are internal primitives (see [Tokens](https://odonckers.github.io/domestic-ui/tokens/index.md)). Samples are decorative; the token name and value are the reference.
-
-| Token | Value in css/tokens/semantic.css | Purpose (from PRINCIPLES.md) |
-| --- | --- | --- |
-| `--dui-color-accent-surface` | `color-mix(in oklab, var(--dui-color-accent) var(--dui-tint-amount), var(--dui-color-surface))` | Accent badge background |
-| `--dui-color-success-surface` | `color-mix(in oklab, var(--dui-color-success) var(--dui-tint-amount), var(--dui-color-surface))` | Success badge background |
-| `--dui-color-warning-surface` | `color-mix(in oklab, var(--dui-color-warning) var(--dui-tint-amount), var(--dui-color-surface))` | Warning badge background |
-| `--dui-color-danger-surface` | `color-mix(in oklab, var(--dui-color-danger) var(--dui-tint-amount), var(--dui-color-surface))` | Danger badge background |
-
-## Component API
-
-Each component exposes one `data-<component>` attribute. Its value is a list of space-separated words matched with the [`~=` attribute selector](https://developer.mozilla.org/en-US/docs/Web/CSS/Attribute_selectors), like [`rel`](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Attributes/rel): `data-button="primary small"`. Component APIs use no classes. State is carried by native attributes and ARIA: `disabled`, `aria-disabled`, `aria-busy`, `aria-invalid`.
-
-**Our choice:** One attribute is one API to learn, it reads as a sentence (`data-button="primary small"`), and it cannot pile up like modifier classes.
-
-Layout primitives and utilities from M1 are classes: `.cluster`, `.grid`, `.stack`, `.visually-hidden`. Base elements need no API: write semantic HTML.
-
-## Components
-
-Page: https://odonckers.github.io/domestic-ui/components/index.html
-
-Each layout primitive, utility and component has one documented API, written in the header comment of its CSS file and tuned with custom properties ([Agent-friendly by design](https://odonckers.github.io/domestic-ui/principles/agent-friendly-by-design.md)).
-
-The levels follow [atomic design](https://atomicdesign.bradfrost.com/chapter-2/). Planned [patterns](https://odonckers.github.io/domestic-ui/patterns/index.md) are listed at their level with their status.
-
-### Component API
-
-Each component exposes one `data-<component>` attribute. Its value is a list of space-separated words matched with the [`~=` attribute selector](https://developer.mozilla.org/en-US/docs/Web/CSS/Attribute_selectors), like [`rel`](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Attributes/rel): `data-button="primary small"`. Component APIs use no classes. State is carried by native attributes and ARIA: `disabled`, `aria-disabled`, `aria-busy`, `aria-invalid`.
-
-**Our choice:** One attribute is one API to learn, it reads as a sentence (`data-button="primary small"`), and it cannot pile up like modifier classes.
-
-Layout primitives and utilities from M1 are classes: `.cluster`, `.grid`, `.stack`, `.visually-hidden`. Base elements need no API: write semantic HTML.
-
-### Tokens
-
-- [Surfaces and text](https://odonckers.github.io/domestic-ui/tokens/surfaces-and-text.md): 5 tokens
-- [Borders](https://odonckers.github.io/domestic-ui/tokens/borders.md): 2 tokens
-- [Accent and status](https://odonckers.github.io/domestic-ui/tokens/accent-and-status.md): 10 tokens
-- [Type](https://odonckers.github.io/domestic-ui/tokens/type.md): 18 tokens
-- [Space](https://odonckers.github.io/domestic-ui/tokens/space.md): 9 tokens
-- [Sizes](https://odonckers.github.io/domestic-ui/tokens/sizes.md): 5 tokens
-- [Shape](https://odonckers.github.io/domestic-ui/tokens/shape.md): 8 tokens
-- [Focus indicator](https://odonckers.github.io/domestic-ui/tokens/focus-indicator.md): 2 tokens
-- [Motion](https://odonckers.github.io/domestic-ui/tokens/motion.md): 3 tokens
-- [State](https://odonckers.github.io/domestic-ui/tokens/state.md): 3 tokens
-- [Dependent tokens](https://odonckers.github.io/domestic-ui/tokens/dependent-tokens.md): 5 tokens
-- [Tinted surfaces for status badges](https://odonckers.github.io/domestic-ui/tokens/tinted-surfaces-for-status-badges.md): 4 tokens
-- [Compact density](https://odonckers.github.io/domestic-ui/patterns/density.md): A compact density token that tightens spacing for data-heavy screens. Coming in M3b.
-
-### Atoms
-
-- [Base elements](https://odonckers.github.io/domestic-ui/components/base.md): Native HTML elements styled by the base layer, with no classes.
-- [Text helpers](https://odonckers.github.io/domestic-ui/components/atoms/text.md): Lead, small and muted text helpers from domestic-ui, with copyable markup.
-- [Quiet link](https://odonckers.github.io/domestic-ui/components/atoms/link.md): A link that takes the surrounding text color and keeps its underline, for dense UI.
-- [Buttons](https://odonckers.github.io/domestic-ui/components/atoms/button.md): Button variants, sizes, link buttons and honest disabled and loading states.
-- [Form controls](https://odonckers.github.io/domestic-ui/components/atoms/controls.md): Native form controls as styled by the domestic-ui base layer, with copyable markup.
-- [Switch](https://odonckers.github.io/domestic-ui/components/atoms/switch.md): An on/off switch built on a native checkbox with role switch, following the APG Switch pattern.
-- [Field](https://odonckers.github.io/domestic-ui/components/atoms/field.md): Label, control, hint and error message wired with aria-describedby and aria-invalid.
-- [Badge](https://odonckers.github.io/domestic-ui/components/atoms/badge.md): Inline status labels with tone variants that meet WCAG AA contrast.
-
-#### Our choices
-
-From [`css/components/atoms/README.md`](https://github.com/odonckers/domestic-ui/blob/main/css/components/atoms/README.md). Each is a choice between valid options, not a standard.
-
-- **Our choice:** one `data-<atom>` attribute per atom, whose value is a space-separated list matched with [`~=`](https://developer.mozilla.org/en-US/docs/Web/CSS/Attribute_selectors). One attribute is one API to learn, it reads as a sentence (`data-button="primary small"`), and it cannot pile up like modifier classes.
-- **Our choice:** `data-button` with no variant word keeps the native default (a submit button is primary, everything else is secondary), so M1 markup keeps working and the attribute is only needed when the native type does not match the emphasis you want.
-- **Our choice:** the quiet button uses the accent color for its text, so it still reads as interactive without a border. Use it next to other buttons, not inside running text, where a real link belongs.
-- **Our choice:** primary buttons add an inner focus ring in their text color on top of the shared outline, so the indicator contrasts with the fill as well as the surface. This is the double-ring technique described in [WCAG technique C40](https://www.w3.org/WAI/WCAG22/Techniques/css/C40).
-- **Our choice:** small buttons are 32px tall: below the 44px default, above the [24px minimum](https://www.w3.org/WAI/WCAG22/Understanding/target-size-minimum.html).
-- **Our choice:** `aria-disabled="true"` looks exactly like `disabled`. Prefer native `disabled`; use `aria-disabled` when users should be able to reach the control and read why it is unavailable.
-- **Our choice:** the field's error text starts with the word "Error:" in the markup, rather than a CSS icon, so every user and every screen reader gets it with no extra API. Invalid controls also get a thick start border, a shape change as well as a color change.
-- **Our choice:** errors are tied to controls with `aria-describedby`, not `aria-errormessage`, because `aria-describedby` has broader screen reader support today (see the support notes on [MDN `aria-errormessage`](https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Reference/Attributes/aria-errormessage)).
-- **Our choice:** the switch is the native checkbox with `role="switch"`, drawn with `appearance: none` and one pseudo-element. The thumb moves and changes color, and forced-colors mode gets explicit system colors.
-- **Our choice:** badge tones are 8% of the tone mixed into the surface, with the tone as text. The tinted surfaces are derived tokens (`--dui-color-*-surface`), so a theme that changes the surface or a tone re-tints badges with no extra overrides.
-- **Our choice:** a field is an atom here, not a molecule, because a control is not usable without its label, hint and error. Larger compositions (forms, cards, headers) are molecules and organisms for later milestones.
-
-#### Not shipped, and why
-
-| Candidate | Decision |
-| --- | --- |
-| Divider | Cut. `<hr>` is the native thematic break and is already styled in the base layer. A class would duplicate it. |
-| Avatar | Cut. There is no standard or APG pattern for it; it is an `<img alt>` with a radius and a size, which the base layer and one line of your CSS already give. Revisit with a real use case (initials fallback, image loading). |
-| Icon sizing | Cut. domestic-ui ships no icon set, so there is nothing to size consistently yet. Inside buttons, icons already line up through the button's `inline-flex` and `gap`. |
-| Danger button variant | Not added. Not requested, and a destructive action is better marked by its label and a confirmation `<dialog>` than by color. Easy to add later as one more variant word. |
-| Spinner for loading | Not added. The honest state is the changed label plus `aria-busy`; a spinner that replaces the label hides it from everyone. |
-
-### Molecules
-
-- [Alerts](https://odonckers.github.io/domestic-ui/patterns/alerts.md): Messages about status, from notices in the page to live alerts for important, time-sensitive changes. Coming in M3.
-- [Breadcrumb](https://odonckers.github.io/domestic-ui/patterns/breadcrumb.md): The path to the current page as an ordered list of links in a labelled `<nav>`. Coming in M3.
-- [Card](https://odonckers.github.io/domestic-ui/patterns/card.md): A self-contained item, such as a product or an article teaser, on a raised surface. Coming in M3.
-- [Disclosure](https://odonckers.github.io/domestic-ui/patterns/disclosure.md): A summary that shows or hides more content, built on `<details>` and `<summary>`. Coming in M3.
-- [Menu button](https://odonckers.github.io/domestic-ui/patterns/menu-button.md): A button that opens a menu of actions. Coming in M3.
-- [Pagination](https://odonckers.github.io/domestic-ui/patterns/pagination.md): Links to the pages of a long list of results. Coming in M3.
-- [Popover](https://odonckers.github.io/domestic-ui/patterns/popover.md): Content shown on top of the page from a button, with the `popover` attribute. Coming in M3.
-- [Search](https://odonckers.github.io/domestic-ui/patterns/search.md): A search form in a `<search>` landmark with an `<input type="search">`. Coming in M3.
-- [Tabs](https://odonckers.github.io/domestic-ui/patterns/tabs.md): Sections of content shown one at a time, chosen from a list of tabs. Coming in M3.
-- [Toolbar](https://odonckers.github.io/domestic-ui/patterns/toolbar.md): A row of related controls that is one stop in the tab order. Coming in M3.
-- [Typeahead](https://odonckers.github.io/domestic-ui/patterns/typeahead.md): A text field that suggests values as you type, with `<datalist>` first and an APG combobox only where `<datalist>` falls short. Coming in M3.
-
-### Organisms
-
-- [Dialog and drawer](https://odonckers.github.io/domestic-ui/patterns/dialog.md): A modal `<dialog>`, either centered or as a drawer along one edge of the viewport. Coming in M3.
-- [Site navigation](https://odonckers.github.io/domestic-ui/patterns/nav.md): The main links of a site in a `<nav>` landmark, with the current page marked. Coming in M3.
-- [Data table](https://odonckers.github.io/domestic-ui/patterns/data-table.md): Rows of records in a native `<table>` with a caption, header cells and optional sorting. Coming in M3b.
-- [Filter bar](https://odonckers.github.io/domestic-ui/patterns/filter-bar.md): A row of native form controls that narrows a list or table. Coming in M3b.
-- [Large forms](https://odonckers.github.io/domestic-ui/patterns/large-forms.md): Long forms split into labelled groups, in one or more columns. Coming in M3b.
-
-### Layouts
-
-- [Cluster](https://odonckers.github.io/domestic-ui/layouts/cluster.md): An inline group that wraps onto new lines (buttons, tags, nav links).
-- [Grid](https://odonckers.github.io/domestic-ui/layouts/grid.md): A responsive grid: as many columns as fit, each at least --grid-min wide, never wider than the container.
-- [Stack](https://odonckers.github.io/domestic-ui/layouts/stack.md): Vertical flow with a consistent gap between children.
-- [App shell](https://odonckers.github.io/domestic-ui/patterns/app-shell.md): The frame of an application: header, primary sidebar, main content and an optional auxiliary sidebar. Coming in M3b.
-- [Dashboard](https://odonckers.github.io/domestic-ui/patterns/dashboard.md): A grid of summary sections, each with a heading, that reflows to fit the screen. Coming in M3b.
-- [List-detail](https://odonckers.github.io/domestic-ui/patterns/list-detail.md): A list of items beside the details of the selected one, stacked on narrow screens. Coming in M3b.
-- [Split](https://odonckers.github.io/domestic-ui/patterns/split.md): Two regions side by side at a set ratio, stacked on narrow screens. Coming in M3b.
-
-### Utilities
-
-- [Visually hidden](https://odonckers.github.io/domestic-ui/components/utilities/visually-hidden.md): Hides content visually but keeps it in the accessibility tree.
-
-## Atoms
-
-Page: https://odonckers.github.io/domestic-ui/atoms/index.html
-
-Atoms add the minimum on top of the base layer: plain HTML already looks right, and an atom covers what a native element cannot say on its own. Components use one `data-<component>` attribute each; see the [component API convention](https://odonckers.github.io/domestic-ui/components/index.md#component-api) and [every level](https://odonckers.github.io/domestic-ui/components/index.md).
-
-### Base elements
-
-- [Base elements](https://odonckers.github.io/domestic-ui/components/base.md): Native HTML elements styled by the base layer, with no classes.
-
-### Atoms
-
-- [Text helpers](https://odonckers.github.io/domestic-ui/components/atoms/text.md): Lead, small and muted text helpers from domestic-ui, with copyable markup. API: `data-text="lead | small | muted"` (combinable).
-- [Quiet link](https://odonckers.github.io/domestic-ui/components/atoms/link.md): A link that takes the surrounding text color and keeps its underline, for dense UI. API: `data-link="quiet"` on `<a href>`.
-- [Buttons](https://odonckers.github.io/domestic-ui/components/atoms/button.md): Button variants, sizes, link buttons and honest disabled and loading states. API: `data-button="[primary | secondary | quiet] [small | large]"` on `<button>`, `<input type=submit|button|reset>`, `<a href>`; states `disabled`, `aria-disabled="true"`, `aria-busy="true"`.
-- [Form controls](https://odonckers.github.io/domestic-ui/components/atoms/controls.md): Native form controls as styled by the domestic-ui base layer, with copyable markup. API: No API; native elements.
-- [Switch](https://odonckers.github.io/domestic-ui/components/atoms/switch.md): An on/off switch built on a native checkbox with role switch, following the APG Switch pattern. API: `role="switch"` on `<input type="checkbox">`.
-- [Field](https://odonckers.github.io/domestic-ui/components/atoms/field.md): Label, control, hint and error message wired with aria-describedby and aria-invalid. API: `data-field` on the wrapper, `data-field="hint"` and `data-field="error"` on the messages.
-- [Badge](https://odonckers.github.io/domestic-ui/components/atoms/badge.md): Inline status labels with tone variants that meet WCAG AA contrast. API: `data-badge="neutral | accent | success | warning | danger"`.
-
-### Utilities
-
-- [Visually hidden](https://odonckers.github.io/domestic-ui/components/utilities/visually-hidden.md): Hides content visually but keeps it in the accessibility tree.
-
-### Our choices
-
-From [`css/components/atoms/README.md`](https://github.com/odonckers/domestic-ui/blob/main/css/components/atoms/README.md). Each is a choice between valid options, not a standard.
-
-- **Our choice:** one `data-<atom>` attribute per atom, whose value is a space-separated list matched with [`~=`](https://developer.mozilla.org/en-US/docs/Web/CSS/Attribute_selectors). One attribute is one API to learn, it reads as a sentence (`data-button="primary small"`), and it cannot pile up like modifier classes.
-- **Our choice:** `data-button` with no variant word keeps the native default (a submit button is primary, everything else is secondary), so M1 markup keeps working and the attribute is only needed when the native type does not match the emphasis you want.
-- **Our choice:** the quiet button uses the accent color for its text, so it still reads as interactive without a border. Use it next to other buttons, not inside running text, where a real link belongs.
-- **Our choice:** primary buttons add an inner focus ring in their text color on top of the shared outline, so the indicator contrasts with the fill as well as the surface. This is the double-ring technique described in [WCAG technique C40](https://www.w3.org/WAI/WCAG22/Techniques/css/C40).
-- **Our choice:** small buttons are 32px tall: below the 44px default, above the [24px minimum](https://www.w3.org/WAI/WCAG22/Understanding/target-size-minimum.html).
-- **Our choice:** `aria-disabled="true"` looks exactly like `disabled`. Prefer native `disabled`; use `aria-disabled` when users should be able to reach the control and read why it is unavailable.
-- **Our choice:** the field's error text starts with the word "Error:" in the markup, rather than a CSS icon, so every user and every screen reader gets it with no extra API. Invalid controls also get a thick start border, a shape change as well as a color change.
-- **Our choice:** errors are tied to controls with `aria-describedby`, not `aria-errormessage`, because `aria-describedby` has broader screen reader support today (see the support notes on [MDN `aria-errormessage`](https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Reference/Attributes/aria-errormessage)).
-- **Our choice:** the switch is the native checkbox with `role="switch"`, drawn with `appearance: none` and one pseudo-element. The thumb moves and changes color, and forced-colors mode gets explicit system colors.
-- **Our choice:** badge tones are 8% of the tone mixed into the surface, with the tone as text. The tinted surfaces are derived tokens (`--dui-color-*-surface`), so a theme that changes the surface or a tone re-tints badges with no extra overrides.
-- **Our choice:** a field is an atom here, not a molecule, because a control is not usable without its label, hint and error. Larger compositions (forms, cards, headers) are molecules and organisms for later milestones.
-
-### Not shipped, and why
-
-| Candidate | Decision |
-| --- | --- |
-| Divider | Cut. `<hr>` is the native thematic break and is already styled in the base layer. A class would duplicate it. |
-| Avatar | Cut. There is no standard or APG pattern for it; it is an `<img alt>` with a radius and a size, which the base layer and one line of your CSS already give. Revisit with a real use case (initials fallback, image loading). |
-| Icon sizing | Cut. domestic-ui ships no icon set, so there is nothing to size consistently yet. Inside buttons, icons already line up through the button's `inline-flex` and `gap`. |
-| Danger button variant | Not added. Not requested, and a destructive action is better marked by its label and a confirmation `<dialog>` than by color. Easy to add later as one more variant word. |
-| Spinner for loading | Not added. The honest state is the changed label plus `aria-busy`; a spinner that replaces the label hides it from everyone. |
+| Token | Light | Dark | Description |
+| --- | --- | --- | --- |
+| `--dui-color-accent-surface` | `color-mix(in oklab, #3451d1 8%, #fff)` | `color-mix(in oklab, #8ea2ff 8%, #12151b)` | Accent badge background (from PRINCIPLES.md) |
+| `--dui-color-success-surface` | `color-mix(in oklab, #17773a 8%, #fff)` | `color-mix(in oklab, #5fd38d 8%, #12151b)` | Success badge background (from PRINCIPLES.md) |
+| `--dui-color-warning-surface` | `color-mix(in oklab, #8a5a00 8%, #fff)` | `color-mix(in oklab, #f2c14e 8%, #12151b)` | Warning badge background (from PRINCIPLES.md) |
+| `--dui-color-danger-surface` | `color-mix(in oklab, #b42318 8%, #fff)` | `color-mix(in oklab, #ff8a80 8%, #12151b)` | Danger badge background (from PRINCIPLES.md) |
 
 ## Base elements
 
@@ -984,6 +865,244 @@ Each point below is stated in a `css/base/` comment or in [PRINCIPLES.md](https:
 - [`examples/base.html`](https://github.com/odonckers/domestic-ui/blob/main/examples/base.html)
 - [`site/content/components/base.md`](https://github.com/odonckers/domestic-ui/blob/main/site/content/components/base.md)
 
+## Visually hidden
+
+Page: https://odonckers.github.io/domestic-ui/components/utilities/visually-hidden.html
+
+Hides content visually but keeps it in the accessibility tree.
+
+### API
+
+```text
+class="visually-hidden"
+```
+
+Layout primitives and utilities are classes, not `data-*` attributes; see the [component API convention](https://odonckers.github.io/domestic-ui/index.md#component-api).
+
+### Live example
+
+There is no standalone example page for visually hidden yet. These example pages use it: [Base elements](https://odonckers.github.io/domestic-ui/examples/base.html), [Theming](https://odonckers.github.io/domestic-ui/examples/theming.html), [Badge](https://odonckers.github.io/domestic-ui/examples/atoms/badge.html), [Buttons](https://odonckers.github.io/domestic-ui/examples/atoms/button.html), [Form controls](https://odonckers.github.io/domestic-ui/examples/atoms/controls.html), [Field](https://odonckers.github.io/domestic-ui/examples/atoms/field.html), [Atoms showcase](https://odonckers.github.io/domestic-ui/examples/atoms/index.html), [Quiet link](https://odonckers.github.io/domestic-ui/examples/atoms/link.html), [Switch](https://odonckers.github.io/domestic-ui/examples/atoms/switch.html), [Text helpers](https://odonckers.github.io/domestic-ui/examples/atoms/text.html).
+
+### Markup
+
+No markup snippet yet: there is no example page and no `Example` block in the CSS header comment.
+
+### Notes
+
+The well-known pattern from The A11Y Project: <https://www.a11yproject.com/posts/how-to-hide-content/>
+
+### Accessibility
+
+From the CSS header comment: Hides content visually but keeps it in the accessibility tree.
+
+See also the spec links below and the [Accessibility baseline](https://odonckers.github.io/domestic-ui/principles/accessibility-baseline-wcag-22-aa.md) principle.
+
+### Specs
+
+- **Other**: [www.a11yproject.com/posts/how-to-hide-content/](https://www.a11yproject.com/posts/how-to-hide-content/)
+
+### Source
+
+- [`css/utilities/visually-hidden.css`](https://github.com/odonckers/domestic-ui/blob/main/css/utilities/visually-hidden.css)
+
+## Layouts
+
+Page: https://odonckers.github.io/domestic-ui/layouts/index.html
+
+Layout primitives arrange their children and nothing else; see [Layout primitives](https://odonckers.github.io/domestic-ui/principles/layout-primitives.md). Each has one class and is tuned with custom properties. Page layouts such as the app shell are listed with their status.
+
+### All layouts
+
+- [Cluster](https://odonckers.github.io/domestic-ui/layouts/cluster.md): An inline group that wraps onto new lines (buttons, tags, nav links).
+- [Grid](https://odonckers.github.io/domestic-ui/layouts/grid.md): A responsive grid: as many columns as fit, each at least --grid-min wide, never wider than the container.
+- [Stack](https://odonckers.github.io/domestic-ui/layouts/stack.md): Vertical flow with a consistent gap between children.
+- [App shell](https://odonckers.github.io/domestic-ui/patterns/app-shell.md): The frame of an application: header, primary sidebar, main content and an optional auxiliary sidebar. Coming in M3b.
+- [Dashboard](https://odonckers.github.io/domestic-ui/patterns/dashboard.md): A grid of summary sections, each with a heading, that reflows to fit the screen. Coming in M3b.
+- [List-detail](https://odonckers.github.io/domestic-ui/patterns/list-detail.md): A list of items beside the details of the selected one, stacked on narrow screens. Coming in M3b.
+- [Split](https://odonckers.github.io/domestic-ui/patterns/split.md): Two regions side by side at a set ratio, stacked on narrow screens. Coming in M3b.
+
+## Cluster
+
+Page: https://odonckers.github.io/domestic-ui/layouts/cluster.html
+
+An inline group that wraps onto new lines (buttons, tags, nav links).
+
+### API
+
+```text
+class="cluster"
+--cluster-gap       space between items   (default: var(--dui-space-s))
+--cluster-justify   justify-content value (default: flex-start)
+--cluster-align     align-items value     (default: center)
+```
+
+Layout primitives and utilities are classes, not `data-*` attributes; see the [component API convention](https://odonckers.github.io/domestic-ui/index.md#component-api).
+
+### Live example
+
+There is no standalone example page for cluster yet. These example pages use it: [Base elements](https://odonckers.github.io/domestic-ui/examples/base.html), [Theming](https://odonckers.github.io/domestic-ui/examples/theming.html), [Badge](https://odonckers.github.io/domestic-ui/examples/atoms/badge.html), [Buttons](https://odonckers.github.io/domestic-ui/examples/atoms/button.html), [Form controls](https://odonckers.github.io/domestic-ui/examples/atoms/controls.html), [Field](https://odonckers.github.io/domestic-ui/examples/atoms/field.html), [Atoms showcase](https://odonckers.github.io/domestic-ui/examples/atoms/index.html), [Quiet link](https://odonckers.github.io/domestic-ui/examples/atoms/link.html), [Switch](https://odonckers.github.io/domestic-ui/examples/atoms/switch.html), [Text helpers](https://odonckers.github.io/domestic-ui/examples/atoms/text.html).
+
+### Markup
+
+From the `Example` block in [`css/layout/cluster.css`](https://github.com/odonckers/domestic-ui/blob/main/css/layout/cluster.css):
+
+```html
+<ul class="cluster" style="--cluster-justify: space-between">…</ul>
+```
+
+### Notes
+
+Pattern: "The Cluster", Every Layout (<https://every-layout.dev/layouts/cluster/>), built with flex-wrap and gap.
+
+The custom properties do not inherit, so nested clusters keep their defaults.
+
+### Accessibility
+
+The CSS header comment has no accessibility notes. See the spec links below and the [Accessibility baseline](https://odonckers.github.io/domestic-ui/principles/accessibility-baseline-wcag-22-aa.md) principle.
+
+### Specs
+
+- **Other**: [every-layout.dev/layouts/cluster/](https://every-layout.dev/layouts/cluster/)
+
+### Source
+
+- [`css/layout/cluster.css`](https://github.com/odonckers/domestic-ui/blob/main/css/layout/cluster.css)
+
+## Grid
+
+Page: https://odonckers.github.io/domestic-ui/layouts/grid.html
+
+A responsive grid: as many columns as fit, each at least --grid-min wide, never wider than the container.
+
+### API
+
+```text
+class="grid"
+--grid-min   minimum column width (default: var(--dui-size-column-min))
+--grid-gap   gap between cells    (default: var(--dui-space-l))
+```
+
+Layout primitives and utilities are classes, not `data-*` attributes; see the [component API convention](https://odonckers.github.io/domestic-ui/index.md#component-api).
+
+### Live example
+
+There is no standalone example page for grid yet. These example pages use it: [Base elements](https://odonckers.github.io/domestic-ui/examples/base.html), [Theming](https://odonckers.github.io/domestic-ui/examples/theming.html), [Form controls](https://odonckers.github.io/domestic-ui/examples/atoms/controls.html), [Atoms showcase](https://odonckers.github.io/domestic-ui/examples/atoms/index.html).
+
+### Markup
+
+From the `Example` block in [`css/layout/grid.css`](https://github.com/odonckers/domestic-ui/blob/main/css/layout/grid.css):
+
+```html
+<div class="grid" style="--grid-min: 12rem">…</div>
+```
+
+### Notes
+
+No media queries. Pattern: "RAM" (repeat, auto-fit, minmax), see <https://developer.mozilla.org/en-US/docs/Web/CSS/repeat#auto-fit> and "The Grid", Every Layout (<https://every-layout.dev/layouts/grid/>).
+
+The custom properties do not inherit, so nested grids keep their defaults.
+
+### Accessibility
+
+The CSS header comment has no accessibility notes. See the spec links below and the [Accessibility baseline](https://odonckers.github.io/domestic-ui/principles/accessibility-baseline-wcag-22-aa.md) principle.
+
+### Specs
+
+- **MDN**: [developer.mozilla.org/en-US/docs/Web/CSS/repeat#auto-fit](https://developer.mozilla.org/en-US/docs/Web/CSS/repeat#auto-fit)
+- **Other**: [every-layout.dev/layouts/grid/](https://every-layout.dev/layouts/grid/)
+
+### Source
+
+- [`css/layout/grid.css`](https://github.com/odonckers/domestic-ui/blob/main/css/layout/grid.css)
+
+## Stack
+
+Page: https://odonckers.github.io/domestic-ui/layouts/stack.html
+
+Vertical flow with a consistent gap between children.
+
+### API
+
+```text
+class="stack"
+--stack-gap   space between children (default: var(--dui-space-m))
+```
+
+Layout primitives and utilities are classes, not `data-*` attributes; see the [component API convention](https://odonckers.github.io/domestic-ui/index.md#component-api).
+
+### Live example
+
+There is no standalone example page for stack yet. These example pages use it: [Base elements](https://odonckers.github.io/domestic-ui/examples/base.html), [Theming](https://odonckers.github.io/domestic-ui/examples/theming.html), [Field](https://odonckers.github.io/domestic-ui/examples/atoms/field.html), [Switch](https://odonckers.github.io/domestic-ui/examples/atoms/switch.html).
+
+### Markup
+
+From the `Example` block in [`css/layout/stack.css`](https://github.com/odonckers/domestic-ui/blob/main/css/layout/stack.css):
+
+```html
+<div class="stack" style="--stack-gap: var(--dui-space-s)">…</div>
+```
+
+### Notes
+
+Pattern: "The Stack", Every Layout (<https://every-layout.dev/layouts/stack/>), built with flexbox gap (<https://developer.mozilla.org/en-US/docs/Web/CSS/gap>).
+
+--stack-gap does not inherit, so nested stacks keep their own default.
+
+### Accessibility
+
+The CSS header comment has no accessibility notes. See the spec links below and the [Accessibility baseline](https://odonckers.github.io/domestic-ui/principles/accessibility-baseline-wcag-22-aa.md) principle.
+
+### Specs
+
+- **Other**: [every-layout.dev/layouts/stack/](https://every-layout.dev/layouts/stack/)
+- **MDN**: [developer.mozilla.org/en-US/docs/Web/CSS/gap](https://developer.mozilla.org/en-US/docs/Web/CSS/gap)
+
+### Source
+
+- [`css/layout/stack.css`](https://github.com/odonckers/domestic-ui/blob/main/css/layout/stack.css)
+
+## Atoms
+
+Page: https://odonckers.github.io/domestic-ui/atoms/index.html
+
+Atoms add the minimum on top of the [base layer](https://odonckers.github.io/domestic-ui/components/base.md): plain HTML already looks right, and an atom covers what a native element cannot say on its own. Components use one `data-<component>` attribute each; see the [component API convention](https://odonckers.github.io/domestic-ui/index.md#component-api). The levels follow [atomic design](https://atomicdesign.bradfrost.com/chapter-2/); planned [patterns](https://odonckers.github.io/domestic-ui/patterns/index.md) are listed at their level with their status.
+
+### Atoms
+
+- [Text helpers](https://odonckers.github.io/domestic-ui/components/atoms/text.md): Lead, small and muted text helpers from domestic-ui, with copyable markup. API: `data-text="lead | small | muted"` (combinable).
+- [Quiet link](https://odonckers.github.io/domestic-ui/components/atoms/link.md): A link that takes the surrounding text color and keeps its underline, for dense UI. API: `data-link="quiet"` on `<a href>`.
+- [Buttons](https://odonckers.github.io/domestic-ui/components/atoms/button.md): Button variants, sizes, link buttons and honest disabled and loading states. API: `data-button="[primary | secondary | quiet] [small | large]"` on `<button>`, `<input type=submit|button|reset>`, `<a href>`; states `disabled`, `aria-disabled="true"`, `aria-busy="true"`.
+- [Form controls](https://odonckers.github.io/domestic-ui/components/atoms/controls.md): Native form controls as styled by the domestic-ui base layer, with copyable markup. API: No API; native elements.
+- [Switch](https://odonckers.github.io/domestic-ui/components/atoms/switch.md): An on/off switch built on a native checkbox with role switch, following the APG Switch pattern. API: `role="switch"` on `<input type="checkbox">`.
+- [Field](https://odonckers.github.io/domestic-ui/components/atoms/field.md): Label, control, hint and error message wired with aria-describedby and aria-invalid. API: `data-field` on the wrapper, `data-field="hint"` and `data-field="error"` on the messages.
+- [Badge](https://odonckers.github.io/domestic-ui/components/atoms/badge.md): Inline status labels with tone variants that meet WCAG AA contrast. API: `data-badge="neutral | accent | success | warning | danger"`.
+
+### Our choices
+
+From [`css/components/atoms/README.md`](https://github.com/odonckers/domestic-ui/blob/main/css/components/atoms/README.md). Each is a choice between valid options, not a standard.
+
+- **Our choice:** one `data-<atom>` attribute per atom, whose value is a space-separated list matched with [`~=`](https://developer.mozilla.org/en-US/docs/Web/CSS/Attribute_selectors). One attribute is one API to learn, it reads as a sentence (`data-button="primary small"`), and it cannot pile up like modifier classes.
+- **Our choice:** `data-button` with no variant word keeps the native default (a submit button is primary, everything else is secondary), so M1 markup keeps working and the attribute is only needed when the native type does not match the emphasis you want.
+- **Our choice:** the quiet button uses the accent color for its text, so it still reads as interactive without a border. Use it next to other buttons, not inside running text, where a real link belongs.
+- **Our choice:** primary buttons add an inner focus ring in their text color on top of the shared outline, so the indicator contrasts with the fill as well as the surface. This is the double-ring technique described in [WCAG technique C40](https://www.w3.org/WAI/WCAG22/Techniques/css/C40).
+- **Our choice:** small buttons are 32px tall: below the 44px default, above the [24px minimum](https://www.w3.org/WAI/WCAG22/Understanding/target-size-minimum.html).
+- **Our choice:** `aria-disabled="true"` looks exactly like `disabled`. Prefer native `disabled`; use `aria-disabled` when users should be able to reach the control and read why it is unavailable.
+- **Our choice:** the field's error text starts with the word "Error:" in the markup, rather than a CSS icon, so every user and every screen reader gets it with no extra API. Invalid controls also get a thick start border, a shape change as well as a color change.
+- **Our choice:** errors are tied to controls with `aria-describedby`, not `aria-errormessage`, because `aria-describedby` has broader screen reader support today (see the support notes on [MDN `aria-errormessage`](https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Reference/Attributes/aria-errormessage)).
+- **Our choice:** the switch is the native checkbox with `role="switch"`, drawn with `appearance: none` and one pseudo-element. The thumb moves and changes color, and forced-colors mode gets explicit system colors.
+- **Our choice:** badge tones are 8% of the tone mixed into the surface, with the tone as text. The tinted surfaces are derived tokens (`--dui-color-*-surface`), so a theme that changes the surface or a tone re-tints badges with no extra overrides.
+- **Our choice:** a field is an atom here, not a molecule, because a control is not usable without its label, hint and error. Larger compositions (forms, cards, headers) are molecules and organisms for later milestones.
+
+### Not shipped, and why
+
+| Candidate | Decision |
+| --- | --- |
+| Divider | Cut. `<hr>` is the native thematic break and is already styled in the base layer. A class would duplicate it. |
+| Avatar | Cut. There is no standard or APG pattern for it; it is an `<img alt>` with a radius and a size, which the base layer and one line of your CSS already give. Revisit with a real use case (initials fallback, image loading). |
+| Icon sizing | Cut. domestic-ui ships no icon set, so there is nothing to size consistently yet. Inside buttons, icons already line up through the button's `inline-flex` and `gap`. |
+| Danger button variant | Not added. Not requested, and a destructive action is better marked by its label and a confirmation `<dialog>` than by color. Easy to add later as one more variant word. |
+| Spinner for loading | Not added. The honest state is the changed label plus `aria-busy`; a spinner that replaces the label hides it from everyone. |
+
 ## Text helpers
 
 Page: https://odonckers.github.io/domestic-ui/components/atoms/text.html
@@ -1003,7 +1122,7 @@ data-text="lead | small | muted"
 Values are a space-separated list, so they combine: data-text="small muted".
 ```
 
-`data-text` follows the [component API convention](https://odonckers.github.io/domestic-ui/components/index.md#component-api): one attribute, its value space-separated words matched with `~=`; state is carried by native attributes and ARIA.
+`data-text` follows the [component API convention](https://odonckers.github.io/domestic-ui/index.md#component-api): one attribute, its value space-separated words matched with `~=`; state is carried by native attributes and ARIA.
 
 ### Live example
 
@@ -1070,7 +1189,7 @@ The `API` block in [`css/components/atoms/link.css`](https://github.com/odoncker
 data-link="quiet"   on <a href>
 ```
 
-`data-link` follows the [component API convention](https://odonckers.github.io/domestic-ui/components/index.md#component-api): one attribute, its value space-separated words matched with `~=`; state is carried by native attributes and ARIA.
+`data-link` follows the [component API convention](https://odonckers.github.io/domestic-ui/index.md#component-api): one attribute, its value space-separated words matched with `~=`; state is carried by native attributes and ARIA.
 
 ### Live example
 
@@ -1146,7 +1265,7 @@ No variant word keeps the native default: type="submit" is primary,
 other buttons and links are secondary.
 ```
 
-`data-button` follows the [component API convention](https://odonckers.github.io/domestic-ui/components/index.md#component-api): one attribute, its value space-separated words matched with `~=`; state is carried by native attributes and ARIA.
+`data-button` follows the [component API convention](https://odonckers.github.io/domestic-ui/index.md#component-api): one attribute, its value space-separated words matched with `~=`; state is carried by native attributes and ARIA.
 
 ### States
 
@@ -1310,7 +1429,7 @@ From the index in [`css/components/atoms/README.md`](https://github.com/odoncker
 
 No API; native elements
 
-No `data-*` attribute: the API is native HTML and ARIA. See the [component API convention](https://odonckers.github.io/domestic-ui/components/index.md#component-api).
+No `data-*` attribute: the API is native HTML and ARIA. See the [component API convention](https://odonckers.github.io/domestic-ui/index.md#component-api).
 
 ### Live example
 
@@ -1450,7 +1569,7 @@ The `API` block in [`css/components/atoms/switch.css`](https://github.com/odonck
 role="switch"   on <input type="checkbox">; no class needed.
 ```
 
-No `data-*` attribute: the API is native HTML and ARIA. See the [component API convention](https://odonckers.github.io/domestic-ui/components/index.md#component-api).
+No `data-*` attribute: the API is native HTML and ARIA. See the [component API convention](https://odonckers.github.io/domestic-ui/index.md#component-api).
 
 ### Our choice
 
@@ -1533,7 +1652,7 @@ data-field="hint"       on the hint
 data-field="error"      on the error message
 ```
 
-`data-field` follows the [component API convention](https://odonckers.github.io/domestic-ui/components/index.md#component-api): one attribute, its value space-separated words matched with `~=`; state is carried by native attributes and ARIA.
+`data-field` follows the [component API convention](https://odonckers.github.io/domestic-ui/index.md#component-api): one attribute, its value space-separated words matched with `~=`; state is carried by native attributes and ARIA.
 
 ### Our choice
 
@@ -1645,7 +1764,7 @@ data-badge="neutral | accent | success | warning | danger"
 (empty means neutral)
 ```
 
-`data-badge` follows the [component API convention](https://odonckers.github.io/domestic-ui/components/index.md#component-api): one attribute, its value space-separated words matched with `~=`; state is carried by native attributes and ARIA.
+`data-badge` follows the [component API convention](https://odonckers.github.io/domestic-ui/index.md#component-api): one attribute, its value space-separated words matched with `~=`; state is carried by native attributes and ARIA.
 
 ### Our choice
 
@@ -1712,51 +1831,11 @@ See also the spec links below and the [Accessibility baseline](https://odonckers
 - [`examples/atoms/badge.html`](https://github.com/odonckers/domestic-ui/blob/main/examples/atoms/badge.html)
 - [`css/components/atoms/README.md`](https://github.com/odonckers/domestic-ui/blob/main/css/components/atoms/README.md)
 
-## Visually hidden
-
-Page: https://odonckers.github.io/domestic-ui/components/utilities/visually-hidden.html
-
-Hides content visually but keeps it in the accessibility tree.
-
-### API
-
-```text
-class="visually-hidden"
-```
-
-Layout primitives and utilities are classes, not `data-*` attributes; see the [component API convention](https://odonckers.github.io/domestic-ui/components/index.md#component-api).
-
-### Live example
-
-There is no standalone example page for visually hidden yet. These example pages use it: [Base elements](https://odonckers.github.io/domestic-ui/examples/base.html), [Theming](https://odonckers.github.io/domestic-ui/examples/theming.html), [Badge](https://odonckers.github.io/domestic-ui/examples/atoms/badge.html), [Buttons](https://odonckers.github.io/domestic-ui/examples/atoms/button.html), [Form controls](https://odonckers.github.io/domestic-ui/examples/atoms/controls.html), [Field](https://odonckers.github.io/domestic-ui/examples/atoms/field.html), [Atoms showcase](https://odonckers.github.io/domestic-ui/examples/atoms/index.html), [Quiet link](https://odonckers.github.io/domestic-ui/examples/atoms/link.html), [Switch](https://odonckers.github.io/domestic-ui/examples/atoms/switch.html), [Text helpers](https://odonckers.github.io/domestic-ui/examples/atoms/text.html).
-
-### Markup
-
-No markup snippet yet: there is no example page and no `Example` block in the CSS header comment.
-
-### Notes
-
-The well-known pattern from The A11Y Project: <https://www.a11yproject.com/posts/how-to-hide-content/>
-
-### Accessibility
-
-From the CSS header comment: Hides content visually but keeps it in the accessibility tree.
-
-See also the spec links below and the [Accessibility baseline](https://odonckers.github.io/domestic-ui/principles/accessibility-baseline-wcag-22-aa.md) principle.
-
-### Specs
-
-- **Other**: [www.a11yproject.com/posts/how-to-hide-content/](https://www.a11yproject.com/posts/how-to-hide-content/)
-
-### Source
-
-- [`css/utilities/visually-hidden.css`](https://github.com/odonckers/domestic-ui/blob/main/css/utilities/visually-hidden.css)
-
 ## Molecules
 
 Page: https://odonckers.github.io/domestic-ui/molecules/index.html
 
-Components use one `data-<component>` attribute each; see the [component API convention](https://odonckers.github.io/domestic-ui/components/index.md#component-api) and [every level](https://odonckers.github.io/domestic-ui/components/index.md).
+Components use one `data-<component>` attribute each; see the [component API convention](https://odonckers.github.io/domestic-ui/index.md#component-api). The levels follow [atomic design](https://atomicdesign.bradfrost.com/chapter-2/); planned [patterns](https://odonckers.github.io/domestic-ui/patterns/index.md) are listed at their level with their status.
 
 ### Molecules
 
@@ -1776,7 +1855,7 @@ Components use one `data-<component>` attribute each; see the [component API con
 
 Page: https://odonckers.github.io/domestic-ui/organisms/index.html
 
-Components use one `data-<component>` attribute each; see the [component API convention](https://odonckers.github.io/domestic-ui/components/index.md#component-api) and [every level](https://odonckers.github.io/domestic-ui/components/index.md).
+Components use one `data-<component>` attribute each; see the [component API convention](https://odonckers.github.io/domestic-ui/index.md#component-api). The levels follow [atomic design](https://atomicdesign.bradfrost.com/chapter-2/); planned [patterns](https://odonckers.github.io/domestic-ui/patterns/index.md) are listed at their level with their status.
 
 ### Organisms
 
@@ -1785,162 +1864,6 @@ Components use one `data-<component>` attribute each; see the [component API con
 - [Data table](https://odonckers.github.io/domestic-ui/patterns/data-table.md): Rows of records in a native `<table>` with a caption, header cells and optional sorting. Coming in M3b.
 - [Filter bar](https://odonckers.github.io/domestic-ui/patterns/filter-bar.md): A row of native form controls that narrows a list or table. Coming in M3b.
 - [Large forms](https://odonckers.github.io/domestic-ui/patterns/large-forms.md): Long forms split into labelled groups, in one or more columns. Coming in M3b.
-
-## Layouts
-
-Page: https://odonckers.github.io/domestic-ui/layouts/index.html
-
-Layout primitives arrange their children and nothing else; see [Layout primitives](https://odonckers.github.io/domestic-ui/principles/layout-primitives.md). Each has one class and is tuned with custom properties. Page layouts such as the app shell are listed with their status.
-
-### All layouts
-
-- [Cluster](https://odonckers.github.io/domestic-ui/layouts/cluster.md): An inline group that wraps onto new lines (buttons, tags, nav links).
-- [Grid](https://odonckers.github.io/domestic-ui/layouts/grid.md): A responsive grid: as many columns as fit, each at least --grid-min wide, never wider than the container.
-- [Stack](https://odonckers.github.io/domestic-ui/layouts/stack.md): Vertical flow with a consistent gap between children.
-- [App shell](https://odonckers.github.io/domestic-ui/patterns/app-shell.md): The frame of an application: header, primary sidebar, main content and an optional auxiliary sidebar. Coming in M3b.
-- [Dashboard](https://odonckers.github.io/domestic-ui/patterns/dashboard.md): A grid of summary sections, each with a heading, that reflows to fit the screen. Coming in M3b.
-- [List-detail](https://odonckers.github.io/domestic-ui/patterns/list-detail.md): A list of items beside the details of the selected one, stacked on narrow screens. Coming in M3b.
-- [Split](https://odonckers.github.io/domestic-ui/patterns/split.md): Two regions side by side at a set ratio, stacked on narrow screens. Coming in M3b.
-
-## Cluster
-
-Page: https://odonckers.github.io/domestic-ui/layouts/cluster.html
-
-An inline group that wraps onto new lines (buttons, tags, nav links).
-
-### API
-
-```text
-class="cluster"
---cluster-gap       space between items   (default: var(--dui-space-s))
---cluster-justify   justify-content value (default: flex-start)
---cluster-align     align-items value     (default: center)
-```
-
-Layout primitives and utilities are classes, not `data-*` attributes; see the [component API convention](https://odonckers.github.io/domestic-ui/components/index.md#component-api).
-
-### Live example
-
-There is no standalone example page for cluster yet. These example pages use it: [Base elements](https://odonckers.github.io/domestic-ui/examples/base.html), [Theming](https://odonckers.github.io/domestic-ui/examples/theming.html), [Badge](https://odonckers.github.io/domestic-ui/examples/atoms/badge.html), [Buttons](https://odonckers.github.io/domestic-ui/examples/atoms/button.html), [Form controls](https://odonckers.github.io/domestic-ui/examples/atoms/controls.html), [Field](https://odonckers.github.io/domestic-ui/examples/atoms/field.html), [Atoms showcase](https://odonckers.github.io/domestic-ui/examples/atoms/index.html), [Quiet link](https://odonckers.github.io/domestic-ui/examples/atoms/link.html), [Switch](https://odonckers.github.io/domestic-ui/examples/atoms/switch.html), [Text helpers](https://odonckers.github.io/domestic-ui/examples/atoms/text.html).
-
-### Markup
-
-From the `Example` block in [`css/layout/cluster.css`](https://github.com/odonckers/domestic-ui/blob/main/css/layout/cluster.css):
-
-```html
-<ul class="cluster" style="--cluster-justify: space-between">…</ul>
-```
-
-### Notes
-
-Pattern: "The Cluster", Every Layout (<https://every-layout.dev/layouts/cluster/>), built with flex-wrap and gap.
-
-The custom properties do not inherit, so nested clusters keep their defaults.
-
-### Accessibility
-
-The CSS header comment has no accessibility notes. See the spec links below and the [Accessibility baseline](https://odonckers.github.io/domestic-ui/principles/accessibility-baseline-wcag-22-aa.md) principle.
-
-### Specs
-
-- **Other**: [every-layout.dev/layouts/cluster/](https://every-layout.dev/layouts/cluster/)
-
-### Source
-
-- [`css/layout/cluster.css`](https://github.com/odonckers/domestic-ui/blob/main/css/layout/cluster.css)
-
-## Grid
-
-Page: https://odonckers.github.io/domestic-ui/layouts/grid.html
-
-A responsive grid: as many columns as fit, each at least --grid-min wide, never wider than the container.
-
-### API
-
-```text
-class="grid"
---grid-min   minimum column width (default: var(--dui-size-column-min))
---grid-gap   gap between cells    (default: var(--dui-space-l))
-```
-
-Layout primitives and utilities are classes, not `data-*` attributes; see the [component API convention](https://odonckers.github.io/domestic-ui/components/index.md#component-api).
-
-### Live example
-
-There is no standalone example page for grid yet. These example pages use it: [Base elements](https://odonckers.github.io/domestic-ui/examples/base.html), [Theming](https://odonckers.github.io/domestic-ui/examples/theming.html), [Form controls](https://odonckers.github.io/domestic-ui/examples/atoms/controls.html), [Atoms showcase](https://odonckers.github.io/domestic-ui/examples/atoms/index.html).
-
-### Markup
-
-From the `Example` block in [`css/layout/grid.css`](https://github.com/odonckers/domestic-ui/blob/main/css/layout/grid.css):
-
-```html
-<div class="grid" style="--grid-min: 12rem">…</div>
-```
-
-### Notes
-
-No media queries. Pattern: "RAM" (repeat, auto-fit, minmax), see <https://developer.mozilla.org/en-US/docs/Web/CSS/repeat#auto-fit> and "The Grid", Every Layout (<https://every-layout.dev/layouts/grid/>).
-
-The custom properties do not inherit, so nested grids keep their defaults.
-
-### Accessibility
-
-The CSS header comment has no accessibility notes. See the spec links below and the [Accessibility baseline](https://odonckers.github.io/domestic-ui/principles/accessibility-baseline-wcag-22-aa.md) principle.
-
-### Specs
-
-- **MDN**: [developer.mozilla.org/en-US/docs/Web/CSS/repeat#auto-fit](https://developer.mozilla.org/en-US/docs/Web/CSS/repeat#auto-fit)
-- **Other**: [every-layout.dev/layouts/grid/](https://every-layout.dev/layouts/grid/)
-
-### Source
-
-- [`css/layout/grid.css`](https://github.com/odonckers/domestic-ui/blob/main/css/layout/grid.css)
-
-## Stack
-
-Page: https://odonckers.github.io/domestic-ui/layouts/stack.html
-
-Vertical flow with a consistent gap between children.
-
-### API
-
-```text
-class="stack"
---stack-gap   space between children (default: var(--dui-space-m))
-```
-
-Layout primitives and utilities are classes, not `data-*` attributes; see the [component API convention](https://odonckers.github.io/domestic-ui/components/index.md#component-api).
-
-### Live example
-
-There is no standalone example page for stack yet. These example pages use it: [Base elements](https://odonckers.github.io/domestic-ui/examples/base.html), [Theming](https://odonckers.github.io/domestic-ui/examples/theming.html), [Field](https://odonckers.github.io/domestic-ui/examples/atoms/field.html), [Switch](https://odonckers.github.io/domestic-ui/examples/atoms/switch.html).
-
-### Markup
-
-From the `Example` block in [`css/layout/stack.css`](https://github.com/odonckers/domestic-ui/blob/main/css/layout/stack.css):
-
-```html
-<div class="stack" style="--stack-gap: var(--dui-space-s)">…</div>
-```
-
-### Notes
-
-Pattern: "The Stack", Every Layout (<https://every-layout.dev/layouts/stack/>), built with flexbox gap (<https://developer.mozilla.org/en-US/docs/Web/CSS/gap>).
-
---stack-gap does not inherit, so nested stacks keep their own default.
-
-### Accessibility
-
-The CSS header comment has no accessibility notes. See the spec links below and the [Accessibility baseline](https://odonckers.github.io/domestic-ui/principles/accessibility-baseline-wcag-22-aa.md) principle.
-
-### Specs
-
-- **Other**: [every-layout.dev/layouts/stack/](https://every-layout.dev/layouts/stack/)
-- **MDN**: [developer.mozilla.org/en-US/docs/Web/CSS/gap](https://developer.mozilla.org/en-US/docs/Web/CSS/gap)
-
-### Source
-
-- [`css/layout/stack.css`](https://github.com/odonckers/domestic-ui/blob/main/css/layout/stack.css)
 
 ## Patterns
 
@@ -2397,24 +2320,120 @@ Show records in a native `<table>`, narrow them with a filter bar, group long fo
 
 None of these are available yet: Data table (M3b), Filter bar (M3b), Large forms (M3b), Compact density (M3b).
 
-## Examples
+## Demos
 
-Page: https://odonckers.github.io/domestic-ui/examples.html
+Page: https://odonckers.github.io/domestic-ui/demos.html
 
-Standalone HTML pages that load `css/domestic.css`, nothing else. Open one, or read its source on GitHub.
+The same two views, a household-chores **dashboard** and an **account settings** form,
+built four ways to show that domestic-ui works with plain HTML and with common frameworks.
+Every view uses the same native markup, the `stack`, `cluster` and `grid` layout primitives, and
+the [atom APIs](https://github.com/odonckers/domestic-ui/blob/main/css/components/atoms/README.md): `data-text`, `data-button`, `data-field`,
+`data-badge` and the `role="switch"` checkbox, written exactly as in
+[`examples/atoms/`](https://odonckers.github.io/domestic-ui/examples/atoms/index.html).
 
-### Pages (`examples/`)
+Each directory in [`demos/`](https://github.com/odonckers/domestic-ui/tree/main/demos) with a `README.md`, by name, with the first sentence of that README. Demos are not part of this site; follow the link to read the source and how to run it.
 
-- [Base elements](https://odonckers.github.io/domestic-ui/examples/base.html) ([source](https://github.com/odonckers/domestic-ui/blob/main/examples/base.html))
-- [Theming](https://odonckers.github.io/domestic-ui/examples/theming.html) ([source](https://github.com/odonckers/domestic-ui/blob/main/examples/theming.html))
+- **Accessibility checker** ([`demos/a11y/`](https://github.com/odonckers/domestic-ui/tree/main/demos/a11y)): Checks the built demo apps the same way the repository checks `examples/`: Playwright with [axe](https://github.com/dequelabs/axe-core) (tags `wcag2a`, `wcag2aa`, `wcag21a`, `wcag21aa`, `wcag22aa`), in light and dark, with every `<details>` opened and checked again.
+- **Angular** ([`demos/angular/`](https://github.com/odonckers/domestic-ui/tree/main/demos/angular)): The dashboard and account settings views in Angular 22: standalone components, two routes (`''` and `'settings'`) with Angular Router, a `title` per route, and `routerLinkActive` with `ariaCurrentWhenActive="page"` for the current link.
+- **Astro** ([`demos/astro/`](https://github.com/odonckers/domestic-ui/tree/main/demos/astro)): The dashboard and account settings views as two static Astro pages (`src/pages/index.astro` and `src/pages/settings.astro`) sharing `src/layouts/Base.astro`.
+- **React** ([`demos/react/`](https://github.com/odonckers/domestic-ui/tree/main/demos/react)): The dashboard and account settings views in React 19 with Vite, as a two-page [multi-page app](https://vite.dev/guide/build#multi-page-app) (`index.html` and `settings.html`).
+- **Plain HTML** ([`demos/vanilla/`](https://github.com/odonckers/domestic-ui/tree/main/demos/vanilla)): The dashboard and account settings views as two static HTML files, with no build step.
 
-### Atoms (`examples/atoms/`)
+## Contributing to domestic-ui
 
-- [Atoms showcase](https://odonckers.github.io/domestic-ui/examples/atoms/index.html) ([source](https://github.com/odonckers/domestic-ui/blob/main/examples/atoms/index.html))
-- [Badge](https://odonckers.github.io/domestic-ui/examples/atoms/badge.html) ([source](https://github.com/odonckers/domestic-ui/blob/main/examples/atoms/badge.html))
-- [Buttons](https://odonckers.github.io/domestic-ui/examples/atoms/button.html) ([source](https://github.com/odonckers/domestic-ui/blob/main/examples/atoms/button.html))
-- [Form controls](https://odonckers.github.io/domestic-ui/examples/atoms/controls.html) ([source](https://github.com/odonckers/domestic-ui/blob/main/examples/atoms/controls.html))
-- [Field](https://odonckers.github.io/domestic-ui/examples/atoms/field.html) ([source](https://github.com/odonckers/domestic-ui/blob/main/examples/atoms/field.html))
-- [Quiet link](https://odonckers.github.io/domestic-ui/examples/atoms/link.html) ([source](https://github.com/odonckers/domestic-ui/blob/main/examples/atoms/link.html))
-- [Switch](https://odonckers.github.io/domestic-ui/examples/atoms/switch.html) ([source](https://github.com/odonckers/domestic-ui/blob/main/examples/atoms/switch.html))
-- [Text helpers](https://odonckers.github.io/domestic-ui/examples/atoms/text.html) ([source](https://github.com/odonckers/domestic-ui/blob/main/examples/atoms/text.html))
+Page: https://odonckers.github.io/domestic-ui/contributing.html
+
+Rendered read-only from [`CONTRIBUTING.md`](https://github.com/odonckers/domestic-ui/blob/main/CONTRIBUTING.md). To change it, [edit CONTRIBUTING.md on GitHub](https://github.com/odonckers/domestic-ui/edit/main/CONTRIBUTING.md).
+
+Thanks for helping. This project is a design system built on native HTML, CSS tokens, and published web standards.
+
+### Issues and pull requests
+
+Use the issue forms for bugs and feature requests. Pull requests should use the template.
+
+Branch names follow `fix/short-description`, `feat/short-description`, `docs/short-description`, or `a11y/short-description`.
+
+#### Approval flow
+
+Issues and pull requests from outside this repository's owners, members, or collaborators get the `needs-owen-approval` label automatically.
+
+The maintainer approves an item by adding the `owen-approved` label. Only Owen applies that label. Team bots never apply `owen-approved` and never merge outside pull requests. Bots may merge their own pull requests.
+
+An outside pull request cannot merge until the `owen-gate` check passes, which requires the `owen-approved` label.
+
+`.github/CODEOWNERS` lists @odonckers on every file. That file is informational today: team bots push with the same GitHub account as Owen, so GitHub cannot tell his review apart from a bot's.
+
+### Standards
+
+- Prefer a native HTML element before adding a component or custom behavior.
+- Cite the relevant [MDN](https://developer.mozilla.org/), [WHATWG](https://whatwg.org/), [W3C](https://www.w3.org/), [WCAG 2.2](https://www.w3.org/TR/WCAG22/), or [APG](https://www.w3.org/WAI/ARIA/apg/) documentation in the issue or pull request.
+- If we choose a behavior the specs leave open, label it as our choice, not as a standard.
+- Theme only through semantic `--dui-*` CSS custom properties. Do not hard-code colors, spacing, typography, or other design values in components.
+
+The default theme should look complete and consistent out of the box. Consumers re-theme the system by overriding those tokens.
+
+### Checks
+
+`npm test` must pass. That run includes html-validate, axe, and stylelint.
+
+### Changelog
+
+Every user-facing change needs an entry in `CHANGELOG.md`.
+
+## Changelog
+
+Page: https://odonckers.github.io/domestic-ui/changelog.html
+
+Rendered read-only from [`CHANGELOG.md`](https://github.com/odonckers/domestic-ui/blob/main/CHANGELOG.md). To change it, [edit CHANGELOG.md on GitHub](https://github.com/odonckers/domestic-ui/edit/main/CHANGELOG.md).
+
+All notable changes to this project are documented in this file.
+
+The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
+and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+Semantic token names and file paths under `css/` are public API; primitive tokens are not.
+
+### [Unreleased]
+
+#### Added
+
+- `css/domestic.css`: zero-build entry point declaring
+  `@layer reset, tokens, base, layout, components, utilities;` and importing each layer file.
+- `reset` layer: a modest modern reset (`css/reset/reset.css`).
+- `tokens` layer: primitive tokens (`css/tokens/primitives.css`) and semantic tokens
+  (`css/tokens/semantic.css`), all prefixed `--dui-`, with `light-dark()` colors,
+  a fluid `clamp()` type scale, spacing, radii, focus and motion tokens that collapse
+  under `prefers-reduced-motion`.
+- Theme scoping with `[data-theme]` or `.theme-*`, and scheme forcing with
+  `data-color-scheme="light" | "dark"`.
+- `base` layer: styles for text, links, lists, quotes, code, media, tables, form controls,
+  buttons, `<dialog>`, `<details>`, visible `:focus-visible` and forced-colors support.
+- `layout` layer: `.stack`, `.cluster` and `.grid` primitives configured with custom properties.
+- `utilities` layer: `.visually-hidden`.
+- Placeholders for `css/components/` and `web-components/`.
+- `examples/base.html` and `examples/theming.html`.
+- `PRINCIPLES.md`, including the semantic token reference.
+- Tooling: html-validate, Stylelint, a token discipline check, and Playwright + axe-core
+  accessibility tests in light and dark, all run by `npm test`.
+- GitHub Actions: CI on pull requests and pushes to `main`, and a GitHub Pages skeleton.
+- Atoms in `css/components/atoms/`, imported into the `components` layer, each with one attribute API:
+  - Text helpers: `data-text="lead | small | muted"`.
+  - Quiet link: `data-link="quiet"` (inherits text color, keeps its underline).
+  - Buttons: `data-button="[primary | secondary | quiet] [small | large]"` on `<button>`, `<input>`
+    and `<a href>`; `aria-disabled="true"` and `aria-busy="true"` states; an inner focus ring on
+    primary buttons. `type="submit"` stays primary by default.
+  - Switch: `role="switch"` on `<input type="checkbox">`, per the APG Switch pattern, with
+    forced-colors support.
+  - Field: `data-field` with `data-field="hint"` and `data-field="error"`; invalid style for
+    `aria-invalid="true"` and `:user-invalid`.
+  - Badge: `data-badge="neutral | accent | success | warning | danger"`.
+- Semantic tokens: `--dui-color-warning`, `--dui-color-accent-surface`, `--dui-color-success-surface`,
+  `--dui-color-warning-surface`, `--dui-color-danger-surface`, `--dui-tint-amount`, `--dui-border-tint-amount`,
+  `--dui-size-target-small`, `--dui-size-target-large` (and their primitives).
+- `examples/atoms/`: an index and one page per atom; the theming example now shows atoms in both themes.
+- Tests: atom states through Playwright accessibility APIs, rendered focus-ring contrast on every
+  button variant, contrast pairs for every new token, and scoped theming of atoms.
+- Firefox and WebKit Playwright projects alongside Chromium, installed in CI.
+
+#### Fixed
+
+- Base button hover and press styles no longer apply to buttons with `aria-disabled="true"`.

@@ -1,0 +1,33 @@
+// @ts-check
+import { existsSync, readdirSync } from "node:fs";
+import { join } from "node:path";
+import { ROOT, build } from "../site/build.mjs";
+
+/*
+ * Shared by the docs specs. The site is built once into _site/ (without
+ * touching README.md or llms*.txt, so the stale check stays meaningful) by
+ * the process that collects tests; workers only read it. Building in every
+ * worker would wipe _site/ while other workers load pages from it. ES
+ * modules are evaluated once per process, so importing this from several
+ * spec files still builds once. Playwright's webServer serves the repo
+ * root, so pages are at /_site/….
+ */
+if (!process.env.TEST_WORKER_INDEX || !existsSync(join(ROOT, "_site", "index.html"))) build({ writeRoot: false });
+
+export const SITE_DIR = join(ROOT, "_site");
+
+/** The same tags as tests/a11y.spec.js. */
+export const WCAG_TAGS = ["wcag2a", "wcag2aa", "wcag21a", "wcag21aa", "wcag22aa"];
+
+/** Readable summary of axe violations for the failure message. @param {any[]} violations */
+export const summarize = (violations) =>
+  violations.map((v) => `${v.id} (${v.impact}): ${v.help}\n    ${v.nodes.map((/** @type {any} */ n) => n.target.join(" ")).join("\n    ")}`).join("\n");
+
+/**
+ * Every built docs page: each .html file in _site/ outside _site/examples/
+ * and _site/css/, as a path relative to _site/, sorted.
+ */
+export const builtPages = readdirSync(SITE_DIR, { recursive: true })
+  .map((name) => String(name).split("\\").join("/"))
+  .filter((name) => name.endsWith(".html") && !name.startsWith("examples/") && !name.startsWith("css/"))
+  .sort();

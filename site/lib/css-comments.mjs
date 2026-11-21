@@ -55,8 +55,8 @@ export function comments(css) {
   return [...css.matchAll(/\/\*([\s\S]*?)\*\//g)].map((m) => stripDecoration(m[1]));
 }
 
-/** @param {string} body */
-function stripDecoration(body) {
+/** A comment's text without the leading " * " decoration. @param {string} body */
+export function stripDecoration(body) {
   const lines = body.split("\n").map((line) => line.replace(/^\s*\* ?/, "").replace(/\s+$/, ""));
   while (lines.length && !lines[0].trim()) lines.shift();
   while (lines.length && !lines[lines.length - 1].trim()) lines.pop();
@@ -183,91 +183,4 @@ export function parseLayerOrder(css) {
   return m ? m[1].split(",").map((s) => s.trim()) : [];
 }
 
-/**
- * @typedef {{ name: string, value: string, conditions: { media: string, value: string }[] }} Token
- * @typedef {{ name: string, slug: string, note: string, tokens: Token[] }} TokenGroup
- */
-
-/**
- * Token groups of css/tokens/semantic.css, from its section comments.
- * A one-line comment inside a rule (such as "Space") starts a group; a
- * block comment before a top-level rule (such as "2. Dependent tokens: …")
- * starts one too. A declaration inside @media is recorded as a condition
- * on the token it overrides instead of a new token. Empty groups are dropped.
- * @param {string} css
- * @returns {TokenGroup[]}
- */
-export function parseTokenGroups(css) {
-  /** @type {TokenGroup[]} */
-  const groups = [];
-  /** @type {Map<string, Token>} */
-  const byName = new Map();
-  /** @type {TokenGroup | null} */
-  let group = null;
-  let depth = 0;
-  let media = "";
-  let pending = "";
-  const lines = css.split("\n");
-
-  const startGroup = (comment) => {
-    const text = comment.replace(/\s+/g, " ").replace(/^\d+\.\s*/, "").trim();
-    let name = text;
-    let note = "";
-    const colon = text.match(/^([^:(]+):\s*([\s\S]*)$/);
-    const paren = text.match(/^([^(]+?)\s*\(([^)]*)\)\s*$/);
-    if (colon) [name, note] = [colon[1].trim(), colon[2].trim()];
-    else if (paren) [name, note] = [paren[1].trim(), paren[2].trim()];
-    group = { name, slug: slugifyName(name), note, tokens: [] };
-    groups.push(group);
-  };
-
-  for (let i = 0; i < lines.length; i++) {
-    const line = lines[i];
-    const trimmed = line.trim();
-    if (trimmed.startsWith("/*")) {
-      let body = trimmed;
-      while (!body.includes("*/") && i + 1 < lines.length) body += `\n${lines[++i]}`;
-      const text = stripDecoration(body.replace(/^\/\*/, "").replace(/\*\/[\s\S]*$/, ""));
-      if (depth > 0 && !media) startGroup(text);
-      else if (depth === 0) pending = text;
-      continue;
-    }
-    const at = trimmed.match(/^@media\s+([^{]+?)\s*\{$/);
-    if (at) {
-      media = at[1];
-      depth++;
-      pending = "";
-      continue;
-    }
-    if (trimmed.endsWith("{")) {
-      if (depth === 0 && pending) startGroup(pending);
-      pending = "";
-      depth++;
-      continue;
-    }
-    const decl = trimmed.match(/^(--dui-[\w-]+)\s*:\s*(.+?);$/);
-    if (decl) {
-      const [, name, value] = decl;
-      const known = byName.get(name);
-      if (media && known) known.conditions.push({ media, value });
-      else if (!known) {
-        if (!group) startGroup("Other");
-        const token = { name, value, conditions: [] };
-        byName.set(name, token);
-        /** @type {TokenGroup} */ (/** @type {unknown} */ (group)).tokens.push(token);
-      }
-    }
-    if (trimmed.startsWith("}")) {
-      depth = Math.max(0, depth - 1);
-      if (depth === 0) media = "";
-    }
-  }
-  return groups.filter((g) => g.tokens.length);
-}
-
-/** @param {string} name */
-const slugifyName = (name) =>
-  name
-    .toLowerCase()
-    .replace(/[^a-z0-9]+/g, "-")
-    .replace(/^-|-$/g, "");
+/* Token files are read by ./tokens.mjs. */

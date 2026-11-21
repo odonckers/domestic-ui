@@ -4,6 +4,21 @@
 
 To use it, link `css/domestic.css` (copy the `css/` folder or clone https://github.com/odonckers/domestic-ui). Plain semantic HTML then gets the full look with no classes. Each component exposes one `data-<component>` attribute whose value is space-separated words matched with `~=`, such as `data-button="primary small"`, never classes; state is carried by native attributes and ARIA (`disabled`, `aria-disabled`, `aria-busy`, `aria-invalid`). Layout primitives and utilities are classes (`.cluster`, `.grid`, `.stack`, `.visually-hidden`), tuned with custom properties. Theme only by overriding semantic `--dui-*` tokens; primitive tokens are internal and may change.
 
+## Getting started
+
+- [Getting started](https://odonckers.github.io/domestic-ui/index.md): domestic-ui is a design system built on native HTML, CSS custom properties and cascade layers.
+- [Examples](https://odonckers.github.io/domestic-ui/examples.md): Standalone example pages that load the real domestic-ui CSS.
+- [Base elements](https://odonckers.github.io/domestic-ui/examples/base.html): live example page (HTML)
+- [Theming](https://odonckers.github.io/domestic-ui/examples/theming.html): live example page (HTML)
+- [Badge](https://odonckers.github.io/domestic-ui/examples/atoms/badge.html): live example page (HTML)
+- [Buttons](https://odonckers.github.io/domestic-ui/examples/atoms/button.html): live example page (HTML)
+- [Form controls](https://odonckers.github.io/domestic-ui/examples/atoms/controls.html): live example page (HTML)
+- [Field](https://odonckers.github.io/domestic-ui/examples/atoms/field.html): live example page (HTML)
+- [Atoms showcase](https://odonckers.github.io/domestic-ui/examples/atoms/index.html): live example page (HTML)
+- [Quiet link](https://odonckers.github.io/domestic-ui/examples/atoms/link.html): live example page (HTML)
+- [Switch](https://odonckers.github.io/domestic-ui/examples/atoms/switch.html): live example page (HTML)
+- [Text helpers](https://odonckers.github.io/domestic-ui/examples/atoms/text.html): live example page (HTML)
+
 ## Principles
 
 - [Principles](https://odonckers.github.io/domestic-ui/principles/index.md): domestic-ui packages existing web standards and well-known patterns.
@@ -18,25 +33,25 @@ To use it, link `css/domestic.css` (copy the `css/` folder or clone https://gith
 
 ## Tokens
 
-- [Tokens](https://odonckers.github.io/domestic-ui/tokens/index.md): The two tiers of domestic-ui design tokens and the groups of public semantic tokens.
-- [Surfaces and text tokens](https://odonckers.github.io/domestic-ui/tokens/surfaces-and-text.md): Semantic surfaces and text tokens and their values (5).
-- [Borders tokens](https://odonckers.github.io/domestic-ui/tokens/borders.md): Semantic borders tokens and their values (2).
-- [Accent and status tokens](https://odonckers.github.io/domestic-ui/tokens/accent-and-status.md): Semantic accent and status tokens and their values (10).
-- [Type tokens](https://odonckers.github.io/domestic-ui/tokens/type.md): Semantic type tokens and their values (18).
-- [Space tokens](https://odonckers.github.io/domestic-ui/tokens/space.md): Semantic space tokens and their values (9).
-- [Sizes tokens](https://odonckers.github.io/domestic-ui/tokens/sizes.md): Semantic sizes tokens and their values (5).
-- [Shape tokens](https://odonckers.github.io/domestic-ui/tokens/shape.md): Semantic shape tokens and their values (8).
-- [Focus indicator tokens](https://odonckers.github.io/domestic-ui/tokens/focus-indicator.md): Semantic focus indicator tokens and their values (2).
-- [Motion tokens](https://odonckers.github.io/domestic-ui/tokens/motion.md): Semantic motion tokens and their values (3).
-- [State tokens](https://odonckers.github.io/domestic-ui/tokens/state.md): Semantic state tokens and their values (3).
-- [Dependent tokens](https://odonckers.github.io/domestic-ui/tokens/dependent-tokens.md): Semantic dependent tokens and their values (5).
-- [Tinted surfaces for status badges tokens](https://odonckers.github.io/domestic-ui/tokens/tinted-surfaces-for-status-badges.md): Semantic tinted surfaces for status badges tokens and their values (4).
+- [Tokens](https://odonckers.github.io/domestic-ui/tokens/index.md): The two tiers of domestic-ui design tokens: 158 custom properties with their light and dark values.
+- [Primitive tokens](https://odonckers.github.io/domestic-ui/tokens/primitives.md): All 84 primitive tokens in css/tokens/primitives.css (internal), with resolved light and dark values.
+- [Semantic tokens](https://odonckers.github.io/domestic-ui/tokens/semantic.md): All 74 semantic tokens in css/tokens/semantic.css (public theming API), with resolved light and dark values.
 
-## Components
+## Base
 
-- [Components](https://odonckers.github.io/domestic-ui/components/index.md): Everything in domestic-ui by level: tokens, atoms, molecules, organisms and layouts, plus utilities.
-- [Atoms](https://odonckers.github.io/domestic-ui/atoms/index.md): Every atom in domestic-ui.
 - [Base elements](https://odonckers.github.io/domestic-ui/components/base.md): Native HTML elements styled by the base layer, with no classes.
+- [Visually hidden](https://odonckers.github.io/domestic-ui/components/utilities/visually-hidden.md): Hides content visually but keeps it in the accessibility tree.
+
+## Layout
+
+- [Layouts](https://odonckers.github.io/domestic-ui/layouts/index.md): Layout primitives and planned page layouts of domestic-ui.
+- [Cluster](https://odonckers.github.io/domestic-ui/layouts/cluster.md): An inline group that wraps onto new lines (buttons, tags, nav links).
+- [Grid](https://odonckers.github.io/domestic-ui/layouts/grid.md): A responsive grid: as many columns as fit, each at least --grid-min wide, never wider than the container.
+- [Stack](https://odonckers.github.io/domestic-ui/layouts/stack.md): Vertical flow with a consistent gap between children.
+
+## Atoms
+
+- [Atoms](https://odonckers.github.io/domestic-ui/atoms/index.md): Every atom in domestic-ui.
 - [Text helpers](https://odonckers.github.io/domestic-ui/components/atoms/text.md): Lead, small and muted text helpers from domestic-ui, with copyable markup.
 - [Quiet link](https://odonckers.github.io/domestic-ui/components/atoms/link.md): A link that takes the surrounding text color and keeps its underline, for dense UI.
 - [Buttons](https://odonckers.github.io/domestic-ui/components/atoms/button.md): Button variants, sizes, link buttons and honest disabled and loading states.
@@ -44,18 +59,16 @@ To use it, link `css/domestic.css` (copy the `css/` folder or clone https://gith
 - [Switch](https://odonckers.github.io/domestic-ui/components/atoms/switch.md): An on/off switch built on a native checkbox with role switch, following the APG Switch pattern.
 - [Field](https://odonckers.github.io/domestic-ui/components/atoms/field.md): Label, control, hint and error message wired with aria-describedby and aria-invalid.
 - [Badge](https://odonckers.github.io/domestic-ui/components/atoms/badge.md): Inline status labels with tone variants that meet WCAG AA contrast.
-- [Visually hidden](https://odonckers.github.io/domestic-ui/components/utilities/visually-hidden.md): Hides content visually but keeps it in the accessibility tree.
+
+## Molecules
+
 - [Molecules](https://odonckers.github.io/domestic-ui/molecules/index.md): Every molecule in domestic-ui, with the patterns planned at this level.
+
+## Organisms
+
 - [Organisms](https://odonckers.github.io/domestic-ui/organisms/index.md): Every organism in domestic-ui, with the patterns planned at this level.
 
-## Layouts
-
-- [Layouts](https://odonckers.github.io/domestic-ui/layouts/index.md): Layout primitives and planned page layouts of domestic-ui.
-- [Cluster](https://odonckers.github.io/domestic-ui/layouts/cluster.md): An inline group that wraps onto new lines (buttons, tags, nav links).
-- [Grid](https://odonckers.github.io/domestic-ui/layouts/grid.md): A responsive grid: as many columns as fit, each at least --grid-min wide, never wider than the container.
-- [Stack](https://odonckers.github.io/domestic-ui/layouts/stack.md): Vertical flow with a consistent gap between children.
-
-## Patterns
+## Patterns and guides
 
 - [Patterns](https://odonckers.github.io/domestic-ui/patterns/index.md): Planned and available interface patterns, from site navigation to app shells, with the standard each one follows.
 - Alerts: Coming in M3. Messages about status, from notices in the page to live alerts for important, time-sensitive changes. Follows [APG Alert pattern](https://www.w3.org/WAI/ARIA/apg/patterns/alert/).
@@ -79,25 +92,25 @@ To use it, link `css/domestic.css` (copy the `css/` folder or clone https://gith
 - Large forms: Coming in M3b. Long forms split into labelled groups, in one or more columns. Follows [HTML `<form>` element](https://html.spec.whatwg.org/multipage/forms.html#the-form-element), [HTML `<fieldset>` element](https://html.spec.whatwg.org/multipage/form-elements.html#the-fieldset-element).
 - List-detail: Coming in M3b. A list of items beside the details of the selected one, stacked on narrow screens. **Our choice:** No standard exists; a list of links beside the detail region, placed with CSS grid, where each item is a real link so the browser's history and the URL keep working.
 - Split: Coming in M3b. Two regions side by side at a set ratio, stacked on narrow screens. **Our choice:** No standard exists for a fixed split; two regions placed with CSS grid. A divider users can drag would follow the APG Window Splitter pattern.
-
-## Guides
-
 - [Guides](https://odonckers.github.io/domestic-ui/guides/index.md): Step-by-step guides for building with domestic-ui.
 - [From a simple site to an ERP app](https://odonckers.github.io/domestic-ui/guides/simple-site-to-erp-app.md): Five steps from a plain content page to a dense business application, and which parts of each step are available today.
 
-## Examples
+## Demos
 
-- [Examples](https://odonckers.github.io/domestic-ui/examples.md): Standalone example pages that load the real domestic-ui CSS.
-- [Base elements](https://odonckers.github.io/domestic-ui/examples/base.html): live example page (HTML)
-- [Theming](https://odonckers.github.io/domestic-ui/examples/theming.html): live example page (HTML)
-- [Badge](https://odonckers.github.io/domestic-ui/examples/atoms/badge.html): live example page (HTML)
-- [Buttons](https://odonckers.github.io/domestic-ui/examples/atoms/button.html): live example page (HTML)
-- [Form controls](https://odonckers.github.io/domestic-ui/examples/atoms/controls.html): live example page (HTML)
-- [Field](https://odonckers.github.io/domestic-ui/examples/atoms/field.html): live example page (HTML)
-- [Atoms showcase](https://odonckers.github.io/domestic-ui/examples/atoms/index.html): live example page (HTML)
-- [Quiet link](https://odonckers.github.io/domestic-ui/examples/atoms/link.html): live example page (HTML)
-- [Switch](https://odonckers.github.io/domestic-ui/examples/atoms/switch.html): live example page (HTML)
-- [Text helpers](https://odonckers.github.io/domestic-ui/examples/atoms/text.html): live example page (HTML)
+- [Demos](https://odonckers.github.io/domestic-ui/demos.md): Demo apps in demos/ that use domestic-ui, each with a link to its source on GitHub.
+- [Accessibility checker](https://github.com/odonckers/domestic-ui/tree/main/demos/a11y): Checks the built demo apps the same way the repository checks `examples/`: Playwright with [axe](https://github.com/dequelabs/axe-core) (tags `wcag2a`, `wcag2aa`, `wcag21a`, `wcag21aa`, `wcag22aa`), in light and dark, with every `<details>` opened and checked again.
+- [Angular](https://github.com/odonckers/domestic-ui/tree/main/demos/angular): The dashboard and account settings views in Angular 22: standalone components, two routes (`''` and `'settings'`) with Angular Router, a `title` per route, and `routerLinkActive` with `ariaCurrentWhenActive="page"` for the current link.
+- [Astro](https://github.com/odonckers/domestic-ui/tree/main/demos/astro): The dashboard and account settings views as two static Astro pages (`src/pages/index.astro` and `src/pages/settings.astro`) sharing `src/layouts/Base.astro`.
+- [React](https://github.com/odonckers/domestic-ui/tree/main/demos/react): The dashboard and account settings views in React 19 with Vite, as a two-page [multi-page app](https://vite.dev/guide/build#multi-page-app) (`index.html` and `settings.html`).
+- [Plain HTML](https://github.com/odonckers/domestic-ui/tree/main/demos/vanilla): The dashboard and account settings views as two static HTML files, with no build step.
+
+## Contributing
+
+- [Contributing](https://odonckers.github.io/domestic-ui/contributing.md): Thanks for helping.
+
+## Changelog
+
+- [Changelog](https://odonckers.github.io/domestic-ui/changelog.md): All notable changes to this project are documented in this file.
 
 ## Optional
 

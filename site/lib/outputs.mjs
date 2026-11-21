@@ -6,9 +6,10 @@
  */
 import { COMPONENT_GROUPS } from "./discovery.mjs";
 import { shiftHeadings, tokenize } from "./markdown.mjs";
+import { NAV, navEntryOf } from "./nav.mjs";
 import { apiSummary, conventionMd, conventionShortMd, demoListMd, followsMd, installMd, layersMd, patternStatus, rewriteRepoLinks, sortedPatterns, themingMd } from "./pages.mjs";
 import { resolveSiteLinks, renderMarkdown } from "./templates.mjs";
-import { BLOB_URL, RAW_URL, REPO_URL, SITE_URL, escapeMdCell, mdCode } from "./util.mjs";
+import { BLOB_URL, RAW_URL, REPO_URL, SITE_URL, escapeMdCell, mdCode, unescapeHtml } from "./util.mjs";
 
 /**
  * @typedef {import("./discovery.mjs").Model} Model
@@ -52,21 +53,27 @@ export function generateReadme(model) {
     return `| ${level} | ${escapeMdCell(p.title)} | ${escapeMdCell(api.map(mdCode).join(", ") || "see the pattern page")} | [${p.title}](site:${p.sitePath}) |`;
   };
   const available = (/** @type {string} */ level) => sortedPatterns(model).filter((p) => p.available && p.level === level);
-  const rows = [row("Atoms", model.base)];
+  // Rows in sidebar order: Base, Layout, Atoms, Molecules, Organisms.
+  const rows = [row("Base", model.base), ...model.utilities.map((c) => row("Base (utility)", c))];
+  rows.push(...model.layouts.map((c) => row("Layout", c)), ...available("layouts").map((p) => patternRow("Layout", p)));
   for (const { group, title, milestone } of COMPONENT_GROUPS) {
     const items = [...model.components[group].map((c) => row(title, c)), ...available(group).map((p) => patternRow(title, p))];
     if (items.length) rows.push(...items);
     else rows.push(`| ${title} | Coming in ${milestone} | | [components README](${BLOB_URL}css/components/README.md) |`);
   }
-  rows.push(...model.layouts.map((c) => row("Layouts", c)), ...available("layouts").map((p) => patternRow("Layouts", p)));
-  rows.push(...available("tokens").map((p) => patternRow("Tokens", p)), ...model.utilities.map((c) => row("Utilities", c)));
+  rows.push(...available("tokens").map((p) => patternRow("Tokens", p)));
 
   const patternRows = sortedPatterns(model).map(
     (p) => `| [${p.title}](site:${p.sitePath}) | ${p.milestone} | ${patternStatus(p)} | ${escapeMdCell(followsMd(p))} |`,
   );
   const guides = model.guides.map((g) => `- [${g.title}](site:${g.sitePath}): ${g.summary}`).join("\n");
 
-  const tokens = model.tokenGroups.map((g) => `- [${g.name}](site:${g.sitePath}): ${g.tokens.map((t) => mdCode(t.name)).join(", ")}`).join("\n");
+  const tokens = model.tokenFiles
+    .map((f) => {
+      const n = f.groups.reduce((sum, g) => sum + g.tokens.length, 0);
+      return `- [${f.title}](site:${f.sitePath})${f.tier ? ` (${f.tier})` : ""}: ${n} tokens in [\`${f.path}\`](${BLOB_URL}${f.path}).`;
+    })
+    .join("\n");
 
   const md = `${README_HEADER}
 
@@ -78,11 +85,9 @@ ${model.intro}
 - Live examples: ${model.examples.map((e) => `[${e.title}](site:${e.path})`).join(", ")}
 - For coding agents: [llms.txt](site:llms.txt) and [llms-full.txt](site:llms-full.txt)
 
-## Principles
+## Getting started
 
-${model.principles.intro ? `${rewriteRepoLinks(model.principles.intro, model)}\n\n` : ""}${principles}
-
-## Install and use
+### Install and use
 
 ${installMd(model)}
 
@@ -94,17 +99,29 @@ ${layersMd(model)}
 
 ${themingMd(model)}
 
-## Components
+### Component API
 
 ${conventionMd(model)}
 
-By level ([Components](site:components/index.html), [Layouts](site:layouts/index.html)):
+## Principles
+
+${model.principles.intro ? `${rewriteRepoLinks(model.principles.intro, model)}\n\n` : ""}${principles}
+
+## Tokens
+
+Primitive tokens are internal and may change; semantic tokens are the public theming API. Every token, with its light and dark value, is on the [Tokens](site:tokens/index.html) pages:
+
+${tokens}
+
+## Base, layout and components
+
+By level ([Base](site:${model.base.sitePath}), [Layout](site:layouts/index.html), [Atoms](site:atoms/index.html), [Molecules](site:molecules/index.html), [Organisms](site:organisms/index.html)):
 
 | Level | Name | API | Docs |
 | --- | --- | --- | --- |
 ${rows.join("\n")}
 
-## Patterns
+## Patterns and guides
 
 Where a standard exists (a native HTML element or a WAI-ARIA APG pattern), the pattern follows it and links to it. Where none exists, it is labeled **Our choice:** with one line on why ([Patterns](site:patterns/index.html)).
 
@@ -112,15 +129,9 @@ Where a standard exists (a native HTML element or a WAI-ARIA APG pattern), the p
 | --- | --- | --- | --- |
 ${patternRows.join("\n")}
 
-## Guides
+Guides:
 
 ${guides || "No guides yet."}
-
-## Tokens
-
-Semantic tokens are the public theming API, in these groups ([Tokens](site:tokens/index.html)):
-
-${tokens}
 
 ## Demos
 
@@ -128,7 +139,11 @@ ${demoListMd(model)}
 
 ## Contributing
 
-Read [CONTRIBUTING.md](${BLOB_URL}CONTRIBUTING.md), the [Code of Conduct](${BLOB_URL}CODE_OF_CONDUCT.md) and the [security policy](${BLOB_URL}SECURITY.md). \`npm test\` runs every check.
+Read [CONTRIBUTING.md](site:contributing.html), the [Code of Conduct](${BLOB_URL}CODE_OF_CONDUCT.md) and the [security policy](${BLOB_URL}SECURITY.md). \`npm test\` runs every check.
+
+## Changelog
+
+See [CHANGELOG.md](site:changelog.html).
 
 ## License
 
@@ -153,42 +168,27 @@ To use it, link \`css/domestic.css\` (copy the \`css/\` folder or clone ${REPO_U
  */
 export function generateLlms(model, pages) {
   const entry = (/** @type {Page} */ p) => `- [${p.title}](${SITE_URL}${p.path.replace(/\.html$/, ".md")}): ${p.description}`;
-  const section = (/** @type {Page["section"]} */ s) => pages.filter((p) => p.section === s).map(entry);
   const examples = model.examples.map((e) => `- [${e.title}](${SITE_URL}${e.path}): live example page (HTML)`);
   // Available patterns link to their Markdown twin; planned ones are named with their milestone only.
-  const patterns = sortedPatterns(model).map((p) => {
-    const note = `${p.summary} ${p.standards.length ? `Follows ${followsMd(p)}.` : followsMd(p)}`;
-    return p.available ? `- [${p.title}](${SITE_URL}${p.sitePath.replace(/\.html$/, ".md")}): Available. ${note}` : `- ${p.title}: ${patternStatus(p)}. ${note}`;
+  const patterns = new Map(
+    sortedPatterns(model).map((p) => {
+      const note = `${p.summary} ${p.standards.length ? `Follows ${followsMd(p)}.` : followsMd(p)}`;
+      return [p.sitePath, p.available ? `- [${p.title}](${SITE_URL}${p.sitePath.replace(/\.html$/, ".md")}): Available. ${note}` : `- ${p.title}: ${patternStatus(p)}. ${note}`];
+    }),
+  );
+  const demos = model.demos.map(
+    (d) => `- [${d.title}](${REPO_URL}/tree/main/${d.path.replace(/\/$/, "")}): ${resolveSiteLinks(rewriteRepoLinks(d.description.replace(/\s*\n\s*/g, " "), model))}`,
+  );
+  // One H2 per Docs sidebar entry, in its order.
+  const sections = NAV.map((n) => {
+    const lines = pages.filter((p) => n.sections.includes(p.section)).map((p) => patterns.get(p.path) ?? entry(p));
+    if (n.path === "index.html") lines.push(...examples);
+    if (n.path === "demos.html") lines.push(...demos);
+    return `## ${n.title}\n\n${lines.join("\n")}`;
   });
   return `${llmsHeader(model)}
 
-## Principles
-
-${section("principles").join("\n")}
-
-## Tokens
-
-${section("tokens").join("\n")}
-
-## Components
-
-${[...section("components"), ...section("atoms"), ...section("molecules"), ...section("organisms")].join("\n")}
-
-## Layouts
-
-${section("layouts").join("\n")}
-
-## Patterns
-
-${[...pages.filter((p) => p.path === "patterns/index.html").map(entry), ...patterns].join("\n")}
-
-## Guides
-
-${section("guides").join("\n")}
-
-## Examples
-
-${[...section("examples"), ...examples].join("\n")}
+${sections.join("\n\n")}
 
 ## Optional
 
@@ -209,9 +209,24 @@ export function generateLlmsFull(model, pages, twins) {
   const body = pages.map((p) => {
     const md = renderMarkdown(p, twins).trimEnd();
     const [first, ...rest] = shiftHeadings(md, 1).split("\n");
-    const page = [first, "", `Page: ${SITE_URL}${p.path}`, ...rest].join("\n");
-    // The component API convention, once, before the components.
-    return p.path === "components/index.html" ? `## Component API\n\n${resolveSiteLinks(conventionMd(model), twins)}\n\n${page}` : page;
+    return [first, "", `Page: ${SITE_URL}${p.path}`, ...rest].join("\n");
   });
   return `${llmsHeader(model)}\n\n${body.join("\n\n")}\n`;
+}
+
+/**
+ * A search index for a later in-page search: one record per page with its
+ * sidebar entry ("level"), summary and h2/h3 headings. No search UI yet.
+ * @param {Page[]} pages
+ * @param {Record<string, string>} html rendered HTML by page path
+ */
+export function searchIndex(pages, html) {
+  const records = pages.map((p) => ({
+    title: p.title,
+    url: p.path,
+    level: navEntryOf(p)?.title ?? "",
+    summary: p.description,
+    headings: [...(html[p.path] ?? "").matchAll(/<h[23] id="[^"]*">([\s\S]*?)<\/h[23]>/g)].map((m) => unescapeHtml(m[1].replace(/<[^>]*>/g, "")).trim()),
+  }));
+  return `[\n${records.map((r) => JSON.stringify(r)).join(",\n")}\n]\n`;
 }

@@ -24,19 +24,61 @@ indexes, which is why every docs link points at a file (`principles/index.html`,
 | File | Does |
 | --- | --- |
 | `site/build.mjs` | Entry point and CLI. `generate(root)` builds everything in memory; `build({ root, outDir, writeRoot })` writes it; `stale(root)` powers `--check`. |
-| `site/lib/discovery.mjs` | Reads the repository into one model: principles, token groups, components, examples, overrides, snippets. |
-| `site/lib/css-comments.mjs` | Parses CSS header comments, token group comments in `semantic.css`, and the `@layer` order. |
+| `site/lib/discovery.mjs` | Reads the repository into one model: principles, token files, components, examples, demos, overrides, snippets. |
+| `site/lib/css-comments.mjs` | Parses CSS header comments and the `@layer` order. |
+| `site/lib/tokens.mjs` | Parses every file in `css/tokens/`, resolves light and dark values, picks a preview kind (see [Tokens](#tokens)). |
 | `site/lib/markdown.mjs` | A small Markdown to HTML converter (the subset `PRINCIPLES.md` and `site/content/` use). |
+| `site/lib/nav.mjs` | The Docs sidebar: its fixed entries and how pages are listed under them (see [Sidebar](#sidebar)). |
 | `site/lib/pages.mjs` | Defines every page as blocks of Markdown, or custom HTML plus its Markdown equivalent. |
-| `site/lib/templates.mjs` | The HTML page frame (skip link, nav, main, footer) and the Markdown twin. |
-| `site/lib/outputs.mjs` | `README.md`, `llms.txt` and `llms-full.txt`. |
+| `site/lib/templates.mjs` | The HTML page frame (skip link, header, sidebar, main, footer) and the Markdown twin. |
+| `site/lib/outputs.mjs` | `README.md`, `llms.txt`, `llms-full.txt` and `_site/search-index.json`. |
 | `site/assets/site.css` | Docs layout only, with semantic `--dui-*` tokens and the layout primitives. |
+| `site/assets/site.js` | Progressive enhancement only: closes the Docs menu on narrow screens, runs the token filter. |
 
 `_site/` is wiped and rebuilt each time. `css/` and `examples/` are copied into it unchanged, so the
 docs and the live examples load the real CSS by relative path, at `/_site/` locally and at
-`/domestic-ui/` on GitHub Pages. Every HTML page gets a Markdown twin next to it (`tokens/space.md`
-beside `tokens/space.html`). Output is deterministic (sorted inputs, no timestamps), so `--check` can
-compare bytes.
+`/domestic-ui/` on GitHub Pages. Every HTML page gets a Markdown twin next to it (`tokens/semantic.md`
+beside `tokens/semantic.html`). Output is deterministic (sorted inputs, no timestamps), so `--check`
+can compare bytes.
+
+`_site/search-index.json` has one record per page (`title`, `url`, `level` = its sidebar entry,
+`summary`, and its `h2`/`h3` `headings`) for a later in-page search. There is no search UI yet.
+
+## Sidebar
+
+Every page has one navigation: the Docs sidebar, `<nav aria-label="Docs">`. Its top-level entries
+are fixed in `NAV` in `site/lib/nav.mjs`, in this order; each links its index page and lists the
+pages of its sections below it, in the order `buildPages()` returns them.
+
+| Entry | Links | Lists |
+| --- | --- | --- |
+| Getting started | `index.html` | `examples.html` |
+| Principles | `principles/index.html` | one page per `PRINCIPLES.md` section |
+| Tokens | `tokens/index.html` | one page per file in `css/tokens/` |
+| Base | `components/base.html` | utilities (`components/utilities/<name>.html`), then the example pages at the top of `examples/` (base, theming) |
+| Layout | `layouts/index.html` | the layout primitives |
+| Atoms, Molecules, Organisms | `<group>/index.html` | `components/<group>/<name>.html`, then the group's showcase `examples/<group>/index.html` |
+| Patterns and guides | `patterns/index.html` | every pattern with "(coming in M3)" while planned, `guides/index.html`, every guide |
+| Demos | `demos.html` | |
+| Contributing | `contributing.html` | |
+| Changelog | `changelog.html` | |
+
+**Our choice:** utilities sit under Base, not Layout, because they are not layout primitives.
+
+A new page goes where its `section` says (`Page["section"]` in `site/lib/pages.mjs`); there is no
+per-page nav to edit. The current page's link has `aria-current="page"` (exactly one per page); its
+entry's `<li>` gets `data-current-section`, drawn as a tinted band with an edge line, with no
+second `aria-current`. The build fails if an entry links a page that is not built.
+
+The sidebar is a native `<details open>` with the summary "Docs menu". Without JavaScript it is open
+at every width. `site.js` closes it on load when the viewport is narrower than `64em` and keeps it
+open when wider (the same query as `site.css`). At `64em` and up the body is a CSS grid with the
+sidebar column (`--dui-size-column-min`) beside `main`; the sidebar is sticky, at most one viewport
+tall and scrolls on its own; the summary is hidden while the menu is open. Links and the summary
+are at least 44px tall (`--dui-size-target`).
+
+`llms.txt` has one H2 per sidebar entry, in the same order. `README.md` follows the same order where
+it makes sense (Base, Layout and the component levels share one table).
 
 ## Source to page
 
@@ -45,26 +87,23 @@ compare bytes.
 | `site/content/readme-intro.md` | The intro of `index.html`, `README.md` and the `llms.txt` summary |
 | `PRINCIPLES.md`, each `## ` section | `principles/<slug>.html`, slug from the heading without its number |
 | `PRINCIPLES.md`, text before the first `## ` | `principles/index.html` |
-| `css/tokens/semantic.css`, each section comment such as `/* Space */` | `tokens/<group>.html` |
-| `css/base/*.css` and `examples/base.html` | `components/base.html` (an atom) |
+| `css/tokens/<file>.css`, every file | `tokens/<file>.html`, one table per section comment (see [Tokens](#tokens)) |
+| `PRINCIPLES.md`, the table whose first header is `Tier` | `tokens/index.html` |
+| `css/base/*.css` and `examples/base.html` | `components/base.html` (Base) |
 | `css/layout/<name>.css`, `css/layouts/<name>.css` or `css/components/layouts/<name>.css`, with `examples/layout/<name>.html` or `examples/layouts/<name>.html` | `layouts/<name>.html` |
-| `css/utilities/<name>.css` | `components/utilities/<name>.html` |
+| `css/utilities/<name>.css` | `components/utilities/<name>.html` (listed under Base) |
 | `css/components/<group>/README.md`, each row of its index table | `components/<group>/<name>.html`, for `atoms`, `molecules`, `organisms` (see [Group README](#group-readme)) |
 | `css/components/<group>/<name>.css` not in that table, and `examples/<group>/<name>.html` | `components/<group>/<name>.html`, after the table's rows |
-| `css/components/<group>/README.md`, "Our choices" and "Not shipped, and why" | `<group>/index.html` and `components/index.html` |
+| `css/components/<group>/README.md`, "Our choices" and "Not shipped, and why" | `<group>/index.html` |
 | `site/content/patterns/<slug>.md`, filled in by matching example and CSS files | `patterns/<slug>.html`, listed on `patterns/index.html` |
 | `site/content/guides/<slug>.md` | `guides/<slug>.html`, listed on `guides/index.html` |
 | `examples/*.html`, `examples/*/*.html` | Listed on `examples.html` by their `<title>`; `examples/<group>/index.html` as "<Group> showcase" |
-| `demos/<name>/README.md` | A link to `demos/<name>` on GitHub on `index.html` and in `README.md`, described by the README's first line. Demos are not copied into `_site/`. |
+| `demos/README.md`, first paragraph; `demos/<name>/README.md`, its H1 and the first sentence of its first paragraph | `demos.html`: each demo by name (the H1 without "domestic-ui demo: "), with a link to `demos/<name>` on GitHub; also in `README.md` and `llms.txt`. With no demos the page says "Coming in M5." Demos are not copied into `_site/`. |
+| `CONTRIBUTING.md`, `CHANGELOG.md` | `contributing.html`, `changelog.html`: read-only, H1 as the page heading, relative links rewritten to site pages or GitHub, with a link to edit the file on GitHub |
 
-The docs are organized by level. The Docs nav reads Overview, Principles, Tokens, Atoms, Molecules,
-Organisms, Layouts, Patterns, Guides, Examples, and wraps as a cluster on narrow screens. Each level
-has an index page (`atoms/index.html`, `molecules/index.html`, `organisms/index.html`,
-`layouts/index.html`); base elements and utilities are under Atoms, utilities as their own group in
-the section nav. `components/index.html` is the overview of every level, with the component API
-convention, planned patterns at their level with their status, and each group's Our choices and Not
-shipped table. Every level's section nav links it as "All levels", and its own section nav lists
-the level pages.
+The component API convention is on the Getting started page (`index.html#component-api`). The
+all-levels overview `components/index.html` was removed in the sidebar change: its convention moved
+to Getting started and its per-level lists and Our choices are on the level index pages.
 
 ## Component API convention
 
@@ -72,7 +111,7 @@ Each component exposes one `data-<component>` attribute whose value is space-sep
 matched with `~=` (like `rel`), for example `data-button="primary small"`. Component APIs use no
 classes; state is carried by native attributes and ARIA (`disabled`, `aria-disabled`, `aria-busy`,
 `aria-invalid`). Layout primitives and utilities from M1 are classes (`.stack`, `.cluster`, `.grid`,
-`.visually-hidden`). The build states this on `components/index.html` (with the **Our choice:** why,
+`.visually-hidden`). The build states this on `index.html` (with the **Our choice:** why,
 taken from the group README's bullet about `data-<…>`), next to the API on each component
 page, in `README.md` and in `llms.txt` and `llms-full.txt`.
 
@@ -108,7 +147,7 @@ When `css/components/<group>/README.md` has a table whose second and third colum
 | `Example` | The example page: live example and copy-paste markup. |
 | `Specs` | Spec links, before any header-comment URL they do not repeat. A label that is only a number ("3.3.2") gets its host label ("WCAG 3.3.2"). |
 
-The "Our choices" bullets appear, labels intact, on `<group>/index.html` and `components/index.html`.
+The "Our choices" bullets appear, labels intact, on `<group>/index.html`.
 A bullet also appears on a component page under "Our choice" when one of its code spans uses an
 attribute from the row's API cell, or its text names the row's title (singular or plural). The
 bullet about `data-<…>` is the convention itself and is shown with the component API convention
@@ -116,7 +155,7 @@ instead. The "Not shipped, and why" table appears as a table on both index pages
 does not exist fails the build.
 
 If the name matches a registered pattern (see [Patterns](#patterns)), the files fill in that
-pattern page instead. The "coming in …" note for a group disappears from `components/index.html`
+pattern page instead. The "coming in …" note for a group disappears from `<group>/index.html`
 and `README.md` as soon as the group has one CSS file or one available pattern.
 
 A layout primitive works the same way: add `<name>.css` to `css/layout/`, `css/layouts/` or
@@ -212,7 +251,7 @@ keyboard:
 | --- | --- |
 | `title`, `summary` | Required in practice. Inline Markdown. |
 | `milestone` | `M3` or `M3b`; groups `patterns/index.html` and sets the "Coming in …" sentence. |
-| `level` | `molecule`, `organism`, `layout` or `token`; places the pattern on `components/index.html` (and `layouts/index.html`). |
+| `level` | `molecule`, `organism`, `layout` or `token`; places the pattern on that level's index page (`molecules/index.html`, `layouts/index.html`, …). |
 | `standard` | One `Label: URL` or a list of them: the native element or APG pattern it follows. |
 | `our-choice` | One line, only when there is no standard. The build fails if a pattern has neither. |
 | `specs` | Further `Label: URL` links, shown once the pattern is available. |
@@ -243,6 +282,63 @@ Until a file lands, the page shows only the summary, the standard or Our choice 
 in M3." (or M3b): no demo, no markup, no keyboard table. `README.md` lists every pattern with its
 status and adds available ones to the components table at their level; `llms.txt` links available
 patterns to their `.md` twin and names planned ones with their milestone.
+
+## Tokens
+
+`site/lib/tokens.mjs` reads every file in `css/tokens/` (found by listing the directory, sorted),
+one page each. It reads the plain style those files use: one declaration per line (or continued
+until `;`), selectors that may span lines.
+
+| Source | Becomes |
+| --- | --- |
+| The file's header comment, first paragraph `Semantic tokens (public theming API).` | Page title "Semantic tokens", tier "public theming API" shown first in bold |
+| The rest of the header comment | The page intro |
+| A comment before a top-level rule (`/* 2. Dependent tokens: … */`) | A group, name before the colon, note after it |
+| A comment inside a rule after a blank line or `{` (`/* Space */`) | A group; the nearest one above a declaration is its group |
+| `--x: 1rem; /* text */` (trailing, same line) | The description of `--x` |
+| A comment directly after a declaration line and directly above the next one, or directly under a group comment | The description of that next declaration |
+| A declaration inside `@media`, `@supports` or any at-rule, or in a rule whose selector has no `:root` | A condition on the token of that name: "With `@media (…)`: value, resolves to …" in its description, never a light or dark value |
+
+So to describe a token, put a comment on its line or on the line above it with no blank line in
+between. A token with no comment falls back to its purpose in the `PRINCIPLES.md` semantic token
+table, labelled "(from PRINCIPLES.md)"; with neither it shows "No description yet" in muted italic.
+
+Values: **Written as** is the value in the file. **Light** and **Dark** substitute every `var()`
+recursively through the tokens of all files (a fallback is used for unknown names; a cycle stays as
+written) and take the first or second argument of `light-dark()`. Other functions (`color-mix()`,
+`clamp()`) are left as written with their arguments resolved.
+
+Previews, by name then value (`previewKind()`): color (`-color-`, or a color value) as a swatch;
+`-shadow-` as a shadowed box; `-space-`, `-size-`, `--*-measure` lengths as a bar capped at half a
+sidebar column; font family, size, weight, line height (`-leading-`) and letter spacing (`-tracking-`)
+as "Aa Bb Cc"; `-radius-` as a rounded box; border and focus widths as a bordered box; anything else
+(durations, easings, opacity, mix amounts, underline metrics) as text only, never animated. Each
+preview shows the light and the dark sample side by side, each in a `data-color-scheme` scope with
+its value as text beside it, so color is never the only cue. The sample's value is the resolved
+literal (in `style="--preview: …"`), so the dark sample shows the dark value whatever the page
+scheme. A value that would need an HTML entity in the `style` attribute gets text only.
+
+Each group is a `<table>` with a `<caption>` ("Spacing (primitive tokens)"), `<th scope="col">`
+headers and the token name in `<code>` in a `<th scope="row">`, wrapped in:
+
+```html
+<div data-scroll="inline" tabindex="0" role="region" aria-label="Spacing (primitive tokens) (scrolls horizontally)">
+```
+
+`data-scroll="inline"` is the core CSS API for horizontal scroll regions. `css/` does not style it
+yet, so `site.css` has `[data-scroll="inline"] { overflow-x: auto; }`; **delete that rule from
+`site.css` once core ships it.** Tables are never `display: block`. Hyphenated words in values never
+break, so a narrow table scrolls in its region instead of breaking names apart. The wrapper is a
+`div` with `role="region"` by design, so the build adds an html-validate directive that silences
+`prefer-native-element` for it.
+
+The filter is a `<search>` with a `<label>` and `<input type="search">` ("Filter tokens"), `hidden`
+in the HTML. `site.js` removes `hidden`, hides rows whose text (name, values, description, preview
+value) does not contain the query, hides groups with no visible row, and writes "N tokens shown"
+to a polite `role="status"` region after typing pauses. Without JavaScript every token shows and the
+filter stays hidden. No requests leave the page.
+
+The Markdown twins and `llms-full.txt` have the same tables as `| Token | Light | Dark | Description |`.
 
 ## Guides
 
@@ -301,9 +397,22 @@ themselves, then run `node site/build.mjs`. Two checks catch a forgotten rebuild
 
 ## Accessibility of the docs
 
-Every page has a skip link (the first focusable element), a labelled Docs nav with `aria-current`,
-one `h1`, tables with `<caption>` and `th scope`, and iframes with a `title`. Code blocks wrap instead
-of scrolling horizontally, so no `<pre>` needs `tabindex` or an accessible name (which ARIA 1.2
-prohibits on the `pre` element's generic role). `tests/docs.spec.js` runs html-validate and axe (WCAG
-2.2 AA tags, light and dark, Chromium) on every page, checks reflow at 320 CSS pixels, and blocks
-external requests.
+Every page has a skip link (the first focusable element), one labelled Docs nav with one
+`aria-current="page"`, one `h1`, tables with `<caption>` and `th scope`, and iframes with a `title`.
+Code blocks wrap instead of scrolling horizontally, so no `<pre>` needs `tabindex` or an accessible
+name (which ARIA 1.2 prohibits on the `pre` element's generic role). Long words, URLs and inline
+code in prose break anywhere (`overflow-wrap: anywhere`); only token tables scroll, inside their
+named `data-scroll` region.
+
+`tests/docs.spec.js` (Chromium) runs html-validate and axe (WCAG 2.2 AA tags, light and dark) on
+every page, blocks external requests, and checks the sidebar (one nav, order, every built page
+reachable, one `aria-current`), the token tables and parser, the filter, and the page with
+JavaScript off.
+
+`tests/docs-mobile.spec.js` runs in every Playwright project (Chromium, Firefox, WebKit). For every
+built page (every `.html` in `_site/` outside `examples/` and `css/`), at 320×640 and 375×812, it
+asserts `scrollWidth <= clientWidth` on the root (the failure names the widest element) and that no
+`<pre>` scrolls, and runs axe with the same tags as `tests/a11y.spec.js`. Framed live examples are
+excluded from that axe run: they are `examples/` pages, checked by `tests/a11y.spec.js`. It also
+opens and closes the Docs menu with Enter and Space at 375px, tabs to the current page link, and
+checks the wide-screen sidebar. Both specs share `tests/docs-helpers.js`, which builds `_site/` once.

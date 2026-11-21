@@ -3,19 +3,20 @@
  * where it needs to. It uses only semantic --dui-* tokens and the layout
  * primitives, like any consumer would; the base layer provides the look,
  * focus styles, color-scheme and forced-colors handling.
+ *
+ * The one literal is the wide-screen breakpoint (64em): custom properties
+ * cannot be used in media queries. site.js uses the same query.
  */
 
 .site-header,
 .site-body,
 .site-footer {
-  max-inline-size: calc(var(--dui-measure) + var(--dui-size-column-min) * 2);
+  max-inline-size: calc(var(--dui-size-column-min) * 5);
   margin-inline: auto;
   padding-inline: var(--dui-space-l);
 }
 
 .site-header {
-  --cluster-justify: space-between;
-
   padding-block: var(--dui-space-m);
   border-block-end: var(--dui-border-width) solid var(--dui-color-border);
 }
@@ -29,6 +30,7 @@
   position: absolute;
   inset-block-start: var(--dui-space-s);
   inset-inline-start: var(--dui-space-s);
+  z-index: 1;
   padding: var(--dui-space-xs) var(--dui-space-s);
   background-color: var(--dui-color-surface);
   border: var(--dui-border-width) solid var(--dui-color-border-control);
@@ -36,42 +38,106 @@
 }
 
 /*
- * Sidebar and content without media queries: the sidebar wraps above the
- * content when the content would get narrower than half the row.
- * Pattern: "The Sidebar", Every Layout (https://every-layout.dev/layouts/sidebar/).
+ * One column on narrow screens: the Docs menu (a disclosure) above main.
+ * On wide screens: a sidebar column beside main.
+ * minmax(0, 1fr) lets main shrink below its content's min-content width,
+ * so wide content scrolls in its own region instead of widening the page.
  */
 .site-body {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--dui-space-xl);
+  align-items: start;
+  padding-block: var(--dui-space-l) var(--dui-space-2xl);
+}
+
+.site-body > * + * {
+  margin-block-start: 0;
+}
+
+/*
+ * The Docs menu: native <details>, open by default (works without
+ * JavaScript). The base layer styles it as a disclosure with a 44px summary.
+ */
+
+.docs-nav ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.docs-nav :is(ul, li) > * + * {
+  margin-block-start: 0;
+}
+
+.docs-nav ul ul {
+  padding-inline-start: var(--dui-space-s);
+}
+
+.docs-nav a {
   display: flex;
   flex-wrap: wrap;
-  align-items: flex-start;
-  gap: var(--dui-space-2xl);
-  padding-block: var(--dui-space-2xl);
+  align-items: center;
+  column-gap: var(--dui-space-2xs);
+  min-block-size: var(--dui-size-target);
+  padding-inline: var(--dui-space-xs);
+  border-inline-start: var(--dui-border-width-emphasis) solid transparent;
+  overflow-wrap: anywhere;
+  text-decoration: none;
 }
 
-.section-nav {
-  flex-basis: var(--dui-size-column-min);
-  flex-grow: 1;
+.docs-nav a:hover {
+  text-decoration: underline;
 }
 
-.section-nav ul {
-  --stack-gap: var(--dui-space-2xs);
-}
-
-/* Group labels (Atoms, Molecules, …) with their pages indented below. */
-.section-nav-group {
-  display: block;
-  margin-block-start: var(--dui-space-s);
+/* Top-level entries. */
+.docs-nav > ul > li > a {
   font-weight: var(--dui-font-weight-strong);
 }
 
-.section-nav ul ul {
-  padding-inline-start: var(--dui-space-m);
+/* The entry that holds the current page: a tinted band and an edge line. */
+.docs-nav li[data-current-section] {
+  background-color: var(--dui-color-surface-raised);
+  border-inline-start: var(--dui-border-width) solid var(--dui-color-border-control);
+  border-radius: var(--dui-radius-control);
 }
 
-.site-body > main {
-  flex-basis: 0;
-  flex-grow: 999;
-  min-inline-size: 50%;
+/* The current page: heavier text and a thick accent edge, not color alone. */
+.docs-nav a[aria-current="page"] {
+  border-inline-start-color: var(--dui-color-accent);
+  color: var(--dui-color-text);
+  font-weight: var(--dui-font-weight-heading);
+}
+
+.docs-nav-note {
+  color: var(--dui-color-text-muted);
+  font-size: var(--dui-step--1);
+  font-weight: var(--dui-font-weight-body);
+}
+
+@media (min-width: 64em) {
+  .site-body {
+    grid-template-columns: var(--dui-size-column-min) minmax(0, 1fr);
+  }
+
+  /*
+   * A sticky sidebar that scrolls on its own when it is taller than the
+   * viewport. It holds links, so it is reachable and scrollable by keyboard;
+   * it never traps focus.
+   */
+  .docs-menu {
+    position: sticky;
+    inset-block-start: 0;
+    max-block-size: 100dvh;
+    overflow-y: auto;
+    padding: var(--dui-space-s) 0;
+    border: 0;
+  }
+
+  /* Open (the default, and kept open by site.js): no summary needed. */
+  .docs-menu[open] > summary {
+    display: none;
+  }
 }
 
 .site-footer {
@@ -81,16 +147,27 @@
 }
 
 /*
- * Code wraps instead of scrolling, so a long line never needs a
- * focusable scroll region. Copying still gives the exact bytes.
+ * Reflow at 320 CSS pixels (WCAG 1.4.10): long words, URLs and inline code
+ * in prose break anywhere instead of widening the page. Code blocks wrap
+ * instead of scrolling, so a long line never needs a focusable scroll
+ * region. Copying still gives the exact bytes.
  */
+main :is(p, li, dt, dd, td, th, caption, h1, h2, h3, h4) {
+  overflow-wrap: anywhere;
+}
+
 main pre {
   white-space: pre-wrap;
   overflow-wrap: anywhere;
 }
 
-main :is(td, th, li) {
-  overflow-wrap: anywhere;
+/*
+ * Horizontal scroll region for wide tables. Delete this rule once
+ * css/ styles [data-scroll="inline"] (see site/README.md).
+ */
+[data-scroll="inline"] {
+  max-inline-size: 100%;
+  overflow-x: auto;
 }
 
 /* Live examples: the real example page, framed. */
@@ -102,74 +179,119 @@ main :is(td, th, li) {
   border-radius: var(--dui-radius-surface);
 }
 
-/*
- * Token samples. Decorative (aria-hidden): the token name and value in
- * the same row are the reference. --token-sample holds the token.
- */
-.token-sample {
+/* Token filter (shown by site.js). */
+.token-filter input {
   display: block;
-  forced-color-adjust: none;
+  inline-size: 100%;
+  max-inline-size: calc(var(--dui-size-column-min) * 1.5);
 }
 
-.token-sample:is([data-sample="color"], [data-sample="radius"], [data-sample="border-width"], [data-sample="shadow"], [data-sample="opacity"]) {
+.token-filter > * + * {
+  margin-block-start: var(--dui-space-2xs);
+}
+
+.token-filter-status:empty {
+  display: none;
+}
+
+/*
+ * Token tables keep their words whole and scroll in their region instead.
+ * Token names never break.
+ */
+.token-table :is(td, th) {
+  overflow-wrap: normal;
+  vertical-align: top;
+}
+
+.token-table th[scope="row"] code,
+.token-word {
+  white-space: nowrap;
+}
+
+.token-missing {
+  color: var(--dui-color-text-muted);
+  font-style: italic;
+}
+
+/*
+ * Previews. Decorative (aria-hidden): the value text beside each one is
+ * the reference. Each sample sits in a data-color-scheme scope, so the
+ * dark one is shown on the dark surface whatever the page scheme. --preview
+ * holds the resolved value, never var(), so the dark value is literal too.
+ */
+.token-sample {
+  display: flex;
+  align-items: center;
+  gap: var(--dui-space-xs);
+  padding: var(--dui-space-2xs) var(--dui-space-xs);
+  border-radius: var(--dui-radius-control);
+}
+
+td > .token-sample + .token-sample {
+  margin-block-start: var(--dui-space-2xs);
+}
+
+.token-sample > [aria-hidden] {
+  flex: none;
+}
+
+.token-chip,
+.token-preview:is([data-preview="radius"], [data-preview="border-width"], [data-preview="shadow"]) {
+  display: block;
   inline-size: var(--dui-size-target);
   block-size: var(--dui-size-target);
   border: var(--dui-border-width) solid var(--dui-color-border-control);
-  background-color: var(--dui-color-surface-raised);
+  forced-color-adjust: none;
 }
 
-.token-sample[data-sample="color"] {
-  background-color: var(--token-sample);
+.token-chip {
+  background-color: var(--preview);
+  border-radius: var(--dui-radius-control);
 }
 
-.token-sample[data-sample="radius"] {
-  border-radius: var(--token-sample);
+.token-preview[data-preview="radius"] {
+  background-color: var(--dui-color-surface-sunken);
+  border-radius: var(--preview);
 }
 
-.token-sample[data-sample="border-width"] {
-  border-width: var(--token-sample);
+.token-preview[data-preview="border-width"] {
+  border-width: var(--preview);
+  border-color: var(--dui-color-text);
 }
 
-.token-sample[data-sample="shadow"] {
-  box-shadow: var(--token-sample);
+.token-preview[data-preview="shadow"] {
+  margin: var(--dui-space-2xs);
+  background-color: var(--dui-color-surface);
+  border-color: var(--dui-color-border);
+  box-shadow: var(--preview);
 }
 
-.token-sample[data-sample="opacity"] {
-  background-color: var(--dui-color-text);
-  opacity: var(--token-sample);
-}
-
-/*
- * Length bars are clipped to the cell. inline-size containment keeps a long
- * bar (such as --dui-measure) from widening the table past a narrow viewport
- * (WCAG 1.4.10 Reflow). https://developer.mozilla.org/en-US/docs/Web/CSS/contain
- */
-.token-sample[data-sample="length"] {
-  contain: inline-size;
-}
-
-.token-sample[data-sample="length"]::before {
-  content: "";
+/* Length bars, capped at half a sidebar column so they never overflow. */
+.token-preview[data-preview="length"] {
   display: block;
-  inline-size: var(--token-sample);
-  max-inline-size: 100%;
+  inline-size: min(var(--preview), calc(var(--dui-size-column-min) / 2));
   block-size: var(--dui-space-s);
   background-color: var(--dui-color-text-muted);
+  forced-color-adjust: none;
 }
 
-.token-sample[data-sample="font-size"] {
-  font-size: var(--token-sample);
+.token-preview[data-preview="font-family"] {
+  font-family: var(--preview);
+}
+
+.token-preview[data-preview="font-size"] {
+  font-size: var(--preview);
   line-height: var(--dui-line-height-heading);
 }
 
-.token-sample[data-sample="font-family"] {
-  font-family: var(--token-sample);
+.token-preview[data-preview="font-weight"] {
+  font-weight: var(--preview);
 }
 
-.token-sample[data-sample="font-weight"] {
-  font-weight: var(--token-sample);
+.token-preview[data-preview="line-height"] {
+  line-height: var(--preview);
 }
 
-.token-sample[data-sample="letter-spacing"] {
-  letter-spacing: var(--token-sample);
+.token-preview[data-preview="letter-spacing"] {
+  letter-spacing: var(--preview);
 }

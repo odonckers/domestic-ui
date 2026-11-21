@@ -13,14 +13,16 @@ import { cpSync, existsSync, mkdirSync, readFileSync, rmSync, writeFileSync } fr
 import { dirname, join, resolve, sep } from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
 import { loadModel } from "./lib/discovery.mjs";
-import { generateLlms, generateLlmsFull, generateReadme } from "./lib/outputs.mjs";
-import { SECTIONS, buildPages } from "./lib/pages.mjs";
+import { NAV, navEntryOf, navTree } from "./lib/nav.mjs";
+import { generateLlms, generateLlmsFull, generateReadme, searchIndex } from "./lib/outputs.mjs";
+import { buildPages } from "./lib/pages.mjs";
 import { renderHtml, renderMarkdown } from "./lib/templates.mjs";
 
 export { extractSnippets, loadModel } from "./lib/discovery.mjs";
 export { markdownToHtml } from "./lib/markdown.mjs";
 export { generateLlms, generateLlmsFull, generateReadme } from "./lib/outputs.mjs";
 export { buildPages } from "./lib/pages.mjs";
+export { NAV } from "./lib/nav.mjs";
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 export const ROOT = resolve(HERE, "..");
@@ -31,7 +33,8 @@ export const GENERATED = /** @type {const} */ (["README.md", "llms.txt", "llms-f
 
 /**
  * Titles must be unique per page (<title>, llms.txt). On a clash, the
- * section name is appended, e.g. "Grid (Components)".
+ * sidebar entry is appended, e.g. "Grid (Layout)"; the sidebar link keeps
+ * the short title.
  * @param {import("./lib/pages.mjs").Page[]} pages
  */
 function dedupeTitles(pages) {
@@ -39,8 +42,8 @@ function dedupeTitles(pages) {
   for (const p of pages) count.set(p.title, (count.get(p.title) ?? 0) + 1);
   return pages.map((p) => {
     if (count.get(p.title) === 1) return p;
-    const section = SECTIONS.find((s) => s.section === p.section)?.title ?? p.section;
-    return { ...p, title: `${p.title} (${section})` };
+    const section = navEntryOf(p)?.title ?? p.section;
+    return { ...p, navLabel: p.navLabel ?? p.title, title: `${p.title} (${section})` };
   });
 }
 
@@ -51,17 +54,20 @@ function dedupeTitles(pages) {
 export function generate(root = ROOT) {
   const model = loadModel(root);
   const pages = dedupeTitles(buildPages(model));
+  for (const entry of NAV) if (!pages.some((p) => p.path === entry.path)) throw new Error(`The Docs sidebar entry "${entry.title}" links ${entry.path}, which no page builds`);
   const twins = new Set(pages.map((p) => p.path));
+  const tree = navTree(pages, model.examples);
   return {
     model,
     pages,
+    tree,
     files: {
       "README.md": generateReadme(model),
       "llms.txt": generateLlms(model, pages),
       "llms-full.txt": generateLlmsFull(model, pages, twins),
     },
     /** @param {import("./lib/pages.mjs").Page} page */
-    html: (page) => renderHtml(page, pages),
+    html: (page) => renderHtml(page, tree),
     /** @param {import("./lib/pages.mjs").Page} page */
     markdown: (page) => renderMarkdown(page, twins),
   };
@@ -83,15 +89,20 @@ export function build({ root = ROOT, outDir, writeRoot = true } = {}) {
   cpSync(join(root, "css"), join(out, "css"), { recursive: true });
   cpSync(join(root, "examples"), join(out, "examples"), { recursive: true });
   cpSync(join(ASSETS, "site.css"), join(out, "site.css"));
+  cpSync(join(ASSETS, "site.js"), join(out, "site.js"));
   // GitHub Pages: serve files as-is, no Jekyll processing.
   writeFileSync(join(out, ".nojekyll"), "");
 
+  /** @type {Record<string, string>} */
+  const html = {};
   for (const page of result.pages) {
     const file = join(out, page.path);
     mkdirSync(dirname(file), { recursive: true });
-    writeFileSync(file, result.html(page));
+    html[page.path] = result.html(page);
+    writeFileSync(file, html[page.path]);
     writeFileSync(file.replace(/\.html$/, ".md"), result.markdown(page));
   }
+  writeFileSync(join(out, "search-index.json"), searchIndex(result.pages, html));
   for (const name of ["llms.txt", "llms-full.txt"]) writeFileSync(join(out, name), result.files[name]);
   if (writeRoot) for (const name of GENERATED) writeFileSync(join(root, name), result.files[name]);
   return result;

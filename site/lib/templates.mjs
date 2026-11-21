@@ -8,22 +8,26 @@
  * - <main tabindex="-1"> so following the skip link moves focus there,
  *   not only the sequential focus starting point.
  * - One <h1> per page; Markdown headings start at h2.
+ * - One navigation: the Docs sidebar (./nav.mjs), a native <details>
+ *   disclosure on narrow screens, open by default so it works without
+ *   JavaScript.
  * - Code blocks wrap instead of scrolling (site.css), so no <pre> needs
  *   tabindex or a name. A focusable <pre> would need an accessible name,
- *   which ARIA 1.2 prohibits on its generic role.
+ *   which ARIA 1.2 prohibits on its generic role. Wide tables scroll in a
+ *   named, focusable [data-scroll="inline"] region instead.
  * - Visible focus, color-scheme and forced colors come from the base CSS.
  */
 import { markdownToHtml, uniqueId } from "./markdown.mjs";
-import { COMPONENTS_INDEX, LEVEL_SECTIONS, SECTIONS } from "./pages.mjs";
+import { renderNav } from "./nav.mjs";
 import { REPO_URL, SITE_URL, BLOB_URL, escapeHtml, relativeUrl } from "./util.mjs";
 
 /** @typedef {import("./pages.mjs").Page} Page */
 
 /**
  * @param {Page} page
- * @param {Page[]} pages all pages, for the section navigation
+ * @param {ReturnType<typeof import("./nav.mjs").navTree>} tree the sidebar
  */
-export function renderHtml(page, pages) {
+export function renderHtml(page, tree) {
   const link = (/** @type {string} */ target) => relativeUrl(page.path, target);
   const resolveLink = (/** @type {string} */ href) => (href.startsWith("site:") ? link(href.slice(5)) : href);
   const ids = new Set(["main"]);
@@ -32,53 +36,6 @@ export function renderHtml(page, pages) {
     heading: (/** @type {number} */ level, /** @type {string} */ text) => `<h${level} id="${uniqueId(text, ids)}">${escapeHtml(text)}</h${level}>`,
   };
   const body = page.blocks.map((b) => (b.html ? b.html(ctx) : markdownToHtml(b.md, { resolveLink, ids, caption: page.heading }))).join("\n");
-
-  const nav = SECTIONS.map(({ section, path, title }) => {
-    const current = page.path === path ? ' aria-current="page"' : page.section === section ? ' aria-current="true"' : "";
-    return `          <li><a href="${link(path)}"${current}>${escapeHtml(title)}</a></li>`;
-  }).join("\n");
-
-  // Level sections start with a link to the overview of every level; the
-  // overview's own section nav lists the level pages.
-  const overview = pages.find((p) => p.path === COMPONENTS_INDEX);
-  const isLevel = /** @type {readonly string[]} */ (LEVEL_SECTIONS).includes(page.section);
-  const siblings =
-    page.section === "home" || page.section === "examples"
-      ? []
-      : page.section === "components"
-        ? [page, ...LEVEL_SECTIONS.flatMap((s) => pages.filter((p) => p.section === s && p.path.endsWith("/index.html")))]
-        : [...(isLevel && overview ? [overview] : []), ...pages.filter((p) => p.section === page.section)];
-  const sectionTitle = page.section === "components" ? "Components" : (SECTIONS.find((s) => s.section === page.section)?.title ?? "");
-  const label = (/** @type {Page} */ p) => {
-    if (p.path === COMPONENTS_INDEX) return "All levels";
-    if (page.section === "components") return p.title;
-    return p.path.endsWith("index.html") ? `All ${sectionTitle.toLowerCase()}` : p.title;
-  };
-  const item = (/** @type {Page} */ p, /** @type {string} */ indent) =>
-    `${indent}<li><a href="${link(p.path)}"${p.path === page.path ? ' aria-current="page"' : ""}>${escapeHtml(label(p))}</a></li>`;
-  // Pages with a `group` are listed under that label as a nested list, in page order.
-  /** @type {string[]} */
-  const items = [];
-  for (let i = 0; i < siblings.length; ) {
-    const group = siblings[i].group;
-    if (!group) {
-      items.push(item(siblings[i++], "          "));
-      continue;
-    }
-    const members = [];
-    while (i < siblings.length && siblings[i].group === group) members.push(siblings[i++]);
-    items.push(
-      `          <li>\n            <span class="section-nav-group">${escapeHtml(group)}</span>\n            <ul class="stack">\n${members.map((p) => item(p, "              ")).join("\n")}\n            </ul>\n          </li>`,
-    );
-  }
-  const sidebar = siblings.length
-    ? `
-      <nav class="section-nav" aria-label="${escapeHtml(sectionTitle)}">
-        <ul class="stack">
-${items.join("\n")}
-        </ul>
-      </nav>`
-    : "";
 
   return `<!DOCTYPE html>
 <html lang="en">
@@ -90,20 +47,17 @@ ${items.join("\n")}
     <link rel="stylesheet" href="${link("css/domestic.css")}">
     <link rel="stylesheet" href="${link("site.css")}">
     <link rel="alternate" type="text/markdown" href="${link(page.path.replace(/\.html$/, ".md"))}">
+    <script src="${link("site.js")}" defer></script>
   </head>
   <body>
     <a class="skip-link visually-hidden" href="#main">Skip to content</a>
 
-    <header class="site-header cluster">
+    <header class="site-header">
       <p class="site-name"><a href="${link("index.html")}">domestic-ui</a></p>
-      <nav aria-label="Docs">
-        <ul class="cluster">
-${nav}
-        </ul>
-      </nav>
     </header>
 
-    <div class="site-body">${sidebar}
+    <div class="site-body">
+      ${renderNav(page, tree, link)}
       <main id="main" tabindex="-1">
 <h1>${escapeHtml(page.heading)}</h1>
 ${body}
@@ -138,6 +92,6 @@ export function resolveSiteLinks(md, twins) {
  * @param {Set<string>} twins
  */
 export function renderMarkdown(page, twins) {
-  const parts = [`# ${page.heading}`, ...page.blocks.map((b) => b.md)];
+  const parts = [`# ${page.heading}`, ...page.blocks.map((b) => b.md).filter(Boolean)];
   return `${resolveSiteLinks(parts.join("\n\n"), twins)}\n`;
 }
