@@ -71,36 +71,29 @@
       <section aria-labelledby="hint-title">
         <h2 id="hint-title">With a hint</h2>
         <div class="demo">
+          <!-- dui:snippet name="With a hint" -->
           <div data-field>
             <label for="f-name">Display name</label>
             <input id="f-name" name="display-name" type="text" autocomplete="nickname" aria-describedby="f-name-hint">
             <p id="f-name-hint" data-field="hint">Shown next to your comments.</p>
           </div>
+          <!-- /dui:snippet -->
         </div>
-        <pre tabindex="0"><code>&lt;div data-field&gt;
-  &lt;label for="f-name"&gt;Display name&lt;/label&gt;
-  &lt;input id="f-name" name="display-name" type="text" autocomplete="nickname" aria-describedby="f-name-hint"&gt;
-  &lt;p id="f-name-hint" data-field="hint"&gt;Shown next to your comments.&lt;/p&gt;
-&lt;/div&gt;</code></pre>
       </section>
 
       <section aria-labelledby="error-title">
         <h2 id="error-title">With a hint and an error</h2>
         <p>Set by your server or script after validation.</p>
         <div class="demo">
+          <!-- dui:snippet name="With a hint and an error" -->
           <div data-field>
             <label for="f-email">Email</label>
             <input id="f-email" name="email" type="email" autocomplete="email" value="ada@" aria-invalid="true" aria-describedby="f-email-hint f-email-error">
             <p id="f-email-hint" data-field="hint">We only use this to reply.</p>
             <p id="f-email-error" data-field="error">Error: enter an email address like name@example.com.</p>
           </div>
+          <!-- /dui:snippet -->
         </div>
-        <pre tabindex="0"><code>&lt;div data-field&gt;
-  &lt;label for="f-email"&gt;Email&lt;/label&gt;
-  &lt;input id="f-email" name="email" type="email" autocomplete="email" value="ada@" aria-invalid="true" aria-describedby="f-email-hint f-email-error"&gt;
-  &lt;p id="f-email-hint" data-field="hint"&gt;We only use this to reply.&lt;/p&gt;
-  &lt;p id="f-email-error" data-field="error"&gt;Error: enter an email address like name@example.com.&lt;/p&gt;
-&lt;/div&gt;</code></pre>
       </section>
 
       <section aria-labelledby="native-title">
@@ -111,6 +104,7 @@
           only after the user has changed the value or tried to submit. Type a few letters, clear them and leave the field.
         </p>
         <div class="demo">
+          <!-- dui:snippet name="Native validation" -->
           <form action="#native-title" class="stack">
             <div data-field>
               <label for="f-code">Invite code</label>
@@ -121,36 +115,23 @@
               <button type="submit">Join</button>
             </div>
           </form>
+          <!-- /dui:snippet -->
         </div>
-        <pre tabindex="0"><code>&lt;form action="#native-title" class="stack"&gt;
-  &lt;div data-field&gt;
-    &lt;label for="f-code"&gt;Invite code&lt;/label&gt;
-    &lt;input id="f-code" name="code" type="text" required minlength="6" aria-describedby="f-code-hint"&gt;
-    &lt;p id="f-code-hint" data-field="hint"&gt;Six characters or more.&lt;/p&gt;
-  &lt;/div&gt;
-  &lt;div class="cluster"&gt;
-    &lt;button type="submit"&gt;Join&lt;/button&gt;
-  &lt;/div&gt;
-&lt;/form&gt;</code></pre>
       </section>
 
       <section aria-labelledby="group-title">
         <h2 id="group-title">A group with an error</h2>
         <p>Use a fieldset as the wrapper; describe the fieldset.</p>
         <div class="demo">
+          <!-- dui:snippet name="A group with an error" -->
           <fieldset data-field aria-describedby="f-size-error">
             <legend>Size</legend>
             <label><input type="radio" name="size" value="s"> Small</label>
             <label><input type="radio" name="size" value="m"> Medium</label>
             <p id="f-size-error" data-field="error">Error: choose a size.</p>
           </fieldset>
+          <!-- /dui:snippet -->
         </div>
-        <pre tabindex="0"><code>&lt;fieldset data-field aria-describedby="f-size-error"&gt;
-  &lt;legend&gt;Size&lt;/legend&gt;
-  &lt;label&gt;&lt;input type="radio" name="size" value="s"&gt; Small&lt;/label&gt;
-  &lt;label&gt;&lt;input type="radio" name="size" value="m"&gt; Medium&lt;/label&gt;
-  &lt;p id="f-size-error" data-field="error"&gt;Error: choose a size.&lt;/p&gt;
-&lt;/fieldset&gt;</code></pre>
       </section>
 
       <section aria-labelledby="specs-title">

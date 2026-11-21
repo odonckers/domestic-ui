@@ -23,11 +23,17 @@ export const WCAG_TAGS = ["wcag2a", "wcag2aa", "wcag21a", "wcag21aa", "wcag22aa"
 export const summarize = (violations) =>
   violations.map((v) => `${v.id} (${v.impact}): ${v.help}\n    ${v.nodes.map((/** @type {any} */ n) => n.target.join(" ")).join("\n    ")}`).join("\n");
 
-/**
- * Every built docs page: each .html file in _site/ outside _site/examples/
- * and _site/css/, as a path relative to _site/, sorted.
- */
-export const builtPages = readdirSync(SITE_DIR, { recursive: true })
+/** Every .html file in _site/, as a path relative to _site/, sorted. */
+const allHtml = readdirSync(SITE_DIR, { recursive: true })
   .map((name) => String(name).split("\\").join("/"))
-  .filter((name) => name.endsWith(".html") && !name.startsWith("examples/") && !name.startsWith("css/"))
+  .filter((name) => name.endsWith(".html"))
   .sort();
+
+/** Redirect pages at old example URLs (examples.html, examples/**): a meta refresh, no docs content. */
+export const redirectPages = allHtml.filter((name) => name === "examples.html" || name.startsWith("examples/"));
+
+/** Render pages: one per snippet, framed on its docs page (live/…). */
+export const livePages = allHtml.filter((name) => name.startsWith("live/"));
+
+/** Every built docs page: each .html file in _site/ that is not a redirect, a render page or under css/ or web-components/. */
+export const builtPages = allHtml.filter((name) => !redirectPages.includes(name) && !livePages.includes(name) && !/^(?:css|web-components)\//.test(name));

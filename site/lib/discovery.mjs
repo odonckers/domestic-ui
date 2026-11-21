@@ -39,7 +39,14 @@ export const LAYOUT_EXAMPLE_DIRS = /** @type {const} */ (["examples/layout", "ex
 export const PATTERN_EXAMPLE_DIRS = /** @type {const} */ (["molecules", "organisms", "layouts", "layout", "patterns"]);
 
 /**
- * @typedef {{ name: string, code: string, source: string, from: "snippet" | "pre" | "main" | "css-comment" }} Snippet
+ * @typedef {object} Snippet
+ * @property {string} name    shown as its heading
+ * @property {string} code    the region's text, dedented, never reformatted
+ * @property {string} source  repo path of the example page
+ * @property {string} page    the page="…" attribute ("layouts/stack"), or ""
+ * @property {boolean} head   the region is inside <head> (a <style>): printed, rendered by the page's other snippets
+ * @property {string} [owner] site path of the one docs page it is shown and rendered on
+ * @property {string} [live]  site path of its render page (live/…), "" for a head snippet
  * @typedef {{ label: string, url: string }} Spec
  * @typedef {{ key: string, action: string }} Key
  * @typedef {object} Component
@@ -64,7 +71,7 @@ export const PATTERN_EXAMPLE_DIRS = /** @type {const} */ (["molecules", "organis
  * @property {boolean} a11yFromOverride
  * @property {Spec[]} specs
  * @property {Snippet[]} snippets
- * @property {string[]} usedIn   examples whose markup uses the API
+ * @property {string[]} usedIn   docs pages whose snippets use the API (only when it has no snippet of its own)
  * @property {{ path: string, summary: string }[]} files  (base only) every file in css/base/
  * @property {string | null} overridePath
  * @property {string} ourChoice  why, when no native element or APG pattern covers it ("" otherwise)
@@ -126,42 +133,30 @@ export function parseFrontMatter(text) {
   return { data, body: m[2].trim() };
 }
 
+/** A snippet region: <!-- dui:snippet name="…" [page="…"] --> … <!-- /dui:snippet -->. */
+const SNIPPET_RE = /<!--\s*dui:snippet\b([^>]*?)\s*-->([\s\S]*?)<!--\s*\/dui:snippet\s*-->/g;
+
 /**
- * Snippets of an example page, per the snippet convention in site/README.md,
- * in this order of priority:
- *
- * 1. Regions between <!-- dui:snippet --> and <!-- /dui:snippet -->
- *    (optionally name="…"): the line break after the opening marker and the
- *    indentation before the closing marker are dropped, then the lines are
- *    dedented.
- * 2. Every <pre><code>…</code></pre> inside <main>: the code content,
- *    HTML-unescaped, named by the nearest <h2> or <h3> before it.
- * 3. The inner content of <main>, trimmed and dedented like a region.
- *
- * Never reformatted.
+ * The named snippets of an example page (the snippet convention in
+ * site/README.md): each region between <!-- dui:snippet name="…" --> and
+ * <!-- /dui:snippet -->. The line break after the opening marker and the
+ * indentation before the closing marker are dropped, then the lines are
+ * dedented. Never reformatted. `page="layouts/stack"` sends the snippet to
+ * another docs page than the example's own; a region inside <head> (a theme's
+ * <style>) is a head snippet, printed but rendered by the page's other
+ * snippets. Throws on a region with no name.
  * @param {string} html
  * @param {string} source repo path, recorded on each snippet
  * @returns {Snippet[]}
  */
 export function extractSnippets(html, source) {
-  const regions = [...html.matchAll(/<!--\s*dui:snippet(?:\s+name="([^"]*)")?\s*-->([\s\S]*?)<!--\s*\/dui:snippet\s*-->/g)];
-  if (regions.length) return regions.map((m) => ({ name: m[1] ?? "", code: trimRegion(m[2]), source, from: "snippet" }));
-  const main = html.match(/<main\b[^>]*>([\s\S]*)<\/main>/i);
-  if (!main) return [];
-  const blocks = [...main[1].matchAll(/<pre\b[^>]*><code\b[^>]*>([\s\S]*?)<\/code><\/pre>/g)];
-  if (blocks.length) {
-    /** @type {Map<string, number>} */
-    const seen = new Map();
-    return blocks.map((m) => {
-      const headings = [...main[1].slice(0, m.index).matchAll(/<h([23])\b[^>]*>([\s\S]*?)<\/h\1>/g)];
-      const last = headings[headings.length - 1];
-      const base = last ? unescapeHtml(last[2].replace(/<[^>]*>/g, "")).replace(/\s+/g, " ").trim() : "";
-      const n = (seen.get(base) ?? 0) + 1;
-      seen.set(base, n);
-      return { name: n > 1 ? `${base} (${n})` : base, code: unescapeHtml(m[1]), source, from: /** @type {const} */ ("pre") };
-    });
-  }
-  return [{ name: "", code: trimRegion(main[1]), source, from: "main" }];
+  const headEnd = html.search(/<\/head>/i);
+  return [...html.matchAll(SNIPPET_RE)].map((m) => {
+    const attr = (/** @type {string} */ key) => m[1].match(new RegExp(`\\b${key}="([^"]*)"`))?.[1] ?? "";
+    const name = unescapeHtml(attr("name"));
+    if (!name) throw new Error(`${source}: every <!-- dui:snippet --> needs a name="…"`);
+    return { name, code: trimRegion(m[2]), source, page: attr("page"), head: headEnd >= 0 && /** @type {number} */ (m.index) < headEnd };
+  });
 }
 
 /** @param {string} region */
@@ -386,11 +381,6 @@ export function loadModel(root) {
     const doc = parseHeader(headerComment(css), comments(css));
     const over = override(`${group}/${name}`);
     const exampleHtml = examplePath ? read(examplePath) : "";
-    const snippets = examplePath
-      ? extractSnippets(exampleHtml, examplePath)
-      : doc.example
-        ? [{ name: "", code: doc.example, source: cssPath, from: /** @type {const} */ ("css-comment") }]
-        : [];
     const description = metaDescription(exampleHtml);
     const summary = str(over?.data.summary) || description || doc.summary;
     const title = str(over?.data.title) || row?.title || titleFromName(name);
@@ -419,7 +409,7 @@ export function loadModel(root) {
       a11yFromOverride: Boolean(over?.body),
       notesFromOverride: Boolean(over && "usage" in over.data),
       specs: [...indexSpecs, ...headerSpecs],
-      snippets,
+      snippets: [], // assigned below, once every page's owner is known
       usedIn: examplePath ? [] : findUsage(doc.api, examples),
       files: [],
       overridePath: over?.path ?? null,
@@ -500,11 +490,6 @@ export function loadModel(root) {
     const cssPaths = names.flatMap((n) => allCss.filter((p) => p.endsWith(`/${n}.css`)));
     const css = cssPaths[0] ? read(cssPaths[0]) : "";
     const doc = cssPaths[0] ? parseHeader(headerComment(css), comments(css)) : null;
-    const snippets = examplePaths.length
-      ? examplePaths.flatMap((p) => extractSnippets(read(p), p))
-      : doc?.example
-        ? [{ name: "", code: doc.example, source: cssPaths[0], from: /** @type {const} */ ("css-comment") }]
-        : [];
 
     /** @type {Pattern["keyboardFrom"]} */
     let keyboardFrom = "";
@@ -551,7 +536,8 @@ export function loadModel(root) {
       examplePaths,
       cssPaths,
       doc,
-      snippets,
+      /** @type {Snippet[]} */
+      snippets: [], // assigned below
       available: examplePaths.length > 0 || cssPaths.length > 0,
       body,
       contentPath: path,
@@ -596,7 +582,7 @@ export function loadModel(root) {
     a11y: baseOver?.body || baseFiles.flatMap((f) => f.doc.a11y).join(" "),
     a11yFromOverride: Boolean(baseOver?.body),
     specs: specsFrom(baseOver?.data.specs, allUrls),
-    snippets: baseExample ? extractSnippets(read(baseExample), baseExample) : [],
+    snippets: [], // assigned below
     usedIn: [],
     files: baseFiles.map((f) => {
       const text = (f.doc.label || f.doc.summary).replace(/^Base:\s*/, "");
@@ -606,6 +592,59 @@ export function loadModel(root) {
     ourChoice: str(baseOver?.data["our-choice"]),
     sitePath: "components/base.html",
   };
+
+  // Snippets: each one is shown and rendered on exactly one docs page, its owner: the page its
+  // page="…" attribute names, else the page of the component or pattern its example belongs to.
+  const allComponents = [base, ...Object.values(components).flat(), ...layouts, ...utilities];
+  /** @type {Map<string, string>} example path → its component or pattern page */
+  const exampleOwner = new Map();
+  for (const c of allComponents) if (c.examplePath) exampleOwner.set(c.examplePath, c.sitePath);
+  for (const p of patterns) for (const e of p.examplePaths) exampleOwner.set(e, p.sitePath);
+  /** @type {Snippet[]} */
+  const snippets = [];
+  /** @type {Map<string, string>} */
+  const livePaths = new Map();
+  for (const e of examples.filter((x) => !x.showcase)) {
+    for (const s of extractSnippets(e.html, e.path)) {
+      const owner = s.page ? `${s.page}.html` : exampleOwner.get(e.path);
+      if (!owner) throw new Error(`${e.path}: snippet "${s.name}" belongs to no docs page; add page="<site path without .html>"`);
+      const live = s.head ? "" : `live/${e.path.replace(/^examples\//, "").replace(/\.html$/, "")}--${slugify(s.name)}.html`;
+      if (live && livePaths.has(live)) throw new Error(`${e.path}: snippets "${livePaths.get(live)}" and "${s.name}" have the same render page ${live}; rename one`);
+      if (live) livePaths.set(live, s.name);
+      snippets.push({ ...s, owner, live });
+    }
+  }
+  /** A page's snippets in the order shown: source order, a head snippet right after the first render of its example. */
+  const ownedBy = (/** @type {string} */ sitePath) => {
+    const mine = snippets.filter((s) => s.owner === sitePath);
+    /** @type {Snippet[]} */
+    const ordered = [];
+    for (const s of mine.filter((x) => !x.head)) {
+      ordered.push(s);
+      if (ordered.filter((x) => x.source === s.source).length === 1) ordered.push(...mine.filter((x) => x.head && x.source === s.source));
+    }
+    return [...ordered, ...mine.filter((x) => !ordered.includes(x))];
+  };
+  for (const c of allComponents) {
+    c.snippets = ownedBy(c.sitePath);
+    // Where an API with no snippet of its own is used: the docs pages that render those examples.
+    c.usedIn = [...new Set(c.usedIn.flatMap((p) => snippets.filter((s) => s.source === p).map((s) => /** @type {string} */ (s.owner))))].filter((p) => p !== c.sitePath);
+  }
+  for (const p of patterns) p.snippets = ownedBy(p.sitePath);
+  const principleSnippets = Object.fromEntries(principles.sections.map((s) => [s.sitePath, ownedBy(s.sitePath)]));
+
+  /**
+   * Where each old example URL now lives: the page that shows its snippets, a
+   * group's showcase → that level's index, anything else → Getting started.
+   * @type {Record<string, string>}
+   */
+  const exampleTargets = Object.fromEntries(
+    examples.map((e) => {
+      const level = COMPONENT_GROUPS.find((g) => g.group === e.group);
+      const target = e.showcase ? (level ? `${level.group}/index.html` : "index.html") : (snippets.find((s) => s.source === e.path && !s.head)?.owner ?? exampleOwner.get(e.path) ?? "index.html");
+      return [e.path, target];
+    }),
+  );
 
   return {
     root,
@@ -624,7 +663,10 @@ export function loadModel(root) {
     demosIntro,
     contributing: exists("CONTRIBUTING.md") ? read("CONTRIBUTING.md") : "",
     changelog: exists("CHANGELOG.md") ? read("CHANGELOG.md") : "",
-    examples: examples.map(({ path, group, title, showcase }) => ({ path, group, title, showcase })),
+    examples,
+    snippets,
+    principleSnippets,
+    exampleTargets,
   };
 }
 

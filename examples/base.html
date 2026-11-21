@@ -64,6 +64,7 @@
 
       <section aria-labelledby="text-title">
         <h2 id="text-title">Text</h2>
+        <!-- dui:snippet name="Text" -->
         <h1>Heading level 1</h1>
         <h2>Heading level 2</h2>
         <h3>Heading level 3</h3>
@@ -84,10 +85,12 @@
           <p>If you can use a native HTML element or attribute with the semantics and behavior you require already built in, instead of re-purposing an element and adding an ARIA role, state or property to make it accessible, then do so.</p>
           <footer>From <cite><a href="https://www.w3.org/TR/using-aria/#rule1">Using ARIA, first rule</a></cite></footer>
         </blockquote>
+        <!-- /dui:snippet -->
       </section>
 
       <section aria-labelledby="lists-title">
         <h2 id="lists-title">Lists</h2>
+        <!-- dui:snippet name="Lists" -->
         <div class="grid">
           <div>
             <h3>Unordered</h3>
@@ -120,19 +123,23 @@
             </dl>
           </div>
         </div>
+        <!-- /dui:snippet -->
       </section>
 
       <section aria-labelledby="code-title">
         <h2 id="code-title">Preformatted code</h2>
+        <!-- dui:snippet name="Preformatted code" -->
         <pre tabindex="0"><code>&lt;link rel="stylesheet" href="css/domestic.css"&gt;
 
 :root {
   --dui-color-accent: light-dark(#7a2e8c, #e2a8f0);
 }</code></pre>
+        <!-- /dui:snippet -->
       </section>
 
       <section aria-labelledby="media-title">
         <h2 id="media-title">Media</h2>
+        <!-- dui:snippet name="Media" -->
         <div class="grid">
           <figure>
             <svg role="img" aria-labelledby="svg-title" viewBox="0 0 160 90" width="320" height="180">
@@ -158,10 +165,12 @@
             <figcaption id="video-caption">A <code>&lt;video&gt;</code> with controls and a captions track (no source loaded, so no network requests).</figcaption>
           </figure>
         </div>
+        <!-- /dui:snippet -->
       </section>
 
       <section aria-labelledby="table-title">
         <h2 id="table-title">Tables</h2>
+        <!-- dui:snippet name="Tables" -->
         <section data-scroll="inline" aria-labelledby="contrast-caption" tabindex="0">
           <table>
             <caption id="contrast-caption">Contrast minimums in WCAG 2.2 AA</caption>
@@ -202,6 +211,7 @@
             </tfoot>
           </table>
         </section>
+        <!-- /dui:snippet -->
       </section>
 
       <section id="forms" aria-labelledby="forms-title">
@@ -333,16 +343,19 @@
 
       <section id="layout" aria-labelledby="layout-title">
         <h2 id="layout-title">Layout primitives</h2>
-        <p>Each primitive is one class, tuned with one or two custom properties.</p>
+        <p>Each primitive is one class or attribute, tuned with custom properties. The utility hides text visually and keeps it for screen readers.</p>
 
         <h3><code>.stack</code></h3>
+        <!-- dui:snippet name="Stack" page="layouts/stack" -->
         <div class="stack card" style="--stack-gap: var(--dui-space-xs)">
           <p>Stack item one</p>
           <p>Stack item two, with <code>--stack-gap: var(--dui-space-xs)</code></p>
           <p>Stack item three</p>
         </div>
+        <!-- /dui:snippet -->
 
         <h3><code>.cluster</code></h3>
+        <!-- dui:snippet name="Cluster" page="layouts/cluster" -->
         <ul class="cluster card">
           <li><code>reset</code></li>
           <li><code>tokens</code></li>
@@ -351,22 +364,61 @@
           <li><code>components</code></li>
           <li><code>utilities</code></li>
         </ul>
+        <!-- /dui:snippet -->
 
         <h3><code>.grid</code></h3>
+        <!-- dui:snippet name="Grid" page="layouts/grid" -->
         <div class="grid" style="--grid-min: 12rem">
           <article class="card">
             <h4>Atoms</h4>
-            <p>Native elements styled by the base layer, plus the <a href="atoms/index.html">atoms</a>.</p>
+            <p>Native elements styled by the base layer, plus a few attributes.</p>
           </article>
           <article class="card">
             <h4>Molecules</h4>
-            <p>Small groups of atoms, such as tabs, dialogs and cards: the <a href="molecules/index.html">molecules</a>.</p>
+            <p>Small groups of atoms, such as tabs, dialogs and cards.</p>
           </article>
           <article class="card">
             <h4>Organisms</h4>
             <p>Larger sections built from molecules. Coming later.</p>
           </article>
         </div>
+        <!-- /dui:snippet -->
+
+        <h3><code>data-scroll="inline"</code></h3>
+        <!-- dui:snippet name="Scroll region" page="layouts/scroll" -->
+        <section data-scroll="inline" aria-labelledby="viewports-caption" tabindex="0">
+          <table>
+            <caption id="viewports-caption">Viewports every page is checked at</caption>
+            <thead>
+              <tr>
+                <th scope="col">Width</th>
+                <th scope="col">Height</th>
+                <th scope="col">Engines</th>
+                <th scope="col">Checks</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>320px</td>
+                <td>640px</td>
+                <td>Chromium, Firefox, WebKit</td>
+                <td>No sideways page scroll, no axe violations</td>
+              </tr>
+              <tr>
+                <td>375px</td>
+                <td>812px</td>
+                <td>Chromium, Firefox, WebKit</td>
+                <td>No sideways page scroll, no axe violations</td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+        <!-- /dui:snippet -->
+
+        <h3><code>.visually-hidden</code></h3>
+        <!-- dui:snippet name="Visually hidden" page="components/utilities/visually-hidden" -->
+        <button type="button"><span aria-hidden="true">×</span> <span class="visually-hidden">Close the panel</span></button>
+        <!-- /dui:snippet -->
       </section>
     </main>
 

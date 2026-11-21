@@ -81,6 +81,7 @@
       <section aria-labelledby="actions-title">
         <h2 id="actions-title">Actions menu</h2>
         <div class="demo">
+          <!-- dui:snippet name="Actions menu" -->
           <dui-menu>
             <button type="button" popovertarget="row-actions">Actions</button>
             <div id="row-actions" popover data-popover>
@@ -92,18 +93,8 @@
             </div>
           </dui-menu>
           <p role="status" id="menu-result"></p>
+          <!-- /dui:snippet -->
         </div>
-        <pre tabindex="0"><code>&lt;dui-menu&gt;
-  &lt;button type="button" popovertarget="row-actions"&gt;Actions&lt;/button&gt;
-  &lt;div id="row-actions" popover data-popover&gt;
-    &lt;button type="button"&gt;Edit&lt;/button&gt;
-    &lt;button type="button"&gt;Duplicate&lt;/button&gt;
-    &lt;button type="button"&gt;Archive&lt;/button&gt;
-    &lt;hr&gt;
-    &lt;button type="button"&gt;Delete&lt;/button&gt;
-  &lt;/div&gt;
-&lt;/dui-menu&gt;
-&lt;p role="status" id="menu-result"&gt;&lt;/p&gt;</code></pre>
       </section>
 
       <section aria-labelledby="links-title">
@@ -113,6 +104,7 @@
           with no menu roles. <kbd>Tab</kbd> moves through the links, as screen reader users expect on the web.
         </p>
         <div class="demo">
+          <!-- dui:snippet name="Links are not a menu" -->
           <button type="button" popovertarget="account-links">Account</button>
           <div id="account-links" popover data-popover>
             <nav aria-label="Account" data-nav>
@@ -123,17 +115,8 @@
               </ul>
             </nav>
           </div>
+          <!-- /dui:snippet -->
         </div>
-        <pre tabindex="0"><code>&lt;button type="button" popovertarget="account-links"&gt;Account&lt;/button&gt;
-&lt;div id="account-links" popover data-popover&gt;
-  &lt;nav aria-label="Account" data-nav&gt;
-    &lt;ul&gt;
-      &lt;li&gt;&lt;a href="#links-title"&gt;Profile&lt;/a&gt;&lt;/li&gt;
-      &lt;li&gt;&lt;a href="#links-title"&gt;Billing&lt;/a&gt;&lt;/li&gt;
-      &lt;li&gt;&lt;a href="#links-title"&gt;Sign out&lt;/a&gt;&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/nav&gt;
-&lt;/div&gt;</code></pre>
       </section>
 
       <section aria-labelledby="specs-title">
@@ -154,7 +137,7 @@
     <script type="module" src="../../web-components/dui-menu.js"></script>
     <script>
       // Demo only: say which action was chosen, in the status region above.
-      document.getElementById("row-actions").addEventListener("click", (event) => {
+      document.getElementById("row-actions")?.addEventListener("click", (event) => {
         const item = event.target.closest("button");
         if (item) document.getElementById("menu-result").textContent = `${item.textContent} chosen.`;
       });

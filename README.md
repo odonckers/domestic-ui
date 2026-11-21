@@ -4,7 +4,7 @@
 
 domestic-ui is a CSS design system built on native HTML, custom properties and cascade layers. Link one stylesheet and semantic HTML is styled in light and dark, with WCAG 2.2 AA as the baseline. Theme it by overriding semantic tokens. It packages existing web standards and patterns; nothing here is original.
 
-[Docs](https://odonckers.github.io/domestic-ui/) · [Examples](https://odonckers.github.io/domestic-ui/examples.html) · [llms.txt](https://odonckers.github.io/domestic-ui/llms.txt) · [llms-full.txt](https://odonckers.github.io/domestic-ui/llms-full.txt)
+[Docs](https://odonckers.github.io/domestic-ui/) · [llms.txt](https://odonckers.github.io/domestic-ui/llms.txt) · [llms-full.txt](https://odonckers.github.io/domestic-ui/llms-full.txt)
 
 ## Install and use
 

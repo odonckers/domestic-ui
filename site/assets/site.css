@@ -170,13 +170,22 @@ main pre {
   overflow-x: auto;
 }
 
-/* Live examples: the real example page, framed. */
+/*
+ * Live examples: one frame per snippet, of its render page (live/, with the
+ * real CSS). This height holds without JavaScript; site.js fits
+ * each frame to its content. Frames that open dialogs, popovers or toasts
+ * keep room for them.
+ */
 .example-frame {
   display: block;
   inline-size: 100%;
-  aspect-ratio: 4 / 3;
+  block-size: 14rem;
   border: var(--dui-border-width) solid var(--dui-color-border);
   border-radius: var(--dui-radius-surface);
+}
+
+.example-frame[data-tall] {
+  min-block-size: 28rem;
 }
 
 /* Token filter (shown by site.js). */

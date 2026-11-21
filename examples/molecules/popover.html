@@ -77,34 +77,28 @@
       <section aria-labelledby="panel-title">
         <h2 id="panel-title">Popover</h2>
         <div class="demo">
+          <!-- dui:snippet name="Popover" -->
           <button type="button" popovertarget="share-popover">Share</button>
           <div id="share-popover" popover data-popover>
             <p>Anyone with the link can view this page.</p>
           </div>
+          <!-- /dui:snippet -->
         </div>
-        <pre tabindex="0"><code>&lt;button type="button" popovertarget="share-popover"&gt;Share&lt;/button&gt;
-&lt;div id="share-popover" popover data-popover&gt;
-  &lt;p&gt;Anyone with the link can view this page.&lt;/p&gt;
-&lt;/div&gt;</code></pre>
       </section>
 
       <section aria-labelledby="above-title">
         <h2 id="above-title">Above the button, with a close button</h2>
         <p><code>popover="manual"</code> does not light-dismiss: close it with a button (<code>popovertargetaction="hide"</code>).</p>
         <div class="demo">
+          <!-- dui:snippet name="Above the button, with a close button" -->
           <button type="button" popovertarget="help-popover">Help</button>
           <div id="help-popover" popover="manual" data-popover="block-start">
             <p><strong>Need a hand?</strong></p>
-            <p>Read the <a href="../../README.md">guide</a> or ask in the forum.</p>
+            <p>Read the <a href="#above-title">guide</a> or ask in the forum.</p>
             <button type="button" popovertarget="help-popover" popovertargetaction="hide" data-button="small">Close</button>
           </div>
+          <!-- /dui:snippet -->
         </div>
-        <pre tabindex="0"><code>&lt;button type="button" popovertarget="help-popover"&gt;Help&lt;/button&gt;
-&lt;div id="help-popover" popover="manual" data-popover="block-start"&gt;
-  &lt;p&gt;&lt;strong&gt;Need a hand?&lt;/strong&gt;&lt;/p&gt;
-  &lt;p&gt;Read the &lt;a href="../../README.md"&gt;guide&lt;/a&gt; or ask in the forum.&lt;/p&gt;
-  &lt;button type="button" popovertarget="help-popover" popovertargetaction="hide" data-button="small"&gt;Close&lt;/button&gt;
-&lt;/div&gt;</code></pre>
       </section>
 
       <section aria-labelledby="tooltip-title">
@@ -116,6 +110,7 @@
           is coming), so <code>&lt;dui-tooltip&gt;</code> does it.
         </p>
         <div class="demo">
+          <!-- dui:snippet name="Tooltip" -->
           <div class="cluster">
             <dui-tooltip>
               <button type="button" aria-describedby="save-tip">Save</button>
@@ -126,17 +121,8 @@
               <span id="copy-tip" popover="hint" role="tooltip">Copies the page address</span>
             </dui-tooltip>
           </div>
+          <!-- /dui:snippet -->
         </div>
-        <pre tabindex="0"><code>&lt;div class="cluster"&gt;
-  &lt;dui-tooltip&gt;
-    &lt;button type="button" aria-describedby="save-tip"&gt;Save&lt;/button&gt;
-    &lt;span id="save-tip" popover="hint" role="tooltip"&gt;Shortcut: Ctrl+S&lt;/span&gt;
-  &lt;/dui-tooltip&gt;
-  &lt;dui-tooltip&gt;
-    &lt;button type="button" aria-label="Copy link" aria-describedby="copy-tip" data-button="quiet"&gt;⧉&lt;/button&gt;
-    &lt;span id="copy-tip" popover="hint" role="tooltip"&gt;Copies the page address&lt;/span&gt;
-  &lt;/dui-tooltip&gt;
-&lt;/div&gt;</code></pre>
       </section>
 
       <section aria-labelledby="specs-title">

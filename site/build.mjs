@@ -15,6 +15,7 @@ import { fileURLToPath, pathToFileURL } from "node:url";
 import { loadModel } from "./lib/discovery.mjs";
 import { NAV, navEntryOf, navTree } from "./lib/nav.mjs";
 import { generateLlms, generateLlmsFull, generateReadme, searchIndex } from "./lib/outputs.mjs";
+import { redirectMarkdown, redirectPage, renderPage } from "./lib/live.mjs";
 import { addOtherSystems, loadOtherSystems } from "./lib/other-systems.mjs";
 import { buildPages } from "./lib/pages.mjs";
 import { renderHtml, renderMarkdown } from "./lib/templates.mjs";
@@ -58,14 +59,32 @@ export function generate(root = ROOT) {
   const { pages: withOthers, warnings } = addOtherSystems(buildPages(model), model, loadOtherSystems(root));
   const pages = dedupeTitles(withOthers);
   for (const entry of NAV) if (!pages.some((p) => p.path === entry.path)) throw new Error(`The Docs sidebar entry "${entry.title}" links ${entry.path}, which no page builds`);
+  // Every snippet is shown and rendered on exactly one docs page.
+  for (const s of model.snippets) {
+    const on = pages.filter((p) => p.snippets?.includes(s)).map((p) => p.path);
+    if (on.length !== 1) throw new Error(`${s.source}: snippet "${s.name}" must be on exactly one docs page; it is on ${on.join(", ") || "none"} (owner ${s.owner})`);
+  }
   const twins = new Set(pages.map((p) => p.path));
-  const tree = navTree(pages, model.examples);
+  const tree = navTree(pages);
+  const titleOf = (/** @type {string} */ path) => pages.find((p) => p.path === path)?.title ?? "domestic-ui";
+  /** Render pages, one per snippet with a render: site path → HTML. @type {Record<string, string>} */
+  const live = {};
+  for (const s of model.snippets) {
+    const example = model.examples.find((e) => e.path === s.source);
+    if (s.live && example) live[s.live] = renderPage(s, example.html);
+  }
+  /** Old example URLs: site path → the page it moved to and the redirect page. examples.html goes to Getting started. */
+  const redirects = Object.fromEntries(
+    [["examples.html", "index.html"], ...Object.entries(model.exampleTargets)].map(([from, to]) => [from, { to, html: redirectPage(from, to, titleOf(to)) }]),
+  );
   return {
     model,
     pages,
     tree,
     /** Non-fatal problems, printed by the CLI. */
     warnings,
+    live,
+    redirects,
     files: {
       "README.md": generateReadme(model),
       "llms.txt": generateLlms(model, pages),
@@ -90,9 +109,9 @@ export function build({ root = ROOT, outDir, writeRoot = true } = {}) {
 
   rmSync(out, { recursive: true, force: true });
   mkdirSync(out, { recursive: true });
-  // Copied unchanged, so live examples and pages load the real CSS by relative path.
+  // Copied unchanged, so docs and render pages load the real CSS and web components by relative path.
   cpSync(join(root, "css"), join(out, "css"), { recursive: true });
-  cpSync(join(root, "examples"), join(out, "examples"), { recursive: true });
+  if (existsSync(join(root, "web-components"))) cpSync(join(root, "web-components"), join(out, "web-components"), { recursive: true });
   cpSync(join(ASSETS, "site.css"), join(out, "site.css"));
   cpSync(join(ASSETS, "site.js"), join(out, "site.js"));
   // GitHub Pages: serve files as-is, no Jekyll processing.
@@ -107,6 +126,14 @@ export function build({ root = ROOT, outDir, writeRoot = true } = {}) {
     writeFileSync(file, html[page.path]);
     writeFileSync(file.replace(/\.html$/, ".md"), result.markdown(page));
   }
+  // Render pages (live/), then redirects at the old example URLs (see ./lib/live.mjs).
+  const put = (/** @type {string} */ path, /** @type {string} */ text) => {
+    mkdirSync(dirname(join(out, path)), { recursive: true });
+    writeFileSync(join(out, path), text);
+  };
+  for (const [path, text] of Object.entries(result.live)) put(path, text);
+  for (const [path, r] of Object.entries(result.redirects)) put(path, r.html);
+  put("examples.md", redirectMarkdown("index.html", "Getting started"));
   writeFileSync(join(out, "search-index.json"), searchIndex(result.pages, html));
   for (const name of ["llms.txt", "llms-full.txt"]) writeFileSync(join(out, name), result.files[name]);
   if (writeRoot) for (const name of GENERATED) writeFileSync(join(root, name), result.files[name]);

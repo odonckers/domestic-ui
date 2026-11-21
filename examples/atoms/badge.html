@@ -70,6 +70,7 @@
       <section aria-labelledby="tones-title">
         <h2 id="tones-title">Tones</h2>
         <div class="demo">
+          <!-- dui:snippet name="Tones" -->
           <p class="cluster">
             <span data-badge>Draft</span>
             <span data-badge="accent">New</span>
@@ -77,20 +78,15 @@
             <span data-badge="warning">Due soon</span>
             <span data-badge="danger">Overdue</span>
           </p>
+          <!-- /dui:snippet -->
         </div>
-        <pre tabindex="0"><code>&lt;p class="cluster"&gt;
-  &lt;span data-badge&gt;Draft&lt;/span&gt;
-  &lt;span data-badge="accent"&gt;New&lt;/span&gt;
-  &lt;span data-badge="success"&gt;Paid&lt;/span&gt;
-  &lt;span data-badge="warning"&gt;Due soon&lt;/span&gt;
-  &lt;span data-badge="danger"&gt;Overdue&lt;/span&gt;
-&lt;/p&gt;</code></pre>
       </section>
 
       <section aria-labelledby="context-title">
         <h2 id="context-title">In context</h2>
         <p>In a table, the column header already says what the badge is.</p>
         <div class="demo">
+          <!-- dui:snippet name="In context" -->
           <section data-scroll="inline" aria-labelledby="invoices-caption" tabindex="0">
             <table>
               <caption id="invoices-caption">Invoices</caption>
@@ -103,19 +99,8 @@
               </tbody>
             </table>
           </section>
+          <!-- /dui:snippet -->
         </div>
-        <pre tabindex="0"><code>&lt;section data-scroll="inline" aria-labelledby="invoices-caption" tabindex="0"&gt;
-  &lt;table&gt;
-    &lt;caption id="invoices-caption"&gt;Invoices&lt;/caption&gt;
-    &lt;thead&gt;
-      &lt;tr&gt;&lt;th scope="col"&gt;Invoice&lt;/th&gt;&lt;th scope="col"&gt;Status&lt;/th&gt;&lt;/tr&gt;
-    &lt;/thead&gt;
-    &lt;tbody&gt;
-      &lt;tr&gt;&lt;td&gt;INV-031&lt;/td&gt;&lt;td&gt;&lt;span data-badge="success"&gt;Paid&lt;/span&gt;&lt;/td&gt;&lt;/tr&gt;
-      &lt;tr&gt;&lt;td&gt;INV-032&lt;/td&gt;&lt;td&gt;&lt;span data-badge="danger"&gt;Overdue&lt;/span&gt;&lt;/td&gt;&lt;/tr&gt;
-    &lt;/tbody&gt;
-  &lt;/table&gt;
-&lt;/section&gt;</code></pre>
       </section>
 
       <section aria-labelledby="specs-title">

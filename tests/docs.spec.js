@@ -9,8 +9,8 @@ import { GENERATED, NAV, ROOT, build, extractSnippets, generate } from "../site/
 import { parseTokenFile, resolveTokens, resolveValue } from "../site/lib/tokens.mjs";
 import { validateOtherSystems } from "../site/lib/other-systems.mjs";
 import { escapeHtml, unescapeHtml } from "../site/lib/util.mjs";
-import { SITE_DIR, WCAG_TAGS, builtPages, summarize } from "./docs-helpers.js";
-import { blockExternalRequests, schemes } from "./helpers.js";
+import { SITE_DIR, WCAG_TAGS, builtPages, livePages, redirectPages, summarize } from "./docs-helpers.js";
+import { blockExternalRequests, examples, schemes } from "./helpers.js";
 
 /*
  * Docs site checks. tests/docs-helpers.js builds _site/ once; see there.
@@ -97,7 +97,7 @@ test.describe("docs build", () => {
     expect(broken).toEqual([]);
   });
 
-  test("copy-paste markup is byte-identical to the example source", () => {
+  test("printed markup is the snippet text in examples/, byte for byte, on the page, its twin and in llms-full.txt", () => {
     const withSnippets = site.pages.filter((p) => p.snippets?.length);
     expect(withSnippets.length).toBeGreaterThan(0);
     const llmsFences = htmlFences(read(join(SITE_DIR, "llms-full.txt")));
@@ -107,20 +107,119 @@ test.describe("docs build", () => {
       expect(shown, page.path).toEqual(snippets.map((s) => s.code));
       for (const s of snippets) {
         const source = read(join(ROOT, s.source));
-        if (s.from !== "css-comment") expect(extractSnippets(source, s.source).map((x) => x.code), s.source).toContain(s.code);
-        if (s.from === "pre") {
-          // Rule (b): the example's own <pre><code> content, unescaped, byte for byte.
-          const main = source.slice(source.indexOf("<main"), source.lastIndexOf("</main>"));
-          const examplePre = [...main.matchAll(/<pre\b[^>]*><code>([\s\S]*?)<\/code><\/pre>/g)].map((m) => unescapeHtml(m[1]));
-          expect(examplePre, `${page.path}: ${s.name} is a <pre><code> of ${s.source}`).toContain(s.code);
-        } else {
-          const decoration = s.from === "css-comment" ? /^\s*\*?\s*$/ : /^[ \t]*$/;
-          expect(isDedentedSlice(source, s.code, decoration), `${page.path}: snippet is not a slice of ${s.source}`).toBe(true);
-        }
-        expect(llmsFences, `llms-full.txt has the ${s.source} snippet`).toContain(s.code);
+        // The named marker is in the source, and the code is that region with one indentation removed.
+        expect(source, `${s.source}: marker for "${s.name}"`).toMatch(new RegExp(`<!-- dui:snippet name="${s.name.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}"`));
+        expect(isDedentedSlice(source, s.code, /^[ \t]*$/), `${page.path}: ${s.name} is not a slice of ${s.source}`).toBe(true);
+        expect(llmsFences, `llms-full.txt has ${s.source}: ${s.name}`).toContain(s.code);
         expect(htmlFences(read(join(SITE_DIR, page.path.replace(/\.html$/, ".md")))), `${page.path} Markdown twin`).toContain(s.code);
       }
     }
+  });
+
+  test("markup exists once in examples/: every demo is a named snippet, no <pre> copies, every snippet on one page", () => {
+    const pages = site.pages.flatMap((p) => p.snippets ?? []);
+    for (const path of examples) {
+      const html = read(join(ROOT, path));
+      const markers = [...html.matchAll(/<!-- dui:snippet\b([^>]*)-->/g)];
+      expect(markers.every((m) => /\bname="[^"]+"/.test(m[1])), `${path}: every snippet is named`).toBe(true);
+      // A <pre> outside a snippet would be a copy of markup shown elsewhere.
+      const outside = html.replace(/<!-- dui:snippet\b[\s\S]*?<!-- \/dui:snippet -->/g, "");
+      expect(outside.match(/<pre\b/g) ?? [], `${path}: <pre> outside a snippet`).toEqual([]);
+      // Showcases (examples/<group>/index.html) are fixtures only; every other example's snippets are each on one docs page.
+      const own = site.model.snippets.filter((s) => s.source === path);
+      expect(own.length, `${path}: snippets`).toBe(path.endsWith("/index.html") && path.split("/").length > 2 ? 0 : markers.length);
+      for (const s of own) expect(pages.filter((x) => x === s).length, `${path}: ${s.name} is on one page`).toBe(1);
+    }
+    expect(pages.length).toBe(site.model.snippets.length);
+  });
+
+  test("every snippet is rendered live on exactly one page, its code directly below the render", async () => {
+    /** @type {Map<string, { page: string, code: string }[]>} render page → frames that show it */
+    const frames = new Map();
+    for (const p of site.pages) {
+      const html = read(join(SITE_DIR, p.path));
+      for (const m of html.matchAll(/<iframe\b[^>]*\bsrc="([^"]+)"[^>]*><\/iframe>\n<pre data-snippet="[^"]*"><code>([\s\S]*?)<\/code><\/pre>/g)) {
+        const target = posix.join(posix.dirname(p.path), unescapeHtml(m[1]));
+        frames.set(target, [...(frames.get(target) ?? []), { page: p.path, code: unescapeHtml(m[2]) }]);
+      }
+      // Every frame on a docs page is a live example followed by its code.
+      expect((html.match(/<iframe\b/g) ?? []).length, `${p.path}: frames`).toBe([...html.matchAll(/<\/iframe>\n<pre data-snippet=/g)].length);
+    }
+    const all = site.model.snippets;
+    for (const s of all.filter((x) => !x.head)) {
+      const on = frames.get(/** @type {string} */ (s.live)) ?? [];
+      expect(on.map((f) => f.page), `${s.source}: ${s.name}`).toEqual([s.owner]);
+      expect(on[0].code, `${s.source}: ${s.name}, code below its render`).toBe(s.code);
+      // The render is the same text: the snippet is the render page's body, line for line.
+      const render = read(join(SITE_DIR, /** @type {string} */ (s.live)));
+      expect(render, `${s.live} renders the snippet text`).toContain(`  <body>\n${s.code}\n`);
+      expect(render).toContain('<meta name="robots" content="noindex">');
+      const report = await htmlValidate.validateString(render, s.live);
+      expect(report.results.flatMap((r) => r.messages.map((m) => `${s.live}:${m.line}:${m.column} ${m.ruleId} ${m.message}`))).toEqual([]);
+      for (const [, url] of render.matchAll(/<[a-z][^>]*?\s(?:href|src)="([^"#?][^"]*)"/g)) {
+        if (/^(?:[a-z][a-z\d+.-]*:|\/\/)/i.test(url)) continue;
+        expect(existsSync(join(SITE_DIR, posix.join(posix.dirname(/** @type {string} */ (s.live)), url.split("#")[0]))), `${s.live}: ${url}`).toBe(true);
+      }
+    }
+    // A head snippet (a theme's <style>) is printed on one page and loaded by every render of its example.
+    for (const s of all.filter((x) => x.head)) {
+      const renders = all.filter((x) => x.source === s.source && x.live);
+      expect(renders.length, `${s.source}: ${s.name} has renders`).toBeGreaterThan(0);
+      for (const r of renders) {
+        const render = read(join(SITE_DIR, /** @type {string} */ (r.live)));
+        expect(isDedentedSlice(render.slice(0, render.indexOf("</head>")), s.code, /^[ \t]*$/), `${r.live} loads ${s.name}`).toBe(true);
+      }
+    }
+    expect([...frames.keys()].sort(), "no frame without a snippet").toEqual(all.filter((s) => s.live).map((s) => s.live).sort());
+    expect(livePages, "no render page without a snippet").toEqual([...frames.keys()].sort());
+  });
+
+  test("prose never repeats snippet markup", () => {
+    // Any snippet line long enough to be markup rather than a word or a closing tag.
+    const lines = [...new Set(site.model.snippets.flatMap((s) => s.code.split("\n").map((l) => l.trim())))].filter((l) => l.length >= 30 && /<[a-z]/.test(l));
+    expect(lines.length).toBeGreaterThan(0);
+    for (const page of site.pages) {
+      const html = read(join(SITE_DIR, page.path));
+      const main = html.slice(html.indexOf("<main"), html.indexOf("</main>")).replace(/<(pre|iframe)\b[\s\S]*?<\/\1>/g, "");
+      const prose = unescapeHtml(main.replace(/<[^>]*>/g, ""));
+      const md = read(join(SITE_DIR, page.path.replace(/\.html$/, ".md"))).replace(/^(`{3,})\w*\n[\s\S]*?\n\1$/gm, "");
+      for (const line of lines) {
+        expect(prose.includes(line), `${page.path} repeats ${line}`).toBe(false);
+        expect(md.includes(line), `${page.path.replace(/\.html$/, ".md")} repeats ${line}`).toBe(false);
+      }
+    }
+  });
+
+  test("every old example URL is a static redirect to the page that now holds it", async () => {
+    const old = ["examples.html", ...examples].sort();
+    expect(redirectPages, "a redirect for each example page and examples.html").toEqual(old);
+    const paths = site.pages.map((p) => p.path);
+    for (const path of old) {
+      const { to } = site.redirects[path];
+      expect(paths, `${path} → ${to}`).toContain(to);
+      const href = escapeHtml(posix.relative(posix.dirname(path), to));
+      const html = read(join(SITE_DIR, path));
+      expect(html, path).toContain(`<meta http-equiv="refresh" content="0; url=${href}">`);
+      expect(html, path).toContain(`<link rel="canonical" href="https://odonckers.github.io/domestic-ui/${to}">`);
+      expect(html, path).toContain('<meta name="robots" content="noindex">');
+      expect(html, path).toMatch(/<title>Moved: [^<]+ · domestic-ui docs<\/title>/);
+      expect(html, `${path}: a plain visible link`).toContain(`<a href="${href}">`);
+      expect(html, `${path}: no docs content`).not.toContain("<main");
+      const report = await htmlValidate.validateString(html, path);
+      expect(report.results.flatMap((r) => r.messages.map((m) => `${path}:${m.line} ${m.ruleId} ${m.message}`))).toEqual([]);
+      // The target shows the example's snippets (a showcase goes to its level index).
+      const own = site.model.snippets.filter((s) => s.source === path);
+      if (own.length) expect(own.some((s) => s.owner === to), `${path}: ${to} shows its snippets`).toBe(true);
+    }
+    expect(site.redirects["examples.html"].to).toBe("index.html");
+    expect(site.redirects["examples/atoms/index.html"].to).toBe("atoms/index.html");
+    expect(site.redirects["examples/molecules/index.html"].to).toBe("molecules/index.html");
+    expect(site.redirects["examples/atoms/button.html"].to).toBe("components/atoms/button.html");
+    expect(site.redirects["examples/molecules/tabs.html"].to).toBe("patterns/tabs.html");
+    expect(site.redirects["examples/theming.html"].to).toBe("principles/theming.html");
+    expect(read(join(SITE_DIR, "examples.md"))).toContain("](https://odonckers.github.io/domestic-ui/index.md)");
+    // Nothing published links an old example URL any more.
+    for (const name of GENERATED) expect(site.files[name], name).not.toMatch(/domestic-ui\/examples[./]/);
   });
 });
 
@@ -249,15 +348,18 @@ test.describe("atoms from the group README", () => {
       const html = read(join(SITE_DIR, page.path));
       const md = read(join(SITE_DIR, page.path.replace(/\.html$/, ".md")));
       expect(page.path, title).toBe(`components/atoms/${exampleFile.replace(/^.*\//, "")}`);
-      expect(html, `${title}: live example`).toContain(`src="../../${exampleFile}"`);
       expect(md, `${title}: API cell as written`).toContain(`\n\n${api}\n\n`);
       expect(md, `${title}: specs`).toMatch(/## Specifications\n\n- \[/);
-      // Copy-paste markup: one named block per <pre><code> in the example, byte for byte.
+      // Live example: one block per named snippet in the example, in order: name, render, code.
       const source = read(join(ROOT, exampleFile));
-      const pre = [...source.matchAll(/<pre\b[^>]*><code>([\s\S]*?)<\/code><\/pre>/g)].map((m) => unescapeHtml(m[1]));
-      expect(snippetBlocks(html), title).toEqual(pre);
-      expect(page.snippets.every((/** @type {any} */ s) => s.from === "pre" && s.name), `${title}: every snippet is named`).toBe(true);
-      for (const s of page.snippets) expect(html).toMatch(new RegExp(`<h3 id="[^"]*">${s.name.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}</h3>\\n<pre data-snippet=`));
+      const names = [...source.matchAll(/<!-- dui:snippet name="([^"]+)"/g)].map((m) => m[1]);
+      expect(names.length, `${title}: snippets`).toBeGreaterThan(0);
+      expect(page.snippets.map((/** @type {any} */ s) => s.name), title).toEqual(names);
+      expect(snippetBlocks(html), title).toEqual(extractSnippets(source, exampleFile).map((s) => s.code));
+      for (const s of page.snippets) {
+        const name = s.name.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+        expect(html).toMatch(new RegExp(`<h3 id="[^"]*">${name}</h3>\\n<iframe class="example-frame" data-live[^>]* src="../../${s.live}" title="Live example: ${name}" loading="lazy"></iframe>\\n<pre data-snippet=`));
+      }
     }
     const button = read(join(SITE_DIR, "components/atoms/button.md"));
     expect(button).not.toContain("# Buttons\n\nPlain <button>");
@@ -275,7 +377,7 @@ test.describe("atoms from the group README", () => {
     const choices = [...readme.matchAll(/^- \*\*Our choice:\*\*/gm)].length;
     expect([...atoms.matchAll(/^- \*\*Our choice:\*\*/gm)].length).toBe(choices);
     expect(atoms).toContain("## Not shipped, and why\n\n| Candidate | Decision |");
-    expect(read(join(SITE_DIR, "examples.md"))).toContain("[Atoms showcase](https://odonckers.github.io/domestic-ui/examples/atoms/index.html)");
+    expect(read(join(SITE_DIR, "examples/atoms/index.html")), "the showcase redirects to the level index").toContain('url=../../atoms/index.html"');
     expect(site.pages.some((p) => p.path === "components/atoms/index.html"), "the showcase is not a component").toBe(false);
     expect(site.pages.some((p) => p.path === "components/index.html"), "the all-levels overview is gone; its parts live on Getting started and the level indexes").toBe(false);
     for (const name of ["README.md", "llms.txt", "llms-full.txt"]) expect(site.files[name], name).toContain('`data-button="primary small"`');
@@ -313,15 +415,19 @@ test.describe("atoms from the group README", () => {
     }
   });
 
-  test("snippet rules apply in priority order", () => {
-    const page = (/** @type {string} */ main) => `<!DOCTYPE html><html lang="en"><body><main>\n${main}\n</main></body></html>`;
-    const pre = '<h2>One &amp; two</h2>\n<pre><code>&lt;p data-text="lead"&gt;A &amp;amp; B&lt;/p&gt;</code></pre>\n<h3>Three</h3><pre><code>&lt;hr&gt;</code></pre>';
-    expect(extractSnippets(page(pre), "x.html")).toEqual([
-      { name: "One & two", code: '<p data-text="lead">A &amp; B</p>', source: "x.html", from: "pre" },
-      { name: "Three", code: "<hr>", source: "x.html", from: "pre" },
+  test("snippets are named marker regions only", () => {
+    const page = (/** @type {string} */ head, /** @type {string} */ main) => `<!DOCTYPE html><html lang="en"><head><title>x</title>${head}</head><body><main>\n${main}\n</main></body></html>`;
+    const region = '    <!-- dui:snippet name="Lead" -->\n    <p data-text="lead">A &amp; B</p>\n      <span>indented</span>\n    <!-- /dui:snippet -->';
+    expect(extractSnippets(page("", `${region}\n<pre><code>&lt;hr&gt;</code></pre>`), "x.html")).toEqual([
+      { name: "Lead", code: '<p data-text="lead">A &amp; B</p>\n  <span>indented</span>', source: "x.html", page: "", head: false },
     ]);
-    expect(extractSnippets(page(`<!-- dui:snippet -->\n<p>x</p>\n<!-- /dui:snippet -->\n${pre}`), "x.html").map((s) => s.from)).toEqual(["snippet"]);
-    expect(extractSnippets(page("  <p>only</p>"), "x.html")).toEqual([{ name: "", code: "<p>only</p>", source: "x.html", from: "main" }]);
+    // page="…" sends it to another docs page; a region in <head> is a head snippet.
+    expect(extractSnippets(page('<!-- dui:snippet name="Theme" page="principles/theming" --><style>p {}</style><!-- /dui:snippet -->', ""), "x.html")).toEqual([
+      { name: "Theme", code: "<style>p {}</style>", source: "x.html", page: "principles/theming", head: true },
+    ]);
+    // <pre> blocks and <main> are not snippets; an unnamed region is an error.
+    expect(extractSnippets(page("", "<h2>Two</h2>\n<pre><code>&lt;hr&gt;</code></pre>"), "x.html")).toEqual([]);
+    expect(() => extractSnippets(page("", "<!-- dui:snippet -->\n<p>x</p>\n<!-- /dui:snippet -->"), "x.html")).toThrow(/needs a name/);
   });
 });
 
@@ -446,6 +552,64 @@ test.describe("docs pages in the browser", () => {
     }
   }
 
+  for (const path of livePages) {
+    test(`render page ${path} has no axe violations and no external requests (light and dark)`, async ({ page, baseURL }) => {
+      const external = await blockExternalRequests(page, baseURL ?? "");
+      for (const colorScheme of schemes) {
+        await page.emulateMedia({ colorScheme });
+        await page.goto(`_site/${path}`, { waitUntil: "networkidle" });
+        const { violations } = await new AxeBuilder({ page }).withTags(WCAG_TAGS).analyze();
+        expect(violations, `${colorScheme}\n${summarize(violations)}`).toEqual([]);
+      }
+      expect(external, "external network requests").toEqual([]);
+    });
+  }
+
+  test("redirect pages have no axe violations, refresh at once and land on their page", async ({ page }) => {
+    for (const path of redirectPages) {
+      const { to } = site.redirects[path];
+      // Answer the target with 204 No Content, so the browser stays on the redirect page for axe (meta-refresh rule included).
+      const target = (/** @type {URL} */ url) => url.pathname.endsWith(`/_site/${to}`);
+      await page.route(target, (route) => route.fulfill({ status: 204 }));
+      await page.goto(`_site/${path}`);
+      const { violations } = await new AxeBuilder({ page }).withTags(WCAG_TAGS).analyze();
+      expect(violations, `${path}\n${summarize(violations)}`).toEqual([]);
+      await page.unroute(target);
+      await page.goto(`_site/${path}`);
+      await page.waitForURL(`**/_site/${to}`);
+      await expect(page.locator("h1"), `${path} → ${to}`).toHaveCount(1);
+    }
+  });
+
+  test("interactive snippets work in their frames on the docs page", async ({ page }) => {
+    // Every web component in a snippet is defined in its render page.
+    for (const s of site.model.snippets.filter((x) => /<dui-[a-z]/.test(x.code))) {
+      await page.goto(`_site/${s.live}`);
+      for (const tag of new Set([...s.code.matchAll(/<(dui-[a-z-]+)/g)].map((m) => m[1]))) {
+        await expect.poll(() => page.evaluate((t) => Boolean(customElements.get(t)), tag), `${s.live}: ${tag}`).toBe(true);
+      }
+    }
+    await page.goto("_site/patterns/tabs.html");
+    const tabsFrame = page.locator('iframe[title="Live example: Automatic activation"]');
+    const tabs = tabsFrame.contentFrame();
+    await tabs.getByRole("tab", { name: "Security" }).click();
+    await expect(tabs.getByRole("tabpanel", { name: "Security" })).toBeVisible();
+    // site.js fits the frame to its content.
+    await expect
+      .poll(() => tabsFrame.evaluate((f) => Math.abs(f.getBoundingClientRect().height - (/** @type {HTMLIFrameElement} */ (f).contentDocument?.documentElement.getBoundingClientRect().height ?? 0)) <= 3))
+      .toBe(true);
+
+    await page.goto("_site/patterns/dialog.html");
+    const dialog = page.locator('iframe[title="Live example: Modal dialog"]').contentFrame();
+    await dialog.getByRole("button", { name: "Delete project…" }).click();
+    await expect(dialog.getByRole("dialog", { name: "Delete project?" })).toBeVisible();
+
+    await page.goto("_site/patterns/menu-button.html");
+    const menu = page.locator('iframe[title="Live example: Actions menu"]').contentFrame();
+    await menu.getByRole("button", { name: "Actions" }).click();
+    await expect(menu.getByRole("menu")).toBeVisible();
+  });
+
   test("the skip link is the first focusable element and moves focus to main", async ({ page }) => {
     for (const path of ["index.html", site.pages.find((p) => p.section === "atoms" && p.snippets?.length)?.path ?? "atoms/index.html"]) {
       await page.goto(`_site/${path}`);
@@ -501,6 +665,9 @@ test.describe("docs pages in the browser", () => {
     expect(top).toEqual(NAV.map((n) => n.title));
     const linked = await page.locator('nav[aria-label="Docs"] a').evaluateAll((all) => all.map((a) => new URL(/** @type {HTMLAnchorElement} */ (a).href).pathname.replace(/^\/_site\//, "")));
     for (const p of builtPages) expect(linked, `${p} is in the sidebar`).toContain(p);
+    // No examples section: example pages are redirects and render pages are frames, never sidebar links.
+    expect(linked.filter((p) => /^(?:examples|live)[/.]/.test(p)), "no example or render page links").toEqual([]);
+    await expect(page.locator('nav[aria-label="Docs"]')).not.toContainText(/example/i);
   });
 
   test("the token filter hides rows and groups that do not match and says how many are shown", async ({ page }) => {
@@ -571,7 +738,7 @@ test("discovery picks up a new component with no site changes", async ({ browser
   <body>
     <main>
       <h1>Demo</h1>
-      <!-- dui:snippet -->
+      <!-- dui:snippet name="Plain" -->
       <p class="demo">
         Plain <code>\`\`\`</code> text.
       </p>
@@ -629,7 +796,7 @@ test("discovery picks up a new component with no site changes", async ({ browser
   <body>
     <main>
       <h1>Tabs</h1>
-      <!-- dui:snippet -->
+      <!-- dui:snippet name="Fixture tabs" -->
       <div class="tabs">
         <p>Fixture tabs.</p>
       </div>
@@ -663,7 +830,8 @@ test("discovery picks up a new component with no site changes", async ({ browser
 
     const page = out("components/atoms/demo.html");
     expect(page).toContain("<h1>Demo</h1>");
-    expect(page).toContain('src="../../examples/atoms/demo.html"');
+    expect(page).toContain('src="../../live/atoms/demo--plain.html"');
+    expect(page).toContain('src="../../live/atoms/demo--with-a-link.html"');
     expect(page).toContain('<a href="https://www.w3.org/WAI/WCAG22/Understanding/focus-visible.html">');
     expect(page).toContain("It keeps a visible focus ring (WCAG 2.4.7).");
     const expected = ['<p class="demo">\n  Plain <code>```</code> text.\n</p>', '<p class="demo"><a href="#x">Link</a></p>'];
@@ -687,20 +855,21 @@ test("discovery picks up a new component with no site changes", async ({ browser
     expect(page).toContain('<a href="../../patterns/disclosure.html">Disclosure <span class="docs-nav-note">(coming in M3)</span></a>');
     // The fixture has no demos/, CONTRIBUTING.md or CHANGELOG.md: the pages still exist and say so.
     expect(out("demos.md")).toContain("Coming in M5.");
-    expect(out("examples.md")).toContain("[Atoms showcase](https://odonckers.github.io/domestic-ui/examples/atoms/index.html)");
+    expect(out("examples/atoms/index.html"), "the showcase redirects to the level index").toContain('url=../../atoms/index.html"');
+    expect(out("examples/atoms/demo.html")).toContain('url=../../components/atoms/demo.html"');
 
     // The tabs pattern page is filled in: demo, byte-identical markup, keyboard notes from the CSS.
     const paths = result.pages.map((p) => p.path);
     expect(paths, "a pattern owns its file names").not.toContain("components/molecules/tabs.html");
     const tabsPage = out("patterns/tabs.html");
     expect(tabsPage).not.toContain("Coming in M3.");
-    expect(tabsPage).toContain('src="../examples/molecules/tabs.html"');
+    expect(tabsPage).toContain('src="../live/molecules/tabs--fixture-tabs.html"');
     const tabsCode = ['<div class="tabs">\n  <p>Fixture tabs.</p>\n</div>'];
+    expect(out("live/molecules/tabs--fixture-tabs.html"), "the render page is the same text").toContain(`\n${tabsCode[0]}\n`);
     expect(snippetBlocks(tabsPage)).toEqual(tabsCode);
     expect(result.pages.find((p) => p.path === "patterns/tabs.html")?.snippets?.map((s) => s.code)).toEqual(tabsCode);
     expect(isDedentedSlice(tabs, tabsCode[0], /^[ \t]*$/)).toBe(true);
     expect(htmlFences(out("patterns/tabs.md"))).toEqual(tabsCode);
-    expect(tabsPage).toContain("From the <code>Keyboard</code> block in");
     expect(tabsPage).toContain('<th scope="row"><kbd>Left Arrow</kbd> / <kbd>Right Arrow</kbd></th><td>moves focus between tabs (fixture)</td>');
     expect(tabsPage).toContain('<th scope="row"><kbd>Home</kbd></th><td>moves focus to the first tab (fixture)</td>');
     expect(tabsPage, "the CSS Keyboard block wins over the registry list").not.toContain("moves focus into the tab list");
@@ -715,7 +884,7 @@ test("discovery picks up a new component with no site changes", async ({ browser
 
     // The layout lands under Layouts, from css/layouts/ with its example in examples/layouts/.
     const layoutPage = out("layouts/demo-layout.html");
-    expect(layoutPage).toContain('src="../examples/layouts/demo-layout.html"');
+    expect(layoutPage).toContain('src="../live/layouts/demo-layout--plain.html"');
     expect(layoutPage).toMatch(/<li data-current-section><a href="index.html">Layout<\/a>[\s\S]*aria-current="page">Demo layout<\/a>/);
     expect(out("layouts/index.md")).toContain("- [Demo layout](https://odonckers.github.io/domestic-ui/layouts/demo-layout.md): A demo layout used by the docs discovery test.");
 

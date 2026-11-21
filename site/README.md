@@ -32,16 +32,18 @@ indexes, which is why every docs link points at a file (`principles/index.html`,
 | `site/lib/pages.mjs` | Defines every page as blocks of Markdown, or custom HTML plus its Markdown equivalent. |
 | `site/lib/templates.mjs` | The HTML page frame (skip link, header, sidebar, main, footer) and the Markdown twin. |
 | `site/lib/outputs.mjs` | `README.md`, `llms.txt`, `llms-full.txt` and `_site/search-index.json`. |
+| `site/lib/live.mjs` | Render pages (`live/`) and the redirects at old example URLs (see [Render pages and redirects](#render-pages-and-redirects)). |
 | `site/lib/other-systems.mjs` | Validates `site/data/other-systems.json` and adds its section to each page (see [How other systems do it](#how-other-systems-do-it)). |
 | `site/check-other-systems.mjs` | Dead-link check for that file; run by `npm test`. |
 | `site/assets/site.css` | Docs layout only, with semantic `--dui-*` tokens and the layout primitives. |
 | `site/assets/site.js` | Progressive enhancement only: closes the Docs menu on narrow screens, runs the token filter. |
 
-`_site/` is wiped and rebuilt each time. `css/` and `examples/` are copied into it unchanged, so the
-docs and the live examples load the real CSS by relative path, at `/_site/` locally and at
-`/domestic-ui/` on GitHub Pages. Every HTML page gets a Markdown twin next to it (`tokens/semantic.md`
-beside `tokens/semantic.html`). Output is deterministic (sorted inputs, no timestamps), so `--check`
-can compare bytes.
+`_site/` is wiped and rebuilt each time. `css/` and `web-components/` are copied into it unchanged,
+so the docs and the render pages load the real CSS and components by relative path, at `/_site/`
+locally and at `/domestic-ui/` on GitHub Pages. `examples/` is not published: its snippets are, each
+on one docs page. Every HTML page gets a Markdown twin next to it (`tokens/semantic.md` beside
+`tokens/semantic.html`). Output is deterministic (sorted inputs, no timestamps), so `--check` can
+compare bytes.
 
 `_site/search-index.json` has one record per page (`title`, `url`, `level` = its sidebar entry,
 `summary`, and its `h2`/`h3` `headings`) for a later in-page search. There is no search UI yet.
@@ -53,8 +55,8 @@ type follows it too:
 
 1. **H1 and a one-sentence summary.** An **Our choice:** line under it only when no native element
    or APG pattern covers the thing.
-2. **Live example.** The framed `examples/` page with a link to open it, then its copy-paste markup
-   directly below (one `###` per snippet), byte for byte (see [Snippet convention](#snippet-convention)).
+2. **Live example.** Per snippet: its name (`###`), its render and directly below it its markup,
+   from the same text (see [Snippet convention](#snippet-convention)). Prose never repeats markup.
    Planned patterns show "Coming in M3." instead and nothing else from this list until 4.
 3. **Attributes** (**API** for layouts and utilities). The `data-<component>` attribute and its
    values, the native attributes that matter, then short usage notes. Labelled header blocks
@@ -78,18 +80,20 @@ pages of its sections below it, in the order `buildPages()` returns them.
 
 | Entry | Links | Lists |
 | --- | --- | --- |
-| Getting started | `index.html` | `examples.html` |
+| Getting started | `index.html` | |
 | Principles | `principles/index.html` | one page per `PRINCIPLES.md` section |
 | Tokens | `tokens/index.html` | one page per file in `css/tokens/` |
-| Base | `components/base.html` | utilities (`components/utilities/<name>.html`), then the example pages at the top of `examples/` (base, theming) |
+| Base | `components/base.html` | utilities (`components/utilities/<name>.html`) |
 | Layout | `layouts/index.html` | the layout primitives |
-| Atoms, Molecules, Organisms | `<group>/index.html` | `components/<group>/<name>.html`, then the group's showcase `examples/<group>/index.html` |
+| Atoms, Molecules, Organisms | `<group>/index.html` | `components/<group>/<name>.html` |
 | Patterns and guides | `patterns/index.html` | every pattern with "(coming in M3)" while planned, `guides/index.html`, every guide |
 | Demos | `demos.html` | |
 | Contributing | `contributing.html` | |
 | Changelog | `changelog.html` | |
 
 **Our choice:** utilities sit under Base, not Layout, because they are not layout primitives.
+There is no examples section: each example is on its element's page, and the old example URLs
+redirect there.
 
 A new page goes where its `section` says (`Page["section"]` in `site/lib/pages.mjs`); there is no
 per-page nav to edit. The current page's link has `aria-current="page"` (exactly one per page); its
@@ -107,27 +111,30 @@ are at least 44px tall (`--dui-size-target`).
 install and use, the principles list, one components table (Base, Layout and the component levels),
 the patterns table, demos, contributing and license. `llms-full.txt` has every reference page; pages
 built with `inFull: false` (`Page` in `site/lib/pages.mjs`) are only linked from `llms.txt`: the
-examples, demos, patterns and guides indexes, the tokens and layouts indexes, level indexes with no
-group README, guides, Contributing and Changelog.
+demos, patterns and guides indexes, the tokens and layouts indexes, level indexes with no group
+README, guides, Contributing and Changelog. A block with `inFull: false` (`Block`) is on the page and
+its twin but not in `llms-full.txt`, so nothing is there twice: a level index's list of pages (each
+page's summary opens its own part) and a component's **Our choice** bullets (all of them are on the
+level index).
 
 ## Source to page
 
 | Source | Pages |
 | --- | --- |
 | `site/content/readme-intro.md` | The intro of `index.html`, `README.md` and the `llms.txt` summary |
-| `PRINCIPLES.md`, each `## ` section | `principles/<slug>.html`, slug from the heading without its number |
+| `PRINCIPLES.md`, each `## ` section | `principles/<slug>.html`, slug from the heading without its number; with a live example when snippets name it (`examples/theming.html` → `principles/theming.html`) |
 | `PRINCIPLES.md`, text before the first `## ` | `principles/index.html` |
 | `css/tokens/<file>.css`, every file | `tokens/<file>.html`, one table per section comment (see [Tokens](#tokens)) |
 | `PRINCIPLES.md`, the table whose first header is `Tier` | `tokens/index.html` |
 | `css/base/*.css` and `examples/base.html` | `components/base.html` (Base) |
-| `css/layout/<name>.css`, `css/layouts/<name>.css` or `css/components/layouts/<name>.css`, with `examples/layout/<name>.html` or `examples/layouts/<name>.html` | `layouts/<name>.html` |
-| `css/utilities/<name>.css` | `components/utilities/<name>.html` (listed under Base) |
+| `css/layout/<name>.css`, `css/layouts/<name>.css` or `css/components/layouts/<name>.css`, with `examples/layout/<name>.html`, `examples/layouts/<name>.html` or snippets with `page="layouts/<name>"` | `layouts/<name>.html` |
+| `css/utilities/<name>.css`, with snippets with `page="components/utilities/<name>"` | `components/utilities/<name>.html` (listed under Base) |
 | `css/components/<group>/README.md`, each row of its index table | `components/<group>/<name>.html`, for `atoms`, `molecules`, `organisms` (see [Group README](#group-readme)) |
 | `css/components/<group>/<name>.css` not in that table, and `examples/<group>/<name>.html` | `components/<group>/<name>.html`, after the table's rows |
 | `css/components/<group>/README.md`, "Our choices" and "Not shipped, and why" | `<group>/index.html` |
 | `site/content/patterns/<slug>.md`, filled in by matching example and CSS files | `patterns/<slug>.html`, listed on `patterns/index.html` |
 | `site/content/guides/<slug>.md` | `guides/<slug>.html`, listed on `guides/index.html` |
-| `examples/*.html`, `examples/*/*.html` | Listed on `examples.html` by their `<title>`; `examples/<group>/index.html` as "<Group> showcase" |
+| `examples/*.html`, `examples/*/*.html` | Not published. Their snippets go on docs pages, each rendered from `live/` (see [Snippet convention](#snippet-convention)); their old URLs redirect (see [Render pages and redirects](#render-pages-and-redirects)). |
 | `demos/README.md`, first paragraph; `demos/<name>/README.md`, its H1 and the first sentence of its first paragraph | `demos.html`: each demo by name (the H1 without "domestic-ui demo: "), with a link to `demos/<name>` on GitHub; also in `README.md` and `llms.txt`. With no demos the page says "Coming in M5." Demos are not copied into `_site/`. |
 | `CONTRIBUTING.md`, `CHANGELOG.md` | `contributing.html`, `changelog.html`: read-only, H1 as the page heading, relative links rewritten to site pages or GitHub, with a link to edit the file on GitHub |
 
@@ -159,9 +166,10 @@ otherwise.
 No site change is needed. Add the files below and run `node site/build.mjs`:
 
 - `css/components/<group>/<name>.css`, with `<group>` one of `atoms`, `molecules`, `organisms`.
-- `examples/<group>/<name>.html`, a standalone valid page, joined to the CSS by file name. Optional:
-  without it the page says there is no example yet. `examples/<group>/index.html` is a showcase,
-  not a component; it is listed on `examples.html` only, as "<Group> showcase".
+- `examples/<group>/<name>.html`, a standalone valid page, joined to the CSS by file name, with each
+  demo in a named snippet region (see [Snippet convention](#snippet-convention)). Optional: without
+  it the page says there is no live example yet. `examples/<group>/index.html` is a showcase, not a
+  component: a test fixture with no snippets, whose URL redirects to the level index.
 - A row in the index table of `css/components/<group>/README.md`, if the group has one. A CSS file
   missing from the table still gets a page (from its header comment alone), so nothing is dropped.
 - An entry in `site/data/other-systems.json` (see [How other systems do it](#how-other-systems-do-it)).
@@ -177,7 +185,7 @@ When `css/components/<group>/README.md` has a table whose second and third colum
 | 1, name | The page title ("Buttons"). |
 | `File` | The CSS file, a link relative to the README. A cell starting with `none`, such as ``none: [`css/base/forms.css`](../../base/forms.css)``, means the row has no CSS file of its own: it still gets a page, named after its example file, and the linked file is shown as its source. |
 | `API` | Shown as written (inline Markdown, `\|` unescaped) above the header's `API` block, and in the `README.md` index's API column. Its attribute names (`data-button`, `aria-disabled`, `role`) select the Our choices bullets for the page. |
-| `Example` | The example page: live example and copy-paste markup. |
+| `Example` | The example page whose snippets are the live example. |
 | `Specs` | Spec links, before any header-comment URL they do not repeat. A label that is only a number ("3.3.2") gets its host label ("WCAG 3.3.2"). |
 
 The "Our choices" bullets appear, labels intact, on `<group>/index.html`.
@@ -225,7 +233,7 @@ The parser reads the comment that opens the CSS file:
 | Summary | The example page's `<meta name="description">`, else the first sentence of the first prose paragraph. Plain text: it is also the meta description. |
 | Notes | The prose paragraphs, less the summary sentence when the summary came from the comment, less sentences repeated under Accessibility, with URLs removed (they are listed under Specifications). Shown at the end of Attributes. |
 | `API` | A paragraph whose first line is `API`; the indented lines below it, dedented. `API: …` one-liners in any comment are collected too. |
-| `Example` | A paragraph whose first line is `Example`; used as the markup only when there is no example page. |
+| `Example` | A paragraph whose first line is `Example`. Not shown: example markup comes only from snippets in `examples/`. |
 | `Keyboard` | A paragraph whose first line is `Keyboard`; `Key: action` lines, shown as a Keyboard table. |
 | Other labelled blocks | A paragraph whose first line is one capitalized word (`States`) over indented lines, or that opens with `Word: ` (`Sizes: default and large are …`). Shown verbatim as preformatted text under a heading of that word, without the label. |
 | Accessibility | Prose sentences that mention WCAG, ARIA, APG, focus, contrast, accessibility, screen readers, forced colors or reduced motion, one bullet each, URLs removed. With none, one bullet says there is nothing beyond the accessibility baseline. |
@@ -304,7 +312,7 @@ A pattern **fills in on its own** when any of its names matches a file:
 
 A pattern owns its names: `css/components/molecules/tabs.css` fills `patterns/tabs.html` and gets no
 `components/molecules/tabs.html` page. A filled page follows [Page structure](#page-structure): live
-example with its copy-paste markup (the snippet convention below, byte for byte), Attributes (the
+example (the snippet convention below), Attributes (the
 CSS header's API block), Accessibility, Keyboard, Specifications (standards, `specs`, then CSS header
 URLs), See also with the source files. Keyboard notes come from the first `Keyboard`
 block found in an HTML comment of the example page, else in the CSS header comment, else the
@@ -466,38 +474,64 @@ guide never claims something is available when it is not:
 
 ## Snippet convention
 
-The copy-paste markup on a component page, and the ```` ```html ```` blocks in its Markdown twin
-and `llms-full.txt`, come from its example page. The first rule that matches wins:
-
-1. **Snippet regions.** Each region between `<!-- dui:snippet -->` and `<!-- /dui:snippet -->` is one
-   snippet. Name one with `<!-- dui:snippet name="Primary" -->`; the name becomes a heading.
-2. **Code blocks.** Otherwise every `<pre><code>…</code></pre>` inside `<main>` is one snippet, named
-   by the nearest `<h2>` or `<h3>` before it (a repeated name gets " (2)"). The M2 atom examples
-   work this way: each `<section>` has a rendered `.demo` and a `<pre><code>` with the markup to copy.
-   The code content is HTML-unescaped; the docs page escapes it again, so unescaping the page's
-   `<pre><code>` gives the example's unescaped `<pre><code>` content byte for byte.
-3. **Main.** Otherwise the inner content of the page's `<main>` element is the single snippet.
-
-The text is used verbatim, never reformatted. For rules 1 and 3, two things are removed:
-
-- the line break right after the opening marker (or `<main …>`) and the whitespace-only last line
-  before the closing marker (or `</main>`);
-- the common leading whitespace: the smallest indentation of the non-blank lines is removed from
-  every line; whitespace-only lines lose up to that many characters.
-
-So a rule 1 or 3 snippet is always the source slice with that indentation removed line by line, and
-a rule 2 snippet is always the unescaped code block. `tests/docs.spec.js` checks whichever rule
-applied for every page, along with the HTML, Markdown and `llms-full.txt` copies. Code blocks use a
-fence longer than any backtick run inside the snippet.
+**Owner decision: one home per element.** Each element and pattern has one docs page, holding its
+explanation and its live example. Example markup has one source: named snippet regions in
+`examples/`. The build renders each snippet live on its page and prints its code from the same text.
 
 ```html
-<main>
-  <h1>Button</h1>
-  <!-- dui:snippet name="Primary" -->
-  <button type="submit">Save</button>
+<div class="demo">
+  <!-- dui:snippet name="Variants" -->
+  <div class="cluster">
+    <button type="button" data-button="primary">Primary</button>
+  </div>
   <!-- /dui:snippet -->
-</main>
+</div>
 ```
+
+- **One rule.** A snippet is the text between `<!-- dui:snippet name="…" -->` and
+  `<!-- /dui:snippet -->`. `name` is required (the build fails without one), is the snippet's
+  heading, and is unique in its file. Nothing else is a snippet: not `<pre><code>`, not `<main>`.
+- **No copies.** Never add a `<pre><code>` copy of a demo; the docs print the region itself. A
+  `<pre>` outside a region fails `tests/docs.spec.js` (a `<pre>` demo goes inside one).
+- **Which page.** A snippet goes on the page of the component or pattern its example belongs to
+  (`examples/atoms/button.html` → Buttons). `page="layouts/stack"` (a site path without `.html`) sends
+  it elsewhere: `examples/base.html` uses it for the layout primitives and the utility,
+  `examples/theming.html` for `principles/theming`. A snippet with no page fails the build.
+- **One home.** Mark a demo only on its element's own page. `examples/base.html` keeps its forms,
+  dialog and details demos unmarked: their pages are Form controls, Dialog and Disclosure.
+- **Head snippets.** A region inside `<head>` (a theme's `<style>`) has no render of its own. It is
+  printed right after the first render of its example, and every render of that example loads it.
+- **Showcases** (`examples/<group>/index.html`) have no snippets; they are test fixtures.
+
+The text is used verbatim, never reformatted. Two things are removed: the line break right after the
+opening marker and the whitespace-only last line before the closing one; and the common leading
+whitespace (the smallest indentation of the non-blank lines, from every line). So a snippet is always
+the source slice with that indentation removed line by line.
+
+On the page: `## Live example`, then per snippet its name (`###`), its render (an iframe of its
+render page) and directly below, `<pre data-snippet>` with the code. The Markdown twin and
+`llms-full.txt` have the name and a fenced block of the same text, with a fence longer than any
+backtick run inside. `tests/docs.spec.js` checks that every snippet is printed and rendered on exactly
+one page, byte for byte with the example, its render page, the twin and `llms-full.txt`, and that no
+prose repeats a line of it.
+
+## Render pages and redirects
+
+`site/lib/live.mjs` writes pages that are not docs pages: not in the sidebar, the search index or the
+llms files.
+
+| Output | Is |
+| --- | --- |
+| `live/<example path>--<snippet name slug>.html` | One per snippet, the source of its iframe: the example's `<head>` (its CSS, page styles and theme), the snippet's text as the body, then the example's scripts after `</main>`. It sits at the example's directory depth, so the example's relative URLs work unchanged. `noindex`. |
+| `examples.html`, `examples.md`, `examples/**/*.html` | The old example URLs. GitHub Pages has no server redirects, so each is a static page: `<meta http-equiv="refresh" content="0; url=…">` (no delay, which [WCAG 2.2.1](https://www.w3.org/WAI/WCAG22/Understanding/timing-adjustable.html) allows), `<link rel="canonical">`, `noindex`, a title and a plain link. An example goes to the page that shows its snippets, a showcase to its level index, `examples.html` to Getting started. |
+
+So that a snippet works alone in its render page:
+
+- Links inside a snippet point in-page (`#…`), not at other example files.
+- Example scripts tolerate a page that holds one snippet: `document.getElementById("save-demo")?.…`.
+
+Frames are `14rem` tall without JavaScript, and at least `28rem` (`data-tall`) when the snippet opens
+a dialog, popover, menu, toast or tooltip; `site.js` fits each frame to its content.
 
 ## Stale check
 
@@ -518,14 +552,17 @@ code in prose break anywhere (`overflow-wrap: anywhere`); only token tables scro
 named `data-scroll` region.
 
 `tests/docs.spec.js` (Chromium) runs html-validate and axe (WCAG 2.2 AA tags, light and dark) on
-every page, blocks external requests, and checks the sidebar (one nav, order, every built page
-reachable, one `aria-current`), the token tables and parser, the filter, and the page with
-JavaScript off.
+every page and every render page, blocks external requests, and checks the sidebar (one nav, order,
+every built page reachable, one `aria-current`, no example links), the snippets (see
+[Snippet convention](#snippet-convention)), the redirects (html-validate, axe, landing on their page),
+the web components working in their frames, the token tables and parser, the filter, and the page
+with JavaScript off.
 
 `tests/docs-mobile.spec.js` runs in every Playwright project (Chromium, Firefox, WebKit). For every
-built page (every `.html` in `_site/` outside `examples/` and `css/`), at 320×640 and 375×812, it
+built docs page (every `.html` in `_site/` outside `css/`, `web-components/`, `live/` and the
+redirects), at 320×640 and 375×812, it
 asserts `scrollWidth <= clientWidth` on the root (the failure names the widest element) and that no
-`<pre>` scrolls, and runs axe with the same tags as `tests/a11y.spec.js`. Framed live examples are
-excluded from that axe run: they are `examples/` pages, checked by `tests/a11y.spec.js`. It also
+`<pre>` scrolls, and runs axe with the same tags as `tests/a11y.spec.js`. Frames are excluded from
+that axe run: their markup is `examples/` markup, checked by `tests/a11y.spec.js`. It also
 opens and closes the Docs menu with Enter and Space at 375px, tabs to the current page link, and
 checks the wide-screen sidebar. Both specs share `tests/docs-helpers.js`, which builds `_site/` once.

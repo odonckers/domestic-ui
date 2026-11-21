@@ -69,6 +69,7 @@
       <section aria-labelledby="table-title">
         <h2 id="table-title">In a table</h2>
         <div class="demo">
+          <!-- dui:snippet name="In a table" -->
           <section data-scroll="inline" aria-labelledby="orders-caption" tabindex="0">
             <table>
               <caption id="orders-caption">Recent orders</caption>
@@ -81,28 +82,18 @@
               </tbody>
             </table>
           </section>
+          <!-- /dui:snippet -->
         </div>
-        <pre tabindex="0"><code>&lt;section data-scroll="inline" aria-labelledby="orders-caption" tabindex="0"&gt;
-  &lt;table&gt;
-    &lt;caption id="orders-caption"&gt;Recent orders&lt;/caption&gt;
-    &lt;thead&gt;
-      &lt;tr&gt;&lt;th scope="col"&gt;Order&lt;/th&gt;&lt;th scope="col"&gt;Customer&lt;/th&gt;&lt;th scope="col"&gt;Total&lt;/th&gt;&lt;/tr&gt;
-    &lt;/thead&gt;
-    &lt;tbody&gt;
-      &lt;tr&gt;&lt;td&gt;&lt;a href="#table-title" data-link="quiet"&gt;#1042&lt;/a&gt;&lt;/td&gt;&lt;td&gt;Ada Lovelace&lt;/td&gt;&lt;td&gt;€120.00&lt;/td&gt;&lt;/tr&gt;
-      &lt;tr&gt;&lt;td&gt;&lt;a href="#table-title" data-link="quiet"&gt;#1041&lt;/a&gt;&lt;/td&gt;&lt;td&gt;Alan Turing&lt;/td&gt;&lt;td&gt;€48.50&lt;/td&gt;&lt;/tr&gt;
-    &lt;/tbody&gt;
-  &lt;/table&gt;
-&lt;/section&gt;</code></pre>
       </section>
 
       <section aria-labelledby="meta-title">
         <h2 id="meta-title">In muted metadata</h2>
         <p>A quiet link inherits muted text color too, which still meets 4.5:1.</p>
         <div class="demo">
+          <!-- dui:snippet name="In muted metadata" -->
           <p data-text="small muted">Posted by <a href="#meta-title" data-link="quiet">Grace Hopper</a> in <a href="#meta-title" data-link="quiet">Compilers</a>.</p>
+          <!-- /dui:snippet -->
         </div>
-        <pre tabindex="0"><code>&lt;p data-text="small muted"&gt;Posted by &lt;a href="#meta-title" data-link="quiet"&gt;Grace Hopper&lt;/a&gt; in &lt;a href="#meta-title" data-link="quiet"&gt;Compilers&lt;/a&gt;.&lt;/p&gt;</code></pre>
       </section>
 
       <section aria-labelledby="specs-title">

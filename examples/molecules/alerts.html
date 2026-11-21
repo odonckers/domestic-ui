@@ -76,6 +76,7 @@
         <h2 id="inline-title">Inline alerts</h2>
         <p>Present on load, so they need no live region role.</p>
         <div class="demo">
+          <!-- dui:snippet name="Inline alerts" -->
           <div class="stack">
             <div data-alert="info">
               <p><strong>Info:</strong> Maintenance is planned for Sunday at 02:00.</p>
@@ -91,22 +92,8 @@
               <p><strong>Error:</strong> The file could not be uploaded. Try a file under 10 MB.</p>
             </div>
           </div>
+          <!-- /dui:snippet -->
         </div>
-        <pre tabindex="0"><code>&lt;div class="stack"&gt;
-  &lt;div data-alert="info"&gt;
-    &lt;p&gt;&lt;strong&gt;Info:&lt;/strong&gt; Maintenance is planned for Sunday at 02:00.&lt;/p&gt;
-  &lt;/div&gt;
-  &lt;div data-alert="success"&gt;
-    &lt;p&gt;&lt;strong&gt;Success:&lt;/strong&gt; Your changes were published.&lt;/p&gt;
-  &lt;/div&gt;
-  &lt;div data-alert="warning"&gt;
-    &lt;p&gt;&lt;strong&gt;Warning:&lt;/strong&gt; Your trial ends in 3 days.&lt;/p&gt;
-    &lt;p&gt;&lt;a href="#inline-title"&gt;Choose a plan&lt;/a&gt; to keep your projects.&lt;/p&gt;
-  &lt;/div&gt;
-  &lt;div data-alert="danger"&gt;
-    &lt;p&gt;&lt;strong&gt;Error:&lt;/strong&gt; The file could not be uploaded. Try a file under 10 MB.&lt;/p&gt;
-  &lt;/div&gt;
-&lt;/div&gt;</code></pre>
       </section>
 
       <section aria-labelledby="live-title">
@@ -116,19 +103,15 @@
           the alert interrupts.
         </p>
         <div class="demo">
+          <!-- dui:snippet name="Live regions" -->
           <div class="cluster">
             <button type="button" data-announce="live-status">Save settings</button>
             <button type="button" data-announce="live-alert">Send without a subject</button>
           </div>
           <div id="live-status" role="status"></div>
           <div id="live-alert" role="alert"></div>
+          <!-- /dui:snippet -->
         </div>
-        <pre tabindex="0"><code>&lt;div class="cluster"&gt;
-  &lt;button type="button" data-announce="live-status"&gt;Save settings&lt;/button&gt;
-  &lt;button type="button" data-announce="live-alert"&gt;Send without a subject&lt;/button&gt;
-&lt;/div&gt;
-&lt;div id="live-status" role="status"&gt;&lt;/div&gt;
-&lt;div id="live-alert" role="alert"&gt;&lt;/div&gt;</code></pre>
       </section>
 
       <section aria-labelledby="toasts-title">
@@ -138,17 +121,14 @@
           Messages stay until you dismiss them; <kbd>Tab</kbd> reaches each Dismiss button.
         </p>
         <div class="demo">
+          <!-- dui:snippet name="Toasts" -->
           <div class="cluster">
             <button type="button" data-toast="success">Copy link</button>
             <button type="button" data-toast="info">Start export</button>
             <button type="button" data-toast="danger">Sync now</button>
           </div>
+          <!-- /dui:snippet -->
         </div>
-        <pre tabindex="0"><code>&lt;div class="cluster"&gt;
-  &lt;button type="button" data-toast="success"&gt;Copy link&lt;/button&gt;
-  &lt;button type="button" data-toast="info"&gt;Start export&lt;/button&gt;
-  &lt;button type="button" data-toast="danger"&gt;Sync now&lt;/button&gt;
-&lt;/div&gt;</code></pre>
       </section>
 
       <section aria-labelledby="specs-title">

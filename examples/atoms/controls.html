@@ -69,6 +69,7 @@
       <section aria-labelledby="text-like-title">
         <h2 id="text-like-title">Text-like inputs</h2>
         <div class="demo">
+          <!-- dui:snippet name="Text-like inputs" -->
           <div class="grid" style="--grid-min: 14rem">
             <div>
               <label for="c-name">Name</label>
@@ -107,50 +108,14 @@
               <input id="c-time" name="time" type="time">
             </div>
           </div>
+          <!-- /dui:snippet -->
         </div>
-        <pre tabindex="0"><code>&lt;div class="grid" style="--grid-min: 14rem"&gt;
-  &lt;div&gt;
-    &lt;label for="c-name"&gt;Name&lt;/label&gt;
-    &lt;input id="c-name" name="name" type="text" autocomplete="name"&gt;
-  &lt;/div&gt;
-  &lt;div&gt;
-    &lt;label for="c-email"&gt;Email&lt;/label&gt;
-    &lt;input id="c-email" name="email" type="email" autocomplete="email"&gt;
-  &lt;/div&gt;
-  &lt;div&gt;
-    &lt;label for="c-password"&gt;Password&lt;/label&gt;
-    &lt;input id="c-password" name="password" type="password" autocomplete="new-password"&gt;
-  &lt;/div&gt;
-  &lt;div&gt;
-    &lt;label for="c-search"&gt;Search&lt;/label&gt;
-    &lt;input id="c-search" name="q" type="search"&gt;
-  &lt;/div&gt;
-  &lt;div&gt;
-    &lt;label for="c-url"&gt;Website&lt;/label&gt;
-    &lt;input id="c-url" name="url" type="url" placeholder="https://example.com"&gt;
-  &lt;/div&gt;
-  &lt;div&gt;
-    &lt;label for="c-tel"&gt;Phone&lt;/label&gt;
-    &lt;input id="c-tel" name="tel" type="tel" autocomplete="tel"&gt;
-  &lt;/div&gt;
-  &lt;div&gt;
-    &lt;label for="c-number"&gt;Guests&lt;/label&gt;
-    &lt;input id="c-number" name="guests" type="number" min="1" max="12" value="2"&gt;
-  &lt;/div&gt;
-  &lt;div&gt;
-    &lt;label for="c-date"&gt;Date&lt;/label&gt;
-    &lt;input id="c-date" name="date" type="date"&gt;
-  &lt;/div&gt;
-  &lt;div&gt;
-    &lt;label for="c-time"&gt;Time&lt;/label&gt;
-    &lt;input id="c-time" name="time" type="time"&gt;
-  &lt;/div&gt;
-&lt;/div&gt;</code></pre>
       </section>
 
       <section aria-labelledby="textarea-select-title">
         <h2 id="textarea-select-title">Textarea and select</h2>
         <div class="demo">
+          <!-- dui:snippet name="Textarea and select" -->
           <div class="grid" style="--grid-min: 14rem">
             <div>
               <label for="c-notes">Notes</label>
@@ -164,25 +129,14 @@
               </select>
             </div>
           </div>
+          <!-- /dui:snippet -->
         </div>
-        <pre tabindex="0"><code>&lt;div class="grid" style="--grid-min: 14rem"&gt;
-  &lt;div&gt;
-    &lt;label for="c-notes"&gt;Notes&lt;/label&gt;
-    &lt;textarea id="c-notes" name="notes" rows="3"&gt;&lt;/textarea&gt;
-  &lt;/div&gt;
-  &lt;div&gt;
-    &lt;label for="c-plan"&gt;Plan&lt;/label&gt;
-    &lt;select id="c-plan" name="plan"&gt;
-      &lt;option value="free"&gt;Free&lt;/option&gt;
-      &lt;option value="team" selected&gt;Team&lt;/option&gt;
-    &lt;/select&gt;
-  &lt;/div&gt;
-&lt;/div&gt;</code></pre>
       </section>
 
       <section aria-labelledby="choices-title">
         <h2 id="choices-title">Checkboxes and radios in a fieldset</h2>
         <div class="demo">
+          <!-- dui:snippet name="Checkboxes and radios in a fieldset" -->
           <div class="grid" style="--grid-min: 14rem">
             <fieldset>
               <legend>Notify me by</legend>
@@ -195,24 +149,14 @@
               <label><input type="radio" name="delivery" value="express"> Express</label>
             </fieldset>
           </div>
+          <!-- /dui:snippet -->
         </div>
-        <pre tabindex="0"><code>&lt;div class="grid" style="--grid-min: 14rem"&gt;
-  &lt;fieldset&gt;
-    &lt;legend&gt;Notify me by&lt;/legend&gt;
-    &lt;label&gt;&lt;input type="checkbox" name="notify-email" checked&gt; Email&lt;/label&gt;
-    &lt;label&gt;&lt;input type="checkbox" name="notify-sms"&gt; Text message&lt;/label&gt;
-  &lt;/fieldset&gt;
-  &lt;fieldset&gt;
-    &lt;legend&gt;Delivery&lt;/legend&gt;
-    &lt;label&gt;&lt;input type="radio" name="delivery" value="standard" checked&gt; Standard&lt;/label&gt;
-    &lt;label&gt;&lt;input type="radio" name="delivery" value="express"&gt; Express&lt;/label&gt;
-  &lt;/fieldset&gt;
-&lt;/div&gt;</code></pre>
       </section>
 
       <section aria-labelledby="range-file-title">
         <h2 id="range-file-title">Range and file</h2>
         <div class="demo">
+          <!-- dui:snippet name="Range and file" -->
           <div class="grid" style="--grid-min: 14rem">
             <div>
               <label for="c-volume">Volume</label>
@@ -223,17 +167,8 @@
               <input id="c-file" name="file" type="file">
             </div>
           </div>
+          <!-- /dui:snippet -->
         </div>
-        <pre tabindex="0"><code>&lt;div class="grid" style="--grid-min: 14rem"&gt;
-  &lt;div&gt;
-    &lt;label for="c-volume"&gt;Volume&lt;/label&gt;
-    &lt;input id="c-volume" name="volume" type="range" min="0" max="100" value="40"&gt;
-  &lt;/div&gt;
-  &lt;div&gt;
-    &lt;label for="c-file"&gt;Attachment&lt;/label&gt;
-    &lt;input id="c-file" name="file" type="file"&gt;
-  &lt;/div&gt;
-&lt;/div&gt;</code></pre>
       </section>
 
       <section aria-labelledby="specs-title">

@@ -3,7 +3,7 @@
  * Page definitions. Each page is a list of blocks; a block is Markdown
  * (rendered to HTML by ./markdown.mjs and used as-is for the .md twin) or a
  * pair of custom HTML and its Markdown equivalent (live examples, token
- * tables with samples, copy-paste markup).
+ * tables with samples, live examples with their markup).
  *
  * Links between pages are written as "site:<path>" and resolved per output:
  * relative in HTML, absolute in Markdown (see ./templates.mjs).
@@ -21,7 +21,7 @@ import { BLOB_URL, REPO_URL, byString, escapeHtml, escapeMdCell, fence, firstSen
  * @typedef {import("./discovery.mjs").Guide} Guide
  * @typedef {import("./discovery.mjs").Snippet} Snippet
  * @typedef {{ link: (target: string) => string, heading: (level: number, text: string) => string }} HtmlContext
- * @typedef {{ md: string, html?: (ctx: HtmlContext) => string }} Block
+ * @typedef {{ md: string, html?: (ctx: HtmlContext) => string, inFull?: false }} Block  inFull false: on the page and its twin, not in llms-full.txt
  * @typedef {"home" | "principles" | "tokens" | "base" | "layouts" | "atoms" | "molecules" | "organisms" | "patterns" | "guides" | "demos" | "contributing" | "changelog"} Section
  * @typedef {object} Page
  * @property {string} path         site path of the HTML page, e.g. "tokens/semantic.html"
@@ -33,7 +33,7 @@ import { BLOB_URL, REPO_URL, byString, escapeHtml, escapeMdCell, fence, firstSen
  * @property {string} description  meta description and llms.txt note
  * @property {{ href: string, label: string }} source  footer link to the source
  * @property {Block[]} blocks
- * @property {Snippet[]} [snippets] copy-paste markup shown on the page, in order
+ * @property {Snippet[]} [snippets] the snippets rendered and printed on the page, in order
  * @property {false} [inFull]      false: left out of llms-full.txt (a list of other pages, a guide, a repository file)
  */
 
@@ -73,7 +73,8 @@ const commentMd = (text) =>
  */
 export function repoTarget(href, model) {
   const [path, hash = ""] = href.replace(/^\.\//, "").split(/(?=#)/);
-  if (path.startsWith("examples/")) return `site:${path}${hash}`;
+  // Example pages are not published; their snippets live on one docs page each.
+  if (path.startsWith("examples/")) return `site:${model.exampleTargets[path] ?? "index.html"}`;
   if (path === "PRINCIPLES.md") {
     // GitHub's heading anchors keep the numbering ("#3-accessibility-…"); find the page it lives on.
     const anchor = hash.slice(1);
@@ -148,7 +149,7 @@ export const layersMd = (model) => `\`css/domestic.css\` declares the [cascade l
 \`\`\``;
 
 /** @param {Model} model */
-export const themingMd = (model) => `Override semantic \`--dui-*\` tokens on \`:root\`, or on an element with \`data-theme\` ([Theming](site:${principleLink(model, "theming")}), [example](site:examples/theming.html)). Force a scheme with \`data-color-scheme="light"\` or \`"dark"\`.`;
+export const themingMd = (model) => `Override semantic \`--dui-*\` tokens on \`:root\`, or on an element with \`data-theme\` ([Theming](site:${principleLink(model, "theming")}), with a live example). Force a scheme with \`data-color-scheme="light"\` or \`"dark"\`.`;
 
 const ATTRIBUTE_SELECTORS_URL = "https://developer.mozilla.org/en-US/docs/Web/CSS/Attribute_selectors";
 const REL_URL = "https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Attributes/rel";
@@ -231,7 +232,6 @@ export function buildPages(model) {
   const as = (/** @type {Page} */ page, /** @type {Section} */ section) => ({ ...page, section });
   return [
     homePage(model),
-    examplesPage(model),
     principlesIndex(model),
     ...model.principles.sections.map((s) => principlePage(model, s)),
     tokensIndex(model),
@@ -373,6 +373,8 @@ function principlesIndex(model) {
  * @returns {Page}
  */
 function principlePage(model, s) {
+  // A principle shows the snippets that name it (page="principles/theming"), after its text.
+  const snippets = model.principleSnippets[s.sitePath] ?? [];
   return {
     path: s.sitePath,
     section: "principles",
@@ -380,7 +382,8 @@ function principlePage(model, s) {
     heading: s.title,
     description: firstSentenceOf(s.body) || s.title,
     source: edit("PRINCIPLES.md"),
-    blocks: [md(shiftHeadings(rewriteRepoLinks(s.body, model), -1))],
+    blocks: [md(shiftHeadings(rewriteRepoLinks(s.body, model), -1)), ...(snippets.length ? liveExampleBlocks(model, snippets) : [])],
+    snippets,
   };
 }
 
@@ -599,7 +602,8 @@ function levelIndex(model, group) {
       `${LEVEL_INTROS[group] ?? ""} A level of [Atomic Design](${ATOMIC_DESIGN_URL}); APIs follow the [component API convention](site:${CONVENTION_LINK}).`.trim(),
     ),
   ];
-  blocks.push(md(`## ${title}\n\n${[...items, ...patterns].join("\n") || `Coming in ${milestone}; see the [components README](${BLOB_URL}css/components/README.md).`}`));
+  // The list repeats each page's summary, which opens that page's own part of llms-full.txt.
+  blocks.push({ ...md(`## ${title}\n\n${[...items, ...patterns].join("\n") || `Coming in ${milestone}; see the [components README](${BLOB_URL}css/components/README.md).`}`), inFull: false });
   const details = groupDetailsMd(model, group, 2);
   if (details) blocks.push(md(details));
   return {
@@ -637,50 +641,47 @@ function layoutsIndex(model) {
  */
 const ourChoiceMd = (why) => `**Our choice:** ${why}`;
 
+/** The title of a docs page by site path, for "Used in" links. @param {Model} model @param {string} path */
+const pageTitle = (model, path) =>
+  [...allComponents(model), ...model.patterns, ...model.principles.sections].find((x) => x.sitePath === path)?.title ?? path;
+
+/** Snippets that open something in the top layer need a taller frame. */
+const TALL_RE = /<dialog\b|\spopover\b|<dui-(?:menu|toaster|tooltip)\b/;
+
 /**
- * The live example and, directly below it, its copy-paste markup: the
- * framed example page (or, with none, the pages that use it), then one code
- * block per snippet (HTML: <pre data-snippet>; Markdown: a long-enough fence).
+ * The live example: per snippet, its name, its render (an iframe of its
+ * build-generated page under live/, see ./live.mjs) and directly below, its
+ * markup from the same text (HTML: <pre data-snippet>; Markdown: a
+ * long-enough fence). A head snippet (a theme's <style>) has no render of its
+ * own: it follows the first render of its example, which loads it.
  * @param {Model} model
- * @param {string[]} paths example pages
- * @param {string} title
- * @param {Snippet[]} snippets
- * @param {string[]} [usedIn] example pages that use it, when it has none of its own
+ * @param {Snippet[]} snippets owned by the page, in the order shown (see loadModel())
+ * @param {string[]} [usedIn] docs pages that use it, when it has no snippet of its own
  * @returns {Block[]}
  */
-function liveExampleBlocks(model, paths, title, snippets, usedIn = []) {
-  const name = (/** @type {string} */ p) => (paths.length > 1 ? (model.examples.find((e) => e.path === p)?.title ?? p) : title);
-  const open = (/** @type {string} */ p) => `Open ${paths.length > 1 ? name(p) : "the example"}`;
-  const used = usedIn.map((p) => `[${model.examples.find((e) => e.path === p)?.title ?? p}](site:${p})`);
-  const none = `No example page yet.${used.length ? ` Used in ${used.join(", ")}.` : ""}${snippets.length ? "" : " No markup snippet yet."}`;
-  /** @type {Block} */
-  const frame = paths.length
-    ? {
-        md: `## Live example\n\n${paths.map((p) => `- [${open(p)}](site:${p})`).join("\n")}`,
-        html: (ctx) =>
-          [
-            ctx.heading(2, "Live example"),
-            ...paths.map(
-              (p) =>
-                `<iframe class="example-frame" src="${escapeHtml(ctx.link(p))}" title="Live example: ${escapeHtml(name(p))}" loading="lazy"></iframe>\n<p><a href="${escapeHtml(ctx.link(p))}">${escapeHtml(open(p))}</a></p>`,
-            ),
-          ].join("\n"),
-      }
-    : md(`## Live example\n\n${none}`);
+function liveExampleBlocks(model, snippets, usedIn = []) {
+  if (!snippets.length) {
+    const used = usedIn.map((p) => `[${pageTitle(model, p)}](site:${p})`);
+    return [md(`## Live example\n\nNone yet.${used.length ? ` Used in ${used.join(", ")}.` : ""}`)];
+  }
   return [
-    frame,
-    ...snippets.map((s, i) => {
-      const heading = snippetName(s, i, snippets.length);
+    { md: "## Live example", html: (ctx) => ctx.heading(2, "Live example") },
+    ...snippets.map((s) => {
+      const note = s.head ? "In the `<head>` of the live example above." : "";
       return {
-        md: `${heading ? `### ${heading}\n\n` : ""}${fence(s.code, "html")}`,
-        html: (/** @type {HtmlContext} */ ctx) => `${heading ? `${ctx.heading(3, heading)}\n` : ""}<pre data-snippet="${escapeHtml(s.source)}"><code>${escapeHtml(s.code)}</code></pre>`,
+        md: `### ${s.name}\n\n${note ? `${note}\n\n` : ""}${fence(s.code, "html")}`,
+        html: (/** @type {HtmlContext} */ ctx) =>
+          [
+            ctx.heading(3, s.name),
+            s.live
+              ? `<iframe class="example-frame" data-live${TALL_RE.test(s.code) ? " data-tall" : ""} src="${escapeHtml(ctx.link(s.live))}" title="Live example: ${escapeHtml(s.name)}" loading="lazy"></iframe>`
+              : `<p>${inline(note)}</p>`,
+            `<pre data-snippet="${escapeHtml(s.source)}"><code>${escapeHtml(s.code)}</code></pre>`,
+          ].join("\n"),
       };
     }),
   ];
 }
-
-/** Name for a snippet heading and aria label. @param {Snippet} s @param {number} i @param {number} n */
-const snippetName = (s, i, n) => s.name || (n > 1 ? `Snippet ${i + 1}` : "");
 
 /**
  * Comment prose without its URLs: every URL in a header comment is already
@@ -714,7 +715,7 @@ function componentPage(model, c) {
   const blocks = [md(summaryMd(c))];
   if (c.ourChoice) blocks.push(md(ourChoiceMd(c.ourChoice)));
 
-  blocks.push(...liveExampleBlocks(model, c.examplePath ? [c.examplePath] : [], c.title, c.snippets, c.usedIn));
+  blocks.push(...liveExampleBlocks(model, c.snippets, c.usedIn));
 
   // Attributes: the index row's cell as written, then the CSS header's API block.
   const isClass = c.group === "layouts" || c.group === "utilities";
@@ -748,7 +749,8 @@ function componentPage(model, c) {
     blocks.push(md(`## Keyboard\n\n| Key | Action |\n| --- | --- |\n${rows.join("\n")}`));
   }
 
-  if (c.choices.length && c.indexPath) blocks.push(md(`## Our choice\n\n${c.choices.map((x) => `- ${rewriteRepoLinks(x, model)}`).join("\n")}`));
+  // In llms-full.txt these bullets appear once, with all the others, on the level index.
+  if (c.choices.length && c.indexPath) blocks.push({ ...md(`## Our choice\n\n${c.choices.map((x) => `- ${rewriteRepoLinks(x, model)}`).join("\n")}`), inFull: false });
 
   const cssLink = `[\`${c.cssPath}\`](${BLOB_URL}${c.cssPath})`;
   const a11y = !c.ownCss
@@ -773,7 +775,7 @@ function componentPage(model, c) {
         ? { title: "Base elements", path: model.base.sitePath }
         : null;
   const sources = [c.group === "base" ? `[\`css/base/\`](${REPO_URL}/tree/main/css/base)` : `${cssLink}${c.ownCss ? "" : " (base layer; no CSS file of its own)"}`];
-  if (c.examplePath) sources.push(`[\`${c.examplePath}\`](${BLOB_URL}${c.examplePath})`);
+  for (const src of new Set(c.snippets.map((s) => s.source))) sources.push(`[\`${src}\`](${BLOB_URL}${src})`);
   const seeAlso = [
     ...(level ? [`[${level.title}](site:${level.path})`] : []),
     ...(c.group === "base" ? [] : [`[Component API convention](site:${CONVENTION_LINK})`]),
@@ -791,31 +793,6 @@ function componentPage(model, c) {
     source: edit(c.overridePath ?? (c.group === "base" ? (c.files[0]?.path ?? "css/base/document.css") : c.ownCss ? c.cssPath : (c.indexPath ?? c.cssPath))),
     blocks,
     snippets: c.snippets,
-  };
-}
-
-/** @param {Model} model @returns {Page} */
-function examplesPage(model) {
-  const groups = [...new Set(model.examples.map((e) => e.group))];
-  const titles = /** @type {Record<string, string>} */ ({ layout: "Layouts", layouts: "Layouts", patterns: "Patterns" });
-  const sections = groups.map((g) => {
-    // A group's showcase (index.html) first, then its pages.
-    const inGroup = model.examples.filter((e) => e.group === g);
-    const ordered = [...inGroup.filter((e) => e.showcase), ...inGroup.filter((e) => !e.showcase)];
-    const items = ordered.map((e) => `- [${e.title}](site:${e.path}) ([source](${BLOB_URL}${e.path}))`);
-    const title = g ? (COMPONENT_GROUPS.find((x) => x.group === g)?.title ?? titles[g] ?? g) : "Pages";
-    return `## ${title} (\`examples/${g ? `${g}/` : ""}\`)\n\n${items.join("\n")}`;
-  });
-  return {
-    path: "examples.html",
-    inFull: false,
-    section: "home",
-    navLabel: "All example pages",
-    title: "Examples",
-    heading: "Examples",
-    description: "Standalone example pages that load the real domestic-ui CSS.",
-    source: { href: `${REPO_URL}/tree/main/examples`, label: "Browse the examples source on GitHub" },
-    blocks: [md("Standalone HTML pages that load only `css/domestic.css`."), ...sections.map(md)],
   };
 }
 
@@ -910,10 +887,8 @@ const kbdMd = (key, markdown) =>
 function keyboardBlock(model, p) {
   if (p.keyboard.length) {
     const markdown = p.keyboardFrom === "front matter";
-    const src = `[\`${p.keyboardSource}\`](${BLOB_URL}${p.keyboardSource})`;
-    const intro = markdown ? `From the pattern registry, ${src}.` : `From the \`Keyboard\` block in ${src}.`;
     const rows = p.keyboard.map((k) => `| ${escapeMdCell(kbdMd(k.key, markdown))} | ${escapeMdCell(markdown ? k.action : commentMd(k.action))} |`);
-    return md(`## Keyboard\n\n${intro}\n\n| Key | Action |\n| --- | --- |\n${rows.join("\n")}`);
+    return md(`## Keyboard\n\n| Key | Action |\n| --- | --- |\n${rows.join("\n")}`);
   }
   const apg = p.standards.find((s) => s.url.startsWith("https://www.w3.org/WAI/ARIA/apg/"));
   if (apg) return md(`## Keyboard\n\nSee the keyboard section of the ${specLink(apg)}.`);
@@ -937,7 +912,7 @@ function patternPage(model, p) {
 
   const doc = p.available ? p.doc : null;
   if (p.available) {
-    blocks.push(...liveExampleBlocks(model, p.examplePaths, p.title, p.snippets));
+    blocks.push(...liveExampleBlocks(model, p.snippets));
     const api = doc ? [...(doc.api ? [fence(doc.api, "text")] : []), ...doc.apiInline.map((l) => `- ${mdCode(l)}`)] : [];
     if (api.length) blocks.push(md(`## Attributes\n\n${api.join("\n\n")}`));
     // The registry body is the accessibility notes; without one, the CSS header's.

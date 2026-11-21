@@ -75,6 +75,7 @@
       <section aria-labelledby="middle-title">
         <h2 id="middle-title">Middle of a long list</h2>
         <div class="demo">
+          <!-- dui:snippet name="Middle of a long list" -->
           <nav aria-label="Pagination" data-pagination>
             <ul>
               <li><a href="?page=4" rel="prev">Previous<span class="visually-hidden"> page</span></a></li>
@@ -88,26 +89,15 @@
               <li><a href="?page=6" rel="next">Next<span class="visually-hidden"> page</span></a></li>
             </ul>
           </nav>
+          <!-- /dui:snippet -->
         </div>
-        <pre tabindex="0"><code>&lt;nav aria-label="Pagination" data-pagination&gt;
-  &lt;ul&gt;
-    &lt;li&gt;&lt;a href="?page=4" rel="prev"&gt;Previous&lt;span class="visually-hidden"&gt; page&lt;/span&gt;&lt;/a&gt;&lt;/li&gt;
-    &lt;li&gt;&lt;a href="?page=1"&gt;&lt;span class="visually-hidden"&gt;Page &lt;/span&gt;1&lt;/a&gt;&lt;/li&gt;
-    &lt;li aria-hidden="true"&gt;…&lt;/li&gt;
-    &lt;li&gt;&lt;a href="?page=4"&gt;&lt;span class="visually-hidden"&gt;Page &lt;/span&gt;4&lt;/a&gt;&lt;/li&gt;
-    &lt;li&gt;&lt;a href="?page=5" aria-current="page"&gt;&lt;span class="visually-hidden"&gt;Page &lt;/span&gt;5&lt;/a&gt;&lt;/li&gt;
-    &lt;li&gt;&lt;a href="?page=6"&gt;&lt;span class="visually-hidden"&gt;Page &lt;/span&gt;6&lt;/a&gt;&lt;/li&gt;
-    &lt;li aria-hidden="true"&gt;…&lt;/li&gt;
-    &lt;li&gt;&lt;a href="?page=10"&gt;&lt;span class="visually-hidden"&gt;Page &lt;/span&gt;10&lt;/a&gt;&lt;/li&gt;
-    &lt;li&gt;&lt;a href="?page=6" rel="next"&gt;Next&lt;span class="visually-hidden"&gt; page&lt;/span&gt;&lt;/a&gt;&lt;/li&gt;
-  &lt;/ul&gt;
-&lt;/nav&gt;</code></pre>
       </section>
 
       <section aria-labelledby="first-title">
         <h2 id="first-title">First page</h2>
         <p>On the first page, Previous is a placeholder link with no <code>href</code>: not focusable, not announced as a link.</p>
         <div class="demo">
+          <!-- dui:snippet name="First page" -->
           <nav aria-label="Pagination, search results" data-pagination>
             <ul>
               <li><a>Previous<span class="visually-hidden"> page</span></a></li>
@@ -117,16 +107,8 @@
               <li><a href="?page=2" rel="next">Next<span class="visually-hidden"> page</span></a></li>
             </ul>
           </nav>
+          <!-- /dui:snippet -->
         </div>
-        <pre tabindex="0"><code>&lt;nav aria-label="Pagination, search results" data-pagination&gt;
-  &lt;ul&gt;
-    &lt;li&gt;&lt;a&gt;Previous&lt;span class="visually-hidden"&gt; page&lt;/span&gt;&lt;/a&gt;&lt;/li&gt;
-    &lt;li&gt;&lt;a href="?page=1" aria-current="page"&gt;&lt;span class="visually-hidden"&gt;Page &lt;/span&gt;1&lt;/a&gt;&lt;/li&gt;
-    &lt;li&gt;&lt;a href="?page=2"&gt;&lt;span class="visually-hidden"&gt;Page &lt;/span&gt;2&lt;/a&gt;&lt;/li&gt;
-    &lt;li&gt;&lt;a href="?page=3"&gt;&lt;span class="visually-hidden"&gt;Page &lt;/span&gt;3&lt;/a&gt;&lt;/li&gt;
-    &lt;li&gt;&lt;a href="?page=2" rel="next"&gt;Next&lt;span class="visually-hidden"&gt; page&lt;/span&gt;&lt;/a&gt;&lt;/li&gt;
-  &lt;/ul&gt;
-&lt;/nav&gt;</code></pre>
       </section>
 
       <section aria-labelledby="specs-title">

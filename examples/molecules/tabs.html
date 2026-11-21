@@ -77,6 +77,7 @@
       <section aria-labelledby="automatic-title">
         <h2 id="automatic-title">Automatic activation</h2>
         <div class="demo">
+          <!-- dui:snippet name="Automatic activation" -->
           <dui-tabs>
             <nav aria-label="Account settings">
               <ul>
@@ -101,37 +102,15 @@
               <p>Email alerts are on. You get a weekly digest on Mondays.</p>
             </section>
           </dui-tabs>
+          <!-- /dui:snippet -->
         </div>
-        <pre tabindex="0"><code>&lt;dui-tabs&gt;
-  &lt;nav aria-label="Account settings"&gt;
-    &lt;ul&gt;
-      &lt;li&gt;&lt;a href="#tab-profile"&gt;Profile&lt;/a&gt;&lt;/li&gt;
-      &lt;li&gt;&lt;a href="#tab-security"&gt;Security&lt;/a&gt;&lt;/li&gt;
-      &lt;li&gt;&lt;a href="#tab-notifications"&gt;Notifications&lt;/a&gt;&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/nav&gt;
-  &lt;section id="tab-profile"&gt;
-    &lt;h3&gt;Profile&lt;/h3&gt;
-    &lt;p&gt;Your name and photo appear on comments and shared projects.&lt;/p&gt;
-  &lt;/section&gt;
-  &lt;section id="tab-security"&gt;
-    &lt;h3&gt;Security&lt;/h3&gt;
-    &lt;div data-field&gt;
-      &lt;label for="tab-security-code"&gt;Recovery code&lt;/label&gt;
-      &lt;input id="tab-security-code" name="recovery" type="text" autocomplete="off"&gt;
-    &lt;/div&gt;
-  &lt;/section&gt;
-  &lt;section id="tab-notifications"&gt;
-    &lt;h3&gt;Notifications&lt;/h3&gt;
-    &lt;p&gt;Email alerts are on. You get a weekly digest on Mondays.&lt;/p&gt;
-  &lt;/section&gt;
-&lt;/dui-tabs&gt;</code></pre>
       </section>
 
       <section aria-labelledby="manual-title">
         <h2 id="manual-title">Manual activation</h2>
         <p>Arrow keys move focus; <kbd>Enter</kbd> or <kbd>Space</kbd> selects. Use it when showing a panel is slow.</p>
         <div class="demo">
+          <!-- dui:snippet name="Manual activation" -->
           <dui-tabs activation="manual">
             <nav aria-label="Report period">
               <ul>
@@ -153,34 +132,15 @@
               <p>2,140 orders this year.</p>
             </section>
           </dui-tabs>
+          <!-- /dui:snippet -->
         </div>
-        <pre tabindex="0"><code>&lt;dui-tabs activation="manual"&gt;
-  &lt;nav aria-label="Report period"&gt;
-    &lt;ul&gt;
-      &lt;li&gt;&lt;a href="#tab-week"&gt;Week&lt;/a&gt;&lt;/li&gt;
-      &lt;li&gt;&lt;a href="#tab-month" aria-current="true"&gt;Month&lt;/a&gt;&lt;/li&gt;
-      &lt;li&gt;&lt;a href="#tab-year"&gt;Year&lt;/a&gt;&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/nav&gt;
-  &lt;section id="tab-week"&gt;
-    &lt;h3&gt;Week&lt;/h3&gt;
-    &lt;p&gt;42 orders this week.&lt;/p&gt;
-  &lt;/section&gt;
-  &lt;section id="tab-month"&gt;
-    &lt;h3&gt;Month&lt;/h3&gt;
-    &lt;p&gt;180 orders this month.&lt;/p&gt;
-  &lt;/section&gt;
-  &lt;section id="tab-year"&gt;
-    &lt;h3&gt;Year&lt;/h3&gt;
-    &lt;p&gt;2,140 orders this year.&lt;/p&gt;
-  &lt;/section&gt;
-&lt;/dui-tabs&gt;</code></pre>
       </section>
 
       <section aria-labelledby="rtl-title">
         <h2 id="rtl-title">Right to left</h2>
         <p>In a right-to-left context the arrow keys follow the visual order: <kbd>Left Arrow</kbd> moves to the next tab.</p>
         <div class="demo">
+          <!-- dui:snippet name="Right to left" -->
           <div dir="rtl" lang="ar">
             <dui-tabs>
               <nav aria-label="الإعدادات">
@@ -204,30 +164,8 @@
               </section>
             </dui-tabs>
           </div>
+          <!-- /dui:snippet -->
         </div>
-        <pre tabindex="0"><code>&lt;div dir="rtl" lang="ar"&gt;
-  &lt;dui-tabs&gt;
-    &lt;nav aria-label="الإعدادات"&gt;
-      &lt;ul&gt;
-        &lt;li&gt;&lt;a href="#tab-rtl-general"&gt;عام&lt;/a&gt;&lt;/li&gt;
-        &lt;li&gt;&lt;a href="#tab-rtl-privacy"&gt;الخصوصية&lt;/a&gt;&lt;/li&gt;
-        &lt;li&gt;&lt;a href="#tab-rtl-help"&gt;مساعدة&lt;/a&gt;&lt;/li&gt;
-      &lt;/ul&gt;
-    &lt;/nav&gt;
-    &lt;section id="tab-rtl-general"&gt;
-      &lt;h3&gt;عام&lt;/h3&gt;
-      &lt;p&gt;الإعدادات العامة للحساب.&lt;/p&gt;
-    &lt;/section&gt;
-    &lt;section id="tab-rtl-privacy"&gt;
-      &lt;h3&gt;الخصوصية&lt;/h3&gt;
-      &lt;p&gt;من يمكنه رؤية ملفك الشخصي.&lt;/p&gt;
-    &lt;/section&gt;
-    &lt;section id="tab-rtl-help"&gt;
-      &lt;h3&gt;مساعدة&lt;/h3&gt;
-      &lt;p&gt;الأسئلة الشائعة والدعم.&lt;/p&gt;
-    &lt;/section&gt;
-  &lt;/dui-tabs&gt;
-&lt;/div&gt;</code></pre>
       </section>
 
       <section aria-labelledby="specs-title">

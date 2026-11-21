@@ -71,34 +71,28 @@
         <h2 id="variants-title">Variants</h2>
         <p>Primary for the main action, secondary for the rest, quiet for low-emphasis actions next to others.</p>
         <div class="demo">
+          <!-- dui:snippet name="Variants" -->
           <div class="cluster">
             <button type="button" data-button="primary">Primary</button>
             <button type="button" data-button="secondary">Secondary</button>
             <button type="button" data-button="quiet">Quiet</button>
           </div>
+          <!-- /dui:snippet -->
         </div>
-        <pre tabindex="0"><code>&lt;div class="cluster"&gt;
-  &lt;button type="button" data-button="primary"&gt;Primary&lt;/button&gt;
-  &lt;button type="button" data-button="secondary"&gt;Secondary&lt;/button&gt;
-  &lt;button type="button" data-button="quiet"&gt;Quiet&lt;/button&gt;
-&lt;/div&gt;</code></pre>
       </section>
 
       <section aria-labelledby="native-title">
         <h2 id="native-title">Native default</h2>
         <p>A submit button is primary with no attribute. Opt out with <code>secondary</code>.</p>
         <div class="demo">
+          <!-- dui:snippet name="Native default" -->
           <form action="#native-title" class="cluster">
             <button type="submit">Publish</button>
             <button type="submit" name="draft" value="1" data-button="secondary">Save draft</button>
             <button type="reset" data-button="quiet">Clear</button>
           </form>
+          <!-- /dui:snippet -->
         </div>
-        <pre tabindex="0"><code>&lt;form action="#native-title" class="cluster"&gt;
-  &lt;button type="submit"&gt;Publish&lt;/button&gt;
-  &lt;button type="submit" name="draft" value="1" data-button="secondary"&gt;Save draft&lt;/button&gt;
-  &lt;button type="reset" data-button="quiet"&gt;Clear&lt;/button&gt;
-&lt;/form&gt;</code></pre>
       </section>
 
       <section aria-labelledby="sizes-title">
@@ -108,34 +102,28 @@
           <a href="https://www.w3.org/WAI/WCAG22/Understanding/target-size-minimum.html">WCAG 2.5.8 Target Size (Minimum)</a>.
         </p>
         <div class="demo">
+          <!-- dui:snippet name="Sizes" -->
           <div class="cluster">
             <button type="button" data-button="primary small">Small</button>
             <button type="button" data-button="primary">Default</button>
             <button type="button" data-button="primary large">Large</button>
           </div>
+          <!-- /dui:snippet -->
         </div>
-        <pre tabindex="0"><code>&lt;div class="cluster"&gt;
-  &lt;button type="button" data-button="primary small"&gt;Small&lt;/button&gt;
-  &lt;button type="button" data-button="primary"&gt;Default&lt;/button&gt;
-  &lt;button type="button" data-button="primary large"&gt;Large&lt;/button&gt;
-&lt;/div&gt;</code></pre>
       </section>
 
       <section aria-labelledby="links-title">
         <h2 id="links-title">Links that look like buttons</h2>
         <p>Same attribute on <code>&lt;a href&gt;</code>. It is still a link: it navigates, opens in a new tab and is announced as a link.</p>
         <div class="demo">
+          <!-- dui:snippet name="Links that look like buttons" -->
           <div class="cluster">
             <a href="#links-title" data-button="primary">Create account</a>
             <a href="#links-title" data-button="secondary">Read the guide</a>
             <a href="#links-title" data-button="quiet">Skip for now</a>
           </div>
+          <!-- /dui:snippet -->
         </div>
-        <pre tabindex="0"><code>&lt;div class="cluster"&gt;
-  &lt;a href="#links-title" data-button="primary"&gt;Create account&lt;/a&gt;
-  &lt;a href="#links-title" data-button="secondary"&gt;Read the guide&lt;/a&gt;
-  &lt;a href="#links-title" data-button="quiet"&gt;Skip for now&lt;/a&gt;
-&lt;/div&gt;</code></pre>
       </section>
 
       <section aria-labelledby="disabled-title">
@@ -145,15 +133,13 @@
           removes the button from the tab order and blocks activation. Use it when the action is simply not available.
         </p>
         <div class="demo">
+          <!-- dui:snippet name="Disabled" -->
           <div class="cluster">
             <button type="button" data-button="primary" disabled>Delete</button>
             <button type="button" disabled>Archive</button>
           </div>
+          <!-- /dui:snippet -->
         </div>
-        <pre tabindex="0"><code>&lt;div class="cluster"&gt;
-  &lt;button type="button" data-button="primary" disabled&gt;Delete&lt;/button&gt;
-  &lt;button type="button" disabled&gt;Archive&lt;/button&gt;
-&lt;/div&gt;</code></pre>
       </section>
 
       <section aria-labelledby="aria-disabled-title">
@@ -166,15 +152,13 @@
           It does not block clicks: your script must ignore them (see the script at the end of this page).
         </p>
         <div class="demo">
+          <!-- dui:snippet name="Disabled but focusable" -->
           <div class="cluster">
             <button type="button" data-button="primary" aria-disabled="true" aria-describedby="publish-why">Publish</button>
             <p id="publish-why" data-text="small muted">Add a title before publishing.</p>
           </div>
+          <!-- /dui:snippet -->
         </div>
-        <pre tabindex="0"><code>&lt;div class="cluster"&gt;
-  &lt;button type="button" data-button="primary" aria-disabled="true" aria-describedby="publish-why"&gt;Publish&lt;/button&gt;
-  &lt;p id="publish-why" data-text="small muted"&gt;Add a title before publishing.&lt;/p&gt;
-&lt;/div&gt;</code></pre>
       </section>
 
       <section aria-labelledby="loading-title">
@@ -186,15 +170,13 @@
           region. There is no spinner that replaces the label.
         </p>
         <div class="demo">
+          <!-- dui:snippet name="Loading" -->
           <div class="cluster">
             <button type="button" id="save-demo" data-button="primary">Save changes</button>
             <p id="save-status" role="status" data-text="small muted"></p>
           </div>
+          <!-- /dui:snippet -->
         </div>
-        <pre tabindex="0"><code>&lt;div class="cluster"&gt;
-  &lt;button type="button" id="save-demo" data-button="primary"&gt;Save changes&lt;/button&gt;
-  &lt;p id="save-status" role="status" data-text="small muted"&gt;&lt;/p&gt;
-&lt;/div&gt;</code></pre>
       </section>
 
       <section aria-labelledby="specs-title">
@@ -230,7 +212,7 @@
       // button keeps focus, and the result is announced in a role="status" region.
       const save = document.getElementById("save-demo");
       const status = document.getElementById("save-status");
-      save.addEventListener("click", () => {
+      save?.addEventListener("click", () => {
         save.setAttribute("aria-busy", "true");
         save.setAttribute("aria-disabled", "true");
         save.textContent = "Saving…";

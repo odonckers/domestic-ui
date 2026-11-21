@@ -7,30 +7,6 @@ Link `css/domestic.css` (copy `css/` from https://github.com/odonckers/domestic-
 ## Getting started
 
 - [Getting started](https://odonckers.github.io/domestic-ui/index.md): domestic-ui is a CSS design system built on native HTML, custom properties and cascade layers.
-- [Examples](https://odonckers.github.io/domestic-ui/examples.md): Standalone example pages that load the real domestic-ui CSS.
-- [Base elements](https://odonckers.github.io/domestic-ui/examples/base.html): live example page (HTML)
-- [Theming](https://odonckers.github.io/domestic-ui/examples/theming.html): live example page (HTML)
-- [Badge](https://odonckers.github.io/domestic-ui/examples/atoms/badge.html): live example page (HTML)
-- [Buttons](https://odonckers.github.io/domestic-ui/examples/atoms/button.html): live example page (HTML)
-- [Form controls](https://odonckers.github.io/domestic-ui/examples/atoms/controls.html): live example page (HTML)
-- [Field](https://odonckers.github.io/domestic-ui/examples/atoms/field.html): live example page (HTML)
-- [Atoms showcase](https://odonckers.github.io/domestic-ui/examples/atoms/index.html): live example page (HTML)
-- [Quiet link](https://odonckers.github.io/domestic-ui/examples/atoms/link.html): live example page (HTML)
-- [Switch](https://odonckers.github.io/domestic-ui/examples/atoms/switch.html): live example page (HTML)
-- [Text helpers](https://odonckers.github.io/domestic-ui/examples/atoms/text.html): live example page (HTML)
-- [Alert and toast](https://odonckers.github.io/domestic-ui/examples/molecules/alerts.html): live example page (HTML)
-- [Breadcrumb](https://odonckers.github.io/domestic-ui/examples/molecules/breadcrumb.html): live example page (HTML)
-- [Card](https://odonckers.github.io/domestic-ui/examples/molecules/card.html): live example page (HTML)
-- [Dialog and drawer](https://odonckers.github.io/domestic-ui/examples/molecules/dialog.html): live example page (HTML)
-- [Disclosure and accordion](https://odonckers.github.io/domestic-ui/examples/molecules/disclosure.html): live example page (HTML)
-- [Molecules showcase](https://odonckers.github.io/domestic-ui/examples/molecules/index.html): live example page (HTML)
-- [Menu button](https://odonckers.github.io/domestic-ui/examples/molecules/menu-button.html): live example page (HTML)
-- [Navigation list](https://odonckers.github.io/domestic-ui/examples/molecules/nav.html): live example page (HTML)
-- [Pagination](https://odonckers.github.io/domestic-ui/examples/molecules/pagination.html): live example page (HTML)
-- [Popover and tooltip](https://odonckers.github.io/domestic-ui/examples/molecules/popover.html): live example page (HTML)
-- [Search field](https://odonckers.github.io/domestic-ui/examples/molecules/search.html): live example page (HTML)
-- [Tabs](https://odonckers.github.io/domestic-ui/examples/molecules/tabs.html): live example page (HTML)
-- [Toolbar](https://odonckers.github.io/domestic-ui/examples/molecules/toolbar.html): live example page (HTML)
 
 ## Principles
 

@@ -30,7 +30,7 @@ Imports are relative, so it works from any path. Paths under `css/` are public A
 
 ### Theming
 
-Override semantic `--dui-*` tokens on `:root`, or on an element with `data-theme` ([Theming](https://odonckers.github.io/domestic-ui/principles/theming.md), [example](https://odonckers.github.io/domestic-ui/examples/theming.html)). Force a scheme with `data-color-scheme="light"` or `"dark"`.
+Override semantic `--dui-*` tokens on `:root`, or on an element with `data-theme` ([Theming](https://odonckers.github.io/domestic-ui/principles/theming.md), with a live example). Force a scheme with `data-color-scheme="light"` or `"dark"`.
 
 ### Component API
 
@@ -202,7 +202,7 @@ with a `data-theme` attribute or a `theme-*` class to scope it:
 <section data-theme="forest">…</section>
 ```
 
-[`examples/theming.html`](https://odonckers.github.io/domestic-ui/examples/theming.html) shows a full scoped theme next to the default.
+[`examples/theming.html`](https://odonckers.github.io/domestic-ui/principles/theming.md) shows a full scoped theme next to the default.
 Check your theme's contrast in both schemes; `tests/tokens.spec.js` shows how.
 
 A few semantic tokens are defined in terms of others (`--dui-color-link`, `--dui-color-focus`
@@ -311,6 +311,92 @@ Derived (re-resolved on each theme scope): `--dui-color-link`, `--dui-color-focu
 `--dui-color-accent-surface`, `--dui-color-success-surface`, `--dui-color-warning-surface`,
 `--dui-color-danger-surface`, `--dui-color-info-surface`, `--dui-color-surface-inverse`,
 `--dui-color-text-inverse`.
+
+### Live example
+
+#### Forest theme
+
+```html
+<section class="panel stack" data-theme="forest" aria-labelledby="forest-title">
+  <nav aria-label="Breadcrumb, forest theme" data-breadcrumb>
+    <ol>
+      <li><a href="#forest-title">Home</a></li>
+      <li><a href="#forest-title">Releases</a></li>
+      <li><a href="#forest-title" aria-current="page">Release notes</a></li>
+    </ol>
+  </nav>
+  <h2 id="forest-title">Forest theme</h2>
+  <p>Release notes are ready for review. <a href="#forest-title">Read the summary</a> before the meeting.</p>
+  <p class="cluster">
+    <span data-badge>Draft</span>
+    <span data-badge="accent">New</span>
+    <span data-badge="success">Passing</span>
+    <span data-badge="warning">Review</span>
+    <span data-badge="danger">Blocked</span>
+  </p>
+  <form action="#forest-title" class="stack">
+    <div data-field>
+      <label for="forest-email">Email</label>
+      <input id="forest-email" name="email" type="email" autocomplete="email" value="ada@" aria-invalid="true" aria-describedby="forest-email-hint forest-email-error">
+      <p id="forest-email-hint" data-field="hint">Release notes go to this address.</p>
+      <p id="forest-email-error" data-field="error">Error: enter an email address like name@example.com.</p>
+    </div>
+    <label><input type="checkbox" role="switch" name="notify" checked> Notify subscribers</label>
+    <div class="cluster">
+      <button type="submit">Publish</button>
+      <button type="button" data-button="secondary">Save draft</button>
+      <button type="button" data-button="quiet">Discard</button>
+    </div>
+  </form>
+  <div data-alert="warning">
+    <p><strong>Warning:</strong> Two checks are still running.</p>
+  </div>
+  <dui-tabs>
+    <nav aria-label="Release, forest theme">
+      <ul>
+        <li><a href="#forest-tab-notes">Notes</a></li>
+        <li><a href="#forest-tab-checks">Checks</a></li>
+      </ul>
+    </nav>
+    <section id="forest-tab-notes">
+      <h3>Notes</h3>
+      <p>Two bug fixes and a new token.</p>
+    </section>
+    <section id="forest-tab-checks">
+      <h3>Checks</h3>
+      <p>Lint passed. Tests are running.</p>
+    </section>
+  </dui-tabs>
+  <article data-card="link">
+    <h3><a href="#forest-title">Upgrade guide</a></h3>
+    <p>What to change when you update.</p>
+  </article>
+  <details>
+    <summary>What changed?</summary>
+    <p>Two bug fixes and a new <code>--dui-color-success</code> token.</p>
+  </details>
+</section>
+```
+
+#### Forest theme CSS
+
+In the `<head>` of the live example above.
+
+```html
+<style id="forest-theme">
+  [data-theme="forest"] {
+    --dui-color-surface: light-dark(#f7f5ef, #141a16);
+    --dui-color-surface-raised: light-dark(#eeeadf, #1d2620);
+    --dui-color-text: light-dark(#1d2a22, #e4ebe3);
+    --dui-color-border: light-dark(#d8d1bf, #34433a);
+    --dui-color-accent: light-dark(#2f6b3f, #7fcf95);
+    --dui-color-accent-contrast: light-dark(#fff, #0f1a13);
+    --dui-font-heading: charter, "Bitstream Charter", "Sitka Text", cambria, serif;
+    --dui-radius-control: 0.125rem;
+    --dui-radius-surface: 0.25rem;
+  }
+</style>
+```
 
 ## Opinions we hold
 
@@ -815,16 +901,151 @@ Native HTML elements styled by the base layer, with no classes.
 
 ### Live example
 
-- [Open the example](https://odonckers.github.io/domestic-ui/examples/base.html)
+#### Text
+
+```html
+<h1>Heading level 1</h1>
+<h2>Heading level 2</h2>
+<h3>Heading level 3</h3>
+<h4>Heading level 4</h4>
+<h5>Heading level 5</h5>
+<h6>Heading level 6</h6>
+<p>
+  A paragraph with a <a href="#text-title">link to this section</a>, some <strong>strong importance</strong>,
+  <em>stress emphasis</em>, a <mark>highlighted run</mark>, an abbreviation like
+  <abbr title="Web Content Accessibility Guidelines">WCAG</abbr>, inline <code>&lt;code&gt;</code>,
+  sample output <samp>Saved.</samp>, and keyboard input <kbd>Ctrl</kbd> + <kbd>K</kbd>.
+  Prose is capped at a comfortable measure so lines stay readable on wide screens.
+</p>
+<p><small>Small print: side comments such as legal text use <code>&lt;small&gt;</code>.</small></p>
+<p>H<sub>2</sub>O and E = mc<sup>2</sup> keep their line height.</p>
+<hr>
+<blockquote cite="https://www.w3.org/TR/using-aria/#rule1">
+  <p>If you can use a native HTML element or attribute with the semantics and behavior you require already built in, instead of re-purposing an element and adding an ARIA role, state or property to make it accessible, then do so.</p>
+  <footer>From <cite><a href="https://www.w3.org/TR/using-aria/#rule1">Using ARIA, first rule</a></cite></footer>
+</blockquote>
+```
+
+#### Lists
+
+```html
+<div class="grid">
+  <div>
+    <h3>Unordered</h3>
+    <ul>
+      <li>Native elements first</li>
+      <li>Tokens as custom properties
+        <ul>
+          <li>Primitive</li>
+          <li>Semantic</li>
+        </ul>
+      </li>
+      <li>Cascade layers</li>
+    </ul>
+  </div>
+  <div>
+    <h3>Ordered</h3>
+    <ol>
+      <li>Link the stylesheet</li>
+      <li>Write semantic HTML</li>
+      <li>Override tokens to theme</li>
+    </ol>
+  </div>
+  <div>
+    <h3>Description</h3>
+    <dl>
+      <dt>Primitive token</dt>
+      <dd>A raw value, named by what it is.</dd>
+      <dt>Semantic token</dt>
+      <dd>A role, pointing at a primitive.</dd>
+    </dl>
+  </div>
+</div>
+```
 
 #### Preformatted code
 
 ```html
-<link rel="stylesheet" href="css/domestic.css">
+        <pre tabindex="0"><code>&lt;link rel="stylesheet" href="css/domestic.css"&gt;
 
 :root {
   --dui-color-accent: light-dark(#7a2e8c, #e2a8f0);
-}
+}</code></pre>
+```
+
+#### Media
+
+```html
+<div class="grid">
+  <figure>
+    <svg role="img" aria-labelledby="svg-title" viewBox="0 0 160 90" width="320" height="180">
+      <title id="svg-title">Three stacked layers: reset, tokens, base</title>
+      <rect x="20" y="58" width="120" height="20" rx="4" fill="none" stroke="currentColor" stroke-width="2"/>
+      <rect x="30" y="35" width="100" height="20" rx="4" fill="none" stroke="currentColor" stroke-width="2"/>
+      <rect x="40" y="12" width="80" height="20" rx="4" fill="currentColor"/>
+    </svg>
+    <figcaption>An inline <code>&lt;svg&gt;</code> drawn with <code>currentColor</code>.</figcaption>
+  </figure>
+  <figure>
+    <picture>
+      <source type="image/svg+xml" srcset="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20320%20180'%3E%3Crect%20width='320'%20height='180'%20fill='%233451d1'/%3E%3Ccircle%20cx='250'%20cy='60'%20r='28'%20fill='%23fff1a8'/%3E%3Cpath%20d='M0%20180%20L110%2070%20L190%20150%20L240%20110%20L320%20180%20Z'%20fill='%2312151b'/%3E%3C/svg%3E">
+      <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 320 180'%3E%3Crect width='320' height='180' fill='%233451d1'/%3E%3C/svg%3E" alt="A flat illustration of dark mountains under a pale sun on a blue sky." width="320" height="180">
+    </picture>
+    <figcaption>A <code>&lt;picture&gt;</code> with an <code>&lt;img&gt;</code> fallback and alt text.</figcaption>
+  </figure>
+  <figure>
+    <video controls preload="none" width="320" height="180" aria-describedby="video-caption" poster="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 320 180'%3E%3Crect width='320' height='180' fill='%23252a34'/%3E%3Cpath d='M140 65 L190 90 L140 115 Z' fill='%23f6f7f9'/%3E%3C/svg%3E">
+      <track kind="captions" src="data:text/vtt,WEBVTT" srclang="en" label="English" default>
+      Your browser does not support the video element.
+    </video>
+    <figcaption id="video-caption">A <code>&lt;video&gt;</code> with controls and a captions track (no source loaded, so no network requests).</figcaption>
+  </figure>
+</div>
+```
+
+#### Tables
+
+```html
+<section data-scroll="inline" aria-labelledby="contrast-caption" tabindex="0">
+  <table>
+    <caption id="contrast-caption">Contrast minimums in WCAG 2.2 AA</caption>
+    <thead>
+      <tr>
+        <th scope="col">Content</th>
+        <th scope="col">Success criterion</th>
+        <th scope="col">Minimum ratio</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <th scope="row">Body text</th>
+        <td>1.4.3 Contrast (Minimum)</td>
+        <td>4.5:1</td>
+      </tr>
+      <tr>
+        <th scope="row">Large text</th>
+        <td>1.4.3 Contrast (Minimum)</td>
+        <td>3:1</td>
+      </tr>
+      <tr>
+        <th scope="row">Control boundaries</th>
+        <td>1.4.11 Non-text Contrast</td>
+        <td>3:1</td>
+      </tr>
+      <tr>
+        <th scope="row">Focus indicator</th>
+        <td>1.4.11 Non-text Contrast</td>
+        <td>3:1</td>
+      </tr>
+    </tbody>
+    <tfoot>
+      <tr>
+        <th scope="row">Source</th>
+        <td colspan="2"><a href="https://www.w3.org/TR/WCAG22/">WCAG 2.2</a></td>
+      </tr>
+    </tfoot>
+  </table>
+</section>
 ```
 
 ### Attributes
@@ -898,7 +1119,11 @@ Hides content visually but keeps it in the accessibility tree.
 
 ### Live example
 
-No example page yet. Used in [Base elements](https://odonckers.github.io/domestic-ui/examples/base.html), [Theming](https://odonckers.github.io/domestic-ui/examples/theming.html), [Badge](https://odonckers.github.io/domestic-ui/examples/atoms/badge.html), [Buttons](https://odonckers.github.io/domestic-ui/examples/atoms/button.html), [Form controls](https://odonckers.github.io/domestic-ui/examples/atoms/controls.html), [Field](https://odonckers.github.io/domestic-ui/examples/atoms/field.html), [Atoms showcase](https://odonckers.github.io/domestic-ui/examples/atoms/index.html), [Quiet link](https://odonckers.github.io/domestic-ui/examples/atoms/link.html), [Switch](https://odonckers.github.io/domestic-ui/examples/atoms/switch.html), [Text helpers](https://odonckers.github.io/domestic-ui/examples/atoms/text.html), [Alert and toast](https://odonckers.github.io/domestic-ui/examples/molecules/alerts.html), [Breadcrumb](https://odonckers.github.io/domestic-ui/examples/molecules/breadcrumb.html), [Card](https://odonckers.github.io/domestic-ui/examples/molecules/card.html), [Dialog and drawer](https://odonckers.github.io/domestic-ui/examples/molecules/dialog.html), [Disclosure and accordion](https://odonckers.github.io/domestic-ui/examples/molecules/disclosure.html), [Molecules showcase](https://odonckers.github.io/domestic-ui/examples/molecules/index.html), [Menu button](https://odonckers.github.io/domestic-ui/examples/molecules/menu-button.html), [Navigation list](https://odonckers.github.io/domestic-ui/examples/molecules/nav.html), [Pagination](https://odonckers.github.io/domestic-ui/examples/molecules/pagination.html), [Popover and tooltip](https://odonckers.github.io/domestic-ui/examples/molecules/popover.html), [Search field](https://odonckers.github.io/domestic-ui/examples/molecules/search.html), [Tabs](https://odonckers.github.io/domestic-ui/examples/molecules/tabs.html), [Toolbar](https://odonckers.github.io/domestic-ui/examples/molecules/toolbar.html). No markup snippet yet.
+#### Visually hidden
+
+```html
+<button type="button"><span aria-hidden="true">×</span> <span class="visually-hidden">Close the panel</span></button>
+```
 
 ### API
 
@@ -922,7 +1147,7 @@ class="visually-hidden"
 - [Base elements](https://odonckers.github.io/domestic-ui/components/base.md)
 - [Component API convention](https://odonckers.github.io/domestic-ui/index.md#component-api)
 - [Accessibility baseline](https://odonckers.github.io/domestic-ui/principles/accessibility-baseline-wcag-22-aa.md)
-- Source: [`css/utilities/visually-hidden.css`](https://github.com/odonckers/domestic-ui/blob/main/css/utilities/visually-hidden.css)
+- Source: [`css/utilities/visually-hidden.css`](https://github.com/odonckers/domestic-ui/blob/main/css/utilities/visually-hidden.css), [`examples/base.html`](https://github.com/odonckers/domestic-ui/blob/main/examples/base.html)
 
 ## Cluster
 
@@ -932,10 +1157,17 @@ An inline group that wraps onto new lines (buttons, tags, nav links).
 
 ### Live example
 
-No example page yet. Used in [Base elements](https://odonckers.github.io/domestic-ui/examples/base.html), [Theming](https://odonckers.github.io/domestic-ui/examples/theming.html), [Badge](https://odonckers.github.io/domestic-ui/examples/atoms/badge.html), [Buttons](https://odonckers.github.io/domestic-ui/examples/atoms/button.html), [Form controls](https://odonckers.github.io/domestic-ui/examples/atoms/controls.html), [Field](https://odonckers.github.io/domestic-ui/examples/atoms/field.html), [Atoms showcase](https://odonckers.github.io/domestic-ui/examples/atoms/index.html), [Quiet link](https://odonckers.github.io/domestic-ui/examples/atoms/link.html), [Switch](https://odonckers.github.io/domestic-ui/examples/atoms/switch.html), [Text helpers](https://odonckers.github.io/domestic-ui/examples/atoms/text.html), [Alert and toast](https://odonckers.github.io/domestic-ui/examples/molecules/alerts.html), [Breadcrumb](https://odonckers.github.io/domestic-ui/examples/molecules/breadcrumb.html), [Card](https://odonckers.github.io/domestic-ui/examples/molecules/card.html), [Dialog and drawer](https://odonckers.github.io/domestic-ui/examples/molecules/dialog.html), [Disclosure and accordion](https://odonckers.github.io/domestic-ui/examples/molecules/disclosure.html), [Molecules showcase](https://odonckers.github.io/domestic-ui/examples/molecules/index.html), [Menu button](https://odonckers.github.io/domestic-ui/examples/molecules/menu-button.html), [Navigation list](https://odonckers.github.io/domestic-ui/examples/molecules/nav.html), [Pagination](https://odonckers.github.io/domestic-ui/examples/molecules/pagination.html), [Popover and tooltip](https://odonckers.github.io/domestic-ui/examples/molecules/popover.html), [Search field](https://odonckers.github.io/domestic-ui/examples/molecules/search.html), [Tabs](https://odonckers.github.io/domestic-ui/examples/molecules/tabs.html), [Toolbar](https://odonckers.github.io/domestic-ui/examples/molecules/toolbar.html).
+#### Cluster
 
 ```html
-<ul class="cluster" style="--cluster-justify: space-between">…</ul>
+<ul class="cluster card">
+  <li><code>reset</code></li>
+  <li><code>tokens</code></li>
+  <li><code>base</code></li>
+  <li><code>layout</code></li>
+  <li><code>components</code></li>
+  <li><code>utilities</code></li>
+</ul>
 ```
 
 ### API
@@ -964,7 +1196,7 @@ The custom properties do not inherit, so nested clusters keep their defaults.
 - [Layouts](https://odonckers.github.io/domestic-ui/layouts/index.md)
 - [Component API convention](https://odonckers.github.io/domestic-ui/index.md#component-api)
 - [Accessibility baseline](https://odonckers.github.io/domestic-ui/principles/accessibility-baseline-wcag-22-aa.md)
-- Source: [`css/layout/cluster.css`](https://github.com/odonckers/domestic-ui/blob/main/css/layout/cluster.css)
+- Source: [`css/layout/cluster.css`](https://github.com/odonckers/domestic-ui/blob/main/css/layout/cluster.css), [`examples/base.html`](https://github.com/odonckers/domestic-ui/blob/main/examples/base.html)
 
 ## Grid
 
@@ -974,10 +1206,23 @@ A responsive grid: as many columns as fit, each at least --grid-min wide, never 
 
 ### Live example
 
-No example page yet. Used in [Base elements](https://odonckers.github.io/domestic-ui/examples/base.html), [Theming](https://odonckers.github.io/domestic-ui/examples/theming.html), [Form controls](https://odonckers.github.io/domestic-ui/examples/atoms/controls.html), [Atoms showcase](https://odonckers.github.io/domestic-ui/examples/atoms/index.html), [Card](https://odonckers.github.io/domestic-ui/examples/molecules/card.html), [Molecules showcase](https://odonckers.github.io/domestic-ui/examples/molecules/index.html).
+#### Grid
 
 ```html
-<div class="grid" style="--grid-min: 12rem">…</div>
+<div class="grid" style="--grid-min: 12rem">
+  <article class="card">
+    <h4>Atoms</h4>
+    <p>Native elements styled by the base layer, plus a few attributes.</p>
+  </article>
+  <article class="card">
+    <h4>Molecules</h4>
+    <p>Small groups of atoms, such as tabs, dialogs and cards.</p>
+  </article>
+  <article class="card">
+    <h4>Organisms</h4>
+    <p>Larger sections built from molecules. Coming later.</p>
+  </article>
+</div>
 ```
 
 ### API
@@ -1006,7 +1251,7 @@ The custom properties do not inherit, so nested grids keep their defaults.
 - [Layouts](https://odonckers.github.io/domestic-ui/layouts/index.md)
 - [Component API convention](https://odonckers.github.io/domestic-ui/index.md#component-api)
 - [Accessibility baseline](https://odonckers.github.io/domestic-ui/principles/accessibility-baseline-wcag-22-aa.md)
-- Source: [`css/layout/grid.css`](https://github.com/odonckers/domestic-ui/blob/main/css/layout/grid.css)
+- Source: [`css/layout/grid.css`](https://github.com/odonckers/domestic-ui/blob/main/css/layout/grid.css), [`examples/base.html`](https://github.com/odonckers/domestic-ui/blob/main/examples/base.html)
 
 ## Scroll
 
@@ -1016,13 +1261,34 @@ A scroll container for content wider than the screen, such as a data table, so i
 
 ### Live example
 
-No example page yet. Used in [Base elements](https://odonckers.github.io/domestic-ui/examples/base.html), [Badge](https://odonckers.github.io/domestic-ui/examples/atoms/badge.html), [Atoms showcase](https://odonckers.github.io/domestic-ui/examples/atoms/index.html), [Quiet link](https://odonckers.github.io/domestic-ui/examples/atoms/link.html).
+#### Scroll region
 
 ```html
-<section data-scroll="inline" aria-labelledby="orders-caption" tabindex="0">
+<section data-scroll="inline" aria-labelledby="viewports-caption" tabindex="0">
   <table>
-    <caption id="orders-caption">Recent orders</caption>
-    …
+    <caption id="viewports-caption">Viewports every page is checked at</caption>
+    <thead>
+      <tr>
+        <th scope="col">Width</th>
+        <th scope="col">Height</th>
+        <th scope="col">Engines</th>
+        <th scope="col">Checks</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>320px</td>
+        <td>640px</td>
+        <td>Chromium, Firefox, WebKit</td>
+        <td>No sideways page scroll, no axe violations</td>
+      </tr>
+      <tr>
+        <td>375px</td>
+        <td>812px</td>
+        <td>Chromium, Firefox, WebKit</td>
+        <td>No sideways page scroll, no axe violations</td>
+      </tr>
+    </tbody>
   </table>
 </section>
 ```
@@ -1055,7 +1321,7 @@ data-scroll="inline"   scroll along the inline axis (left/right in English)
 - [Layouts](https://odonckers.github.io/domestic-ui/layouts/index.md)
 - [Component API convention](https://odonckers.github.io/domestic-ui/index.md#component-api)
 - [Accessibility baseline](https://odonckers.github.io/domestic-ui/principles/accessibility-baseline-wcag-22-aa.md)
-- Source: [`css/layout/scroll.css`](https://github.com/odonckers/domestic-ui/blob/main/css/layout/scroll.css)
+- Source: [`css/layout/scroll.css`](https://github.com/odonckers/domestic-ui/blob/main/css/layout/scroll.css), [`examples/base.html`](https://github.com/odonckers/domestic-ui/blob/main/examples/base.html)
 
 ## Stack
 
@@ -1065,10 +1331,14 @@ Vertical flow with a consistent gap between children.
 
 ### Live example
 
-No example page yet. Used in [Base elements](https://odonckers.github.io/domestic-ui/examples/base.html), [Theming](https://odonckers.github.io/domestic-ui/examples/theming.html), [Field](https://odonckers.github.io/domestic-ui/examples/atoms/field.html), [Switch](https://odonckers.github.io/domestic-ui/examples/atoms/switch.html), [Alert and toast](https://odonckers.github.io/domestic-ui/examples/molecules/alerts.html), [Dialog and drawer](https://odonckers.github.io/domestic-ui/examples/molecules/dialog.html), [Molecules showcase](https://odonckers.github.io/domestic-ui/examples/molecules/index.html).
+#### Stack
 
 ```html
-<div class="stack" style="--stack-gap: var(--dui-space-s)">…</div>
+<div class="stack card" style="--stack-gap: var(--dui-space-xs)">
+  <p>Stack item one</p>
+  <p>Stack item two, with <code>--stack-gap: var(--dui-space-xs)</code></p>
+  <p>Stack item three</p>
+</div>
 ```
 
 ### API
@@ -1096,23 +1366,13 @@ Pattern: "The Stack", Every Layout, built with flexbox gap.
 - [Layouts](https://odonckers.github.io/domestic-ui/layouts/index.md)
 - [Component API convention](https://odonckers.github.io/domestic-ui/index.md#component-api)
 - [Accessibility baseline](https://odonckers.github.io/domestic-ui/principles/accessibility-baseline-wcag-22-aa.md)
-- Source: [`css/layout/stack.css`](https://github.com/odonckers/domestic-ui/blob/main/css/layout/stack.css)
+- Source: [`css/layout/stack.css`](https://github.com/odonckers/domestic-ui/blob/main/css/layout/stack.css), [`examples/base.html`](https://github.com/odonckers/domestic-ui/blob/main/examples/base.html)
 
 ## Atoms
 
 Page: https://odonckers.github.io/domestic-ui/atoms/index.html
 
 Small additions to the base layer, for what a native element cannot express on its own. A level of [Atomic Design](https://atomicdesign.bradfrost.com/); APIs follow the [component API convention](https://odonckers.github.io/domestic-ui/index.md#component-api).
-
-### Atoms
-
-- [Text helpers](https://odonckers.github.io/domestic-ui/components/atoms/text.md): Lead, small and muted text helpers from domestic-ui, with copyable markup. API: `data-text="lead | small | muted"` (combinable).
-- [Quiet link](https://odonckers.github.io/domestic-ui/components/atoms/link.md): A link that takes the surrounding text color and keeps its underline, for dense UI. API: `data-link="quiet"` on `<a href>`.
-- [Buttons](https://odonckers.github.io/domestic-ui/components/atoms/button.md): Button variants and sizes, links styled as buttons, and disabled and loading states. API: `data-button="[primary | secondary | quiet] [small | large]"` on `<button>`, `<input type=submit|button|reset>`, `<a href>`; states `disabled`, `aria-disabled="true"`, `aria-busy="true"`.
-- [Form controls](https://odonckers.github.io/domestic-ui/components/atoms/controls.md): Native form controls as styled by the domestic-ui base layer, with copyable markup. API: No API; native elements.
-- [Switch](https://odonckers.github.io/domestic-ui/components/atoms/switch.md): An on/off switch built on a native checkbox with role switch, following the APG Switch pattern. API: `role="switch"` on `<input type="checkbox">`.
-- [Field](https://odonckers.github.io/domestic-ui/components/atoms/field.md): Label, control, hint and error message wired with aria-describedby and aria-invalid. API: `data-field` on the wrapper, `data-field="hint"` and `data-field="error"` on the messages.
-- [Badge](https://odonckers.github.io/domestic-ui/components/atoms/badge.md): Inline status labels with tone variants that meet WCAG AA contrast. API: `data-badge="neutral | accent | success | warning | danger"`.
 
 ### Our choices
 
@@ -1147,8 +1407,6 @@ Page: https://odonckers.github.io/domestic-ui/components/atoms/text.html
 Lead, small and muted text helpers from domestic-ui, with copyable markup.
 
 ### Live example
-
-- [Open the example](https://odonckers.github.io/domestic-ui/examples/atoms/text.html)
 
 #### Lead paragraph
 
@@ -1209,8 +1467,6 @@ Page: https://odonckers.github.io/domestic-ui/components/atoms/link.html
 A link that takes the surrounding text color and keeps its underline, for dense UI.
 
 ### Live example
-
-- [Open the example](https://odonckers.github.io/domestic-ui/examples/atoms/link.html)
 
 #### In a table
 
@@ -1278,8 +1534,6 @@ Page: https://odonckers.github.io/domestic-ui/components/atoms/button.html
 Button variants and sizes, links styled as buttons, and disabled and loading states.
 
 ### Live example
-
-- [Open the example](https://odonckers.github.io/domestic-ui/examples/atoms/button.html)
 
 #### Variants
 
@@ -1393,14 +1647,6 @@ with the fill as well as with the surface (WCAG 1.4.11, 2.4.13).
 https://www.w3.org/WAI/WCAG22/Understanding/focus-appearance.html
 ```
 
-### Our choice
-
-- **Our choice:** `data-button` with no variant word keeps the native default (a submit button is primary, everything else is secondary), so M1 markup keeps working and the attribute is only needed when the native type does not match the emphasis you want.
-- **Our choice:** the quiet button uses the accent color for its text, so it still reads as interactive without a border. Use it next to other buttons, not inside running text, where a real link belongs.
-- **Our choice:** primary buttons add an inner focus ring in their text color on top of the shared outline, so the indicator contrasts with the fill as well as the surface. This is the double-ring technique described in [WCAG technique C40](https://www.w3.org/WAI/WCAG22/Techniques/css/C40).
-- **Our choice:** small buttons are 32px tall: below the 44px default, above the [24px minimum](https://www.w3.org/WAI/WCAG22/Understanding/target-size-minimum.html).
-- **Our choice:** `aria-disabled="true"` looks exactly like `disabled`. Prefer native `disabled`; use `aria-disabled` when users should be able to reach the control and read why it is unavailable.
-
 ### Accessibility
 
 - `aria-disabled="true"` stays focusable, so a description can say why; your script must ignore activation ([APG](https://www.w3.org/WAI/ARIA/apg/practices/keyboard-interface/#focusabilityofdisabledcontrols)).
@@ -1438,8 +1684,6 @@ Page: https://odonckers.github.io/domestic-ui/components/atoms/controls.html
 Native form controls as styled by the domestic-ui base layer, with copyable markup.
 
 ### Live example
-
-- [Open the example](https://odonckers.github.io/domestic-ui/examples/atoms/controls.html)
 
 #### Text-like inputs
 
@@ -1570,8 +1814,6 @@ An on/off switch built on a native checkbox with role switch, following the APG 
 
 ### Live example
 
-- [Open the example](https://odonckers.github.io/domestic-ui/examples/atoms/switch.html)
-
 #### Off, on and disabled
 
 ```html
@@ -1602,10 +1844,6 @@ role="switch"   on <input type="checkbox">; no class needed.
 
 - Keep the label the same in both states; the state is on or off.
 - Wrap the input in its `<label>` so the whole label is the click target.
-
-### Our choice
-
-- **Our choice:** the switch is the native checkbox with `role="switch"`, drawn with `appearance: none` and one pseudo-element. The thumb moves and changes color, and forced-colors mode gets explicit system colors.
 
 ### Accessibility
 
@@ -1643,8 +1881,6 @@ Page: https://odonckers.github.io/domestic-ui/components/atoms/field.html
 Label, control, hint and error message wired with aria-describedby and aria-invalid.
 
 ### Live example
-
-- [Open the example](https://odonckers.github.io/domestic-ui/examples/atoms/field.html)
 
 #### With a hint
 
@@ -1706,11 +1942,6 @@ data-field="error"      on the error message
 - The wrapper is a `<div>`, or a `<fieldset>` for a group of controls.
 - Hide an error that does not apply with `hidden`, and remove its id from `aria-describedby`.
 
-### Our choice
-
-- **Our choice:** the field's error text starts with the word "Error:" in the markup, rather than a CSS icon, so every user and every screen reader gets it with no extra API. Invalid controls also get a thick start border, a shape change as well as a color change.
-- **Our choice:** a field is an atom here, not a molecule, because a control is not usable without its label, hint and error. Larger compositions (forms, cards, headers) are molecules and organisms for later milestones.
-
 ### Accessibility
 
 - `<label for>` names the control ([WCAG 1.3.1](https://www.w3.org/WAI/WCAG22/Understanding/info-and-relationships.html), [3.3.2](https://www.w3.org/WAI/WCAG22/Understanding/labels-or-instructions.html)).
@@ -1749,8 +1980,6 @@ Page: https://odonckers.github.io/domestic-ui/components/atoms/badge.html
 Inline status labels with tone variants that meet WCAG AA contrast.
 
 ### Live example
-
-- [Open the example](https://odonckers.github.io/domestic-ui/examples/atoms/badge.html)
 
 #### Tones
 
@@ -1793,10 +2022,6 @@ data-badge="neutral | accent | success | warning | danger"
 - Static text. To make a badge clickable, put a real `<button>` or `<a href>` around it.
 - An empty value is neutral.
 
-### Our choice
-
-- **Our choice:** badge tones are 8% of the tone mixed into the surface, with the tone as text. The tinted surfaces are derived tokens (`--dui-color-*-surface`), so a theme that changes the surface or a tone re-tints badges with no extra overrides.
-
 ### Accessibility
 
 - The words carry the meaning, not the tone ([WCAG 1.4.1](https://www.w3.org/WAI/WCAG22/Understanding/use-of-color.html)); add "Status:" with `.visually-hidden` if only position gives context.
@@ -1828,20 +2053,6 @@ For comparison only; these are not the standard this system follows.
 Page: https://odonckers.github.io/domestic-ui/molecules/index.html
 
 Small groups of atoms that work as one unit. A level of [Atomic Design](https://atomicdesign.bradfrost.com/); APIs follow the [component API convention](https://odonckers.github.io/domestic-ui/index.md#component-api).
-
-### Molecules
-
-- [Alerts](https://odonckers.github.io/domestic-ui/patterns/alerts.md): Status messages, from notices in the page to live alerts and toasts. Available.
-- [Breadcrumb](https://odonckers.github.io/domestic-ui/patterns/breadcrumb.md): The path to the current page: an ordered list of links in a labelled `<nav>`. Available.
-- [Card](https://odonckers.github.io/domestic-ui/patterns/card.md): A self-contained item, such as an article teaser, on a raised surface. Available.
-- [Disclosure](https://odonckers.github.io/domestic-ui/patterns/disclosure.md): A summary that shows or hides more content, built on `<details>` and `<summary>`. Available.
-- [Menu button](https://odonckers.github.io/domestic-ui/patterns/menu-button.md): A button that opens a menu of actions. Available.
-- [Pagination](https://odonckers.github.io/domestic-ui/patterns/pagination.md): Links to the pages of a long list of results. Available.
-- [Popover](https://odonckers.github.io/domestic-ui/patterns/popover.md): Content shown on top of the page from a button, with the `popover` attribute. Available.
-- [Search](https://odonckers.github.io/domestic-ui/patterns/search.md): A search form in a `<search>` landmark with an `<input type="search">`. Available.
-- [Tabs](https://odonckers.github.io/domestic-ui/patterns/tabs.md): Sections of content shown one at a time, chosen from a list of tabs. Available.
-- [Toolbar](https://odonckers.github.io/domestic-ui/patterns/toolbar.md): A row of related controls that is one stop in the tab order. Available.
-- [Typeahead](https://odonckers.github.io/domestic-ui/patterns/typeahead.md): A text field that suggests values as you type: `<datalist>` first, an APG combobox where it falls short. Coming in M3.
 
 ### Our choices
 
@@ -1882,8 +2093,6 @@ Page: https://odonckers.github.io/domestic-ui/patterns/alerts.html
 Status messages, from notices in the page to live alerts and toasts.
 
 ### Live example
-
-- [Open the example](https://odonckers.github.io/domestic-ui/examples/molecules/alerts.html)
 
 #### Inline alerts
 
@@ -1944,8 +2153,6 @@ role="status" | role="alert"                      native ARIA live regions
 
 ### Keyboard
 
-From the `Keyboard` block in [`examples/molecules/alerts.html`](https://github.com/odonckers/domestic-ui/blob/main/examples/molecules/alerts.html).
-
 | Key | Action |
 | --- | --- |
 | <kbd>Tab</kbd> | reaches each toast's Dismiss button; toasts never take focus |
@@ -1979,16 +2186,14 @@ The path to the current page: an ordered list of links in a labelled `<nav>`.
 
 ### Live example
 
-- [Open the example](https://odonckers.github.io/domestic-ui/examples/molecules/breadcrumb.html)
-
 #### Breadcrumb
 
 ```html
 <nav aria-label="Breadcrumb" data-breadcrumb>
   <ol>
-    <li><a href="../base.html">Home</a></li>
-    <li><a href="index.html">Molecules</a></li>
-    <li><a href="breadcrumb.html" aria-current="page">Breadcrumb</a></li>
+    <li><a href="#trail-title">Home</a></li>
+    <li><a href="#trail-title">Molecules</a></li>
+    <li><a href="#trail-title" aria-current="page">Breadcrumb</a></li>
   </ol>
 </nav>
 ```
@@ -2054,9 +2259,7 @@ A self-contained item, such as an article teaser, on a raised surface.
 
 ### Live example
 
-- [Open the example](https://odonckers.github.io/domestic-ui/examples/molecules/card.html)
-
-#### Atoms
+#### Cards in a grid
 
 ```html
 <div class="grid" style="--grid-min: 16rem">
@@ -2070,16 +2273,16 @@ A self-contained item, such as an article teaser, on a raised surface.
   </article>
   <article data-card="link">
     <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 320 160'%3E%3Crect width='320' height='160' fill='%233451d1'/%3E%3Ccircle cx='250' cy='40' r='60' fill='%238ea2ff'/%3E%3Crect x='24' y='96' width='140' height='40' rx='8' fill='%23f6f7f9'/%3E%3C/svg%3E" alt="" width="320" height="160">
-    <h3><a href="../theming.html">Theming guide</a></h3>
+    <h3><a href="#grid-title">Theming guide</a></h3>
     <p>Override semantic tokens to make a theme, with no build step.</p>
     <footer>
       <span data-badge="accent">Guide</span>
-      <a href="../../css/tokens/semantic.css" data-button="secondary small">View tokens</a>
+      <a href="#grid-title" data-button="secondary small">View tokens</a>
     </footer>
   </article>
   <article data-card="link">
     <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 320 160'%3E%3Crect width='320' height='160' fill='%2317773a'/%3E%3Cpath d='M0 160 L120 50 L200 120 L260 70 L320 120 V160Z' fill='%235fd38d'/%3E%3C/svg%3E" alt="" width="320" height="160">
-    <h3><a href="../atoms/index.html">Atoms</a></h3>
+    <h3><a href="#grid-title">Atoms</a></h3>
     <p>Buttons, switches, fields and badges.</p>
   </article>
 </div>
@@ -2101,8 +2304,6 @@ a heading, body content, and an optional <footer> for actions.
 - `data-card="link"` stretches the heading's link over the card, so the link name is the heading ([Inclusive Components](https://inclusive-components.design/cards/)). Footer actions stay focusable; card text cannot be selected with the mouse.
 
 ### Keyboard
-
-From the `Keyboard` block in [`examples/molecules/card.html`](https://github.com/odonckers/domestic-ui/blob/main/examples/molecules/card.html).
 
 | Key | Action |
 | --- | --- |
@@ -2137,9 +2338,7 @@ A modal `<dialog>`, either centered or as a drawer along one edge of the viewpor
 
 ### Live example
 
-- [Open the example](https://odonckers.github.io/domestic-ui/examples/molecules/dialog.html)
-
-#### Delete project?
+#### Modal dialog
 
 ```html
 <button type="button" commandfor="confirm-dialog" command="show-modal">Delete project…</button>
@@ -2157,7 +2356,7 @@ A modal `<dialog>`, either centered or as a drawer along one edge of the viewpor
 </dialog>
 ```
 
-#### Filters
+#### Drawer (end)
 
 ```html
 <button type="button" commandfor="filters-drawer" command="show-modal">Filters</button>
@@ -2183,7 +2382,7 @@ A modal `<dialog>`, either centered or as a drawer along one edge of the viewpor
 </dialog>
 ```
 
-#### Menu
+#### Drawer (start)
 
 ```html
 <button type="button" commandfor="menu-drawer" command="show-modal">Menu</button>
@@ -2202,7 +2401,7 @@ A modal `<dialog>`, either centered or as a drawer along one edge of the viewpor
 </dialog>
 ```
 
-#### Autosave is on
+#### Non-modal dialog
 
 ```html
 <button type="button" data-show-dialog="note-dialog">Show a note</button>
@@ -2234,8 +2433,6 @@ Children: an optional <header> (heading and close button) and <footer>
 - <kbd>Esc</kbd> and the close buttons always work ([WCAG 2.1.2](https://www.w3.org/WAI/WCAG22/Understanding/no-keyboard-trap.html)); [`closedby="any"`](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/dialog#closedby) adds light dismiss.
 
 ### Keyboard
-
-From the `Keyboard` block in [`examples/molecules/dialog.html`](https://github.com/odonckers/domestic-ui/blob/main/examples/molecules/dialog.html).
 
 | Key | Action |
 | --- | --- |
@@ -2273,8 +2470,6 @@ Page: https://odonckers.github.io/domestic-ui/patterns/disclosure.html
 A summary that shows or hides more content, built on `<details>` and `<summary>`.
 
 ### Live example
-
-- [Open the example](https://odonckers.github.io/domestic-ui/examples/molecules/disclosure.html)
 
 #### Disclosure
 
@@ -2352,8 +2547,6 @@ open                          on a <details> (native): open on load
 
 ### Keyboard
 
-From the `Keyboard` block in [`examples/molecules/disclosure.html`](https://github.com/odonckers/domestic-ui/blob/main/examples/molecules/disclosure.html).
-
 | Key | Action |
 | --- | --- |
 | <kbd>Tab</kbd> | moves to the next summary / Shift+Tab: previous |
@@ -2385,8 +2578,6 @@ Page: https://odonckers.github.io/domestic-ui/patterns/menu-button.html
 A button that opens a menu of actions.
 
 ### Live example
-
-- [Open the example](https://odonckers.github.io/domestic-ui/examples/molecules/menu-button.html)
 
 #### Actions menu
 
@@ -2437,8 +2628,6 @@ role="menuitem", tabindex="-1".
 
 ### Keyboard
 
-From the `Keyboard` block in [`examples/molecules/menu-button.html`](https://github.com/odonckers/domestic-ui/blob/main/examples/molecules/menu-button.html).
-
 | Key | Action |
 | --- | --- |
 | <kbd>Enter</kbd> / <kbd>Space</kbd> / <kbd>Down Arrow</kbd> | on the button, opens the menu and focuses the first item |
@@ -2480,8 +2669,6 @@ Links to the pages of a long list of results.
 **Our choice:** No standard exists: a labelled `<nav>` with a list of links and `aria-current="page"`, as for breadcrumbs.
 
 ### Live example
-
-- [Open the example](https://odonckers.github.io/domestic-ui/examples/molecules/pagination.html)
 
 #### Middle of a long list
 
@@ -2532,8 +2719,6 @@ aria-current="page"    on the current page link (native ARIA)
 
 ### Keyboard
 
-From the `Keyboard` block in [`examples/molecules/pagination.html`](https://github.com/odonckers/domestic-ui/blob/main/examples/molecules/pagination.html).
-
 | Key | Action |
 | --- | --- |
 | <kbd>Tab</kbd> | moves to the next page link / Shift+Tab: previous |
@@ -2568,8 +2753,6 @@ Content shown on top of the page from a button, with the `popover` attribute.
 
 ### Live example
 
-- [Open the example](https://odonckers.github.io/domestic-ui/examples/molecules/popover.html)
-
 #### Popover
 
 ```html
@@ -2585,7 +2768,7 @@ Content shown on top of the page from a button, with the `popover` attribute.
 <button type="button" popovertarget="help-popover">Help</button>
 <div id="help-popover" popover="manual" data-popover="block-start">
   <p><strong>Need a hand?</strong></p>
-  <p>Read the <a href="../../README.md">guide</a> or ask in the forum.</p>
+  <p>Read the <a href="#above-title">guide</a> or ask in the forum.</p>
   <button type="button" popovertarget="help-popover" popovertargetaction="hide" data-button="small">Close</button>
 </div>
 ```
@@ -2623,8 +2806,6 @@ popover="auto | manual | hint"  native: auto light-dismisses, manual does not
 - A tooltip supplements the trigger's name, shows on focus and hover, and closes on <kbd>Esc</kbd> ([WCAG 1.4.13](https://www.w3.org/WAI/WCAG22/Understanding/content-on-hover-or-focus.html); [APG Tooltip](https://www.w3.org/WAI/ARIA/apg/patterns/tooltip/) is a draft).
 
 ### Keyboard
-
-From the `Keyboard` block in [`examples/molecules/popover.html`](https://github.com/odonckers/domestic-ui/blob/main/examples/molecules/popover.html).
 
 | Key | Action |
 | --- | --- |
@@ -2666,8 +2847,6 @@ A search form in a `<search>` landmark with an `<input type="search">`.
 
 ### Live example
 
-- [Open the example](https://odonckers.github.io/domestic-ui/examples/molecules/search.html)
-
 #### With a visible label
 
 ```html
@@ -2708,8 +2887,6 @@ button share the row below.
 
 ### Keyboard
 
-From the `Keyboard` block in [`examples/molecules/search.html`](https://github.com/odonckers/domestic-ui/blob/main/examples/molecules/search.html).
-
 | Key | Action |
 | --- | --- |
 | <kbd>Enter</kbd> | in the field, submits the search |
@@ -2743,8 +2920,6 @@ Page: https://odonckers.github.io/domestic-ui/patterns/nav.html
 The main links of a site in a `<nav>` landmark, with the current page marked.
 
 ### Live example
-
-- [Open the example](https://odonckers.github.io/domestic-ui/examples/molecules/nav.html)
 
 #### Vertical (sidebar)
 
@@ -2822,8 +2997,6 @@ aria-current="page"                on the current link (native ARIA)
 
 ### Keyboard
 
-From the `Keyboard` block in [`examples/molecules/nav.html`](https://github.com/odonckers/domestic-ui/blob/main/examples/molecules/nav.html).
-
 | Key | Action |
 | --- | --- |
 | <kbd>Tab</kbd> | moves to the next link or group summary / Shift+Tab: previous |
@@ -2862,9 +3035,7 @@ Sections of content shown one at a time, chosen from a list of tabs.
 
 ### Live example
 
-- [Open the example](https://odonckers.github.io/domestic-ui/examples/molecules/tabs.html)
-
-#### Notifications
+#### Automatic activation
 
 ```html
 <dui-tabs>
@@ -2893,7 +3064,7 @@ Sections of content shown one at a time, chosen from a list of tabs.
 </dui-tabs>
 ```
 
-#### Year
+#### Manual activation
 
 ```html
 <dui-tabs activation="manual">
@@ -2919,7 +3090,7 @@ Sections of content shown one at a time, chosen from a list of tabs.
 </dui-tabs>
 ```
 
-#### مساعدة
+#### Right to left
 
 ```html
 <div dir="rtl" lang="ar">
@@ -2969,8 +3140,6 @@ role="tablist" | "tab" | "tabpanel" (added by the component; styled here)
 
 ### Keyboard
 
-From the `Keyboard` block in [`examples/molecules/tabs.html`](https://github.com/odonckers/domestic-ui/blob/main/examples/molecules/tabs.html).
-
 | Key | Action |
 | --- | --- |
 | <kbd>Tab</kbd> | moves into the tab list (to the selected tab), then to the panel |
@@ -3005,8 +3174,6 @@ Page: https://odonckers.github.io/domestic-ui/patterns/toolbar.html
 A row of related controls that is one stop in the tab order.
 
 ### Live example
-
-- [Open the example](https://odonckers.github.io/domestic-ui/examples/molecules/toolbar.html)
 
 #### Text formatting
 
@@ -3046,8 +3213,6 @@ aria-pressed="true | false"       on toggle buttons (native ARIA)
 - Toggle buttons use [`aria-pressed`](https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Reference/Attributes/aria-pressed), shown by more than color ([WCAG 1.4.1](https://www.w3.org/WAI/WCAG22/Understanding/use-of-color.html)).
 
 ### Keyboard
-
-From the `Keyboard` block in [`examples/molecules/toolbar.html`](https://github.com/odonckers/domestic-ui/blob/main/examples/molecules/toolbar.html).
 
 | Key | Action |
 | --- | --- |

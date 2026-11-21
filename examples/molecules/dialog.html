@@ -77,6 +77,7 @@
       <section aria-labelledby="modal-title">
         <h2 id="modal-title">Modal dialog</h2>
         <div class="demo">
+          <!-- dui:snippet name="Modal dialog" -->
           <button type="button" commandfor="confirm-dialog" command="show-modal">Delete project…</button>
           <dialog id="confirm-dialog" data-dialog aria-labelledby="confirm-dialog-title">
             <header>
@@ -90,26 +91,15 @@
               </footer>
             </form>
           </dialog>
+          <!-- /dui:snippet -->
         </div>
-        <pre tabindex="0"><code>&lt;button type="button" commandfor="confirm-dialog" command="show-modal"&gt;Delete project…&lt;/button&gt;
-&lt;dialog id="confirm-dialog" data-dialog aria-labelledby="confirm-dialog-title"&gt;
-  &lt;header&gt;
-    &lt;h2 id="confirm-dialog-title"&gt;Delete project?&lt;/h2&gt;
-  &lt;/header&gt;
-  &lt;p&gt;This deletes the project and its 12 files for everyone. You cannot undo it.&lt;/p&gt;
-  &lt;form method="dialog"&gt;
-    &lt;footer&gt;
-      &lt;button type="submit" value="cancel" data-button="secondary" autofocus&gt;Cancel&lt;/button&gt;
-      &lt;button type="submit" value="delete"&gt;Delete project&lt;/button&gt;
-    &lt;/footer&gt;
-  &lt;/form&gt;
-&lt;/dialog&gt;</code></pre>
       </section>
 
       <section aria-labelledby="drawer-end-title">
         <h2 id="drawer-end-title">Drawer (end)</h2>
         <p>Slides in from the inline end. <code>closedby="any"</code> lets a click on the backdrop close it.</p>
         <div class="demo">
+          <!-- dui:snippet name="Drawer (end)" -->
           <button type="button" commandfor="filters-drawer" command="show-modal">Filters</button>
           <dialog id="filters-drawer" data-dialog="drawer end" closedby="any" aria-labelledby="filters-drawer-title">
             <header>
@@ -131,34 +121,15 @@
               </footer>
             </form>
           </dialog>
+          <!-- /dui:snippet -->
         </div>
-        <pre tabindex="0"><code>&lt;button type="button" commandfor="filters-drawer" command="show-modal"&gt;Filters&lt;/button&gt;
-&lt;dialog id="filters-drawer" data-dialog="drawer end" closedby="any" aria-labelledby="filters-drawer-title"&gt;
-  &lt;header&gt;
-    &lt;h2 id="filters-drawer-title"&gt;Filters&lt;/h2&gt;
-    &lt;button type="button" commandfor="filters-drawer" command="close" data-button="quiet small"&gt;Close&lt;/button&gt;
-  &lt;/header&gt;
-  &lt;form method="dialog" class="stack"&gt;
-    &lt;fieldset&gt;
-      &lt;legend&gt;Status&lt;/legend&gt;
-      &lt;label&gt;&lt;input type="checkbox" name="show-open" checked&gt; Open&lt;/label&gt;
-      &lt;label&gt;&lt;input type="checkbox" name="show-closed"&gt; Closed&lt;/label&gt;
-    &lt;/fieldset&gt;
-    &lt;div data-field&gt;
-      &lt;label for="filters-owner"&gt;Owner&lt;/label&gt;
-      &lt;input id="filters-owner" name="owner" type="text" autocomplete="off"&gt;
-    &lt;/div&gt;
-    &lt;footer&gt;
-      &lt;button type="submit" value="apply"&gt;Apply filters&lt;/button&gt;
-    &lt;/footer&gt;
-  &lt;/form&gt;
-&lt;/dialog&gt;</code></pre>
       </section>
 
       <section aria-labelledby="drawer-start-title">
         <h2 id="drawer-start-title">Drawer (start)</h2>
         <p>Slides in from the inline start, for example a navigation drawer on small screens.</p>
         <div class="demo">
+          <!-- dui:snippet name="Drawer (start)" -->
           <button type="button" commandfor="menu-drawer" command="show-modal">Menu</button>
           <dialog id="menu-drawer" data-dialog="drawer start" closedby="any" aria-labelledby="menu-drawer-title">
             <header>
@@ -173,27 +144,15 @@
               </ul>
             </nav>
           </dialog>
+          <!-- /dui:snippet -->
         </div>
-        <pre tabindex="0"><code>&lt;button type="button" commandfor="menu-drawer" command="show-modal"&gt;Menu&lt;/button&gt;
-&lt;dialog id="menu-drawer" data-dialog="drawer start" closedby="any" aria-labelledby="menu-drawer-title"&gt;
-  &lt;header&gt;
-    &lt;h2 id="menu-drawer-title"&gt;Menu&lt;/h2&gt;
-    &lt;button type="button" commandfor="menu-drawer" command="close" data-button="quiet small"&gt;Close&lt;/button&gt;
-  &lt;/header&gt;
-  &lt;nav aria-label="Drawer" data-nav&gt;
-    &lt;ul&gt;
-      &lt;li&gt;&lt;a href="#menu-drawer-title" aria-current="page"&gt;Overview&lt;/a&gt;&lt;/li&gt;
-      &lt;li&gt;&lt;a href="#drawer-start-title"&gt;Projects&lt;/a&gt;&lt;/li&gt;
-      &lt;li&gt;&lt;a href="#drawer-start-title"&gt;Settings&lt;/a&gt;&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/nav&gt;
-&lt;/dialog&gt;</code></pre>
       </section>
 
       <section aria-labelledby="non-modal-title">
         <h2 id="non-modal-title">Non-modal dialog</h2>
         <p>Opened with <code>show()</code> (there is no invoker command for it): the page stays usable and focus is not trapped. The script is the two lines at the end of this page.</p>
         <div class="demo">
+          <!-- dui:snippet name="Non-modal dialog" -->
           <button type="button" data-show-dialog="note-dialog">Show a note</button>
           <dialog id="note-dialog" data-dialog closedby="closerequest" aria-labelledby="note-dialog-title">
             <header>
@@ -202,15 +161,8 @@
             </header>
             <p>Changes are saved as you type.</p>
           </dialog>
+          <!-- /dui:snippet -->
         </div>
-        <pre tabindex="0"><code>&lt;button type="button" data-show-dialog="note-dialog"&gt;Show a note&lt;/button&gt;
-&lt;dialog id="note-dialog" data-dialog closedby="closerequest" aria-labelledby="note-dialog-title"&gt;
-  &lt;header&gt;
-    &lt;h2 id="note-dialog-title"&gt;Autosave is on&lt;/h2&gt;
-    &lt;button type="button" commandfor="note-dialog" command="close" data-button="quiet small"&gt;Close&lt;/button&gt;
-  &lt;/header&gt;
-  &lt;p&gt;Changes are saved as you type.&lt;/p&gt;
-&lt;/dialog&gt;</code></pre>
       </section>
 
       <section aria-labelledby="specs-title">
@@ -244,7 +196,7 @@
       }
 
       // Non-modal dialogs have no invoker command: open them with show().
-      document.querySelector("[data-show-dialog]").addEventListener("click", (event) => {
+      document.querySelector("[data-show-dialog]")?.addEventListener("click", (event) => {
         document.getElementById(event.currentTarget.dataset.showDialog).show();
       });
     </script>

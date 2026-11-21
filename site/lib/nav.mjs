@@ -2,7 +2,7 @@
 /*
  * The Docs sidebar: one navigation for the whole site. Its top-level
  * entries are fixed, in this order; each lists the pages of its sections,
- * in page order (see buildPages()), plus a few links to example pages.
+ * in page order (see buildPages()).
  *
  * To add a page, give it one of the sections below; it appears under that
  * entry. To add an entry, add it here (and a section to Page["section"]).
@@ -35,38 +35,14 @@ export const NAV = [
 export const navEntryOf = (page) => NAV.find((e) => e.sections.includes(page.section));
 
 /**
- * Where an example page is listed in the sidebar: pages at the top of
- * examples/ (base, theming) under Base, a group's showcase
- * (examples/<group>/index.html) under that level. Other example pages are
- * reached from their component page and from examples.html.
- * @param {{ group: string, showcase: boolean }} e
- * @returns {Section | null}
- */
-export function exampleNavSection(e) {
-  if (!e.group) return "base";
-  if (!e.showcase) return null;
-  const section = e.group === "layout" ? "layouts" : e.group;
-  return NAV.some((n) => n.sections.includes(/** @type {Section} */ (section))) ? /** @type {Section} */ (section) : null;
-}
-
-/**
- * The sidebar's tree: each entry with its child links, in page order,
- * then the example pages listed under it.
+ * The sidebar's tree: each entry with its child links, in page order.
+ * Example pages are not listed: each snippet lives on its element's page.
  * @param {Page[]} pages
- * @param {{ path: string, title: string, group: string, showcase: boolean }[]} examples
  */
-export function navTree(pages, examples) {
+export function navTree(pages) {
   return NAV.map((entry) => ({
     ...entry,
-    children: [
-      ...pages.filter((p) => entry.sections.includes(p.section) && p.path !== entry.path).map((p) => ({ path: p.path, label: p.navLabel ?? p.title, note: p.navNote ?? "" })),
-      ...examples
-        .filter((e) => {
-          const s = exampleNavSection(e);
-          return s !== null && entry.sections.includes(s);
-        })
-        .map((e) => ({ path: e.path, label: e.title, note: "example page" })),
-    ],
+    children: pages.filter((p) => entry.sections.includes(p.section) && p.path !== entry.path).map((p) => ({ path: p.path, label: p.navLabel ?? p.title, note: p.navNote ?? "" })),
   }));
 }
 

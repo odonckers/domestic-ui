@@ -90,8 +90,9 @@ export function resolveSiteLinks(md, twins) {
  * The Markdown twin of a page: its title, then every block's Markdown.
  * @param {Page} page
  * @param {Set<string>} twins
+ * @param {{ full?: boolean }} [options] full: for llms-full.txt, without the blocks marked inFull: false
  */
-export function renderMarkdown(page, twins) {
-  const parts = [`# ${page.heading}`, ...page.blocks.map((b) => b.md).filter(Boolean)];
+export function renderMarkdown(page, twins, { full = false } = {}) {
+  const parts = [`# ${page.heading}`, ...page.blocks.filter((b) => !full || b.inFull !== false).map((b) => b.md).filter(Boolean)];
   return `${resolveSiteLinks(parts.join("\n\n"), twins)}\n`;
 }

@@ -42,7 +42,7 @@ for (const path of builtPages) {
       await page.goto(`_site/${path}`);
       const result = await page.evaluate(overflow);
       expect(result, `${path} at ${viewport.width}px: ${result}`).toBeNull();
-      // Framed live examples are examples/ pages, checked by tests/a11y.spec.js; the frame itself is checked here.
+      // Framed render pages (live/) hold examples/ markup, checked by tests/a11y.spec.js and axe-checked on their own in tests/docs.spec.js; the frame itself is checked here.
       const { violations } = await new AxeBuilder({ page }).withTags(WCAG_TAGS).exclude("iframe").analyze();
       expect(violations, `${path} at ${viewport.width}px\n${summarize(violations)}`).toEqual([]);
     }

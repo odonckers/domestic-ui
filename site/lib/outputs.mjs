@@ -55,7 +55,7 @@ export function generateReadme(model) {
 
 ${model.intro}
 
-[Docs](${SITE_URL}) · [Examples](site:examples.html) · [llms.txt](site:llms.txt) · [llms-full.txt](site:llms-full.txt)
+[Docs](${SITE_URL}) · [llms.txt](site:llms.txt) · [llms-full.txt](site:llms-full.txt)
 
 ## Install and use
 
@@ -110,7 +110,6 @@ Link \`css/domestic.css\` (copy \`css/\` from ${REPO_URL}); semantic HTML needs 
  */
 export function generateLlms(model, pages) {
   const entry = (/** @type {Page} */ p) => `- [${p.title}](${SITE_URL}${p.path.replace(/\.html$/, ".md")}): ${p.description}`;
-  const examples = model.examples.map((e) => `- [${e.title}](${SITE_URL}${e.path}): live example page (HTML)`);
   // Available patterns link to their Markdown twin; planned ones are named with their milestone only.
   const patterns = new Map(
     sortedPatterns(model).map((p) => {
@@ -124,7 +123,6 @@ export function generateLlms(model, pages) {
   // One H2 per Docs sidebar entry, in its order.
   const sections = NAV.map((n) => {
     const lines = pages.filter((p) => n.sections.includes(p.section)).map((p) => patterns.get(p.path) ?? entry(p));
-    if (n.path === "index.html") lines.push(...examples);
     if (n.path === "demos.html") lines.push(...demos);
     return `## ${n.title}\n\n${lines.join("\n")}`;
   });
@@ -150,7 +148,7 @@ ${sections.join("\n\n")}
  */
 export function generateLlmsFull(model, pages, twins) {
   const body = pages.filter((p) => p.inFull !== false).map((p) => {
-    const md = renderMarkdown(p, twins).trimEnd();
+    const md = renderMarkdown(p, twins, { full: true }).trimEnd();
     const [first, ...rest] = shiftHeadings(md, 1).split("\n");
     return [first, "", `Page: ${SITE_URL}${p.path}`, ...rest].join("\n");
   });

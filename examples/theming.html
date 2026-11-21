@@ -35,6 +35,7 @@
         border-radius: var(--dui-radius-surface);
       }
     </style>
+    <!-- dui:snippet name="Forest theme CSS" page="principles/theming" -->
     <style id="forest-theme">
       [data-theme="forest"] {
         --dui-color-surface: light-dark(#f7f5ef, #141a16);
@@ -48,6 +49,7 @@
         --dui-radius-surface: 0.25rem;
       }
     </style>
+    <!-- /dui:snippet -->
   </head>
   <body>
     <a class="visually-hidden" href="#main">Skip to main content</a>
@@ -69,19 +71,9 @@
       <p>
         A theme is an override of <strong>semantic tokens</strong> on <code>:root</code> or on a scoped element.
         No build step, no extra classes on the content. The right-hand panel below uses
-        <code>data-theme="forest"</code> and this CSS, which is the only difference between the two panels:
+        <code>data-theme="forest"</code> and the <code>&lt;style id="forest-theme"&gt;</code> in this page's <code>&lt;head&gt;</code>,
+        which is the only difference between the two panels.
       </p>
-      <pre tabindex="0"><code>[data-theme="forest"] {
-  --dui-color-surface: light-dark(#f7f5ef, #141a16);
-  --dui-color-surface-raised: light-dark(#eeeadf, #1d2620);
-  --dui-color-text: light-dark(#1d2a22, #e4ebe3);
-  --dui-color-border: light-dark(#d8d1bf, #34433a);
-  --dui-color-accent: light-dark(#2f6b3f, #7fcf95);
-  --dui-color-accent-contrast: light-dark(#fff, #0f1a13);
-  --dui-font-heading: charter, "Bitstream Charter", "Sitka Text", cambria, serif;
-  --dui-radius-control: 0.125rem;
-  --dui-radius-surface: 0.25rem;
-}</code></pre>
       <p>
         Links, focus rings, button hover colors and the tinted badge backgrounds follow <code>--dui-color-accent</code>
         and <code>--dui-color-surface</code> automatically, because those tokens are re-derived on every
@@ -96,7 +88,7 @@
         <section class="panel stack" aria-labelledby="default-title">
           <nav aria-label="Breadcrumb, default theme" data-breadcrumb>
             <ol>
-              <li><a href="base.html">Home</a></li>
+              <li><a href="#default-title">Home</a></li>
               <li><a href="#default-title">Releases</a></li>
               <li><a href="#default-title" aria-current="page">Release notes</a></li>
             </ol>
@@ -153,10 +145,11 @@
           </details>
         </section>
 
+        <!-- dui:snippet name="Forest theme" page="principles/theming" -->
         <section class="panel stack" data-theme="forest" aria-labelledby="forest-title">
           <nav aria-label="Breadcrumb, forest theme" data-breadcrumb>
             <ol>
-              <li><a href="base.html">Home</a></li>
+              <li><a href="#forest-title">Home</a></li>
               <li><a href="#forest-title">Releases</a></li>
               <li><a href="#forest-title" aria-current="page">Release notes</a></li>
             </ol>
@@ -212,6 +205,7 @@
             <p>Two bug fixes and a new <code>--dui-color-success</code> token.</p>
           </details>
         </section>
+        <!-- /dui:snippet -->
       </div>
     </main>
 

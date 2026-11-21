@@ -81,6 +81,7 @@
       <section aria-labelledby="vertical-title">
         <h2 id="vertical-title">Vertical (sidebar)</h2>
         <div class="demo">
+          <!-- dui:snippet name="Vertical (sidebar)" -->
           <nav aria-label="Sidebar example" data-nav="vertical">
             <ul>
               <li><a href="#vertical-title">Overview</a></li>
@@ -104,36 +105,15 @@
               </li>
             </ul>
           </nav>
+          <!-- /dui:snippet -->
         </div>
-        <pre tabindex="0"><code>&lt;nav aria-label="Sidebar example" data-nav="vertical"&gt;
-  &lt;ul&gt;
-    &lt;li&gt;&lt;a href="#vertical-title"&gt;Overview&lt;/a&gt;&lt;/li&gt;
-    &lt;li&gt;
-      &lt;details open&gt;
-        &lt;summary&gt;Projects&lt;/summary&gt;
-        &lt;ul&gt;
-          &lt;li&gt;&lt;a href="#vertical-title" aria-current="page"&gt;Active&lt;/a&gt;&lt;/li&gt;
-          &lt;li&gt;&lt;a href="#vertical-title"&gt;Archived&lt;/a&gt;&lt;/li&gt;
-        &lt;/ul&gt;
-      &lt;/details&gt;
-    &lt;/li&gt;
-    &lt;li&gt;
-      &lt;details&gt;
-        &lt;summary&gt;Settings&lt;/summary&gt;
-        &lt;ul&gt;
-          &lt;li&gt;&lt;a href="#vertical-title"&gt;Profile&lt;/a&gt;&lt;/li&gt;
-          &lt;li&gt;&lt;a href="#vertical-title"&gt;Billing&lt;/a&gt;&lt;/li&gt;
-        &lt;/ul&gt;
-      &lt;/details&gt;
-    &lt;/li&gt;
-  &lt;/ul&gt;
-&lt;/nav&gt;</code></pre>
       </section>
 
       <section aria-labelledby="horizontal-title">
         <h2 id="horizontal-title">Horizontal (top bar)</h2>
         <p>Groups open as dropdowns. They share a <code>name</code>, so opening one closes the other.</p>
         <div class="demo nav-demo">
+          <!-- dui:snippet name="Horizontal (top bar)" -->
           <nav aria-label="Top bar example" data-nav="horizontal">
             <ul>
               <li><a href="#horizontal-title" aria-current="page">Home</a></li>
@@ -158,31 +138,8 @@
               <li><a href="#horizontal-title">Contact</a></li>
             </ul>
           </nav>
+          <!-- /dui:snippet -->
         </div>
-        <pre tabindex="0"><code>&lt;nav aria-label="Top bar example" data-nav="horizontal"&gt;
-  &lt;ul&gt;
-    &lt;li&gt;&lt;a href="#horizontal-title" aria-current="page"&gt;Home&lt;/a&gt;&lt;/li&gt;
-    &lt;li&gt;
-      &lt;details name="top-bar"&gt;
-        &lt;summary&gt;Products&lt;/summary&gt;
-        &lt;ul&gt;
-          &lt;li&gt;&lt;a href="#horizontal-title"&gt;Design system&lt;/a&gt;&lt;/li&gt;
-          &lt;li&gt;&lt;a href="#horizontal-title"&gt;Icons&lt;/a&gt;&lt;/li&gt;
-        &lt;/ul&gt;
-      &lt;/details&gt;
-    &lt;/li&gt;
-    &lt;li&gt;
-      &lt;details name="top-bar"&gt;
-        &lt;summary&gt;Company&lt;/summary&gt;
-        &lt;ul&gt;
-          &lt;li&gt;&lt;a href="#horizontal-title"&gt;About&lt;/a&gt;&lt;/li&gt;
-          &lt;li&gt;&lt;a href="#horizontal-title"&gt;Careers&lt;/a&gt;&lt;/li&gt;
-        &lt;/ul&gt;
-      &lt;/details&gt;
-    &lt;/li&gt;
-    &lt;li&gt;&lt;a href="#horizontal-title"&gt;Contact&lt;/a&gt;&lt;/li&gt;
-  &lt;/ul&gt;
-&lt;/nav&gt;</code></pre>
       </section>
 
       <section aria-labelledby="specs-title">

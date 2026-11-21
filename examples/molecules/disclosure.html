@@ -78,21 +78,20 @@
         <h2 id="single-title">Disclosure</h2>
         <p>A single <code>&lt;details&gt;</code> is styled by the base layer; no attribute needed.</p>
         <div class="demo">
+          <!-- dui:snippet name="Disclosure" -->
           <details>
             <summary>What is included in the plan?</summary>
             <p>Unlimited projects, five collaborators and email support.</p>
           </details>
+          <!-- /dui:snippet -->
         </div>
-        <pre tabindex="0"><code>&lt;details&gt;
-  &lt;summary&gt;What is included in the plan?&lt;/summary&gt;
-  &lt;p&gt;Unlimited projects, five collaborators and email support.&lt;/p&gt;
-&lt;/details&gt;</code></pre>
       </section>
 
       <section aria-labelledby="accordion-title">
         <h2 id="accordion-title">Exclusive accordion</h2>
         <p>Same <code>name</code> on each item: only one is open at a time.</p>
         <div class="demo">
+          <!-- dui:snippet name="Exclusive accordion" -->
           <div data-disclosure="accordion">
             <details name="faq" open>
               <summary>Shipping</summary>
@@ -107,27 +106,15 @@
               <p>Every product has a two-year warranty.</p>
             </details>
           </div>
+          <!-- /dui:snippet -->
         </div>
-        <pre tabindex="0"><code>&lt;div data-disclosure="accordion"&gt;
-  &lt;details name="faq" open&gt;
-    &lt;summary&gt;Shipping&lt;/summary&gt;
-    &lt;p&gt;Orders ship within two working days.&lt;/p&gt;
-  &lt;/details&gt;
-  &lt;details name="faq"&gt;
-    &lt;summary&gt;Returns&lt;/summary&gt;
-    &lt;p&gt;Return unused items within 30 days for a full refund.&lt;/p&gt;
-  &lt;/details&gt;
-  &lt;details name="faq"&gt;
-    &lt;summary&gt;Warranty&lt;/summary&gt;
-    &lt;p&gt;Every product has a two-year warranty.&lt;/p&gt;
-  &lt;/details&gt;
-&lt;/div&gt;</code></pre>
       </section>
 
       <section aria-labelledby="multi-title">
         <h2 id="multi-title">Accordion with several open</h2>
         <p>Leave out <code>name</code> when people need to compare sections.</p>
         <div class="demo">
+          <!-- dui:snippet name="Accordion with several open" -->
           <div data-disclosure="accordion">
             <details>
               <summary>Monthly plan</summary>
@@ -138,22 +125,14 @@
               <p>Pay once a year and get two months free.</p>
             </details>
           </div>
+          <!-- /dui:snippet -->
         </div>
-        <pre tabindex="0"><code>&lt;div data-disclosure="accordion"&gt;
-  &lt;details&gt;
-    &lt;summary&gt;Monthly plan&lt;/summary&gt;
-    &lt;p&gt;Pay each month and cancel any time.&lt;/p&gt;
-  &lt;/details&gt;
-  &lt;details&gt;
-    &lt;summary&gt;Yearly plan&lt;/summary&gt;
-    &lt;p&gt;Pay once a year and get two months free.&lt;/p&gt;
-  &lt;/details&gt;
-&lt;/div&gt;</code></pre>
       </section>
 
       <section aria-labelledby="plain-title">
         <h2 id="plain-title">Inline show more</h2>
         <div class="demo">
+          <!-- dui:snippet name="Inline show more" -->
           <p>The release adds pagination, tabs and toasts.</p>
           <details data-disclosure="plain">
             <summary>Show the full list of changes</summary>
@@ -163,16 +142,8 @@
               <li>Four explainers for custom patterns.</li>
             </ul>
           </details>
+          <!-- /dui:snippet -->
         </div>
-        <pre tabindex="0"><code>&lt;p&gt;The release adds pagination, tabs and toasts.&lt;/p&gt;
-&lt;details data-disclosure="plain"&gt;
-  &lt;summary&gt;Show the full list of changes&lt;/summary&gt;
-  &lt;ul&gt;
-    &lt;li&gt;Twelve molecules with example pages.&lt;/li&gt;
-    &lt;li&gt;Five small web components.&lt;/li&gt;
-    &lt;li&gt;Four explainers for custom patterns.&lt;/li&gt;
-  &lt;/ul&gt;
-&lt;/details&gt;</code></pre>
       </section>
 
       <section aria-labelledby="specs-title">

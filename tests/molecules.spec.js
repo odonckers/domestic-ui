@@ -635,9 +635,9 @@ test.describe("toolbar", () => {
     await page.keyboard.press("ArrowRight");
     await page.keyboard.press("ArrowRight");
     await expect(button("Underline")).toBeFocused();
-    // Tab leaves the toolbar (for the scrollable code example after it); Shift+Tab comes back to the last focused control.
+    // Tab leaves the toolbar (for the next toolbar's one tab stop); Shift+Tab comes back to the last focused control.
     await page.keyboard.press("Tab");
-    await expect(toolbar.locator("xpath=following::pre[1]")).toBeFocused();
+    await expect(page.getByRole("toolbar", { name: "Drawing tools" }).locator('[tabindex="0"]')).toBeFocused();
     await page.keyboard.press("Shift+Tab");
     await expect(button("Underline")).toBeFocused();
     await expect(toolbar.locator('[tabindex="0"]')).toHaveCount(1);

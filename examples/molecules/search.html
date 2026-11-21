@@ -75,6 +75,7 @@
       <section aria-labelledby="visible-title">
         <h2 id="visible-title">With a visible label</h2>
         <div class="demo">
+          <!-- dui:snippet name="With a visible label" -->
           <search aria-label="Guides">
             <form action="search.html" method="get">
               <label for="guide-search">Search the guides</label>
@@ -83,20 +84,14 @@
               <p id="guide-search-hint" data-field="hint">Try "tokens" or "dialog".</p>
             </form>
           </search>
+          <!-- /dui:snippet -->
         </div>
-        <pre tabindex="0"><code>&lt;search aria-label="Guides"&gt;
-  &lt;form action="search.html" method="get"&gt;
-    &lt;label for="guide-search"&gt;Search the guides&lt;/label&gt;
-    &lt;input id="guide-search" type="search" name="q" autocomplete="off" aria-describedby="guide-search-hint"&gt;
-    &lt;button type="submit"&gt;Search&lt;/button&gt;
-    &lt;p id="guide-search-hint" data-field="hint"&gt;Try "tokens" or "dialog".&lt;/p&gt;
-  &lt;/form&gt;
-&lt;/search&gt;</code></pre>
       </section>
 
       <section aria-labelledby="compact-title">
         <h2 id="compact-title">Compact, label visually hidden</h2>
         <div class="demo">
+          <!-- dui:snippet name="Compact, label visually hidden" -->
           <search aria-label="Site">
             <form action="search.html" method="get">
               <label for="site-search" class="visually-hidden">Search this site</label>
@@ -104,14 +99,8 @@
               <button type="submit" data-button="secondary">Search</button>
             </form>
           </search>
+          <!-- /dui:snippet -->
         </div>
-        <pre tabindex="0"><code>&lt;search aria-label="Site"&gt;
-  &lt;form action="search.html" method="get"&gt;
-    &lt;label for="site-search" class="visually-hidden"&gt;Search this site&lt;/label&gt;
-    &lt;input id="site-search" type="search" name="q" autocomplete="off"&gt;
-    &lt;button type="submit" data-button="secondary"&gt;Search&lt;/button&gt;
-  &lt;/form&gt;
-&lt;/search&gt;</code></pre>
       </section>
 
       <section aria-labelledby="specs-title">
