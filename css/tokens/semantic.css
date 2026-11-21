@@ -78,6 +78,7 @@
   --dui-size-column-min: var(--dui-size-16);
   --dui-size-menu-min: var(--dui-size-12);
   --dui-size-drawer: var(--dui-size-24);
+  --dui-size-page: var(--dui-size-72); /* Max inline size of a page's content column: header, main and footer */
 
   /* Shape */
   --dui-radius-control: var(--dui-radius-2);
@@ -106,6 +107,9 @@
   --dui-elevation-strength: var(--dui-mix-100); /* How much of --dui-color-shadow each shadow uses, 0% to 100% */
   --dui-elevation-surface-step: var(--dui-mix-3); /* Dark scheme: how much text color each level mixes into its surface */
 
+  /* Density knob: the density tokens (section 2) are derived from it. */
+  --dui-density-scale: var(--dui-factor-1); /* 1 is comfortable, 0 compact (data-density); in between interpolates. Below 0 is not supported: targets could drop under 24px */
+
   /* State */
   --dui-opacity-disabled: var(--dui-opacity-60);
   --dui-tint-amount: var(--dui-mix-8);
@@ -124,13 +128,14 @@
  *
  * Motion tokens follow --dui-motion-scale, --dui-motion-enabled and
  * --dui-motion-movement, so they are re-declared on [data-motion] too
- * (section 3).
+ * (section 3). Density tokens follow --dui-density-scale, so they are
+ * re-declared on [data-density] (section 4).
  *
  * Our choice: themes are scoped with [data-theme] or .theme-*, so one
  * attribute (or class) is the whole scoping API.
  */
 :root,
-:where([data-theme], [class^="theme-"], [class*=" theme-"], [data-motion]) {
+:where([data-theme], [class^="theme-"], [class*=" theme-"], [data-motion], [data-density]) {
   --dui-color-link: var(--dui-color-accent);
   --dui-color-focus: var(--dui-color-accent);
   --dui-color-accent-hover: color-mix(in oklab, var(--dui-color-accent) 82%, var(--dui-color-text));
@@ -184,6 +189,20 @@
   --dui-elevation-dialog: var(--dui-elevation-4); /* Shadow of dialogs and drawers */
   --dui-elevation-dialog-surface: var(--dui-elevation-4-surface); /* Surface of dialogs and drawers */
 
+  /*
+   * Density: space inside components and control heights, from the
+   * comfortable value (--dui-density-scale 1) down to the compact one (0).
+   * Compact controls stay 32px tall, above the 24px of WCAG 2.5.8. Type
+   * sizes never change with density.
+   */
+  --dui-size-control: calc(var(--dui-size-target-small) + (var(--dui-size-target) - var(--dui-size-target-small)) * var(--dui-density-scale)); /* Min block size of controls, buttons and nav, menu and listbox items: 44px comfortable, 32px compact */
+  --dui-space-control-block: calc(var(--dui-space-2xs) + (var(--dui-space-xs) - var(--dui-space-2xs)) * var(--dui-density-scale)); /* Block padding inside controls, buttons and items: 0.5rem comfortable, 0.25rem compact */
+  --dui-space-control-inline: calc(var(--dui-space-xs) + (var(--dui-space-s) - var(--dui-space-xs)) * var(--dui-density-scale)); /* Inline padding of text fields and nav, menu and listbox items: 0.75rem comfortable, 0.5rem compact */
+  --dui-space-button-inline: calc(var(--dui-space-s) + (var(--dui-space-m) - var(--dui-space-s)) * var(--dui-density-scale)); /* Inline padding of buttons: 1rem comfortable, 0.75rem compact */
+  --dui-space-gap: calc(var(--dui-space-2xs) + (var(--dui-space-xs) - var(--dui-space-2xs)) * var(--dui-density-scale)); /* Gap between the parts of a control: icon and label, check and label: 0.5rem comfortable, 0.25rem compact */
+  --dui-space-gap-tight: calc(var(--dui-space-3xs) + (var(--dui-space-2xs) - var(--dui-space-3xs)) * var(--dui-density-scale)); /* Gap and padding in groups of controls: field, toolbar, pagination, menu: 0.25rem comfortable, 0.125rem compact */
+  --dui-space-cell: calc(var(--dui-space-2xs) + (var(--dui-space-xs) - var(--dui-space-2xs)) * var(--dui-density-scale)); /* Table cell padding: 0.5rem comfortable, 0.25rem compact */
+
   /* Deprecated aliases, removed in the next release (see CHANGELOG.md). */
   --dui-shadow-raised: var(--dui-elevation-1); /* Deprecated: use --dui-elevation-raised (level 1) */
   --dui-duration-fast: var(--dui-motion-duration-fast); /* Deprecated: use --dui-motion-duration-fast */
@@ -221,4 +240,26 @@
 [data-motion="none"] {
   --dui-motion-enabled: var(--dui-factor-0);
   --dui-motion-movement: var(--dui-factor-0);
+}
+
+/*
+ * 4. Density.
+ *
+ * Density changes space, never type size: control heights, padding and
+ * gaps inside components and table cells. Compact keeps every target at
+ * least 32px tall, above the 24 by 24 CSS pixels of WCAG 2.5.8.
+ * https://www.w3.org/WAI/WCAG22/Understanding/target-size-minimum.html
+ *
+ * API: data-density="compact" on any element tightens everything inside;
+ * data-density="comfortable" (the default with no attribute) restores it
+ * inside a compact area. Our choice: an attribute on any ancestor, not a
+ * media query, because density follows the task (a data table, a toolbar),
+ * not the device.
+ */
+[data-density="comfortable"] {
+  --dui-density-scale: var(--dui-factor-1);
+}
+
+[data-density="compact"] {
+  --dui-density-scale: var(--dui-factor-0);
 }
