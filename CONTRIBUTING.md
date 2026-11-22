@@ -69,3 +69,20 @@ request re-runs CI. Merge commits such as "Merge branch 'main' into …" are ign
 [`cliff.toml`](cliff.toml)) at release time. Never edit it by hand, and do not add changelog entries in pull
 requests: the commit message is the entry. `npm run changelog:check` fails if the file is out of date. The section
 written by hand before Conventional Commits is kept as it is.
+
+### Releasing
+
+Versions follow [Semantic Versioning 2.0.0](https://semver.org/spec/v2.0.0.html), and the changelog follows
+[Keep a Changelog 1.1.0](https://keepachangelog.com/en/1.1.0/). Releases happen only when the maintainer asks.
+
+1. Open a `chore(release): prepare X.Y.Z` pull request that sets `version` in `package.json` (and
+   `package-lock.json`, with `npm version X.Y.Z --no-git-tag-version`) and runs
+   `npm run changelog -- --tag vX.Y.Z`. That files every unreleased commit under `X.Y.Z` before the tag exists
+   (git-cliff [`--tag`](https://git-cliff.org/docs/usage/args)) and leaves an empty `[Unreleased]` above it. Commit
+   its output unedited. `npm run changelog:check -- --tag vX.Y.Z` checks it.
+2. git-cliff dates the new section today (UTC), so generate it on the day the pull request merges, and regenerate
+   it if the merge slips to another day.
+3. After it merges, create an annotated tag on the merge commit on `main` and push it:
+   `git tag -a vX.Y.Z -m "vX.Y.Z" <merge-sha> && git push origin vX.Y.Z`. From then on, plain
+   `npm run changelog` and `npm run changelog:check` see the tag and produce the same section.
+4. Publish a GitHub release named `vX.Y.Z` from that tag, with the `X.Y.Z` changelog section as its notes.
