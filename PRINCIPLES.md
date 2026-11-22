@@ -498,15 +498,7 @@ link's visited status "is not an author responsibility". The visited color still
   through [`currentColor`](https://developer.mozilla.org/en-US/docs/Web/CSS/color_value#currentcolor), so it follows
   themes and [forced colors](https://developer.mozilla.org/en-US/docs/Web/CSS/@media/forced-colors) with no extra CSS.
 
-  ```html
-  <!-- Lucide: search -->
-  <svg data-icon xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-       stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-       aria-hidden="true" focusable="false">
-    <path d="m21 21-4.34-4.34" />
-    <circle cx="11" cy="11" r="8" />
-  </svg>
-  ```
+  [`examples/atoms/icon.html`](examples/atoms/icon.html) shows the recipe in every context.
 
 - **Decorative or meaningful.** An icon beside a visible label is decoration: `aria-hidden="true"`, so the label is the
   name and is not announced twice ([1.1.1 Non-text Content](https://www.w3.org/WAI/WCAG22/Understanding/non-text-content.html)).

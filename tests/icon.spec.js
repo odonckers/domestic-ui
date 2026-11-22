@@ -120,7 +120,7 @@ test.describe("icons", () => {
     const labelled = page.locator("main button:not([data-button~='icon'])", { hasText: "Search" });
     await expect(labelled).toBeVisible();
     await expect(labelled).toHaveAccessibleName("Search");
-    await expect(page.getByRole("link", { name: "Back to the app shell" })).toBeVisible();
+    await expect(page.getByRole("link", { name: "Back", exact: true })).toBeVisible();
     await expect(page.getByRole("navigation", { name: "Example" }).getByRole("link", { name: "Home" })).toBeVisible();
   });
 

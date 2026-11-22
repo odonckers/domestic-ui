@@ -934,15 +934,7 @@ link's visited status "is not an author responsibility". The visited color still
   through [`currentColor`](https://developer.mozilla.org/en-US/docs/Web/CSS/color_value#currentcolor), so it follows
   themes and [forced colors](https://developer.mozilla.org/en-US/docs/Web/CSS/@media/forced-colors) with no extra CSS.
 
-  ```html
-  <!-- Lucide: search -->
-  <svg data-icon xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-       stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-       aria-hidden="true" focusable="false">
-    <path d="m21 21-4.34-4.34" />
-    <circle cx="11" cy="11" r="8" />
-  </svg>
-  ```
+  [`examples/atoms/icon.html`](https://odonckers.github.io/domestic-ui/components/atoms/icon.md) shows the recipe in every context.
 
 - **Decorative or meaningful.** An icon beside a visible label is decoration: `aria-hidden="true"`, so the label is the
   name and is not announced twice ([1.1.1 Non-text Content](https://www.w3.org/WAI/WCAG22/Understanding/non-text-content.html)).
@@ -3033,13 +3025,13 @@ _Diagram: Icons sit inside buttons in a toolbar above the content: beside the la
     </svg>
     Search
   </button>
-  <a href="../app-shell.html" data-button="quiet">
+  <a href="#main" data-button="quiet">
     <!-- Lucide: arrow-left -->
     <svg data-icon="mirror" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
       <path d="m12 19-7-7 7-7" />
       <path d="M19 12H5" />
     </svg>
-    Back to the app shell
+    Back
   </a>
 </div>
 ```
@@ -3091,7 +3083,7 @@ _Diagram: Icons sit inside buttons in a toolbar above the content: beside the la
 <nav aria-label="Example" data-nav="vertical">
   <ul>
     <li>
-      <a href="../app-shell.html">
+      <a href="#nav-title">
         <!-- Lucide: house -->
         <svg data-icon xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
           <path d="M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8" />
