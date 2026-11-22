@@ -174,8 +174,9 @@ test.describe("visited links (real :visited, Firefox)", () => {
       const [visited, link] = await resolve(page, ["var(--dui-color-link-visited)", "var(--dui-color-link)"]);
       const { content, nav, marked } = links(page);
 
-      const [contentVisited, contentLink] = await countPixels(page, content, [visited, link]);
-      expect(contentVisited, "content link shows the visited color").toBeGreaterThan(0);
+      // Firefox looks up history asynchronously after load, so the first paint can still be unvisited.
+      await expect.poll(async () => (await countPixels(page, content, [visited, link]))[0], { message: "content link shows the visited color" }).toBeGreaterThan(0);
+      const [, contentLink] = await countPixels(page, content, [visited, link]);
       expect(contentLink).toBe(0);
 
       for (const [name, locator] of [["nav", nav], ["data-link=nav", marked]]) {
@@ -194,8 +195,9 @@ test.describe("visited links (real :visited, Firefox)", () => {
     expect(visited).not.toBe(link);
     const { content, nav, marked } = links(page);
 
-    const [contentVisited, contentLink] = await countPixels(page, content, [visited, link]);
-    expect(contentVisited, "content link shows VisitedText").toBeGreaterThan(0);
+    // Firefox looks up history asynchronously after load, so the first paint can still be unvisited.
+    await expect.poll(async () => (await countPixels(page, content, [visited, link]))[0], { message: "content link shows VisitedText" }).toBeGreaterThan(0);
+    const [, contentLink] = await countPixels(page, content, [visited, link]);
     expect(contentLink).toBe(0);
 
     for (const [name, locator] of [["nav", nav], ["data-link=nav", marked]]) {
