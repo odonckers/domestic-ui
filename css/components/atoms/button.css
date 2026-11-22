@@ -15,7 +15,7 @@
  * tall, above the 24px minimum of WCAG 2.5.8.
  *
  * API
- *   data-button="[primary | secondary | quiet] [small | large]"  on <button>, <input type="submit | button | reset"> or <a href>: at most one variant word and one size word
+ *   data-button="[primary | secondary | quiet] [small | large] [icon]"  on <button>, <input type="submit | button | reset"> or <a href>: at most one variant word, one size word and icon
  *
  * data-button is a space-separated list. No variant word keeps the native
  * default: type="submit" is primary, other buttons and links are secondary.
@@ -25,6 +25,22 @@
  *   <button type="submit" data-button="secondary">Save draft</button>
  *   <button type="button" data-button="quiet small">Undo</button>
  *   <a href="/signup" data-button="primary large">Create account</a>
+ *
+ * Icon only: data-button="icon" makes the button a square of the control
+ * size (32px compact, 44px comfortable, never under the 24px of WCAG
+ * 2.5.8), for a short list of well-known actions only (PRINCIPLES.md,
+ * Icons). The name is visually hidden text in the button, so it is real
+ * content that translation tools and every engine see; the SVG is hidden.
+ * <dui-tooltip> shows the same words on hover and focus, and Esc hides
+ * them (WCAG 1.4.13). The tooltip repeats the name, so it is aria-hidden
+ * rather than a description: the name is not announced twice.
+ *   <dui-tooltip>
+ *     <button type="button" data-button="quiet icon">
+ *       <svg data-icon … aria-hidden="true" focusable="false">…</svg>
+ *       <span class="visually-hidden">Search</span>
+ *     </button>
+ *     <span popover="hint" role="tooltip" aria-hidden="true">Search</span>
+ *   </dui-tooltip>
  *
  * States
  *   disabled              Native. Removed from the tab order, not submitted.
@@ -60,6 +76,8 @@
  *   https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Reference/Attributes/aria-busy
  *   https://www.w3.org/WAI/WCAG22/Understanding/target-size-minimum.html
  *   https://www.w3.org/WAI/WCAG22/Understanding/focus-appearance.html
+ *   https://www.w3.org/WAI/WCAG22/Understanding/content-on-hover-or-focus.html
+ *   https://www.w3.org/WAI/ARIA/apg/practices/names-and-descriptions/
  */
 
 /* Links that look like buttons: the box that base gives <button>. */
@@ -137,6 +155,11 @@ a[data-button] {
   min-inline-size: var(--dui-size-target-large);
   padding: var(--dui-space-s) var(--dui-space-l);
   font-size: var(--dui-step-1);
+}
+
+/* Icon only: a square of the size's min block size; the icon sits centered. */
+[data-button~="icon"] {
+  padding: 0;
 }
 
 /* aria-disabled: same look as native :disabled (css/base/forms.css), still focusable. */

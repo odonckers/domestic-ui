@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Icon · domestic-ui</title>
+    <meta name="description" content="Inline Lucide SVG icons sized by a token, icon and label buttons, and icon-only buttons with a name and a tooltip.">
+    <link rel="stylesheet" href="../../css/domestic.css">
+    <style>
+      /* Page-only layout, written with semantic tokens like any consumer would. */
+      body > :is(header, main, footer) {
+        max-inline-size: var(--dui-size-page);
+        margin-inline: auto;
+        padding-inline: var(--dui-space-l);
+      }
+
+      body > header {
+        padding-block: var(--dui-space-m);
+        border-block-end: var(--dui-border-width) solid var(--dui-color-border);
+      }
+
+      body > main {
+        padding-block: var(--dui-space-2xl);
+      }
+
+      body > footer {
+        padding-block: var(--dui-space-l);
+        border-block-start: var(--dui-border-width) solid var(--dui-color-border);
+        color: var(--dui-color-text-muted);
+      }
+
+      /* Wrap long lines of example markup instead of scrolling them. */
+      pre {
+        white-space: pre-wrap;
+        overflow-wrap: anywhere;
+      }
+
+      .demo {
+        padding: var(--dui-space-l);
+        border: var(--dui-border-width) solid var(--dui-color-border);
+        border-radius: var(--dui-radius-surface);
+      }
+    </style>
+  </head>
+  <body>
+    <a class="visually-hidden" href="#main">Skip to main content</a>
+
+    <header class="cluster" style="--cluster-justify: space-between">
+      <p><strong>domestic-ui</strong></p>
+      <nav aria-label="Examples">
+        <ul class="cluster">
+          <li><a href="../base.html">Base elements</a></li>
+          <li><a href="../theming.html">Theming</a></li>
+          <li><a href="../motion.html">Motion</a></li>
+          <li><a href="../elevation.html">Elevation</a></li>
+          <li><a href="../patterns/density.html">Density</a></li>
+          <li><a href="index.html">Atoms</a></li>
+          <li><a href="../app-shell.html">App shell</a></li>
+        </ul>
+      </nav>
+    </header>
+
+    <main id="main">
+      <h1>Icon</h1>
+      <!--
+        Keyboard
+          Tab to an icon-only button: shows its tooltip / Esc: hides it, focus stays
+      -->
+      <p data-text="lead">Inline SVG icons from Lucide, pasted into the page and colored by the text around them.</p>
+      <p>API: <code>data-icon</code> (or <code>data-icon="mirror"</code>) on an inline <code>&lt;svg&gt;</code>; <code>data-button="icon"</code> on an icon-only button. Source: <a href="../../css/components/atoms/icon.css"><code>css/components/atoms/icon.css</code></a> and <a href="../../css/components/atoms/button.css"><code>css/components/atoms/button.css</code></a>.</p>
+      <p>
+        Copy an icon from <a href="https://lucide.dev">lucide.dev</a>, replace its <code>class</code> with <code>data-icon</code> and add
+        <code>aria-hidden="true" focusable="false"</code>. Nothing is installed: the SVG is the icon. Stroke and fill stay
+        <code>currentColor</code>, so the icon follows the theme and forced colors. Icon plus a visible label is the default;
+        label only is always fine; icon only is for a short list of well-known actions (see
+        <a href="../../PRINCIPLES.md#icons">PRINCIPLES.md, Icons</a>).
+      </p>
+
+      <section aria-labelledby="label-title">
+        <h2 id="label-title">Icon and label</h2>
+        <p>The default. The icon is decoration: the visible word is the button's name.</p>
+        <div class="demo">
+          <!-- dui:snippet name="Icon and label" -->
+          <div class="cluster">
+            <button type="button">
+              <!-- Lucide: search -->
+              <svg data-icon xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+                <path d="m21 21-4.34-4.34" />
+                <circle cx="11" cy="11" r="8" />
+              </svg>
+              Search
+            </button>
+            <a href="../app-shell.html" data-button="quiet">
+              <!-- Lucide: arrow-left -->
+              <svg data-icon="mirror" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+                <path d="m12 19-7-7 7-7" />
+                <path d="M19 12H5" />
+              </svg>
+              Back to the app shell
+            </a>
+          </div>
+          <!-- /dui:snippet -->
+        </div>
+      </section>
+
+      <section aria-labelledby="icon-only-title">
+        <h2 id="icon-only-title">Icon only, with a tooltip</h2>
+        <p>
+          Only for a well-known action. The name is visually hidden text in the button and names the action, not the picture.
+          The tooltip shows the same words on hover and on keyboard focus, <kbd>Esc</kbd> hides it, and the pointer can move onto it
+          (<a href="https://www.w3.org/WAI/WCAG22/Understanding/content-on-hover-or-focus.html">WCAG 1.4.13</a>). It repeats the name,
+          so it is <code>aria-hidden</code>: screen readers hear the name once. The button is a square of the control size,
+          never smaller than 24 by 24 pixels.
+        </p>
+        <div class="demo">
+          <!-- dui:snippet name="Icon only, with a tooltip" -->
+          <div class="cluster">
+            <dui-tooltip>
+              <button type="button" data-button="quiet icon">
+                <!-- Lucide: search -->
+                <svg data-icon xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+                  <path d="m21 21-4.34-4.34" />
+                  <circle cx="11" cy="11" r="8" />
+                </svg>
+                <span class="visually-hidden">Search</span>
+              </button>
+              <span popover="hint" role="tooltip" aria-hidden="true">Search</span>
+            </dui-tooltip>
+            <dui-tooltip>
+              <button type="button" data-button="quiet icon">
+                <!-- Lucide: x -->
+                <svg data-icon xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+                  <path d="M18 6 6 18" />
+                  <path d="m6 6 12 12" />
+                </svg>
+                <span class="visually-hidden">Close</span>
+              </button>
+              <span popover="hint" role="tooltip" aria-hidden="true">Close</span>
+            </dui-tooltip>
+            <dui-tooltip>
+              <button type="button" data-button="quiet icon">
+                <!-- Lucide: ellipsis -->
+                <svg data-icon xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+                  <circle cx="12" cy="12" r="1" />
+                  <circle cx="19" cy="12" r="1" />
+                  <circle cx="5" cy="12" r="1" />
+                </svg>
+                <span class="visually-hidden">More actions</span>
+              </button>
+              <span popover="hint" role="tooltip" aria-hidden="true">More actions</span>
+            </dui-tooltip>
+          </div>
+          <!-- /dui:snippet -->
+        </div>
+      </section>
+
+      <section aria-labelledby="nav-title">
+        <h2 id="nav-title">Navigation keeps its text</h2>
+        <p>An icon in a nav link is decoration; the link text is the name and stays visible.</p>
+        <div class="demo">
+          <!-- dui:snippet name="Navigation keeps its text" -->
+          <nav aria-label="Example" data-nav="vertical">
+            <ul>
+              <li>
+                <a href="../app-shell.html">
+                  <!-- Lucide: house -->
+                  <svg data-icon xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+                    <path d="M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8" />
+                    <path d="M3 10a2 2 0 0 1 .709-1.528l7-6a2 2 0 0 1 2.582 0l7 6A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+                  </svg>
+                  Home
+                </a>
+              </li>
+            </ul>
+          </nav>
+          <!-- /dui:snippet -->
+        </div>
+      </section>
+
+      <section aria-labelledby="dont-title">
+        <h2 id="dont-title">Don't: an icon-only delete</h2>
+        <p>
+          Never make a destructive action icon only. A trash can alone is easy to misread and easy to hit; write the word.
+          Delete, remove, empty and reset get a visible label, with the icon beside it if you like, and a confirmation
+          <code>&lt;dialog&gt;</code> when the data cannot come back.
+        </p>
+      </section>
+
+      <section aria-labelledby="specs-title">
+        <h2 id="specs-title">Specs and guidance</h2>
+        <ul>
+          <li><a href="https://www.w3.org/WAI/WCAG22/Understanding/non-text-content.html">WCAG 2.2: 1.1.1 Non-text Content</a></li>
+          <li><a href="https://www.w3.org/WAI/WCAG22/Understanding/non-text-contrast.html">WCAG 2.2: 1.4.11 Non-text Contrast</a></li>
+          <li><a href="https://www.w3.org/WAI/WCAG22/Understanding/content-on-hover-or-focus.html">WCAG 2.2: 1.4.13 Content on Hover or Focus</a></li>
+          <li><a href="https://www.w3.org/WAI/WCAG22/Understanding/label-in-name.html">WCAG 2.2: 2.5.3 Label in Name</a></li>
+          <li><a href="https://www.w3.org/WAI/WCAG22/Understanding/target-size-minimum.html">WCAG 2.2: 2.5.8 Target Size (Minimum)</a></li>
+          <li><a href="https://www.w3.org/WAI/WCAG22/Understanding/name-role-value.html">WCAG 2.2: 4.1.2 Name, Role, Value</a></li>
+          <li><a href="https://www.w3.org/WAI/ARIA/apg/practices/names-and-descriptions/">APG: Providing Accessible Names and Descriptions</a></li>
+          <li><a href="https://developer.mozilla.org/en-US/docs/Web/CSS/color_value#currentcolor">MDN: currentColor</a></li>
+          <li><a href="https://developer.mozilla.org/en-US/docs/Web/CSS/@media/forced-colors">MDN: forced-colors</a></li>
+        </ul>
+      </section>
+    </main>
+
+    <footer>
+      <p><small>Icons from <a href="https://lucide.dev">Lucide</a>, <a href="https://lucide.dev/license">ISC licence</a>; icons derived from <a href="https://github.com/feathericons/feather">Feather</a> are under the <a href="https://github.com/feathericons/feather/blob/main/LICENSE">MIT licence</a>.</small></p>
+      <p><small>domestic-ui packages existing standards and well-known patterns. MIT licensed.</small></p>
+    </footer>
+    <script type="module" src="../../web-components/dui-tooltip.js"></script>
+  </body>
+</html>

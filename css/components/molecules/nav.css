@@ -60,7 +60,7 @@
  *                                      open to expand it on load, name for
  *                                      one-at-a-time
  *
- *   <svg aria-hidden="true" focusable="false">   optional icon, first in a link or summary
+ *   <svg data-icon aria-hidden="true" focusable="false">   optional icon (icon.css), first in a link or summary
  *
  * Example
  *   <nav aria-label="Main" data-nav="vertical">

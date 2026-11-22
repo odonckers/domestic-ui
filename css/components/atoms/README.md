@@ -19,11 +19,12 @@ Every atom:
 | --- | --- | --- | --- | --- |
 | Text helpers | [`text.css`](text.css) | `data-text="lead \| small \| muted"` (combinable) | [text.html](../../../examples/atoms/text.html) | [WHATWG text-level semantics](https://html.spec.whatwg.org/multipage/text-level-semantics.html), [WCAG 1.4.3](https://www.w3.org/WAI/WCAG22/Understanding/contrast-minimum.html) |
 | Quiet link | [`link.css`](link.css) | `data-link="quiet"` on `<a href>` | [link.html](../../../examples/atoms/link.html) | [WHATWG `a`](https://html.spec.whatwg.org/multipage/text-level-semantics.html#the-a-element), [WCAG 1.4.1](https://www.w3.org/WAI/WCAG22/Understanding/use-of-color.html) |
-| Buttons | [`button.css`](button.css) | `data-button="[primary \| secondary \| quiet] [small \| large]"` on `<button>`, `<input type=submit\|button\|reset>`, `<a href>`; states `disabled`, `aria-disabled="true"`, `aria-busy="true"` | [button.html](../../../examples/atoms/button.html) | [WHATWG `button`](https://html.spec.whatwg.org/multipage/form-elements.html#the-button-element), [APG Button](https://www.w3.org/WAI/ARIA/apg/patterns/button/), [APG focusability of disabled controls](https://www.w3.org/WAI/ARIA/apg/practices/keyboard-interface/#focusabilityofdisabledcontrols), [MDN `aria-disabled`](https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Reference/Attributes/aria-disabled), [MDN `aria-busy`](https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Reference/Attributes/aria-busy), [WCAG 2.5.8](https://www.w3.org/WAI/WCAG22/Understanding/target-size-minimum.html) |
+| Buttons | [`button.css`](button.css) | `data-button="[primary \| secondary \| quiet] [small \| large] [icon]"` on `<button>`, `<input type=submit\|button\|reset>`, `<a href>`; states `disabled`, `aria-disabled="true"`, `aria-busy="true"` | [button.html](../../../examples/atoms/button.html) | [WHATWG `button`](https://html.spec.whatwg.org/multipage/form-elements.html#the-button-element), [APG Button](https://www.w3.org/WAI/ARIA/apg/patterns/button/), [APG focusability of disabled controls](https://www.w3.org/WAI/ARIA/apg/practices/keyboard-interface/#focusabilityofdisabledcontrols), [MDN `aria-disabled`](https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Reference/Attributes/aria-disabled), [MDN `aria-busy`](https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Reference/Attributes/aria-busy), [WCAG 2.5.8](https://www.w3.org/WAI/WCAG22/Understanding/target-size-minimum.html), [WCAG 1.4.13](https://www.w3.org/WAI/WCAG22/Understanding/content-on-hover-or-focus.html) |
 | Form controls | none: [`css/base/forms.css`](../../base/forms.css) | No API; native elements | [controls.html](../../../examples/atoms/controls.html) | [WHATWG forms](https://html.spec.whatwg.org/multipage/forms.html), [W3C forms tutorial](https://www.w3.org/WAI/tutorials/forms/) |
 | Switch | [`switch.css`](switch.css) | `role="switch"` on `<input type="checkbox">` | [switch.html](../../../examples/atoms/switch.html) | [APG Switch](https://www.w3.org/WAI/ARIA/apg/patterns/switch/), [ARIA in HTML](https://www.w3.org/TR/html-aria/#el-input-checkbox), [MDN `switch` role](https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Reference/Roles/switch_role) |
 | Field | [`field.css`](field.css) | `data-field` on the wrapper, `data-field="hint"` and `data-field="error"` on the messages | [field.html](../../../examples/atoms/field.html) | [WCAG 3.3.1](https://www.w3.org/WAI/WCAG22/Understanding/error-identification.html), [3.3.2](https://www.w3.org/WAI/WCAG22/Understanding/labels-or-instructions.html), [1.3.1](https://www.w3.org/WAI/WCAG22/Understanding/info-and-relationships.html), [MDN `aria-describedby`](https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Reference/Attributes/aria-describedby), [MDN `aria-invalid`](https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Reference/Attributes/aria-invalid), [MDN `:user-invalid`](https://developer.mozilla.org/en-US/docs/Web/CSS/:user-invalid) |
 | Badge | [`badge.css`](badge.css) | `data-badge="neutral \| accent \| success \| warning \| danger"` | [badge.html](../../../examples/atoms/badge.html) | [WCAG 1.4.3](https://www.w3.org/WAI/WCAG22/Understanding/contrast-minimum.html), [WCAG 1.4.1](https://www.w3.org/WAI/WCAG22/Understanding/use-of-color.html), [Using ARIA rule 1](https://www.w3.org/TR/using-aria/#rule1) |
+| Icon | [`icon.css`](icon.css) | `data-icon` on an inline `<svg>` copied from [Lucide](https://lucide.dev); `data-icon="mirror"` flips a directional icon in right-to-left text | [icon.html](../../../examples/atoms/icon.html) | [WCAG 1.1.1](https://www.w3.org/WAI/WCAG22/Understanding/non-text-content.html), [WCAG 1.4.11](https://www.w3.org/WAI/WCAG22/Understanding/non-text-contrast.html), [APG names and descriptions](https://www.w3.org/WAI/ARIA/apg/practices/names-and-descriptions/), [MDN `currentColor`](https://developer.mozilla.org/en-US/docs/Web/CSS/color_value#currentcolor), [MDN `forced-colors`](https://developer.mozilla.org/en-US/docs/Web/CSS/@media/forced-colors) |
 
 ## Not shipped, and why
 
@@ -31,7 +32,6 @@ Every atom:
 | --- | --- |
 | Divider | Cut. `<hr>` is the native thematic break and is already styled in the base layer. A class would duplicate it. |
 | Avatar | Cut. There is no standard or APG pattern for it; it is an `<img alt>` with a radius and a size, which the base layer and one line of your CSS already give. Revisit with a real use case (initials fallback, image loading). |
-| Icon sizing | Cut. domestic-ui ships no icon set, so there is nothing to size consistently yet. Inside buttons, icons already line up through the button's `inline-flex` and `gap`. |
 | Danger button variant | Not added. Not requested, and a destructive action is better marked by its label and a confirmation `<dialog>` than by color. Easy to add later as one more variant word. |
 | Spinner for loading | Not added. The honest state is the changed label plus `aria-busy`; a spinner that replaces the label hides it from everyone. |
 
@@ -69,6 +69,15 @@ Each is a choice between valid options, not a standard.
 - **Our choice:** badge tones are 8% of the tone mixed into the surface, with the tone as text.
   The tinted surfaces are derived tokens (`--dui-color-*-surface`), so a theme that changes the
   surface or a tone re-tints badges with no extra overrides.
+- **Our choice:** icons are [Lucide](https://lucide.dev) SVGs pasted inline, with no icon files, sprite, font or
+  package in the repository, because Lucide already draws in our 24px, 2px, `currentColor` stroke and inline SVG needs
+  no build and follows forced colors. The hook is `data-icon` on the `<svg>`, the same one-attribute rule as every atom,
+  rather than `svg[aria-hidden]`, which would also style meaningful `role="img"` graphics and tie the look to an
+  accessibility attribute. The rules for when to use an icon are in [PRINCIPLES.md](../../../PRINCIPLES.md#icons).
+- **Our choice:** an icon-only button (`data-button="icon"`) is named by visually hidden text inside it, not
+  `aria-label`, because real text is translated by browser translation tools and copied with the page. Its
+  `<dui-tooltip>` shows the same words and is `aria-hidden`, so the name is announced once; with JavaScript off the
+  button keeps its name.
 - **Our choice:** a field is an atom here, not a molecule, because a control is not usable
   without its label, hint and error. Larger compositions (forms, cards, headers) are
   molecules and organisms for later milestones.

@@ -1,0 +1,66 @@
+/*
+ * Atom: icon
+ *
+ * An inline <svg> icon, copied from Lucide (https://lucide.dev) and pasted
+ * into the page. domestic-ui ships no icon files, sprite, font or package:
+ * the SVG markup is the icon. Lucide draws with stroke="currentColor", so
+ * the icon takes the text color of whatever holds it, in every theme and in
+ * forced colors mode, where the browser forces color to a system color.
+ * https://developer.mozilla.org/en-US/docs/Web/CSS/color_value#currentcolor
+ * https://developer.mozilla.org/en-US/docs/Web/CSS/@media/forced-colors
+ *
+ * Accessibility: an icon beside a visible label is decoration, hidden with
+ * aria-hidden="true" (WCAG 1.1.1); focusable="false" keeps old engines from
+ * putting the SVG in the tab order. An icon-only button gets its name on
+ * the button, not on the SVG (data-button="icon" in button.css). A
+ * standalone meaningful icon is role="img" with a <title> instead.
+ * https://www.w3.org/WAI/ARIA/apg/practices/names-and-descriptions/
+ *
+ * API
+ *   data-icon                 on an inline <svg>: sized --dui-size-icon, never shrunk, colored by currentColor
+ *   data-icon="mirror"        also flipped in right-to-left text: directional icons only (arrows, chevrons, undo, redo)
+ *
+ * Copy the SVG from lucide.dev, replace its class attribute with data-icon,
+ * and add aria-hidden="true" focusable="false". Keep the rest as Lucide
+ * ships it (width and height keep the icon small if CSS fails to load).
+ *
+ * Example
+ *   <button type="button">
+ *     <!-- Lucide: search -->
+ *     <svg data-icon xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+ *       <path d="m21 21-4.34-4.34" />
+ *       <circle cx="11" cy="11" r="8" />
+ *     </svg>
+ *     Search
+ *   </button>
+ *
+ * Size: --dui-size-icon (1.25rem), the size nav and app bar icons already
+ * use. Inside a button or link the flex gap spaces it from the label; in
+ * running text it sits on the middle of the line.
+ *
+ * Direction: data-icon="mirror" flips the icon with :dir(rtl), which follows
+ * the nearest dir attribute, so a dir="ltr" island inside an RTL page stays
+ * unflipped. Never mirror search, close, play, check or logos.
+ * https://developer.mozilla.org/en-US/docs/Web/CSS/:dir
+ *
+ * Specs
+ *   https://www.w3.org/WAI/WCAG22/Understanding/non-text-content.html
+ *   https://www.w3.org/WAI/WCAG22/Understanding/non-text-contrast.html
+ *   https://www.w3.org/WAI/ARIA/apg/practices/names-and-descriptions/
+ *   https://developer.mozilla.org/en-US/docs/Web/CSS/color_value#currentcolor
+ *   https://developer.mozilla.org/en-US/docs/Web/CSS/@media/forced-colors
+ *   https://developer.mozilla.org/en-US/docs/Web/CSS/:dir
+ */
+
+svg[data-icon] {
+  display: inline-block;
+  flex-shrink: 0;
+  inline-size: var(--dui-size-icon);
+  block-size: var(--dui-size-icon);
+  vertical-align: middle;
+  color: inherit;
+}
+
+svg[data-icon~="mirror"]:dir(rtl) {
+  scale: -1 1;
+}

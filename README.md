@@ -51,11 +51,12 @@ Components: one `data-<component>` attribute of space-separated words matched wi
 | Layout | Split | `data-split="[1:1 \| 1:2 \| 2:1]"`, `empty means 1:1 (equal halves)` | [Split](https://odonckers.github.io/domestic-ui/patterns/split.html) |
 | Atoms | Text helpers | `data-text="lead \| small \| muted"` (combinable) | [Text helpers](https://odonckers.github.io/domestic-ui/components/atoms/text.html) |
 | Atoms | Quiet link | `data-link="quiet"` on `<a href>` | [Quiet link](https://odonckers.github.io/domestic-ui/components/atoms/link.html) |
-| Atoms | Buttons | `data-button="[primary \| secondary \| quiet] [small \| large]"` on `<button>`, `<input type=submit\|button\|reset>`, `<a href>`; states `disabled`, `aria-disabled="true"`, `aria-busy="true"` | [Buttons](https://odonckers.github.io/domestic-ui/components/atoms/button.html) |
+| Atoms | Buttons | `data-button="[primary \| secondary \| quiet] [small \| large] [icon]"` on `<button>`, `<input type=submit\|button\|reset>`, `<a href>`; states `disabled`, `aria-disabled="true"`, `aria-busy="true"` | [Buttons](https://odonckers.github.io/domestic-ui/components/atoms/button.html) |
 | Atoms | Form controls | No API; native elements | [Form controls](https://odonckers.github.io/domestic-ui/components/atoms/controls.html) |
 | Atoms | Switch | `role="switch"` on `<input type="checkbox">` | [Switch](https://odonckers.github.io/domestic-ui/components/atoms/switch.html) |
 | Atoms | Field | `data-field` on the wrapper, `data-field="hint"` and `data-field="error"` on the messages | [Field](https://odonckers.github.io/domestic-ui/components/atoms/field.html) |
 | Atoms | Badge | `data-badge="neutral \| accent \| success \| warning \| danger"` | [Badge](https://odonckers.github.io/domestic-ui/components/atoms/badge.html) |
+| Atoms | Icon | `data-icon` on an inline `<svg>` copied from [Lucide](https://lucide.dev); `data-icon="mirror"` flips a directional icon in right-to-left text | [Icon](https://odonckers.github.io/domestic-ui/components/atoms/icon.html) |
 | Molecules | Alerts | `data-alert="info \| success \| warning \| danger"`, `data-alert="toasts"`, `data-alert="dismiss"`, `role="status" \| role="alert"` | [Alerts](https://odonckers.github.io/domestic-ui/patterns/alerts.html) |
 | Molecules | Breadcrumb | `data-breadcrumb`, `aria-current="page"` | [Breadcrumb](https://odonckers.github.io/domestic-ui/patterns/breadcrumb.html) |
 | Molecules | Card | `data-card`, `data-card="link"`, `Children: an optional first <img> (or <picture>, <video>) as media,`, `a heading, body content, and an optional <footer> for actions.` | [Card](https://odonckers.github.io/domestic-ui/patterns/card.html) |

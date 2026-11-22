@@ -464,6 +464,66 @@ Each of these is a choice between valid options, not a standard.
   [`@property`](https://developer.mozilla.org/en-US/docs/Web/CSS/@property) as non-inheriting,
   so a nested primitive keeps its own default.
 
+### Icons
+
+- **Our choice:** [Lucide](https://lucide.dev) is the icon set, because its SVGs already use our 24px grid, 2px round
+  `currentColor` stroke and need no build. Credit: Lucide is under the [ISC licence](https://lucide.dev/license); the
+  icons it took from [Feather](https://github.com/feathericons/feather) are under the
+  [MIT licence](https://github.com/feathericons/feather/blob/main/LICENSE). [Tabler](https://tabler.io/icons) and
+  [Heroicons](https://heroicons.com) were the alternatives considered.
+- **Our choice:** icons are inline SVG, copied from the official set into the markup. The repository ships no icon
+  files, sprite, font or package. The recipe: copy the icon from lucide.dev, replace its `class` with
+  [`data-icon`](css/components/atoms/icon.css), add `aria-hidden="true" focusable="false"`, keep everything else
+  (`viewBox`, `fill="none"`, `stroke="currentColor"`, `width` and `height`) as Lucide ships it, and note the icon's name
+  in a comment. `data-icon` sizes it to `--dui-size-icon` and keeps it from shrinking; the stroke follows the text color
+  through [`currentColor`](https://developer.mozilla.org/en-US/docs/Web/CSS/color_value#currentcolor), so it follows
+  themes and [forced colors](https://developer.mozilla.org/en-US/docs/Web/CSS/@media/forced-colors) with no extra CSS.
+
+  ```html
+  <!-- Lucide: search -->
+  <svg data-icon xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+       stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+       aria-hidden="true" focusable="false">
+    <path d="m21 21-4.34-4.34" />
+    <circle cx="11" cy="11" r="8" />
+  </svg>
+  ```
+
+- **Decorative or meaningful.** An icon beside a visible label is decoration: `aria-hidden="true"`, so the label is the
+  name and is not announced twice ([1.1.1 Non-text Content](https://www.w3.org/WAI/WCAG22/Understanding/non-text-content.html)).
+  A standalone icon that carries meaning, outside a control, is `role="img"` with a `<title>` (and `aria-labelledby`
+  pointing at it). In a control, the name goes on the control, never on the SVG
+  ([4.1.2 Name, Role, Value](https://www.w3.org/WAI/WCAG22/Understanding/name-role-value.html),
+  [APG: names and descriptions](https://www.w3.org/WAI/ARIA/apg/practices/names-and-descriptions/)).
+- **Contrast.** An icon that is the only sign of a control or a state meets 3:1
+  ([1.4.11 Non-text Contrast](https://www.w3.org/WAI/WCAG22/Understanding/non-text-contrast.html)); a selected state
+  changes the drawing (filled or outlined), not only its color.
+- **Our choice:** icon plus a visible label is the default. Label only is always fine, and better when no icon comes to
+  mind at once. If the label is visible, the accessible name contains it
+  ([2.5.3 Label in Name](https://www.w3.org/WAI/WCAG22/Understanding/label-in-name.html)).
+- **Our choice:** icon only (`data-button="icon"`) is allowed only for these widely recognized actions: search, close,
+  open or close navigation (menu), play, pause, stop, skip, expand and collapse, back, forward, edit, more (overflow),
+  settings in an app bar, and add item in a dense toolbar. A product-specific metaphor is never icon only. The button
+  - is named for the action ("Search", "Close"), never the picture ("Magnifying glass", "X"), with visually hidden text
+    inside it;
+  - shows a visible tooltip with the same words on hover **and** keyboard focus, which <kbd>Esc</kbd> hides and the
+    pointer can move onto ([1.4.13 Content on Hover or Focus](https://www.w3.org/WAI/WCAG22/Understanding/content-on-hover-or-focus.html)).
+    The tooltip is `<dui-tooltip>` with a `popover="hint"`: no browser can show a popover on hover and focus without
+    script except Chromium, through [`interestfor`](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/button#interestfor),
+    which Firefox and Safari do not support yet;
+  - is a square of `--dui-size-control` (32px compact, 44px comfortable), never smaller than 24 by 24 pixels
+    ([2.5.8 Target Size (Minimum)](https://www.w3.org/WAI/WCAG22/Understanding/target-size-minimum.html)).
+- **Our choice:** no icon-only destructive actions. Delete, remove, empty and reset always show their word; a trash icon
+  may sit beside it. For that reason delete is not on the list above, even in a toolbar.
+- **Our choice:** navigation keeps visible text. Icons in nav links and app bar buttons are decoration.
+- **Our choice:** in right-to-left text, flip only icons whose meaning has a direction, with `data-icon="mirror"`
+  (flipped under [`:dir(rtl)`](https://developer.mozilla.org/en-US/docs/Web/CSS/:dir), which follows the nearest `dir`
+  attribute): arrows, chevrons, back and forward, undo and redo, indent and outdent, text alignment to the start or end.
+  Never flip search, close, play, check, clocks or logos.
+- **Icon fonts are rejected.** A ligature or private-use glyph is text: user text spacing
+  ([1.4.12 Text Spacing](https://www.w3.org/WAI/WCAG22/Understanding/text-spacing.html)) can break the ligature into
+  words, a font that fails to load shows letters or empty boxes, and screen readers may read the ligature name.
+
 ## 9. Layout primitives
 
 | Class | What it does | Custom properties |

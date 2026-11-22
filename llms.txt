@@ -60,6 +60,7 @@ Link `css/domestic.css` (copy `css/` from https://github.com/odonckers/domestic-
 - [Switch](https://odonckers.github.io/domestic-ui/components/atoms/switch.md): An on/off switch built on a native checkbox with role switch, following the APG Switch pattern.
 - [Field](https://odonckers.github.io/domestic-ui/components/atoms/field.md): Label, control, hint and error message wired with aria-describedby and aria-invalid.
 - [Badge](https://odonckers.github.io/domestic-ui/components/atoms/badge.md): Inline status labels with tone variants that meet WCAG AA contrast.
+- [Icon](https://odonckers.github.io/domestic-ui/components/atoms/icon.md): Inline Lucide SVG icons sized by a token, icon and label buttons, and icon-only buttons with a name and a tooltip.
 
 ## Molecules
 

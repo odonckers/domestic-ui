@@ -36,6 +36,7 @@
 @import url("components/atoms/switch.css") layer(components);
 @import url("components/atoms/field.css") layer(components);
 @import url("components/atoms/badge.css") layer(components);
+@import url("components/atoms/icon.css") layer(components);
 @import url("components/molecules/disclosure.css") layer(components);
 @import url("components/molecules/dialog.css") layer(components);
 @import url("components/molecules/popover.css") layer(components);
