@@ -464,6 +464,25 @@ Each of these is a choice between valid options, not a standard.
   [`@property`](https://developer.mozilla.org/en-US/docs/Web/CSS/@property) as non-inheriting,
   so a nested primitive keeps its own default.
 
+### Links: visited state
+
+[`:visited`](https://developer.mozilla.org/en-US/docs/Web/CSS/:visited) tells a reader which
+destinations they have already seen. WCAG does not require it:
+[Understanding 1.4.1](https://www.w3.org/WAI/WCAG22/Understanding/use-of-color.html) says conveying a
+link's visited status "is not an author responsibility". The visited color still meets 4.5:1.
+
+- **Our choice:** only content links take `--dui-color-link-visited`. Navigational links keep their
+  unvisited color, because a reader picks a destination again on every page and "seen before" is noise
+  there. Navigational means: inside a [`<nav>`](https://html.spec.whatwg.org/multipage/sections.html#the-nav-element)
+  or `role="navigation"`, `menu`, `menubar`, `tablist` or `toolbar`; a `role="tab"` or `menuitem*` link;
+  a link with `data-button`; or a same-page `#fragment` link (skip links, tables of contents).
+- The base rule does this with `a:visited:not(:where(…))`, so it stays at the specificity of `a:visited`
+  and needs no per-component resets. In forced colors, navigational links show `LinkText` and content
+  links show `VisitedText`.
+- **Either way:** mark a navigational link outside a `<nav>` with `data-link="nav"` (combines with
+  `quiet`) to drop the visited color. For the rare content link inside a `<nav>`, set
+  `color: var(--dui-color-link-visited)` on its `:visited` state in your own CSS, which beats the layers.
+
 ## 9. Layout primitives
 
 | Class | What it does | Custom properties |

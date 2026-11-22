@@ -13,20 +13,30 @@
  * meets 4.5:1.
  *
  * API
- *   data-link="quiet"   on <a href>
+ *   data-link="quiet"   on <a href>: surrounding text color
+ *   data-link="nav"     on <a href>: navigational outside a <nav>, so it
+ *                       keeps its unvisited color once visited
+ *   Space-separated: data-link="quiet nav" works.
  *
  * Example
  *   <td><a href="/orders/1042" data-link="quiet">#1042</a></td>
+ *   <ul><li><a href="/inbox" data-link="nav">Inbox</a></li></ul>
  *
  * Visited links keep the surrounding color too. The surrounding text color
  * already meets 4.5:1, so the link does as well.
+ *
+ * Visited state: links in navigation never take --dui-color-link-visited
+ * (css/base/typography.css, PRINCIPLES.md "Links: visited state").
+ * data-link="nav" opts a link outside a <nav> into that. For the rare
+ * content link inside a <nav>, set the color in your own CSS:
+ *   .site-footer nav p a:visited { color: var(--dui-color-link-visited); }
+ * The "nav" value has no rule here: the base rule reads it.
  *
  * Specs
  *   https://html.spec.whatwg.org/multipage/text-level-semantics.html#the-a-element
  *   https://www.w3.org/WAI/WCAG22/Understanding/use-of-color.html
  */
 
-a[data-link~="quiet"],
-a[data-link~="quiet"]:visited {
+a[data-link~="quiet"] {
   color: inherit;
 }

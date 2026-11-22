@@ -50,7 +50,7 @@ Components: one `data-<component>` attribute of space-separated words matched wi
 | Layout | List-detail | `data-list-detail`, `<nav aria-label> or <div>`, `<section> or <article> with aria-labelledby`, `aria-current="page"`, `aria-current="true"` | [List-detail](https://odonckers.github.io/domestic-ui/patterns/list-detail.html) |
 | Layout | Split | `data-split="[1:1 \| 1:2 \| 2:1]"`, `empty means 1:1 (equal halves)` | [Split](https://odonckers.github.io/domestic-ui/patterns/split.html) |
 | Atoms | Text helpers | `data-text="lead \| small \| muted"` (combinable) | [Text helpers](https://odonckers.github.io/domestic-ui/components/atoms/text.html) |
-| Atoms | Quiet link | `data-link="quiet"` on `<a href>` | [Quiet link](https://odonckers.github.io/domestic-ui/components/atoms/link.html) |
+| Atoms | Quiet link | `data-link="quiet"` on `<a href>`; `data-link="nav"` keeps a navigational link outside a `<nav>` out of the visited color (combinable) | [Quiet link](https://odonckers.github.io/domestic-ui/components/atoms/link.html) |
 | Atoms | Buttons | `data-button="[primary \| secondary \| quiet] [small \| large]"` on `<button>`, `<input type=submit\|button\|reset>`, `<a href>`; states `disabled`, `aria-disabled="true"`, `aria-busy="true"` | [Buttons](https://odonckers.github.io/domestic-ui/components/atoms/button.html) |
 | Atoms | Form controls | No API; native elements | [Form controls](https://odonckers.github.io/domestic-ui/components/atoms/controls.html) |
 | Atoms | Switch | `role="switch"` on `<input type="checkbox">` | [Switch](https://odonckers.github.io/domestic-ui/components/atoms/switch.html) |

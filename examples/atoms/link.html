@@ -100,6 +100,28 @@
         </div>
       </section>
 
+      <section aria-labelledby="visited-title">
+        <h2 id="visited-title">Visited links</h2>
+        <p>
+          Content links take the visited color; navigational links keep the link color, whether they are in a
+          <code>&lt;nav&gt;</code> or marked with <code>data-link="nav"</code>. Every link below has an empty <code>href</code>, which points to
+          this page, so a browser that keeps history shows them all as visited.
+        </p>
+        <div class="demo stack">
+          <!-- dui:snippet name="Visited links" -->
+          <p>A content link: <a href="">read about quiet links</a>.</p>
+          <nav aria-label="Atoms">
+            <ul class="cluster">
+              <li><a href="">Quiet link</a></li>
+            </ul>
+          </nav>
+          <ul>
+            <li><a href="" data-link="nav">Quiet link</a>, navigational outside a nav</li>
+          </ul>
+          <!-- /dui:snippet -->
+        </div>
+      </section>
+
       <section aria-labelledby="specs-title">
         <h2 id="specs-title">Specs and guidance</h2>
         <ul>

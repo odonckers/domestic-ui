@@ -95,10 +95,6 @@
   cursor: pointer;
 }
 
-[role="tab"]:visited {
-  color: var(--dui-color-text-muted);
-}
-
 [role="tab"]:hover {
   background-color: var(--dui-color-surface-sunken);
   color: var(--dui-color-text);
