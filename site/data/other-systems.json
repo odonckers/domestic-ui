@@ -181,6 +181,39 @@
       },
       "geist": null
     },
+    "layouts/action-bar": {
+      "apple": null,
+      "material": null,
+      "geist": null
+    },
+    "layouts/cluster": {
+      "apple": null,
+      "material": null,
+      "geist": null
+    },
+    "layouts/grid": {
+      "apple": null,
+      "material": null,
+      "geist": null
+    },
+    "layouts/scroll": {
+      "apple": null,
+      "material": null,
+      "geist": {
+        "url": "https://vercel.com/geist/scroller",
+        "title": "Scroller"
+      }
+    },
+    "layouts/stack": {
+      "apple": null,
+      "material": null,
+      "geist": null
+    },
+    "components/utilities/visually-hidden": {
+      "apple": null,
+      "material": null,
+      "geist": null
+    },
     "patterns/nav": {
       "apple": null,
       "material": null,
