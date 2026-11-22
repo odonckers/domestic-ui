@@ -40,6 +40,32 @@ vendored [gridlines](https://github.com/pritamux/gridlines) skill: read
 the target lines are in [`PRINCIPLES.md` § 13](PRINCIPLES.md#13-edges-and-alignment). Measure with
 `npm run gridlines -- examples/app-shell.html` (a manual tool, not part of `npm test`).
 
+## Commits and PR titles
+
+Every commit follows [Conventional Commits 1.0](https://www.conventionalcommits.org/en/v1.0.0/):
+`type(scope): description`, lowercase.
+
+- Types: `feat`, `fix`, `docs`, `style`, `refactor`, `perf`, `test`, `build`, `ci`, `chore`, `revert`.
+- The scope is optional and free-form lowercase, for example `css`, `tokens`, `examples`, `web-components`,
+  `docs`, `demos`, `ci` or `deps`.
+- The description starts lowercase (a proper noun later in the line is fine) and the whole header is at most 100
+  characters. Mark a breaking change with `!` after the type or scope, or a `BREAKING CHANGE:` footer.
+
+```text
+feat(css): add toolbar density tokens
+fix(nav): keep the marker on aria-current
+docs: link the apg tabs pattern
+```
+
+We squash-merge, so the pull request title becomes the commit on `main`: the title must follow the same rule.
+CI's `commits` job lints the title and every commit in the pull request with commitlint
+([`commitlint.config.mjs`](commitlint.config.mjs)), and the required `ci` check fails if it does. Retitling a pull
+request re-runs CI. Merge commits such as "Merge branch 'main' into …" are ignored. To check a message locally:
+`echo "fix(nav): keep the marker on aria-current" | npx commitlint`.
+
 ## Changelog
 
-Every user-facing change needs an entry in `CHANGELOG.md`.
+`CHANGELOG.md` is generated from the commits on `main` by `npm run changelog` ([git-cliff](https://git-cliff.org/),
+[`cliff.toml`](cliff.toml)) at release time. Never edit it by hand, and do not add changelog entries in pull
+requests: the commit message is the entry. `npm run changelog:check` fails if the file is out of date. The section
+written by hand before Conventional Commits is kept as it is.
