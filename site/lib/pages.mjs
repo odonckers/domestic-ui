@@ -17,7 +17,7 @@ import { inline, plainText, shiftHeadings, tokenize } from "./markdown.mjs";
 import { previewKind } from "./tokens.mjs";
 import { existsSync, readFileSync } from "node:fs";
 import { join } from "node:path";
-import { BLOB_URL, REPO_URL, byString, escapeHtml, escapeMdCell, fence, firstSentence, mdCode, slugify } from "./util.mjs";
+import { BLOB_URL, REPO_URL, archiveUrl, byString, escapeHtml, escapeMdCell, fence, firstSentence, mdCode, releaseUrl, slugify } from "./util.mjs";
 
 /**
  * @typedef {import("./discovery.mjs").Model} Model
@@ -140,13 +140,18 @@ function firstSentenceOf(body) {
 /* ------------------------------------------------------------------ */
 
 /** @param {Model} model */
-export const installMd = (model) => `Plain CSS, no build step. Copy \`css/\` from the [repository](${REPO_URL}) into your project and link the entry point:
+export const installMd = (model) => {
+  const get = model.version
+    ? `The current release is **${model.version}** ([release notes](${releaseUrl(model.version)}), [changelog](site:changelog.html)). Download the [v${model.version} source archive](${archiveUrl(model.version)}), copy its \`css/\` folder into your project and link the entry point:`
+    : `Copy \`css/\` from the [repository](${REPO_URL}) into your project and link the entry point:`;
+  return `Plain CSS, no build step. ${get}
 
 \`\`\`html
 <link rel="stylesheet" href="css/domestic.css">
 \`\`\`
 
-Imports are relative, so it works from any path. Paths under \`css/\` are public API ([Agent-friendly by design](site:${principleLink(model, "agent-friendly-by-design")})).`;
+Imports are relative, so it works from any path. Paths under \`css/\` are public API ([Agent-friendly by design](site:${principleLink(model, "agent-friendly-by-design")})), versioned with [Semantic Versioning](https://semver.org/spec/v2.0.0.html).`;
+};
 
 /** @param {Model} model */
 export const layersMd = (model) => `\`css/domestic.css\` declares the [cascade layers](site:${principleLink(model, "cascade-layers")}), lowest priority first. Your unlayered CSS beats all of them.

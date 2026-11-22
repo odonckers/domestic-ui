@@ -9,7 +9,7 @@ import { shiftHeadings } from "./markdown.mjs";
 import { NAV, navEntryOf } from "./nav.mjs";
 import { apiSummary, conventionShortMd, demoListMd, followsMd, installMd, patternStatus, rewriteRepoLinks, sortedPatterns } from "./pages.mjs";
 import { resolveSiteLinks, renderMarkdown } from "./templates.mjs";
-import { BLOB_URL, RAW_URL, REPO_URL, SITE_URL, escapeMdCell, mdCode, unescapeHtml } from "./util.mjs";
+import { BLOB_URL, RAW_URL, REPO_URL, SITE_URL, releaseUrl, escapeMdCell, mdCode, unescapeHtml } from "./util.mjs";
 
 /**
  * @typedef {import("./discovery.mjs").Model} Model
@@ -107,7 +107,7 @@ function llmsHeader(model) {
 
 > ${summary}
 
-Link \`css/domestic.css\` (copy \`css/\` from ${REPO_URL}); semantic HTML needs no classes. ${conventionShortMd(model)} Theme only with semantic \`--dui-*\` tokens; primitives are internal.`;
+Link \`css/domestic.css\` (${model.version ? `copy \`css/\` from the v${model.version} release, ${releaseUrl(model.version)}` : `copy \`css/\` from ${REPO_URL}`}); semantic HTML needs no classes. ${conventionShortMd(model)} Theme only with semantic \`--dui-*\` tokens; primitives are internal.`;
 }
 
 /**

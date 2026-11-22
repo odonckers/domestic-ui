@@ -8,6 +8,10 @@ export const SITE_URL = "https://odonckers.github.io/domestic-ui/";
 export const REPO_URL = "https://github.com/odonckers/domestic-ui";
 export const BLOB_URL = `${REPO_URL}/blob/main/`;
 export const EDIT_URL = `${REPO_URL}/edit/main/`;
+/** The GitHub release page for a version tag. @param {string} version e.g. "0.1.0" */
+export const releaseUrl = (version) => `${REPO_URL}/releases/tag/v${version}`;
+/** The source archive GitHub attaches to every release. @param {string} version */
+export const archiveUrl = (version) => `${REPO_URL}/archive/refs/tags/v${version}.zip`;
 export const RAW_URL = "https://raw.githubusercontent.com/odonckers/domestic-ui/main/";
 
 const ESCAPES = { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" };

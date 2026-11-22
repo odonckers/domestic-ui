@@ -1,6 +1,6 @@
 {
   "name": "domestic-ui",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "private": true,
   "description": "A standards-first design system built on native HTML, CSS custom properties, and cascade layers.",
   "license": "MIT",

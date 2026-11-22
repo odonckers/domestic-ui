@@ -2,7 +2,7 @@
 
 > domestic-ui is a CSS design system built on native HTML, custom properties and cascade layers. Link one stylesheet and semantic HTML is styled in light and dark, with WCAG 2.2 AA as the baseline. Theme it by overriding semantic tokens. It packages existing web standards and patterns; nothing here is original.
 
-Link `css/domestic.css` (copy `css/` from https://github.com/odonckers/domestic-ui); semantic HTML needs no classes. Components: one `data-<component>` attribute of space-separated words matched with `~=` (`data-button="primary small"`), no classes; state via native attributes and ARIA. Layout primitives and utilities: `data-action-bar`, `.cluster`, `.grid`, `data-scroll`, `.stack`, `.visually-hidden`. Theme only with semantic `--dui-*` tokens; primitives are internal.
+Link `css/domestic.css` (copy `css/` from the v0.1.0 release, https://github.com/odonckers/domestic-ui/releases/tag/v0.1.0); semantic HTML needs no classes. Components: one `data-<component>` attribute of space-separated words matched with `~=` (`data-button="primary small"`), no classes; state via native attributes and ARIA. Layout primitives and utilities: `data-action-bar`, `.cluster`, `.grid`, `data-scroll`, `.stack`, `.visually-hidden`. Theme only with semantic `--dui-*` tokens; primitives are internal.
 
 ## domestic-ui
 
@@ -12,13 +12,13 @@ domestic-ui is a CSS design system built on native HTML, custom properties and c
 
 ### Install and use
 
-Plain CSS, no build step. Copy `css/` from the [repository](https://github.com/odonckers/domestic-ui) into your project and link the entry point:
+Plain CSS, no build step. The current release is **0.1.0** ([release notes](https://github.com/odonckers/domestic-ui/releases/tag/v0.1.0), [changelog](https://odonckers.github.io/domestic-ui/changelog.md)). Download the [v0.1.0 source archive](https://github.com/odonckers/domestic-ui/archive/refs/tags/v0.1.0.zip), copy its `css/` folder into your project and link the entry point:
 
 ```html
 <link rel="stylesheet" href="css/domestic.css">
 ```
 
-Imports are relative, so it works from any path. Paths under `css/` are public API ([Agent-friendly by design](https://odonckers.github.io/domestic-ui/principles/agent-friendly-by-design.md)).
+Imports are relative, so it works from any path. Paths under `css/` are public API ([Agent-friendly by design](https://odonckers.github.io/domestic-ui/principles/agent-friendly-by-design.md)), versioned with [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ### Layer order
 

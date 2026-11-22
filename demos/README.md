@@ -21,7 +21,8 @@ order details sidebar as a `data-list-detail` list and detail.
 | [`a11y/`](a11y/) | Shared checker: axe (WCAG 2.2 AA, light and dark) and html-validate | |
 
 Every app links the shipped stylesheet, [`css/domestic.css`](../css/domestic.css), straight from
-this repository: no copy, no fork. Bundlers inline its `@import … layer()` rules and keep the
+this repository: no copy, no fork. So the demos always match the shipped `css/` at the same commit: at the
+[v0.1.0 release](https://github.com/odonckers/domestic-ui/releases/tag/v0.1.0) they show v0.1.0. Bundlers inline its `@import … layer()` rules and keep the
 cascade layers. There is no app CSS: the app shell and organisms lay out every view (Angular only
 adds `app-root { display: block; }`, since custom elements are inline by default).
 

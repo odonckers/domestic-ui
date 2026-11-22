@@ -8,13 +8,13 @@ domestic-ui is a CSS design system built on native HTML, custom properties and c
 
 ## Install and use
 
-Plain CSS, no build step. Copy `css/` from the [repository](https://github.com/odonckers/domestic-ui) into your project and link the entry point:
+Plain CSS, no build step. The current release is **0.1.0** ([release notes](https://github.com/odonckers/domestic-ui/releases/tag/v0.1.0), [changelog](https://odonckers.github.io/domestic-ui/changelog.html)). Download the [v0.1.0 source archive](https://github.com/odonckers/domestic-ui/archive/refs/tags/v0.1.0.zip), copy its `css/` folder into your project and link the entry point:
 
 ```html
 <link rel="stylesheet" href="css/domestic.css">
 ```
 
-Imports are relative, so it works from any path. Paths under `css/` are public API ([Agent-friendly by design](https://odonckers.github.io/domestic-ui/principles/agent-friendly-by-design.html)).
+Imports are relative, so it works from any path. Paths under `css/` are public API ([Agent-friendly by design](https://odonckers.github.io/domestic-ui/principles/agent-friendly-by-design.html)), versioned with [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 Components: one `data-<component>` attribute of space-separated words matched with `~=` (`data-button="primary small"`), no classes; state via native attributes and ARIA. Layout primitives and utilities: `data-action-bar`, `.cluster`, `.grid`, `data-scroll`, `.stack`, `.visually-hidden`. Theme by overriding semantic `--dui-*` tokens ([Tokens](https://odonckers.github.io/domestic-ui/tokens/index.html)); primitive tokens are internal.
 

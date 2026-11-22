@@ -651,6 +651,8 @@ export function loadModel(root) {
   return {
     root,
     intro: read("site/content/readme-intro.md").trim(),
+    // The released version (package.json); "" in fixture roots without one, or before the first release.
+    version: releasedVersion(exists("package.json") ? read("package.json") : ""),
     layers: parseLayerOrder(read("css/domestic.css")),
     principles,
     tokenFiles,
@@ -708,6 +710,16 @@ function specsFrom(declared, urls) {
     });
   }
   return urls.map((url) => ({ label: specName(url), url }));
+}
+
+/**
+ * package.json's version, or "" for 0.0.0 (nothing released yet).
+ * @param {string} json
+ */
+function releasedVersion(json) {
+  if (!json) return "";
+  const version = String(JSON.parse(json).version ?? "");
+  return /^\d+\.\d+\.\d+$/.test(version) && version !== "0.0.0" ? version : "";
 }
 
 /** @typedef {ReturnType<typeof loadModel>} Model */
