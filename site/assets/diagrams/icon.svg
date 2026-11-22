@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 180" role="img" aria-labelledby="diagram-icon-title" aria-describedby="diagram-icon-desc">
+  <title id="diagram-icon-title">Where icons are used</title>
+  <desc id="diagram-icon-desc">Icons sit inside buttons in a toolbar above the content: beside the label of a labelled button, and alone in a square icon-only button whose tooltip shows its name.</desc>
+  <!-- Frame -->
+  <rect x="0.75" y="0.75" width="318.5" height="178.5" rx="6" fill="var(--dui-color-surface)" stroke="var(--dui-color-border)" stroke-width="1.5"/>
+  <!-- Regions -->
+  <g fill="none" stroke="currentColor" stroke-opacity=".35">
+    <path d="M1 24.5h318M76.5 24.5V179"/>
+  </g>
+  <!-- Text -->
+  <g fill="currentColor" fill-opacity=".3">
+    <rect x="10" y="9" width="34" height="6" rx="2"/>
+    <rect x="12" y="38" width="44" height="6" rx="2"/>
+    <rect x="12" y="52" width="36" height="6" rx="2"/>
+    <rect x="12" y="66" width="50" height="6" rx="2"/>
+    <rect x="12" y="80" width="40" height="6" rx="2"/>
+    <rect x="92" y="34" width="100" height="10" rx="2" fill-opacity=".6"/>
+    <rect x="122" y="66" width="30" height="6" rx="2"/>
+    <rect x="92" y="122" width="180" height="6" rx="2"/>
+    <rect x="92" y="136" width="150" height="6" rx="2"/>
+    <rect x="92" y="150" width="166" height="6" rx="2"/>
+  </g>
+  <!-- Other controls: the buttons and the tooltip -->
+  <g fill="none" stroke="currentColor" stroke-opacity=".5">
+    <rect x="92" y="58" width="70" height="22" rx="4"/>
+    <rect x="170" y="58" width="22" height="22" rx="4"/>
+    <rect x="152" y="88" width="58" height="18" rx="3" fill="var(--dui-color-surface)"/>
+    <path d="M176 88l5-5 5 5"/>
+  </g>
+  <g fill="currentColor" fill-opacity=".45">
+    <rect x="164" y="94" width="34" height="6" rx="2"/>
+  </g>
+  <!-- The icons -->
+  <g fill="none" stroke="var(--dui-color-accent)" stroke-width="2" stroke-linecap="round">
+    <path d="M106 64v10M101 69h10"/>
+    <circle cx="180" cy="68" r="4"/>
+    <path d="M183 71l3.5 3.5"/>
+  </g>
+</svg>

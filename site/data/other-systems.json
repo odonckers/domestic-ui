@@ -153,6 +153,23 @@
         "title": "Badge"
       }
     },
+    "components/atoms/icon": {
+      "apple": [
+        {
+          "url": "https://developer.apple.com/design/human-interface-guidelines/icons",
+          "title": "Icons"
+        },
+        {
+          "url": "https://developer.apple.com/design/human-interface-guidelines/sf-symbols",
+          "title": "SF Symbols"
+        }
+      ],
+      "material": {
+        "url": "https://m3.material.io/styles/icons/overview",
+        "title": "Icons"
+      },
+      "geist": null
+    },
     "components/organisms/page-header": {
       "apple": {
         "url": "https://developer.apple.com/design/human-interface-guidelines/toolbars",
