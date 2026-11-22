@@ -75,8 +75,64 @@ a {
   overflow-wrap: anywhere;
 }
 
-a:visited {
+/*
+ * Visited: content links only. A link in navigation (<nav> or
+ * role="navigation", a menu, menubar, tablist or toolbar), a tab or menu
+ * item, a link styled as a button, a same-page #fragment link (skip links,
+ * tables of contents) or a link with data-link~="nav" (css/components/atoms/
+ * link.css) keeps its unvisited color. https://developer.mozilla.org/en-US/docs/Web/CSS/:visited
+ * Our choice: navigation is chosen again on every page, so "already seen"
+ * is noise there; in content it helps (PRINCIPLES.md, "Links: visited state").
+ * :not(:where()) adds no specificity, so the rule stays (0,1,1), the same as
+ * a:visited. Complex selectors in :not() are Selectors Level 4:
+ * https://developer.mozilla.org/en-US/docs/Web/CSS/:not#browser_compatibility
+ */
+a:visited:not(
+  :where(
+    nav *,
+    [role="navigation"] *,
+    [role="menu"] *,
+    [role="menubar"] *,
+    [role="tablist"] *,
+    [role="toolbar"] *,
+    [role="tab"],
+    [role^="menuitem"],
+    [data-button],
+    [data-link~="nav"],
+    [href^="#"]
+  )
+) {
   color: var(--dui-color-link-visited);
+}
+
+/*
+ * Forced colors: the browser replaces every non-system author color, and a
+ * replaced link color is VisitedText once visited, whatever a component set.
+ * A system color is kept, so navigational links (the same list as above)
+ * ask for LinkText; content links keep VisitedText.
+ * https://www.w3.org/TR/css-color-adjust-1/#forced-colors-properties
+ * Our choice: !important, because a navigational component (nav, tabs,
+ * pagination) sets its color in a later layer, and an important
+ * declaration in an earlier layer wins over all of them
+ * (https://www.w3.org/TR/css-cascade-5/#important). In forced colors only
+ * system colors survive, so this locks LinkText against VisitedText, nothing else.
+ */
+@media (forced-colors: active) {
+  a:visited:where(
+    nav *,
+    [role="navigation"] *,
+    [role="menu"] *,
+    [role="menubar"] *,
+    [role="tablist"] *,
+    [role="toolbar"] *,
+    [role="tab"],
+    [role^="menuitem"],
+    [data-button],
+    [data-link~="nav"],
+    [href^="#"]
+  ) {
+    color: linktext !important;
+  }
 }
 
 a:hover {

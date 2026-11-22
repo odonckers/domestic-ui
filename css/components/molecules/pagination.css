@@ -87,8 +87,7 @@
   text-decoration-line: none;
 }
 
-[data-pagination] a[href],
-[data-pagination] a[href]:visited {
+[data-pagination] a[href] {
   color: var(--dui-color-link);
 }
 
@@ -98,7 +97,6 @@
 }
 
 [data-pagination] a[aria-current="page"],
-[data-pagination] a[aria-current="page"]:visited,
 [data-pagination] a[aria-current="page"]:hover {
   background-color: var(--dui-color-accent);
   color: var(--dui-color-accent-contrast);

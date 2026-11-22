@@ -132,10 +132,6 @@
   text-decoration-line: none;
 }
 
-[data-nav] a:visited {
-  color: var(--dui-color-text);
-}
-
 [data-nav] :is(a, summary):hover {
   background-color: var(--dui-color-surface-sunken);
 }
