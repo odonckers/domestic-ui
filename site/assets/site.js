@@ -37,8 +37,10 @@ for (const frame of document.querySelectorAll("iframe[data-live]")) {
 
 /**
  * Scroll the current page's link into view inside its sidebar, never the
- * page: only the sidebar's own scroll position changes (the "nearest" block
- * alignment of scrollIntoView, limited to one scroll container).
+ * page: only the sidebar's own scroll position changes. A link out of view
+ * is centred in the part of the sidebar on screen (the "center" block
+ * alignment of scrollIntoView, limited to one scroll container), so a small
+ * later shift in layout (the app bar settling) cannot push it back out.
  * @param {Element} scroller
  */
 const revealCurrent = (scroller) => {
@@ -49,8 +51,7 @@ const revealCurrent = (scroller) => {
   const top = Math.max(box.top, 0);
   const bottom = Math.min(box.bottom, window.innerHeight);
   const r = current.getBoundingClientRect();
-  if (r.top < top) scroller.scrollTop -= top - r.top;
-  else if (r.bottom > bottom) scroller.scrollTop += r.bottom - bottom;
+  if (r.top < top || r.bottom > bottom) scroller.scrollTop += r.top + r.height / 2 - (top + bottom) / 2;
 };
 
 const docsNav = document.getElementById("docs-nav");
