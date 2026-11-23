@@ -29,7 +29,25 @@ The default theme should look complete and consistent out of the box. Consumers 
 
 ## Checks
 
-`npm test` must pass. That run includes html-validate, axe, and stylelint.
+`npm test` must pass. That run includes html-validate, axe, and stylelint. On Linux it also compares the screenshot baselines.
+
+## Screenshot baselines
+
+`tests/visual.spec.js` records Chromium screenshots of the docs home and the button, field, card, dialog (open), data table, nav and app shell examples. Each page is shot at 1280×800 and 390×844, in light, dark and [forced colors](https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/At-rules/@media/forced-colors). The two widths are the reflow check from [WCAG 2.2 1.4.10](https://www.w3.org/WAI/WCAG22/Understanding/reflow.html). Comparisons use Playwright's [`toHaveScreenshot()`](https://playwright.dev/docs/test-snapshots).
+
+Baselines live in `tests/__screenshots__/`. They are Linux images. On any other operating system the spec skips unless `VISUAL=1` is set, so a macOS `npm test` does not fail on font rendering. Update the baselines in the same pull request as the visual change. On Linux:
+
+```bash
+npm run test:visual:update
+```
+
+To match the CI browser, run that in the Playwright image named in [`.github/workflows/ci.yml`](.github/workflows/ci.yml) (the tag matches `@playwright/test` in `package.json`):
+
+```bash
+docker run --rm -v "$PWD":/work -w /work -u "$(id -u):$(id -g)" mcr.microsoft.com/playwright:v1.65.1-noble bash -lc "npm ci && npm run test:visual:update"
+```
+
+A prebuilt theme adds an entry to `themeScopes` in the spec and commits the new images with the same command.
 
 ## Alignment passes
 
