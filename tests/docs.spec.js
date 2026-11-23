@@ -652,6 +652,8 @@ test.describe("docs pages in the browser", () => {
   }
 
   test("every element and pattern page has one diagram between the h1 and the first h2, named and drawn with tokens", async ({ page }) => {
+    // Two loads (light, dark) per page in one test, so budget time per page, not per test.
+    test.setTimeout(30_000 + diagramPages.length * 2_000);
     for (const p of diagramPages) {
       const strokes = [];
       for (const colorScheme of /** @type {const} */ (["light", "dark"])) {

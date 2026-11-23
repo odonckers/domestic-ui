@@ -9,7 +9,13 @@
  * this script copies that section through verbatim, so it is never regenerated,
  * and refuses to run if its text no longer matches HISTORY_SHA256.
  *
- * --check exits 1 when CHANGELOG.md differs from what would be generated.
+ * --tag <vX.Y.Z> files the commits not yet in a release under that version, so the
+ * release commit can carry its own changelog before the tag exists (git-cliff --tag).
+ * git-cliff dates that section today (UTC), so generate it on the day it merges.
+ * An empty [Unreleased] heading is always kept above the latest release.
+ *
+ * --check exits 1 when CHANGELOG.md differs from what would be generated. It accepts
+ * the same --tag.
  */
 import { execFileSync } from "node:child_process";
 import { createHash } from "node:crypto";
@@ -25,6 +31,25 @@ const HISTORY_HEADING = "## Before Conventional Commits (hand-written, Nov 20–
 // SHA-256 of that section, heading to end of file.
 const HISTORY_SHA256 = "036cf4f486c69615047461b5a0eb957162980545dba776f004e27c4836945d0c";
 
+// Release tags, as in cliff.toml's tag_pattern.
+const TAG_PATTERN = /^v[0-9]+\.[0-9]+\.[0-9]+$/;
+
+const args = process.argv.slice(2);
+const check = args.includes("--check");
+let tag;
+for (let i = 0; i < args.length; i++) {
+  if (args[i] === "--tag") tag = args[++i];
+  else if (args[i].startsWith("--tag=")) tag = args[i].slice("--tag=".length);
+  else if (args[i] !== "--check") {
+    console.error(`changelog: unknown argument "${args[i]}". Usage: changelog.mjs [--check] [--tag vX.Y.Z]`);
+    process.exit(1);
+  }
+}
+if (tag !== undefined && !TAG_PATTERN.test(tag)) {
+  console.error(`changelog: --tag needs a version tag like v0.1.0, got "${tag ?? ""}".`);
+  process.exit(1);
+}
+
 const current = readFileSync(file, "utf8");
 const at = current.indexOf(`\n${HISTORY_HEADING}\n`);
 if (at === -1) {
@@ -39,17 +64,23 @@ if (createHash("sha256").update(history).digest("hex") !== HISTORY_SHA256) {
 
 const generated = execFileSync(
   join(root, "node_modules", ".bin", process.platform === "win32" ? "git-cliff.cmd" : "git-cliff"),
-  ["--config", join(root, "cliff.toml"), `${LAST_UNCONVENTIONAL}..HEAD`],
+  ["--config", join(root, "cliff.toml"), ...(tag ? ["--tag", tag] : []), `${LAST_UNCONVENTIONAL}..HEAD`],
   { cwd: root, encoding: "utf8", stdio: ["ignore", "pipe", "inherit"], shell: process.platform === "win32" },
 ).trimEnd();
 
-// With no conventional commits yet, git-cliff prints only the header.
-const unreleased = /^## /m.test(generated) ? "" : "\n\n## [Unreleased]";
-const next = `${generated}${unreleased}\n\n${history}`;
+// git-cliff writes [Unreleased] only when there are unreleased commits: with none
+// yet, or with every commit filed under a release, add the empty heading above the
+// first release (or after the header).
+let body = generated;
+if (!/^## \[Unreleased\]$/m.test(body)) {
+  const first = body.search(/^## /m);
+  body = first === -1 ? `${body}\n\n## [Unreleased]` : `${body.slice(0, first)}## [Unreleased]\n\n${body.slice(first)}`;
+}
+const next = `${body}\n\n${history}`;
 
-if (process.argv.includes("--check")) {
+if (check) {
   if (next !== current) {
-    console.error("CHANGELOG.md is out of date. Run `npm run changelog`.");
+    console.error(`CHANGELOG.md is out of date. Run \`npm run changelog${tag ? ` -- --tag ${tag}` : ""}\`.`);
     process.exit(1);
   }
   console.log("CHANGELOG.md is up to date.");

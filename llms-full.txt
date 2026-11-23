@@ -1938,6 +1938,14 @@ _Diagram: Visually hidden text names an icon-only button, such as the close butt
 - [Accessibility baseline](https://odonckers.github.io/domestic-ui/principles/accessibility-baseline-wcag-22-aa.md)
 - Source: [`css/utilities/visually-hidden.css`](https://github.com/odonckers/domestic-ui/blob/main/css/utilities/visually-hidden.css), [`examples/base.html`](https://github.com/odonckers/domestic-ui/blob/main/examples/base.html)
 
+### How other systems do it
+
+For comparison only; these are not the standard this system follows.
+
+- Apple Human Interface Guidelines: No equivalent
+- Material Design 3: No equivalent
+- Vercel Geist: No equivalent
+
 ## Action bar
 
 Page: https://odonckers.github.io/domestic-ui/layouts/action-bar.html
@@ -2070,6 +2078,14 @@ Our choice: the bar is the last child of the \<form> it submits, so its buttons 
 - [Accessibility baseline](https://odonckers.github.io/domestic-ui/principles/accessibility-baseline-wcag-22-aa.md)
 - Source: [`css/layout/action-bar.css`](https://github.com/odonckers/domestic-ui/blob/main/css/layout/action-bar.css), [`examples/layouts/action-bar.html`](https://github.com/odonckers/domestic-ui/blob/main/examples/layouts/action-bar.html)
 
+### How other systems do it
+
+For comparison only; these are not the standard this system follows.
+
+- Apple Human Interface Guidelines: No equivalent
+- Material Design 3: No equivalent
+- Vercel Geist: No equivalent
+
 ## Cluster
 
 Page: https://odonckers.github.io/domestic-ui/layouts/cluster.html
@@ -2116,6 +2132,14 @@ The custom properties do not inherit, so nested clusters keep their defaults.
 - [Component API convention](https://odonckers.github.io/domestic-ui/index.md#component-api)
 - [Accessibility baseline](https://odonckers.github.io/domestic-ui/principles/accessibility-baseline-wcag-22-aa.md)
 - Source: [`css/layout/cluster.css`](https://github.com/odonckers/domestic-ui/blob/main/css/layout/cluster.css), [`examples/base.html`](https://github.com/odonckers/domestic-ui/blob/main/examples/base.html)
+
+### How other systems do it
+
+For comparison only; these are not the standard this system follows.
+
+- Apple Human Interface Guidelines: No equivalent
+- Material Design 3: No equivalent
+- Vercel Geist: No equivalent
 
 ## Grid
 
@@ -2169,6 +2193,14 @@ The custom properties do not inherit, so nested grids keep their defaults.
 - [Component API convention](https://odonckers.github.io/domestic-ui/index.md#component-api)
 - [Accessibility baseline](https://odonckers.github.io/domestic-ui/principles/accessibility-baseline-wcag-22-aa.md)
 - Source: [`css/layout/grid.css`](https://github.com/odonckers/domestic-ui/blob/main/css/layout/grid.css), [`examples/base.html`](https://github.com/odonckers/domestic-ui/blob/main/examples/base.html)
+
+### How other systems do it
+
+For comparison only; these are not the standard this system follows.
+
+- Apple Human Interface Guidelines: No equivalent
+- Material Design 3: No equivalent
+- Vercel Geist: No equivalent
 
 ## Scroll
 
@@ -2243,6 +2275,14 @@ _Diagram: A scroll region holds a data table wider than the content area, so the
 - [Accessibility baseline](https://odonckers.github.io/domestic-ui/principles/accessibility-baseline-wcag-22-aa.md)
 - Source: [`css/layout/scroll.css`](https://github.com/odonckers/domestic-ui/blob/main/css/layout/scroll.css), [`examples/base.html`](https://github.com/odonckers/domestic-ui/blob/main/examples/base.html)
 
+### How other systems do it
+
+For comparison only; these are not the standard this system follows.
+
+- Apple Human Interface Guidelines: No equivalent
+- Material Design 3: No equivalent
+- [Vercel Geist: Scroller](https://vercel.com/geist/scroller)
+
 ## Stack
 
 Page: https://odonckers.github.io/domestic-ui/layouts/stack.html
@@ -2285,6 +2325,14 @@ Pattern: "The Stack", Every Layout, built with flexbox gap.
 - [Component API convention](https://odonckers.github.io/domestic-ui/index.md#component-api)
 - [Accessibility baseline](https://odonckers.github.io/domestic-ui/principles/accessibility-baseline-wcag-22-aa.md)
 - Source: [`css/layout/stack.css`](https://github.com/odonckers/domestic-ui/blob/main/css/layout/stack.css), [`examples/base.html`](https://github.com/odonckers/domestic-ui/blob/main/examples/base.html)
+
+### How other systems do it
+
+For comparison only; these are not the standard this system follows.
+
+- Apple Human Interface Guidelines: No equivalent
+- Material Design 3: No equivalent
+- Vercel Geist: No equivalent
 
 ## Atoms
 
