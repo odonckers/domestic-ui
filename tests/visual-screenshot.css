@@ -1,0 +1,12 @@
+/*
+ * Applied only while a screenshot is taken.
+ * https://playwright.dev/docs/api/class-pageassertions#page-assertions-to-have-screenshot-option-style-path
+ *
+ * Our choice: native <select> text is painted by Chromium's widget and shifts
+ * under forced colors, so the same page fails a zero-pixel compare. appearance
+ * none keeps the control's border, size and value as CSS text.
+ * https://developer.mozilla.org/en-US/docs/Web/CSS/appearance
+ */
+select {
+  appearance: none;
+}
