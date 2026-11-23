@@ -62,7 +62,7 @@
   padding: var(--dui-space-l);
   background-color: var(--dui-elevation-raised-surface);
   color: var(--dui-color-text);
-  border: calc(var(--dui-border-width) + 1px) solid var(--dui-color-border);
+  border: var(--dui-border-width) solid var(--dui-color-border);
   border-radius: var(--dui-radius-surface);
   box-shadow: var(--dui-elevation-raised);
 }
