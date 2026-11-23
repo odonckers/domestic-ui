@@ -6472,7 +6472,7 @@ For comparison only; these are not the standard this system follows.
 
 Page: https://odonckers.github.io/domestic-ui/components/web-components.html
 
-From [`web-components/README.md`](https://github.com/odonckers/domestic-ui/blob/main/web-components/README.md). Each element's attributes, keyboard and accessibility are on the page of the pattern it enhances.
+Each element's attributes, keyboard and accessibility are on the page of the pattern it enhances.
 
 A few small [custom elements](https://developer.mozilla.org/en-US/docs/Web/API/Web_components/Using_custom_elements),
 each added only because native HTML cannot do the job. Before reaching for one, check whether an

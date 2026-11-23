@@ -256,7 +256,8 @@ test.describe("docs build", () => {
     // Any snippet line long enough to be markup rather than a word or a closing tag.
     const lines = [...new Set(site.model.snippets.flatMap((s) => s.code.split("\n").map((l) => l.trim())))].filter((l) => l.length >= 30 && /<[a-z]/.test(l));
     expect(lines.length).toBeGreaterThan(0);
-    for (const page of site.pages) {
+    // Explainers are proposals rendered as written (explainers/*.md), quoting the markup they propose.
+    for (const page of site.pages.filter((p) => p.section !== "explainers")) {
       const html = read(join(SITE_DIR, page.path));
       const main = html.slice(html.indexOf("<main"), html.indexOf("</main>")).replace(/<(pre|iframe)\b[\s\S]*?<\/\1>/g, "");
       const prose = unescapeHtml(main.replace(/<[^>]*>/g, ""));
@@ -499,7 +500,7 @@ test.describe("atoms from the group README", () => {
       expect(md).toContain(`# ${source.match(/^#\s+(.+)$/m)?.[1]}`);
       expect(md).toContain(`[edit ${file} on GitHub](https://github.com/odonckers/domestic-ui/edit/main/${file})`);
       // Every heading with something under it; an empty one ("[Unreleased]" between releases) is left out.
-      for (const [, heading, after] of source.matchAll(/^##+\s+(.+)\n+(.?.?)/gm)) {
+      for (const [, heading, after] of source.matchAll(/^##+\s+(.+)\n+(.?.?.?)/gm)) {
         if (after.startsWith("##") && !after.startsWith("###")) expect(md, `${file}: empty ${heading}`).not.toContain(`## ${heading}\n`);
         else expect(md, `${file}: ${heading}`).toContain(heading);
       }

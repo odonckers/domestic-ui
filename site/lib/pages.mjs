@@ -256,10 +256,11 @@ export function buildPages(model) {
     ...COMPONENT_GROUPS.flatMap(({ group }) => [levelIndex(model, group), ...model.components[group].map((c) => as(componentPage(model, c), /** @type {Section} */ (group)))]),
     patternsIndex(model),
     ...sortedPatterns(model).map((p) => patternPage(model, p)),
-    ...(model.webComponentsReadme ? [webComponentsPage(model)] : []),
+    webComponentsPage(model),
     guidesIndex(model),
     ...model.guides.map((g) => guidePage(model, g)),
-    ...(model.explainers?.length ? [explainersIndex(model), ...model.explainers.map((e) => explainerPage(model, e))] : []),
+    explainersIndex(model),
+    ...model.explainers.map((e) => explainerPage(model, e)),
     demosPage(model),
     repoFilePage(model, "CONTRIBUTING.md", model.contributing, "contributing"),
     repoFilePage(model, "CHANGELOG.md", model.changelog, "changelog"),
@@ -1185,7 +1186,13 @@ function webComponentsPage(model) {
     heading: "Web components",
     description: "The custom elements domestic-ui ships for what HTML cannot do yet: what each one adds, its events and how to load it.",
     source: edit("web-components/README.md"),
-    blocks: [md(`From [\`web-components/README.md\`](${BLOB_URL}web-components/README.md). Each element's attributes, keyboard and accessibility are on the page of the pattern it enhances.\n\n${titledLinks(model, rewriteRepoLinks(indexAsSections(model.webComponentsReadme), model))}`)],
+    blocks: [
+      md(
+        model.webComponentsReadme
+          ? `Each element's attributes, keyboard and accessibility are on the page of the pattern it enhances.\n\n${titledLinks(model, rewriteRepoLinks(indexAsSections(model.webComponentsReadme), model))}`
+          : "No web components yet: every pattern works with HTML and CSS alone.",
+      ),
+    ],
   };
 }
 
@@ -1227,7 +1234,7 @@ function explainersIndex(model) {
     heading: "Explainers",
     description: "Proposals, in the W3C TAG explainer format, for the patterns that have no native element and no APG pattern.",
     source: edit("explainers/README.md"),
-    blocks: [md(titledLinks(model, rewriteRepoLinks(model.explainersReadme, model)))],
+    blocks: [md(model.explainersReadme ? titledLinks(model, rewriteRepoLinks(model.explainersReadme, model)) : "No explainers yet.")],
   };
 }
 
