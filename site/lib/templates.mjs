@@ -71,7 +71,8 @@ export function renderHtml(page, tree) {
         <search class="docs-search">
           <form action="${link(SEARCH_PATH)}" method="get">
             <label class="visually-hidden" for="docs-search-q">Search the docs</label>
-            <input type="search" id="docs-search-q" name="q" autocomplete="off" spellcheck="false" placeholder="Search">
+            <input type="search" id="docs-search-q" name="q" autocomplete="off" spellcheck="false">
+            <button type="submit">Search</button>
           </form>
         </search>
         <a class="docs-github" href="${REPO_URL}">GitHub</a>
@@ -80,7 +81,7 @@ export function renderHtml(page, tree) {
       <main id="main" tabindex="-1">
         <article class="docs-content"${page.wide ? " data-wide" : ""}${page.section === "search" ? "" : " data-pagefind-body"}>
 ${/role="region"/.test(body) ? `${REGIONS_NOTE}\n` : ""}${renderBreadcrumb(page, link)}
-<h1>${escapeHtml(page.heading)}</h1>
+<h1 data-pagefind-meta="title[data-title]" data-title="${escapeHtml(page.title)}">${escapeHtml(page.heading)}</h1>
 ${body}
         </article>
       </main>${toc}

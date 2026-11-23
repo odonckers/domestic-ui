@@ -97,14 +97,14 @@ test.describe("docs build", () => {
 
   test("every element and pattern page has one valid header diagram under its lead; its twin has the description", () => {
     expect(diagramPages.map((p) => p.path)).not.toContain("base/index.html");
-    for (const p of site.pages.filter((x) => /^(components\/(atoms|molecules|organisms|utilities)|layouts\/(?!index)|patterns\/(?!index))/.test(x.path))) expect(p.diagram, p.path).toBeTruthy();
+    for (const p of site.pages.filter((x) => /^(components\/(atoms|molecules|organisms)\/(?!index)|layouts\/(?!index)|base\/(?!index)|tokens\/density)/.test(x.path))) expect(p.diagram, p.path).toBeTruthy();
     for (const p of diagramPages) {
       const d = site.model.diagrams.get(/** @type {string} */ (p.diagram));
       expect(d, p.path).toBeDefined();
       const html = site.html(p);
       expect(html.match(/<figure class="docs-diagram">/g), p.path).toHaveLength(1);
       const at = html.indexOf('<figure class="docs-diagram">');
-      expect(at, `${p.path}: after the h1`).toBeGreaterThan(html.indexOf("<h1>"));
+      expect(at, `${p.path}: after the h1`).toBeGreaterThan(html.indexOf("<h1 "));
       expect(at, `${p.path}: before the first section`).toBeLessThan(html.indexOf("<h2 id="));
       const md = site.markdown(p);
       expect(md, p.path).toContain(`\n\n_Diagram: ${d?.desc}_\n\n`);
@@ -428,7 +428,7 @@ test.describe("atoms from the group README", () => {
 
   test("every row of the index table has a complete page, in row order", () => {
     expect(rows.length).toBeGreaterThan(0);
-    const atomPages = site.pages.filter((p) => p.path.startsWith("components/atoms/"));
+    const atomPages = site.pages.filter((p) => p.path.startsWith("components/atoms/") && p.path !== "components/atoms/index.html");
     expect(atomPages.slice(0, rows.length).map((p) => p.title)).toEqual(rows.map((r) => r[0]));
     for (const [title, , api, example] of rows) {
       const exampleFile = example.match(/\]\(([^)]+)\)/)?.[1].replace(/^(\.\.\/)+/, "") ?? "";
@@ -469,7 +469,7 @@ test.describe("atoms from the group README", () => {
     expect([...atoms.matchAll(/^- \*\*Our choice:\*\*/gm)].length).toBe(choices);
     expect(atoms).toContain("## Not shipped, and why\n\n| Candidate | Decision |");
     expect(read(join(SITE_DIR, "examples/atoms/index.html")), "the showcase redirects to the level index").toContain('url=../../components/atoms/index.html"');
-    expect(site.pages.some((p) => p.path === "components/atoms/index.html"), "the showcase is not a component").toBe(false);
+    expect(site.pages.find((p) => p.path === "components/atoms/index.html")?.title, "the showcase is not a component: the path is the level index").toBe("Atoms");
     expect(site.pages.some((p) => p.path === "components/index.html"), "the all-levels overview is gone; its parts live on Getting started and the level indexes").toBe(false);
     for (const name of ["README.md", "llms.txt", "llms-full.txt"]) expect(site.files[name], name).toContain('`data-button="primary small"`');
     expect(site.files["llms-full.txt"]).toContain("\n### Component API\n\nEach component exposes one `data-<component>` attribute.");
@@ -566,7 +566,13 @@ test.describe("tokens from css/tokens/", () => {
       }
       expect(site.files["llms.txt"]).toContain(`(https://odonckers.github.io/domestic-ui/tokens/${page}.md)`);
     }
-    expect(site.pages.map((p) => p.path).filter((p) => p.startsWith("tokens/"))).toEqual(["tokens/index.html", ...files.map((f) => `tokens/${f.replace(/\.css$/, ".html")}`)]);
+    // Then the foundation pages and the density pattern, all under the Tokens entry.
+    expect(site.pages.map((p) => p.path).filter((p) => p.startsWith("tokens/"))).toEqual([
+      "tokens/index.html",
+      ...files.map((f) => `tokens/${f.replace(/\.css$/, ".html")}`),
+      ...site.model.foundations.map((f) => f.sitePath),
+      "tokens/density.html",
+    ]);
     expect(existsSync(join(SITE_DIR, "tokens/space.html")), "the old per-group pages are gone").toBe(false);
   });
 
@@ -819,7 +825,8 @@ test.describe("docs pages in the browser", () => {
   });
 
   test("the Docs sidebar marks the current page once and opens only its group; the app bar and breadcrumb agree", async ({ page }) => {
-    for (const p of site.pages) {
+    // The search page is in no sidebar entry (the app bar's search box opens it).
+    for (const p of site.pages.filter((x) => x.path !== "search.html")) {
       await page.goto(`_site/${p.path}`);
       const nav = page.locator('nav[aria-label="Docs"]');
       await expect(nav, p.path).toHaveCount(1);
@@ -842,8 +849,9 @@ test.describe("docs pages in the browser", () => {
       await expect(page.locator('nav[aria-label="Sections"] a[aria-current]'), p.path).toHaveCount(1);
       // Breadcrumb: the last item is the page.
       const crumbs = page.locator('nav[aria-label="Breadcrumb"]');
-      // None on the home page, or where the top section is the page itself ("Demos / Demos").
-      if (p.path === "index.html" || p.path === "demos.html") await expect(crumbs).toHaveCount(0);
+      // None on the home page, or where the top section is the page itself ("Demos / Demos", "Guides / Guides").
+      const entry = NAV.find((n) => n.path === p.path);
+      if (p.path === "index.html" || (entry && entry.top === entry.title)) await expect(crumbs).toHaveCount(0);
       else {
         await expect(crumbs.locator("li").last().locator('a[aria-current="page"]'), p.path).toHaveCount(1);
         await expect(crumbs.locator('a[aria-current="page"]'), p.path).toHaveCount(1);
@@ -873,7 +881,8 @@ test.describe("docs pages in the browser", () => {
     ]);
     expect(top).toEqual(NAV.map((n) => n.title));
     const linked = await page.locator('nav[aria-label="Docs"] a').evaluateAll((all) => all.map((a) => new URL(/** @type {HTMLAnchorElement} */ (a).href).pathname.replace(/^\/_site\//, "")));
-    for (const p of builtPages) expect(linked, `${p} is in the sidebar`).toContain(p);
+    // Every page but the search page, which the app bar's search box opens.
+    for (const p of builtPages.filter((x) => x !== "search.html")) expect(linked, `${p} is in the sidebar`).toContain(p);
     expect(new Set(linked).size, "each page once").toBe(linked.length);
     // No examples section: example pages are redirects and render pages are frames, never sidebar links.
     expect(linked.filter((p) => /^(?:examples|live)[/.]/.test(p)), "no example or render page links").toEqual([]);
@@ -1057,7 +1066,7 @@ test("discovery picks up a new component with no site changes", async ({ browser
     const out = (/** @type {string} */ path) => read(join(fixture, "_site", path));
 
     const page = out("components/atoms/demo.html");
-    expect(page).toContain("<h1>Demo</h1>");
+    expect(page).toContain('data-title="Demo">Demo</h1>');
     expect(page, "the new page's diagram is inlined").toContain('aria-labelledby="diagram-demo-title" aria-describedby="diagram-demo-desc"');
     expect(page).toContain('src="../../live/atoms/demo--plain.html"');
     expect(page).toContain('src="../../live/atoms/demo--with-a-link.html"');
@@ -1068,7 +1077,7 @@ test("discovery picks up a new component with no site changes", async ({ browser
     for (const code of expected) expect(isDedentedSlice(demo, code, /^[ \t]*$/)).toBe(true);
     const report = await htmlValidate.validateString(page, join(fixture, "_site/components/atoms/demo.html"));
     expect(report.valid, JSON.stringify(report.results)).toBe(true);
-    expect(result.pages.map((p) => p.path)).not.toContain("components/atoms/index.html");
+    expect(result.pages.find((p) => p.path === "components/atoms/index.html")?.title, "the showcase is not a component: the path is the level index").toBe("Atoms");
 
     const atoms = out("components/atoms/index.md");
     expect(atoms).toContain("[Demo](https://odonckers.github.io/domestic-ui/components/atoms/demo.md)");
@@ -1078,10 +1087,12 @@ test("discovery picks up a new component with no site changes", async ({ browser
     expect(atomPaths[atomPaths.length - 1]).toBe("components/atoms/demo.html");
     expect(page).toMatch(/<details open>\s*<summary>Atoms<\/summary>[\s\S]*aria-current="page">Demo<\/a>/);
     const molecules = out("components/molecules/index.md");
-    expect(molecules, "an available pattern has no status note").toContain("[Tabs](https://odonckers.github.io/domestic-ui/patterns/tabs.md): Sections of content shown one at a time, chosen from a list of tabs.\n");
+    expect(molecules, "an available pattern has no status note, and says what it follows").toContain(
+      "[Tabs](https://odonckers.github.io/domestic-ui/components/molecules/tabs.md): Sections of content shown one at a time, chosen from a list of tabs. Follows: [APG Tabs pattern](https://www.w3.org/WAI/ARIA/apg/patterns/tabs/).\n",
+    );
     expect(molecules).toContain("Coming in M3.");
-    expect(page, "an available pattern has no status note in the sidebar").toContain('<a href="../../patterns/tabs.html">Tabs</a>');
-    expect(page).toContain('<a href="../../patterns/disclosure.html">Disclosure <span class="docs-nav-note">(coming in M3)</span></a>');
+    expect(page, "an available pattern has no status note in the sidebar").toContain('<a href="../molecules/tabs.html">Tabs</a>');
+    expect(page).toContain('<a href="../molecules/disclosure.html">Disclosure <span class="docs-nav-note">(coming in M3)</span></a>');
     // The fixture has no demos/, CONTRIBUTING.md or CHANGELOG.md: the pages still exist and say so.
     expect(out("demos.md")).toContain("Coming in M5.");
     expect(out("examples/atoms/index.html"), "the showcase redirects to the level index").toContain('url=../../components/atoms/index.html"');
@@ -1089,10 +1100,11 @@ test("discovery picks up a new component with no site changes", async ({ browser
 
     // The tabs pattern page is filled in: demo, byte-identical markup, keyboard notes from the CSS.
     const paths = result.pages.map((p) => p.path);
-    expect(paths, "a pattern owns its file names").not.toContain("components/molecules/tabs.html");
+    expect(paths.filter((p) => p === "components/molecules/tabs.html"), "a pattern owns its file names: one page, the pattern's").toHaveLength(1);
+    expect(paths, "no patterns/ folder").not.toContain("patterns/tabs.html");
     const tabsPage = out("components/molecules/tabs.html");
     expect(tabsPage).not.toContain("Coming in M3.");
-    expect(tabsPage).toContain('src="../live/molecules/tabs--fixture-tabs.html"');
+    expect(tabsPage).toContain('src="../../live/molecules/tabs--fixture-tabs.html"');
     const tabsCode = ['<div class="tabs">\n  <p>Fixture tabs.</p>\n</div>'];
     expect(out("live/molecules/tabs--fixture-tabs.html"), "the render page is the same text").toContain(`\n${tabsCode[0]}\n`);
     expect(snippetBlocks(tabsPage)).toEqual(tabsCode);
@@ -1105,11 +1117,8 @@ test("discovery picks up a new component with no site changes", async ({ browser
     expect(tabsPage).toContain('<a href="https://www.w3.org/WAI/ARIA/apg/patterns/tabs/">APG Tabs pattern</a>');
     const tabsReport = await htmlValidate.validateString(tabsPage, join(fixture, "_site/components/molecules/tabs.html"));
     expect(tabsReport.valid, JSON.stringify(tabsReport.results)).toBe(true);
-    // Grouped by level, as in the sidebar.
-    const patternsIndex = out("patterns/index.md");
-    expect(patternsIndex).toContain("| [Tabs](https://odonckers.github.io/domestic-ui/patterns/tabs.md) | Available |");
-    expect(patternsIndex.indexOf("## Molecules")).toBeLessThan(patternsIndex.indexOf("[Tabs]"));
-    expect(patternsIndex).not.toMatch(/^## M3/m);
+    // No patterns index: each pattern is listed on its level's index.
+    expect(paths).not.toContain("patterns/index.html");
     const guide = out("guides/simple-site-to-erp-app.md");
     expect(guide).toContain("chosen from a list of tabs.\n");
     expect(guide).not.toContain("tabs. Available.");
@@ -1125,13 +1134,13 @@ test("discovery picks up a new component with no site changes", async ({ browser
     const readme = read(join(fixture, "README.md"));
     expect(readme).toContain('| Atoms | Demo | `class="demo"` | [Demo](https://odonckers.github.io/domestic-ui/components/atoms/demo.html) |');
     expect(readme).not.toContain("| Atoms | Coming in M2 |");
-    expect(readme).toContain('| Molecules | Tabs | `class="tabs"` | [Tabs](https://odonckers.github.io/domestic-ui/patterns/tabs.html) |');
-    expect(readme).toContain("| [Tabs](https://odonckers.github.io/domestic-ui/patterns/tabs.html) | M3 | Available |");
+    expect(readme).toContain('| Molecules | Tabs | `class="tabs"` | [Tabs](https://odonckers.github.io/domestic-ui/components/molecules/tabs.html) |');
+    expect(readme).toContain("| [Tabs](https://odonckers.github.io/domestic-ui/components/molecules/tabs.html) | M3 | Available |");
     expect(readme).toContain('| Layout | Demo layout | `class="demo-layout"` | [Demo layout](https://odonckers.github.io/domestic-ui/layouts/demo-layout.html) |');
 
     const llms = read(join(fixture, "llms.txt"));
     expect(llms).toContain("- [Demo](https://odonckers.github.io/domestic-ui/components/atoms/demo.md): A demo atom used by the docs discovery test.");
-    expect(llms).toContain("- [Tabs](https://odonckers.github.io/domestic-ui/patterns/tabs.md): Available.");
+    expect(llms).toContain("- [Tabs](https://odonckers.github.io/domestic-ui/components/molecules/tabs.md): Available.");
     expect(llms).not.toContain("- Tabs: Coming in M3.");
     expect(llms.slice(llms.indexOf("## Layout\n"), llms.indexOf("## Atoms\n"))).toContain("- [Demo layout](https://odonckers.github.io/domestic-ui/layouts/demo-layout.md)");
     const full = read(join(fixture, "llms-full.txt"));
@@ -1144,8 +1153,8 @@ test("discovery picks up a new component with no site changes", async ({ browser
 });
 
 test.describe("docs search", () => {
-  test("the app bar search opens search.html, which lists matching pages from the Pagefind index", async ({ page }) => {
-    await blockExternalRequests(page);
+  test("the app bar search opens search.html, which lists matching pages from the Pagefind index", async ({ page, baseURL }) => {
+    const external = await blockExternalRequests(page, baseURL ?? "");
     await page.goto("_site/components/molecules/card.html");
     const box = page.getByRole("searchbox", { name: "Search the docs" });
     await box.fill("drawer");
@@ -1166,6 +1175,7 @@ test.describe("docs search", () => {
     await expect(page.locator("[data-search-status]")).toContainText("“visited links”");
     const results2 = await page.locator("[data-search-results] > li > a").evaluateAll((as) => as.map((a) => /** @type {HTMLAnchorElement} */ (a).pathname));
     expect(results2).toContain("/_site/components/atoms/link.html");
+    expect(external, "the index and its client are served with the site").toEqual([]);
   });
 
   test("without JavaScript the search page says so and the form still submits", async ({ browser }) => {

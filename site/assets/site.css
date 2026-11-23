@@ -27,17 +27,24 @@
   margin-inline-start: auto;
 }
 
-/* Narrow shells: the GitHub link leaves the app bar (the footer has it), so the bar keeps two rows. */
+/*
+ * Narrow shells: the GitHub link leaves the app bar (the footer has it), so
+ * the bar keeps two rows, and the search fills its own row.
+ */
 @container dui-app-shell (inline-size < 48rem) {
   .docs-github {
     display: none;
+  }
+
+  .docs-search {
+    max-inline-size: none;
+    margin-inline-start: 0;
   }
 }
 
 /* The search page (search.html): the field, then one result per page with its excerpt. */
 .docs-search-page input {
-  display: block;
-  inline-size: 100%;
+  flex: 1 1 var(--dui-size-column-min);
 }
 
 .docs-search-page > * + * {

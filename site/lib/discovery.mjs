@@ -697,7 +697,8 @@ export function loadModel(root) {
   }
   for (const p of patterns) p.snippets = ownedBy(p.sitePath);
   for (const f of foundations) f.snippets = ownedBy(f.sitePath);
-  for (const p of patterns) {
+  // A fixture root without explainers/ has nothing to link.
+  if (explainers.length) for (const p of patterns) {
     for (const e of p.explainers) if (!explainers.some((x) => x.slug === e)) throw new Error(`${p.contentPath}: no explainer "${e}" in explainers/`);
   }
   const principleSnippets = Object.fromEntries(principles.sections.map((s) => [s.sitePath, ownedBy(s.sitePath)]));

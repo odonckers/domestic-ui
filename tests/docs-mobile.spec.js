@@ -118,7 +118,7 @@ test("at 1280px the Docs sidebar sits beside main, only the current group is ope
   expect(await page.evaluate(() => scrollY)).toBe(0);
 
   // A page low in the sidebar: site.js scrolls the sidebar (not the page) so its link is on screen.
-  await page.goto("_site/components/molecules/combobox.html");
+  await page.goto("_site/explainers/density.html");
   await expect(nav.locator('a[aria-current="page"]')).toBeInViewport({ ratio: 1 });
   expect(await nav.evaluate((n) => n.scrollTop), "the sidebar scrolled").toBeGreaterThan(0);
   expect(await page.evaluate(() => scrollY)).toBe(0);

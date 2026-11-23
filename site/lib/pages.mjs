@@ -1221,7 +1221,10 @@ function searchPage() {
         html: (ctx) => `<search class="docs-search-page" data-search-page data-pagefind="${escapeHtml(ctx.link(`${PAGEFIND_DIR}/pagefind.js`))}">
 <form action="${escapeHtml(ctx.link(SEARCH_PATH))}" method="get">
 <label for="search-q">Search the docs</label>
+<div class="cluster">
 <input type="search" id="search-q" name="q" autocomplete="off" spellcheck="false">
+<button type="submit">Search</button>
+</div>
 </form>
 </search>
 <p role="status" data-search-status>Search needs JavaScript. Every page is listed in the sidebar and in <a href="${escapeHtml(ctx.link("llms.txt"))}">llms.txt</a>.</p>
