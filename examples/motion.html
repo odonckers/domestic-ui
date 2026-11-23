@@ -79,7 +79,7 @@
         <h2 id="fade-title">Fade: dialog</h2>
         <p>Fades and lifts by <code>--dui-motion-distance</code> over <code>--dui-motion-duration-normal</code>; the backdrop fades with it.</p>
         <div class="demo">
-          <!-- dui:snippet name="Fade: dialog" page="principles/motion" -->
+          <!-- dui:snippet name="Fade: dialog" page="tokens/motion" -->
           <button type="button" commandfor="fade-dialog" command="show-modal">Open dialog</button>
           <dialog id="fade-dialog" data-dialog aria-labelledby="fade-dialog-title">
             <header>
@@ -100,7 +100,7 @@
         <h2 id="slide-title">Slide: drawer</h2>
         <p>Slides from the inline-end edge over <code>--dui-motion-duration-slow</code>. With reduced motion it fades in place.</p>
         <div class="demo">
-          <!-- dui:snippet name="Slide: drawer" page="principles/motion" -->
+          <!-- dui:snippet name="Slide: drawer" page="tokens/motion" -->
           <button type="button" commandfor="slide-drawer" command="show-modal">Open drawer</button>
           <dialog id="slide-drawer" data-dialog="drawer end" closedby="any" aria-labelledby="slide-drawer-title">
             <header>
@@ -117,7 +117,7 @@
         <h2 id="scale-title">Scale: popover and menu</h2>
         <p>Grows from <code>--dui-motion-zoom</code> while it fades, over <code>--dui-motion-duration-fast</code>.</p>
         <div class="demo">
-          <!-- dui:snippet name="Scale: popover and menu" page="principles/motion" -->
+          <!-- dui:snippet name="Scale: popover and menu" page="tokens/motion" -->
           <div class="cluster">
             <button type="button" popovertarget="scale-popover">Popover</button>
             <div id="scale-popover" popover data-popover>
@@ -139,7 +139,7 @@
         <h2 id="state-title">Color and state: buttons, links, switch</h2>
         <p>Colors fade over <code>--dui-motion-duration-fast</code> with <code>--dui-motion-easing-standard</code>. The switch thumb slides; with reduced motion it jumps and the color still fades.</p>
         <div class="demo">
-          <!-- dui:snippet name="Color and state" page="principles/motion" -->
+          <!-- dui:snippet name="Color and state" page="tokens/motion" -->
           <div class="cluster">
             <button type="button">Hover me</button>
             <button type="button" data-button="primary">Primary</button>
@@ -154,7 +154,7 @@
         <h2 id="toast-title">Toast</h2>
         <p>A new toast fades in and lifts by <code>--dui-motion-distance</code>. Its text is announced at once; only the box moves.</p>
         <div class="demo">
-          <!-- dui:snippet name="Toast" page="principles/motion" -->
+          <!-- dui:snippet name="Toast" page="tokens/motion" -->
           <button type="button" data-toast="success">Save</button>
           <dui-toaster data-alert="toasts" role="status"></dui-toaster>
           <!-- /dui:snippet -->
@@ -168,7 +168,7 @@
           Set it on <code>:root</code> for the page, or on an element with <code>data-motion</code> (empty) or
           <code>data-theme</code>, where the derived durations are re-declared.
         </p>
-        <!-- dui:snippet name="Motion scale" page="principles/motion" -->
+        <!-- dui:snippet name="Motion scale" page="tokens/motion" -->
         <div class="panel cluster" data-motion style="--dui-motion-scale: 3">
           <button type="button">Hover me</button>
           <label><input type="checkbox" role="switch" name="slow-switch"> Slow switch</label>
@@ -186,7 +186,7 @@
           <code>data-motion="reduced"</code> behaves like <code>prefers-reduced-motion: reduce</code>: fades and color changes stay,
           movement goes. <code>data-motion="none"</code> sets every duration to <code>0s</code>.
         </p>
-        <!-- dui:snippet name="Reduced and no motion" page="principles/motion" -->
+        <!-- dui:snippet name="Reduced and no motion" page="tokens/motion" -->
         <div class="grid">
           <section class="panel stack" data-motion="reduced" aria-labelledby="reduced-title">
             <h3 id="reduced-title">data-motion="reduced"</h3>
@@ -236,7 +236,7 @@
           <code>--dui-motion-scale</code>, reduced motion and <code>data-motion</code> on the root like everything else.
         </p>
         <div class="demo">
-          <!-- dui:snippet name="View transition" page="principles/motion" -->
+          <!-- dui:snippet name="View transition" page="tokens/motion" -->
           <div class="stack">
             <ol id="vt-list" class="stack" style="--stack-gap: var(--dui-space-2xs)">
               <li>Draft</li>

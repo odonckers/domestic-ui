@@ -16,28 +16,28 @@
 /* 1. Independent tokens: resolve once on :root, inherit everywhere. */
 :root {
   /* Surfaces and text */
-  --dui-color-surface: light-dark(var(--dui-color-gray-0), var(--dui-color-gray-900));
-  --dui-color-surface-raised: light-dark(var(--dui-color-gray-50), var(--dui-color-gray-850));
-  --dui-color-surface-sunken: light-dark(var(--dui-color-gray-100), var(--dui-color-gray-800));
-  --dui-color-text: light-dark(var(--dui-color-gray-900), var(--dui-color-gray-100));
-  --dui-color-text-muted: light-dark(var(--dui-color-gray-600), var(--dui-color-gray-400));
+  --dui-color-surface: light-dark(var(--dui-color-gray-0), var(--dui-color-gray-900)); /* Page and control background */
+  --dui-color-surface-raised: light-dark(var(--dui-color-gray-50), var(--dui-color-gray-850)); /* Slightly lifted areas: neutral buttons, zebra rows, cards */
+  --dui-color-surface-sunken: light-dark(var(--dui-color-gray-100), var(--dui-color-gray-800)); /* Recessed areas: code, button hover */
+  --dui-color-text: light-dark(var(--dui-color-gray-900), var(--dui-color-gray-100)); /* Body text */
+  --dui-color-text-muted: light-dark(var(--dui-color-gray-600), var(--dui-color-gray-400)); /* Secondary text, captions, list markers (still 4.5:1) */
 
   /* Borders: decorative hairlines vs. control boundaries (3:1, WCAG 1.4.11) */
-  --dui-color-border: light-dark(var(--dui-color-gray-200), var(--dui-color-gray-700));
-  --dui-color-border-control: light-dark(var(--dui-color-gray-500), var(--dui-color-gray-500));
+  --dui-color-border: light-dark(var(--dui-color-gray-200), var(--dui-color-gray-700)); /* Decorative hairlines: tables, hr, details, fieldset */
+  --dui-color-border-control: light-dark(var(--dui-color-gray-500), var(--dui-color-gray-500)); /* Form control and button boundaries (3:1) */
 
   /* Accent and status */
-  --dui-color-accent: light-dark(var(--dui-color-blue-600), var(--dui-color-blue-400));
-  --dui-color-accent-contrast: light-dark(var(--dui-color-gray-0), var(--dui-color-gray-900));
-  --dui-color-link-visited: light-dark(var(--dui-color-purple-700), var(--dui-color-purple-300));
-  --dui-color-danger: light-dark(var(--dui-color-red-700), var(--dui-color-red-300));
-  --dui-color-success: light-dark(var(--dui-color-green-700), var(--dui-color-green-300));
-  --dui-color-warning: light-dark(var(--dui-color-amber-700), var(--dui-color-amber-300));
-  --dui-color-info: light-dark(var(--dui-color-blue-700), var(--dui-color-blue-300));
-  --dui-color-mark: light-dark(var(--dui-color-yellow-100), var(--dui-color-yellow-300));
-  --dui-color-mark-text: light-dark(var(--dui-color-gray-900), var(--dui-color-gray-900));
-  --dui-color-backdrop: light-dark(var(--dui-color-black-a40), var(--dui-color-black-a60));
-  --dui-color-shadow: light-dark(var(--dui-color-black-a10), var(--dui-color-black-a40));
+  --dui-color-accent: light-dark(var(--dui-color-blue-600), var(--dui-color-blue-400)); /* Brand color: primary button fill, checks, links and focus by default */
+  --dui-color-accent-contrast: light-dark(var(--dui-color-gray-0), var(--dui-color-gray-900)); /* Text on accent */
+  --dui-color-link-visited: light-dark(var(--dui-color-purple-700), var(--dui-color-purple-300)); /* Visited links */
+  --dui-color-danger: light-dark(var(--dui-color-red-700), var(--dui-color-red-300)); /* Errors, :user-invalid borders */
+  --dui-color-success: light-dark(var(--dui-color-green-700), var(--dui-color-green-300)); /* Success messages */
+  --dui-color-warning: light-dark(var(--dui-color-amber-700), var(--dui-color-amber-300)); /* Warning badges and messages */
+  --dui-color-info: light-dark(var(--dui-color-blue-700), var(--dui-color-blue-300)); /* Informational alerts and toasts (separate from the accent, so a brand color never reads as a status) */
+  --dui-color-mark: light-dark(var(--dui-color-yellow-100), var(--dui-color-yellow-300)); /* `mark` and `::selection` background */
+  --dui-color-mark-text: light-dark(var(--dui-color-gray-900), var(--dui-color-gray-900)); /* Text on `mark` */
+  --dui-color-backdrop: light-dark(var(--dui-color-black-a40), var(--dui-color-black-a60)); /* `dialog::backdrop` */
+  --dui-color-shadow: light-dark(var(--dui-color-black-a10), var(--dui-color-black-a40)); /* Shadow color */
 
   /*
    * Code highlighting (css/base/typography.css, explainers/code-highlighting.md).
@@ -53,44 +53,44 @@
   --dui-color-code-punctuation: light-dark(var(--dui-color-gray-700), var(--dui-color-gray-300)); /* Brackets, braces, angle brackets, colons, semicolons, commas */
 
   /* Type */
-  --dui-font-body: var(--dui-font-stack-system-ui);
-  --dui-font-mono: var(--dui-font-stack-monospace);
-  --dui-font-weight-body: var(--dui-font-weight-400);
-  --dui-font-weight-strong: var(--dui-font-weight-600);
-  --dui-font-weight-heading: var(--dui-font-weight-700);
-  --dui-step--1: var(--dui-font-size-fluid--1);
-  --dui-step-0: var(--dui-font-size-fluid-0);
-  --dui-step-1: var(--dui-font-size-fluid-1);
-  --dui-step-2: var(--dui-font-size-fluid-2);
-  --dui-step-3: var(--dui-font-size-fluid-3);
-  --dui-step-4: var(--dui-font-size-fluid-4);
-  --dui-step-5: var(--dui-font-size-fluid-5);
-  --dui-font-size-code: var(--dui-font-size-relative-90);
-  --dui-line-height-body: var(--dui-leading-160);
-  --dui-line-height-heading: var(--dui-leading-125);
-  --dui-line-height-display: var(--dui-leading-110);
-  --dui-letter-spacing-heading: var(--dui-tracking-tight);
-  --dui-measure: var(--dui-size-65ch);
+  --dui-font-body: var(--dui-font-stack-system-ui); /* Body font stack */
+  --dui-font-mono: var(--dui-font-stack-monospace); /* Code font stack */
+  --dui-font-weight-body: var(--dui-font-weight-400); /* Body weight */
+  --dui-font-weight-strong: var(--dui-font-weight-600); /* strong, labels, buttons, th */
+  --dui-font-weight-heading: var(--dui-font-weight-700); /* h1–h6 */
+  --dui-step--1: var(--dui-font-size-fluid--1); /* small, captions */
+  --dui-step-0: var(--dui-font-size-fluid-0); /* Body text, h6 */
+  --dui-step-1: var(--dui-font-size-fluid-1); /* h5 */
+  --dui-step-2: var(--dui-font-size-fluid-2); /* h4 */
+  --dui-step-3: var(--dui-font-size-fluid-3); /* h3 */
+  --dui-step-4: var(--dui-font-size-fluid-4); /* h2 */
+  --dui-step-5: var(--dui-font-size-fluid-5); /* h1 */
+  --dui-font-size-code: var(--dui-font-size-relative-90); /* code, kbd, samp, pre (relative) */
+  --dui-line-height-body: var(--dui-leading-160); /* Body text */
+  --dui-line-height-heading: var(--dui-leading-125); /* Headings, buttons, pre */
+  --dui-line-height-display: var(--dui-leading-110); /* h1 */
+  --dui-letter-spacing-heading: var(--dui-tracking-tight); /* h1, h2 */
+  --dui-measure: var(--dui-size-65ch); /* Max line length for prose */
 
   /* Space */
-  --dui-space-3xs: var(--dui-space-1);
-  --dui-space-2xs: var(--dui-space-2);
-  --dui-space-xs: var(--dui-space-3);
-  --dui-space-s: var(--dui-space-4);
-  --dui-space-m: var(--dui-space-5);
-  --dui-space-l: var(--dui-space-6);
-  --dui-space-xl: var(--dui-space-7);
-  --dui-space-2xl: var(--dui-space-8);
-  --dui-space-3xl: var(--dui-space-9);
+  --dui-space-3xs: var(--dui-space-1); /* Space scale */
+  --dui-space-2xs: var(--dui-space-2); /* Space scale */
+  --dui-space-xs: var(--dui-space-3); /* Space scale */
+  --dui-space-s: var(--dui-space-4); /* Space scale */
+  --dui-space-m: var(--dui-space-5); /* Space scale; default flow rhythm and .stack gap */
+  --dui-space-l: var(--dui-space-6); /* Space scale; default .grid gap */
+  --dui-space-xl: var(--dui-space-7); /* Space scale; space above h1–h3 */
+  --dui-space-2xl: var(--dui-space-8); /* Space scale */
+  --dui-space-3xl: var(--dui-space-9); /* Space scale */
 
   /* Sizes */
-  --dui-size-target: var(--dui-size-2-75);
-  --dui-size-target-small: var(--dui-size-2);
-  --dui-size-target-large: var(--dui-size-3-25);
-  --dui-size-check: var(--dui-size-1-25);
-  --dui-size-column-min: var(--dui-size-16);
-  --dui-size-menu-min: var(--dui-size-12);
-  --dui-size-drawer: var(--dui-size-24);
+  --dui-size-target: var(--dui-size-2-75); /* Min height of controls and buttons (WCAG 2.5.8 needs 24px; this gives 44px) */
+  --dui-size-target-small: var(--dui-size-2); /* Small buttons (32px: under 44px, over the 24px minimum) */
+  --dui-size-target-large: var(--dui-size-3-25); /* Large buttons */
+  --dui-size-check: var(--dui-size-1-25); /* Checkbox and radio size */
+  --dui-size-column-min: var(--dui-size-16); /* Default .grid min column width */
+  --dui-size-menu-min: var(--dui-size-12); /* Min width of menus and nav dropdowns */
+  --dui-size-drawer: var(--dui-size-24); /* Drawer width (all of the viewport when narrower) */
   --dui-size-page: var(--dui-size-72); /* Max inline size of a page's content column: header, main and footer */
   --dui-size-icon: var(--dui-size-1-25); /* Decorative icons beside a label: nav links and group summaries */
   --dui-size-sidebar: var(--dui-size-16); /* Inline size of an app shell's primary sidebar when it sits beside main */
@@ -98,19 +98,19 @@
   --dui-size-pane: var(--dui-size-100svh); /* Max block size of a pane that scrolls on its own beside others, such as the detail of a list-detail or a data-scroll="block inline" table */
 
   /* Shape */
-  --dui-radius-control: var(--dui-radius-2);
-  --dui-radius-surface: var(--dui-radius-3);
-  --dui-radius-pill: var(--dui-radius-round);
-  --dui-border-width: var(--dui-border-1);
-  --dui-border-width-emphasis: var(--dui-border-4);
-  --dui-border-width-indicator: var(--dui-border-3);
-  --dui-underline-offset: var(--dui-underline-offset-015em);
-  --dui-underline-thickness: var(--dui-underline-1);
-  --dui-underline-thickness-hover: var(--dui-underline-2);
+  --dui-radius-control: var(--dui-radius-2); /* Controls, buttons, inline code */
+  --dui-radius-surface: var(--dui-radius-3); /* Panels, pre, dialog, details, media */
+  --dui-radius-pill: var(--dui-radius-round); /* Fully rounded ends */
+  --dui-border-width: var(--dui-border-1); /* Hairline width */
+  --dui-border-width-emphasis: var(--dui-border-4); /* blockquote rule, alert start rule, invalid field */
+  --dui-border-width-indicator: var(--dui-border-3); /* Selected tab, current nav item (3:1 against the surface) */
+  --dui-underline-offset: var(--dui-underline-offset-015em); /* Link underline offset */
+  --dui-underline-thickness: var(--dui-underline-1); /* Link underline */
+  --dui-underline-thickness-hover: var(--dui-underline-2); /* Link underline on hover */
 
   /* Focus indicator (WCAG 2.4.7, 2.4.11, 2.4.13) */
-  --dui-focus-width: var(--dui-border-2);
-  --dui-focus-offset: var(--dui-border-2);
+  --dui-focus-width: var(--dui-border-2); /* Focus outline width */
+  --dui-focus-offset: var(--dui-border-2); /* Focus outline offset */
 
   /* Motion knobs: durations and distances (section 2) are derived from these. */
   --dui-motion-scale: var(--dui-factor-1); /* Multiplies every motion duration: 2 is twice as slow, 0 turns motion off */
@@ -128,9 +128,9 @@
   --dui-density-scale: var(--dui-factor-1); /* 1 is comfortable, 0 compact (data-density); in between interpolates. Below 0 is not supported: targets could drop under 24px */
 
   /* State */
-  --dui-opacity-disabled: var(--dui-opacity-60);
-  --dui-tint-amount: var(--dui-mix-8);
-  --dui-border-tint-amount: var(--dui-mix-35);
+  --dui-opacity-disabled: var(--dui-opacity-60); /* Disabled controls, `disabled` and `aria-disabled="true"` */
+  --dui-tint-amount: var(--dui-mix-8); /* How much of a tone goes into a tinted surface */
+  --dui-border-tint-amount: var(--dui-mix-35); /* How much of the text color goes into a tinted border (badges) */
 }
 
 /*
@@ -153,21 +153,21 @@
  */
 :root,
 :where([data-theme], [class^="theme-"], [class*=" theme-"], [data-motion], [data-density]) {
-  --dui-color-link: var(--dui-color-accent);
-  --dui-color-focus: var(--dui-color-accent);
-  --dui-color-accent-hover: color-mix(in oklab, var(--dui-color-accent) 82%, var(--dui-color-text));
-  --dui-font-heading: var(--dui-font-body);
+  --dui-color-link: var(--dui-color-accent); /* Links */
+  --dui-color-focus: var(--dui-color-accent); /* Focus ring (3:1 against surfaces) */
+  --dui-color-accent-hover: color-mix(in oklab, var(--dui-color-accent) 82%, var(--dui-color-text)); /* Primary button hover */
+  --dui-font-heading: var(--dui-font-body); /* Heading font stack */
 
   /* Tinted surfaces for status badges: a little of the tone mixed into the surface. */
-  --dui-color-accent-surface: color-mix(in oklab, var(--dui-color-accent) var(--dui-tint-amount), var(--dui-color-surface));
-  --dui-color-success-surface: color-mix(in oklab, var(--dui-color-success) var(--dui-tint-amount), var(--dui-color-surface));
-  --dui-color-warning-surface: color-mix(in oklab, var(--dui-color-warning) var(--dui-tint-amount), var(--dui-color-surface));
-  --dui-color-danger-surface: color-mix(in oklab, var(--dui-color-danger) var(--dui-tint-amount), var(--dui-color-surface));
-  --dui-color-info-surface: color-mix(in oklab, var(--dui-color-info) var(--dui-tint-amount), var(--dui-color-surface));
+  --dui-color-accent-surface: color-mix(in oklab, var(--dui-color-accent) var(--dui-tint-amount), var(--dui-color-surface)); /* Accent badge background */
+  --dui-color-success-surface: color-mix(in oklab, var(--dui-color-success) var(--dui-tint-amount), var(--dui-color-surface)); /* Success badge background */
+  --dui-color-warning-surface: color-mix(in oklab, var(--dui-color-warning) var(--dui-tint-amount), var(--dui-color-surface)); /* Warning badge background */
+  --dui-color-danger-surface: color-mix(in oklab, var(--dui-color-danger) var(--dui-tint-amount), var(--dui-color-surface)); /* Danger badge and alert background */
+  --dui-color-info-surface: color-mix(in oklab, var(--dui-color-info) var(--dui-tint-amount), var(--dui-color-surface)); /* Info alert background */
 
   /* Inverse pair for small overlays on top of content (tooltips): text and surface swapped. */
-  --dui-color-surface-inverse: var(--dui-color-text);
-  --dui-color-text-inverse: var(--dui-color-surface);
+  --dui-color-surface-inverse: var(--dui-color-text); /* Tooltip background */
+  --dui-color-text-inverse: var(--dui-color-surface); /* Tooltip text */
 
   /* Motion: durations times --dui-motion-scale and --dui-motion-enabled, distances times --dui-motion-movement. */
   --dui-motion-duration-fast: calc(var(--dui-duration-150) * var(--dui-motion-scale) * var(--dui-motion-enabled)); /* Small state changes: hover, press, switch, popovers and menus */
@@ -246,7 +246,7 @@
  */
 @media (prefers-reduced-motion: reduce) {
   :root {
-    --dui-motion-movement: var(--dui-factor-0);
+    --dui-motion-movement: var(--dui-factor-0); /* Lets things slide, lift and zoom (1) or not (0); `0` with reduced motion */
   }
 }
 
@@ -255,7 +255,7 @@
 }
 
 [data-motion="none"] {
-  --dui-motion-enabled: var(--dui-factor-0);
+  --dui-motion-enabled: var(--dui-factor-0); /* `0` with `data-motion="none"`: every duration is `0s`, whatever scale is set inside */
   --dui-motion-movement: var(--dui-factor-0);
 }
 
@@ -274,7 +274,7 @@
  * not the device.
  */
 [data-density="comfortable"] {
-  --dui-density-scale: var(--dui-factor-1);
+  --dui-density-scale: var(--dui-factor-1); /* Density knob: `1` comfortable, `0` compact (`data-density`); in between interpolates, never below `0` */
 }
 
 [data-density="compact"] {

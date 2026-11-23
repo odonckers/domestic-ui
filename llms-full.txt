@@ -42,7 +42,7 @@ Layout primitives and utilities: `data-action-bar`, `.cluster`, `.grid`, `data-s
 
 ### How these docs are organized
 
-The sidebar follows Brad Frost's [Atomic Design](https://atomicdesign.bradfrost.com/): [tokens](https://odonckers.github.io/domestic-ui/tokens/index.md), then [base elements](https://odonckers.github.io/domestic-ui/components/base.md) and [layouts](https://odonckers.github.io/domestic-ui/layouts/index.md), then [atoms](https://odonckers.github.io/domestic-ui/atoms/index.md), [molecules](https://odonckers.github.io/domestic-ui/molecules/index.md) and [organisms](https://odonckers.github.io/domestic-ui/organisms/index.md). [Patterns](https://odonckers.github.io/domestic-ui/patterns/index.md) combine them, and [web components](https://odonckers.github.io/domestic-ui/components/web-components.md) add the behavior HTML lacks. The [principles](https://odonckers.github.io/domestic-ui/principles/index.md) explain each choice; [explainers](https://odonckers.github.io/domestic-ui/explainers/index.md) cover the patterns no standard does.
+The sidebar follows Brad Frost's [Atomic Design](https://atomicdesign.bradfrost.com/), and each group has one folder in the URL. **Foundations**: the [principles](https://odonckers.github.io/domestic-ui/principles/index.md) that explain each choice, [tokens](https://odonckers.github.io/domestic-ui/tokens/index.md) (with theming, motion, elevation and density), [base elements](https://odonckers.github.io/domestic-ui/base/index.md) and [layouts](https://odonckers.github.io/domestic-ui/layouts/index.md). **Components**: [atoms](https://odonckers.github.io/domestic-ui/components/atoms/index.md), [molecules](https://odonckers.github.io/domestic-ui/components/molecules/index.md) and [organisms](https://odonckers.github.io/domestic-ui/components/organisms/index.md) under `components/`, and the [web components](https://odonckers.github.io/domestic-ui/components/web-components.md) that add the behavior HTML lacks. **Guides**: step-by-step [guides](https://odonckers.github.io/domestic-ui/guides/index.md) and the [explainers](https://odonckers.github.io/domestic-ui/explainers/index.md) for the patterns no standard covers; a component page links its explainer when it has one.
 
 ### For coding agents
 
@@ -73,8 +73,7 @@ options, the pick is labeled **Our choice:** with one line saying why.
 9. [Layout primitives](https://odonckers.github.io/domestic-ui/principles/layout-primitives.md)
 10. [Web components](https://odonckers.github.io/domestic-ui/principles/web-components.md)
 11. [Explainers](https://odonckers.github.io/domestic-ui/principles/explainers.md)
-12. [Tooling](https://odonckers.github.io/domestic-ui/principles/tooling.md)
-13. [Edges and alignment](https://odonckers.github.io/domestic-ui/principles/edges-and-alignment.md)
+12. [Edges and alignment](https://odonckers.github.io/domestic-ui/principles/edges-and-alignment.md)
 
 ## Native element first
 
@@ -169,6 +168,8 @@ utility should beat a component the way an inline override would.
 
 Page: https://odonckers.github.io/domestic-ui/principles/theming.html
 
+Tokens and live examples: [Theming](https://odonckers.github.io/domestic-ui/tokens/theming.md).
+
 ### Two tiers of tokens
 
 All tokens are [custom properties](https://www.w3.org/TR/css-variables-1/) on `:root`
@@ -205,7 +206,7 @@ with a `data-theme` attribute or a `theme-*` class to scope it:
 <section data-theme="forest">…</section>
 ```
 
-[`examples/theming.html`](https://odonckers.github.io/domestic-ui/principles/theming.md) shows a full scoped theme next to the default.
+[`examples/theming.html`](https://odonckers.github.io/domestic-ui/tokens/theming.md) shows a full scoped theme next to the default.
 Check your theme's contrast in both schemes; `tests/tokens.spec.js` shows how.
 
 A few semantic tokens are defined in terms of others (`--dui-color-link`, `--dui-color-focus`
@@ -223,138 +224,8 @@ headings, controls), but not inherited text color, background or derived tokens.
 ### Semantic tokens (public API)
 
 Renaming or removing a semantic token is a **breaking change**. Primitives are internal and
-may change. Fluid `--dui-step-*` values are `clamp()` expressions; see `primitives.css`.
-
-| Token | Purpose | Default (primitive, light / dark) |
-| --- | --- | --- |
-| `--dui-color-surface` | Page and control background | light: `color-gray-0` (#fff)<br>dark: `color-gray-900` (#12151b) |
-| `--dui-color-surface-raised` | Slightly lifted areas: neutral buttons, zebra rows, cards | light: `color-gray-50` (#f6f7f9)<br>dark: `color-gray-850` (#1b1f27) |
-| `--dui-color-surface-sunken` | Recessed areas: code, button hover | light: `color-gray-100` (#eceef2)<br>dark: `color-gray-800` (#252a34) |
-| `--dui-color-text` | Body text | light: `color-gray-900` (#12151b)<br>dark: `color-gray-100` (#eceef2) |
-| `--dui-color-text-muted` | Secondary text, captions, list markers (still 4.5:1) | light: `color-gray-600` (#545b68)<br>dark: `color-gray-400` (#a3aab6) |
-| `--dui-color-border` | Decorative hairlines: tables, hr, details, fieldset | light: `color-gray-200` (#dde0e6)<br>dark: `color-gray-700` (#3a404b) |
-| `--dui-color-border-control` | Form control and button boundaries (3:1) | light: `color-gray-500` (#7a8291)<br>dark: `color-gray-500` (#7a8291) |
-| `--dui-color-accent` | Brand color: primary button fill, checks, links and focus by default | light: `color-blue-600` (#3451d1)<br>dark: `color-blue-400` (#8ea2ff) |
-| `--dui-color-accent-contrast` | Text on accent | light: `color-gray-0` (#fff)<br>dark: `color-gray-900` (#12151b) |
-| `--dui-color-link-visited` | Visited links | light: `color-purple-700` (#6b2fb3)<br>dark: `color-purple-300` (#d2a8ff) |
-| `--dui-color-danger` | Errors, :user-invalid borders | light: `color-red-700` (#b42318)<br>dark: `color-red-300` (#ff8a80) |
-| `--dui-color-success` | Success messages | light: `color-green-700` (#17773a)<br>dark: `color-green-300` (#5fd38d) |
-| `--dui-color-warning` | Warning badges and messages | light: `color-amber-700` (#8a5a00)<br>dark: `color-amber-300` (#f2c14e) |
-| `--dui-color-info` | Informational alerts and toasts (separate from the accent, so a brand color never reads as a status) | light: `color-blue-700` (#2b43b0)<br>dark: `color-blue-300` (#a8b7ff) |
-| `--dui-color-mark` | mark and ::selection background | light: `color-yellow-100` (#fff1a8)<br>dark: `color-yellow-300` (#e3c84f) |
-| `--dui-color-mark-text` | Text on mark | light: `color-gray-900` (#12151b)<br>dark: `color-gray-900` (#12151b) |
-| `--dui-color-backdrop` | dialog::backdrop | light: `color-black-a40` (rgb(0 0 0 / 40%))<br>dark: `color-black-a60` (rgb(0 0 0 / 60%)) |
-| `--dui-color-shadow` | Shadow color | light: `color-black-a10` (rgb(0 0 0 / 10%))<br>dark: `color-black-a40` (rgb(0 0 0 / 40%)) |
-| `--dui-color-code-keyword` | JS keywords and CSS at-rules in highlighted code (4.5:1 on surface-sunken) | light: `color-purple-700` (#6b2fb3)<br>dark: `color-purple-300` (#d2a8ff) |
-| `--dui-color-code-string` | Strings and HTML attribute values in highlighted code (4.5:1 on surface-sunken) | light: `color-green-700` (#17773a)<br>dark: `color-green-300` (#5fd38d) |
-| `--dui-color-code-comment` | Comments in highlighted code (4.5:1 on surface-sunken) | light: `color-gray-600` (#545b68)<br>dark: `color-gray-400` (#a3aab6) |
-| `--dui-color-code-tag` | HTML tag names and CSS selectors in highlighted code (4.5:1 on surface-sunken) | light: `color-blue-700` (#2b43b0)<br>dark: `color-blue-300` (#a8b7ff) |
-| `--dui-color-code-attribute` | HTML attribute names in highlighted code (4.5:1 on surface-sunken) | light: `color-amber-700` (#8a5a00)<br>dark: `color-amber-300` (#f2c14e) |
-| `--dui-color-code-property` | CSS and JS properties in highlighted code (4.5:1 on surface-sunken) | light: `color-teal-700` (#0b6e75)<br>dark: `color-teal-300` (#5cc8d1) |
-| `--dui-color-code-number` | Numbers and units in highlighted code (4.5:1 on surface-sunken) | light: `color-red-700` (#b42318)<br>dark: `color-red-300` (#ff8a80) |
-| `--dui-color-code-punctuation` | Brackets, braces and separators in highlighted code (4.5:1 on surface-sunken) | light: `color-gray-700` (#3a404b)<br>dark: `color-gray-300` (#c4c9d2) |
-| `--dui-font-body` | Body font stack | `--dui-font-stack-system-ui` (`system-ui, sans-serif`) |
-| `--dui-font-mono` | Code font stack | `--dui-font-stack-monospace` (`ui-monospace`, …, `monospace`) |
-| `--dui-font-weight-body` | Body weight | `font-weight-400` (400) |
-| `--dui-font-weight-strong` | strong, labels, buttons, th | `font-weight-600` (600) |
-| `--dui-font-weight-heading` | h1–h6 | `font-weight-700` (700) |
-| `--dui-step--1` | small, captions | `--dui-font-size-fluid--1` |
-| `--dui-step-0` | Body text, h6 | `--dui-font-size-fluid-0` |
-| `--dui-step-1` | h5 | `--dui-font-size-fluid-1` |
-| `--dui-step-2` | h4 | `--dui-font-size-fluid-2` |
-| `--dui-step-3` | h3 | `--dui-font-size-fluid-3` |
-| `--dui-step-4` | h2 | `--dui-font-size-fluid-4` |
-| `--dui-step-5` | h1 | `--dui-font-size-fluid-5` |
-| `--dui-font-size-code` | code, kbd, samp, pre (relative) | `font-size-relative-90` (0.9em) |
-| `--dui-line-height-body` | Body text | `leading-160` (1.6) |
-| `--dui-line-height-heading` | Headings, buttons, pre | `leading-125` (1.25) |
-| `--dui-line-height-display` | h1 | `leading-110` (1.1) |
-| `--dui-letter-spacing-heading` | h1, h2 | `tracking-tight` (-0.015em) |
-| `--dui-measure` | Max line length for prose | `size-65ch` (65ch) |
-| `--dui-space-3xs` | Space scale | `space-1` (0.125rem) |
-| `--dui-space-2xs` | Space scale | `space-2` (0.25rem) |
-| `--dui-space-xs` | Space scale | `space-3` (0.5rem) |
-| `--dui-space-s` | Space scale | `space-4` (0.75rem) |
-| `--dui-space-m` | Space scale; default flow rhythm and .stack gap | `space-5` (1rem) |
-| `--dui-space-l` | Space scale; default .grid gap | `space-6` (1.5rem) |
-| `--dui-space-xl` | Space scale; space above h1–h3 | `space-7` (2rem) |
-| `--dui-space-2xl` | Space scale | `space-8` (3rem) |
-| `--dui-space-3xl` | Space scale | `space-9` (4rem) |
-| `--dui-size-target` | Min height of controls and buttons (WCAG 2.5.8 needs 24px; this gives 44px) | `size-2-75` (2.75rem) |
-| `--dui-size-target-small` | Small buttons (32px: under 44px, over the 24px minimum) | `size-2` (2rem) |
-| `--dui-size-target-large` | Large buttons | `size-3-25` (3.25rem) |
-| `--dui-size-check` | Checkbox and radio size | `size-1-25` (1.25rem) |
-| `--dui-size-column-min` | Default .grid min column width | `size-16` (16rem) |
-| `--dui-size-menu-min` | Min width of menus and nav dropdowns | `size-12` (12rem) |
-| `--dui-size-drawer` | Drawer width (all of the viewport when narrower) | `size-24` (24rem) |
-| `--dui-size-page` | Max inline size of a page's content column (the examples' header, main and footer) | `size-72` (72rem) |
-| `--dui-size-icon` | Decorative icons beside a label: nav links and group summaries, app bar buttons | `size-1-25` (1.25rem) |
-| `--dui-size-sidebar` | Inline size of an app shell's primary sidebar beside main | `size-16` (16rem) |
-| `--dui-size-sidebar-aux` | Inline size of an app shell's auxiliary (inline-end) sidebar beside main | `size-20` (20rem) |
-| `--dui-size-pane` | Max block size of a pane that scrolls on its own beside others (the detail of a list-detail when side by side) | `size-100svh` (100svh, the small viewport height) |
-| `--dui-radius-control` | Controls, buttons, inline code | `radius-2` (0.375rem) |
-| `--dui-radius-surface` | Panels, pre, dialog, details, media | `radius-3` (0.625rem) |
-| `--dui-radius-pill` | Fully rounded ends | `radius-round` (999rem) |
-| `--dui-border-width` | Hairline width | `border-1` (1px) |
-| `--dui-border-width-emphasis` | blockquote rule, alert start rule, invalid field | `border-4` (0.25rem) |
-| `--dui-border-width-indicator` | Selected tab, current nav item (3:1 against the surface) | `border-3` (3px) |
-| `--dui-underline-offset` | Link underline offset | `underline-offset-015em` (0.15em) |
-| `--dui-underline-thickness` | Link underline | `underline-1` (0.0625em) |
-| `--dui-underline-thickness-hover` | Link underline on hover | `underline-2` (0.125em) |
-| `--dui-focus-width` | Focus outline width | `border-2` (2px) |
-| `--dui-focus-offset` | Focus outline offset | `border-2` (2px) |
-| `--dui-motion-scale` | Multiplies every motion duration | `factor-1` (1) |
-| `--dui-motion-movement` | Lets things slide, lift and zoom (1) or not (0); `0` with reduced motion | `factor-1` (1) |
-| `--dui-motion-enabled` | `0` with `data-motion="none"`: every duration is `0s`, whatever scale is set inside | `factor-1` (1) |
-| `--dui-motion-easing-standard` | State changes that stay on screen: hover, press, switch | `easing-ease-out` (`cubic-bezier(0.2, 0, 0, 1)`) |
-| `--dui-motion-easing-enter` | Things arriving: dialogs, drawers, popovers, toasts | `easing-decelerate` (`cubic-bezier(0, 0, 0, 1)`) |
-| `--dui-motion-easing-exit` | Things leaving | `easing-accelerate` (`cubic-bezier(0.3, 0, 1, 1)`) |
-| `--dui-elevation-strength` | How much of `--dui-color-shadow` each shadow uses (0% to 100%) | `mix-100` (100%) |
-| `--dui-elevation-surface-step` | Dark scheme: text color mixed into the surface per level | `mix-3` (3%) |
-| `--dui-density-scale` | Density knob: `1` comfortable, `0` compact (`data-density`); in between interpolates, never below `0` | `factor-1` (1) |
-| `--dui-opacity-disabled` | Disabled controls, `disabled` and `aria-disabled="true"` | `opacity-60` (0.6) |
-| `--dui-tint-amount` | How much of a tone goes into a tinted surface | `mix-8` (8%) |
-| `--dui-border-tint-amount` | How much of the text color goes into a tinted border (badges) | `mix-35` (35%) |
-| `--dui-color-link` | Links | `--dui-color-accent` |
-| `--dui-color-focus` | Focus ring (3:1 against surfaces) | `--dui-color-accent` |
-| `--dui-color-accent-hover` | Primary button hover | `color-mix()` of 82% `--dui-color-accent` with `--dui-color-text` |
-| `--dui-font-heading` | Heading font stack | `--dui-font-body` |
-| `--dui-color-accent-surface` | Accent badge background | `color-mix()` of `--dui-tint-amount` `--dui-color-accent` into `--dui-color-surface` |
-| `--dui-color-success-surface` | Success badge background | same, with `--dui-color-success` |
-| `--dui-color-warning-surface` | Warning badge background | same, with `--dui-color-warning` |
-| `--dui-color-danger-surface` | Danger badge and alert background | same, with `--dui-color-danger` |
-| `--dui-color-info-surface` | Info alert background | same, with `--dui-color-info` |
-| `--dui-color-surface-inverse` | Tooltip background | `--dui-color-text` |
-| `--dui-color-text-inverse` | Tooltip text | `--dui-color-surface` |
-| `--dui-motion-duration-fast` | Hover, press, switch, popovers and menus | `duration-150` (150ms) × `--dui-motion-scale` × `--dui-motion-enabled` |
-| `--dui-motion-duration-normal` | Dialogs and toasts | `duration-250` (250ms) × `--dui-motion-scale` × `--dui-motion-enabled` |
-| `--dui-motion-duration-slow` | The drawer | `duration-350` (350ms) × `--dui-motion-scale` × `--dui-motion-enabled` |
-| `--dui-motion-distance` | How far a dialog or toast lifts as it fades in | `space-4` (0.75rem) × `--dui-motion-movement` |
-| `--dui-motion-zoom` | Scale a popover or menu grows from | 0.95, or 1 when `--dui-motion-movement` is 0 |
-| `--dui-elevation-shadow-color` | Shadow color after strength | `color-mix()` of `--dui-color-shadow` at `--dui-elevation-strength` |
-| `--dui-size-control` | Min block size of controls, buttons, check labels and nav, menu and listbox items | `--dui-size-target` (44px), `--dui-size-target-small` (32px) when compact |
-| `--dui-space-control-block` | Block padding of controls, buttons and items | `space-3` (0.5rem), `space-2` (0.25rem) when compact |
-| `--dui-space-control-inline` | Inline padding of text fields and items | `space-4` (0.75rem), `space-3` (0.5rem) when compact |
-| `--dui-space-button-inline` | Inline padding of buttons and tabs | `space-5` (1rem), `space-4` (0.75rem) when compact |
-| `--dui-space-gap` | Gap between the parts of a control (icon and label, check and label) | `space-3` (0.5rem), `space-2` (0.25rem) when compact |
-| `--dui-space-gap-tight` | Gap and padding in groups of controls: field, toolbar, pagination, menu | `space-2` (0.25rem), `space-1` (0.125rem) when compact |
-| `--dui-space-cell` | Table cell padding | `space-3` (0.5rem), `space-2` (0.25rem) when compact |
-| `--dui-elevation-0` … `--dui-elevation-4` | Shadow per level | `none`, then two layers (key and ambient) growing with the level |
-| `--dui-elevation-0-surface` … `--dui-elevation-4-surface` | Surface per level | light: `--dui-color-surface`<br>dark: `--dui-color-surface` with N × `--dui-elevation-surface-step` of `--dui-color-text` |
-| `--dui-elevation-flat`, `-raised`, `-overlay`, `-popover`, `-dialog` | Shadow by role | levels 0, 1, 2, 3, 4 |
-| `--dui-elevation-flat-surface`, `-raised-surface`, `-overlay-surface`, `-popover-surface`, `-dialog-surface` | Surface by role | level 0 to 4 surfaces |
-| `--dui-shadow-raised` | **Deprecated**, removed in the next release: use `--dui-elevation-raised` | `--dui-elevation-1` |
-| `--dui-duration-fast` | **Deprecated**, removed in the next release | `--dui-motion-duration-fast` |
-| `--dui-duration-normal` | **Deprecated**, removed in the next release | `--dui-motion-duration-normal` |
-| `--dui-easing-standard` | **Deprecated**, removed in the next release | `--dui-motion-easing-standard` |
-
-Derived (re-resolved on each theme scope and on every `[data-motion]` and `[data-density]` element): `--dui-color-link`,
-`--dui-color-focus`, `--dui-color-accent-hover`, `--dui-font-heading`, `--dui-color-accent-surface`,
-`--dui-color-success-surface`, `--dui-color-warning-surface`, `--dui-color-danger-surface`,
-`--dui-color-info-surface`, `--dui-color-surface-inverse`, `--dui-color-text-inverse`, every
-`--dui-motion-duration-*`, `--dui-motion-distance`, `--dui-motion-zoom`, every `--dui-elevation-*`
-except the two knobs, the seven density tokens (`--dui-size-control` and the `--dui-space-control-*`,
-`-button-inline`, `-gap*` and `-cell` spaces), and the deprecated aliases.
+may change. Every semantic token, with what it is for and its light and dark values, is listed
+from its description comment in [`css/tokens/semantic.css`](https://odonckers.github.io/domestic-ui/tokens/semantic.md).
 
 ### Density
 
@@ -373,98 +244,14 @@ is the default and restores it inside a compact area. Density changes space only
 - **Our choice:** no [`zoom`](https://developer.mozilla.org/en-US/docs/Web/CSS/zoom) or font-size scaling,
   because both shrink text against the user's text size and scale targets below 24px.
 
-[`examples/patterns/density.html`](https://odonckers.github.io/domestic-ui/patterns/density.md) shows the same form, table and toolbar at
+[`examples/patterns/density.html`](https://odonckers.github.io/domestic-ui/tokens/density.md) shows the same form, table and toolbar at
 both densities side by side; [`explainers/density.md`](https://odonckers.github.io/domestic-ui/explainers/density.md) has the full contract.
-
-### Live example
-
-#### Forest theme
-
-```html
-<section class="panel stack" data-theme="forest" aria-labelledby="forest-title">
-  <nav aria-label="Breadcrumb, forest theme" data-breadcrumb>
-    <ol>
-      <li><a href="#forest-title">Home</a></li>
-      <li><a href="#forest-title">Releases</a></li>
-      <li><a href="#forest-title" aria-current="page">Release notes</a></li>
-    </ol>
-  </nav>
-  <h2 id="forest-title">Forest theme</h2>
-  <p>Release notes are ready for review. <a href="#forest-title">Read the summary</a> before the meeting.</p>
-  <p class="cluster">
-    <span data-badge>Draft</span>
-    <span data-badge="accent">New</span>
-    <span data-badge="success">Passing</span>
-    <span data-badge="warning">Review</span>
-    <span data-badge="danger">Blocked</span>
-  </p>
-  <form action="#forest-title" class="stack">
-    <div data-field>
-      <label for="forest-email">Email</label>
-      <input id="forest-email" name="email" type="email" autocomplete="email" value="ada@" aria-invalid="true" aria-describedby="forest-email-hint forest-email-error">
-      <p id="forest-email-hint" data-field="hint">Release notes go to this address.</p>
-      <p id="forest-email-error" data-field="error">Error: enter an email address like name@example.com.</p>
-    </div>
-    <label><input type="checkbox" role="switch" name="notify" checked> Notify subscribers</label>
-    <div class="cluster">
-      <button type="submit">Publish</button>
-      <button type="button" data-button="secondary">Save draft</button>
-      <button type="button" data-button="quiet">Discard</button>
-    </div>
-  </form>
-  <div data-alert="warning">
-    <p><strong>Warning:</strong> Two checks are still running.</p>
-  </div>
-  <dui-tabs>
-    <nav aria-label="Release, forest theme">
-      <ul>
-        <li><a href="#forest-tab-notes">Notes</a></li>
-        <li><a href="#forest-tab-checks">Checks</a></li>
-      </ul>
-    </nav>
-    <section id="forest-tab-notes">
-      <h3>Notes</h3>
-      <p>Two bug fixes and a new token.</p>
-    </section>
-    <section id="forest-tab-checks">
-      <h3>Checks</h3>
-      <p>Lint passed. Tests are running.</p>
-    </section>
-  </dui-tabs>
-  <article data-card="link">
-    <h3><a href="#forest-title">Upgrade guide</a></h3>
-    <p>What to change when you update.</p>
-  </article>
-  <details>
-    <summary>What changed?</summary>
-    <p>Two bug fixes and a new <code>--dui-color-success</code> token.</p>
-  </details>
-</section>
-```
-
-#### Forest theme CSS
-
-In the `<head>` of the live example above.
-
-```html
-<style id="forest-theme">
-  [data-theme="forest"] {
-    --dui-color-surface: light-dark(#f7f5ef, #141a16);
-    --dui-color-surface-raised: light-dark(#eeeadf, #1d2620);
-    --dui-color-text: light-dark(#1d2a22, #e4ebe3);
-    --dui-color-border: light-dark(#d8d1bf, #34433a);
-    --dui-color-accent: light-dark(#2f6b3f, #7fcf95);
-    --dui-color-accent-contrast: light-dark(#fff, #0f1a13);
-    --dui-font-heading: charter, "Bitstream Charter", "Sitka Text", cambria, serif;
-    --dui-radius-control: 0.125rem;
-    --dui-radius-surface: 0.25rem;
-  }
-</style>
-```
 
 ## Motion
 
 Page: https://odonckers.github.io/domestic-ui/principles/motion.html
+
+Tokens and live examples: [Motion](https://odonckers.github.io/domestic-ui/tokens/motion.md).
 
 Motion is CSS-first, token-driven and close to platform behavior: short fades, a drawer that
 slides from its edge, popovers and menus that grow a little as they appear, and color changes on
@@ -518,149 +305,14 @@ buttons, links and the switch. Nothing waits on a transition to work.
 
 **Our choice:** 150, 250 and 350ms, longer for larger surfaces, with a decelerating enter and an
 accelerating exit, because short transitions keep the UI responsive and the curves match how things
-arrive and leave. [`examples/motion.html`](https://odonckers.github.io/domestic-ui/principles/motion.md) shows each transition, the scale, and reduced
+arrive and leave. [`examples/motion.html`](https://odonckers.github.io/domestic-ui/tokens/motion.md) shows each transition, the scale, and reduced
 and no-motion scopes side by side.
-
-### Live example
-
-#### Fade: dialog
-
-```html
-<button type="button" commandfor="fade-dialog" command="show-modal">Open dialog</button>
-<dialog id="fade-dialog" data-dialog aria-labelledby="fade-dialog-title">
-  <header>
-    <h2 id="fade-dialog-title">Fade in, fade out</h2>
-  </header>
-  <p>Enters with <code>--dui-motion-easing-enter</code> and leaves with <code>--dui-motion-easing-exit</code>.</p>
-  <form method="dialog">
-    <footer>
-      <button type="submit" autofocus>Close</button>
-    </footer>
-  </form>
-</dialog>
-```
-
-#### Slide: drawer
-
-```html
-<button type="button" commandfor="slide-drawer" command="show-modal">Open drawer</button>
-<dialog id="slide-drawer" data-dialog="drawer end" closedby="any" aria-labelledby="slide-drawer-title">
-  <header>
-    <h2 id="slide-drawer-title">Drawer</h2>
-    <button type="button" commandfor="slide-drawer" command="close" data-button="quiet small">Close</button>
-  </header>
-  <p>The off-screen offset is 100% times <code>--dui-motion-movement</code>.</p>
-</dialog>
-```
-
-#### Scale: popover and menu
-
-```html
-<div class="cluster">
-  <button type="button" popovertarget="scale-popover">Popover</button>
-  <div id="scale-popover" popover data-popover>
-    <p>Grows and fades in.</p>
-  </div>
-  <dui-menu>
-    <button type="button" popovertarget="scale-menu">Menu</button>
-    <div id="scale-menu" popover data-popover>
-      <button type="button">Rename</button>
-      <button type="button">Duplicate</button>
-    </div>
-  </dui-menu>
-</div>
-```
-
-#### Color and state
-
-```html
-<div class="cluster">
-  <button type="button">Hover me</button>
-  <button type="button" data-button="primary">Primary</button>
-  <a href="#state-title">A link</a>
-  <label><input type="checkbox" role="switch" name="state-switch"> Switch</label>
-</div>
-```
-
-#### Toast
-
-```html
-<button type="button" data-toast="success">Save</button>
-<dui-toaster data-alert="toasts" role="status"></dui-toaster>
-```
-
-#### Motion scale
-
-```html
-<div class="panel cluster" data-motion style="--dui-motion-scale: 3">
-  <button type="button">Hover me</button>
-  <label><input type="checkbox" role="switch" name="slow-switch"> Slow switch</label>
-  <button type="button" popovertarget="slow-popover">Slow popover</button>
-  <div id="slow-popover" popover data-popover>
-    <p>Three times the normal duration.</p>
-  </div>
-</div>
-```
-
-#### Reduced and no motion
-
-```html
-<div class="grid">
-  <section class="panel stack" data-motion="reduced" aria-labelledby="reduced-title">
-    <h3 id="reduced-title">data-motion="reduced"</h3>
-    <label><input type="checkbox" role="switch" name="reduced-switch"> Switch</label>
-    <div class="cluster">
-      <button type="button" popovertarget="reduced-popover">Popover</button>
-      <div id="reduced-popover" popover data-popover>
-        <p>Fades without growing.</p>
-      </div>
-      <button type="button" commandfor="reduced-drawer" command="show-modal">Drawer</button>
-    </div>
-    <dialog id="reduced-drawer" data-dialog="drawer end" closedby="any" aria-labelledby="reduced-drawer-title">
-      <header>
-        <h2 id="reduced-drawer-title">Reduced motion</h2>
-        <button type="button" commandfor="reduced-drawer" command="close" data-button="quiet small">Close</button>
-      </header>
-      <p>Fades in place instead of sliding.</p>
-    </dialog>
-  </section>
-  <section class="panel stack" data-motion="none" aria-labelledby="none-title">
-    <h3 id="none-title">data-motion="none"</h3>
-    <label><input type="checkbox" role="switch" name="none-switch"> Switch</label>
-    <div class="cluster">
-      <button type="button" popovertarget="none-popover">Popover</button>
-      <div id="none-popover" popover data-popover>
-        <p>Appears at once.</p>
-      </div>
-      <button type="button" commandfor="none-drawer" command="show-modal">Drawer</button>
-    </div>
-    <dialog id="none-drawer" data-dialog="drawer end" closedby="any" aria-labelledby="none-drawer-title">
-      <header>
-        <h2 id="none-drawer-title">No motion</h2>
-        <button type="button" commandfor="none-drawer" command="close" data-button="quiet small">Close</button>
-      </header>
-      <p>Appears at once.</p>
-    </dialog>
-  </section>
-</div>
-```
-
-#### View transition
-
-```html
-<div class="stack">
-  <ol id="vt-list" class="stack" style="--stack-gap: var(--dui-space-2xs)">
-    <li>Draft</li>
-    <li>Review</li>
-    <li>Publish</li>
-  </ol>
-  <p><button type="button" data-reverse="vt-list">Reverse the list</button></p>
-</div>
-```
 
 ## Elevation
 
 Page: https://odonckers.github.io/domestic-ui/principles/elevation.html
+
+Tokens and live examples: [Elevation](https://odonckers.github.io/domestic-ui/tokens/elevation.md).
 
 Elevation says which layer is on top. Five levels, each a
 [`box-shadow`](https://developer.mozilla.org/en-US/docs/Web/CSS/box-shadow) paired with a surface color:
@@ -699,136 +351,7 @@ Each has a `-surface` twin (`--dui-elevation-2-surface`, `--dui-elevation-overla
   carries into its raised surfaces.
 
 `--dui-shadow-raised` is deprecated: it now points at `--dui-elevation-1` and is removed in the next
-release. [`examples/elevation.html`](https://odonckers.github.io/domestic-ui/principles/elevation.md) shows every level in light and dark side by side.
-
-### Live example
-
-#### Levels in light and dark
-
-```html
-<div class="grid">
-  <section class="panel stack" data-color-scheme="light" aria-labelledby="light-title">
-    <h3 id="light-title">Light</h3>
-    <ol class="stack" aria-label="Elevation levels, light">
-      <li class="level" style="--level-shadow: var(--dui-elevation-0); --level-surface: var(--dui-elevation-0-surface)">
-        <strong>Level 0: flat</strong>
-        <span class="level-note">The page itself and content on it. <a href="#levels-title">Link</a></span>
-      </li>
-      <li class="level" style="--level-shadow: var(--dui-elevation-1); --level-surface: var(--dui-elevation-1-surface)">
-        <strong>Level 1: raised</strong>
-        <span class="level-note">Cards. <a href="#levels-title">Link</a></span>
-      </li>
-      <li class="level" style="--level-shadow: var(--dui-elevation-2); --level-surface: var(--dui-elevation-2-surface)">
-        <strong>Level 2: overlay</strong>
-        <span class="level-note">Toasts and other non-modal layers. <a href="#levels-title">Link</a></span>
-      </li>
-      <li class="level" style="--level-shadow: var(--dui-elevation-3); --level-surface: var(--dui-elevation-3-surface)">
-        <strong>Level 3: popover</strong>
-        <span class="level-note">Popovers, menus, tooltips, nav dropdowns. <a href="#levels-title">Link</a></span>
-      </li>
-      <li class="level" style="--level-shadow: var(--dui-elevation-4); --level-surface: var(--dui-elevation-4-surface)">
-        <strong>Level 4: dialog</strong>
-        <span class="level-note">Dialogs and drawers. <a href="#levels-title">Link</a></span>
-      </li>
-    </ol>
-  </section>
-  <section class="panel stack" data-color-scheme="dark" aria-labelledby="dark-title">
-    <h3 id="dark-title">Dark</h3>
-    <ol class="stack" aria-label="Elevation levels, dark">
-      <li class="level" style="--level-shadow: var(--dui-elevation-0); --level-surface: var(--dui-elevation-0-surface)">
-        <strong>Level 0: flat</strong>
-        <span class="level-note">The page itself and content on it. <a href="#levels-title">Link</a></span>
-      </li>
-      <li class="level" style="--level-shadow: var(--dui-elevation-1); --level-surface: var(--dui-elevation-1-surface)">
-        <strong>Level 1: raised</strong>
-        <span class="level-note">Cards. <a href="#levels-title">Link</a></span>
-      </li>
-      <li class="level" style="--level-shadow: var(--dui-elevation-2); --level-surface: var(--dui-elevation-2-surface)">
-        <strong>Level 2: overlay</strong>
-        <span class="level-note">Toasts and other non-modal layers. <a href="#levels-title">Link</a></span>
-      </li>
-      <li class="level" style="--level-shadow: var(--dui-elevation-3); --level-surface: var(--dui-elevation-3-surface)">
-        <strong>Level 3: popover</strong>
-        <span class="level-note">Popovers, menus, tooltips, nav dropdowns. <a href="#levels-title">Link</a></span>
-      </li>
-      <li class="level" style="--level-shadow: var(--dui-elevation-4); --level-surface: var(--dui-elevation-4-surface)">
-        <strong>Level 4: dialog</strong>
-        <span class="level-note">Dialogs and drawers. <a href="#levels-title">Link</a></span>
-      </li>
-    </ol>
-  </section>
-</div>
-```
-
-#### Level swatch CSS
-
-Each `.level` swatch draws one elevation level from two custom properties: `--level-shadow` (its `box-shadow`) and `--level-surface` (its background).
-
-In the `<head>` of the live example above.
-
-```html
-<style>
-  .level {
-    display: flex;
-    flex-direction: column;
-    gap: var(--dui-space-3xs);
-    padding: var(--dui-space-m);
-    background-color: var(--level-surface);
-    color: var(--dui-color-text);
-    border: var(--dui-border-width) solid var(--dui-color-border);
-    border-radius: var(--dui-radius-surface);
-    box-shadow: var(--level-shadow);
-  }
-
-  .level-note {
-    color: var(--dui-color-text-muted);
-  }
-
-  @media (forced-colors: active) {
-    .level {
-      border-color: canvastext;
-    }
-  }
-</style>
-```
-
-#### Components by role
-
-```html
-<div class="stack">
-  <article data-card>
-    <h3>Raised: a card</h3>
-    <p>Level 1. <a href="#roles-title">A link on the card</a>.</p>
-  </article>
-  <div class="cluster">
-    <button type="button" popovertarget="role-popover">Popover</button>
-    <div id="role-popover" popover data-popover>
-      <p>Level 3, the popover level.</p>
-    </div>
-    <dui-menu>
-      <button type="button" popovertarget="role-menu">Menu</button>
-      <div id="role-menu" popover data-popover>
-        <button type="button">Rename</button>
-        <button type="button">Archive</button>
-      </div>
-    </dui-menu>
-    <button type="button" commandfor="role-dialog" command="show-modal">Dialog</button>
-    <button type="button" data-toast="info">Toast</button>
-  </div>
-  <dialog id="role-dialog" data-dialog aria-labelledby="role-dialog-title">
-    <header>
-      <h2 id="role-dialog-title">Level 4: dialog</h2>
-    </header>
-    <p>The highest level, with the lightest surface in the dark scheme.</p>
-    <form method="dialog">
-      <footer>
-        <button type="submit" autofocus>Close</button>
-      </footer>
-    </form>
-  </dialog>
-  <dui-toaster data-alert="toasts" role="status"></dui-toaster>
-</div>
-```
+release. [`examples/elevation.html`](https://odonckers.github.io/domestic-ui/tokens/elevation.md) shows every level in light and dark side by side.
 
 ## Opinions we hold
 
@@ -1005,7 +528,7 @@ are shown in [`examples/layouts/`](https://odonckers.github.io/domestic-ui/index
 Each one is side by side when its wrapper is wide and stacked when it is narrow, from 320px up, and keeps
 source order (the reading and Tab order) in both. A settings page needs no API of its own: it is a
 `data-list-detail` of in-page links beside `data-form-sections` with a `data-action-bar`
-([example](https://odonckers.github.io/domestic-ui/patterns/list-detail.md)).
+([example](https://odonckers.github.io/domestic-ui/layouts/list-detail.md)).
 
 - **Our choice:** layouts and [organisms](https://github.com/odonckers/domestic-ui/blob/main/css/components/organisms/README.md) switch with a
   [container query](https://developer.mozilla.org/en-US/docs/Web/CSS/Guides/Containment/Container_queries)
@@ -1099,47 +622,6 @@ and toast molecules have one, and so do density, the combobox, the split view, t
 its auxiliary sidebar, which record the choices their
 standards leave open. Names follow HTML and ARIA conventions, so a pattern could map onto
 a future native element or attribute.
-
-## Tooling
-
-Page: https://odonckers.github.io/domestic-ui/principles/tooling.html
-
-`npm test` runs, in order, and fails if any step fails:
-
-| Script | Tool | Checks |
-| --- | --- | --- |
-| `lint:html` | [html-validate](https://html-validate.org/) | `examples/**/*.html` against `html-validate:recommended` |
-| `lint:css` | [Stylelint](https://stylelint.io/) | `css/**/*.css` against `stylelint-config-standard` |
-| `lint:tokens` | `scripts/check-tokens.mjs` | Semantic-only tokens and no literal colors or sizes outside `css/tokens/` |
-| `test:a11y` | [Playwright](https://playwright.dev/) + [axe-core](https://github.com/dequelabs/axe-core) | Every `examples/**/*.html` (atoms and molecules included) in light and dark, in Chromium, Firefox and WebKit, with tags `wcag2a`, `wcag2aa`, `wcag21a`, `wcag21aa`, `wcag22aa`, including open dialogs and drawers, open popovers and menus, shown tooltips and toasts, every tab selected and every details expanded; no horizontal page overflow and no axe violations at 320×640 and 375×812; no external requests; token contrast pairs (atoms and molecules included) in the default and forest themes; rendered focus-ring and indicator contrast; atom and molecule states through accessibility APIs; molecule keyboard behavior against the APG; no-JavaScript fallbacks; fallbacks for engine-specific features; scoped theming of atoms and molecules; layouts and organisms side by side when wide and stacked when narrow, the sticky action bar never covering the focused field, data table sorting, selection, sticky header and loading state (with and without JavaScript), and 24px targets in compact density; the app shell's landmarks and grid areas, collapse when wide, modal drawers with focus return when narrow, one copy of each sidebar, no-JavaScript fallbacks and axe with the drawers open |
-
-Preview locally with `npm run serve` (a zero-dependency static server) and open
-<http://127.0.0.1:4173/examples/base.html>. To run tests from two checkouts at once, give each its own port, e.g. `PORT=4273 npm test`.
-
-Rule relaxations, each with its reason:
-
-- **Stylelint `custom-property-pattern`** is replaced, not disabled. The standard kebab-case
-  pattern rejects `--dui-step--1` (the double hyphen marks a negative step, a common naming for
-  type scales below zero). The replacement still requires kebab-case and only allows names
-  starting with `--dui-` or the documented layout properties (`--stack-*`, `--cluster-*`, `--grid-*`).
-- **Engine-specific test**: the field test also reads the `invalid` state from the accessibility
-  tree through the Chrome DevTools Protocol, which only Chromium offers; Firefox and WebKit run the
-  rest of that test (attribute and accessible description). The molecule tests do the same for the
-  expanded state of `<summary>` and of a `popovertarget` button, which browsers expose natively but
-  Playwright's role engine does not compute; the other engines check the `open` attribute and the
-  popover's visibility instead. No browser is skipped.
-- **Feature fallbacks**: where every engine in the test run supports a feature (anchor positioning,
-  `@starting-style`, `closedby`, `popover="hint"`), the molecule tests also exercise the fallback path
-  by removing the feature in the page: deleting the `@supports` or `@starting-style` rules from the
-  CSSOM, removing the `closedby` attribute, or setting `popover="manual"` (what `hint` falls back to).
-- **Settling transitions**: axe and geometry checks wait for running CSS transitions to finish, so they
-  measure final colors and positions rather than a frame mid-fade.
-- **External-request check**: same-origin `blob:` URLs are allowed, because WebKit routes these
-  in-memory objects through the request handler. Any other origin still fails the test.
-- **html-validate**: none. `html-validate:recommended` is used as-is. Inline `style` attributes
-  that set only custom properties are already allowed by its
-  [`no-inline-style`](https://html-validate.org/rules/no-inline-style.html) default
-  (`allowVariables: true`), which is how the layout primitives are configured.
 
 ## Edges and alignment
 
@@ -1402,17 +884,17 @@ A theme is an override of these tokens on `:root` or on a scoped element. No reb
 
 Colors use [`light-dark()`](https://developer.mozilla.org/en-US/docs/Web/CSS/color_value/light-dark), which picks a value from the used color-scheme of the element where the token is read.
 
-136 tokens in [`css/tokens/semantic.css`](https://github.com/odonckers/domestic-ui/blob/main/css/tokens/semantic.css). **Light** and **Dark** resolve every `var()` and take one side of [`light-dark()`](https://developer.mozilla.org/en-US/docs/Web/CSS/color_value/light-dark). Previews are decorative. † marks a description taken from the semantic token table in [Theming](https://odonckers.github.io/domestic-ui/principles/theming.md).
+136 tokens in [`css/tokens/semantic.css`](https://github.com/odonckers/domestic-ui/blob/main/css/tokens/semantic.css). **Light** and **Dark** resolve every `var()` and take one side of [`light-dark()`](https://developer.mozilla.org/en-US/docs/Web/CSS/color_value/light-dark). Previews are decorative.
 
 ### Surfaces and text
 
 | Token | Light | Dark | Description |
 | --- | --- | --- | --- |
-| `--dui-color-surface` | `#fff` | `#12151b` | Page and control background † |
-| `--dui-color-surface-raised` | `#f6f7f9` | `#1b1f27` | Slightly lifted areas: neutral buttons, zebra rows, cards † |
-| `--dui-color-surface-sunken` | `#eceef2` | `#252a34` | Recessed areas: code, button hover † |
-| `--dui-color-text` | `#12151b` | `#eceef2` | Body text † |
-| `--dui-color-text-muted` | `#545b68` | `#a3aab6` | Secondary text, captions, list markers (still 4.5:1) † |
+| `--dui-color-surface` | `#fff` | `#12151b` | Page and control background |
+| `--dui-color-surface-raised` | `#f6f7f9` | `#1b1f27` | Slightly lifted areas: neutral buttons, zebra rows, cards |
+| `--dui-color-surface-sunken` | `#eceef2` | `#252a34` | Recessed areas: code, button hover |
+| `--dui-color-text` | `#12151b` | `#eceef2` | Body text |
+| `--dui-color-text-muted` | `#545b68` | `#a3aab6` | Secondary text, captions, list markers (still 4.5:1) |
 
 ### Borders
 
@@ -1420,24 +902,24 @@ Decorative hairlines vs. control boundaries (3:1, WCAG 1.4.11).
 
 | Token | Light | Dark | Description |
 | --- | --- | --- | --- |
-| `--dui-color-border` | `#dde0e6` | `#3a404b` | Decorative hairlines: tables, hr, details, fieldset † |
-| `--dui-color-border-control` | `#7a8291` | `#7a8291` | Form control and button boundaries (3:1) † |
+| `--dui-color-border` | `#dde0e6` | `#3a404b` | Decorative hairlines: tables, hr, details, fieldset |
+| `--dui-color-border-control` | `#7a8291` | `#7a8291` | Form control and button boundaries (3:1) |
 
 ### Accent and status
 
 | Token | Light | Dark | Description |
 | --- | --- | --- | --- |
-| `--dui-color-accent` | `#3451d1` | `#8ea2ff` | Brand color: primary button fill, checks, links and focus by default † |
-| `--dui-color-accent-contrast` | `#fff` | `#12151b` | Text on accent † |
-| `--dui-color-link-visited` | `#6b2fb3` | `#d2a8ff` | Visited links † |
-| `--dui-color-danger` | `#b42318` | `#ff8a80` | Errors, :user-invalid borders † |
-| `--dui-color-success` | `#17773a` | `#5fd38d` | Success messages † |
-| `--dui-color-warning` | `#8a5a00` | `#f2c14e` | Warning badges and messages † |
-| `--dui-color-info` | `#2b43b0` | `#a8b7ff` | Informational alerts and toasts (separate from the accent, so a brand color never reads as a status) † |
-| `--dui-color-mark` | `#fff1a8` | `#e3c84f` | mark and ::selection background † |
-| `--dui-color-mark-text` | `#12151b` | `#12151b` | Text on mark † |
-| `--dui-color-backdrop` | `rgb(0 0 0 / 40%)` | `rgb(0 0 0 / 60%)` | dialog::backdrop † |
-| `--dui-color-shadow` | `rgb(0 0 0 / 10%)` | `rgb(0 0 0 / 40%)` | Shadow color † |
+| `--dui-color-accent` | `#3451d1` | `#8ea2ff` | Brand color: primary button fill, checks, links and focus by default |
+| `--dui-color-accent-contrast` | `#fff` | `#12151b` | Text on accent |
+| `--dui-color-link-visited` | `#6b2fb3` | `#d2a8ff` | Visited links |
+| `--dui-color-danger` | `#b42318` | `#ff8a80` | Errors, :user-invalid borders |
+| `--dui-color-success` | `#17773a` | `#5fd38d` | Success messages |
+| `--dui-color-warning` | `#8a5a00` | `#f2c14e` | Warning badges and messages |
+| `--dui-color-info` | `#2b43b0` | `#a8b7ff` | Informational alerts and toasts (separate from the accent, so a brand color never reads as a status) |
+| `--dui-color-mark` | `#fff1a8` | `#e3c84f` | `mark` and `::selection` background |
+| `--dui-color-mark-text` | `#12151b` | `#12151b` | Text on `mark` |
+| `--dui-color-backdrop` | `rgb(0 0 0 / 40%)` | `rgb(0 0 0 / 60%)` | `dialog::backdrop` |
+| `--dui-color-shadow` | `rgb(0 0 0 / 10%)` | `rgb(0 0 0 / 40%)` | Shadow color |
 
 ### Code highlighting (css/base/typography.css, explainers/code-highlighting.md). Each meets 4.5:1 on --dui-color-surface-sunken, the <pre> background (WCAG 1.4.3)
 
@@ -1456,50 +938,50 @@ Decorative hairlines vs. control boundaries (3:1, WCAG 1.4.11).
 
 | Token | Light | Dark | Description |
 | --- | --- | --- | --- |
-| `--dui-font-body` | `system-ui, sans-serif` | `system-ui, sans-serif` | Body font stack † |
-| `--dui-font-mono` | `ui-monospace, "Cascadia Code", "Source Code Pro", menlo, consolas, "DejaVu Sans Mono", monospace` | `ui-monospace, "Cascadia Code", "Source Code Pro", menlo, consolas, "DejaVu Sans Mono", monospace` | Code font stack † |
-| `--dui-font-weight-body` | `400` | `400` | Body weight † |
-| `--dui-font-weight-strong` | `600` | `600` | strong, labels, buttons, th † |
-| `--dui-font-weight-heading` | `700` | `700` | h1–h6 † |
-| `--dui-step--1` | `clamp(0.8333rem, 0.8101rem + 0.1159vw, 0.9rem)` | `clamp(0.8333rem, 0.8101rem + 0.1159vw, 0.9rem)` | small, captions † |
-| `--dui-step-0` | `clamp(1rem, 0.9565rem + 0.2174vw, 1.125rem)` | `clamp(1rem, 0.9565rem + 0.2174vw, 1.125rem)` | Body text, h6 † |
-| `--dui-step-1` | `clamp(1.2rem, 1.1283rem + 0.3587vw, 1.4063rem)` | `clamp(1.2rem, 1.1283rem + 0.3587vw, 1.4063rem)` | h5 † |
-| `--dui-step-2` | `clamp(1.44rem, 1.3295rem + 0.5527vw, 1.7578rem)` | `clamp(1.44rem, 1.3295rem + 0.5527vw, 1.7578rem)` | h4 † |
-| `--dui-step-3` | `clamp(1.728rem, 1.5648rem + 0.8161vw, 2.1973rem)` | `clamp(1.728rem, 1.5648rem + 0.8161vw, 2.1973rem)` | h3 † |
-| `--dui-step-4` | `clamp(2.0736rem, 1.8395rem + 1.1704vw, 2.7466rem)` | `clamp(2.0736rem, 1.8395rem + 1.1704vw, 2.7466rem)` | h2 † |
-| `--dui-step-5` | `clamp(2.4883rem, 2.1597rem + 1.6428vw, 3.4332rem)` | `clamp(2.4883rem, 2.1597rem + 1.6428vw, 3.4332rem)` | h1 † |
-| `--dui-font-size-code` | `0.9em` | `0.9em` | code, kbd, samp, pre (relative) † |
-| `--dui-line-height-body` | `1.6` | `1.6` | Body text † |
-| `--dui-line-height-heading` | `1.25` | `1.25` | Headings, buttons, pre † |
-| `--dui-line-height-display` | `1.1` | `1.1` | h1 † |
-| `--dui-letter-spacing-heading` | `-0.015em` | `-0.015em` | h1, h2 † |
-| `--dui-measure` | `65ch` | `65ch` | Max line length for prose † |
+| `--dui-font-body` | `system-ui, sans-serif` | `system-ui, sans-serif` | Body font stack |
+| `--dui-font-mono` | `ui-monospace, "Cascadia Code", "Source Code Pro", menlo, consolas, "DejaVu Sans Mono", monospace` | `ui-monospace, "Cascadia Code", "Source Code Pro", menlo, consolas, "DejaVu Sans Mono", monospace` | Code font stack |
+| `--dui-font-weight-body` | `400` | `400` | Body weight |
+| `--dui-font-weight-strong` | `600` | `600` | strong, labels, buttons, th |
+| `--dui-font-weight-heading` | `700` | `700` | h1–h6 |
+| `--dui-step--1` | `clamp(0.8333rem, 0.8101rem + 0.1159vw, 0.9rem)` | `clamp(0.8333rem, 0.8101rem + 0.1159vw, 0.9rem)` | small, captions |
+| `--dui-step-0` | `clamp(1rem, 0.9565rem + 0.2174vw, 1.125rem)` | `clamp(1rem, 0.9565rem + 0.2174vw, 1.125rem)` | Body text, h6 |
+| `--dui-step-1` | `clamp(1.2rem, 1.1283rem + 0.3587vw, 1.4063rem)` | `clamp(1.2rem, 1.1283rem + 0.3587vw, 1.4063rem)` | h5 |
+| `--dui-step-2` | `clamp(1.44rem, 1.3295rem + 0.5527vw, 1.7578rem)` | `clamp(1.44rem, 1.3295rem + 0.5527vw, 1.7578rem)` | h4 |
+| `--dui-step-3` | `clamp(1.728rem, 1.5648rem + 0.8161vw, 2.1973rem)` | `clamp(1.728rem, 1.5648rem + 0.8161vw, 2.1973rem)` | h3 |
+| `--dui-step-4` | `clamp(2.0736rem, 1.8395rem + 1.1704vw, 2.7466rem)` | `clamp(2.0736rem, 1.8395rem + 1.1704vw, 2.7466rem)` | h2 |
+| `--dui-step-5` | `clamp(2.4883rem, 2.1597rem + 1.6428vw, 3.4332rem)` | `clamp(2.4883rem, 2.1597rem + 1.6428vw, 3.4332rem)` | h1 |
+| `--dui-font-size-code` | `0.9em` | `0.9em` | code, kbd, samp, pre (relative) |
+| `--dui-line-height-body` | `1.6` | `1.6` | Body text |
+| `--dui-line-height-heading` | `1.25` | `1.25` | Headings, buttons, pre |
+| `--dui-line-height-display` | `1.1` | `1.1` | h1 |
+| `--dui-letter-spacing-heading` | `-0.015em` | `-0.015em` | h1, h2 |
+| `--dui-measure` | `65ch` | `65ch` | Max line length for prose |
 
 ### Space
 
 | Token | Light | Dark | Description |
 | --- | --- | --- | --- |
-| `--dui-space-3xs` | `0.125rem` | `0.125rem` | Space scale † |
-| `--dui-space-2xs` | `0.25rem` | `0.25rem` | Space scale † |
-| `--dui-space-xs` | `0.5rem` | `0.5rem` | Space scale † |
-| `--dui-space-s` | `0.75rem` | `0.75rem` | Space scale † |
-| `--dui-space-m` | `1rem` | `1rem` | Space scale; default flow rhythm and .stack gap † |
-| `--dui-space-l` | `1.5rem` | `1.5rem` | Space scale; default .grid gap † |
-| `--dui-space-xl` | `2rem` | `2rem` | Space scale; space above h1–h3 † |
-| `--dui-space-2xl` | `3rem` | `3rem` | Space scale † |
-| `--dui-space-3xl` | `4rem` | `4rem` | Space scale † |
+| `--dui-space-3xs` | `0.125rem` | `0.125rem` | Space scale |
+| `--dui-space-2xs` | `0.25rem` | `0.25rem` | Space scale |
+| `--dui-space-xs` | `0.5rem` | `0.5rem` | Space scale |
+| `--dui-space-s` | `0.75rem` | `0.75rem` | Space scale |
+| `--dui-space-m` | `1rem` | `1rem` | Space scale; default flow rhythm and .stack gap |
+| `--dui-space-l` | `1.5rem` | `1.5rem` | Space scale; default .grid gap |
+| `--dui-space-xl` | `2rem` | `2rem` | Space scale; space above h1–h3 |
+| `--dui-space-2xl` | `3rem` | `3rem` | Space scale |
+| `--dui-space-3xl` | `4rem` | `4rem` | Space scale |
 
 ### Sizes
 
 | Token | Light | Dark | Description |
 | --- | --- | --- | --- |
-| `--dui-size-target` | `2.75rem` | `2.75rem` | Min height of controls and buttons (WCAG 2.5.8 needs 24px; this gives 44px) † |
-| `--dui-size-target-small` | `2rem` | `2rem` | Small buttons (32px: under 44px, over the 24px minimum) † |
-| `--dui-size-target-large` | `3.25rem` | `3.25rem` | Large buttons † |
-| `--dui-size-check` | `1.25rem` | `1.25rem` | Checkbox and radio size † |
-| `--dui-size-column-min` | `16rem` | `16rem` | Default .grid min column width † |
-| `--dui-size-menu-min` | `12rem` | `12rem` | Min width of menus and nav dropdowns † |
-| `--dui-size-drawer` | `24rem` | `24rem` | Drawer width (all of the viewport when narrower) † |
+| `--dui-size-target` | `2.75rem` | `2.75rem` | Min height of controls and buttons (WCAG 2.5.8 needs 24px; this gives 44px) |
+| `--dui-size-target-small` | `2rem` | `2rem` | Small buttons (32px: under 44px, over the 24px minimum) |
+| `--dui-size-target-large` | `3.25rem` | `3.25rem` | Large buttons |
+| `--dui-size-check` | `1.25rem` | `1.25rem` | Checkbox and radio size |
+| `--dui-size-column-min` | `16rem` | `16rem` | Default .grid min column width |
+| `--dui-size-menu-min` | `12rem` | `12rem` | Min width of menus and nav dropdowns |
+| `--dui-size-drawer` | `24rem` | `24rem` | Drawer width (all of the viewport when narrower) |
 | `--dui-size-page` | `72rem` | `72rem` | Max inline size of a page's content column: header, main and footer |
 | `--dui-size-icon` | `1.25rem` | `1.25rem` | Decorative icons beside a label: nav links and group summaries |
 | `--dui-size-sidebar` | `16rem` | `16rem` | Inline size of an app shell's primary sidebar when it sits beside main |
@@ -1510,15 +992,15 @@ Decorative hairlines vs. control boundaries (3:1, WCAG 1.4.11).
 
 | Token | Light | Dark | Description |
 | --- | --- | --- | --- |
-| `--dui-radius-control` | `0.375rem` | `0.375rem` | Controls, buttons, inline code † |
-| `--dui-radius-surface` | `0.625rem` | `0.625rem` | Panels, pre, dialog, details, media † |
-| `--dui-radius-pill` | `999rem` | `999rem` | Fully rounded ends † |
-| `--dui-border-width` | `1px` | `1px` | Hairline width † |
-| `--dui-border-width-emphasis` | `0.25rem` | `0.25rem` | blockquote rule, alert start rule, invalid field † |
-| `--dui-border-width-indicator` | `3px` | `3px` | Selected tab, current nav item (3:1 against the surface) † |
-| `--dui-underline-offset` | `0.15em` | `0.15em` | Link underline offset † |
-| `--dui-underline-thickness` | `0.0625em` | `0.0625em` | Link underline † |
-| `--dui-underline-thickness-hover` | `0.125em` | `0.125em` | Link underline on hover † |
+| `--dui-radius-control` | `0.375rem` | `0.375rem` | Controls, buttons, inline code |
+| `--dui-radius-surface` | `0.625rem` | `0.625rem` | Panels, pre, dialog, details, media |
+| `--dui-radius-pill` | `999rem` | `999rem` | Fully rounded ends |
+| `--dui-border-width` | `1px` | `1px` | Hairline width |
+| `--dui-border-width-emphasis` | `0.25rem` | `0.25rem` | blockquote rule, alert start rule, invalid field |
+| `--dui-border-width-indicator` | `3px` | `3px` | Selected tab, current nav item (3:1 against the surface) |
+| `--dui-underline-offset` | `0.15em` | `0.15em` | Link underline offset |
+| `--dui-underline-thickness` | `0.0625em` | `0.0625em` | Link underline |
+| `--dui-underline-thickness-hover` | `0.125em` | `0.125em` | Link underline on hover |
 
 ### Focus indicator
 
@@ -1526,8 +1008,8 @@ WCAG 2.4.7, 2.4.11, 2.4.13.
 
 | Token | Light | Dark | Description |
 | --- | --- | --- | --- |
-| `--dui-focus-width` | `2px` | `2px` | Focus outline width † |
-| `--dui-focus-offset` | `2px` | `2px` | Focus outline offset † |
+| `--dui-focus-width` | `2px` | `2px` | Focus outline width |
+| `--dui-focus-offset` | `2px` | `2px` | Focus outline offset |
 
 ### Motion knobs
 
@@ -1561,9 +1043,9 @@ The density tokens (section 2) are derived from it.
 
 | Token | Light | Dark | Description |
 | --- | --- | --- | --- |
-| `--dui-opacity-disabled` | `0.6` | `0.6` | Disabled controls, `disabled` and `aria-disabled="true"` † |
-| `--dui-tint-amount` | `8%` | `8%` | How much of a tone goes into a tinted surface † |
-| `--dui-border-tint-amount` | `35%` | `35%` | How much of the text color goes into a tinted border (badges) † |
+| `--dui-opacity-disabled` | `0.6` | `0.6` | Disabled controls, `disabled` and `aria-disabled="true"` |
+| `--dui-tint-amount` | `8%` | `8%` | How much of a tone goes into a tinted surface |
+| `--dui-border-tint-amount` | `35%` | `35%` | How much of the text color goes into a tinted border (badges) |
 
 ### Dependent tokens
 
@@ -1571,10 +1053,10 @@ Defined in terms of other semantic tokens.
 
 | Token | Light | Dark | Description |
 | --- | --- | --- | --- |
-| `--dui-color-link` | `#3451d1` | `#8ea2ff` | Links † |
-| `--dui-color-focus` | `#3451d1` | `#8ea2ff` | Focus ring (3:1 against surfaces) † |
-| `--dui-color-accent-hover` | `color-mix(in oklab, #3451d1 82%, #12151b)` | `color-mix(in oklab, #8ea2ff 82%, #eceef2)` | Primary button hover † |
-| `--dui-font-heading` | `system-ui, sans-serif` | `system-ui, sans-serif` | Heading font stack † |
+| `--dui-color-link` | `#3451d1` | `#8ea2ff` | Links |
+| `--dui-color-focus` | `#3451d1` | `#8ea2ff` | Focus ring (3:1 against surfaces) |
+| `--dui-color-accent-hover` | `color-mix(in oklab, #3451d1 82%, #12151b)` | `color-mix(in oklab, #8ea2ff 82%, #eceef2)` | Primary button hover |
+| `--dui-font-heading` | `system-ui, sans-serif` | `system-ui, sans-serif` | Heading font stack |
 
 ### Tinted surfaces for status badges
 
@@ -1582,18 +1064,18 @@ A little of the tone mixed into the surface.
 
 | Token | Light | Dark | Description |
 | --- | --- | --- | --- |
-| `--dui-color-accent-surface` | `color-mix(in oklab, #3451d1 8%, #fff)` | `color-mix(in oklab, #8ea2ff 8%, #12151b)` | Accent badge background † |
-| `--dui-color-success-surface` | `color-mix(in oklab, #17773a 8%, #fff)` | `color-mix(in oklab, #5fd38d 8%, #12151b)` | Success badge background † |
-| `--dui-color-warning-surface` | `color-mix(in oklab, #8a5a00 8%, #fff)` | `color-mix(in oklab, #f2c14e 8%, #12151b)` | Warning badge background † |
-| `--dui-color-danger-surface` | `color-mix(in oklab, #b42318 8%, #fff)` | `color-mix(in oklab, #ff8a80 8%, #12151b)` | Danger badge and alert background † |
-| `--dui-color-info-surface` | `color-mix(in oklab, #2b43b0 8%, #fff)` | `color-mix(in oklab, #a8b7ff 8%, #12151b)` | Info alert background † |
+| `--dui-color-accent-surface` | `color-mix(in oklab, #3451d1 8%, #fff)` | `color-mix(in oklab, #8ea2ff 8%, #12151b)` | Accent badge background |
+| `--dui-color-success-surface` | `color-mix(in oklab, #17773a 8%, #fff)` | `color-mix(in oklab, #5fd38d 8%, #12151b)` | Success badge background |
+| `--dui-color-warning-surface` | `color-mix(in oklab, #8a5a00 8%, #fff)` | `color-mix(in oklab, #f2c14e 8%, #12151b)` | Warning badge background |
+| `--dui-color-danger-surface` | `color-mix(in oklab, #b42318 8%, #fff)` | `color-mix(in oklab, #ff8a80 8%, #12151b)` | Danger badge and alert background |
+| `--dui-color-info-surface` | `color-mix(in oklab, #2b43b0 8%, #fff)` | `color-mix(in oklab, #a8b7ff 8%, #12151b)` | Info alert background |
 
 ### Inverse pair for small overlays on top of content (tooltips): text and surface swapped
 
 | Token | Light | Dark | Description |
 | --- | --- | --- | --- |
-| `--dui-color-surface-inverse` | `#12151b` | `#eceef2` | Tooltip background † |
-| `--dui-color-text-inverse` | `#fff` | `#12151b` | Tooltip text † |
+| `--dui-color-surface-inverse` | `#12151b` | `#eceef2` | Tooltip background |
+| `--dui-color-text-inverse` | `#fff` | `#12151b` | Tooltip text |
 
 ### Motion
 
@@ -1667,9 +1149,416 @@ See CHANGELOG.md.
 | `--dui-duration-normal` | `calc(250ms * 1 * 1)` | `calc(250ms * 1 * 1)` | Deprecated: use --dui-motion-duration-normal |
 | `--dui-easing-standard` | `cubic-bezier(0.2, 0, 0, 1)` | `cubic-bezier(0.2, 0, 0, 1)` | Deprecated: use --dui-motion-easing-standard |
 
+## Theming
+
+Page: https://odonckers.github.io/domestic-ui/tokens/theming.html
+
+A theme is an override of semantic tokens, on `:root` for the whole page or on any element with `data-theme`.
+
+Why it works this way: [Theming](https://odonckers.github.io/domestic-ui/principles/theming.md).
+
+Start from the forest theme below: a `<style>` block that sets a handful of semantic color tokens on
+`[data-theme="forest"]`. Tokens that derive from others (links, focus, hover, tinted surfaces) follow
+on their own. Check the contrast of every pair in both color schemes; `tests/tokens.spec.js` shows how.
+
+### Tokens
+
+- [Surfaces and text](https://odonckers.github.io/domestic-ui/tokens/semantic.md#surfaces-and-text) in Semantic tokens: 5 tokens.
+- [Borders](https://odonckers.github.io/domestic-ui/tokens/semantic.md#borders) in Semantic tokens: 2 tokens.
+- [Accent and status](https://odonckers.github.io/domestic-ui/tokens/semantic.md#accent-and-status) in Semantic tokens: 11 tokens.
+- [Dependent tokens](https://odonckers.github.io/domestic-ui/tokens/semantic.md#dependent-tokens) in Semantic tokens: 4 tokens.
+
+### Live example
+
+#### Forest theme
+
+```html
+<section class="panel stack" data-theme="forest" aria-labelledby="forest-title">
+  <nav aria-label="Breadcrumb, forest theme" data-breadcrumb>
+    <ol>
+      <li><a href="#forest-title">Home</a></li>
+      <li><a href="#forest-title">Releases</a></li>
+      <li><a href="#forest-title" aria-current="page">Release notes</a></li>
+    </ol>
+  </nav>
+  <h2 id="forest-title">Forest theme</h2>
+  <p>Release notes are ready for review. <a href="#forest-title">Read the summary</a> before the meeting.</p>
+  <p class="cluster">
+    <span data-badge>Draft</span>
+    <span data-badge="accent">New</span>
+    <span data-badge="success">Passing</span>
+    <span data-badge="warning">Review</span>
+    <span data-badge="danger">Blocked</span>
+  </p>
+  <form action="#forest-title" class="stack">
+    <div data-field>
+      <label for="forest-email">Email</label>
+      <input id="forest-email" name="email" type="email" autocomplete="email" value="ada@" aria-invalid="true" aria-describedby="forest-email-hint forest-email-error">
+      <p id="forest-email-hint" data-field="hint">Release notes go to this address.</p>
+      <p id="forest-email-error" data-field="error">Error: enter an email address like name@example.com.</p>
+    </div>
+    <label><input type="checkbox" role="switch" name="notify" checked> Notify subscribers</label>
+    <div class="cluster">
+      <button type="submit">Publish</button>
+      <button type="button" data-button="secondary">Save draft</button>
+      <button type="button" data-button="quiet">Discard</button>
+    </div>
+  </form>
+  <div data-alert="warning">
+    <p><strong>Warning:</strong> Two checks are still running.</p>
+  </div>
+  <dui-tabs>
+    <nav aria-label="Release, forest theme">
+      <ul>
+        <li><a href="#forest-tab-notes">Notes</a></li>
+        <li><a href="#forest-tab-checks">Checks</a></li>
+      </ul>
+    </nav>
+    <section id="forest-tab-notes">
+      <h3>Notes</h3>
+      <p>Two bug fixes and a new token.</p>
+    </section>
+    <section id="forest-tab-checks">
+      <h3>Checks</h3>
+      <p>Lint passed. Tests are running.</p>
+    </section>
+  </dui-tabs>
+  <article data-card="link">
+    <h3><a href="#forest-title">Upgrade guide</a></h3>
+    <p>What to change when you update.</p>
+  </article>
+  <details>
+    <summary>What changed?</summary>
+    <p>Two bug fixes and a new <code>--dui-color-success</code> token.</p>
+  </details>
+</section>
+```
+
+#### Forest theme CSS
+
+In the `<head>` of the live example above.
+
+```html
+<style id="forest-theme">
+  [data-theme="forest"] {
+    --dui-color-surface: light-dark(#f7f5ef, #141a16);
+    --dui-color-surface-raised: light-dark(#eeeadf, #1d2620);
+    --dui-color-text: light-dark(#1d2a22, #e4ebe3);
+    --dui-color-border: light-dark(#d8d1bf, #34433a);
+    --dui-color-accent: light-dark(#2f6b3f, #7fcf95);
+    --dui-color-accent-contrast: light-dark(#fff, #0f1a13);
+    --dui-font-heading: charter, "Bitstream Charter", "Sitka Text", cambria, serif;
+    --dui-radius-control: 0.125rem;
+    --dui-radius-surface: 0.25rem;
+  }
+</style>
+```
+
+## Motion
+
+Page: https://odonckers.github.io/domestic-ui/tokens/motion.html
+
+Transitions driven by tokens: one scale for every duration, one knob for movement, and `data-motion` to reduce or stop motion in part of a page.
+
+Why it works this way: [Motion](https://odonckers.github.io/domestic-ui/principles/motion.md).
+
+Set `--dui-motion-scale` on `:root` to slow every transition down (`2`) or switch it off (`0`).
+`data-motion="reduced"` on an element behaves like `prefers-reduced-motion: reduce` inside it, and
+`data-motion="none"` stops every transition there.
+
+### Tokens
+
+- [Motion knobs](https://odonckers.github.io/domestic-ui/tokens/semantic.md#motion-knobs) in Semantic tokens: 6 tokens.
+- [Motion](https://odonckers.github.io/domestic-ui/tokens/semantic.md#motion) in Semantic tokens: 5 tokens.
+- [Motion](https://odonckers.github.io/domestic-ui/tokens/primitives.md#motion) in Primitive tokens: 8 tokens.
+
+### Live example
+
+#### Fade: dialog
+
+```html
+<button type="button" commandfor="fade-dialog" command="show-modal">Open dialog</button>
+<dialog id="fade-dialog" data-dialog aria-labelledby="fade-dialog-title">
+  <header>
+    <h2 id="fade-dialog-title">Fade in, fade out</h2>
+  </header>
+  <p>Enters with <code>--dui-motion-easing-enter</code> and leaves with <code>--dui-motion-easing-exit</code>.</p>
+  <form method="dialog">
+    <footer>
+      <button type="submit" autofocus>Close</button>
+    </footer>
+  </form>
+</dialog>
+```
+
+#### Slide: drawer
+
+```html
+<button type="button" commandfor="slide-drawer" command="show-modal">Open drawer</button>
+<dialog id="slide-drawer" data-dialog="drawer end" closedby="any" aria-labelledby="slide-drawer-title">
+  <header>
+    <h2 id="slide-drawer-title">Drawer</h2>
+    <button type="button" commandfor="slide-drawer" command="close" data-button="quiet small">Close</button>
+  </header>
+  <p>The off-screen offset is 100% times <code>--dui-motion-movement</code>.</p>
+</dialog>
+```
+
+#### Scale: popover and menu
+
+```html
+<div class="cluster">
+  <button type="button" popovertarget="scale-popover">Popover</button>
+  <div id="scale-popover" popover data-popover>
+    <p>Grows and fades in.</p>
+  </div>
+  <dui-menu>
+    <button type="button" popovertarget="scale-menu">Menu</button>
+    <div id="scale-menu" popover data-popover>
+      <button type="button">Rename</button>
+      <button type="button">Duplicate</button>
+    </div>
+  </dui-menu>
+</div>
+```
+
+#### Color and state
+
+```html
+<div class="cluster">
+  <button type="button">Hover me</button>
+  <button type="button" data-button="primary">Primary</button>
+  <a href="#state-title">A link</a>
+  <label><input type="checkbox" role="switch" name="state-switch"> Switch</label>
+</div>
+```
+
+#### Toast
+
+```html
+<button type="button" data-toast="success">Save</button>
+<dui-toaster data-alert="toasts" role="status"></dui-toaster>
+```
+
+#### Motion scale
+
+```html
+<div class="panel cluster" data-motion style="--dui-motion-scale: 3">
+  <button type="button">Hover me</button>
+  <label><input type="checkbox" role="switch" name="slow-switch"> Slow switch</label>
+  <button type="button" popovertarget="slow-popover">Slow popover</button>
+  <div id="slow-popover" popover data-popover>
+    <p>Three times the normal duration.</p>
+  </div>
+</div>
+```
+
+#### Reduced and no motion
+
+```html
+<div class="grid">
+  <section class="panel stack" data-motion="reduced" aria-labelledby="reduced-title">
+    <h3 id="reduced-title">data-motion="reduced"</h3>
+    <label><input type="checkbox" role="switch" name="reduced-switch"> Switch</label>
+    <div class="cluster">
+      <button type="button" popovertarget="reduced-popover">Popover</button>
+      <div id="reduced-popover" popover data-popover>
+        <p>Fades without growing.</p>
+      </div>
+      <button type="button" commandfor="reduced-drawer" command="show-modal">Drawer</button>
+    </div>
+    <dialog id="reduced-drawer" data-dialog="drawer end" closedby="any" aria-labelledby="reduced-drawer-title">
+      <header>
+        <h2 id="reduced-drawer-title">Reduced motion</h2>
+        <button type="button" commandfor="reduced-drawer" command="close" data-button="quiet small">Close</button>
+      </header>
+      <p>Fades in place instead of sliding.</p>
+    </dialog>
+  </section>
+  <section class="panel stack" data-motion="none" aria-labelledby="none-title">
+    <h3 id="none-title">data-motion="none"</h3>
+    <label><input type="checkbox" role="switch" name="none-switch"> Switch</label>
+    <div class="cluster">
+      <button type="button" popovertarget="none-popover">Popover</button>
+      <div id="none-popover" popover data-popover>
+        <p>Appears at once.</p>
+      </div>
+      <button type="button" commandfor="none-drawer" command="show-modal">Drawer</button>
+    </div>
+    <dialog id="none-drawer" data-dialog="drawer end" closedby="any" aria-labelledby="none-drawer-title">
+      <header>
+        <h2 id="none-drawer-title">No motion</h2>
+        <button type="button" commandfor="none-drawer" command="close" data-button="quiet small">Close</button>
+      </header>
+      <p>Appears at once.</p>
+    </dialog>
+  </section>
+</div>
+```
+
+#### View transition
+
+```html
+<div class="stack">
+  <ol id="vt-list" class="stack" style="--stack-gap: var(--dui-space-2xs)">
+    <li>Draft</li>
+    <li>Review</li>
+    <li>Publish</li>
+  </ol>
+  <p><button type="button" data-reverse="vt-list">Reverse the list</button></p>
+</div>
+```
+
+## Elevation
+
+Page: https://odonckers.github.io/domestic-ui/tokens/elevation.html
+
+Five levels, each a shadow paired with a surface color, used through role tokens such as `--dui-elevation-popover`.
+
+Why it works this way: [Elevation](https://odonckers.github.io/domestic-ui/principles/elevation.md).
+
+Components use the role tokens, never the level numbers, so a theme can move a role to another level.
+In light schemes the shadow grows with the level; in dark schemes the surface gets lighter instead.
+
+### Tokens
+
+- [Elevation knobs](https://odonckers.github.io/domestic-ui/tokens/semantic.md#elevation-knobs) in Semantic tokens: 2 tokens.
+- [Elevation](https://odonckers.github.io/domestic-ui/tokens/semantic.md#elevation) in Semantic tokens: 11 tokens.
+- [Elevation by role](https://odonckers.github.io/domestic-ui/tokens/semantic.md#elevation-by-role) in Semantic tokens: 10 tokens.
+- [Shadow geometry](https://odonckers.github.io/domestic-ui/tokens/primitives.md#shadow-geometry) in Primitive tokens: 9 tokens.
+
+### Live example
+
+#### Levels in light and dark
+
+```html
+<div class="grid">
+  <section class="panel stack" data-color-scheme="light" aria-labelledby="light-title">
+    <h3 id="light-title">Light</h3>
+    <ol class="stack" aria-label="Elevation levels, light">
+      <li class="level" style="--level-shadow: var(--dui-elevation-0); --level-surface: var(--dui-elevation-0-surface)">
+        <strong>Level 0: flat</strong>
+        <span class="level-note">The page itself and content on it. <a href="#levels-title">Link</a></span>
+      </li>
+      <li class="level" style="--level-shadow: var(--dui-elevation-1); --level-surface: var(--dui-elevation-1-surface)">
+        <strong>Level 1: raised</strong>
+        <span class="level-note">Cards. <a href="#levels-title">Link</a></span>
+      </li>
+      <li class="level" style="--level-shadow: var(--dui-elevation-2); --level-surface: var(--dui-elevation-2-surface)">
+        <strong>Level 2: overlay</strong>
+        <span class="level-note">Toasts and other non-modal layers. <a href="#levels-title">Link</a></span>
+      </li>
+      <li class="level" style="--level-shadow: var(--dui-elevation-3); --level-surface: var(--dui-elevation-3-surface)">
+        <strong>Level 3: popover</strong>
+        <span class="level-note">Popovers, menus, tooltips, nav dropdowns. <a href="#levels-title">Link</a></span>
+      </li>
+      <li class="level" style="--level-shadow: var(--dui-elevation-4); --level-surface: var(--dui-elevation-4-surface)">
+        <strong>Level 4: dialog</strong>
+        <span class="level-note">Dialogs and drawers. <a href="#levels-title">Link</a></span>
+      </li>
+    </ol>
+  </section>
+  <section class="panel stack" data-color-scheme="dark" aria-labelledby="dark-title">
+    <h3 id="dark-title">Dark</h3>
+    <ol class="stack" aria-label="Elevation levels, dark">
+      <li class="level" style="--level-shadow: var(--dui-elevation-0); --level-surface: var(--dui-elevation-0-surface)">
+        <strong>Level 0: flat</strong>
+        <span class="level-note">The page itself and content on it. <a href="#levels-title">Link</a></span>
+      </li>
+      <li class="level" style="--level-shadow: var(--dui-elevation-1); --level-surface: var(--dui-elevation-1-surface)">
+        <strong>Level 1: raised</strong>
+        <span class="level-note">Cards. <a href="#levels-title">Link</a></span>
+      </li>
+      <li class="level" style="--level-shadow: var(--dui-elevation-2); --level-surface: var(--dui-elevation-2-surface)">
+        <strong>Level 2: overlay</strong>
+        <span class="level-note">Toasts and other non-modal layers. <a href="#levels-title">Link</a></span>
+      </li>
+      <li class="level" style="--level-shadow: var(--dui-elevation-3); --level-surface: var(--dui-elevation-3-surface)">
+        <strong>Level 3: popover</strong>
+        <span class="level-note">Popovers, menus, tooltips, nav dropdowns. <a href="#levels-title">Link</a></span>
+      </li>
+      <li class="level" style="--level-shadow: var(--dui-elevation-4); --level-surface: var(--dui-elevation-4-surface)">
+        <strong>Level 4: dialog</strong>
+        <span class="level-note">Dialogs and drawers. <a href="#levels-title">Link</a></span>
+      </li>
+    </ol>
+  </section>
+</div>
+```
+
+#### Level swatch CSS
+
+Each `.level` swatch draws one elevation level from two custom properties: `--level-shadow` (its `box-shadow`) and `--level-surface` (its background).
+
+In the `<head>` of the live example above.
+
+```html
+<style>
+  .level {
+    display: flex;
+    flex-direction: column;
+    gap: var(--dui-space-3xs);
+    padding: var(--dui-space-m);
+    background-color: var(--level-surface);
+    color: var(--dui-color-text);
+    border: var(--dui-border-width) solid var(--dui-color-border);
+    border-radius: var(--dui-radius-surface);
+    box-shadow: var(--level-shadow);
+  }
+
+  .level-note {
+    color: var(--dui-color-text-muted);
+  }
+
+  @media (forced-colors: active) {
+    .level {
+      border-color: canvastext;
+    }
+  }
+</style>
+```
+
+#### Components by role
+
+```html
+<div class="stack">
+  <article data-card>
+    <h3>Raised: a card</h3>
+    <p>Level 1. <a href="#roles-title">A link on the card</a>.</p>
+  </article>
+  <div class="cluster">
+    <button type="button" popovertarget="role-popover">Popover</button>
+    <div id="role-popover" popover data-popover>
+      <p>Level 3, the popover level.</p>
+    </div>
+    <dui-menu>
+      <button type="button" popovertarget="role-menu">Menu</button>
+      <div id="role-menu" popover data-popover>
+        <button type="button">Rename</button>
+        <button type="button">Archive</button>
+      </div>
+    </dui-menu>
+    <button type="button" commandfor="role-dialog" command="show-modal">Dialog</button>
+    <button type="button" data-toast="info">Toast</button>
+  </div>
+  <dialog id="role-dialog" data-dialog aria-labelledby="role-dialog-title">
+    <header>
+      <h2 id="role-dialog-title">Level 4: dialog</h2>
+    </header>
+    <p>The highest level, with the lightest surface in the dark scheme.</p>
+    <form method="dialog">
+      <footer>
+        <button type="submit" autofocus>Close</button>
+      </footer>
+    </form>
+  </dialog>
+  <dui-toaster data-alert="toasts" role="status"></dui-toaster>
+</div>
+```
+
 ## Base elements
 
-Page: https://odonckers.github.io/domestic-ui/components/base.html
+Page: https://odonckers.github.io/domestic-ui/base/index.html
 
 Native HTML elements styled by the base layer, with no classes.
 
@@ -1900,7 +1789,7 @@ For comparison only; these are not the standard this system follows.
 
 ## Visually hidden
 
-Page: https://odonckers.github.io/domestic-ui/components/utilities/visually-hidden.html
+Page: https://odonckers.github.io/domestic-ui/base/visually-hidden.html
 
 Hides content visually but keeps it in the accessibility tree.
 
@@ -1933,7 +1822,7 @@ _Diagram: Visually hidden text names an icon-only button, such as the close butt
 
 ### See also
 
-- [Base elements](https://odonckers.github.io/domestic-ui/components/base.md)
+- [Base elements](https://odonckers.github.io/domestic-ui/base/index.md)
 - [Component API convention](https://odonckers.github.io/domestic-ui/index.md#component-api)
 - [Accessibility baseline](https://odonckers.github.io/domestic-ui/principles/accessibility-baseline-wcag-22-aa.md)
 - Source: [`css/utilities/visually-hidden.css`](https://github.com/odonckers/domestic-ui/blob/main/css/utilities/visually-hidden.css), [`examples/base.html`](https://github.com/odonckers/domestic-ui/blob/main/examples/base.html)
@@ -2336,7 +2225,7 @@ For comparison only; these are not the standard this system follows.
 
 ## Atoms
 
-Page: https://odonckers.github.io/domestic-ui/atoms/index.html
+Page: https://odonckers.github.io/domestic-ui/components/atoms/index.html
 
 Small additions to the base layer, for what a native element cannot express on its own. A level of [Atomic Design](https://atomicdesign.bradfrost.com/); APIs follow the [component API convention](https://odonckers.github.io/domestic-ui/index.md#component-api).
 
@@ -2417,7 +2306,7 @@ Values are a space-separated list, so they combine: `data-text="small muted"`.
 
 ### See also
 
-- [Atoms](https://odonckers.github.io/domestic-ui/atoms/index.md)
+- [Atoms](https://odonckers.github.io/domestic-ui/components/atoms/index.md)
 - [Component API convention](https://odonckers.github.io/domestic-ui/index.md#component-api)
 - [Accessibility baseline](https://odonckers.github.io/domestic-ui/principles/accessibility-baseline-wcag-22-aa.md)
 - Source: [`css/components/atoms/text.css`](https://github.com/odonckers/domestic-ui/blob/main/css/components/atoms/text.css), [`examples/atoms/text.html`](https://github.com/odonckers/domestic-ui/blob/main/examples/atoms/text.html)
@@ -2503,7 +2392,7 @@ Space-separated: `data-link="quiet nav"` works.
 
 ### See also
 
-- [Atoms](https://odonckers.github.io/domestic-ui/atoms/index.md)
+- [Atoms](https://odonckers.github.io/domestic-ui/components/atoms/index.md)
 - [Component API convention](https://odonckers.github.io/domestic-ui/index.md#component-api)
 - [Accessibility baseline](https://odonckers.github.io/domestic-ui/principles/accessibility-baseline-wcag-22-aa.md)
 - Source: [`css/components/atoms/link.css`](https://github.com/odonckers/domestic-ui/blob/main/css/components/atoms/link.css), [`examples/atoms/link.html`](https://github.com/odonckers/domestic-ui/blob/main/examples/atoms/link.html)
@@ -2642,7 +2531,7 @@ Background and border colors fade over `--dui-motion-duration-fast` with `--dui-
 
 ### See also
 
-- [Atoms](https://odonckers.github.io/domestic-ui/atoms/index.md)
+- [Atoms](https://odonckers.github.io/domestic-ui/components/atoms/index.md)
 - [Component API convention](https://odonckers.github.io/domestic-ui/index.md#component-api)
 - [Accessibility baseline](https://odonckers.github.io/domestic-ui/principles/accessibility-baseline-wcag-22-aa.md)
 - Source: [`css/components/atoms/button.css`](https://github.com/odonckers/domestic-ui/blob/main/css/components/atoms/button.css), [`examples/atoms/button.html`](https://github.com/odonckers/domestic-ui/blob/main/examples/atoms/button.html)
@@ -2764,7 +2653,7 @@ No API; native elements
 
 ### Accessibility
 
-- Styled by the base layer; see [Base elements](https://odonckers.github.io/domestic-ui/components/base.md).
+- Styled by the base layer; see [Base elements](https://odonckers.github.io/domestic-ui/base/index.md).
 
 ### Specifications
 
@@ -2773,7 +2662,7 @@ No API; native elements
 
 ### See also
 
-- [Atoms](https://odonckers.github.io/domestic-ui/atoms/index.md)
+- [Atoms](https://odonckers.github.io/domestic-ui/components/atoms/index.md)
 - [Component API convention](https://odonckers.github.io/domestic-ui/index.md#component-api)
 - [Accessibility baseline](https://odonckers.github.io/domestic-ui/principles/accessibility-baseline-wcag-22-aa.md)
 - Source: [`css/base/forms.css`](https://github.com/odonckers/domestic-ui/blob/main/css/base/forms.css) (base layer; no CSS file of its own), [`examples/atoms/controls.html`](https://github.com/odonckers/domestic-ui/blob/main/examples/atoms/controls.html)
@@ -2862,7 +2751,7 @@ The track color fades over `--dui-motion-duration-fast`; the thumb slides for th
 
 ### See also
 
-- [Atoms](https://odonckers.github.io/domestic-ui/atoms/index.md)
+- [Atoms](https://odonckers.github.io/domestic-ui/components/atoms/index.md)
 - [Component API convention](https://odonckers.github.io/domestic-ui/index.md#component-api)
 - [Accessibility baseline](https://odonckers.github.io/domestic-ui/principles/accessibility-baseline-wcag-22-aa.md)
 - Source: [`css/components/atoms/switch.css`](https://github.com/odonckers/domestic-ui/blob/main/css/components/atoms/switch.css), [`examples/atoms/switch.html`](https://github.com/odonckers/domestic-ui/blob/main/examples/atoms/switch.html)
@@ -2964,7 +2853,7 @@ _Diagram: A field is one form entry in the content area: the label, the control,
 
 ### See also
 
-- [Atoms](https://odonckers.github.io/domestic-ui/atoms/index.md)
+- [Atoms](https://odonckers.github.io/domestic-ui/components/atoms/index.md)
 - [Component API convention](https://odonckers.github.io/domestic-ui/index.md#component-api)
 - [Accessibility baseline](https://odonckers.github.io/domestic-ui/principles/accessibility-baseline-wcag-22-aa.md)
 - Source: [`css/components/atoms/field.css`](https://github.com/odonckers/domestic-ui/blob/main/css/components/atoms/field.css), [`examples/atoms/field.html`](https://github.com/odonckers/domestic-ui/blob/main/examples/atoms/field.html)
@@ -3040,7 +2929,7 @@ _Diagram: Badges label the status of each row in a table's Status column, such a
 
 ### See also
 
-- [Atoms](https://odonckers.github.io/domestic-ui/atoms/index.md)
+- [Atoms](https://odonckers.github.io/domestic-ui/components/atoms/index.md)
 - [Component API convention](https://odonckers.github.io/domestic-ui/index.md#component-api)
 - [Accessibility baseline](https://odonckers.github.io/domestic-ui/principles/accessibility-baseline-wcag-22-aa.md)
 - Source: [`css/components/atoms/badge.css`](https://github.com/odonckers/domestic-ui/blob/main/css/components/atoms/badge.css), [`examples/atoms/badge.html`](https://github.com/odonckers/domestic-ui/blob/main/examples/atoms/badge.html)
@@ -3186,7 +3075,7 @@ Copy the SVG from lucide.dev, replace its class attribute with data-icon, and ad
 
 ### See also
 
-- [Atoms](https://odonckers.github.io/domestic-ui/atoms/index.md)
+- [Atoms](https://odonckers.github.io/domestic-ui/components/atoms/index.md)
 - [Component API convention](https://odonckers.github.io/domestic-ui/index.md#component-api)
 - [Accessibility baseline](https://odonckers.github.io/domestic-ui/principles/accessibility-baseline-wcag-22-aa.md)
 - Source: [`css/components/atoms/icon.css`](https://github.com/odonckers/domestic-ui/blob/main/css/components/atoms/icon.css), [`examples/atoms/icon.html`](https://github.com/odonckers/domestic-ui/blob/main/examples/atoms/icon.html)
@@ -3202,9 +3091,9 @@ For comparison only; these are not the standard this system follows.
 
 ## Molecules
 
-Page: https://odonckers.github.io/domestic-ui/molecules/index.html
+Page: https://odonckers.github.io/domestic-ui/components/molecules/index.html
 
-Small groups of atoms that work as one unit. A level of [Atomic Design](https://atomicdesign.bradfrost.com/); APIs follow the [component API convention](https://odonckers.github.io/domestic-ui/index.md#component-api).
+Small groups of atoms that work as one unit. A level of [Atomic Design](https://atomicdesign.bradfrost.com/); APIs follow the [component API convention](https://odonckers.github.io/domestic-ui/index.md#component-api). Each pattern follows a native HTML element or a [WAI-ARIA APG pattern](https://www.w3.org/WAI/ARIA/apg/patterns/) where one exists. Otherwise it stays close to plain HTML and is labeled **Our choice**.
 
 ### Our choices
 
@@ -3217,7 +3106,7 @@ From [`css/components/molecules/README.md`](https://github.com/odonckers/domesti
 - **Our choice:** automatic tab activation (selection follows focus), as the [APG recommends](https://www.w3.org/WAI/ARIA/apg/patterns/tabs/#deciding-when-to-make-selection-automatically-follow-focus) when panels show without delay; `activation="manual"` is one attribute away.
 - **Our choice:** tabs are written as a `<nav>` of in-page links and `<section>` panels, so they read as a table of contents with JavaScript off. Once upgraded, each panel's first heading is visually hidden (it repeats the tab label) but stays in the accessibility tree.
 - **Our choice:** `<dui-menu>` adds `role="menu"` and `role="menuitem"` itself. Without the script there are no menu roles, so assistive technology is never promised arrow keys that do not work. A list of links is never a menu; use a disclosure.
-- **Our choice:** `<dui-combobox>` upgrades a native `<input list>` + `<datalist>`, not a `<select>`, because the value is free text and the upgrade reuses the same input and options. Its listbox is positioned under the input inside the component (not a top-layer popover), so it is never wider than the field. Options are filtered by "contains", case-insensitive, like the native datalist popups in Chromium and Firefox. See [Combobox (typeahead) explainer](https://odonckers.github.io/domestic-ui/explainers/combobox.md).
+- **Our choice:** `<dui-combobox>` upgrades a native `<input list>` + `<datalist>`, not a `<select>`, because the value is free text and the upgrade reuses the same input and options. Its listbox is positioned under the input inside the component (not a top-layer popover), so it is never wider than the field. Options are filtered by "contains", case-insensitive, like the native datalist popups in Chromium and Firefox. See [Combobox explainer](https://odonckers.github.io/domestic-ui/explainers/combobox.md).
 - **Our choice:** `<dui-toolbar>` keeps `role="toolbar"` in the markup, because a labelled group of Tab stops is still correct without the script; only the roving focus is added.
 - **Our choice:** navigation lists (nav, tabs, pagination) drop the link underline, because their role is clear from the list ([F73](https://www.w3.org/WAI/WCAG22/Techniques/failures/F73) is about links in running text); hover brings it back. Breadcrumb links keep it, because they read as text.
 - **Our choice:** "current" is never color alone: the nav item gets an accent bar, a tint and bold text (in a sidebar too: the nav molecule is the app shell's sidebar navigation, extended with decorative icons rather than forked into an organism, so there is one navigation API); the current page in pagination is filled and bold; the selected tab gets a bar and full-strength text.
@@ -3242,9 +3131,9 @@ From [`css/components/molecules/README.md`](https://github.com/odonckers/domesti
 
 ## Organisms
 
-Page: https://odonckers.github.io/domestic-ui/organisms/index.html
+Page: https://odonckers.github.io/domestic-ui/components/organisms/index.html
 
-Larger sections of an interface built from molecules and atoms. A level of [Atomic Design](https://atomicdesign.bradfrost.com/); APIs follow the [component API convention](https://odonckers.github.io/domestic-ui/index.md#component-api).
+Larger sections of an interface built from molecules and atoms. A level of [Atomic Design](https://atomicdesign.bradfrost.com/); APIs follow the [component API convention](https://odonckers.github.io/domestic-ui/index.md#component-api). Each pattern follows a native HTML element or a [WAI-ARIA APG pattern](https://www.w3.org/WAI/ARIA/apg/patterns/) where one exists. Otherwise it stays close to plain HTML and is labeled **Our choice**.
 
 ### Our choices
 
@@ -3265,7 +3154,7 @@ From [`css/components/organisms/README.md`](https://github.com/odonckers/domesti
 | --- | --- |
 | Filters that apply on every keystroke | Not built in. A page MAY apply on change, but the default is a submit button, so several filters can be set without interruptions and the form works without JavaScript. |
 | A `<fieldset>` as the top-level form section | Not used. A `<legend>` cannot be placed in a grid column; sections are headed `<section>` elements, with fieldsets for groups inside them. |
-| App shell, sidebar navigation | Not organisms. The app shell is a layout ([`app-shell.css`](https://odonckers.github.io/domestic-ui/patterns/app-shell.md), with [`<dui-app-shell>`](https://github.com/odonckers/domestic-ui/blob/main/web-components/dui-app-shell.js)) and the sidebar navigation is the [nav molecule](https://odonckers.github.io/domestic-ui/patterns/nav.md) (`data-nav="vertical"`); see [app-shell.md](https://odonckers.github.io/domestic-ui/explainers/app-shell.md). |
+| App shell, sidebar navigation | Not organisms. The app shell is a layout ([`app-shell.css`](https://odonckers.github.io/domestic-ui/layouts/app-shell.md), with [`<dui-app-shell>`](https://github.com/odonckers/domestic-ui/blob/main/web-components/dui-app-shell.js)) and the sidebar navigation is the [nav molecule](https://odonckers.github.io/domestic-ui/components/molecules/nav.md) (`data-nav="vertical"`); see [app-shell.md](https://odonckers.github.io/domestic-ui/explainers/app-shell.md). |
 | Tree view for navigation | Not used. An [APG Tree View](https://www.w3.org/WAI/ARIA/apg/patterns/treeview/) is for hierarchies users navigate as data; site navigation is disclosure groups and links. |
 | Editable cells, arrow keys between cells | Not in the data table. Cells that are edited in place make the table an [APG Grid](https://www.w3.org/WAI/ARIA/apg/patterns/grid/), a different widget with its own keyboard model. |
 | Announcing the new order after a sort | Not done. As in the APG Sortable Table example, `aria-sort` on the header is the announcement; a caption hint says which headers sort. |
@@ -3361,7 +3250,7 @@ Our choice: the layout is chosen from the children's elements (a \<nav> breadcru
 
 ### See also
 
-- [Organisms](https://odonckers.github.io/domestic-ui/organisms/index.md)
+- [Organisms](https://odonckers.github.io/domestic-ui/components/organisms/index.md)
 - [Component API convention](https://odonckers.github.io/domestic-ui/index.md#component-api)
 - [Accessibility baseline](https://odonckers.github.io/domestic-ui/principles/accessibility-baseline-wcag-22-aa.md)
 - Source: [`css/components/organisms/page-header.css`](https://github.com/odonckers/domestic-ui/blob/main/css/components/organisms/page-header.css), [`examples/organisms/page-header.html`](https://github.com/odonckers/domestic-ui/blob/main/examples/organisms/page-header.html)
@@ -3377,9 +3266,11 @@ For comparison only; these are not the standard this system follows.
 
 ## Alerts
 
-Page: https://odonckers.github.io/domestic-ui/patterns/alerts.html
+Page: https://odonckers.github.io/domestic-ui/components/molecules/alerts.html
 
 Status messages, from notices in the page to live alerts and toasts.
+
+**Rationale:** [Toast explainer](https://odonckers.github.io/domestic-ui/explainers/toast.md) records the design choices and the alternatives considered.
 
 _Diagram: An alert is a notice at the top of the content area under the heading, and a toast appears in the bottom corner at the end of the window._
 
@@ -3466,7 +3357,7 @@ A new toast fades in and lifts by `--dui-motion-distance` over `--dui-motion-dur
 
 ### See also
 
-- [Molecules](https://odonckers.github.io/domestic-ui/molecules/index.md)
+- [Molecules](https://odonckers.github.io/domestic-ui/components/molecules/index.md)
 - Source: [`css/components/molecules/alerts.css`](https://github.com/odonckers/domestic-ui/blob/main/css/components/molecules/alerts.css), [`examples/molecules/alerts.html`](https://github.com/odonckers/domestic-ui/blob/main/examples/molecules/alerts.html)
 
 ### How other systems do it
@@ -3479,7 +3370,7 @@ For comparison only; these are not the standard this system follows.
 
 ## Breadcrumb
 
-Page: https://odonckers.github.io/domestic-ui/patterns/breadcrumb.html
+Page: https://odonckers.github.io/domestic-ui/components/molecules/breadcrumb.html
 
 The path to the current page: an ordered list of links in a labelled `<nav>`.
 
@@ -3539,7 +3430,7 @@ See the keyboard section of the [APG Breadcrumb pattern](https://www.w3.org/WAI/
 
 ### See also
 
-- [Molecules](https://odonckers.github.io/domestic-ui/molecules/index.md)
+- [Molecules](https://odonckers.github.io/domestic-ui/components/molecules/index.md)
 - Source: [`css/components/molecules/breadcrumb.css`](https://github.com/odonckers/domestic-ui/blob/main/css/components/molecules/breadcrumb.css), [`examples/molecules/breadcrumb.html`](https://github.com/odonckers/domestic-ui/blob/main/examples/molecules/breadcrumb.html)
 - Demos: Orders view ([Plain HTML](https://github.com/odonckers/domestic-ui/blob/main/demos/vanilla/orders.html), [React](https://github.com/odonckers/domestic-ui/blob/main/demos/react/src/OrdersPage.tsx), [Angular](https://github.com/odonckers/domestic-ui/tree/main/demos/angular/src/app/orders), [Astro](https://github.com/odonckers/domestic-ui/blob/main/demos/astro/src/pages/orders.astro))
 
@@ -3553,11 +3444,13 @@ For comparison only; these are not the standard this system follows.
 
 ## Card
 
-Page: https://odonckers.github.io/domestic-ui/patterns/card.html
+Page: https://odonckers.github.io/domestic-ui/components/molecules/card.html
 
 A self-contained item, such as an article teaser, on a raised surface.
 
 **Our choice:** No standard exists: an `<article>` whose heading holds the one link, so the link name stays short.
+
+**Rationale:** [Card explainer](https://odonckers.github.io/domestic-ui/explainers/card.md) records the design choices and the alternatives considered.
 
 _Diagram: Cards sit in a grid in the content area, each a raised box with a heading link and a short text._
 
@@ -3627,7 +3520,7 @@ Children: an optional first `<img>` (or `<picture>`, `<video>`) as media, a head
 
 ### See also
 
-- [Molecules](https://odonckers.github.io/domestic-ui/molecules/index.md)
+- [Molecules](https://odonckers.github.io/domestic-ui/components/molecules/index.md)
 - Source: [`css/components/molecules/card.css`](https://github.com/odonckers/domestic-ui/blob/main/css/components/molecules/card.css), [`examples/molecules/card.html`](https://github.com/odonckers/domestic-ui/blob/main/examples/molecules/card.html)
 
 ### How other systems do it
@@ -3638,11 +3531,137 @@ For comparison only; these are not the standard this system follows.
 - [Material Design 3: Cards](https://m3.material.io/components/cards/overview)
 - Vercel Geist: No equivalent
 
+## Combobox
+
+Page: https://odonckers.github.io/domestic-ui/components/molecules/combobox.html
+
+A text field that suggests values as you type: `<datalist>` first, an APG combobox where it falls short.
+
+**Rationale:** [Combobox explainer](https://odonckers.github.io/domestic-ui/explainers/combobox.md) records the design choices and the alternatives considered.
+
+_Diagram: A combobox is a text field in a form whose list of suggestions opens right under it as you type._
+
+### Live example
+
+#### Typeahead
+
+```html
+<dui-combobox>
+  <label for="city">City</label>
+  <input type="text" id="city" name="city" list="city-options">
+  <datalist id="city-options">
+    <option value="Amsterdam"></option>
+    <option value="Athens"></option>
+    <option value="Berlin"></option>
+    <option value="Bern"></option>
+    <option value="Brussels"></option>
+    <option value="Copenhagen"></option>
+    <option value="Dublin"></option>
+    <option value="Lisbon"></option>
+    <option value="Madrid"></option>
+    <option value="Oslo"></option>
+    <option value="Paris"></option>
+    <option value="Rome"></option>
+    <option value="Vienna"></option>
+  </datalist>
+</dui-combobox>
+```
+
+#### Typeahead in a form
+
+```html
+<form id="ship-form" class="stack">
+  <dui-combobox>
+    <label for="carrier">Carrier</label>
+    <input type="text" id="carrier" name="carrier" list="carrier-options" required>
+    <datalist id="carrier-options">
+      <option value="DHL Express" label="Next day"></option>
+      <option value="DPD Classic" label="2 to 3 days"></option>
+      <option value="FedEx International" label="Next day"></option>
+      <option value="PostNL Parcel" label="1 to 2 days"></option>
+      <option value="UPS Standard" label="2 to 5 days"></option>
+    </datalist>
+  </dui-combobox>
+  <p><button type="submit">Ship order</button></p>
+  <p role="status" id="ship-result"></p>
+</form>
+```
+
+#### Options loaded by the page
+
+```html
+<dui-combobox id="country-combobox">
+  <label for="country">Country</label>
+  <input type="text" id="country" name="country" list="country-options">
+  <datalist id="country-options"></datalist>
+</dui-combobox>
+```
+
+### Attributes
+
+| Attribute or value | Effect |
+| --- | --- |
+| `<dui-combobox>` | wraps a `<label>`, an `<input list>` and its `<datalist>` |
+| `<option value="…" label="…">` | the suggestions; an optional label shows as a hint |
+| `dui-combobox-filter` | event, cancelable, detail { query }: cancel it to load options yourself |
+| `element.setOptions([...])` | replaces the options: strings or { value, label } objects |
+
+#### Keyboard
+
+| Key | Action |
+| --- | --- |
+| <kbd>Down Arrow</kbd> | opens the list and moves to the next option (the first if none) |
+| <kbd>Up Arrow</kbd> | opens the list and moves to the previous option (the last if none) |
+| <kbd>Alt+Down Arrow</kbd> | opens the list without moving to an option |
+| <kbd>Enter</kbd> | accepts the active option and closes the list |
+| <kbd>Escape</kbd> | closes the list; if it is already closed, clears the input |
+| <kbd>Home</kbd> / <kbd>End</kbd> | moves the caret to the start or end of the input; the list loses its active option |
+| <kbd>Typing</kbd> | filters the options |
+| <kbd>Tab</kbd> | closes the list without accepting an option |
+
+### Accessibility
+
+- A text field that suggests values as you type, following the APG Combobox pattern, list autocomplete variant: the input keeps focus, a listbox of matching options opens below it, and the arrow keys move an active option shown with aria-activedescendant.
+- The listbox is exactly as wide as the combobox, so it never overflows the viewport sideways (WCAG 1.4.10), and it needs neither anchor positioning nor the popover fallback that centers a panel at the bottom of the viewport.
+- The input has role="combobox", aria-autocomplete="list", aria-expanded and aria-controls; the list is role="listbox", named by the label, with role="option" items.
+- Focus never leaves the input; the active option is aria-activedescendant and has aria-selected="true", and it is drawn with an outline in the focus color (3:1, WCAG 1.4.11) and a tint, so it does not rely on color alone (WCAG 1.4.1).
+- A polite role="status" region, in the page from the upgrade on, announces how many options match after typing pauses (WCAG 4.1.3).
+- Options are at least --dui-size-control tall (44px, 32px compact; WCAG 2.5.8).
+- In forced colors mode the list keeps its border and the active option its outline, in system colors.
+- The list fades and grows from --dui-motion-zoom over --dui-motion-duration-fast, entering with --dui-motion-easing-enter and leaving with --dui-motion-easing-exit; the zoom runs for that duration times --dui-motion-movement, so reduced motion keeps only the fade (WCAG 2.3.3).
+
+### Specifications
+
+- [HTML `<datalist>` element](https://html.spec.whatwg.org/multipage/form-elements.html#the-datalist-element)
+- [APG Combobox pattern](https://www.w3.org/WAI/ARIA/apg/patterns/combobox/)
+- [MDN `<datalist>`](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/datalist)
+- [APG combobox autocomplete list](https://www.w3.org/WAI/ARIA/apg/patterns/combobox/examples/combobox-autocomplete-list/)
+- [MDN `combobox` role](https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Reference/Roles/combobox_role)
+- [MDN `listbox` role](https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Reference/Roles/listbox_role)
+- [WCAG Status messages](https://www.w3.org/WAI/WCAG22/Understanding/status-messages.html)
+- [WCAG Target size minimum](https://www.w3.org/WAI/WCAG22/Understanding/target-size-minimum.html)
+
+### See also
+
+- [Molecules](https://odonckers.github.io/domestic-ui/components/molecules/index.md)
+- Source: [`css/components/molecules/combobox.css`](https://github.com/odonckers/domestic-ui/blob/main/css/components/molecules/combobox.css), [`examples/molecules/combobox.html`](https://github.com/odonckers/domestic-ui/blob/main/examples/molecules/combobox.html)
+- Demos: Orders view ([Plain HTML](https://github.com/odonckers/domestic-ui/blob/main/demos/vanilla/orders.html), [React](https://github.com/odonckers/domestic-ui/blob/main/demos/react/src/OrdersPage.tsx), [Angular](https://github.com/odonckers/domestic-ui/tree/main/demos/angular/src/app/orders), [Astro](https://github.com/odonckers/domestic-ui/blob/main/demos/astro/src/pages/orders.astro))
+
+### How other systems do it
+
+For comparison only; these are not the standard this system follows.
+
+- [Apple Human Interface Guidelines: Combo boxes](https://developer.apple.com/design/human-interface-guidelines/combo-boxes)
+- Material Design 3: No equivalent
+- [Vercel Geist: Combobox](https://vercel.com/geist/combobox)
+
 ## Dialog and drawer
 
-Page: https://odonckers.github.io/domestic-ui/patterns/dialog.html
+Page: https://odonckers.github.io/domestic-ui/components/molecules/dialog.html
 
 A modal `<dialog>`, either centered or as a drawer along one edge of the viewport.
+
+**Rationale:** [Drawer explainer](https://odonckers.github.io/domestic-ui/explainers/drawer.md) records the design choices and the alternatives considered.
 
 _Diagram: A modal dialog sits centred over the dimmed page; a drawer takes the same place along one edge of the window._
 
@@ -3768,7 +3787,7 @@ Dialogs and drawers use `--dui-elevation-dialog` and its surface (the highest le
 
 ### See also
 
-- [Organisms](https://odonckers.github.io/domestic-ui/organisms/index.md)
+- [Molecules](https://odonckers.github.io/domestic-ui/components/molecules/index.md)
 - Source: [`css/components/molecules/dialog.css`](https://github.com/odonckers/domestic-ui/blob/main/css/components/molecules/dialog.css), [`examples/molecules/dialog.html`](https://github.com/odonckers/domestic-ui/blob/main/examples/molecules/dialog.html)
 
 ### How other systems do it
@@ -3781,7 +3800,7 @@ For comparison only; these are not the standard this system follows.
 
 ## Disclosure
 
-Page: https://odonckers.github.io/domestic-ui/patterns/disclosure.html
+Page: https://odonckers.github.io/domestic-ui/components/molecules/disclosure.html
 
 A summary that shows or hides more content, built on `<details>` and `<summary>`.
 
@@ -3876,7 +3895,7 @@ _Diagram: Disclosures are summary rows in the content area, such as an accordion
 
 ### See also
 
-- [Molecules](https://odonckers.github.io/domestic-ui/molecules/index.md)
+- [Molecules](https://odonckers.github.io/domestic-ui/components/molecules/index.md)
 - Source: [`css/components/molecules/disclosure.css`](https://github.com/odonckers/domestic-ui/blob/main/css/components/molecules/disclosure.css), [`examples/molecules/disclosure.html`](https://github.com/odonckers/domestic-ui/blob/main/examples/molecules/disclosure.html)
 - Demos: Dashboard view ([Plain HTML](https://github.com/odonckers/domestic-ui/blob/main/demos/vanilla/index.html), [React](https://github.com/odonckers/domestic-ui/blob/main/demos/react/src/DashboardPage.tsx), [Angular](https://github.com/odonckers/domestic-ui/tree/main/demos/angular/src/app/dashboard), [Astro](https://github.com/odonckers/domestic-ui/blob/main/demos/astro/src/pages/index.astro))
 
@@ -3890,7 +3909,7 @@ For comparison only; these are not the standard this system follows.
 
 ## Menu button
 
-Page: https://odonckers.github.io/domestic-ui/patterns/menu-button.html
+Page: https://odonckers.github.io/domestic-ui/components/molecules/menu-button.html
 
 A button that opens a menu of actions.
 
@@ -3968,7 +3987,7 @@ Added by the component: `aria-haspopup`, `aria-expanded`, `role="menu"`, `role="
 
 ### See also
 
-- [Molecules](https://odonckers.github.io/domestic-ui/molecules/index.md)
+- [Molecules](https://odonckers.github.io/domestic-ui/components/molecules/index.md)
 - Source: [`css/components/molecules/menu-button.css`](https://github.com/odonckers/domestic-ui/blob/main/css/components/molecules/menu-button.css), [`examples/molecules/menu-button.html`](https://github.com/odonckers/domestic-ui/blob/main/examples/molecules/menu-button.html)
 - Demos: Dashboard view ([Plain HTML](https://github.com/odonckers/domestic-ui/blob/main/demos/vanilla/index.html), [React](https://github.com/odonckers/domestic-ui/blob/main/demos/react/src/DashboardPage.tsx), [Angular](https://github.com/odonckers/domestic-ui/tree/main/demos/angular/src/app/dashboard), [Astro](https://github.com/odonckers/domestic-ui/blob/main/demos/astro/src/pages/index.astro)); Account settings view ([Plain HTML](https://github.com/odonckers/domestic-ui/blob/main/demos/vanilla/settings.html), [React](https://github.com/odonckers/domestic-ui/blob/main/demos/react/src/SettingsPage.tsx), [Angular](https://github.com/odonckers/domestic-ui/tree/main/demos/angular/src/app/settings), [Astro](https://github.com/odonckers/domestic-ui/blob/main/demos/astro/src/pages/settings.astro)); Orders view ([Plain HTML](https://github.com/odonckers/domestic-ui/blob/main/demos/vanilla/orders.html), [React](https://github.com/odonckers/domestic-ui/blob/main/demos/react/src/OrdersPage.tsx), [Angular](https://github.com/odonckers/domestic-ui/tree/main/demos/angular/src/app/orders), [Astro](https://github.com/odonckers/domestic-ui/blob/main/demos/astro/src/pages/orders.astro))
 
@@ -3982,11 +4001,13 @@ For comparison only; these are not the standard this system follows.
 
 ## Pagination
 
-Page: https://odonckers.github.io/domestic-ui/patterns/pagination.html
+Page: https://odonckers.github.io/domestic-ui/components/molecules/pagination.html
 
 Links to the pages of a long list of results.
 
 **Our choice:** No standard exists: a labelled `<nav>` with a list of links and `aria-current="page"`, as for breadcrumbs.
+
+**Rationale:** [Pagination explainer](https://odonckers.github.io/domestic-ui/explainers/pagination.md) records the design choices and the alternatives considered.
 
 _Diagram: Pagination is the row of page links under a long list of results, with the current page marked._
 
@@ -4056,7 +4077,7 @@ _Diagram: Pagination is the row of page links under a long list of results, with
 
 ### See also
 
-- [Molecules](https://odonckers.github.io/domestic-ui/molecules/index.md)
+- [Molecules](https://odonckers.github.io/domestic-ui/components/molecules/index.md)
 - Source: [`css/components/molecules/pagination.css`](https://github.com/odonckers/domestic-ui/blob/main/css/components/molecules/pagination.css), [`examples/molecules/pagination.html`](https://github.com/odonckers/domestic-ui/blob/main/examples/molecules/pagination.html)
 
 ### How other systems do it
@@ -4069,7 +4090,7 @@ For comparison only; these are not the standard this system follows.
 
 ## Popover
 
-Page: https://odonckers.github.io/domestic-ui/patterns/popover.html
+Page: https://odonckers.github.io/domestic-ui/components/molecules/popover.html
 
 Content shown on top of the page from a button, with the `popover` attribute.
 
@@ -4155,7 +4176,7 @@ Panels use `--dui-elevation-popover` and `--dui-elevation-popover-surface`; tool
 
 ### Accessibility
 
-- A popover does not trap focus; decisions belong in a modal `<dialog>`. For actions, use the [menu button](https://odonckers.github.io/domestic-ui/patterns/menu-button.md).
+- A popover does not trap focus; decisions belong in a modal `<dialog>`. For actions, use the [menu button](https://odonckers.github.io/domestic-ui/components/molecules/menu-button.md).
 - A tooltip supplements the trigger's name, shows on focus and hover, and closes on <kbd>Esc</kbd> ([WCAG 1.4.13](https://www.w3.org/WAI/WCAG22/Understanding/content-on-hover-or-focus.html); [APG Tooltip](https://www.w3.org/WAI/ARIA/apg/patterns/tooltip/) is a draft).
 
 ### Specifications
@@ -4172,7 +4193,7 @@ Panels use `--dui-elevation-popover` and `--dui-elevation-popover-surface`; tool
 
 ### See also
 
-- [Molecules](https://odonckers.github.io/domestic-ui/molecules/index.md)
+- [Molecules](https://odonckers.github.io/domestic-ui/components/molecules/index.md)
 - Source: [`css/components/molecules/popover.css`](https://github.com/odonckers/domestic-ui/blob/main/css/components/molecules/popover.css), [`examples/molecules/popover.html`](https://github.com/odonckers/domestic-ui/blob/main/examples/molecules/popover.html)
 - Demos: Dashboard view ([Plain HTML](https://github.com/odonckers/domestic-ui/blob/main/demos/vanilla/index.html), [React](https://github.com/odonckers/domestic-ui/blob/main/demos/react/src/DashboardPage.tsx), [Angular](https://github.com/odonckers/domestic-ui/tree/main/demos/angular/src/app/dashboard), [Astro](https://github.com/odonckers/domestic-ui/blob/main/demos/astro/src/pages/index.astro)); Account settings view ([Plain HTML](https://github.com/odonckers/domestic-ui/blob/main/demos/vanilla/settings.html), [React](https://github.com/odonckers/domestic-ui/blob/main/demos/react/src/SettingsPage.tsx), [Angular](https://github.com/odonckers/domestic-ui/tree/main/demos/angular/src/app/settings), [Astro](https://github.com/odonckers/domestic-ui/blob/main/demos/astro/src/pages/settings.astro)); Orders view ([Plain HTML](https://github.com/odonckers/domestic-ui/blob/main/demos/vanilla/orders.html), [React](https://github.com/odonckers/domestic-ui/blob/main/demos/react/src/OrdersPage.tsx), [Angular](https://github.com/odonckers/domestic-ui/tree/main/demos/angular/src/app/orders), [Astro](https://github.com/odonckers/domestic-ui/blob/main/demos/astro/src/pages/orders.astro))
 
@@ -4186,7 +4207,7 @@ For comparison only; these are not the standard this system follows.
 
 ## Search
 
-Page: https://odonckers.github.io/domestic-ui/patterns/search.html
+Page: https://odonckers.github.io/domestic-ui/components/molecules/search.html
 
 A search form in a `<search>` landmark with an `<input type="search">`.
 
@@ -4247,7 +4268,7 @@ _Diagram: Site search sits in the app bar as a search input with a Search button
 
 ### See also
 
-- [Molecules](https://odonckers.github.io/domestic-ui/molecules/index.md)
+- [Molecules](https://odonckers.github.io/domestic-ui/components/molecules/index.md)
 - Source: [`css/components/molecules/search.css`](https://github.com/odonckers/domestic-ui/blob/main/css/components/molecules/search.css), [`examples/molecules/search.html`](https://github.com/odonckers/domestic-ui/blob/main/examples/molecules/search.html)
 
 ### How other systems do it
@@ -4260,7 +4281,7 @@ For comparison only; these are not the standard this system follows.
 
 ## Site navigation
 
-Page: https://odonckers.github.io/domestic-ui/patterns/nav.html
+Page: https://odonckers.github.io/domestic-ui/components/molecules/nav.html
 
 The main links of a site in a `<nav>` landmark, with the current page marked.
 
@@ -4367,7 +4388,7 @@ Horizontal dropdowns use `--dui-elevation-popover` and its surface, like a popov
 
 ### See also
 
-- [Organisms](https://odonckers.github.io/domestic-ui/organisms/index.md)
+- [Molecules](https://odonckers.github.io/domestic-ui/components/molecules/index.md)
 - Source: [`css/components/molecules/nav.css`](https://github.com/odonckers/domestic-ui/blob/main/css/components/molecules/nav.css), [`examples/molecules/nav.html`](https://github.com/odonckers/domestic-ui/blob/main/examples/molecules/nav.html)
 - Demos: Dashboard view ([Plain HTML](https://github.com/odonckers/domestic-ui/blob/main/demos/vanilla/index.html), [React](https://github.com/odonckers/domestic-ui/blob/main/demos/react/src/DashboardPage.tsx), [Angular](https://github.com/odonckers/domestic-ui/tree/main/demos/angular/src/app/dashboard), [Astro](https://github.com/odonckers/domestic-ui/blob/main/demos/astro/src/pages/index.astro)); Account settings view ([Plain HTML](https://github.com/odonckers/domestic-ui/blob/main/demos/vanilla/settings.html), [React](https://github.com/odonckers/domestic-ui/blob/main/demos/react/src/SettingsPage.tsx), [Angular](https://github.com/odonckers/domestic-ui/tree/main/demos/angular/src/app/settings), [Astro](https://github.com/odonckers/domestic-ui/blob/main/demos/astro/src/pages/settings.astro)); Orders view ([Plain HTML](https://github.com/odonckers/domestic-ui/blob/main/demos/vanilla/orders.html), [React](https://github.com/odonckers/domestic-ui/blob/main/demos/react/src/OrdersPage.tsx), [Angular](https://github.com/odonckers/domestic-ui/tree/main/demos/angular/src/app/orders), [Astro](https://github.com/odonckers/domestic-ui/blob/main/demos/astro/src/pages/orders.astro))
 
@@ -4381,7 +4402,7 @@ For comparison only; these are not the standard this system follows.
 
 ## Tabs
 
-Page: https://odonckers.github.io/domestic-ui/patterns/tabs.html
+Page: https://odonckers.github.io/domestic-ui/components/molecules/tabs.html
 
 Sections of content shown one at a time, chosen from a list of tabs.
 
@@ -4505,7 +4526,7 @@ _Diagram: Tabs are a row of labels under a heading in the content area, with the
 
 ### See also
 
-- [Molecules](https://odonckers.github.io/domestic-ui/molecules/index.md)
+- [Molecules](https://odonckers.github.io/domestic-ui/components/molecules/index.md)
 - Source: [`css/components/molecules/tabs.css`](https://github.com/odonckers/domestic-ui/blob/main/css/components/molecules/tabs.css), [`examples/molecules/tabs.html`](https://github.com/odonckers/domestic-ui/blob/main/examples/molecules/tabs.html)
 
 ### How other systems do it
@@ -4518,7 +4539,7 @@ For comparison only; these are not the standard this system follows.
 
 ## Toolbar
 
-Page: https://odonckers.github.io/domestic-ui/patterns/toolbar.html
+Page: https://odonckers.github.io/domestic-ui/components/molecules/toolbar.html
 
 A row of related controls that is one stop in the tab order.
 
@@ -4581,7 +4602,7 @@ _Diagram: A toolbar is a row of related buttons at the top of the area it acts o
 
 ### See also
 
-- [Molecules](https://odonckers.github.io/domestic-ui/molecules/index.md)
+- [Molecules](https://odonckers.github.io/domestic-ui/components/molecules/index.md)
 - Source: [`css/components/molecules/toolbar.css`](https://github.com/odonckers/domestic-ui/blob/main/css/components/molecules/toolbar.css), [`examples/molecules/toolbar.html`](https://github.com/odonckers/domestic-ui/blob/main/examples/molecules/toolbar.html)
 - Demos: Orders view ([Plain HTML](https://github.com/odonckers/domestic-ui/blob/main/demos/vanilla/orders.html), [React](https://github.com/odonckers/domestic-ui/blob/main/demos/react/src/OrdersPage.tsx), [Angular](https://github.com/odonckers/domestic-ui/tree/main/demos/angular/src/app/orders), [Astro](https://github.com/odonckers/domestic-ui/blob/main/demos/astro/src/pages/orders.astro))
 
@@ -4593,135 +4614,15 @@ For comparison only; these are not the standard this system follows.
 - [Material Design 3: Toolbars](https://m3.material.io/components/toolbars/overview)
 - Vercel Geist: No equivalent
 
-## Typeahead
-
-Page: https://odonckers.github.io/domestic-ui/patterns/typeahead.html
-
-A text field that suggests values as you type: `<datalist>` first, an APG combobox where it falls short.
-
-_Diagram: A typeahead is a text field in a form whose list of suggestions opens right under it as you type._
-
-### Live example
-
-#### Typeahead
-
-```html
-<dui-combobox>
-  <label for="city">City</label>
-  <input type="text" id="city" name="city" list="city-options">
-  <datalist id="city-options">
-    <option value="Amsterdam"></option>
-    <option value="Athens"></option>
-    <option value="Berlin"></option>
-    <option value="Bern"></option>
-    <option value="Brussels"></option>
-    <option value="Copenhagen"></option>
-    <option value="Dublin"></option>
-    <option value="Lisbon"></option>
-    <option value="Madrid"></option>
-    <option value="Oslo"></option>
-    <option value="Paris"></option>
-    <option value="Rome"></option>
-    <option value="Vienna"></option>
-  </datalist>
-</dui-combobox>
-```
-
-#### Typeahead in a form
-
-```html
-<form id="ship-form" class="stack">
-  <dui-combobox>
-    <label for="carrier">Carrier</label>
-    <input type="text" id="carrier" name="carrier" list="carrier-options" required>
-    <datalist id="carrier-options">
-      <option value="DHL Express" label="Next day"></option>
-      <option value="DPD Classic" label="2 to 3 days"></option>
-      <option value="FedEx International" label="Next day"></option>
-      <option value="PostNL Parcel" label="1 to 2 days"></option>
-      <option value="UPS Standard" label="2 to 5 days"></option>
-    </datalist>
-  </dui-combobox>
-  <p><button type="submit">Ship order</button></p>
-  <p role="status" id="ship-result"></p>
-</form>
-```
-
-#### Options loaded by the page
-
-```html
-<dui-combobox id="country-combobox">
-  <label for="country">Country</label>
-  <input type="text" id="country" name="country" list="country-options">
-  <datalist id="country-options"></datalist>
-</dui-combobox>
-```
-
-### Attributes
-
-| Attribute or value | Effect |
-| --- | --- |
-| `<dui-combobox>` | wraps a `<label>`, an `<input list>` and its `<datalist>` |
-| `<option value="…" label="…">` | the suggestions; an optional label shows as a hint |
-| `dui-combobox-filter` | event, cancelable, detail { query }: cancel it to load options yourself |
-| `element.setOptions([...])` | replaces the options: strings or { value, label } objects |
-
-#### Keyboard
-
-| Key | Action |
-| --- | --- |
-| <kbd>Down Arrow</kbd> | opens the list and moves to the next option (the first if none) |
-| <kbd>Up Arrow</kbd> | opens the list and moves to the previous option (the last if none) |
-| <kbd>Alt+Down Arrow</kbd> | opens the list without moving to an option |
-| <kbd>Enter</kbd> | accepts the active option and closes the list |
-| <kbd>Escape</kbd> | closes the list; if it is already closed, clears the input |
-| <kbd>Home</kbd> / <kbd>End</kbd> | moves the caret to the start or end of the input; the list loses its active option |
-| <kbd>Typing</kbd> | filters the options |
-| <kbd>Tab</kbd> | closes the list without accepting an option |
-
-### Accessibility
-
-- A text field that suggests values as you type, following the APG Combobox pattern, list autocomplete variant: the input keeps focus, a listbox of matching options opens below it, and the arrow keys move an active option shown with aria-activedescendant.
-- The listbox is exactly as wide as the combobox, so it never overflows the viewport sideways (WCAG 1.4.10), and it needs neither anchor positioning nor the popover fallback that centers a panel at the bottom of the viewport.
-- The input has role="combobox", aria-autocomplete="list", aria-expanded and aria-controls; the list is role="listbox", named by the label, with role="option" items.
-- Focus never leaves the input; the active option is aria-activedescendant and has aria-selected="true", and it is drawn with an outline in the focus color (3:1, WCAG 1.4.11) and a tint, so it does not rely on color alone (WCAG 1.4.1).
-- A polite role="status" region, in the page from the upgrade on, announces how many options match after typing pauses (WCAG 4.1.3).
-- Options are at least --dui-size-control tall (44px, 32px compact; WCAG 2.5.8).
-- In forced colors mode the list keeps its border and the active option its outline, in system colors.
-- The list fades and grows from --dui-motion-zoom over --dui-motion-duration-fast, entering with --dui-motion-easing-enter and leaving with --dui-motion-easing-exit; the zoom runs for that duration times --dui-motion-movement, so reduced motion keeps only the fade (WCAG 2.3.3).
-
-### Specifications
-
-- [HTML `<datalist>` element](https://html.spec.whatwg.org/multipage/form-elements.html#the-datalist-element)
-- [APG Combobox pattern](https://www.w3.org/WAI/ARIA/apg/patterns/combobox/)
-- [MDN `<datalist>`](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/datalist)
-- [APG combobox autocomplete list](https://www.w3.org/WAI/ARIA/apg/patterns/combobox/examples/combobox-autocomplete-list/)
-- [MDN `combobox` role](https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Reference/Roles/combobox_role)
-- [MDN `listbox` role](https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Reference/Roles/listbox_role)
-- [WCAG Status messages](https://www.w3.org/WAI/WCAG22/Understanding/status-messages.html)
-- [WCAG Target size minimum](https://www.w3.org/WAI/WCAG22/Understanding/target-size-minimum.html)
-
-### See also
-
-- [Molecules](https://odonckers.github.io/domestic-ui/molecules/index.md)
-- Source: [`css/components/molecules/combobox.css`](https://github.com/odonckers/domestic-ui/blob/main/css/components/molecules/combobox.css), [`examples/molecules/combobox.html`](https://github.com/odonckers/domestic-ui/blob/main/examples/molecules/combobox.html)
-- Demos: Orders view ([Plain HTML](https://github.com/odonckers/domestic-ui/blob/main/demos/vanilla/orders.html), [React](https://github.com/odonckers/domestic-ui/blob/main/demos/react/src/OrdersPage.tsx), [Angular](https://github.com/odonckers/domestic-ui/tree/main/demos/angular/src/app/orders), [Astro](https://github.com/odonckers/domestic-ui/blob/main/demos/astro/src/pages/orders.astro))
-
-### How other systems do it
-
-For comparison only; these are not the standard this system follows.
-
-- [Apple Human Interface Guidelines: Combo boxes](https://developer.apple.com/design/human-interface-guidelines/combo-boxes)
-- Material Design 3: No equivalent
-- [Vercel Geist: Combobox](https://vercel.com/geist/combobox)
-
 ## App shell
 
-Page: https://odonckers.github.io/domestic-ui/patterns/app-shell.html
+Page: https://odonckers.github.io/domestic-ui/layouts/app-shell.html
 
 The frame of an application: header, primary sidebar, main content and an optional auxiliary sidebar.
 
 **Our choice:** No standard defines an app shell: the landmarks `<header>`, `<nav>`, `<main>` and `<aside>`, placed with CSS grid.
+
+**Rationale:** [App shell explainer](https://odonckers.github.io/domestic-ui/explainers/app-shell.md) and [Auxiliary sidebar explainer](https://odonckers.github.io/domestic-ui/explainers/aux-sidebar.md) records the design choices and the alternatives considered.
 
 _Diagram: The app shell is the whole frame of an app: the app bar across the top, the primary sidebar, the main content and an optional auxiliary sidebar._
 
@@ -5001,165 +4902,9 @@ For comparison only; these are not the standard this system follows.
 - [Material Design 3: Scaffold](https://m3.material.io/foundations/layout/scaffold/overview)
 - Vercel Geist: No equivalent
 
-## Compact density
-
-Page: https://odonckers.github.io/domestic-ui/patterns/density.html
-
-A compact density token that tightens spacing for data-heavy screens.
-
-**Our choice:** No standard exists: `data-density="compact"` on any ancestor re-derives the density tokens; text size never changes and targets stay at least 24 by 24 CSS pixels.
-
-_Diagram: Compact density tightens a data-heavy area such as a table, so it shows more rows in the same height than a comfortable table beside it._
-
-### Live example
-
-#### Comfortable and compact
-
-```html
-<div class="grid" style="--grid-min: 20rem">
-  <section data-density="comfortable" class="panel stack" aria-labelledby="comfortable-title">
-    <h3 id="comfortable-title">Comfortable (default)</h3>
-    <dui-toolbar role="toolbar" aria-label="Order actions (comfortable)">
-      <button type="button">New order</button>
-      <button type="button">Export</button>
-      <hr>
-      <button type="button" aria-pressed="false">Show archived</button>
-    </dui-toolbar>
-    <form class="stack" aria-labelledby="comfortable-form-title comfortable-title">
-      <h4 id="comfortable-form-title">Edit order</h4>
-      <div data-field>
-        <label for="comfortable-customer">Customer</label>
-        <input type="text" id="comfortable-customer" name="customer" value="Ada Lovelace" autocomplete="off">
-      </div>
-      <div data-field>
-        <label for="comfortable-status">Status</label>
-        <select id="comfortable-status" name="status">
-          <option>Open</option>
-          <option selected>Shipped</option>
-          <option>Delivered</option>
-        </select>
-      </div>
-      <dui-combobox>
-        <label for="comfortable-carrier">Carrier</label>
-        <input type="text" id="comfortable-carrier" name="carrier" list="comfortable-carriers">
-        <datalist id="comfortable-carriers">
-          <option value="DHL Express"></option>
-          <option value="DPD Classic"></option>
-          <option value="PostNL Parcel"></option>
-          <option value="UPS Standard"></option>
-        </datalist>
-      </dui-combobox>
-      <label><input type="checkbox" name="notify" checked> Email the customer</label>
-      <label><input type="checkbox" role="switch" name="priority"> Priority</label>
-      <p class="cluster">
-        <button type="submit">Save</button>
-        <button type="reset">Reset</button>
-      </p>
-    </form>
-    <section data-scroll="inline" aria-labelledby="comfortable-orders comfortable-title" tabindex="0">
-      <table>
-        <caption id="comfortable-orders">Recent orders</caption>
-        <thead>
-          <tr><th scope="col">Order</th><th scope="col">Customer</th><th scope="col">Status</th><th scope="col">Total</th></tr>
-        </thead>
-        <tbody>
-          <tr><td>1042</td><td>Ada Lovelace</td><td>Shipped</td><td>€120.00</td></tr>
-          <tr><td>1041</td><td>Alan Turing</td><td>Open</td><td>€48.50</td></tr>
-          <tr><td>1040</td><td>Grace Hopper</td><td>Delivered</td><td>€310.25</td></tr>
-          <tr><td>1039</td><td>Katherine Johnson</td><td>Delivered</td><td>€72.00</td></tr>
-        </tbody>
-      </table>
-    </section>
-  </section>
-  <section data-density="compact" class="panel stack" aria-labelledby="compact-title">
-    <h3 id="compact-title">Compact</h3>
-    <dui-toolbar role="toolbar" aria-label="Order actions (compact)">
-      <button type="button">New order</button>
-      <button type="button">Export</button>
-      <hr>
-      <button type="button" aria-pressed="false">Show archived</button>
-    </dui-toolbar>
-    <form class="stack" aria-labelledby="compact-form-title compact-title">
-      <h4 id="compact-form-title">Edit order</h4>
-      <div data-field>
-        <label for="compact-customer">Customer</label>
-        <input type="text" id="compact-customer" name="customer" value="Ada Lovelace" autocomplete="off">
-      </div>
-      <div data-field>
-        <label for="compact-status">Status</label>
-        <select id="compact-status" name="status">
-          <option>Open</option>
-          <option selected>Shipped</option>
-          <option>Delivered</option>
-        </select>
-      </div>
-      <dui-combobox>
-        <label for="compact-carrier">Carrier</label>
-        <input type="text" id="compact-carrier" name="carrier" list="compact-carriers">
-        <datalist id="compact-carriers">
-          <option value="DHL Express"></option>
-          <option value="DPD Classic"></option>
-          <option value="PostNL Parcel"></option>
-          <option value="UPS Standard"></option>
-        </datalist>
-      </dui-combobox>
-      <label><input type="checkbox" name="notify" checked> Email the customer</label>
-      <label><input type="checkbox" role="switch" name="priority"> Priority</label>
-      <p class="cluster">
-        <button type="submit">Save</button>
-        <button type="reset">Reset</button>
-      </p>
-    </form>
-    <section data-scroll="inline" aria-labelledby="compact-orders compact-title" tabindex="0">
-      <table>
-        <caption id="compact-orders">Recent orders</caption>
-        <thead>
-          <tr><th scope="col">Order</th><th scope="col">Customer</th><th scope="col">Status</th><th scope="col">Total</th></tr>
-        </thead>
-        <tbody>
-          <tr><td>1042</td><td>Ada Lovelace</td><td>Shipped</td><td>€120.00</td></tr>
-          <tr><td>1041</td><td>Alan Turing</td><td>Open</td><td>€48.50</td></tr>
-          <tr><td>1040</td><td>Grace Hopper</td><td>Delivered</td><td>€310.25</td></tr>
-          <tr><td>1039</td><td>Katherine Johnson</td><td>Delivered</td><td>€72.00</td></tr>
-        </tbody>
-      </table>
-    </section>
-  </section>
-</div>
-```
-
-#### Comfortable inside compact
-
-```html
-<div data-density="compact" class="panel stack">
-  <p class="cluster">
-    <button type="button">Compact button</button>
-    <span data-density="comfortable"><button type="button">Comfortable button</button></span>
-  </p>
-</div>
-```
-
-### Specifications
-
-- [WCAG 2.5.8 Target Size (Minimum)](https://www.w3.org/WAI/WCAG22/Understanding/target-size-minimum.html)
-
-### See also
-
-- [Tokens](https://odonckers.github.io/domestic-ui/tokens/index.md)
-- Source: [`examples/patterns/density.html`](https://github.com/odonckers/domestic-ui/blob/main/examples/patterns/density.html)
-- Demos: Orders view ([Plain HTML](https://github.com/odonckers/domestic-ui/blob/main/demos/vanilla/orders.html), [React](https://github.com/odonckers/domestic-ui/blob/main/demos/react/src/OrdersPage.tsx), [Angular](https://github.com/odonckers/domestic-ui/tree/main/demos/angular/src/app/orders), [Astro](https://github.com/odonckers/domestic-ui/blob/main/demos/astro/src/pages/orders.astro))
-
-### How other systems do it
-
-For comparison only; these are not the standard this system follows.
-
-- Apple Human Interface Guidelines: No equivalent
-- [Material Design 3: Grids & spacing: Density](https://m3.material.io/foundations/layout/grids-spacing/density)
-- Vercel Geist: No equivalent
-
 ## Dashboard
 
-Page: https://odonckers.github.io/domestic-ui/patterns/dashboard.html
+Page: https://odonckers.github.io/domestic-ui/layouts/dashboard.html
 
 A grid of summary sections, each with a heading, that reflows to fit the screen.
 
@@ -5277,7 +5022,7 @@ For comparison only; these are not the standard this system follows.
 
 ## Data table
 
-Page: https://odonckers.github.io/domestic-ui/patterns/data-table.html
+Page: https://odonckers.github.io/domestic-ui/components/organisms/data-table.html
 
 Rows of records in a native `<table>` with a caption, header cells and optional sorting.
 
@@ -5798,7 +5543,7 @@ One row with a single `<td colspan>` holding a message and an optional action.
 
 ### See also
 
-- [Organisms](https://odonckers.github.io/domestic-ui/organisms/index.md)
+- [Organisms](https://odonckers.github.io/domestic-ui/components/organisms/index.md)
 - Source: [`css/components/organisms/data-table.css`](https://github.com/odonckers/domestic-ui/blob/main/css/components/organisms/data-table.css), [`examples/organisms/data-table.html`](https://github.com/odonckers/domestic-ui/blob/main/examples/organisms/data-table.html)
 - Demos: Dashboard view ([Plain HTML](https://github.com/odonckers/domestic-ui/blob/main/demos/vanilla/index.html), [React](https://github.com/odonckers/domestic-ui/blob/main/demos/react/src/DashboardPage.tsx), [Angular](https://github.com/odonckers/domestic-ui/tree/main/demos/angular/src/app/dashboard), [Astro](https://github.com/odonckers/domestic-ui/blob/main/demos/astro/src/pages/index.astro)); Orders view ([Plain HTML](https://github.com/odonckers/domestic-ui/blob/main/demos/vanilla/orders.html), [React](https://github.com/odonckers/domestic-ui/blob/main/demos/react/src/OrdersPage.tsx), [Angular](https://github.com/odonckers/domestic-ui/tree/main/demos/angular/src/app/orders), [Astro](https://github.com/odonckers/domestic-ui/blob/main/demos/astro/src/pages/orders.astro))
 
@@ -5810,9 +5555,167 @@ For comparison only; these are not the standard this system follows.
 - Material Design 3: No equivalent
 - [Vercel Geist: Table](https://vercel.com/geist/table)
 
+## Density
+
+Page: https://odonckers.github.io/domestic-ui/tokens/density.html
+
+A compact density token that tightens spacing for data-heavy screens.
+
+**Our choice:** No standard exists: `data-density="compact"` on any ancestor re-derives the density tokens; text size never changes and targets stay at least 24 by 24 CSS pixels.
+
+**Rationale:** [Density explainer](https://odonckers.github.io/domestic-ui/explainers/density.md) records the design choices and the alternatives considered.
+
+_Diagram: Compact density tightens a data-heavy area such as a table, so it shows more rows in the same height than a comfortable table beside it._
+
+### Live example
+
+#### Comfortable and compact
+
+```html
+<div class="grid" style="--grid-min: 20rem">
+  <section data-density="comfortable" class="panel stack" aria-labelledby="comfortable-title">
+    <h3 id="comfortable-title">Comfortable (default)</h3>
+    <dui-toolbar role="toolbar" aria-label="Order actions (comfortable)">
+      <button type="button">New order</button>
+      <button type="button">Export</button>
+      <hr>
+      <button type="button" aria-pressed="false">Show archived</button>
+    </dui-toolbar>
+    <form class="stack" aria-labelledby="comfortable-form-title comfortable-title">
+      <h4 id="comfortable-form-title">Edit order</h4>
+      <div data-field>
+        <label for="comfortable-customer">Customer</label>
+        <input type="text" id="comfortable-customer" name="customer" value="Ada Lovelace" autocomplete="off">
+      </div>
+      <div data-field>
+        <label for="comfortable-status">Status</label>
+        <select id="comfortable-status" name="status">
+          <option>Open</option>
+          <option selected>Shipped</option>
+          <option>Delivered</option>
+        </select>
+      </div>
+      <dui-combobox>
+        <label for="comfortable-carrier">Carrier</label>
+        <input type="text" id="comfortable-carrier" name="carrier" list="comfortable-carriers">
+        <datalist id="comfortable-carriers">
+          <option value="DHL Express"></option>
+          <option value="DPD Classic"></option>
+          <option value="PostNL Parcel"></option>
+          <option value="UPS Standard"></option>
+        </datalist>
+      </dui-combobox>
+      <label><input type="checkbox" name="notify" checked> Email the customer</label>
+      <label><input type="checkbox" role="switch" name="priority"> Priority</label>
+      <p class="cluster">
+        <button type="submit">Save</button>
+        <button type="reset">Reset</button>
+      </p>
+    </form>
+    <section data-scroll="inline" aria-labelledby="comfortable-orders comfortable-title" tabindex="0">
+      <table>
+        <caption id="comfortable-orders">Recent orders</caption>
+        <thead>
+          <tr><th scope="col">Order</th><th scope="col">Customer</th><th scope="col">Status</th><th scope="col">Total</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>1042</td><td>Ada Lovelace</td><td>Shipped</td><td>€120.00</td></tr>
+          <tr><td>1041</td><td>Alan Turing</td><td>Open</td><td>€48.50</td></tr>
+          <tr><td>1040</td><td>Grace Hopper</td><td>Delivered</td><td>€310.25</td></tr>
+          <tr><td>1039</td><td>Katherine Johnson</td><td>Delivered</td><td>€72.00</td></tr>
+        </tbody>
+      </table>
+    </section>
+  </section>
+  <section data-density="compact" class="panel stack" aria-labelledby="compact-title">
+    <h3 id="compact-title">Compact</h3>
+    <dui-toolbar role="toolbar" aria-label="Order actions (compact)">
+      <button type="button">New order</button>
+      <button type="button">Export</button>
+      <hr>
+      <button type="button" aria-pressed="false">Show archived</button>
+    </dui-toolbar>
+    <form class="stack" aria-labelledby="compact-form-title compact-title">
+      <h4 id="compact-form-title">Edit order</h4>
+      <div data-field>
+        <label for="compact-customer">Customer</label>
+        <input type="text" id="compact-customer" name="customer" value="Ada Lovelace" autocomplete="off">
+      </div>
+      <div data-field>
+        <label for="compact-status">Status</label>
+        <select id="compact-status" name="status">
+          <option>Open</option>
+          <option selected>Shipped</option>
+          <option>Delivered</option>
+        </select>
+      </div>
+      <dui-combobox>
+        <label for="compact-carrier">Carrier</label>
+        <input type="text" id="compact-carrier" name="carrier" list="compact-carriers">
+        <datalist id="compact-carriers">
+          <option value="DHL Express"></option>
+          <option value="DPD Classic"></option>
+          <option value="PostNL Parcel"></option>
+          <option value="UPS Standard"></option>
+        </datalist>
+      </dui-combobox>
+      <label><input type="checkbox" name="notify" checked> Email the customer</label>
+      <label><input type="checkbox" role="switch" name="priority"> Priority</label>
+      <p class="cluster">
+        <button type="submit">Save</button>
+        <button type="reset">Reset</button>
+      </p>
+    </form>
+    <section data-scroll="inline" aria-labelledby="compact-orders compact-title" tabindex="0">
+      <table>
+        <caption id="compact-orders">Recent orders</caption>
+        <thead>
+          <tr><th scope="col">Order</th><th scope="col">Customer</th><th scope="col">Status</th><th scope="col">Total</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>1042</td><td>Ada Lovelace</td><td>Shipped</td><td>€120.00</td></tr>
+          <tr><td>1041</td><td>Alan Turing</td><td>Open</td><td>€48.50</td></tr>
+          <tr><td>1040</td><td>Grace Hopper</td><td>Delivered</td><td>€310.25</td></tr>
+          <tr><td>1039</td><td>Katherine Johnson</td><td>Delivered</td><td>€72.00</td></tr>
+        </tbody>
+      </table>
+    </section>
+  </section>
+</div>
+```
+
+#### Comfortable inside compact
+
+```html
+<div data-density="compact" class="panel stack">
+  <p class="cluster">
+    <button type="button">Compact button</button>
+    <span data-density="comfortable"><button type="button">Comfortable button</button></span>
+  </p>
+</div>
+```
+
+### Specifications
+
+- [WCAG 2.5.8 Target Size (Minimum)](https://www.w3.org/WAI/WCAG22/Understanding/target-size-minimum.html)
+
+### See also
+
+- [Tokens](https://odonckers.github.io/domestic-ui/tokens/index.md)
+- Source: [`examples/patterns/density.html`](https://github.com/odonckers/domestic-ui/blob/main/examples/patterns/density.html)
+- Demos: Orders view ([Plain HTML](https://github.com/odonckers/domestic-ui/blob/main/demos/vanilla/orders.html), [React](https://github.com/odonckers/domestic-ui/blob/main/demos/react/src/OrdersPage.tsx), [Angular](https://github.com/odonckers/domestic-ui/tree/main/demos/angular/src/app/orders), [Astro](https://github.com/odonckers/domestic-ui/blob/main/demos/astro/src/pages/orders.astro))
+
+### How other systems do it
+
+For comparison only; these are not the standard this system follows.
+
+- Apple Human Interface Guidelines: No equivalent
+- [Material Design 3: Grids & spacing: Density](https://m3.material.io/foundations/layout/grids-spacing/density)
+- Vercel Geist: No equivalent
+
 ## Filter bar
 
-Page: https://odonckers.github.io/domestic-ui/patterns/filter-bar.html
+Page: https://odonckers.github.io/domestic-ui/components/organisms/filter-bar.html
 
 A row of native form controls that narrows a list or table.
 
@@ -5943,7 +5846,7 @@ Children: a `<form>` of fields (each a `data-field`, or a `<dui-combobox>`) whos
 
 ### See also
 
-- [Organisms](https://odonckers.github.io/domestic-ui/organisms/index.md)
+- [Organisms](https://odonckers.github.io/domestic-ui/components/organisms/index.md)
 - Source: [`css/components/organisms/filter-bar.css`](https://github.com/odonckers/domestic-ui/blob/main/css/components/organisms/filter-bar.css), [`examples/organisms/filter-bar.html`](https://github.com/odonckers/domestic-ui/blob/main/examples/organisms/filter-bar.html)
 - Demos: Orders view ([Plain HTML](https://github.com/odonckers/domestic-ui/blob/main/demos/vanilla/orders.html), [React](https://github.com/odonckers/domestic-ui/blob/main/demos/react/src/OrdersPage.tsx), [Angular](https://github.com/odonckers/domestic-ui/tree/main/demos/angular/src/app/orders), [Astro](https://github.com/odonckers/domestic-ui/blob/main/demos/astro/src/pages/orders.astro))
 
@@ -5957,7 +5860,7 @@ For comparison only; these are not the standard this system follows.
 
 ## Large forms
 
-Page: https://odonckers.github.io/domestic-ui/patterns/large-forms.html
+Page: https://odonckers.github.io/domestic-ui/components/organisms/large-forms.html
 
 Long forms split into labelled groups, in one or more columns.
 
@@ -6104,7 +6007,7 @@ Native keyboard behavior; see [HTML `<form>` element](https://html.spec.whatwg.o
 
 ### See also
 
-- [Organisms](https://odonckers.github.io/domestic-ui/organisms/index.md)
+- [Organisms](https://odonckers.github.io/domestic-ui/components/organisms/index.md)
 - Source: [`css/components/organisms/large-forms.css`](https://github.com/odonckers/domestic-ui/blob/main/css/components/organisms/large-forms.css), [`examples/organisms/large-forms.html`](https://github.com/odonckers/domestic-ui/blob/main/examples/organisms/large-forms.html)
 - Demos: Account settings view ([Plain HTML](https://github.com/odonckers/domestic-ui/blob/main/demos/vanilla/settings.html), [React](https://github.com/odonckers/domestic-ui/blob/main/demos/react/src/SettingsPage.tsx), [Angular](https://github.com/odonckers/domestic-ui/tree/main/demos/angular/src/app/settings), [Astro](https://github.com/odonckers/domestic-ui/blob/main/demos/astro/src/pages/settings.astro))
 
@@ -6118,7 +6021,7 @@ For comparison only; these are not the standard this system follows.
 
 ## List-detail
 
-Page: https://odonckers.github.io/domestic-ui/patterns/list-detail.html
+Page: https://odonckers.github.io/domestic-ui/layouts/list-detail.html
 
 A list of items beside the details of the selected one, stacked on narrow screens.
 
@@ -6340,11 +6243,13 @@ For comparison only; these are not the standard this system follows.
 
 ## Split
 
-Page: https://odonckers.github.io/domestic-ui/patterns/split.html
+Page: https://odonckers.github.io/domestic-ui/layouts/split.html
 
 Two regions side by side at a set ratio, stacked on narrow screens.
 
 **Our choice:** No standard exists for a fixed split: two regions in a CSS grid. A draggable divider would follow the APG Window Splitter pattern.
+
+**Rationale:** [Split view explainer](https://odonckers.github.io/domestic-ui/explainers/split-view.md) records the design choices and the alternatives considered.
 
 _Diagram: A split puts two regions side by side in the content area at a set ratio, such as an invoice and its payments at two to one._
 
@@ -6509,49 +6414,49 @@ any added later:
 
 No tabs element: one panel at a time, roving tabindex and arrow keys ([APG Tabs](https://www.w3.org/WAI/ARIA/apg/patterns/tabs/)). Upgrades a `<nav>` of in-page links and `<section>` panels; `aria-current="true"` on a link selects it on load.
 
-Styles: [tabs.css](https://odonckers.github.io/domestic-ui/patterns/tabs.md). Example: [Tabs](https://odonckers.github.io/domestic-ui/patterns/tabs.md). Source: [`dui-tabs.js`](https://github.com/odonckers/domestic-ui/blob/main/web-components/dui-tabs.js).
+Styles: [tabs.css](https://odonckers.github.io/domestic-ui/components/molecules/tabs.md). Example: [Tabs](https://odonckers.github.io/domestic-ui/components/molecules/tabs.md). Source: [`dui-tabs.js`](https://github.com/odonckers/domestic-ui/blob/main/web-components/dui-tabs.js).
 
 #### `<dui-menu>`
 
 `popovertarget` opens the list, but there is no menu widget: arrow keys, Home/End, typeahead, opening on a chosen item ([APG Menu Button](https://www.w3.org/WAI/ARIA/apg/patterns/menu-button/)).
 
-Styles: [menu-button.css](https://odonckers.github.io/domestic-ui/patterns/menu-button.md). Example: [Menu button](https://odonckers.github.io/domestic-ui/patterns/menu-button.md). Source: [`dui-menu.js`](https://github.com/odonckers/domestic-ui/blob/main/web-components/dui-menu.js).
+Styles: [menu-button.css](https://odonckers.github.io/domestic-ui/components/molecules/menu-button.md). Example: [Menu button](https://odonckers.github.io/domestic-ui/components/molecules/menu-button.md). Source: [`dui-menu.js`](https://github.com/odonckers/domestic-ui/blob/main/web-components/dui-menu.js).
 
 #### `<dui-combobox>`
 
-`<input list>` suggests values, but the browser draws the popup: it cannot be styled, filters differently per engine and announces no result count. Builds an APG list autocomplete listbox from the `<datalist>` and keeps the same input ([APG Combobox](https://www.w3.org/WAI/ARIA/apg/patterns/combobox/)). See [Combobox (typeahead) explainer](https://odonckers.github.io/domestic-ui/explainers/combobox.md).
+`<input list>` suggests values, but the browser draws the popup: it cannot be styled, filters differently per engine and announces no result count. Builds an APG list autocomplete listbox from the `<datalist>` and keeps the same input ([APG Combobox](https://www.w3.org/WAI/ARIA/apg/patterns/combobox/)). See [Combobox explainer](https://odonckers.github.io/domestic-ui/explainers/combobox.md).
 
-Styles: [combobox.css](https://odonckers.github.io/domestic-ui/patterns/typeahead.md). Example: [Typeahead](https://odonckers.github.io/domestic-ui/patterns/typeahead.md). Source: [`dui-combobox.js`](https://github.com/odonckers/domestic-ui/blob/main/web-components/dui-combobox.js).
+Styles: [combobox.css](https://odonckers.github.io/domestic-ui/components/molecules/combobox.md). Example: [Combobox](https://odonckers.github.io/domestic-ui/components/molecules/combobox.md). Source: [`dui-combobox.js`](https://github.com/odonckers/domestic-ui/blob/main/web-components/dui-combobox.js).
 
 #### `<dui-toolbar>`
 
 No roving focus in HTML: one Tab stop with arrow keys between controls ([APG Toolbar](https://www.w3.org/WAI/ARIA/apg/patterns/toolbar/)).
 
-Styles: [toolbar.css](https://odonckers.github.io/domestic-ui/patterns/toolbar.md). Example: [Toolbar](https://odonckers.github.io/domestic-ui/patterns/toolbar.md). Source: [`dui-toolbar.js`](https://github.com/odonckers/domestic-ui/blob/main/web-components/dui-toolbar.js).
+Styles: [toolbar.css](https://odonckers.github.io/domestic-ui/components/molecules/toolbar.md). Example: [Toolbar](https://odonckers.github.io/domestic-ui/components/molecules/toolbar.md). Source: [`dui-toolbar.js`](https://github.com/odonckers/domestic-ui/blob/main/web-components/dui-toolbar.js).
 
 #### `<dui-tooltip>`
 
 A popover cannot open on hover or focus yet. [`interestfor`](https://open-ui.org/components/interest-invokers.explainer/) is the coming standard (Chromium only today); this element stands in until it is interoperable.
 
-Styles: [popover.css](https://odonckers.github.io/domestic-ui/patterns/popover.md). Example: [Popover](https://odonckers.github.io/domestic-ui/patterns/popover.md). Source: [`dui-tooltip.js`](https://github.com/odonckers/domestic-ui/blob/main/web-components/dui-tooltip.js).
+Styles: [popover.css](https://odonckers.github.io/domestic-ui/components/molecules/popover.md). Example: [Popover](https://odonckers.github.io/domestic-ui/components/molecules/popover.md). Source: [`dui-tooltip.js`](https://github.com/odonckers/domestic-ui/blob/main/web-components/dui-tooltip.js).
 
 #### `<dui-toaster>`
 
 A live region announces messages, but nothing builds a toast, adds its Dismiss button and moves focus sensibly when one goes away. See [Toast explainer](https://odonckers.github.io/domestic-ui/explainers/toast.md).
 
-Styles: [alerts.css](https://odonckers.github.io/domestic-ui/patterns/alerts.md). Example: [Alerts](https://odonckers.github.io/domestic-ui/patterns/alerts.md). Source: [`dui-toaster.js`](https://github.com/odonckers/domestic-ui/blob/main/web-components/dui-toaster.js).
+Styles: [alerts.css](https://odonckers.github.io/domestic-ui/components/molecules/alerts.md). Example: [Alerts](https://odonckers.github.io/domestic-ui/components/molecules/alerts.md). Source: [`dui-toaster.js`](https://github.com/odonckers/domestic-ui/blob/main/web-components/dui-toaster.js).
 
 #### `<dui-app-shell>`
 
 A button cannot hide another element and keep `aria-expanded` in step, and a sidebar that is part of the page when wide must become a modal drawer only when the shell is narrow. Toggles `hidden` on a sidebar beside main, moves the one copy of a sidebar into a `<dialog data-dialog="drawer">` (`showModal()`) while it is open on a narrow shell, and switches mode on the shell's own width ([`ResizeObserver`](https://developer.mozilla.org/en-US/docs/Web/API/ResizeObserver)); toggles are `hidden` until it upgrades. See [App shell explainer](https://odonckers.github.io/domestic-ui/explainers/app-shell.md).
 
-Styles: [app-shell.css](https://odonckers.github.io/domestic-ui/patterns/app-shell.md) (layout). Example: [App shell](https://odonckers.github.io/domestic-ui/patterns/app-shell.md). Source: [`dui-app-shell.js`](https://github.com/odonckers/domestic-ui/blob/main/web-components/dui-app-shell.js).
+Styles: [app-shell.css](https://odonckers.github.io/domestic-ui/layouts/app-shell.md) (layout). Example: [App shell](https://odonckers.github.io/domestic-ui/layouts/app-shell.md). Source: [`dui-app-shell.js`](https://github.com/odonckers/domestic-ui/blob/main/web-components/dui-app-shell.js).
 
 #### `<dui-table>`
 
 A table cannot reorder its rows, and a checkbox cannot check its siblings, count them or be indeterminate from markup. Adds sortable column buttons with `aria-sort` ([APG Sortable Table](https://www.w3.org/WAI/ARIA/apg/patterns/table/examples/sortable-table/)), a "select all" checkbox, the selection count and bulk-action enabling to a native `<table>`; without it the table is a plain table with ordinary checkboxes.
 
-Styles: [data-table.css](https://odonckers.github.io/domestic-ui/patterns/data-table.md). Example: [Data table](https://odonckers.github.io/domestic-ui/patterns/data-table.md). Source: [`dui-table.js`](https://github.com/odonckers/domestic-ui/blob/main/web-components/dui-table.js).
+Styles: [data-table.css](https://odonckers.github.io/domestic-ui/components/organisms/data-table.md). Example: [Data table](https://odonckers.github.io/domestic-ui/components/organisms/data-table.md). Source: [`dui-table.js`](https://github.com/odonckers/domestic-ui/blob/main/web-components/dui-table.js).
 
 ### Events
 
@@ -6615,26 +6520,28 @@ so a pattern could map onto a future native element or attribute.
 
 | Explainer | Summary | CSS | Example | Script |
 | --- | --- | --- | --- | --- |
-| [Card](https://odonckers.github.io/domestic-ui/explainers/card.md) | A self-contained summary with a heading, optional media and actions; a whole-card link whose name is the heading | [`card.css`](https://odonckers.github.io/domestic-ui/patterns/card.md) | [Card](https://odonckers.github.io/domestic-ui/patterns/card.md) | None |
-| [Pagination](https://odonckers.github.io/domestic-ui/explainers/pagination.md) | Links between pages of a list in a named `<nav>`, with `aria-current="page"` and non-link disabled ends | [`pagination.css`](https://odonckers.github.io/domestic-ui/patterns/pagination.md) | [Pagination](https://odonckers.github.io/domestic-ui/patterns/pagination.md) | None |
-| [Drawer](https://odonckers.github.io/domestic-ui/explainers/drawer.md) | A `<dialog>` variant at the inline-start or inline-end edge, full block size | [`dialog.css`](https://odonckers.github.io/domestic-ui/patterns/dialog.md) | [Dialog and drawer](https://odonckers.github.io/domestic-ui/patterns/dialog.md) | None |
-| [Toast](https://odonckers.github.io/domestic-ui/explainers/toast.md) | A fixed `role="status"` region that stacks short messages that never dismiss themselves | [`alerts.css`](https://odonckers.github.io/domestic-ui/patterns/alerts.md) | [Alerts](https://odonckers.github.io/domestic-ui/patterns/alerts.md) | [`dui-toaster.js`](https://github.com/odonckers/domestic-ui/blob/main/web-components/dui-toaster.js) |
-| [Combobox](https://odonckers.github.io/domestic-ui/explainers/combobox.md) | How domestic-ui maps the APG list autocomplete combobox onto `<input list>` and `<datalist>`, and the choices the APG leaves open | [`combobox.css`](https://odonckers.github.io/domestic-ui/patterns/typeahead.md) | [Typeahead](https://odonckers.github.io/domestic-ui/patterns/typeahead.md) | [`dui-combobox.js`](https://github.com/odonckers/domestic-ui/blob/main/web-components/dui-combobox.js) |
-| [Density](https://odonckers.github.io/domestic-ui/explainers/density.md) | `data-density="compact"` on any element: tighter control heights, padding and table cells, same text size, targets at least 24px | [`semantic.css`](https://odonckers.github.io/domestic-ui/tokens/semantic.md) | [Compact density](https://odonckers.github.io/domestic-ui/patterns/density.md) | None |
-| [App shell](https://odonckers.github.io/domestic-ui/explainers/app-shell.md) | `data-app-shell`: app bar, primary sidebar, main and an auxiliary sidebar as native landmarks in named grid areas; one copy of each sidebar, collapsible beside main and a modal drawer when the shell is narrow; why not a dialog, popover, `<details>`, checkbox hack or duplicated navigation | [`app-shell.css`](https://odonckers.github.io/domestic-ui/patterns/app-shell.md) | [App shell](https://odonckers.github.io/domestic-ui/patterns/app-shell.md) | [`dui-app-shell.js`](https://github.com/odonckers/domestic-ui/blob/main/web-components/dui-app-shell.js) |
-| [Auxiliary sidebar](https://odonckers.github.io/domestic-ui/explainers/aux-sidebar.md) | The `<aside>` after `<main>` in an app shell: context for the selection, beside main from 64rem, a drawer at the end below; stable name, polite status on change | [`app-shell.css`](https://odonckers.github.io/domestic-ui/patterns/app-shell.md) | [App shell](https://odonckers.github.io/domestic-ui/patterns/app-shell.md) | [`dui-app-shell.js`](https://github.com/odonckers/domestic-ui/blob/main/web-components/dui-app-shell.js) |
-| [Split view](https://odonckers.github.io/domestic-ui/explainers/split-view.md) | Two regions side by side at a fixed ratio (`data-split`) or a list of links beside a detail pane (`data-list-detail`), switched by a container query; why there is no draggable divider | [`split.css`](https://odonckers.github.io/domestic-ui/patterns/split.md), [`list-detail.css`](https://odonckers.github.io/domestic-ui/patterns/list-detail.md) | [Split](https://odonckers.github.io/domestic-ui/patterns/split.md) | None |
-| [Code highlighting](https://odonckers.github.io/domestic-ui/explainers/code-highlighting.md) | `::highlight(dui-code-*)` names a page registers with the CSS Custom Highlight API, each colored by a `--dui-color-code-*` token at 4.5:1 on the code background | [`typography.css`](https://odonckers.github.io/domestic-ui/components/base.md) | [Base elements](https://odonckers.github.io/domestic-ui/components/base.md) | None (the page registers ranges) |
+| [Card](https://odonckers.github.io/domestic-ui/explainers/card.md) | A self-contained summary with a heading, optional media and actions; a whole-card link whose name is the heading | [`card.css`](https://odonckers.github.io/domestic-ui/components/molecules/card.md) | [Card](https://odonckers.github.io/domestic-ui/components/molecules/card.md) | None |
+| [Pagination](https://odonckers.github.io/domestic-ui/explainers/pagination.md) | Links between pages of a list in a named `<nav>`, with `aria-current="page"` and non-link disabled ends | [`pagination.css`](https://odonckers.github.io/domestic-ui/components/molecules/pagination.md) | [Pagination](https://odonckers.github.io/domestic-ui/components/molecules/pagination.md) | None |
+| [Drawer](https://odonckers.github.io/domestic-ui/explainers/drawer.md) | A `<dialog>` variant at the inline-start or inline-end edge, full block size | [`dialog.css`](https://odonckers.github.io/domestic-ui/components/molecules/dialog.md) | [Dialog and drawer](https://odonckers.github.io/domestic-ui/components/molecules/dialog.md) | None |
+| [Toast](https://odonckers.github.io/domestic-ui/explainers/toast.md) | A fixed `role="status"` region that stacks short messages that never dismiss themselves | [`alerts.css`](https://odonckers.github.io/domestic-ui/components/molecules/alerts.md) | [Alerts](https://odonckers.github.io/domestic-ui/components/molecules/alerts.md) | [`dui-toaster.js`](https://github.com/odonckers/domestic-ui/blob/main/web-components/dui-toaster.js) |
+| [Combobox](https://odonckers.github.io/domestic-ui/explainers/combobox.md) | How domestic-ui maps the APG list autocomplete combobox onto `<input list>` and `<datalist>`, and the choices the APG leaves open | [`combobox.css`](https://odonckers.github.io/domestic-ui/components/molecules/combobox.md) | [Combobox](https://odonckers.github.io/domestic-ui/components/molecules/combobox.md) | [`dui-combobox.js`](https://github.com/odonckers/domestic-ui/blob/main/web-components/dui-combobox.js) |
+| [Density](https://odonckers.github.io/domestic-ui/explainers/density.md) | `data-density="compact"` on any element: tighter control heights, padding and table cells, same text size, targets at least 24px | [`semantic.css`](https://odonckers.github.io/domestic-ui/tokens/semantic.md) | [Density](https://odonckers.github.io/domestic-ui/tokens/density.md) | None |
+| [App shell](https://odonckers.github.io/domestic-ui/explainers/app-shell.md) | `data-app-shell`: app bar, primary sidebar, main and an auxiliary sidebar as native landmarks in named grid areas; one copy of each sidebar, collapsible beside main and a modal drawer when the shell is narrow; why not a dialog, popover, `<details>`, checkbox hack or duplicated navigation | [`app-shell.css`](https://odonckers.github.io/domestic-ui/layouts/app-shell.md) | [App shell](https://odonckers.github.io/domestic-ui/layouts/app-shell.md) | [`dui-app-shell.js`](https://github.com/odonckers/domestic-ui/blob/main/web-components/dui-app-shell.js) |
+| [Auxiliary sidebar](https://odonckers.github.io/domestic-ui/explainers/aux-sidebar.md) | The `<aside>` after `<main>` in an app shell: context for the selection, beside main from 64rem, a drawer at the end below; stable name, polite status on change | [`app-shell.css`](https://odonckers.github.io/domestic-ui/layouts/app-shell.md) | [App shell](https://odonckers.github.io/domestic-ui/layouts/app-shell.md) | [`dui-app-shell.js`](https://github.com/odonckers/domestic-ui/blob/main/web-components/dui-app-shell.js) |
+| [Split view](https://odonckers.github.io/domestic-ui/explainers/split-view.md) | Two regions side by side at a fixed ratio (`data-split`) or a list of links beside a detail pane (`data-list-detail`), switched by a container query; why there is no draggable divider | [`split.css`](https://odonckers.github.io/domestic-ui/layouts/split.md), [`list-detail.css`](https://odonckers.github.io/domestic-ui/layouts/list-detail.md) | [Split](https://odonckers.github.io/domestic-ui/layouts/split.md) | None |
+| [Code highlighting](https://odonckers.github.io/domestic-ui/explainers/code-highlighting.md) | `::highlight(dui-code-*)` names a page registers with the CSS Custom Highlight API, each colored by a `--dui-color-code-*` token at 4.5:1 on the code background | [`typography.css`](https://odonckers.github.io/domestic-ui/base/index.md) | [Base elements](https://odonckers.github.io/domestic-ui/base/index.md) | None (the page registers ranges) |
 
 ## App shell
 
 Page: https://odonckers.github.io/domestic-ui/explainers/app-shell.html
 
+Documented on: [App shell](https://odonckers.github.io/domestic-ui/layouts/app-shell.md).
+
 Status: shipped in domestic-ui as a layout (`data-app-shell`) plus one web component (`<dui-app-shell>`).
-CSS: [`css/layout/app-shell.css`](https://odonckers.github.io/domestic-ui/patterns/app-shell.md) ·
+CSS: [`css/layout/app-shell.css`](https://odonckers.github.io/domestic-ui/layouts/app-shell.md) ·
 Script: [`web-components/dui-app-shell.js`](https://github.com/odonckers/domestic-ui/blob/main/web-components/dui-app-shell.js) ·
-Examples: [`examples/app-shell.html`](https://odonckers.github.io/domestic-ui/patterns/app-shell.md) (a full orders screen),
-[`examples/layouts/app-shell.html`](https://odonckers.github.io/domestic-ui/patterns/app-shell.md) (a contained shell)
+Examples: [`examples/app-shell.html`](https://odonckers.github.io/domestic-ui/layouts/app-shell.md) (a full orders screen),
+[`examples/layouts/app-shell.html`](https://odonckers.github.io/domestic-ui/layouts/app-shell.md) (a contained shell)
 
 The key words MUST, MUST NOT, SHOULD, SHOULD NOT and MAY are to be interpreted as described in
 [RFC 2119](https://www.rfc-editor.org/rfc/rfc2119) and [RFC 8174](https://www.rfc-editor.org/rfc/rfc8174)
@@ -6846,11 +6753,13 @@ inside it; after Esc, focus is back on "Menu, button, collapsed".
 
 Page: https://odonckers.github.io/domestic-ui/explainers/aux-sidebar.html
 
+Documented on: [App shell](https://odonckers.github.io/domestic-ui/layouts/app-shell.md).
+
 Status: shipped in domestic-ui as part of the [app shell](https://odonckers.github.io/domestic-ui/explainers/app-shell.md): the `<aside>` after `<main>` in a
 `data-app-shell`.
-CSS: [`css/layout/app-shell.css`](https://odonckers.github.io/domestic-ui/patterns/app-shell.md) ·
+CSS: [`css/layout/app-shell.css`](https://odonckers.github.io/domestic-ui/layouts/app-shell.md) ·
 Script: [`web-components/dui-app-shell.js`](https://github.com/odonckers/domestic-ui/blob/main/web-components/dui-app-shell.js) ·
-Example: [`examples/app-shell.html`](https://odonckers.github.io/domestic-ui/patterns/app-shell.md)
+Example: [`examples/app-shell.html`](https://odonckers.github.io/domestic-ui/layouts/app-shell.md)
 
 The key words MUST, MUST NOT, SHOULD, SHOULD NOT and MAY are to be interpreted as described in
 [RFC 2119](https://www.rfc-editor.org/rfc/rfc2119) and [RFC 8174](https://www.rfc-editor.org/rfc/rfc8174)
@@ -6869,7 +6778,7 @@ or rebuild the panel as a modal on phones with a second copy of its content.
 ### Use cases
 
 - Details of the selected order beside the orders table (the
-  [orders example](https://odonckers.github.io/domestic-ui/patterns/app-shell.md)).
+  [orders example](https://odonckers.github.io/domestic-ui/layouts/app-shell.md)).
 - Filters for a long report, kept open while scrolling it.
 - An activity feed or comments on the record in main.
 
@@ -6886,7 +6795,7 @@ or rebuild the panel as a modal on phones with a second copy of its content.
 
 - A non-modal overlay floating over main.
 - More than one auxiliary sidebar.
-- Tabs inside it: use [tabs](https://odonckers.github.io/domestic-ui/patterns/tabs.md) in the aside when it needs them.
+- Tabs inside it: use [tabs](https://odonckers.github.io/domestic-ui/components/molecules/tabs.md) in the aside when it needs them.
 
 ### Proposed markup and API
 
@@ -6940,7 +6849,7 @@ without losing their place in the table.
 - **A popover at the inline end.** Non-modal and light-dismissed, so it covers the table while the table is
   still in the Tab order behind it. Rejected.
 - **The details inside main, under the table** (a list-detail). Good when the details are the point of the
-  screen; use [`data-list-detail`](https://odonckers.github.io/domestic-ui/patterns/list-detail.md) then. The aside is for context that the
+  screen; use [`data-list-detail`](https://odonckers.github.io/domestic-ui/layouts/list-detail.md) then. The aside is for context that the
   user may hide.
 - **A second copy of the details for phones.** Rejected for the same reason as a duplicated navigation: one
   copy, moved into the drawer while it is open.
@@ -6965,9 +6874,11 @@ without losing their place in the table.
 
 Page: https://odonckers.github.io/domestic-ui/explainers/card.html
 
+Documented on: [Card](https://odonckers.github.io/domestic-ui/components/molecules/card.md).
+
 Status: shipped in domestic-ui as a styling contract.
-CSS: [`css/components/molecules/card.css`](https://odonckers.github.io/domestic-ui/patterns/card.md) ·
-Example: [`examples/molecules/card.html`](https://odonckers.github.io/domestic-ui/patterns/card.md)
+CSS: [`css/components/molecules/card.css`](https://odonckers.github.io/domestic-ui/components/molecules/card.md) ·
+Example: [`examples/molecules/card.html`](https://odonckers.github.io/domestic-ui/components/molecules/card.md)
 
 The key words MUST, MUST NOT, SHOULD, SHOULD NOT and MAY are to be interpreted as described in
 [RFC 2119](https://www.rfc-editor.org/rfc/rfc2119) and [RFC 8174](https://www.rfc-editor.org/rfc/rfc8174)
@@ -7090,9 +7001,9 @@ elsewhere), the attribute would map onto it and the pseudo-element would go away
 Page: https://odonckers.github.io/domestic-ui/explainers/code-highlighting.html
 
 Status: shipped in domestic-ui as CSS only. The page registers the ranges.
-CSS: [`css/base/typography.css`](https://odonckers.github.io/domestic-ui/components/base.md) ·
+CSS: [`css/base/typography.css`](https://odonckers.github.io/domestic-ui/base/index.md) ·
 Tokens: [`css/tokens/semantic.css`](https://odonckers.github.io/domestic-ui/tokens/semantic.md) ·
-Example: [`examples/base.html`](https://odonckers.github.io/domestic-ui/components/base.md)
+Example: [`examples/base.html`](https://odonckers.github.io/domestic-ui/base/index.md)
 
 The key words MUST, MUST NOT, SHOULD, SHOULD NOT and MAY are to be interpreted as described in
 [RFC 2119](https://www.rfc-editor.org/rfc/rfc2119) and [RFC 8174](https://www.rfc-editor.org/rfc/rfc8174)
@@ -7187,14 +7098,16 @@ None. Highlights do not change focus, selection or the text.
 
 - Should JS template literals and regular expressions get names of their own?
 
-## Combobox (typeahead)
+## Combobox
 
 Page: https://odonckers.github.io/domestic-ui/explainers/combobox.html
 
+Documented on: [Combobox](https://odonckers.github.io/domestic-ui/components/molecules/combobox.md).
+
 Status: shipped in domestic-ui as a web component over native markup.
-CSS: [`css/components/molecules/combobox.css`](https://odonckers.github.io/domestic-ui/patterns/typeahead.md) ·
+CSS: [`css/components/molecules/combobox.css`](https://odonckers.github.io/domestic-ui/components/molecules/combobox.md) ·
 Script: [`web-components/dui-combobox.js`](https://github.com/odonckers/domestic-ui/blob/main/web-components/dui-combobox.js) ·
-Example: [`examples/molecules/combobox.html`](https://odonckers.github.io/domestic-ui/patterns/typeahead.md)
+Example: [`examples/molecules/combobox.html`](https://odonckers.github.io/domestic-ui/components/molecules/combobox.md)
 
 The key words MUST, MUST NOT, SHOULD, SHOULD NOT and MAY are to be interpreted as described in
 [RFC 2119](https://www.rfc-editor.org/rfc/rfc2119) and [RFC 8174](https://www.rfc-editor.org/rfc/rfc8174)
@@ -7383,9 +7296,11 @@ wrapper and its script is all a page needs to do.
 
 Page: https://odonckers.github.io/domestic-ui/explainers/density.html
 
+Documented on: [Density](https://odonckers.github.io/domestic-ui/tokens/density.md).
+
 Status: shipped in domestic-ui as semantic tokens and one attribute.
 CSS: the density tokens in [`css/tokens/semantic.css`](https://odonckers.github.io/domestic-ui/tokens/semantic.md) (sections 2 and 4) ·
-Example: [`examples/patterns/density.html`](https://odonckers.github.io/domestic-ui/patterns/density.md)
+Example: [`examples/patterns/density.html`](https://odonckers.github.io/domestic-ui/tokens/density.md)
 
 The key words MUST, MUST NOT, SHOULD, SHOULD NOT and MAY are to be interpreted as described in
 [RFC 2119](https://www.rfc-editor.org/rfc/rfc2119) and [RFC 8174](https://www.rfc-editor.org/rfc/rfc8174)
@@ -7510,9 +7425,11 @@ If a density user preference ever arrives as a media feature, a page would set
 
 Page: https://odonckers.github.io/domestic-ui/explainers/drawer.html
 
+Documented on: [Dialog and drawer](https://odonckers.github.io/domestic-ui/components/molecules/dialog.md).
+
 Status: shipped in domestic-ui as a `<dialog>` variant.
-CSS: [`css/components/molecules/dialog.css`](https://odonckers.github.io/domestic-ui/patterns/dialog.md) ·
-Example: [`examples/molecules/dialog.html`](https://odonckers.github.io/domestic-ui/patterns/dialog.md)
+CSS: [`css/components/molecules/dialog.css`](https://odonckers.github.io/domestic-ui/components/molecules/dialog.md) ·
+Example: [`examples/molecules/dialog.html`](https://odonckers.github.io/domestic-ui/components/molecules/dialog.md)
 
 The key words MUST, MUST NOT, SHOULD, SHOULD NOT and MAY are to be interpreted as described in
 [RFC 2119](https://www.rfc-editor.org/rfc/rfc2119) and [RFC 8174](https://www.rfc-editor.org/rfc/rfc8174)
@@ -7632,9 +7549,11 @@ The variant only changes position and motion. It could become a presentational h
 
 Page: https://odonckers.github.io/domestic-ui/explainers/pagination.html
 
+Documented on: [Pagination](https://odonckers.github.io/domestic-ui/components/molecules/pagination.md).
+
 Status: shipped in domestic-ui as a styling contract.
-CSS: [`css/components/molecules/pagination.css`](https://odonckers.github.io/domestic-ui/patterns/pagination.md) ·
-Example: [`examples/molecules/pagination.html`](https://odonckers.github.io/domestic-ui/patterns/pagination.md)
+CSS: [`css/components/molecules/pagination.css`](https://odonckers.github.io/domestic-ui/components/molecules/pagination.md) ·
+Example: [`examples/molecules/pagination.html`](https://odonckers.github.io/domestic-ui/components/molecules/pagination.md)
 
 The key words MUST, MUST NOT, SHOULD, SHOULD NOT and MAY are to be interpreted as described in
 [RFC 2119](https://www.rfc-editor.org/rfc/rfc2119) and [RFC 8174](https://www.rfc-editor.org/rfc/rfc8174)
@@ -7761,10 +7680,12 @@ none of the `data-pagination` styling hooks.
 
 Page: https://odonckers.github.io/domestic-ui/explainers/split-view.html
 
+Documented on: [Split](https://odonckers.github.io/domestic-ui/layouts/split.md).
+
 Status: shipped in domestic-ui as two layouts, `data-split` and `data-list-detail`; no resizable divider.
-CSS: [`css/layout/split.css`](https://odonckers.github.io/domestic-ui/patterns/split.md), [`css/layout/list-detail.css`](https://odonckers.github.io/domestic-ui/patterns/list-detail.md) ·
-Examples: [`examples/layouts/split.html`](https://odonckers.github.io/domestic-ui/patterns/split.md),
-[`examples/layouts/list-detail.html`](https://odonckers.github.io/domestic-ui/patterns/list-detail.md)
+CSS: [`css/layout/split.css`](https://odonckers.github.io/domestic-ui/layouts/split.md), [`css/layout/list-detail.css`](https://odonckers.github.io/domestic-ui/layouts/list-detail.md) ·
+Examples: [`examples/layouts/split.html`](https://odonckers.github.io/domestic-ui/layouts/split.md),
+[`examples/layouts/list-detail.html`](https://odonckers.github.io/domestic-ui/layouts/list-detail.md)
 
 The key words MUST, MUST NOT, SHOULD, SHOULD NOT and MAY are to be interpreted as described in
 [RFC 2119](https://www.rfc-editor.org/rfc/rfc2119) and [RFC 8174](https://www.rfc-editor.org/rfc/rfc8174)
@@ -7957,10 +7878,12 @@ selected item.
 
 Page: https://odonckers.github.io/domestic-ui/explainers/toast.html
 
+Documented on: [Alerts](https://odonckers.github.io/domestic-ui/components/molecules/alerts.md).
+
 Status: shipped in domestic-ui as a CSS region plus a small web component.
-CSS: [`css/components/molecules/alerts.css`](https://odonckers.github.io/domestic-ui/patterns/alerts.md) ·
+CSS: [`css/components/molecules/alerts.css`](https://odonckers.github.io/domestic-ui/components/molecules/alerts.md) ·
 Script: [`web-components/dui-toaster.js`](https://github.com/odonckers/domestic-ui/blob/main/web-components/dui-toaster.js) ·
-Example: [`examples/molecules/alerts.html`](https://odonckers.github.io/domestic-ui/patterns/alerts.md)
+Example: [`examples/molecules/alerts.html`](https://odonckers.github.io/domestic-ui/components/molecules/alerts.md)
 
 The key words MUST, MUST NOT, SHOULD, SHOULD NOT and MAY are to be interpreted as described in
 [RFC 2119](https://www.rfc-editor.org/rfc/rfc2119) and [RFC 8174](https://www.rfc-editor.org/rfc/rfc8174)

@@ -6,6 +6,8 @@ level: molecule
 our-choice: No standard exists: an `<article>` whose heading holds the one link, so the link name stays short.
 specs:
   - HTML `<article>` element: https://html.spec.whatwg.org/multipage/sections.html#the-article-element
+explainers:
+  - card
 ---
 - Every card has a heading. Use `<article>` when it stands on its own.
 - Images need `alt`, or `alt=""` when decorative.

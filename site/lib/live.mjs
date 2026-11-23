@@ -79,4 +79,4 @@ export function redirectPage(from, to, title) {
  * @param {string} to
  * @param {string} title
  */
-export const redirectMarkdown = (to, title) => `# Moved\n\nThis page moved to [${title}](${SITE_URL}${to.replace(/\.html$/, ".md")}).\n`;
+export const redirectMarkdown = (to, title) => `# Moved\n\nThis page moved to [${title}](${SITE_URL}${to.replace(/\.html(?=#|$)/, ".md")}).\n`;

@@ -12,12 +12,12 @@ import { apiMd, codeMd, labelledMd } from "./api-table.mjs";
 import { findUrls, specName } from "./css-comments.mjs";
 import { demoAppLinksMd, demoViewMd } from "./demo-views.mjs";
 import { diagramBlock, diagramName } from "./diagrams.mjs";
-import { COMPONENT_GROUPS, LEVELS } from "./discovery.mjs";
+import { BASE_PATH, COMPONENT_GROUPS, LEVELS, levelIndexPath } from "./discovery.mjs";
 import { inline, plainText, shiftHeadings, tokenize } from "./markdown.mjs";
 import { previewKind } from "./tokens.mjs";
 import { existsSync, readFileSync } from "node:fs";
 import { join } from "node:path";
-import { BLOB_URL, REPO_URL, archiveUrl, byString, escapeHtml, escapeMdCell, fence, firstSentence, mdCode, releaseUrl, slugify } from "./util.mjs";
+import { BLOB_URL, PAGEFIND_DIR, REPO_URL, SEARCH_PATH, archiveUrl, byString, escapeHtml, escapeMdCell, fence, firstSentence, mdCode, releaseUrl, slugify } from "./util.mjs";
 
 /**
  * @typedef {import("./discovery.mjs").Model} Model
@@ -27,7 +27,7 @@ import { BLOB_URL, REPO_URL, archiveUrl, byString, escapeHtml, escapeMdCell, fen
  * @typedef {import("./discovery.mjs").Snippet} Snippet
  * @typedef {{ link: (target: string) => string, heading: (level: number, text: string) => string }} HtmlContext
  * @typedef {{ md: string, html?: (ctx: HtmlContext) => string, inFull?: false }} Block  inFull false: on the page and its twin, not in llms-full.txt
- * @typedef {"home" | "principles" | "tokens" | "base" | "layouts" | "atoms" | "molecules" | "organisms" | "patterns" | "web-components" | "guides" | "explainers" | "demos" | "contributing" | "changelog"} Section
+ * @typedef {"home" | "principles" | "tokens" | "base" | "layouts" | "atoms" | "molecules" | "organisms" | "web-components" | "guides" | "explainers" | "demos" | "contributing" | "changelog" | "search"} Section
  * @typedef {object} Page
  * @property {string} path         site path of the HTML page, e.g. "tokens/semantic.html"
  * @property {Section} section     where it is listed in the Docs sidebar (see ./nav.mjs)
@@ -100,7 +100,7 @@ export function repoTarget(href, model) {
   if (path === "web-components/README.md" && model.webComponentsReadme) return `site:${WEB_COMPONENTS_PATH}${hash}`;
   const tokenFile = model.tokenFiles.find((f) => f.path === path);
   if (tokenFile) return `site:${tokenFile.sitePath}${hash}`;
-  if (path.startsWith("css/base/")) return "site:components/base.html";
+  if (path.startsWith("css/base/")) return `site:${BASE_PATH}`;
   const hit = allComponents(model).find((c) => c.cssPath === path) ?? model.patterns.find((p) => p.cssPaths.includes(path));
   if (hit) return `site:${hit.sitePath}${hash}`;
   return `${BLOB_URL}${path}${hash}`;
@@ -233,6 +233,12 @@ const specLink = (s) => `[${s.label}](${s.url})`;
 export const followsMd = (p) => (p.standards.length ? p.standards.map(specLink).join(", ") : `**Our choice:** ${p.ourChoice}`);
 
 /** @param {Pattern} p */
+const patternIndexLine = (p) => `${patternLine(p)} Follows: ${p.standards.length ? p.standards.map(specLink).join(", ") : "our choice"}.`;
+
+/** The index page of a level: tokens/, layouts/ or components/<level>/. @param {string} level */
+const levelPagePath = (level) => (level === "tokens" || level === "layouts" ? `${level}/index.html` : levelIndexPath(level));
+
+/** @param {Pattern} p */
 const patternLine = (p) => `- [${p.title}](site:${p.sitePath}): ${p.summary}${p.available ? "" : ` ${patternStatus(p)}.`}`;
 
 /* ------------------------------------------------------------------ */
@@ -249,12 +255,12 @@ export function buildPages(model) {
     ...model.principles.sections.map((s) => principlePage(model, s)),
     tokensIndex(model),
     ...model.tokenFiles.map((f) => tokenFilePage(model, f)),
+    ...model.foundations.map((f) => foundationPage(model, f)),
     as(componentPage(model, model.base), "base"),
     ...model.utilities.map((c) => as(componentPage(model, c), "base")),
     layoutsIndex(model),
     ...model.layouts.map((c) => as(componentPage(model, c), "layouts")),
     ...COMPONENT_GROUPS.flatMap(({ group }) => [levelIndex(model, group), ...model.components[group].map((c) => as(componentPage(model, c), /** @type {Section} */ (group)))]),
-    patternsIndex(model),
     ...sortedPatterns(model).map((p) => patternPage(model, p)),
     webComponentsPage(model),
     guidesIndex(model),
@@ -264,6 +270,7 @@ export function buildPages(model) {
     demosPage(model),
     repoFilePage(model, "CONTRIBUTING.md", model.contributing, "contributing"),
     repoFilePage(model, "CHANGELOG.md", model.changelog, "changelog"),
+    searchPage(),
   ];
 }
 
@@ -303,8 +310,8 @@ export const ATOMIC_DESIGN_URL = "https://atomicdesign.bradfrost.com/";
 
 /** How the sidebar is organized, in one paragraph. @param {Model} model */
 const organizationMd = (model) => {
-  const levels = COMPONENT_GROUPS.map(({ group, title }) => `[${title.toLowerCase()}](site:${group}/index.html)`);
-  return `The sidebar follows Brad Frost's [Atomic Design](${ATOMIC_DESIGN_URL}): [tokens](site:tokens/index.html), then [base elements](site:${model.base.sitePath}) and [layouts](site:layouts/index.html), then ${levels.slice(0, -1).join(", ")} and ${levels.at(-1)}. [Patterns](site:patterns/index.html) combine them, and [web components](site:${WEB_COMPONENTS_PATH}) add the behavior HTML lacks. The [principles](site:principles/index.html) explain each choice; [explainers](site:explainers/index.html) cover the patterns no standard does.`;
+  const levels = COMPONENT_GROUPS.map(({ group, title }) => `[${title.toLowerCase()}](site:${levelIndexPath(group)})`);
+  return `The sidebar follows Brad Frost's [Atomic Design](${ATOMIC_DESIGN_URL}), and each group has one folder in the URL. **Foundations**: the [principles](site:principles/index.html) that explain each choice, [tokens](site:tokens/index.html) (with theming, motion, elevation and density), [base elements](site:${model.base.sitePath}) and [layouts](site:layouts/index.html). **Components**: ${levels.slice(0, -1).join(", ")} and ${levels.at(-1)} under \`components/\`, and the [web components](site:${WEB_COMPONENTS_PATH}) that add the behavior HTML lacks. **Guides**: step-by-step [guides](site:guides/index.html) and the [explainers](site:explainers/index.html) for the patterns no standard covers; a component page links its explainer when it has one.`;
 };
 
 /** @param {Model} model */
@@ -397,6 +404,8 @@ function principlesIndex(model) {
 function principlePage(model, s) {
   // A principle shows the snippets that name it (page="principles/theming"), after its text.
   const snippets = model.principleSnippets[s.sitePath] ?? [];
+  const foundation = model.foundations.find((f) => f.principle === s.slug);
+  const reference = foundation ? [md(`Tokens and live examples: [${foundation.title}](site:${foundation.sitePath}).`)] : [];
   return {
     path: s.sitePath,
     section: "principles",
@@ -404,7 +413,7 @@ function principlePage(model, s) {
     heading: s.title,
     description: firstSentenceOf(s.body) || s.title,
     source: edit("PRINCIPLES.md"),
-    blocks: [md(shiftHeadings(rewriteRepoLinks(s.body, model), -1)), ...(snippets.length ? liveExampleBlocks(model, snippets) : [])],
+    blocks: [...reference, md(shiftHeadings(rewriteRepoLinks(s.body, model), -1)), ...(snippets.length ? liveExampleBlocks(model, snippets) : [])],
     snippets,
   };
 }
@@ -422,9 +431,8 @@ function tierTableMd(model) {
   return "";
 }
 
-/** How a token table's values are shown. @param {Model} model @param {boolean} fallbacks some descriptions come from PRINCIPLES.md */
-const resolvedMd = (model, fallbacks) =>
-  `**Light** and **Dark** resolve every \`var()\` and take one side of [\`light-dark()\`](https://developer.mozilla.org/en-US/docs/Web/CSS/color_value/light-dark). Previews are decorative.${fallbacks ? ` † marks a description taken from the semantic token table in [Theming](site:${principleLink(model, "theming")}).` : ""}`;
+/** How a token table's values are shown. */
+const RESOLVED_MD = "**Light** and **Dark** resolve every `var()` and take one side of [`light-dark()`](https://developer.mozilla.org/en-US/docs/Web/CSS/color_value/light-dark). Previews are decorative.";
 
 /** @param {Model} model @returns {Page} */
 function tokensIndex(model) {
@@ -476,8 +484,16 @@ function tokenIntroMd(model, para) {
 
 /** @typedef {Model["tokenFiles"][number]} TokenFile @typedef {TokenFile["groups"][number]["tokens"][number]} Token */
 
-/** A token's description: its comment, else its purpose in PRINCIPLES.md, else "". @param {Token} t */
-const tokenDescription = (t) => (t.description ? { text: t.description, from: "comment" } : t.purpose ? { text: t.purpose, from: "PRINCIPLES.md" } : { text: "", from: "" });
+/**
+ * A token's description comment as Markdown: code in backticks stays code,
+ * the rest is kept literal (see commentMd()).
+ * @param {string} text
+ */
+const descriptionMd = (text) =>
+  text
+    .split(/(`[^`]+`)/)
+    .map((part, i) => (i % 2 ? part : commentMd(part)))
+    .join("");
 
 /** Conditional overrides, as one line each. @param {Token} t @param {boolean} html */
 const conditionLines = (t, html) =>
@@ -563,10 +579,7 @@ function tokenFilePage(model, f) {
 
   const groupBlock = (/** @type {TokenFile["groups"][number]} */ g) => {
     const note = g.note ? `${commentMd(g.note.charAt(0).toUpperCase() + g.note.slice(1)).replace(/([^.])$/, "$1.")}` : "";
-    const descMd = (/** @type {Token} */ t) => {
-      const d = tokenDescription(t);
-      return [d.text ? `${d.text}${d.from === "PRINCIPLES.md" ? " †" : ""}` : "No description yet.", ...conditionLines(t, false)].join(" ");
-    };
+    const descMd = (/** @type {Token} */ t) => [t.description ? descriptionMd(t.description) : "No description yet.", ...conditionLines(t, false)].join(" ");
     const tableMd = [
       "| Token | Light | Dark | Description |",
       "| --- | --- | --- | --- |",
@@ -576,10 +589,7 @@ function tokenFilePage(model, f) {
       md: `## ${g.name}\n\n${note ? `${note}\n\n` : ""}${tableMd}`,
       html: (/** @type {HtmlContext} */ ctx) => {
         const rows = g.tokens.map((t) => {
-          const d = tokenDescription(t);
-          const text = d.text
-            ? `${d.from === "comment" ? inline(commentMd(d.text)) : inline(d.text)}${d.from === "PRINCIPLES.md" ? ' <span data-text="muted">†</span>' : ""}`
-            : '<span class="token-missing">No description yet</span>';
+          const text = t.description ? inline(descriptionMd(t.description)) : '<span class="token-missing">No description yet</span>';
           const conditions = conditionLines(t, true).map((l) => `<br>${l}`).join("");
           // How the file writes it, when that is not already the light or dark value.
           const written = t.value !== t.light || t.value !== t.dark ? `<br><span data-text="small muted">Written as <code>${escapeHtml(t.value)}</code></span>` : "";
@@ -614,10 +624,46 @@ ${rows.join("\n")}
     description: `All ${count} ${short} in ${f.path}${f.tier ? ` (${f.tier})` : ""}, with resolved light and dark values.`,
     source: edit(f.path),
     blocks: [
-      md(`${intro}\n\n${count} tokens in ${fileLink}. ${resolvedMd(model, f.groups.some((g) => g.tokens.some((t) => tokenDescription(t).from === "PRINCIPLES.md")))}`),
+      md(`${intro}\n\n${count} tokens in ${fileLink}. ${RESOLVED_MD}`),
       filter,
       ...f.groups.map(groupBlock),
     ],
+  };
+}
+
+/**
+ * A Foundations page under Tokens (site/content/foundations/<slug>.md):
+ * summary, the principle that explains it, the handwritten body, links to
+ * the token groups it uses (their one home is the token file's page), then
+ * its live examples.
+ * @param {Model} model
+ * @param {Model["foundations"][number]} f
+ * @returns {Page}
+ */
+function foundationPage(model, f) {
+  const principle = model.principles.sections.find((s) => s.slug === f.principle);
+  const groups = f.tokens.map(({ file, group }) => {
+    const tokenFile = model.tokenFiles.find((t) => t.path === `css/tokens/${file}.css`);
+    const g = tokenFile?.groups.find((x) => x.name === group);
+    if (!tokenFile || !g) throw new Error(`${f.contentPath}: no token group "${group}" in css/tokens/${file}.css`);
+    const n = g.tokens.length;
+    return `- [${g.name}](site:${tokenFile.sitePath}#${slugify(g.name)}) in ${tokenFile.title}: ${n} token${n === 1 ? "" : "s"}.`;
+  });
+  /** @type {Block[]} */
+  const blocks = [md(f.summary)];
+  if (principle) blocks.push(md(`Why it works this way: [${principle.title}](site:${principle.sitePath}).`));
+  if (f.body) blocks.push(md(rewriteRepoLinks(f.body, model)));
+  if (groups.length) blocks.push(md(`## Tokens\n\n${groups.join("\n")}`));
+  blocks.push(...liveExampleBlocks(model, f.snippets));
+  return {
+    path: f.sitePath,
+    section: "tokens",
+    title: f.title,
+    heading: f.title,
+    description: plainMd(f.summary),
+    source: edit(f.contentPath),
+    blocks,
+    snippets: f.snippets,
   };
 }
 
@@ -644,13 +690,13 @@ function levelIndex(model, group) {
   const readme = model.readmes[group];
   const apiLine = (/** @type {Component} */ c) => (c.indexApi ? ` API: ${c.indexApi}.` : "");
   const items = model.components[group].map((c) => `${componentLine(c)}${apiLine(c)}`);
-  const patterns = sortedPatterns(model).filter((p) => p.level === group).map(patternLine);
+  const patterns = sortedPatterns(model).filter((p) => p.level === group).map(patternIndexLine);
   const empty = !items.length && !patterns.length;
   const milestone = COMPONENT_GROUPS.find((g) => g.group === group)?.milestone;
   /** @type {Block[]} */
   const blocks = [
     md(
-      `${LEVEL_INTROS[group] ?? ""} A level of [Atomic Design](${ATOMIC_DESIGN_URL}); APIs follow the [component API convention](site:${CONVENTION_LINK}).`.trim(),
+      `${LEVEL_INTROS[group] ?? ""} A level of [Atomic Design](${ATOMIC_DESIGN_URL}); APIs follow the [component API convention](site:${CONVENTION_LINK}).${patterns.length ? ` ${patternIntroMd}` : ""}`.trim(),
     ),
   ];
   const details = groupDetailsMd(model, group, 2);
@@ -659,7 +705,7 @@ function levelIndex(model, group) {
   if (details.choices) blocks.push(md(`## Our choices\n\n${details.choices}`));
   if (details.notShipped) blocks.push(md(details.notShipped));
   return {
-    path: `${group}/index.html`,
+    path: levelIndexPath(group),
     ...(details.choices || details.notShipped ? {} : { inFull: /** @type {const} */ (false) }),
     section: /** @type {Section} */ (group),
     title,
@@ -684,7 +730,7 @@ function layoutsIndex(model) {
     blocks: [
       md(`Layout primitives arrange their children and nothing else ([Layout primitives](site:${principleLink(model, "layout-primitives")})). Each is one class or attribute, tuned with custom properties.`),
       md(`## Primitives\n\nArrange the children of one element.\n\n${model.layouts.map(componentLine).join("\n")}`),
-      ...(layoutPatterns.length ? [md(`## Page layouts\n\nWhole-page and whole-region arrangements built from the primitives.\n\n${layoutPatterns.map(patternLine).join("\n")}`)] : []),
+      ...(layoutPatterns.length ? [md(`## Page layouts\n\nWhole-page and whole-region arrangements built from the primitives.\n\n${layoutPatterns.map(patternIndexLine).join("\n")}`)] : []),
     ],
   };
 }
@@ -830,7 +876,7 @@ function componentPage(model, c) {
 
   const group = COMPONENT_GROUPS.find((g) => g.group === c.group);
   const level = group
-    ? { title: group.title, path: `${c.group}/index.html` }
+    ? { title: group.title, path: levelIndexPath(c.group) }
     : c.group === "layouts"
       ? { title: "Layouts", path: "layouts/index.html" }
       : c.group === "utilities"
@@ -877,7 +923,7 @@ function componentPage(model, c) {
  * The See also line naming the demo views that use a page, with each app's
  * source file. Empty when no view lists the page.
  * @param {Model} model
- * @param {string} sitePath "patterns/nav.html"
+ * @param {string} sitePath "components/molecules/nav.html"
  * @returns {string[]}
  */
 function demosLine(model, sitePath) {
@@ -958,34 +1004,6 @@ function repoFilePage(model, file, text, section) {
   };
 }
 
-/** @param {Model} model @returns {Page} */
-function patternsIndex(model) {
-  // The Status column only while something is still planned.
-  const planned = model.patterns.some((p) => !p.available);
-  const row = (/** @type {Pattern} */ p) => `| [${p.title}](site:${p.sitePath}) |${planned ? ` ${patternStatus(p)} |` : ""} ${escapeMdCell(p.standards.length ? followsMd(p) : "Our choice")} |`;
-  // Grouped by level, as in the sidebar.
-  const levels = LEVELS.filter((l) => model.patterns.some((p) => p.level === l.level));
-  const guide = model.guides[0];
-  const guideMd = guide ? ` Step by step: [${guide.title}](site:${guide.sitePath}).` : "";
-  return {
-    path: "patterns/index.html",
-    inFull: false,
-    section: "patterns",
-    title: "Patterns",
-    heading: "Patterns",
-    description: "Planned and available interface patterns, from site navigation to app shells, with the standard each one follows.",
-    source: { href: `${REPO_URL}/tree/main/site/content/patterns`, label: "Browse the pattern registry on GitHub" },
-    blocks: [
-      md(`${patternIntroMd}${guideMd}`),
-      ...levels.map((l) => {
-        const rows = sortedPatterns(model).filter((p) => p.level === l.level).map(row);
-        const head = planned ? "| Pattern | Status | Follows |\n| --- | --- | --- |" : "| Pattern | Follows |\n| --- | --- |";
-        return md(`## ${l.title}\n\n${head}\n${rows.join("\n")}`);
-      }),
-    ],
-  };
-}
-
 /** Keys as <kbd>, one per alternative ("Left Arrow / Right Arrow"). @param {string} key @param {boolean} markdown */
 const kbdMd = (key, markdown) =>
   key
@@ -1061,6 +1079,8 @@ function patternPage(model, p) {
   const blocks = [md(p.summary)];
   if (p.ourChoice) blocks.push(md(ourChoiceMd(p.ourChoice)));
   if (!p.available) blocks.push(md(`Coming in ${p.milestone}.`));
+  const rationale = explainerLinks(model, p);
+  if (rationale) blocks.push(md(`**Rationale:** ${rationale} records the design choices and the alternatives considered.`));
   const diagram = diagramName(p.sitePath);
   blocks.push(...leadDiagram(model, diagram));
 
@@ -1076,7 +1096,7 @@ function patternPage(model, p) {
   const specs = [...p.standards, ...p.specs, ...fromCss];
 
   const seeAlso = [
-    level ? `[${level.title}](site:${level.level}/index.html)` : `[Patterns](site:patterns/index.html)`,
+    ...(level ? [`[${level.title}](site:${levelPagePath(level.level)})`] : []),
     ...(p.available ? [`Source: ${[...p.cssPaths, ...p.examplePaths].map((s) => `[\`${s}\`](${BLOB_URL}${s})`).join(", ")}`] : []),
     ...demosLine(model, p.sitePath),
   ];
@@ -1107,6 +1127,19 @@ function patternPage(model, p) {
     snippets: p.available ? p.snippets : [],
     diagram,
   };
+}
+
+/**
+ * Links to the explainers that record a pattern's design, or "".
+ * @param {Model} model
+ * @param {Pattern} p
+ */
+function explainerLinks(model, p) {
+  const links = p.explainers.flatMap((slug) => {
+    const e = model.explainers.find((x) => x.slug === slug);
+    return e ? [`[${e.title} explainer](site:${e.sitePath})`] : [];
+  });
+  return links.length > 1 ? `${links.slice(0, -1).join(", ")} and ${links.at(-1)}` : (links[0] ?? "");
 }
 
 /** @param {Model} model @returns {Page} */
@@ -1163,6 +1196,38 @@ function guidePage(model, g) {
     description: plainMd(g.summary),
     source: edit(g.contentPath),
     blocks: [md(rewriteRepoLinks(expandGuide(model, g), model))],
+  };
+}
+
+/**
+ * The search page: a form, and the results site.js gets from the Pagefind
+ * index (site/build.mjs). Not in the sidebar; the app bar's search box
+ * submits here (?q=). Without JavaScript it says so and points at the
+ * sidebar and llms.txt.
+ * @returns {Page}
+ */
+function searchPage() {
+  return {
+    path: SEARCH_PATH,
+    section: "search",
+    inFull: false,
+    title: "Search",
+    heading: "Search",
+    description: "Search every page of the domestic-ui docs.",
+    source: { href: "https://pagefind.app/", label: "Search by Pagefind" },
+    blocks: [
+      {
+        md: "Search needs JavaScript. Every page is listed in the sidebar and in [llms.txt](site:llms.txt).",
+        html: (ctx) => `<search class="docs-search-page" data-search-page data-pagefind="${escapeHtml(ctx.link(`${PAGEFIND_DIR}/pagefind.js`))}">
+<form action="${escapeHtml(ctx.link(SEARCH_PATH))}" method="get">
+<label for="search-q">Search the docs</label>
+<input type="search" id="search-q" name="q" autocomplete="off" spellcheck="false">
+</form>
+</search>
+<p role="status" data-search-status>Search needs JavaScript. Every page is listed in the sidebar and in <a href="${escapeHtml(ctx.link("llms.txt"))}">llms.txt</a>.</p>
+<ol class="docs-search-results" data-search-results hidden></ol>`,
+      },
+    ],
   };
 }
 
@@ -1246,6 +1311,8 @@ function explainersIndex(model) {
  */
 function explainerPage(model, e) {
   const firstPara = tokenize(e.body).find((b) => b.type === "paragraph" && !/^Status:/.test(b.text));
+  const documented = model.patterns.filter((p) => p.explainers.includes(e.slug)).map((p) => `[${p.title}](site:${p.sitePath})`);
+  const back = documented.length ? [md(`Documented on: ${documented.join(", ")}.`)] : [];
   return {
     path: e.sitePath,
     section: "explainers",
@@ -1254,6 +1321,6 @@ function explainerPage(model, e) {
     heading: e.title,
     description: firstPara ? firstSentence(plainMd(firstPara.text)) : `The ${e.title} explainer.`,
     source: edit(e.path),
-    blocks: [md(titledLinks(model, rewriteRepoLinks(e.body, model)))],
+    blocks: [...back, md(titledLinks(model, rewriteRepoLinks(e.body, model)))],
   };
 }

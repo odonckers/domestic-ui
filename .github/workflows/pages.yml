@@ -25,12 +25,16 @@ jobs:
       - uses: actions/setup-node@v7
         with:
           node-version: lts/*
+          cache: npm
+
+      # The build parses Markdown with markdown-it and indexes search with Pagefind.
+      - run: npm ci
 
       # Fails if README.md, llms.txt or llms-full.txt were not regenerated.
       - name: Check generated files are up to date
         run: node site/build.mjs --check
 
-      # Writes _site/ (pages, Markdown twins, copied css/ and examples/, .nojekyll).
+      # Writes _site/ (pages, Markdown twins, copied css/ and examples/, .nojekyll) and the Pagefind index in _site/pagefind/.
       - name: Build site
         run: node site/build.mjs
 

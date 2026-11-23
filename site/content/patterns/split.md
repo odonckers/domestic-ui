@@ -7,4 +7,6 @@ our-choice: No standard exists for a fixed split: two regions in a CSS grid. A d
 specs:
   - APG Window Splitter pattern: https://www.w3.org/WAI/ARIA/apg/patterns/windowsplitter/
   - WCAG 1.4.10 Reflow: https://www.w3.org/WAI/WCAG22/Understanding/reflow.html
+explainers:
+  - split-view
 ---

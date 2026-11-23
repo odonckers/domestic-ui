@@ -7,6 +7,8 @@ our-choice: No standard exists: a labelled `<nav>` with a list of links and `ari
 specs:
   - HTML `<nav>` element: https://html.spec.whatwg.org/multipage/sections.html#the-nav-element
   - MDN `aria-current`: https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Reference/Attributes/aria-current
+explainers:
+  - pagination
 ---
 - A visually hidden "Page" completes each number's link name ([WCAG 2.4.4](https://www.w3.org/WAI/WCAG22/Understanding/link-purpose-in-context.html)).
 - At the ends, Previous or Next is an `<a>` with no `href`: not focusable.

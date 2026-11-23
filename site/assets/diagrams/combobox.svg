@@ -1,6 +1,6 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 180" role="img" aria-labelledby="diagram-typeahead-title" aria-describedby="diagram-typeahead-desc">
-  <title id="diagram-typeahead-title">Where a typeahead is used</title>
-  <desc id="diagram-typeahead-desc">A typeahead is a text field in a form whose list of suggestions opens right under it as you type.</desc>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 180" role="img" aria-labelledby="diagram-combobox-title" aria-describedby="diagram-combobox-desc">
+  <title id="diagram-combobox-title">Where a combobox is used</title>
+  <desc id="diagram-combobox-desc">A combobox is a text field in a form whose list of suggestions opens right under it as you type.</desc>
   <!-- Frame -->
   <rect x="0.75" y="0.75" width="318.5" height="178.5" rx="6" fill="var(--dui-color-surface)" stroke="var(--dui-color-border)" stroke-width="1.5"/>
   <!-- Regions -->
@@ -23,7 +23,7 @@
   <g fill="none" stroke="currentColor" stroke-opacity=".5">
     <rect x="92" y="138" width="160" height="16" rx="3"/>
   </g>
-  <!-- The typeahead -->
+  <!-- The combobox -->
   <g fill="var(--dui-color-accent-surface)" stroke="var(--dui-color-accent)" stroke-width="2">
     <rect x="92" y="64" width="160" height="16" rx="3"/>
     <rect x="92" y="82" width="160" height="40" rx="3" fill="var(--dui-color-surface)"/>

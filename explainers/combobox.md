@@ -1,4 +1,4 @@
-# Combobox (typeahead)
+# Combobox
 
 Status: shipped in domestic-ui as a web component over native markup.
 CSS: [`css/components/molecules/combobox.css`](../css/components/molecules/combobox.css) ·

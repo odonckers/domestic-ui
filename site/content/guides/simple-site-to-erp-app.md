@@ -6,7 +6,7 @@ Each step builds on the last; stop at any step. Statuses are as of this build.
 
 ## Step 1: a plain content page
 
-Link `css/domestic.css` and write semantic HTML; the [base layer](site:components/base.html) styles it with no classes. Arrange content with the layout primitives:
+Link `css/domestic.css` and write semantic HTML; the [base layer](site:base/index.html) styles it with no classes. Arrange content with the layout primitives:
 
 {{layouts}}
 
@@ -20,7 +20,7 @@ Theme with semantic [tokens](site:tokens/index.html).
 
 Use a native element where one exists, and an APG pattern where not:
 
-{{patterns: disclosure, tabs, dialog, popover, menu-button, toolbar, typeahead, alerts, card}}
+{{patterns: disclosure, tabs, dialog, popover, menu-button, toolbar, combobox, alerts, card}}
 
 ## Step 4: the app shell
 

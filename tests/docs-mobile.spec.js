@@ -118,7 +118,7 @@ test("at 1280px the Docs sidebar sits beside main, only the current group is ope
   expect(await page.evaluate(() => scrollY)).toBe(0);
 
   // A page low in the sidebar: site.js scrolls the sidebar (not the page) so its link is on screen.
-  await page.goto("_site/patterns/typeahead.html");
+  await page.goto("_site/components/molecules/combobox.html");
   await expect(nav.locator('a[aria-current="page"]')).toBeInViewport({ ratio: 1 });
   expect(await nav.evaluate((n) => n.scrollTop), "the sidebar scrolled").toBeGreaterThan(0);
   expect(await page.evaluate(() => scrollY)).toBe(0);
@@ -126,7 +126,7 @@ test("at 1280px the Docs sidebar sits beside main, only the current group is ope
 
 // Owen's rule: an accent edge on the leading side is straight (nav.css, alerts and anything site.css draws).
 test("coloured leading edges are straight: no start-side radius on a thick start border, no exceptions", async ({ page }) => {
-  for (const path of ["index.html", "components/atoms/button.html", "patterns/alerts.html", "tokens/semantic.html"]) {
+  for (const path of ["index.html", "components/atoms/button.html", "components/molecules/alerts.html", "tokens/semantic.html"]) {
     await page.goto(`_site/${path}`);
     const curved = await page.evaluate(() =>
       [...document.querySelectorAll("body *")].flatMap((el) => {

@@ -29,7 +29,42 @@ The default theme should look complete and consistent out of the box. Consumers 
 
 ## Checks
 
-`npm test` must pass. That run includes html-validate, axe, and stylelint.
+`npm test` runs, in order, and fails if any step fails:
+
+| Script | Tool | Checks |
+| --- | --- | --- |
+| `lint:html` | [html-validate](https://html-validate.org/) | `examples/**/*.html` against `html-validate:recommended` |
+| `lint:css` | [Stylelint](https://stylelint.io/) | `css/**/*.css` against `stylelint-config-standard` |
+| `lint:tokens` | `scripts/check-tokens.mjs` | Semantic-only tokens and no literal colors or sizes outside `css/tokens/` |
+| `test:a11y` | [Playwright](https://playwright.dev/) + [axe-core](https://github.com/dequelabs/axe-core) | Every `examples/**/*.html` (atoms and molecules included) in light and dark, in Chromium, Firefox and WebKit, with tags `wcag2a`, `wcag2aa`, `wcag21a`, `wcag21aa`, `wcag22aa`, including open dialogs and drawers, open popovers and menus, shown tooltips and toasts, every tab selected and every details expanded; no horizontal page overflow and no axe violations at 320×640 and 375×812; no external requests; token contrast pairs (atoms and molecules included) in the default and forest themes; rendered focus-ring and indicator contrast; atom and molecule states through accessibility APIs; molecule keyboard behavior against the APG; no-JavaScript fallbacks; fallbacks for engine-specific features; scoped theming of atoms and molecules; layouts and organisms side by side when wide and stacked when narrow, the sticky action bar never covering the focused field, data table sorting, selection, sticky header and loading state (with and without JavaScript), and 24px targets in compact density; the app shell's landmarks and grid areas, collapse when wide, modal drawers with focus return when narrow, one copy of each sidebar, no-JavaScript fallbacks and axe with the drawers open |
+
+Preview locally with `npm run serve` (a zero-dependency static server) and open
+<http://127.0.0.1:4173/examples/base.html>. To run tests from two checkouts at once, give each its own port, e.g. `PORT=4273 npm test`.
+
+Rule relaxations, each with its reason:
+
+- **Stylelint `custom-property-pattern`** is replaced, not disabled. The standard kebab-case
+  pattern rejects `--dui-step--1` (the double hyphen marks a negative step, a common naming for
+  type scales below zero). The replacement still requires kebab-case and only allows names
+  starting with `--dui-` or the documented layout properties (`--stack-*`, `--cluster-*`, `--grid-*`).
+- **Engine-specific test**: the field test also reads the `invalid` state from the accessibility
+  tree through the Chrome DevTools Protocol, which only Chromium offers; Firefox and WebKit run the
+  rest of that test (attribute and accessible description). The molecule tests do the same for the
+  expanded state of `<summary>` and of a `popovertarget` button, which browsers expose natively but
+  Playwright's role engine does not compute; the other engines check the `open` attribute and the
+  popover's visibility instead. No browser is skipped.
+- **Feature fallbacks**: where every engine in the test run supports a feature (anchor positioning,
+  `@starting-style`, `closedby`, `popover="hint"`), the molecule tests also exercise the fallback path
+  by removing the feature in the page: deleting the `@supports` or `@starting-style` rules from the
+  CSSOM, removing the `closedby` attribute, or setting `popover="manual"` (what `hint` falls back to).
+- **Settling transitions**: axe and geometry checks wait for running CSS transitions to finish, so they
+  measure final colors and positions rather than a frame mid-fade.
+- **External-request check**: same-origin `blob:` URLs are allowed, because WebKit routes these
+  in-memory objects through the request handler. Any other origin still fails the test.
+- **html-validate**: none. `html-validate:recommended` is used as-is. Inline `style` attributes
+  that set only custom properties are already allowed by its
+  [`no-inline-style`](https://html-validate.org/rules/no-inline-style.html) default
+  (`allowVariables: true`), which is how the layout primitives are configured.
 
 ## Alignment passes
 
@@ -37,7 +72,7 @@ To check or fix how items line up (sidebars, nav, toolbars, menus, tabs, dialogs
 vendored [gridlines](https://github.com/pritamux/gridlines) skill: read
 [`.claude/skills/gridlines/DOMESTIC-UI.md`](.claude/skills/gridlines/DOMESTIC-UI.md) first, then
 [`.claude/skills/gridlines/SKILL.md`](.claude/skills/gridlines/SKILL.md). Its rules are our choice, not a standard;
-the target lines are in [`PRINCIPLES.md` § 13](PRINCIPLES.md#13-edges-and-alignment). Measure with
+the target lines are in [`PRINCIPLES.md` § 12](PRINCIPLES.md#12-edges-and-alignment). Measure with
 `npm run gridlines -- examples/app-shell.html` (a manual tool, not part of `npm test`).
 
 ## Commits and PR titles

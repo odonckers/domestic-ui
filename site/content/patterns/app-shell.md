@@ -9,4 +9,7 @@ specs:
   - HTML `<main>` element: https://html.spec.whatwg.org/multipage/grouping-content.html#the-main-element
   - HTML `<aside>` element: https://html.spec.whatwg.org/multipage/sections.html#the-aside-element
   - WCAG 1.4.10 Reflow: https://www.w3.org/WAI/WCAG22/Understanding/reflow.html
+explainers:
+  - app-shell
+  - aux-sidebar
 ---

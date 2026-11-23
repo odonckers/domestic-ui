@@ -30,28 +30,32 @@ import { escapeHtml } from "./util.mjs";
 export const TOP = [
   { title: "Get started", path: "index.html" },
   { title: "Foundations", path: "principles/index.html" },
-  { title: "Components", path: "atoms/index.html" },
-  { title: "Patterns & guides", path: "patterns/index.html" },
+  { title: "Components", path: "components/atoms/index.html" },
+  { title: "Guides", path: "guides/index.html" },
   { title: "Demos", path: "demos.html" },
 ];
 
-/** @type {readonly NavEntry[]} */
+/**
+ * The sidebar entries, grouped by app bar section and in its order, so the
+ * previous and next links never jump between sections. Each entry's pages
+ * share one folder in the URL (components/molecules/…, tokens/…).
+ * @type {readonly NavEntry[]}
+ */
 export const NAV = [
   { title: "Getting started", path: "index.html", sections: ["home"], top: "Get started" },
-  { title: "Principles", path: "principles/index.html", sections: ["principles"], top: "Foundations" },
-  { title: "Tokens", path: "tokens/index.html", sections: ["tokens"], top: "Foundations" },
-  { title: "Base", path: "components/base.html", sections: ["base"], top: "Foundations" },
-  { title: "Layout", path: "layouts/index.html", sections: ["layouts"], top: "Foundations" },
-  { title: "Atoms", path: "atoms/index.html", sections: ["atoms"], top: "Components" },
-  { title: "Molecules", path: "molecules/index.html", sections: ["molecules"], top: "Components" },
-  { title: "Organisms", path: "organisms/index.html", sections: ["organisms"], top: "Components" },
-  { title: "Web components", path: "components/web-components.html", sections: ["web-components"], top: "Components" },
-  { title: "Patterns", path: "patterns/index.html", sections: ["patterns"], top: "Patterns & guides" },
-  { title: "Guides", path: "guides/index.html", sections: ["guides"], top: "Patterns & guides" },
-  { title: "Explainers", path: "explainers/index.html", sections: ["explainers"], top: "Patterns & guides" },
-  { title: "Demos", path: "demos.html", sections: ["demos"], top: "Demos" },
   { title: "Contributing", path: "contributing.html", sections: ["contributing"], top: "Get started" },
   { title: "Changelog", path: "changelog.html", sections: ["changelog"], top: "Get started" },
+  { title: "Principles", path: "principles/index.html", sections: ["principles"], top: "Foundations" },
+  { title: "Tokens", path: "tokens/index.html", sections: ["tokens"], top: "Foundations" },
+  { title: "Base", path: "base/index.html", sections: ["base"], top: "Foundations" },
+  { title: "Layout", path: "layouts/index.html", sections: ["layouts"], top: "Foundations" },
+  { title: "Atoms", path: "components/atoms/index.html", sections: ["atoms"], top: "Components" },
+  { title: "Molecules", path: "components/molecules/index.html", sections: ["molecules"], top: "Components" },
+  { title: "Organisms", path: "components/organisms/index.html", sections: ["organisms"], top: "Components" },
+  { title: "Web components", path: "components/web-components.html", sections: ["web-components"], top: "Components" },
+  { title: "Guides", path: "guides/index.html", sections: ["guides"], top: "Guides" },
+  { title: "Explainers", path: "explainers/index.html", sections: ["explainers"], top: "Guides" },
+  { title: "Demos", path: "demos.html", sections: ["demos"], top: "Demos" },
 ];
 
 /**
@@ -64,8 +68,7 @@ export const NAV_LABELS = /** @type {Record<string, string>} */ ({
   "components/atoms/link.html": "Link",
   "components/atoms/button.html": "Button",
   "components/atoms/controls.html": "Controls",
-  "patterns/alerts.html": "Alert",
-  "patterns/density.html": "Density",
+  "components/molecules/alerts.html": "Alert",
 });
 
 /** A page's sidebar link text. @param {Page} page */

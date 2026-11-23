@@ -1,7 +1,7 @@
 // @ts-check
-import { existsSync, readdirSync } from "node:fs";
+import { existsSync, readFileSync, readdirSync } from "node:fs";
 import { join } from "node:path";
-import { ROOT, build } from "../site/build.mjs";
+import { ROOT, build, writeSearchIndex } from "../site/build.mjs";
 
 /*
  * Shared by the docs specs. The site is built once into _site/ (without
@@ -12,7 +12,10 @@ import { ROOT, build } from "../site/build.mjs";
  * spec files still builds once. Playwright's webServer serves the repo
  * root, so pages are at /_site/….
  */
-if (!process.env.TEST_WORKER_INDEX || !existsSync(join(ROOT, "_site", "index.html"))) build({ writeRoot: false });
+if (!process.env.TEST_WORKER_INDEX || !existsSync(join(ROOT, "_site", "index.html"))) {
+  build({ writeRoot: false });
+  await writeSearchIndex();
+}
 
 export const SITE_DIR = join(ROOT, "_site");
 
@@ -29,8 +32,11 @@ const allHtml = readdirSync(SITE_DIR, { recursive: true })
   .filter((name) => name.endsWith(".html"))
   .sort();
 
-/** Redirect pages at old example URLs (examples.html, examples/**): a meta refresh, no docs content. */
-export const redirectPages = allHtml.filter((name) => name === "examples.html" || name.startsWith("examples/"));
+/** Old docs URLs that moved (site/data/moved.json): old site path → new one. */
+export const movedPages = /** @type {Record<string, string>} */ (JSON.parse(readFileSync(join(ROOT, "site/data/moved.json"), "utf8")));
+
+/** Redirect pages at old URLs (examples.html, examples/**, moved docs pages): a meta refresh, no docs content. */
+export const redirectPages = allHtml.filter((name) => name === "examples.html" || name.startsWith("examples/") || name in movedPages);
 
 /** Render pages: one per snippet, framed on its docs page (live/…). */
 export const livePages = allHtml.filter((name) => name.startsWith("live/"));
@@ -38,5 +44,5 @@ export const livePages = allHtml.filter((name) => name.startsWith("live/"));
 /** The published plain HTML demo (demos/vanilla/, copied as-is; demos/a11y checks it). */
 export const demoPages = allHtml.filter((name) => name.startsWith("demos/"));
 
-/** Every built docs page: each .html file in _site/ that is not a redirect, a render page, the demo or under css/ or web-components/. */
-export const builtPages = allHtml.filter((name) => !redirectPages.includes(name) && !livePages.includes(name) && !demoPages.includes(name) && !/^(?:css|web-components)\//.test(name));
+/** Every built docs page: each .html file in _site/ that is not a redirect, a render page, the demo or under css/, web-components/ or pagefind/. */
+export const builtPages = allHtml.filter((name) => !redirectPages.includes(name) && !livePages.includes(name) && !demoPages.includes(name) && !/^(?:css|web-components|pagefind)\//.test(name));

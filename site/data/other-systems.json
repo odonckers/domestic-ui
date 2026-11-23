@@ -16,7 +16,7 @@
     }
   },
   "pages": {
-    "components/base": {
+    "base/index": {
       "apple": null,
       "material": null,
       "geist": null
@@ -209,17 +209,17 @@
       "material": null,
       "geist": null
     },
-    "components/utilities/visually-hidden": {
+    "base/visually-hidden": {
       "apple": null,
       "material": null,
       "geist": null
     },
-    "patterns/nav": {
+    "components/molecules/nav": {
       "apple": null,
       "material": null,
       "geist": null
     },
-    "patterns/breadcrumb": {
+    "components/molecules/breadcrumb": {
       "apple": {
         "url": "https://developer.apple.com/design/human-interface-guidelines/path-controls",
         "title": "Path controls"
@@ -230,7 +230,7 @@
         "title": "Breadcrumbs"
       }
     },
-    "patterns/tabs": {
+    "components/molecules/tabs": {
       "apple": {
         "url": "https://developer.apple.com/design/human-interface-guidelines/tab-views",
         "title": "Tab views"
@@ -244,7 +244,7 @@
         "title": "Tabs"
       }
     },
-    "patterns/menu-button": {
+    "components/molecules/menu-button": {
       "apple": {
         "url": "https://developer.apple.com/design/human-interface-guidelines/pull-down-buttons",
         "title": "Pull-down buttons"
@@ -258,7 +258,7 @@
         "title": "Menu"
       }
     },
-    "patterns/disclosure": {
+    "components/molecules/disclosure": {
       "apple": {
         "url": "https://developer.apple.com/design/human-interface-guidelines/disclosure-controls",
         "title": "Disclosure controls"
@@ -269,7 +269,7 @@
         "title": "Collapse"
       }
     },
-    "patterns/dialog": {
+    "components/molecules/dialog": {
       "apple": {
         "url": "https://developer.apple.com/design/human-interface-guidelines/modality",
         "title": "Modality"
@@ -283,7 +283,7 @@
         "title": "Modal"
       }
     },
-    "patterns/popover": {
+    "components/molecules/popover": {
       "apple": {
         "url": "https://developer.apple.com/design/human-interface-guidelines/popovers",
         "title": "Popovers"
@@ -291,7 +291,7 @@
       "material": null,
       "geist": null
     },
-    "patterns/toolbar": {
+    "components/molecules/toolbar": {
       "apple": {
         "url": "https://developer.apple.com/design/human-interface-guidelines/toolbars",
         "title": "Toolbars"
@@ -302,7 +302,7 @@
       },
       "geist": null
     },
-    "patterns/pagination": {
+    "components/molecules/pagination": {
       "apple": null,
       "material": null,
       "geist": {
@@ -310,7 +310,7 @@
         "title": "Pagination"
       }
     },
-    "patterns/search": {
+    "components/molecules/search": {
       "apple": {
         "url": "https://developer.apple.com/design/human-interface-guidelines/search-fields",
         "title": "Search fields"
@@ -324,7 +324,7 @@
         "title": "Search Input"
       }
     },
-    "patterns/card": {
+    "components/molecules/card": {
       "apple": null,
       "material": {
         "url": "https://m3.material.io/components/cards/overview",
@@ -332,7 +332,7 @@
       },
       "geist": null
     },
-    "patterns/alerts": {
+    "components/molecules/alerts": {
       "apple": {
         "url": "https://developer.apple.com/design/human-interface-guidelines/feedback",
         "title": "Feedback"
@@ -346,7 +346,7 @@
         "title": "Note"
       }
     },
-    "patterns/typeahead": {
+    "components/molecules/combobox": {
       "apple": {
         "url": "https://developer.apple.com/design/human-interface-guidelines/combo-boxes",
         "title": "Combo boxes"
@@ -357,7 +357,7 @@
         "title": "Combobox"
       }
     },
-    "patterns/app-shell": {
+    "layouts/app-shell": {
       "apple": {
         "url": "https://developer.apple.com/design/human-interface-guidelines/sidebars",
         "title": "Sidebars"
@@ -368,7 +368,7 @@
       },
       "geist": null
     },
-    "patterns/list-detail": {
+    "layouts/list-detail": {
       "apple": {
         "url": "https://developer.apple.com/design/human-interface-guidelines/split-views",
         "title": "Split views"
@@ -379,7 +379,7 @@
       },
       "geist": null
     },
-    "patterns/split": {
+    "layouts/split": {
       "apple": {
         "url": "https://developer.apple.com/design/human-interface-guidelines/split-views",
         "title": "Split views"
@@ -390,12 +390,12 @@
       },
       "geist": null
     },
-    "patterns/dashboard": {
+    "layouts/dashboard": {
       "apple": null,
       "material": null,
       "geist": null
     },
-    "patterns/data-table": {
+    "components/organisms/data-table": {
       "apple": {
         "url": "https://developer.apple.com/design/human-interface-guidelines/lists-and-tables",
         "title": "Lists and tables"
@@ -406,7 +406,7 @@
         "title": "Table"
       }
     },
-    "patterns/filter-bar": {
+    "components/organisms/filter-bar": {
       "apple": null,
       "material": {
         "url": "https://m3.material.io/components/chips/overview",
@@ -417,12 +417,12 @@
         "title": "Filter Params"
       }
     },
-    "patterns/large-forms": {
+    "components/organisms/large-forms": {
       "apple": null,
       "material": null,
       "geist": null
     },
-    "patterns/density": {
+    "tokens/density": {
       "apple": null,
       "material": {
         "url": "https://m3.material.io/foundations/layout/grids-spacing/density",

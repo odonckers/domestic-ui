@@ -8,7 +8,11 @@
  * - Live examples are frames of a fixed height (site.css), loaded with the
  *   page (not lazily, so the page does not jump as you scroll). Here each is
  *   fitted to its content, and refitted when the content changes size.
- * No network requests.
+ * - The search page (search.html) says search needs JavaScript. Here it
+ *   loads the Pagefind index (https://pagefind.app/, written by
+ *   site/build.mjs into pagefind/) and lists the results for ?q= and for
+ *   what is typed, keeping ?q= in the URL.
+ * No requests to other origins.
  */
 
 for (const frame of document.querySelectorAll("iframe[data-live]")) {
@@ -96,4 +100,71 @@ if (filter instanceof HTMLElement && input instanceof HTMLInputElement && status
 
   input.addEventListener("input", apply);
   filter.hidden = false;
+}
+
+const searchPage = document.querySelector("[data-search-page]");
+const searchStatus = document.querySelector("[data-search-status]");
+const searchResults = document.querySelector("[data-search-results]");
+const searchInput = searchPage?.querySelector('input[type="search"]');
+if (searchPage instanceof HTMLElement && searchStatus && searchResults instanceof HTMLOListElement && searchInput instanceof HTMLInputElement) {
+  const bundle = new URL(searchPage.dataset.pagefind ?? "pagefind/pagefind.js", document.baseURI);
+  // Pagefind's result URLs start at the site root ("/tokens/motion.html"), which is the bundle's parent folder.
+  const siteRoot = new URL("../", bundle);
+  /** @type {Promise<any> | null} */
+  let loading = null;
+  const load = () => (loading ??= import(bundle.href));
+  let latest = 0;
+
+  /** @param {string} query */
+  const run = async (query) => {
+    const run = ++latest;
+    const q = query.trim();
+    const url = new URL(location.href);
+    if (q) url.searchParams.set("q", q);
+    else url.searchParams.delete("q");
+    history.replaceState(null, "", url);
+    if (!q) {
+      searchResults.replaceChildren();
+      searchResults.hidden = true;
+      searchStatus.textContent = "Type to search every page.";
+      return;
+    }
+    const pagefind = await load();
+    const found = await pagefind.debouncedSearch(q, {}, 200);
+    // A newer query started while this one waited: drop this one.
+    if (found === null || run !== latest) return;
+    const data = await Promise.all(found.results.slice(0, 20).map((/** @type {any} */ r) => r.data()));
+    if (run !== latest) return;
+    searchResults.replaceChildren(
+      ...data.map((/** @type {any} */ d) => {
+        const li = document.createElement("li");
+        const a = document.createElement("a");
+        a.href = new URL(String(d.url).replace(/^\//, ""), siteRoot).href;
+        a.textContent = d.meta?.title ?? d.url;
+        const excerpt = document.createElement("p");
+        excerpt.dataset.text = "small";
+        // Pagefind's excerpt is escaped page text with <mark> around the matches.
+        excerpt.innerHTML = d.excerpt;
+        li.append(a, excerpt);
+        return li;
+      }),
+    );
+    searchResults.hidden = !data.length;
+    const total = found.results.length;
+    const shown = total > data.length ? `, the first ${data.length} shown` : "";
+    searchStatus.textContent = total ? `${total} ${total === 1 ? "page matches" : "pages match"} “${q}”${shown}.` : `No page matches “${q}”.`;
+  };
+
+  searchPage.querySelector("form")?.addEventListener("submit", (event) => {
+    event.preventDefault();
+    run(searchInput.value);
+  });
+  searchInput.addEventListener("input", () => run(searchInput.value));
+  const initial = new URLSearchParams(location.search).get("q") ?? "";
+  searchInput.value = initial;
+  // The header box submitted here: keep its query there too.
+  const header = document.getElementById("docs-search-q");
+  if (header instanceof HTMLInputElement) header.value = initial;
+  if (initial) run(initial);
+  else searchStatus.textContent = "Type to search every page.";
 }

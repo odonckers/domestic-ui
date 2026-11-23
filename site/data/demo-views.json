@@ -16,7 +16,7 @@
         "angular": "demos/angular/src/app/dashboard",
         "astro": "demos/astro/src/pages/index.astro"
       },
-      "pages": ["patterns/app-shell", "patterns/nav", "patterns/menu-button", "patterns/popover", "patterns/disclosure", "patterns/dashboard", "patterns/data-table"]
+      "pages": ["layouts/app-shell", "components/molecules/nav", "components/molecules/menu-button", "components/molecules/popover", "components/molecules/disclosure", "layouts/dashboard", "components/organisms/data-table"]
     },
     {
       "id": "settings",
@@ -28,7 +28,7 @@
         "angular": "demos/angular/src/app/settings",
         "astro": "demos/astro/src/pages/settings.astro"
       },
-      "pages": ["patterns/app-shell", "patterns/nav", "patterns/menu-button", "patterns/popover", "patterns/large-forms"]
+      "pages": ["layouts/app-shell", "components/molecules/nav", "components/molecules/menu-button", "components/molecules/popover", "components/organisms/large-forms"]
     },
     {
       "id": "orders",
@@ -41,20 +41,20 @@
         "astro": "demos/astro/src/pages/orders.astro"
       },
       "pages": [
-        "patterns/app-shell",
-        "patterns/nav",
-        "patterns/menu-button",
-        "patterns/popover",
-        "patterns/breadcrumb",
-        "patterns/filter-bar",
-        "patterns/typeahead",
-        "patterns/data-table",
-        "patterns/toolbar",
-        "patterns/density",
-        "patterns/list-detail",
+        "layouts/app-shell",
+        "components/molecules/nav",
+        "components/molecules/menu-button",
+        "components/molecules/popover",
+        "components/molecules/breadcrumb",
+        "components/organisms/filter-bar",
+        "components/molecules/combobox",
+        "components/organisms/data-table",
+        "components/molecules/toolbar",
+        "tokens/density",
+        "layouts/list-detail",
         "components/organisms/page-header"
       ],
-      "notes": { "patterns/app-shell": "with the auxiliary sidebar" }
+      "notes": { "layouts/app-shell": "with the auxiliary sidebar" }
     }
   ]
 }

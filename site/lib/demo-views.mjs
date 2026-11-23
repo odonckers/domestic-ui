@@ -22,7 +22,7 @@ export const DEMO_VIEWS_PATH = "site/data/demo-views.json";
  * @property {string} title        "Account settings"
  * @property {string} description  one plain line
  * @property {Record<string, string>} paths  app id → repo path of the view's source (file or directory)
- * @property {string[]} pages      docs pages it uses, site paths without ".html" ("patterns/nav")
+ * @property {string[]} pages      docs pages it uses, site paths without ".html" ("components/molecules/nav")
  * @property {Record<string, string>} [notes]  page → a short note shown after the view's name there
  *
  * @typedef {{ apps: DemoApp[], views: DemoView[] }} DemoViews

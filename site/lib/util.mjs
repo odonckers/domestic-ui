@@ -12,6 +12,10 @@ export const EDIT_URL = `${REPO_URL}/edit/main/`;
 export const releaseUrl = (version) => `${REPO_URL}/releases/tag/v${version}`;
 /** The source archive GitHub attaches to every release. @param {string} version */
 export const archiveUrl = (version) => `${REPO_URL}/archive/refs/tags/v${version}.zip`;
+/** The search page (./pages.mjs) and the Pagefind bundle it loads (site/build.mjs writes it). */
+export const SEARCH_PATH = "search.html";
+export const PAGEFIND_DIR = "pagefind";
+
 export const RAW_URL = "https://raw.githubusercontent.com/odonckers/domestic-ui/main/";
 
 const ESCAPES = { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" };

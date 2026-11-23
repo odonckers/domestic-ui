@@ -1,7 +1,8 @@
 #!/usr/bin/env node
 // @ts-check
 /*
- * Docs build. Zero dependencies.
+ * Docs build. Markdown is parsed by markdown-it; the search index is
+ * built by Pagefind.
  *
  *   node site/build.mjs           build _site/ and write README.md, llms.txt, llms-full.txt
  *   node site/build.mjs --check   exit 1 if README.md, llms.txt or llms-full.txt are stale
@@ -15,11 +16,12 @@ import { fileURLToPath, pathToFileURL } from "node:url";
 import { loadModel } from "./lib/discovery.mjs";
 import { checkDiagrams } from "./lib/diagrams.mjs";
 import { NAV, navEntryOf, navLabel, navTree } from "./lib/nav.mjs";
-import { generateLlms, generateLlmsFull, generateReadme, searchIndex } from "./lib/outputs.mjs";
+import { generateLlms, generateLlmsFull, generateReadme } from "./lib/outputs.mjs";
 import { redirectMarkdown, redirectPage, renderPage } from "./lib/live.mjs";
 import { addOtherSystems, loadOtherSystems } from "./lib/other-systems.mjs";
 import { LIVE_DEMO, buildPages } from "./lib/pages.mjs";
 import { renderHtml, renderMarkdown } from "./lib/templates.mjs";
+import { PAGEFIND_DIR } from "./lib/util.mjs";
 
 export { extractSnippets, loadModel } from "./lib/discovery.mjs";
 export { markdownToHtml } from "./lib/markdown.mjs";
@@ -30,6 +32,12 @@ export { NAV } from "./lib/nav.mjs";
 const HERE = dirname(fileURLToPath(import.meta.url));
 export const ROOT = resolve(HERE, "..");
 const ASSETS = join(HERE, "assets");
+
+/** Old docs URLs and where each moved: { "<old site path>": "<new site path>" }. */
+export const MOVED_PATH = "site/data/moved.json";
+
+/** @param {string} root @returns {Record<string, string>} */
+const loadMoved = (root) => (existsSync(join(root, MOVED_PATH)) ? JSON.parse(readFileSync(join(root, MOVED_PATH), "utf8")) : {});
 
 /** Files at the repository root that the build owns. */
 export const GENERATED = /** @type {const} */ (["README.md", "llms.txt", "llms-full.txt"]);
@@ -82,9 +90,15 @@ export function generate(root = ROOT) {
     const example = model.examples.find((e) => e.path === s.source);
     if (s.live && example) live[s.live] = renderPage(s, example.html);
   }
-  /** Old example URLs: site path → the page it moved to and the redirect page. examples.html goes to Getting started. */
+  // Old docs URLs (site/data/moved.json): each target is built, and no old URL is a page again.
+  const moved = loadMoved(root);
+  for (const [from, to] of Object.entries(moved)) {
+    if (pages.some((p) => p.path === from)) throw new Error(`${MOVED_PATH}: ${from} is a page again; remove it from the file`);
+    if (!pages.some((p) => p.path === to.split("#")[0])) throw new Error(`${MOVED_PATH}: ${from} moved to ${to}, which no page builds`);
+  }
+  /** Old URLs: site path → the page it moved to and the redirect page. examples.html goes to Getting started. */
   const redirects = Object.fromEntries(
-    [["examples.html", "index.html"], ...Object.entries(model.exampleTargets)].map(([from, to]) => [from, { to, html: redirectPage(from, to, titleOf(to)) }]),
+    [["examples.html", "index.html"], ...Object.entries(model.exampleTargets), ...Object.entries(moved)].map(([from, to]) => [from, { to, html: redirectPage(from, to, titleOf(to.split("#")[0])) }]),
   );
   return {
     model,
@@ -129,13 +143,10 @@ export function build({ root = ROOT, outDir, writeRoot = true } = {}) {
   // GitHub Pages: serve files as-is, no Jekyll processing.
   writeFileSync(join(out, ".nojekyll"), "");
 
-  /** @type {Record<string, string>} */
-  const html = {};
   for (const page of result.pages) {
     const file = join(out, page.path);
     mkdirSync(dirname(file), { recursive: true });
-    html[page.path] = result.html(page);
-    writeFileSync(file, html[page.path]);
+    writeFileSync(file, result.html(page));
     writeFileSync(file.replace(/\.html$/, ".md"), result.markdown(page));
   }
   // Render pages (live/), then redirects at the old example URLs (see ./lib/live.mjs).
@@ -144,12 +155,37 @@ export function build({ root = ROOT, outDir, writeRoot = true } = {}) {
     writeFileSync(join(out, path), text);
   };
   for (const [path, text] of Object.entries(result.live)) put(path, text);
-  for (const [path, r] of Object.entries(result.redirects)) put(path, r.html);
+  for (const [path, r] of Object.entries(result.redirects)) {
+    put(path, r.html);
+    // A moved docs page had a Markdown twin too.
+    if (!path.startsWith("examples")) put(path.replace(/\.html$/, ".md"), redirectMarkdown(r.to, result.pages.find((p) => p.path === r.to.split("#")[0])?.title ?? "domestic-ui"));
+  }
   put("examples.md", redirectMarkdown("index.html", "Getting started"));
-  writeFileSync(join(out, "search-index.json"), searchIndex(result.pages, html));
   for (const name of ["llms.txt", "llms-full.txt"]) writeFileSync(join(out, name), result.files[name]);
   if (writeRoot) for (const name of GENERATED) writeFileSync(join(root, name), result.files[name]);
   return result;
+}
+
+/**
+ * Index the built pages for search with Pagefind (https://pagefind.app/)
+ * into outDir/pagefind/. Only each page's article (data-pagefind-body) is
+ * indexed, so render pages, redirects and the demo are left out.
+ * @param {string} [outDir]
+ * @returns {Promise<number>} the number of pages indexed
+ */
+export async function writeSearchIndex(outDir = join(ROOT, "_site")) {
+  const pagefind = await import("pagefind");
+  const { index, errors } = await pagefind.createIndex({ forceLanguage: "en" });
+  if (!index) throw new Error(`Pagefind: ${errors.join("; ")}`);
+  try {
+    const added = await index.addDirectory({ path: outDir });
+    if (added.errors.length) throw new Error(`Pagefind: ${added.errors.join("; ")}`);
+    const written = await index.writeFiles({ outputPath: join(outDir, PAGEFIND_DIR) });
+    if (written.errors.length) throw new Error(`Pagefind: ${written.errors.join("; ")}`);
+    return added.page_count;
+  } finally {
+    await pagefind.close();
+  }
 }
 
 /**
@@ -175,6 +211,7 @@ if (process.argv[1] && import.meta.url === pathToFileURL(resolve(process.argv[1]
   } else {
     const { pages, warnings } = build();
     warn(warnings);
-    console.log(`Built ${pages.length} pages into _site/ and wrote ${GENERATED.join(", ")}.`);
+    const indexed = await writeSearchIndex();
+    console.log(`Built ${pages.length} pages into _site/, indexed ${indexed} for search, and wrote ${GENERATED.join(", ")}.`);
   }
 }

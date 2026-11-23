@@ -10,7 +10,7 @@ Read [PRINCIPLES.md](PRINCIPLES.md) before changing behavior. [CONTRIBUTING.md](
 - `web-components/`: `dui-app-shell`, `dui-combobox`, `dui-menu`, `dui-table`, `dui-tabs`, `dui-toaster`, `dui-toolbar`, `dui-tooltip` (plain JS custom elements, light DOM).
 - `examples/`: named snippet blocks. They are the single source for docs examples and test fixtures.
 - `explainers/`: Open UI/W3C-style explainers for our own patterns (RFC 2119 wording).
-- `site/`: zero-dependency docs build (`site/build.mjs`) that writes `_site/` plus `README.md`, `llms.txt` and `llms-full.txt`.
+- `site/`: docs build (`site/build.mjs`; markdown-it for Markdown, Pagefind for search, so `npm ci` first) that writes `_site/` plus `README.md`, `llms.txt` and `llms-full.txt`.
 - `demos/`: `vanilla` (no build), `react` (Vite), `angular` and `astro`, each with its own `package.json`. `demos/a11y` is the shared axe and html-validate checker.
 - `tests/`: Playwright specs (Chromium, Firefox, WebKit) with axe.
 - Node >= 24.8 (`engines` in `package.json`). The repo root installs dev tooling only.

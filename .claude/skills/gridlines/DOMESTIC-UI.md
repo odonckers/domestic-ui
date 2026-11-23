@@ -10,7 +10,7 @@ Read this before `SKILL.md`. `SKILL.md`, `probe.js` and `audit.mjs` are upstream
   wherever they surface: CSS comments, `PRINCIPLES.md`, pull requests, the changelog. Standards win any conflict:
   WCAG 2.2 AA, the APG patterns and native elements come first.
 - The "design policy" the skill reads first and records new lines in is
-  [`PRINCIPLES.md` § 13 Edges and alignment](../../../PRINCIPLES.md#13-edges-and-alignment). Use its lines as the
+  [`PRINCIPLES.md` § 12 Edges and alignment](../../../PRINCIPLES.md#12-edges-and-alignment). Use its lines as the
   target; change them only with the owner's approval.
 - Our box-line convention differs from the skill's tab rule: boxes sit on the container's content edge and labels one
   control padding in; we never pull a tab strip or a row outside its container (see the policy for why).

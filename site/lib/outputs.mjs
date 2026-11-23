@@ -6,10 +6,10 @@
  */
 import { COMPONENT_GROUPS } from "./discovery.mjs";
 import { shiftHeadings } from "./markdown.mjs";
-import { NAV, navEntryOf } from "./nav.mjs";
+import { NAV } from "./nav.mjs";
 import { apiSummary, conventionShortMd, demoListMd, followsMd, installMd, patternStatus, rewriteRepoLinks, sortedPatterns } from "./pages.mjs";
 import { resolveSiteLinks, renderMarkdown } from "./templates.mjs";
-import { BLOB_URL, RAW_URL, REPO_URL, SITE_URL, releaseUrl, escapeMdCell, mdCode, unescapeHtml } from "./util.mjs";
+import { BLOB_URL, RAW_URL, REPO_URL, SITE_URL, releaseUrl, escapeMdCell, mdCode } from "./util.mjs";
 
 /**
  * @typedef {import("./discovery.mjs").Model} Model
@@ -160,21 +160,4 @@ export function generateLlmsFull(model, pages, twins) {
     return [first, "", `Page: ${SITE_URL}${p.path}`, ...rest].join("\n");
   });
   return `${llmsHeader(model)}\n\n${body.join("\n\n")}\n`;
-}
-
-/**
- * A search index for a later in-page search: one record per page with its
- * sidebar entry ("level"), summary and h2/h3 headings. No search UI yet.
- * @param {Page[]} pages
- * @param {Record<string, string>} html rendered HTML by page path
- */
-export function searchIndex(pages, html) {
-  const records = pages.map((p) => ({
-    title: p.title,
-    url: p.path,
-    level: navEntryOf(p)?.title ?? "",
-    summary: p.description,
-    headings: [...(html[p.path] ?? "").matchAll(/<h[23] id="[^"]*">([\s\S]*?)<\/h[23]>/g)].map((m) => unescapeHtml(m[1].replace(/<[^>]*>/g, "")).trim()),
-  }));
-  return `[\n${records.map((r) => JSON.stringify(r)).join(",\n")}\n]\n`;
 }

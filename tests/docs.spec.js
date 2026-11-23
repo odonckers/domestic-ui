@@ -96,7 +96,7 @@ test.describe("docs build", () => {
   });
 
   test("every element and pattern page has one valid header diagram under its lead; its twin has the description", () => {
-    expect(diagramPages.map((p) => p.path)).not.toContain("components/base.html");
+    expect(diagramPages.map((p) => p.path)).not.toContain("base/index.html");
     for (const p of site.pages.filter((x) => /^(components\/(atoms|molecules|organisms|utilities)|layouts\/(?!index)|patterns\/(?!index))/.test(x.path))) expect(p.diagram, p.path).toBeTruthy();
     for (const p of diagramPages) {
       const d = site.model.diagrams.get(/** @type {string} */ (p.diagram));
@@ -291,10 +291,10 @@ test.describe("docs build", () => {
       if (own.length) expect(own.some((s) => s.owner === to), `${path}: ${to} shows its snippets`).toBe(true);
     }
     expect(site.redirects["examples.html"].to).toBe("index.html");
-    expect(site.redirects["examples/atoms/index.html"].to).toBe("atoms/index.html");
-    expect(site.redirects["examples/molecules/index.html"].to).toBe("molecules/index.html");
+    expect(site.redirects["examples/atoms/index.html"].to).toBe("components/atoms/index.html");
+    expect(site.redirects["examples/molecules/index.html"].to).toBe("components/molecules/index.html");
     expect(site.redirects["examples/atoms/button.html"].to).toBe("components/atoms/button.html");
-    expect(site.redirects["examples/molecules/tabs.html"].to).toBe("patterns/tabs.html");
+    expect(site.redirects["examples/molecules/tabs.html"].to).toBe("components/molecules/tabs.html");
     expect(site.redirects["examples/theming.html"].to).toBe("principles/theming.html");
     expect(read(join(SITE_DIR, "examples.md"))).toContain("](https://odonckers.github.io/domestic-ui/index.md)");
     // Nothing published links an old example URL any more.
@@ -376,16 +376,16 @@ test.describe("how other systems do it", () => {
   test("the build rejects invalid data and warns about comparable pages with no entry", () => {
     const paths = site.pages.map((p) => p.path);
     expect(validateOtherSystems(data, paths)).toEqual([]);
-    const tabs = data.pages["patterns/tabs"];
+    const tabs = data.pages["components/molecules/tabs"];
     const bad = (/** @type {any} */ pages, systems = data.systems) => validateOtherSystems({ systems, pages }, paths);
     expect(bad({ "patterns/nope": tabs })).toEqual(['pages["patterns/nope"]: no built page patterns/nope.html']);
-    expect(bad({ "patterns/tabs": { ...tabs, carbon: null } })).toEqual(['pages["patterns/tabs"].carbon: unknown system; expected one of apple, material, geist']);
-    expect(bad({ "patterns/tabs": { apple: null, material: null } })).toEqual(['pages["patterns/tabs"]: missing "geist" (use null for no equivalent)']);
+    expect(bad({ "components/molecules/tabs": { ...tabs, carbon: null } })).toEqual(['pages["components/molecules/tabs"].carbon: unknown system; expected one of apple, material, geist']);
+    expect(bad({ "components/molecules/tabs": { apple: null, material: null } })).toEqual(['pages["components/molecules/tabs"]: missing "geist" (use null for no equivalent)']);
     for (const value of [{ url: "http://example.com/", title: "T" }, { url: "https://example.com/" }, { url: "https://example.com/", title: "T", note: "x" }, "https://example.com/", false, [], [{ url: "https://example.com/", title: "T" }, null]]) {
-      expect(bad({ "patterns/tabs": { ...tabs, geist: value } }), JSON.stringify(value)).toEqual(['pages["patterns/tabs"].geist: must be null, { "url": "https://…", "title": "…" }, or a non-empty list of those']);
+      expect(bad({ "components/molecules/tabs": { ...tabs, geist: value } }), JSON.stringify(value)).toEqual(['pages["components/molecules/tabs"].geist: must be null, { "url": "https://…", "title": "…" }, or a non-empty list of those']);
     }
     // A list of links is valid.
-    expect(bad({ "patterns/tabs": { ...tabs, geist: [{ url: "https://example.com/a", title: "A" }, { url: "https://example.com/b", title: "B" }] } })).toEqual([]);
+    expect(bad({ "components/molecules/tabs": { ...tabs, geist: [{ url: "https://example.com/a", title: "A" }, { url: "https://example.com/b", title: "B" }] } })).toEqual([]);
     expect(bad({}, { ...data.systems, carbon: { name: "Carbon" } })).toEqual(["systems.carbon: unknown system; expected one of apple, material, geist"]);
 
     // End to end, with the fixture approach below: a bad key fails the build with a clear message.
@@ -459,7 +459,7 @@ test.describe("atoms from the group README", () => {
     const home = read(join(SITE_DIR, "index.md"));
     expect(home).toContain("## Component API\n\nEach component exposes one `data-<component>` attribute.");
     expect(home).toMatch(/\*\*Our choice:\*\* One attribute is one API to learn/);
-    const atoms = read(join(SITE_DIR, "atoms/index.md"));
+    const atoms = read(join(SITE_DIR, "components/atoms/index.md"));
     const choices = [...readme.matchAll(/^- \*\*Our choice:\*\*/gm)].length;
     expect([...atoms.matchAll(/^- \*\*Our choice:\*\*/gm)].length).toBe(choices);
     expect(atoms).toContain("## Not shipped, and why\n\n| Candidate | Decision |");
@@ -779,7 +779,7 @@ test.describe("docs pages in the browser", () => {
         await expect.poll(() => page.evaluate((t) => Boolean(customElements.get(t)), tag), `${s.live}: ${tag}`).toBe(true);
       }
     }
-    await page.goto("_site/patterns/tabs.html");
+    await page.goto("_site/components/molecules/tabs.html");
     const tabsFrame = page.locator('iframe[title="Live example: Automatic activation"]');
     const tabs = tabsFrame.contentFrame();
     await tabs.getByRole("tab", { name: "Security" }).click();
@@ -789,19 +789,19 @@ test.describe("docs pages in the browser", () => {
       .poll(() => tabsFrame.evaluate((f) => Math.abs(f.getBoundingClientRect().height - (/** @type {HTMLIFrameElement} */ (f).contentDocument?.documentElement.getBoundingClientRect().height ?? 0)) <= 3))
       .toBe(true);
 
-    await page.goto("_site/patterns/dialog.html");
+    await page.goto("_site/components/molecules/dialog.html");
     const dialog = page.locator('iframe[title="Live example: Modal dialog"]').contentFrame();
     await dialog.getByRole("button", { name: "Delete project…" }).click();
     await expect(dialog.getByRole("dialog", { name: "Delete project?" })).toBeVisible();
 
-    await page.goto("_site/patterns/menu-button.html");
+    await page.goto("_site/components/molecules/menu-button.html");
     const menu = page.locator('iframe[title="Live example: Actions menu"]').contentFrame();
     await menu.getByRole("button", { name: "Actions" }).click();
     await expect(menu.getByRole("menu")).toBeVisible();
   });
 
   test("the skip link is the first focusable element and moves focus to main", async ({ page }) => {
-    for (const path of ["index.html", site.pages.find((p) => p.section === "atoms" && p.snippets?.length)?.path ?? "atoms/index.html"]) {
+    for (const path of ["index.html", site.pages.find((p) => p.section === "atoms" && p.snippets?.length)?.path ?? "components/atoms/index.html"]) {
       await page.goto(`_site/${path}`);
       await page.keyboard.press("Tab");
       const skip = page.locator(":focus");
@@ -978,7 +978,7 @@ test("discovery picks up a new component with no site changes", async ({ browser
 
     // Before its files land, the tabs pattern page is a short "coming" page.
     const before = generate(fixture);
-    const tabsBefore = before.pages.find((p) => p.path === "patterns/tabs.html");
+    const tabsBefore = before.pages.find((p) => p.path === "components/molecules/tabs.html");
     expect(tabsBefore).toBeDefined();
     const tabsBeforeMd = before.markdown(/** @type {any} */ (tabsBefore));
     expect(tabsBeforeMd).toContain("\n\nComing in M3.\n\n");
@@ -1066,14 +1066,14 @@ test("discovery picks up a new component with no site changes", async ({ browser
     expect(report.valid, JSON.stringify(report.results)).toBe(true);
     expect(result.pages.map((p) => p.path)).not.toContain("components/atoms/index.html");
 
-    const atoms = out("atoms/index.md");
+    const atoms = out("components/atoms/index.md");
     expect(atoms).toContain("[Demo](https://odonckers.github.io/domestic-ui/components/atoms/demo.md)");
     expect(atoms).not.toMatch(/coming in M2/i);
     // demo.css is not in the README index table: it still gets a page, after the table's rows.
     const atomPaths = result.pages.filter((p) => p.path.startsWith("components/atoms/")).map((p) => p.path);
     expect(atomPaths[atomPaths.length - 1]).toBe("components/atoms/demo.html");
     expect(page).toMatch(/<details open>\s*<summary>Atoms<\/summary>[\s\S]*aria-current="page">Demo<\/a>/);
-    const molecules = out("molecules/index.md");
+    const molecules = out("components/molecules/index.md");
     expect(molecules, "an available pattern has no status note").toContain("[Tabs](https://odonckers.github.io/domestic-ui/patterns/tabs.md): Sections of content shown one at a time, chosen from a list of tabs.\n");
     expect(molecules).toContain("Coming in M3.");
     expect(page, "an available pattern has no status note in the sidebar").toContain('<a href="../../patterns/tabs.html">Tabs</a>');
@@ -1086,20 +1086,20 @@ test("discovery picks up a new component with no site changes", async ({ browser
     // The tabs pattern page is filled in: demo, byte-identical markup, keyboard notes from the CSS.
     const paths = result.pages.map((p) => p.path);
     expect(paths, "a pattern owns its file names").not.toContain("components/molecules/tabs.html");
-    const tabsPage = out("patterns/tabs.html");
+    const tabsPage = out("components/molecules/tabs.html");
     expect(tabsPage).not.toContain("Coming in M3.");
     expect(tabsPage).toContain('src="../live/molecules/tabs--fixture-tabs.html"');
     const tabsCode = ['<div class="tabs">\n  <p>Fixture tabs.</p>\n</div>'];
     expect(out("live/molecules/tabs--fixture-tabs.html"), "the render page is the same text").toContain(`\n${tabsCode[0]}\n`);
     expect(snippetBlocks(tabsPage)).toEqual(tabsCode);
-    expect(result.pages.find((p) => p.path === "patterns/tabs.html")?.snippets?.map((s) => s.code)).toEqual(tabsCode);
+    expect(result.pages.find((p) => p.path === "components/molecules/tabs.html")?.snippets?.map((s) => s.code)).toEqual(tabsCode);
     expect(isDedentedSlice(tabs, tabsCode[0], /^[ \t]*$/)).toBe(true);
-    expect(htmlFences(out("patterns/tabs.md"))).toEqual(tabsCode);
+    expect(htmlFences(out("components/molecules/tabs.md"))).toEqual(tabsCode);
     expect(tabsPage).toContain('<th scope="row"><kbd>Left Arrow</kbd> / <kbd>Right Arrow</kbd></th><td>moves focus between tabs (fixture)</td>');
     expect(tabsPage).toContain('<th scope="row"><kbd>Home</kbd></th><td>moves focus to the first tab (fixture)</td>');
     expect(tabsPage, "the CSS Keyboard block wins over the registry list").not.toContain("moves focus into the tab list");
     expect(tabsPage).toContain('<a href="https://www.w3.org/WAI/ARIA/apg/patterns/tabs/">APG Tabs pattern</a>');
-    const tabsReport = await htmlValidate.validateString(tabsPage, join(fixture, "_site/patterns/tabs.html"));
+    const tabsReport = await htmlValidate.validateString(tabsPage, join(fixture, "_site/components/molecules/tabs.html"));
     expect(tabsReport.valid, JSON.stringify(tabsReport.results)).toBe(true);
     // Grouped by level, as in the sidebar.
     const patternsIndex = out("patterns/index.md");

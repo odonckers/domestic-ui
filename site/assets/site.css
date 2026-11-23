@@ -16,8 +16,38 @@
   text-decoration-line: none;
 }
 
-.docs-github {
+/*
+ * Site search in the app bar: a GET form to search.html. The app shell lays
+ * it out (css/layout/app-shell.css: it grows, and takes its own row when
+ * there is no room); here it is capped and pushed to the end edge, before
+ * GitHub.
+ */
+.docs-search {
+  max-inline-size: 20rem;
   margin-inline-start: auto;
+}
+
+/* The search page (search.html): the field, then one result per page with its excerpt. */
+.docs-search-page input {
+  display: block;
+  inline-size: 100%;
+}
+
+.docs-search-page > * + * {
+  margin-block-start: var(--dui-space-2xs);
+}
+
+.docs-search-results {
+  padding: 0;
+  list-style: none;
+}
+
+.docs-search-results > li + li {
+  margin-block-start: var(--dui-space-m);
+}
+
+.docs-search-results p {
+  margin-block-start: var(--dui-space-3xs);
 }
 
 /* Skip link: hidden by .visually-hidden until focused, then pinned top-left. */

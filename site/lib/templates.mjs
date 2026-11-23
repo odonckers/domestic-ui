@@ -20,7 +20,7 @@
  */
 import { markdownToHtml, uniqueId } from "./markdown.mjs";
 import { renderBreadcrumb, renderNav, renderPrevNext, renderSections } from "./nav.mjs";
-import { REPO_URL, SITE_URL, BLOB_URL, escapeHtml, relativeUrl } from "./util.mjs";
+import { REPO_URL, SITE_URL, BLOB_URL, SEARCH_PATH, escapeHtml, relativeUrl } from "./util.mjs";
 
 /** @typedef {import("./pages.mjs").Page} Page */
 
@@ -68,13 +68,17 @@ export function renderHtml(page, tree) {
         </button>
         <a class="docs-name" href="${link("index.html")}">domestic-ui</a>
         ${renderSections(page, link)}
-        <!-- Slot for the site search (M4): search-index.json. Empty and hidden until then. -->
-        <div class="docs-search" data-docs-search hidden></div>
+        <search class="docs-search">
+          <form action="${link(SEARCH_PATH)}" method="get">
+            <label class="visually-hidden" for="docs-search-q">Search the docs</label>
+            <input type="search" id="docs-search-q" name="q" autocomplete="off" spellcheck="false" placeholder="Search">
+          </form>
+        </search>
         <a class="docs-github" href="${REPO_URL}">GitHub</a>
       </header>
       ${renderNav(page, tree, link)}
       <main id="main" tabindex="-1">
-        <article class="docs-content"${page.wide ? " data-wide" : ""}>
+        <article class="docs-content"${page.wide ? " data-wide" : ""}${page.section === "search" ? "" : " data-pagefind-body"}>
 ${/role="region"/.test(body) ? `${REGIONS_NOTE}\n` : ""}${renderBreadcrumb(page, link)}
 <h1>${escapeHtml(page.heading)}</h1>
 ${body}

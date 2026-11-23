@@ -33,6 +33,20 @@ export const LEVELS = /** @type {const} */ ([
   { level: "layouts", title: "Layouts", singular: "layout" },
 ]);
 
+/** Site path of the Base elements page; utilities sit next to it (base/<name>.html). */
+export const BASE_PATH = "base/index.html";
+
+/** Site path of a component level's index: "components/molecules/index.html". @param {string} group */
+export const levelIndexPath = (group) => `components/${group}/index.html`;
+
+/**
+ * Site path of a pattern page, under its sidebar group: tokens/, layouts/,
+ * or components/<level>/.
+ * @param {string} level one of LEVELS[].level
+ * @param {string} slug
+ */
+export const patternSitePath = (level, slug) => (level === "tokens" || level === "layouts" ? `${level}/${slug}.html` : `components/${level}/${slug}.html`);
+
 /** Layout primitives may live in any of these; the first file of a name wins. */
 export const LAYOUT_CSS_DIRS = /** @type {const} */ (["css/layout", "css/layouts", "css/components/layouts"]);
 /** Standalone layout examples, joined to the CSS by file name. */
@@ -98,8 +112,20 @@ export const PATTERN_EXAMPLE_DIRS = /** @type {const} */ (["molecules", "organis
  * @property {Snippet[]} snippets
  * @property {boolean} available  true once an example page or CSS file exists
  * @property {string} body        Markdown after the front matter
+ * @property {string[]} explainers slugs of the explainers that record its design (front matter `explainers`)
  * @property {string} contentPath
  * @property {string} sitePath
+ *
+ * @typedef {object} Foundation  a Foundations page under Tokens: site/content/foundations/<slug>.md
+ * @property {string} slug
+ * @property {string} title
+ * @property {string} summary     Markdown
+ * @property {string} principle   slug of the principle that explains it
+ * @property {{ file: string, group: string }[]} tokens token groups it uses ("semantic: Motion")
+ * @property {string} body        Markdown after the front matter
+ * @property {Snippet[]} snippets the snippets whose page="tokens/<slug>"
+ * @property {string} contentPath
+ * @property {string} sitePath    "tokens/motion.html"
  *
  * @typedef {object} Guide
  * @property {string} slug
@@ -356,21 +382,8 @@ export function loadModel(root) {
     }),
   };
 
-  // Token purposes, from PRINCIPLES.md's semantic token table.
-  /** @type {Map<string, string>} */
-  const purposes = new Map();
-  for (const block of tokenize(principlesMd)) {
-    if (block.type !== "table") continue;
-    for (const [first, second] of block.rows.slice(1)) {
-      const name = first?.match(/^`(--dui-[\w-]+)`$/);
-      if (name && second) purposes.set(name[1], second);
-    }
-  }
   // Every file in css/tokens/, resolved together so semantic values resolve through primitives.
-  const tokenFiles = resolveTokens(list("css/tokens", ".css").map((f) => parseTokenFile(read(`css/tokens/${f}`), `css/tokens/${f}`))).map((f) => ({
-    ...f,
-    groups: f.groups.map((g) => ({ ...g, tokens: g.tokens.map((t) => ({ ...t, purpose: purposes.get(t.name) ?? "" })) })),
-  }));
+  const tokenFiles = resolveTokens(list("css/tokens", ".css").map((f) => parseTokenFile(read(`css/tokens/${f}`), `css/tokens/${f}`)));
 
   const override = (/** @type {string} */ key) => {
     const path = `site/content/components/${key}.md`;
@@ -426,7 +439,7 @@ export function loadModel(root) {
       overridePath: over?.path ?? null,
       ourChoice: str(over?.data["our-choice"]),
       choices: choicesFor(indexed?.readme ?? null, title, row?.terms ?? []),
-      sitePath: group === "layouts" ? `layouts/${name}.html` : `components/${group}/${name}.html`,
+      sitePath: group === "layouts" ? `layouts/${name}.html` : group === "utilities" ? `base/${name}.html` : `components/${group}/${name}.html`,
     };
   };
 
@@ -551,8 +564,9 @@ export function loadModel(root) {
       snippets: [], // assigned below
       available: examplePaths.length > 0 || cssPaths.length > 0,
       body,
+      explainers: strList(data.explainers),
       contentPath: path,
-      sitePath: `patterns/${slug}.html`,
+      sitePath: patternSitePath(level, slug),
     };
   });
 
@@ -563,6 +577,27 @@ export function loadModel(root) {
     const { data, body } = parseFrontMatter(read(path));
     return { slug, title: str(data.title) || titleFromName(slug), summary: str(data.summary), body, contentPath: path, sitePath: `guides/${slug}.html` };
   });
+
+  /**
+   * Foundations (site/content/foundations/*.md): reference pages under
+   * Tokens for a principle's tokens and live examples, in `order`.
+   * @type {Foundation[]}
+   */
+  const foundations = list("site/content/foundations", ".md")
+    .map((f) => {
+      const path = `site/content/foundations/${f}`;
+      const slug = f.replace(/\.md$/, "");
+      const { data, body } = parseFrontMatter(read(path));
+      const principle = str(data.principle);
+      if (!principles.sections.some((s) => s.slug === principle)) throw new Error(`${path}: principle "${principle}" is not a section of PRINCIPLES.md`);
+      const tokens = strList(data.tokens).map((t) => {
+        const [file, ...group] = t.split(":");
+        return { file: file.trim(), group: group.join(":").trim() };
+      });
+      return { slug, order: Number(str(data.order) || 99), title: str(data.title) || titleFromName(slug), summary: str(data.summary), principle, tokens, body, snippets: /** @type {Snippet[]} */ ([]), contentPath: path, sitePath: `tokens/${slug}.html` };
+    })
+    .sort((a, b) => a.order - b.order || byString(a.slug, b.slug))
+    .map(({ order, ...f }) => f);
 
   /**
    * Explainers (explainers/*.md): one docs page each, the README as their
@@ -620,7 +655,7 @@ export function loadModel(root) {
     }),
     overridePath: baseOver?.path ?? null,
     ourChoice: str(baseOver?.data["our-choice"]),
-    sitePath: "components/base.html",
+    sitePath: BASE_PATH,
   };
 
   // Snippets: each one is shown and rendered on exactly one docs page, its owner: the page its
@@ -661,6 +696,10 @@ export function loadModel(root) {
     c.usedIn = [...new Set(c.usedIn.flatMap((p) => snippets.filter((s) => s.source === p).map((s) => /** @type {string} */ (s.owner))))].filter((p) => p !== c.sitePath);
   }
   for (const p of patterns) p.snippets = ownedBy(p.sitePath);
+  for (const f of foundations) f.snippets = ownedBy(f.sitePath);
+  for (const p of patterns) {
+    for (const e of p.explainers) if (!explainers.some((x) => x.slug === e)) throw new Error(`${p.contentPath}: no explainer "${e}" in explainers/`);
+  }
   const principleSnippets = Object.fromEntries(principles.sections.map((s) => [s.sitePath, ownedBy(s.sitePath)]));
 
   /**
@@ -671,7 +710,7 @@ export function loadModel(root) {
   const exampleTargets = Object.fromEntries(
     examples.map((e) => {
       const level = COMPONENT_GROUPS.find((g) => g.group === e.group);
-      const target = e.showcase ? (level ? `${level.group}/index.html` : "index.html") : (snippets.find((s) => s.source === e.path && !s.head)?.owner ?? exampleOwner.get(e.path) ?? "index.html");
+      const target = e.showcase ? (level ? levelIndexPath(level.group) : "index.html") : (snippets.find((s) => s.source === e.path && !s.head)?.owner ?? exampleOwner.get(e.path) ?? "index.html");
       return [e.path, target];
     }),
   );
@@ -690,6 +729,7 @@ export function loadModel(root) {
     base,
     patterns,
     guides,
+    foundations,
     explainers,
     explainersReadme,
     webComponentsReadme,

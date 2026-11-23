@@ -61,7 +61,7 @@ const isHttps = (url) => {
 /**
  * Every problem with the data, as one message per problem; [] when valid.
  * @param {OtherSystems} data
- * @param {string[]} pagePaths site paths of every built page ("patterns/tabs.html")
+ * @param {string[]} pagePaths site paths of every built page ("components/molecules/tabs.html")
  */
 export function validateOtherSystems(data, pagePaths) {
   const problems = [];
