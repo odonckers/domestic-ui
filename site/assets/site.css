@@ -27,6 +27,13 @@
   margin-inline-start: auto;
 }
 
+/* Narrow shells: the GitHub link leaves the app bar (the footer has it), so the bar keeps two rows. */
+@container dui-app-shell (inline-size < 48rem) {
+  .docs-github {
+    display: none;
+  }
+}
+
 /* The search page (search.html): the field, then one result per page with its excerpt. */
 .docs-search-page input {
   display: block;

@@ -11,7 +11,7 @@ import { linksOf, validateOtherSystems } from "../site/lib/other-systems.mjs";
 import { DIAGRAM_DIR, checkDiagrams, diagramProblems, loadDiagrams } from "../site/lib/diagrams.mjs";
 import { navLabel } from "../site/lib/nav.mjs";
 import { escapeHtml, unescapeHtml } from "../site/lib/util.mjs";
-import { SITE_DIR, WCAG_TAGS, builtPages, livePages, redirectPages, summarize } from "./docs-helpers.js";
+import { SITE_DIR, WCAG_TAGS, builtPages, livePages, movedPages, redirectPages, summarize } from "./docs-helpers.js";
 import { blockExternalRequests, examples, schemes } from "./helpers.js";
 
 /*
@@ -269,13 +269,13 @@ test.describe("docs build", () => {
     }
   });
 
-  test("every old example URL is a static redirect to the page that now holds it", async () => {
-    const old = ["examples.html", ...examples].sort();
-    expect(redirectPages, "a redirect for each example page and examples.html").toEqual(old);
+  test("every old example and docs URL is a static redirect to the page that now holds it", async () => {
+    const old = ["examples.html", ...examples, ...Object.keys(movedPages)].sort();
+    expect(redirectPages, "a redirect for each example page, examples.html and each moved docs page").toEqual(old);
     const paths = site.pages.map((p) => p.path);
     for (const path of old) {
       const { to } = site.redirects[path];
-      expect(paths, `${path} → ${to}`).toContain(to);
+      expect(paths, `${path} → ${to}`).toContain(to.split("#")[0]);
       const href = escapeHtml(posix.relative(posix.dirname(path), to));
       const html = read(join(SITE_DIR, path));
       expect(html, path).toContain(`<meta http-equiv="refresh" content="0; url=${href}">`);
@@ -295,7 +295,12 @@ test.describe("docs build", () => {
     expect(site.redirects["examples/molecules/index.html"].to).toBe("components/molecules/index.html");
     expect(site.redirects["examples/atoms/button.html"].to).toBe("components/atoms/button.html");
     expect(site.redirects["examples/molecules/tabs.html"].to).toBe("components/molecules/tabs.html");
-    expect(site.redirects["examples/theming.html"].to).toBe("principles/theming.html");
+    expect(site.redirects["examples/theming.html"].to).toBe("tokens/theming.html");
+    expect(site.redirects["patterns/typeahead.html"].to).toBe("components/molecules/combobox.html");
+    expect(site.redirects["patterns/index.html"].to).toBe("components/molecules/index.html");
+    expect(site.redirects["components/base.html"].to).toBe("base/index.html");
+    // A moved page's Markdown twin redirects too.
+    expect(read(join(SITE_DIR, "patterns/dialog.md"))).toContain("](https://odonckers.github.io/domestic-ui/components/molecules/dialog.md)");
     expect(read(join(SITE_DIR, "examples.md"))).toContain("](https://odonckers.github.io/domestic-ui/index.md)");
     // Nothing published links an old example URL any more.
     for (const name of GENERATED) expect(site.files[name], name).not.toMatch(/domestic-ui\/examples[./]/);
@@ -463,7 +468,7 @@ test.describe("atoms from the group README", () => {
     const choices = [...readme.matchAll(/^- \*\*Our choice:\*\*/gm)].length;
     expect([...atoms.matchAll(/^- \*\*Our choice:\*\*/gm)].length).toBe(choices);
     expect(atoms).toContain("## Not shipped, and why\n\n| Candidate | Decision |");
-    expect(read(join(SITE_DIR, "examples/atoms/index.html")), "the showcase redirects to the level index").toContain('url=../../atoms/index.html"');
+    expect(read(join(SITE_DIR, "examples/atoms/index.html")), "the showcase redirects to the level index").toContain('url=../../components/atoms/index.html"');
     expect(site.pages.some((p) => p.path === "components/atoms/index.html"), "the showcase is not a component").toBe(false);
     expect(site.pages.some((p) => p.path === "components/index.html"), "the all-levels overview is gone; its parts live on Getting started and the level indexes").toBe(false);
     for (const name of ["README.md", "llms.txt", "llms-full.txt"]) expect(site.files[name], name).toContain('`data-button="primary small"`');
@@ -758,7 +763,7 @@ test.describe("docs pages in the browser", () => {
     for (const path of redirectPages) {
       const { to } = site.redirects[path];
       // Answer the target with 204 No Content, so the browser stays on the redirect page for axe (meta-refresh rule included).
-      const target = (/** @type {URL} */ url) => url.pathname.endsWith(`/_site/${to}`);
+      const target = (/** @type {URL} */ url) => url.pathname.endsWith(`/_site/${to.split("#")[0]}`);
       await page.route(target, (route) => route.fulfill({ status: 204 }));
       await page.goto(`_site/${path}`);
       const { violations } = await new AxeBuilder({ page }).withTags(WCAG_TAGS).analyze();
@@ -852,6 +857,8 @@ test.describe("docs pages in the browser", () => {
     const top = await page.locator('nav[aria-label="Docs"] > ul > li > a, nav[aria-label="Docs"] > ul > li > details > summary').allTextContents();
     expect(top).toEqual([
       "Getting started",
+      "Contributing",
+      "Changelog",
       "Principles",
       "Tokens",
       "Base",
@@ -860,12 +867,9 @@ test.describe("docs pages in the browser", () => {
       "Molecules",
       "Organisms",
       "Web components",
-      "Patterns",
       "Guides",
       "Explainers",
       "Demos",
-      "Contributing",
-      "Changelog",
     ]);
     expect(top).toEqual(NAV.map((n) => n.title));
     const linked = await page.locator('nav[aria-label="Docs"] a').evaluateAll((all) => all.map((a) => new URL(/** @type {HTMLAnchorElement} */ (a).href).pathname.replace(/^\/_site\//, "")));
@@ -1080,7 +1084,7 @@ test("discovery picks up a new component with no site changes", async ({ browser
     expect(page).toContain('<a href="../../patterns/disclosure.html">Disclosure <span class="docs-nav-note">(coming in M3)</span></a>');
     // The fixture has no demos/, CONTRIBUTING.md or CHANGELOG.md: the pages still exist and say so.
     expect(out("demos.md")).toContain("Coming in M5.");
-    expect(out("examples/atoms/index.html"), "the showcase redirects to the level index").toContain('url=../../atoms/index.html"');
+    expect(out("examples/atoms/index.html"), "the showcase redirects to the level index").toContain('url=../../components/atoms/index.html"');
     expect(out("examples/atoms/demo.html")).toContain('url=../../components/atoms/demo.html"');
 
     // The tabs pattern page is filled in: demo, byte-identical markup, keyboard notes from the CSS.
@@ -1137,4 +1141,50 @@ test("discovery picks up a new component with no site changes", async ({ browser
   } finally {
     rmSync(fixture, { recursive: true, force: true });
   }
+});
+
+test.describe("docs search", () => {
+  test("the app bar search opens search.html, which lists matching pages from the Pagefind index", async ({ page }) => {
+    await blockExternalRequests(page);
+    await page.goto("_site/components/molecules/card.html");
+    const box = page.getByRole("searchbox", { name: "Search the docs" });
+    await box.fill("drawer");
+    await box.press("Enter");
+    await expect(page).toHaveURL(/\/_site\/search\.html\?q=drawer$/);
+    const results = page.locator("[data-search-results] > li > a");
+    await expect(results.first()).toBeVisible();
+    await expect(page.locator("[data-search-status]")).toContainText("“drawer”");
+    // Result links resolve under _site/ and reach the dialog page.
+    const hrefs = await results.evaluateAll((as) => as.map((a) => /** @type {HTMLAnchorElement} */ (a).pathname));
+    expect(hrefs).toContain("/_site/components/molecules/dialog.html");
+    // Snippet markup is not indexed, so excerpts never show tags.
+    await expect(page.locator("[data-search-results] p").first()).not.toContainText("<");
+    // Typing updates the results and the URL.
+    const field = page.locator("#search-q");
+    await field.fill("visited links");
+    await expect(page).toHaveURL(/\?q=visited\+links$/);
+    await expect(page.locator("[data-search-status]")).toContainText("“visited links”");
+    const results2 = await page.locator("[data-search-results] > li > a").evaluateAll((as) => as.map((a) => /** @type {HTMLAnchorElement} */ (a).pathname));
+    expect(results2).toContain("/_site/components/atoms/link.html");
+  });
+
+  test("without JavaScript the search page says so and the form still submits", async ({ browser }) => {
+    const context = await browser.newContext({ javaScriptEnabled: false });
+    const page = await context.newPage();
+    await page.goto("_site/index.html");
+    await page.locator("#docs-search-q").fill("tabs");
+    await page.locator("#docs-search-q").press("Enter");
+    await expect(page).toHaveURL(/search\.html\?q=tabs$/);
+    await expect(page.locator("[data-search-status]")).toContainText("Search needs JavaScript");
+    await expect(page.locator("[data-search-results]")).toBeHidden();
+    await context.close();
+  });
+
+  test("render pages, redirects and the sidebar are not in the index", async () => {
+    for (const path of builtPages.filter((p) => p !== "search.html")) {
+      expect(read(join(SITE_DIR, path)), path).toContain("data-pagefind-body");
+    }
+    for (const path of [...livePages, ...redirectPages]) expect(read(join(SITE_DIR, path)), path).not.toContain("data-pagefind-body");
+    expect(read(join(SITE_DIR, "search.html"))).not.toContain("data-pagefind-body");
+  });
 });

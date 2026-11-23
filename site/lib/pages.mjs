@@ -799,7 +799,7 @@ function liveExampleBlocks(model, snippets, usedIn = []) {
             s.live
               ? `<iframe class="example-frame" data-live${TALL_RE.test(s.code) ? " data-tall" : ""} src="${escapeHtml(ctx.link(s.live))}" title="Live example: ${escapeHtml(s.name)}"></iframe>`
               : `<p>${inline(note)}</p>`,
-            `<pre data-snippet="${escapeHtml(s.source)}" data-scroll="inline" role="region" tabindex="0" aria-label="Markup: ${escapeHtml(s.name)}"><code>${escapeHtml(s.code)}</code></pre>`,
+            `<pre data-snippet="${escapeHtml(s.source)}" data-pagefind-ignore data-scroll="inline" role="region" tabindex="0" aria-label="Markup: ${escapeHtml(s.name)}"><code>${escapeHtml(s.code)}</code></pre>`,
           ].join("\n"),
       };
     }),

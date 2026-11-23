@@ -107,9 +107,8 @@ const searchStatus = document.querySelector("[data-search-status]");
 const searchResults = document.querySelector("[data-search-results]");
 const searchInput = searchPage?.querySelector('input[type="search"]');
 if (searchPage instanceof HTMLElement && searchStatus && searchResults instanceof HTMLOListElement && searchInput instanceof HTMLInputElement) {
+  // Pagefind's result URLs are absolute paths under the folder the bundle was loaded from (/_site/… or /domestic-ui/…).
   const bundle = new URL(searchPage.dataset.pagefind ?? "pagefind/pagefind.js", document.baseURI);
-  // Pagefind's result URLs start at the site root ("/tokens/motion.html"), which is the bundle's parent folder.
-  const siteRoot = new URL("../", bundle);
   /** @type {Promise<any> | null} */
   let loading = null;
   const load = () => (loading ??= import(bundle.href));
@@ -139,7 +138,7 @@ if (searchPage instanceof HTMLElement && searchStatus && searchResults instanceo
       ...data.map((/** @type {any} */ d) => {
         const li = document.createElement("li");
         const a = document.createElement("a");
-        a.href = new URL(String(d.url).replace(/^\//, ""), siteRoot).href;
+        a.href = new URL(String(d.url), location.href).href;
         a.textContent = d.meta?.title ?? d.url;
         const excerpt = document.createElement("p");
         excerpt.dataset.text = "small";
