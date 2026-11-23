@@ -132,6 +132,17 @@ dui-tabs {
 }
 
 @media (forced-colors: active) {
+  /*
+   * Forced colors replace transparent borders too, so an unselected tab's
+   * bar would look selected. It becomes the tab list's own hairline
+   * instead; the padding keeps the tab's height.
+   */
+  [role="tab"]:not([aria-selected="true"]) {
+    padding-block-end: calc(var(--dui-space-control-block) + var(--dui-border-width-indicator) - var(--dui-border-width));
+    border-block-end-width: var(--dui-border-width);
+    border-block-end-color: canvastext;
+  }
+
   [role="tab"][aria-selected="true"] {
     border-block-end-color: highlight;
   }

@@ -297,6 +297,11 @@ table[data-table][aria-busy="true"] > tbody > tr[aria-hidden="true"] > td:empty:
     border-block-end-color: canvastext;
   }
 
+  /* Forced colors replace transparent borders too: only selected rows show the bar. */
+  table[data-table] > tbody > tr:has(> :first-child > label > input[type="checkbox"]) > :first-child {
+    border-inline-start-color: canvas;
+  }
+
   table[data-table] > tbody > tr:has(> :first-child > label > input[type="checkbox"]:checked) > :first-child {
     border-inline-start-color: highlight;
   }

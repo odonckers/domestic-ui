@@ -261,9 +261,26 @@
 }
 
 @media (forced-colors: active) {
+  /*
+   * Forced colors replace every border color, transparent included
+   * (https://www.w3.org/TR/css-color-adjust-1/#forced-colors-properties),
+   * so the empty indicator bars take the background color and only the
+   * current link shows one.
+   */
+  [data-nav] a,
+  [data-nav~="horizontal"] > :is(ul, ol) > li > a:any-link,
+  [data-nav~="horizontal"] > :is(ul, ol) > li > details > summary,
+  [data-nav] details[open] > summary {
+    border-color: canvas;
+  }
+
   [data-nav] a[aria-current="page"],
   [data-nav~="horizontal"] > :is(ul, ol) > li > a[aria-current]:not([aria-current="false"], [aria-current=""]) {
     border-color: highlight;
+  }
+
+  [data-nav~="horizontal"] > :is(ul, ol) > li > details:has([aria-current="page"]) > summary {
+    border-block-end-color: highlight;
   }
 
   [data-nav~="horizontal"] details > :is(ul, ol) {

@@ -1107,3 +1107,38 @@ test("molecules in the forest panel re-theme from the token overrides alone", as
   const [plainDefault, plainForest] = await sample();
   expect(plainForest).toEqual(plainDefault);
 });
+
+// Forced colors replace every border color, transparent included
+// (https://www.w3.org/TR/css-color-adjust-1/#forced-colors-properties): an
+// empty indicator bar must take the background color, or every item looks current.
+test("in forced colors only the current nav link and the selected tab show an indicator bar", async ({ page, browserName }) => {
+  test.skip(browserName !== "chromium", "forced-colors emulation is Chromium-only in Playwright");
+  await page.emulateMedia({ forcedColors: "active" });
+  const system = (/** @type {string} */ name) =>
+    page.evaluate((n) => {
+      const p = document.createElement("p");
+      p.style.color = n;
+      document.body.append(p);
+      const color = getComputedStyle(p).color;
+      p.remove();
+      return color;
+    }, name);
+
+  await page.goto("examples/molecules/nav.html");
+  const canvas = await system("Canvas");
+  const highlight = await system("Highlight");
+  const sidebar = page.getByRole("navigation", { name: "Sidebar example" });
+  const bars = await sidebar.locator("a").evaluateAll((links) => links.map((a) => ({ current: a.getAttribute("aria-current") === "page", color: getComputedStyle(a).borderInlineStartColor })));
+  for (const bar of bars) expect(bar.color).toBe(bar.current ? highlight : canvas);
+  const top = page.getByRole("navigation", { name: "Top bar example" });
+  const tops = await top.locator(":scope > ul > li > a").evaluateAll((links) => links.map((a) => ({ current: !!a.getAttribute("aria-current"), color: getComputedStyle(a).borderBottomColor })));
+  for (const bar of tops) expect(bar.color).toBe(bar.current ? highlight : canvas);
+
+  await page.goto("examples/molecules/tabs.html");
+  const canvasText = await system("CanvasText");
+  const tabs = await page.locator('[role="tab"]').evaluateAll((all) => all.map((t) => ({ selected: t.getAttribute("aria-selected") === "true", color: getComputedStyle(t).borderBottomColor, width: getComputedStyle(t).borderBottomWidth })));
+  expect(tabs.length).toBeGreaterThan(1);
+  for (const t of tabs) expect(t.color).toBe(t.selected ? highlight : canvasText);
+  expect(new Set(tabs.filter((t) => !t.selected).map((t) => t.width)).size).toBe(1);
+  expect(tabs.find((t) => t.selected)?.width).not.toBe(tabs.find((t) => !t.selected)?.width);
+});
