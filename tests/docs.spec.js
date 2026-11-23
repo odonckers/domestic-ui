@@ -825,6 +825,8 @@ test.describe("docs pages in the browser", () => {
   });
 
   test("the Docs sidebar marks the current page once and opens only its group; the app bar and breadcrumb agree", async ({ page }) => {
+    // One visit per page, so budget time per page, not per test.
+    test.setTimeout(30_000 + site.pages.length * 1_000);
     // The search page is in no sidebar entry (the app bar's search box opens it).
     for (const p of site.pages.filter((x) => x.path !== "search.html")) {
       await page.goto(`_site/${p.path}`);
