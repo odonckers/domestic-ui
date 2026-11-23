@@ -1,18 +1,24 @@
 // @ts-check
 /*
- * A minimal Markdown to HTML converter for PRINCIPLES.md and the
- * handwritten pages under site/content/. It covers the subset those use,
- * following CommonMark (https://spec.commonmark.org/) and GFM tables
- * (https://github.github.com/gfm/#tables-extension-):
+ * Markdown for PRINCIPLES.md, the repository's Markdown files and the
+ * handwritten pages under site/content/, parsed by markdown-it
+ * (https://github.com/markdown-it/markdown-it): CommonMark
+ * (https://spec.commonmark.org/) plus GFM tables
+ * (https://github.github.com/gfm/#tables-extension-).
  *
- *   ATX headings, paragraphs, nested lists (by indentation), pipe tables,
- *   fenced code blocks, inline code, **bold**, *italics* / _italics_,
- *   [links](url), <https://autolinks>, backslash escapes, and a short
- *   allowlist of inline HTML tags such as <kbd> and <br>.
+ * On top of markdown-it's defaults:
+ * - headings get unique ids, and can be shifted a level up or down;
+ * - tables and multi-line code blocks scroll in a named, focusable region
+ *   (see markdownToHtml());
+ * - links go through options.resolveLink ("site:" links, see ./templates.mjs);
+ * - raw HTML is limited to a short allowlist of inline tags such as <kbd>
+ *   and <br>; any other tag, and every raw HTML block, is shown as text.
  *
- * Everything else is escaped. It is not a general Markdown parser: no
- * block quotes, setext headings, reference links or raw HTML blocks.
+ * tokenize() exposes the block structure (headings, paragraphs, lists,
+ * tables, code) with each block's source text, for the build's own
+ * extraction (first sentences, tier tables, index tables).
  */
+import MarkdownIt from "markdown-it";
 import { escapeHtml, unescapeHtml, slugify } from "./util.mjs";
 
 /**
@@ -29,160 +35,121 @@ import { escapeHtml, unescapeHtml, slugify } from "./util.mjs";
  *   | { type: "paragraph", text: string, raw: string }} Block
  *
  * @typedef {{ ordered: boolean, start: number, text: string, children: ListItem[] }} ListItem
+ * @typedef {import("markdown-it").Token} Token
  */
-
-const FENCE = /^ {0,3}(`{3,}|~{3,})\s*([\w-]*)\s*$/;
-const HEADING = /^ {0,3}(#{1,6})\s+(.*?)(?:\s+#+)?\s*$/;
-const LIST_ITEM = /^(\s*)([-*+]|\d{1,9}[.)])(\s+)(.*)$/;
-const TABLE_DELIMITER = /^\s*\|?\s*:?-+:?\s*(\|\s*:?-+:?\s*)*\|?\s*$/;
-
-const isTableStart = (lines, i) => lines[i].trim().startsWith("|") && i + 1 < lines.length && TABLE_DELIMITER.test(lines[i + 1]);
-const startsBlock = (lines, i) => FENCE.test(lines[i]) || HEADING.test(lines[i]) || isTableStart(lines, i) || LIST_ITEM.test(lines[i]);
-
-/** Split a pipe-table row into raw cells. `\|` is a literal pipe (GFM). @param {string} line */
-const splitRow = (line) =>
-  line
-    .trim()
-    .replace(/^\|/, "")
-    .replace(/(?<!\\)\|$/, "")
-    .split(/(?<!\\)\|/)
-    .map((cell) => cell.trim().replace(/\\\|/g, "|"));
-
-/**
- * Parse Markdown into blocks. Each block keeps its raw source text.
- * @param {string} md
- * @returns {Block[]}
- */
-export function tokenize(md) {
-  const lines = md.replace(/\r\n?/g, "\n").split("\n");
-  /** @type {Block[]} */
-  const blocks = [];
-  let i = 0;
-  while (i < lines.length) {
-    const line = lines[i];
-    if (!line.trim()) {
-      i++;
-      continue;
-    }
-    const start = i;
-    let m;
-    if ((m = line.match(FENCE))) {
-      const marker = m[1];
-      const body = [];
-      i++;
-      while (i < lines.length) {
-        const close = lines[i].match(/^ {0,3}(`{3,}|~{3,})\s*$/);
-        if (close && close[1][0] === marker[0] && close[1].length >= marker.length) break;
-        body.push(lines[i++]);
-      }
-      i++;
-      blocks.push({ type: "code", lang: m[2], code: body.join("\n"), raw: lines.slice(start, i).join("\n") });
-    } else if ((m = line.match(HEADING))) {
-      i++;
-      blocks.push({ type: "heading", level: m[1].length, text: m[2], raw: line });
-    } else if (isTableStart(lines, i)) {
-      const rows = [splitRow(line)];
-      i += 2;
-      while (i < lines.length && lines[i].trim().startsWith("|")) rows.push(splitRow(lines[i++]));
-      blocks.push({ type: "table", rows, raw: lines.slice(start, i).join("\n") });
-    } else if (LIST_ITEM.test(line)) {
-      i++;
-      while (i < lines.length) {
-        if (lines[i].trim()) {
-          // Item, indented continuation, or a lazy continuation line.
-          if (LIST_ITEM.test(lines[i]) || /^\s/.test(lines[i]) || !startsBlock(lines, i)) i++;
-          else break;
-        } else {
-          // A blank line ends the list unless an item or indented text follows.
-          let j = i;
-          while (j < lines.length && !lines[j].trim()) j++;
-          if (j < lines.length && (LIST_ITEM.test(lines[j]) || /^\s+\S/.test(lines[j]))) i = j;
-          else break;
-        }
-      }
-      const raw = lines.slice(start, i).join("\n").replace(/\n+$/, "");
-      blocks.push({ type: "list", items: parseList(raw.split("\n")), raw });
-    } else {
-      i++;
-      while (i < lines.length && lines[i].trim() && !startsBlock(lines, i)) i++;
-      const raw = lines.slice(start, i).join("\n");
-      blocks.push({ type: "paragraph", text: raw.split("\n").map((l) => l.trim()).join("\n"), raw });
-    }
-  }
-  return blocks;
-}
-
-/**
- * Build a list tree from its lines. A marker indented past the current
- * item's marker starts a nested list; other lines continue the last item.
- * @param {string[]} lines
- * @returns {ListItem[]}
- */
-function parseList(lines) {
-  /** @type {ListItem} */
-  const root = { ordered: false, start: 1, text: "", children: [] };
-  /** @type {{ indent: number, item: ListItem }[]} */
-  const stack = [{ indent: -1, item: root }];
-  let last = root;
-  for (const line of lines) {
-    if (!line.trim()) continue;
-    const m = line.match(LIST_ITEM);
-    if (m) {
-      const indent = m[1].length;
-      while (stack.length > 1 && stack[stack.length - 1].indent >= indent) stack.pop();
-      const ordered = /\d/.test(m[2]);
-      last = { ordered, start: ordered ? Number.parseInt(m[2], 10) : 1, text: m[4].trim(), children: [] };
-      stack[stack.length - 1].item.children.push(last);
-      stack.push({ indent, item: last });
-    } else {
-      last.text += `\n${line.trim()}`;
-    }
-  }
-  return root.children;
-}
 
 const INLINE_TAGS = "kbd|br|sub|sup|small|mark|abbr|em|strong|code|samp|var|cite|q|s|del|ins|dfn|time";
-const INLINE_HTML = new RegExp(`</?(?:${INLINE_TAGS})(?:\\s+[a-z-]+(?:="[^"<>]*")?)*\\s*/?>`, "gi");
+const ALLOWED_TAG = new RegExp(`^</?(?:${INLINE_TAGS})(?:\\s+[a-z-]+(?:="[^"<>]*")?)*\\s*/?>$`, "i");
+
+const md = new MarkdownIt({ html: true });
+
+/** The renderer's per-call state: options and the nearest heading above. */
+/** @type {{ options: Options, ids: Set<string>, heading: { id: string, text: string }, seen: Map<string, number> }} */
+let state = { options: {}, ids: new Set(), heading: { id: "", text: "" }, seen: new Map() };
+
+const rules = md.renderer.rules;
+
+rules.html_inline = (tokens, i) => (ALLOWED_TAG.test(tokens[i].content) ? tokens[i].content : escapeHtml(tokens[i].content));
+rules.html_block = (tokens, i) => `<p>${escapeHtml(tokens[i].content.trim())}</p>\n`;
+
+rules.link_open = (tokens, i, opts, env, self) => {
+  const token = tokens[i];
+  const href = token.attrGet("href");
+  const resolve = state.options.resolveLink;
+  if (href != null && resolve) token.attrSet("href", resolve(href));
+  // Link titles are not used in the docs; keep the markup to href alone.
+  if (token.attrGet("title") != null) token.attrs = (token.attrs ?? []).filter(([name]) => name !== "title");
+  return self.renderToken(tokens, i, opts);
+};
+
+rules.heading_open = (tokens, i) => {
+  const inline = tokens[i + 1];
+  const level = Math.min(6, Math.max(1, Number(tokens[i].tag.slice(1)) + (state.options.headingShift ?? 0)));
+  const text = plainText(inline.content);
+  state.heading = { id: uniqueId(text, state.ids), text };
+  tokens[i].meta = { level };
+  return `<h${level} id="${state.heading.id}">`;
+};
+rules.heading_close = (tokens, i) => {
+  // The opening token of this heading is two back (open, inline, close).
+  const level = tokens[i - 2]?.meta?.level ?? Number(tokens[i].tag.slice(1));
+  return `</h${level}>\n`;
+};
+
+/** Count of blocks of a kind under the current heading. @param {string} kind */
+const nth = (kind) => {
+  const key = `${kind}\u0000${state.heading.id}\u0000${state.heading.text}`;
+  const n = (state.seen.get(key) ?? 0) + 1;
+  state.seen.set(key, n);
+  return n;
+};
+
+/** @param {Token[]} tokens @param {number} i */
+const codeBlock = (tokens, i) => {
+  const token = tokens[i];
+  const lang = token.info ? token.info.trim().split(/\s+/)[0] : "";
+  const cls = lang ? ` class="language-${escapeHtml(lang)}"` : "";
+  const code = token.content.replace(/\n$/, "");
+  // A one-line block wraps (css/base/typography.css): no line structure to keep, no extra focus stop.
+  if (!code.includes("\n")) return `<pre><code${cls}>${escapeHtml(code)}</code></pre>\n`;
+  const n = nth("code");
+  const name = `Code${state.heading.text ? `: ${state.heading.text}` : ""}${n > 1 ? ` (${n})` : ""}`;
+  return `<pre data-scroll="inline" role="region" tabindex="0" aria-label="${escapeHtml(name)}"><code${cls}>${escapeHtml(code)}</code></pre>\n`;
+};
+rules.fence = codeBlock;
+rules.code_block = codeBlock;
+
+rules.table_open = () => {
+  const n = nth("table");
+  const { id, text } = state.heading;
+  const name = n === 1 && id ? `aria-labelledby="${id}"` : `aria-label="${escapeHtml(`${text || "Table"}${n > 1 ? ` (${n})` : ""}`)}"`;
+  return `<div data-scroll="inline" role="region" tabindex="0" ${name}>\n<table ${name}>\n`;
+};
+rules.table_close = () => "</table>\n</div>\n";
+
+// Header cells are column headers; the first cell of each body row is its row header
+// (https://www.w3.org/WAI/tutorials/tables/). Alignment is not used in the docs.
+rules.tr_open = () => "<tr>";
+rules.tr_close = () => "</tr>\n";
+rules.th_open = () => '<th scope="col">';
+rules.th_close = () => "</th>";
+rules.td_open = (tokens, i) => (tokens[i - 1]?.type === "tr_open" ? '<th scope="row">' : "<td>");
+rules.td_close = (tokens, i) => {
+  // Close the cell with the tag it opened with.
+  let j = i - 1;
+  while (j >= 0 && tokens[j].type !== "td_open") j--;
+  return tokens[j - 1]?.type === "tr_open" ? "</th>" : "</td>";
+};
 
 /**
- * Inline Markdown to HTML. Code spans, escapes, links and allowed tags are
- * set aside first so emphasis never reaches inside them.
+ * Run the renderer with options, restoring the previous state afterwards
+ * (inline() is called from inside page rendering).
+ * @template T
+ * @param {Options} options
+ * @param {() => T} fn
+ * @returns {T}
+ */
+function withState(options, fn) {
+  const saved = state;
+  state = { options, ids: options.ids ?? new Set(), heading: { id: "", text: options.caption ?? "" }, seen: new Map() };
+  try {
+    return fn();
+  } finally {
+    state = saved;
+  }
+}
+
+/**
+ * Inline Markdown to HTML.
  * @param {string} text
  * @param {Options} [options]
  */
 export function inline(text, options = {}) {
-  const resolve = options.resolveLink ?? ((href) => href);
-  /** @type {string[]} */
-  const slots = [];
-  const hold = (html) => `\u0000${slots.push(html) - 1}\u0000`;
-
-  let s = text.replace(/(?<!`)(`+)(?!`)([\s\S]*?[^`])\1(?!`)/g, (_, _ticks, code) => {
-    const body = code.replace(/\n/g, " ");
-    const trimmed = /^ .*\S.* $/.test(body) ? body.slice(1, -1) : body;
-    return hold(`<code>${escapeHtml(trimmed)}</code>`);
-  });
-  s = s.replace(/\\([!-/:-@[-`{-~])/g, (_, c) => hold(escapeHtml(c)));
-  s = s.replace(/<(https?:\/\/[^\s<>]+)>/g, (_, url) => hold(`<a href="${escapeHtml(resolve(url))}">${escapeHtml(url)}</a>`));
-  s = s.replace(/\[([^\]]*)\]\(([^()\s]+)(?:\s+"([^"]*)")?\)/g, (_, label, href) =>
-    hold(`<a href="${escapeHtml(resolve(href))}">${emphasis(label)}</a>`),
-  );
-  s = s.replace(INLINE_HTML, (tag) => hold(tag));
-  s = emphasis(s);
-  while (/\u0000\d+\u0000/.test(s)) s = s.replace(/\u0000(\d+)\u0000/g, (_, n) => slots[Number(n)]);
-  return s;
-}
-
-/** Escape, then apply strong and em. @param {string} text */
-function emphasis(text) {
-  return escapeHtml(text)
-    .replace(/\*\*(?=\S)([\s\S]*?\S)\*\*/g, "<strong>$1</strong>")
-    .replace(/(?<![\w])__(?=\S)([\s\S]*?\S)__(?![\w])/g, "<strong>$1</strong>")
-    .replace(/(?<![*\w])\*(?=[^\s*])([\s\S]*?[^\s*])\*(?![*\w])/g, "<em>$1</em>")
-    .replace(/(?<![\w])_(?=[^\s_])([\s\S]*?[^\s_])_(?![\w])/g, "<em>$1</em>");
+  return withState(options, () => md.renderInline(text));
 }
 
 /** Plain text of inline Markdown, for ids, captions and titles. @param {string} text */
-export const plainText = (text) => unescapeHtml(inline(text).replace(/<[^>]*>/g, ""));
+export const plainText = (text) => unescapeHtml(withState({}, () => md.renderInline(text)).replace(/<[^>]*>/g, ""));
 
 /**
  * A heading id unique on the page: "theming", then "theming-2", ...
@@ -200,18 +167,6 @@ export function uniqueId(text, ids) {
   return id;
 }
 
-/** @param {ListItem[]} items @param {Options} options @returns {string} */
-function renderList(items, options) {
-  const ordered = items[0]?.ordered;
-  const start = ordered && items[0].start !== 1 ? ` start="${items[0].start}"` : "";
-  const tag = ordered ? "ol" : "ul";
-  const lis = items.map((item) => {
-    const nested = item.children.length ? `\n${renderList(item.children, options)}\n` : "";
-    return `<li>${inline(item.text, options)}${nested}</li>`;
-  });
-  return `<${tag}${start}>\n${lis.join("\n")}\n</${tag}>`;
-}
-
 /**
  * Render Markdown to HTML.
  * Wide blocks scroll in a named, focusable [data-scroll="inline"] region
@@ -225,68 +180,96 @@ function renderList(items, options) {
  *   "Code: <heading>" (pre[data-scroll~="inline"] keeps its lines); a
  *   one-line block wraps, as css/base/typography.css does by default.
  * A second table or code block under one heading gets "(2)" in its name.
- * @param {string} md
+ * @param {string} source
  * @param {Options} [options]
  */
-export function markdownToHtml(md, options = {}) {
-  const ids = options.ids ?? new Set();
-  const shift = options.headingShift ?? 0;
-  /** The nearest heading above: its id (none at the top of a page) and text. */
-  let heading = { id: "", text: options.caption ?? "" };
-  /** @type {Map<string, number>} */
-  const seen = new Map();
-  /** Count of blocks of a kind under the current heading. @param {string} kind */
-  const nth = (kind) => {
-    const key = `${kind}\u0000${heading.id}\u0000${heading.text}`;
-    const n = (seen.get(key) ?? 0) + 1;
-    seen.set(key, n);
-    return n;
-  };
-  return tokenize(md)
-    .map((block) => {
-      switch (block.type) {
-        case "heading": {
-          const level = Math.min(6, Math.max(1, block.level + shift));
-          const text = plainText(block.text);
-          heading = { id: uniqueId(text, ids), text };
-          return `<h${level} id="${heading.id}">${inline(block.text, options)}</h${level}>`;
-        }
-        case "code": {
-          const lang = block.lang ? ` class="language-${escapeHtml(block.lang)}"` : "";
-          // A one-line block wraps (css/base/typography.css): no line structure to keep, no extra focus stop.
-          if (!block.code.includes("\n")) return `<pre><code${lang}>${escapeHtml(block.code)}</code></pre>`;
-          const n = nth("code");
-          const name = `Code${heading.text ? `: ${heading.text}` : ""}${n > 1 ? ` (${n})` : ""}`;
-          return `<pre data-scroll="inline" role="region" tabindex="0" aria-label="${escapeHtml(name)}"><code${lang}>${escapeHtml(block.code)}</code></pre>`;
-        }
-        case "table": {
-          const [head, ...body] = block.rows;
-          const n = nth("table");
-          const name = n === 1 && heading.id ? `aria-labelledby="${heading.id}"` : `aria-label="${escapeHtml(`${heading.text || "Table"}${n > 1 ? ` (${n})` : ""}`)}"`;
-          const ths = head.map((cell) => `<th scope="col">${inline(cell, options)}</th>`).join("");
-          const trs = body.map(
-            (row) =>
-              `<tr>${row.map((cell, c) => (c === 0 ? `<th scope="row">${inline(cell, options)}</th>` : `<td>${inline(cell, options)}</td>`)).join("")}</tr>`,
-          );
-          return `<div data-scroll="inline" role="region" tabindex="0" ${name}>\n<table ${name}>\n<thead>\n<tr>${ths}</tr>\n</thead>\n<tbody>\n${trs.join("\n")}\n</tbody>\n</table>\n</div>`;
-        }
-        case "list":
-          return renderList(block.items, options);
-        default:
-          return `<p>${inline(block.text, options)}</p>`;
+export function markdownToHtml(source, options = {}) {
+  return withState(options, () => md.render(source).trimEnd());
+}
+
+/* ------------------------------------------------------------------ */
+/* Block structure, for extraction                                     */
+/* ------------------------------------------------------------------ */
+
+/**
+ * Parse Markdown into blocks. Each block keeps its raw source text.
+ * @param {string} source
+ * @returns {Block[]}
+ */
+export function tokenize(source) {
+  const text = source.replace(/\r\n?/g, "\n");
+  const lines = text.split("\n");
+  const tokens = md.parse(text, {});
+  /** @param {Token} t */
+  const rawOf = (t) => (t.map ? lines.slice(t.map[0], t.map[1]).join("\n").replace(/\n+$/, "") : "");
+  /** @type {Block[]} */
+  const blocks = [];
+  for (let i = 0; i < tokens.length; i++) {
+    const t = tokens[i];
+    if (t.level !== 0) continue;
+    if (t.type === "heading_open") {
+      blocks.push({ type: "heading", level: Number(t.tag.slice(1)), text: tokens[i + 1].content, raw: rawOf(t) });
+    } else if (t.type === "fence" || t.type === "code_block") {
+      blocks.push({ type: "code", lang: t.info.trim().split(/\s+/)[0] ?? "", code: t.content.replace(/\n$/, ""), raw: rawOf(t) });
+    } else if (t.type === "table_open") {
+      /** @type {string[][]} */
+      const rows = [];
+      for (let j = i + 1; j < tokens.length && tokens[j].type !== "table_close"; j++) {
+        if (tokens[j].type === "tr_open") rows.push([]);
+        else if (tokens[j].type === "inline") rows[rows.length - 1].push(tokens[j].content.trim());
       }
-    })
-    .join("\n");
+      blocks.push({ type: "table", rows, raw: rawOf(t) });
+    } else if (t.type === "bullet_list_open" || t.type === "ordered_list_open") {
+      const { items } = listItems(tokens, i);
+      blocks.push({ type: "list", items, raw: rawOf(t) });
+    } else if (t.type === "paragraph_open") {
+      blocks.push({ type: "paragraph", text: tokens[i + 1].content, raw: rawOf(t) });
+    }
+  }
+  return blocks;
+}
+
+/**
+ * The items of the list opening at tokens[start], with nested lists as
+ * children; an item's text is its paragraphs' inline source.
+ * @param {Token[]} tokens
+ * @param {number} start
+ * @returns {{ items: ListItem[], end: number }}
+ */
+function listItems(tokens, start) {
+  const open = tokens[start];
+  const ordered = open.type === "ordered_list_open";
+  const first = ordered ? Number(open.attrGet("start") ?? 1) : 1;
+  const close = ordered ? "ordered_list_close" : "bullet_list_close";
+  /** @type {ListItem[]} */
+  const items = [];
+  let i = start + 1;
+  while (i < tokens.length && !(tokens[i].type === close && tokens[i].level === open.level)) {
+    const t = tokens[i];
+    if (t.type === "list_item_open") {
+      items.push({ ordered, start: first + items.length, text: "", children: [] });
+      i++;
+    } else if (t.type === "inline" && t.level === open.level + 3) {
+      const item = items[items.length - 1];
+      item.text = item.text ? `${item.text}\n${t.content}` : t.content;
+      i++;
+    } else if ((t.type === "bullet_list_open" || t.type === "ordered_list_open") && t.level === open.level + 2) {
+      const nested = listItems(tokens, i);
+      items[items.length - 1].children.push(...nested.items);
+      i = nested.end + 1;
+    } else i++;
+  }
+  return { items, end: i };
 }
 
 /**
  * Add `delta` to every ATX heading level, outside fenced code.
- * @param {string} md
+ * @param {string} source
  * @param {number} delta
  */
-export function shiftHeadings(md, delta) {
+export function shiftHeadings(source, delta) {
   let fence = "";
-  return md
+  return source
     .split("\n")
     .map((line) => {
       const f = line.match(/^ {0,3}(`{3,}|~{3,})/);
@@ -302,18 +285,18 @@ export function shiftHeadings(md, delta) {
 
 /**
  * Split Markdown at headings of `level` (outside fenced code).
- * @param {string} md
+ * @param {string} source
  * @param {number} level
  * @returns {{ intro: string, sections: { heading: string, body: string }[] }}
  */
-export function splitSections(md, level) {
+export function splitSections(source, level) {
   const marker = new RegExp(`^${"#".repeat(level)}\\s+(.*?)\\s*$`);
   const sections = [];
   const intro = [];
   /** @type {string[]} */
   let current = intro;
   let fence = "";
-  for (const line of md.replace(/\r\n?/g, "\n").split("\n")) {
+  for (const line of source.replace(/\r\n?/g, "\n").split("\n")) {
     const f = line.match(/^ {0,3}(`{3,}|~{3,})/);
     if (f && (!fence || (f[1][0] === fence[0] && f[1].length >= fence.length))) fence = fence ? "" : f[1];
     const m = !fence && line.match(marker);

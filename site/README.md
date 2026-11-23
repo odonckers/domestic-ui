@@ -27,7 +27,7 @@ indexes, which is why every docs link points at a file (`principles/index.html`,
 | `site/lib/discovery.mjs` | Reads the repository into one model: principles, token files, components, examples, demos, overrides, snippets. |
 | `site/lib/css-comments.mjs` | Parses CSS header comments and the `@layer` order. |
 | `site/lib/tokens.mjs` | Parses every file in `css/tokens/`, resolves light and dark values, picks a preview kind (see [Tokens](#tokens)). |
-| `site/lib/markdown.mjs` | A small Markdown to HTML converter (the subset `PRINCIPLES.md` and `site/content/` use). |
+| `site/lib/markdown.mjs` | Markdown to HTML with [markdown-it](https://github.com/markdown-it/markdown-it) (CommonMark and GFM tables), plus heading ids, named scroll regions for tables and code, `site:` links and an inline HTML allowlist; `tokenize()` gives the block structure for extraction. |
 | `site/lib/nav.mjs` | The Docs sidebar: its fixed entries and how pages are listed under them (see [Sidebar](#sidebar)). |
 | `site/lib/pages.mjs` | Defines every page as blocks of Markdown, or custom HTML plus its Markdown equivalent. |
 | `site/lib/templates.mjs` | The HTML page frame (skip link, header, sidebar, main, footer) and the Markdown twin. |
