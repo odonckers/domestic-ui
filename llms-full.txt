@@ -176,8 +176,8 @@ with the `--dui-` prefix.
 
 | Tier | File | Named by | Example | Public? |
 | --- | --- | --- | --- | --- |
-| Primitive | `css/tokens/primitives.css` | What it is | `--dui-color-blue-600: #3451d1;` `--dui-space-5: 1rem;` | No. Internal, may change in any release. |
-| Semantic | `css/tokens/semantic.css` | What it is for | `--dui-color-accent: light-dark(var(--dui-color-blue-600), var(--dui-color-blue-400));` | **Yes.** The stable theming API. |
+| Primitive | `css/tokens/primitives.css` | What it is | `--dui-color-indigo-9: oklch(53% 0.215 272);` `--dui-space-5: 1rem;` | No. Internal, may change in any release. |
+| Semantic | `css/tokens/semantic.css` | What it is for | `--dui-color-accent: light-dark(var(--dui-color-indigo-9), var(--dui-color-indigo-dark-9));` | **Yes.** The stable theming API. |
 
 **Base, layout, utility and component CSS reference only semantic tokens.** They never use
 primitives and never hard-code colors or sizes (`0`, `1px` hairlines, percentages, `fr`,
@@ -186,6 +186,35 @@ this with `scripts/check-tokens.mjs` (`npm run lint:tokens`), which also rejects
 colors in `semantic.css`.
 
 **Our choice:** the `--dui-` prefix, so tokens never collide with your own custom properties.
+
+### Color
+
+Color primitives are [`oklch()`](https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/Values/color_value/oklch) in [OKLCH](https://www.w3.org/TR/css-color-4/#ok-lab) (CSS Color 4), inside the sRGB gamut. Neutral and indigo each have 12 steps in light and in dark. The step number is the role:
+
+| Step | Role |
+| --- | --- |
+| 1 | Page |
+| 2 | Raised |
+| 3 | Sunken or element |
+| 4 | Hover |
+| 5 | Active or selected |
+| 6 | Subtle border |
+| 7 | Border |
+| 8 | Control border |
+| 9 | Solid |
+| 10 | Solid hover |
+| 11 | Muted or accent text |
+| 12 | Text |
+
+Red, green, amber and blue have steps 3, 9 and 11. [Radix Colors](https://www.radix-ui.com/colors/docs/palette-composition/understanding-the-scale) numbers a scale the same way; [Tailwind v4](https://tailwindcss.com/docs/colors) and [Geist](https://vercel.com/geist/colors) also ship OKLCH ramps. Those are other systems, for comparison.
+
+**Our choice:** the default is monochrome. `--dui-color-primary` is neutral step 12 (near-black on a light page, near-white on a dark page). `--dui-color-primary-contrast` is the text on that fill (white, or the dark page color). `--dui-color-primary-hover` is a [relative color](https://www.w3.org/TR/css-color-5/#relative-colors) of the primary ([MDN](https://developer.mozilla.org/en-US/docs/Web/CSS/Guides/Colors/Using_relative_colors)), so it keeps the primary's hue. Primary buttons and `type="submit"` read these three. The accent is indigo, for links, focus rings and selection. A theme that painted primary buttons with `--dui-color-accent` sets `--dui-color-primary` (and `--dui-color-primary-contrast` when the fill needs different text).
+
+`--dui-color-accent-text` is a relative color of `--dui-color-accent`: the same hue, with lightness and chroma set for [1.4.3 Contrast (Minimum)](https://www.w3.org/WAI/WCAG22/Understanding/contrast-minimum.html). `--dui-color-link` points at it. `--dui-color-focus` is the accent solid in light and the accent text in dark, so the ring meets [1.4.11 Non-text Contrast](https://www.w3.org/WAI/WCAG22/Understanding/non-text-contrast.html) on a dark page. `--dui-color-accent-hover` and `--dui-color-accent-surface` are derived from the accent too, so a theme that sets only `--dui-color-accent` still gets a matching link, hover and tint. `--dui-color-accent-contrast` is white in both schemes.
+
+`--dui-color-border` is the text color at about 11% alpha, a hairline in the neutral hue. `--dui-color-border-control` stays an opaque step at 3:1. `--dui-color-shadow` is tinted with the neutral hue.
+
+Light and dark values use [`light-dark()`](https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/Values/color_value/light-dark) ([CSS Color 5](https://www.w3.org/TR/css-color-5/)). `tests/contrast.js` checks the pairs below, and the status and code colors, against these thresholds. It takes a theme scope, so another theme can reuse it.
 
 ### A theme is a semantic-token override
 
@@ -198,6 +227,8 @@ with a `data-theme` attribute or a `theme-*` class to scope it:
   --dui-color-text: light-dark(#1d2a22, #e4ebe3);
   --dui-color-accent: light-dark(#2f6b3f, #7fcf95);
   --dui-color-accent-contrast: light-dark(#fff, #0f1a13);
+  --dui-color-primary: light-dark(#173528, #d7f5e3);
+  --dui-color-primary-contrast: light-dark(#fff, #0f1a13);
 }
 ```
 
@@ -208,9 +239,11 @@ with a `data-theme` attribute or a `theme-*` class to scope it:
 [`examples/theming.html`](https://odonckers.github.io/domestic-ui/principles/theming.md) shows a full scoped theme next to the default.
 Check your theme's contrast in both schemes; `tests/tokens.spec.js` shows how.
 
-A few semantic tokens are defined in terms of others (`--dui-color-link`, `--dui-color-focus`
-and `--dui-color-accent-hover` follow `--dui-color-accent`; the badge tints
-`--dui-color-*-surface` mix a tone into `--dui-color-surface`). A custom property's `var()` is
+A few semantic tokens are defined in terms of others (`--dui-color-accent-text`,
+`--dui-color-link`, `--dui-color-focus`, `--dui-color-accent-hover` and
+`--dui-color-accent-surface` follow `--dui-color-accent`; `--dui-color-primary-hover`
+follows `--dui-color-primary`; the badge tints `--dui-color-*-surface` mix a tone into
+`--dui-color-surface`). A custom property's `var()` is
 resolved on the element that declares it ([CSS Variables, "Resolving dependency cycles"](https://www.w3.org/TR/css-variables-1/#cycles)),
 so these, plus `color`, `background-color` and `font-family`, are re-applied on every
 `[data-theme]`, `.theme-*` and `[data-color-scheme]` element.
@@ -227,32 +260,34 @@ may change. Fluid `--dui-step-*` values are `clamp()` expressions; see `primitiv
 
 | Token | Purpose | Default (primitive, light / dark) |
 | --- | --- | --- |
-| `--dui-color-surface` | Page and control background | light: `color-gray-0` (#fff)<br>dark: `color-gray-900` (#12151b) |
-| `--dui-color-surface-raised` | Slightly lifted areas: neutral buttons, zebra rows, cards | light: `color-gray-50` (#f6f7f9)<br>dark: `color-gray-850` (#1b1f27) |
-| `--dui-color-surface-sunken` | Recessed areas: code, button hover | light: `color-gray-100` (#eceef2)<br>dark: `color-gray-800` (#252a34) |
-| `--dui-color-text` | Body text | light: `color-gray-900` (#12151b)<br>dark: `color-gray-100` (#eceef2) |
-| `--dui-color-text-muted` | Secondary text, captions, list markers (still 4.5:1) | light: `color-gray-600` (#545b68)<br>dark: `color-gray-400` (#a3aab6) |
-| `--dui-color-border` | Decorative hairlines: tables, hr, details, fieldset | light: `color-gray-200` (#dde0e6)<br>dark: `color-gray-700` (#3a404b) |
-| `--dui-color-border-control` | Form control and button boundaries (3:1) | light: `color-gray-500` (#7a8291)<br>dark: `color-gray-500` (#7a8291) |
-| `--dui-color-accent` | Brand color: primary button fill, checks, links and focus by default | light: `color-blue-600` (#3451d1)<br>dark: `color-blue-400` (#8ea2ff) |
-| `--dui-color-accent-contrast` | Text on accent | light: `color-gray-0` (#fff)<br>dark: `color-gray-900` (#12151b) |
-| `--dui-color-link-visited` | Visited links | light: `color-purple-700` (#6b2fb3)<br>dark: `color-purple-300` (#d2a8ff) |
-| `--dui-color-danger` | Errors, :user-invalid borders | light: `color-red-700` (#b42318)<br>dark: `color-red-300` (#ff8a80) |
-| `--dui-color-success` | Success messages | light: `color-green-700` (#17773a)<br>dark: `color-green-300` (#5fd38d) |
-| `--dui-color-warning` | Warning badges and messages | light: `color-amber-700` (#8a5a00)<br>dark: `color-amber-300` (#f2c14e) |
-| `--dui-color-info` | Informational alerts and toasts (separate from the accent, so a brand color never reads as a status) | light: `color-blue-700` (#2b43b0)<br>dark: `color-blue-300` (#a8b7ff) |
-| `--dui-color-mark` | mark and ::selection background | light: `color-yellow-100` (#fff1a8)<br>dark: `color-yellow-300` (#e3c84f) |
-| `--dui-color-mark-text` | Text on mark | light: `color-gray-900` (#12151b)<br>dark: `color-gray-900` (#12151b) |
-| `--dui-color-backdrop` | dialog::backdrop | light: `color-black-a40` (rgb(0 0 0 / 40%))<br>dark: `color-black-a60` (rgb(0 0 0 / 60%)) |
-| `--dui-color-shadow` | Shadow color | light: `color-black-a10` (rgb(0 0 0 / 10%))<br>dark: `color-black-a40` (rgb(0 0 0 / 40%)) |
-| `--dui-color-code-keyword` | JS keywords and CSS at-rules in highlighted code (4.5:1 on surface-sunken) | light: `color-purple-700` (#6b2fb3)<br>dark: `color-purple-300` (#d2a8ff) |
-| `--dui-color-code-string` | Strings and HTML attribute values in highlighted code (4.5:1 on surface-sunken) | light: `color-green-700` (#17773a)<br>dark: `color-green-300` (#5fd38d) |
-| `--dui-color-code-comment` | Comments in highlighted code (4.5:1 on surface-sunken) | light: `color-gray-600` (#545b68)<br>dark: `color-gray-400` (#a3aab6) |
-| `--dui-color-code-tag` | HTML tag names and CSS selectors in highlighted code (4.5:1 on surface-sunken) | light: `color-blue-700` (#2b43b0)<br>dark: `color-blue-300` (#a8b7ff) |
-| `--dui-color-code-attribute` | HTML attribute names in highlighted code (4.5:1 on surface-sunken) | light: `color-amber-700` (#8a5a00)<br>dark: `color-amber-300` (#f2c14e) |
-| `--dui-color-code-property` | CSS and JS properties in highlighted code (4.5:1 on surface-sunken) | light: `color-teal-700` (#0b6e75)<br>dark: `color-teal-300` (#5cc8d1) |
-| `--dui-color-code-number` | Numbers and units in highlighted code (4.5:1 on surface-sunken) | light: `color-red-700` (#b42318)<br>dark: `color-red-300` (#ff8a80) |
-| `--dui-color-code-punctuation` | Brackets, braces and separators in highlighted code (4.5:1 on surface-sunken) | light: `color-gray-700` (#3a404b)<br>dark: `color-gray-300` (#c4c9d2) |
+| `--dui-color-surface` | Page and control background (neutral step 1) | light: `neutral-1` (`oklch(99.3% 0.002 265)`)<br>dark: `neutral-dark-1` (`oklch(16.5% 0.006 265)`) |
+| `--dui-color-surface-raised` | Slightly lifted areas: neutral buttons, zebra rows, cards (step 2) | light: `neutral-2` (`oklch(98.2% 0.003 265)`)<br>dark: `neutral-dark-2` (`oklch(19% 0.007 265)`) |
+| `--dui-color-surface-sunken` | Recessed areas: code, button hover (step 3) | light: `neutral-3` (`oklch(96.2% 0.005 265)`)<br>dark: `neutral-dark-3` (`oklch(22% 0.009 265)`) |
+| `--dui-color-text` | Body text (step 12) | light: `neutral-12` (`oklch(21.5% 0.012 265)`)<br>dark: `neutral-dark-12` (`oklch(95% 0.004 265)`) |
+| `--dui-color-text-muted` | Secondary text, captions, list markers (step 11, still 4.5:1) | light: `neutral-11` (`oklch(47.5% 0.016 265)`)<br>dark: `neutral-dark-11` (`oklch(76% 0.012 265)`) |
+| `--dui-color-border` | Decorative hairline: the text color at about 11% alpha | light: `neutral-12` at 11% (`oklch(21.5% 0.012 265 / 11%)`)<br>dark: `neutral-dark-12` at 10% (`oklch(95% 0.004 265 / 10%)`) |
+| `--dui-color-border-control` | Form control and button boundaries (step 8, 3:1) | light: `neutral-8` (`oklch(58.5% 0.016 265)`)<br>dark: `neutral-dark-8` (`oklch(58% 0.016 265)`) |
+| `--dui-color-primary` | Primary action fill (neutral step 12) | light: `neutral-12` (`oklch(21.5% 0.012 265)`)<br>dark: `neutral-dark-12` (`oklch(95% 0.004 265)`) |
+| `--dui-color-primary-contrast` | Text on the primary fill | light: `white` (`oklch(100% 0 0)`)<br>dark: `neutral-dark-1` (`oklch(16.5% 0.006 265)`) |
+| `--dui-color-accent` | Accent solid for focus rings, selection and checks (indigo step 9) | light: `indigo-9` (`oklch(53% 0.215 272)`)<br>dark: `indigo-dark-9` (`oklch(53% 0.215 272)`) |
+| `--dui-color-accent-contrast` | Text on the accent fill, white in both schemes | `white` (`oklch(100% 0 0)`) |
+| `--dui-color-link-visited` | Visited links | light: `purple-11` (`oklch(46.2% 0.195 299)`)<br>dark: `purple-dark-11` (`oklch(80.1% 0.127 306)`) |
+| `--dui-color-danger` | Errors, :user-invalid borders (red step 11) | light: `red-11` (`oklch(48% 0.16 27)`)<br>dark: `red-dark-11` (`oklch(80% 0.114 27)`) |
+| `--dui-color-success` | Success messages (green step 11) | light: `green-11` (`oklch(47% 0.128 150)`)<br>dark: `green-dark-11` (`oklch(80% 0.12 150)`) |
+| `--dui-color-warning` | Warning badges and messages (amber step 11) | light: `amber-11` (`oklch(47% 0.098 75)`)<br>dark: `amber-dark-11` (`oklch(80% 0.12 75)`) |
+| `--dui-color-info` | Informational alerts and toasts (blue step 11, separate from the accent, so a brand color never reads as a status) | light: `blue-11` (`oklch(48% 0.12 245)`)<br>dark: `blue-dark-11` (`oklch(80% 0.108 245)`) |
+| `--dui-color-mark` | mark and ::selection background | light: `yellow-3` (`oklch(95.3% 0.093 99)`)<br>dark: `yellow-dark-9` (`oklch(83.4% 0.141 97)`) |
+| `--dui-color-mark-text` | Text on mark | `neutral-12` (`oklch(21.5% 0.012 265)`) |
+| `--dui-color-backdrop` | dialog::backdrop | light: `black-a40` (`oklch(0% 0 0 / 40%)`)<br>dark: `black-a60` (`oklch(0% 0 0 / 60%)`) |
+| `--dui-color-shadow` | Shadow color, tinted with the neutral hue | light: `neutral-shadow` (`oklch(25% 0.015 265 / 12%)`)<br>dark: `neutral-dark-shadow` (`oklch(14% 0.015 265 / 46%)`) |
+| `--dui-color-code-keyword` | JS keywords and CSS at-rules in highlighted code (4.5:1 on surface-sunken) | light: `purple-11` (`oklch(46.2% 0.195 299)`)<br>dark: `purple-dark-11` (`oklch(80.1% 0.127 306)`) |
+| `--dui-color-code-string` | Strings and HTML attribute values in highlighted code (4.5:1 on surface-sunken) | light: `green-11` (`oklch(47% 0.128 150)`)<br>dark: `green-dark-11` (`oklch(80% 0.12 150)`) |
+| `--dui-color-code-comment` | Comments in highlighted code (4.5:1 on surface-sunken) | light: `neutral-11` (`oklch(47.5% 0.016 265)`)<br>dark: `neutral-dark-11` (`oklch(76% 0.012 265)`) |
+| `--dui-color-code-tag` | HTML tag names and CSS selectors in highlighted code (4.5:1 on surface-sunken) | light: `blue-11` (`oklch(48% 0.12 245)`)<br>dark: `blue-dark-11` (`oklch(80% 0.108 245)`) |
+| `--dui-color-code-attribute` | HTML attribute names in highlighted code (4.5:1 on surface-sunken) | light: `amber-11` (`oklch(47% 0.098 75)`)<br>dark: `amber-dark-11` (`oklch(80% 0.12 75)`) |
+| `--dui-color-code-property` | CSS and JS properties in highlighted code (4.5:1 on surface-sunken) | light: `teal-11` (`oklch(49.1% 0.081 203)`)<br>dark: `teal-dark-11` (`oklch(77.3% 0.099 203)`) |
+| `--dui-color-code-number` | Numbers and units in highlighted code (4.5:1 on surface-sunken) | light: `red-11` (`oklch(48% 0.16 27)`)<br>dark: `red-dark-11` (`oklch(80% 0.114 27)`) |
+| `--dui-color-code-punctuation` | Brackets, braces and separators in highlighted code (4.5:1 on surface-sunken) | light: `neutral-punctuation` (`oklch(37% 0.016 265)`)<br>dark: `neutral-dark-punctuation` (`oklch(83.5% 0.01 265)`) |
 | `--dui-font-body` | Body font stack | `--dui-font-stack-system-ui` (`system-ui, sans-serif`) |
 | `--dui-font-mono` | Code font stack | `--dui-font-stack-monospace` (`ui-monospace`, …, `monospace`) |
 | `--dui-font-weight-body` | Body weight | `font-weight-400` (400) |
@@ -315,9 +350,11 @@ may change. Fluid `--dui-step-*` values are `clamp()` expressions; see `primitiv
 | `--dui-opacity-disabled` | Disabled controls, `disabled` and `aria-disabled="true"` | `opacity-60` (0.6) |
 | `--dui-tint-amount` | How much of a tone goes into a tinted surface | `mix-8` (8%) |
 | `--dui-border-tint-amount` | How much of the text color goes into a tinted border (badges) | `mix-35` (35%) |
-| `--dui-color-link` | Links | `--dui-color-accent` |
-| `--dui-color-focus` | Focus ring (3:1 against surfaces) | `--dui-color-accent` |
-| `--dui-color-accent-hover` | Primary button hover | `color-mix()` of 82% `--dui-color-accent` with `--dui-color-text` |
+| `--dui-color-accent-text` | Accent as text (links, quiet buttons, accent badges). Relative color of `--dui-color-accent` | light: `oklch(47% 0.19 272)`<br>dark: `oklch(78% 0.11 272)` |
+| `--dui-color-link` | Links | `--dui-color-accent-text` |
+| `--dui-color-focus` | Focus ring (3:1 against surfaces) | light: `--dui-color-accent`<br>dark: `--dui-color-accent-text` |
+| `--dui-color-accent-hover` | Accent solid hover | `oklch(from --dui-color-accent)` with lightness 0.02 lower |
+| `--dui-color-primary-hover` | Primary fill hover | light: `oklch(32% 0.014 265)`<br>dark: `oklch(86% 0.008 265)`, hue from `--dui-color-primary` |
 | `--dui-font-heading` | Heading font stack | `--dui-font-body` |
 | `--dui-color-accent-surface` | Accent badge background | `color-mix()` of `--dui-tint-amount` `--dui-color-accent` into `--dui-color-surface` |
 | `--dui-color-success-surface` | Success badge background | same, with `--dui-color-success` |
@@ -348,8 +385,8 @@ may change. Fluid `--dui-step-*` values are `clamp()` expressions; see `primitiv
 | `--dui-duration-normal` | **Deprecated**, removed in the next release | `--dui-motion-duration-normal` |
 | `--dui-easing-standard` | **Deprecated**, removed in the next release | `--dui-motion-easing-standard` |
 
-Derived (re-resolved on each theme scope and on every `[data-motion]` and `[data-density]` element): `--dui-color-link`,
-`--dui-color-focus`, `--dui-color-accent-hover`, `--dui-font-heading`, `--dui-color-accent-surface`,
+Derived (re-resolved on each theme scope and on every `[data-motion]` and `[data-density]` element): `--dui-color-accent-text`, `--dui-color-link`,
+`--dui-color-focus`, `--dui-color-accent-hover`, `--dui-color-primary-hover`, `--dui-font-heading`, `--dui-color-accent-surface`,
 `--dui-color-success-surface`, `--dui-color-warning-surface`, `--dui-color-danger-surface`,
 `--dui-color-info-surface`, `--dui-color-surface-inverse`, `--dui-color-text-inverse`, every
 `--dui-motion-duration-*`, `--dui-motion-distance`, `--dui-motion-zoom`, every `--dui-elevation-*`
@@ -455,6 +492,8 @@ In the `<head>` of the live example above.
     --dui-color-border: light-dark(#d8d1bf, #34433a);
     --dui-color-accent: light-dark(#2f6b3f, #7fcf95);
     --dui-color-accent-contrast: light-dark(#fff, #0f1a13);
+    --dui-color-primary: light-dark(#173528, #d7f5e3);
+    --dui-color-primary-contrast: light-dark(#fff, #0f1a13);
     --dui-font-heading: charter, "Bitstream Charter", "Sitka Text", cambria, serif;
     --dui-radius-control: 0.125rem;
     --dui-radius-surface: 0.25rem;
@@ -1191,55 +1230,150 @@ Page: https://odonckers.github.io/domestic-ui/tokens/primitives.html
 
 Primitives are NOT public API: they may be renamed, added or removed in any release. Theme with semantic tokens.
 
+Colors are OKLCH, in the sRGB gamut (CSS Color 4). [W3C ok lab](https://www.w3.org/TR/css-color-4/#ok-lab) [MDN `oklch`](https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/Values/color_value/oklch)
+
+Neutral and indigo each have 12 steps in light and in dark. The step number is the role, the same idea as Radix's scales (for comparison: 1 page, 2 raised, 3 sunken or element, 4 hover, 5 active or selected, 6 subtle border, 7 border, 8 control border, 9 solid, 10 solid hover, 11 muted or accent text, 12 text. Red, green, amber and blue have steps 3, 9 and 11 only. Purple, teal and yellow keep the code-highlight and mark hues. Our choice: the primary action uses neutral 12 (near-black or near-white), and indigo is the accent for links, focus and selection. ([radix-ui.com understanding the scale](https://www.radix-ui.com/colors/docs/palette-composition/understanding-the-scale))
+
 [Custom properties](https://developer.mozilla.org/en-US/docs/Web/CSS/--*).
 
-109 tokens in [`css/tokens/primitives.css`](https://github.com/odonckers/domestic-ui/blob/main/css/tokens/primitives.css). **Light** and **Dark** resolve every `var()` and take one side of [`light-dark()`](https://developer.mozilla.org/en-US/docs/Web/CSS/color_value/light-dark). Previews are decorative.
+165 tokens in [`css/tokens/primitives.css`](https://github.com/odonckers/domestic-ui/blob/main/css/tokens/primitives.css). **Light** and **Dark** resolve every `var()` and take one side of [`light-dark()`](https://developer.mozilla.org/en-US/docs/Web/CSS/color_value/light-dark). Previews are decorative.
 
-### Neutral gray, cool tint
-
-| Token | Light | Dark | Description |
-| --- | --- | --- | --- |
-| `--dui-color-gray-0` | `#fff` | `#fff` | No description yet. |
-| `--dui-color-gray-50` | `#f6f7f9` | `#f6f7f9` | No description yet. |
-| `--dui-color-gray-100` | `#eceef2` | `#eceef2` | No description yet. |
-| `--dui-color-gray-200` | `#dde0e6` | `#dde0e6` | No description yet. |
-| `--dui-color-gray-300` | `#c4c9d2` | `#c4c9d2` | No description yet. |
-| `--dui-color-gray-400` | `#a3aab6` | `#a3aab6` | No description yet. |
-| `--dui-color-gray-500` | `#7a8291` | `#7a8291` | No description yet. |
-| `--dui-color-gray-600` | `#545b68` | `#545b68` | No description yet. |
-| `--dui-color-gray-700` | `#3a404b` | `#3a404b` | No description yet. |
-| `--dui-color-gray-800` | `#252a34` | `#252a34` | No description yet. |
-| `--dui-color-gray-850` | `#1b1f27` | `#1b1f27` | No description yet. |
-| `--dui-color-gray-900` | `#12151b` | `#12151b` | No description yet. |
-
-### Hues
+### Neutral, light. Hue 265
 
 | Token | Light | Dark | Description |
 | --- | --- | --- | --- |
-| `--dui-color-blue-300` | `#a8b7ff` | `#a8b7ff` | No description yet. |
-| `--dui-color-blue-400` | `#8ea2ff` | `#8ea2ff` | No description yet. |
-| `--dui-color-blue-600` | `#3451d1` | `#3451d1` | No description yet. |
-| `--dui-color-blue-700` | `#2b43b0` | `#2b43b0` | No description yet. |
-| `--dui-color-purple-300` | `#d2a8ff` | `#d2a8ff` | No description yet. |
-| `--dui-color-purple-700` | `#6b2fb3` | `#6b2fb3` | No description yet. |
-| `--dui-color-red-300` | `#ff8a80` | `#ff8a80` | No description yet. |
-| `--dui-color-red-700` | `#b42318` | `#b42318` | No description yet. |
-| `--dui-color-green-300` | `#5fd38d` | `#5fd38d` | No description yet. |
-| `--dui-color-green-700` | `#17773a` | `#17773a` | No description yet. |
-| `--dui-color-yellow-100` | `#fff1a8` | `#fff1a8` | No description yet. |
-| `--dui-color-yellow-300` | `#e3c84f` | `#e3c84f` | No description yet. |
-| `--dui-color-amber-300` | `#f2c14e` | `#f2c14e` | No description yet. |
-| `--dui-color-amber-700` | `#8a5a00` | `#8a5a00` | No description yet. |
-| `--dui-color-teal-300` | `#5cc8d1` | `#5cc8d1` | No description yet. |
-| `--dui-color-teal-700` | `#0b6e75` | `#0b6e75` | No description yet. |
+| `--dui-color-neutral-1` | `oklch(99.3% 0.002 265deg)` | `oklch(99.3% 0.002 265deg)` | Step 1, page |
+| `--dui-color-neutral-2` | `oklch(98.2% 0.003 265deg)` | `oklch(98.2% 0.003 265deg)` | Step 2, raised |
+| `--dui-color-neutral-3` | `oklch(96.2% 0.005 265deg)` | `oklch(96.2% 0.005 265deg)` | Step 3, sunken or element |
+| `--dui-color-neutral-4` | `oklch(94% 0.006 265deg)` | `oklch(94% 0.006 265deg)` | Step 4, hover |
+| `--dui-color-neutral-5` | `oklch(91% 0.008 265deg)` | `oklch(91% 0.008 265deg)` | Step 5, active or selected |
+| `--dui-color-neutral-6` | `oklch(84% 0.01 265deg)` | `oklch(84% 0.01 265deg)` | Step 6, subtle border |
+| `--dui-color-neutral-7` | `oklch(72% 0.013 265deg)` | `oklch(72% 0.013 265deg)` | Step 7, border |
+| `--dui-color-neutral-8` | `oklch(58.5% 0.016 265deg)` | `oklch(58.5% 0.016 265deg)` | Step 8, control border, 3:1 on the page |
+| `--dui-color-neutral-9` | `oklch(52% 0.016 265deg)` | `oklch(52% 0.016 265deg)` | Step 9, solid |
+| `--dui-color-neutral-10` | `oklch(50% 0.016 265deg)` | `oklch(50% 0.016 265deg)` | Step 10, solid hover |
+| `--dui-color-neutral-11` | `oklch(47.5% 0.016 265deg)` | `oklch(47.5% 0.016 265deg)` | Step 11, muted text |
+| `--dui-color-neutral-12` | `oklch(21.5% 0.012 265deg)` | `oklch(21.5% 0.012 265deg)` | Step 12, text, and the light primary fill |
+| `--dui-color-neutral-12-a11` | `oklch(21.5% 0.012 265deg / 11%)` | `oklch(21.5% 0.012 265deg / 11%)` | Hairline: the text color at 11% alpha |
+| `--dui-color-neutral-punctuation` | `oklch(37% 0.016 265deg)` | `oklch(37% 0.016 265deg)` | Code punctuation, darker than muted text |
+| `--dui-color-neutral-shadow` | `oklch(25% 0.015 265deg / 12%)` | `oklch(25% 0.015 265deg / 12%)` | Shadow tinted with the neutral hue |
 
-### Translucent black, for overlays and shadows
+### Neutral, dark. Hue 265. Lightness rises with the step
 
 | Token | Light | Dark | Description |
 | --- | --- | --- | --- |
-| `--dui-color-black-a10` | `rgb(0 0 0 / 10%)` | `rgb(0 0 0 / 10%)` | No description yet. |
-| `--dui-color-black-a40` | `rgb(0 0 0 / 40%)` | `rgb(0 0 0 / 40%)` | No description yet. |
-| `--dui-color-black-a60` | `rgb(0 0 0 / 60%)` | `rgb(0 0 0 / 60%)` | No description yet. |
+| `--dui-color-neutral-dark-1` | `oklch(16.5% 0.006 265deg)` | `oklch(16.5% 0.006 265deg)` | Step 1, page |
+| `--dui-color-neutral-dark-2` | `oklch(19% 0.007 265deg)` | `oklch(19% 0.007 265deg)` | Step 2, raised |
+| `--dui-color-neutral-dark-3` | `oklch(22% 0.009 265deg)` | `oklch(22% 0.009 265deg)` | Step 3, sunken or element |
+| `--dui-color-neutral-dark-4` | `oklch(26% 0.011 265deg)` | `oklch(26% 0.011 265deg)` | Step 4, hover |
+| `--dui-color-neutral-dark-5` | `oklch(31% 0.012 265deg)` | `oklch(31% 0.012 265deg)` | Step 5, active or selected |
+| `--dui-color-neutral-dark-6` | `oklch(38% 0.014 265deg)` | `oklch(38% 0.014 265deg)` | Step 6, subtle border |
+| `--dui-color-neutral-dark-7` | `oklch(48% 0.015 265deg)` | `oklch(48% 0.015 265deg)` | Step 7, border |
+| `--dui-color-neutral-dark-8` | `oklch(58% 0.016 265deg)` | `oklch(58% 0.016 265deg)` | Step 8, control border, 3:1 on the page |
+| `--dui-color-neutral-dark-9` | `oklch(66% 0.014 265deg)` | `oklch(66% 0.014 265deg)` | Step 9, solid |
+| `--dui-color-neutral-dark-10` | `oklch(71% 0.013 265deg)` | `oklch(71% 0.013 265deg)` | Step 10, solid hover |
+| `--dui-color-neutral-dark-11` | `oklch(76% 0.012 265deg)` | `oklch(76% 0.012 265deg)` | Step 11, muted text |
+| `--dui-color-neutral-dark-12` | `oklch(95% 0.004 265deg)` | `oklch(95% 0.004 265deg)` | Step 12, text, and the dark primary fill |
+| `--dui-color-neutral-dark-12-a10` | `oklch(95% 0.004 265deg / 10%)` | `oklch(95% 0.004 265deg / 10%)` | Hairline: the text color at 10% alpha |
+| `--dui-color-neutral-dark-punctuation` | `oklch(83.5% 0.01 265deg)` | `oklch(83.5% 0.01 265deg)` | Code punctuation, lighter than muted text |
+| `--dui-color-neutral-dark-shadow` | `oklch(14% 0.015 265deg / 46%)` | `oklch(14% 0.015 265deg / 46%)` | Shadow tinted with the neutral hue |
+
+### Indigo, the accent, light. Hue 272
+
+| Token | Light | Dark | Description |
+| --- | --- | --- | --- |
+| `--dui-color-indigo-1` | `oklch(98.4% 0.006 272deg)` | `oklch(98.4% 0.006 272deg)` | Step 1, page |
+| `--dui-color-indigo-2` | `oklch(96.8% 0.012 272deg)` | `oklch(96.8% 0.012 272deg)` | Step 2, raised |
+| `--dui-color-indigo-3` | `oklch(94.8% 0.022 272deg)` | `oklch(94.8% 0.022 272deg)` | Step 3, sunken or element |
+| `--dui-color-indigo-4` | `oklch(92.4% 0.032 272deg)` | `oklch(92.4% 0.032 272deg)` | Step 4, hover |
+| `--dui-color-indigo-5` | `oklch(89.2% 0.045 272deg)` | `oklch(89.2% 0.045 272deg)` | Step 5, active or selected |
+| `--dui-color-indigo-6` | `oklch(84.5% 0.055 272deg)` | `oklch(84.5% 0.055 272deg)` | Step 6, subtle border |
+| `--dui-color-indigo-7` | `oklch(76% 0.07 272deg)` | `oklch(76% 0.07 272deg)` | Step 7, border |
+| `--dui-color-indigo-8` | `oklch(66% 0.11 272deg)` | `oklch(66% 0.11 272deg)` | Step 8, control border |
+| `--dui-color-indigo-9` | `oklch(53% 0.215 272deg)` | `oklch(53% 0.215 272deg)` | Step 9, solid accent |
+| `--dui-color-indigo-10` | `oklch(48.5% 0.2 272deg)` | `oklch(48.5% 0.2 272deg)` | Step 10, solid hover |
+| `--dui-color-indigo-11` | `oklch(47% 0.19 272deg)` | `oklch(47% 0.19 272deg)` | Step 11, accent text |
+| `--dui-color-indigo-12` | `oklch(36% 0.13 272deg)` | `oklch(36% 0.13 272deg)` | Step 12, text |
+
+### Indigo, the accent, dark. Hue 272. Step 9 matches the light solid
+
+| Token | Light | Dark | Description |
+| --- | --- | --- | --- |
+| `--dui-color-indigo-dark-1` | `oklch(19% 0.02 272deg)` | `oklch(19% 0.02 272deg)` | Step 1, page |
+| `--dui-color-indigo-dark-2` | `oklch(22% 0.028 272deg)` | `oklch(22% 0.028 272deg)` | Step 2, raised |
+| `--dui-color-indigo-dark-3` | `oklch(26% 0.04 272deg)` | `oklch(26% 0.04 272deg)` | Step 3, sunken or element |
+| `--dui-color-indigo-dark-4` | `oklch(30% 0.052 272deg)` | `oklch(30% 0.052 272deg)` | Step 4, hover |
+| `--dui-color-indigo-dark-5` | `oklch(35% 0.065 272deg)` | `oklch(35% 0.065 272deg)` | Step 5, active or selected |
+| `--dui-color-indigo-dark-6` | `oklch(40% 0.075 272deg)` | `oklch(40% 0.075 272deg)` | Step 6, subtle border |
+| `--dui-color-indigo-dark-7` | `oklch(45% 0.09 272deg)` | `oklch(45% 0.09 272deg)` | Step 7, border |
+| `--dui-color-indigo-dark-8` | `oklch(50% 0.13 272deg)` | `oklch(50% 0.13 272deg)` | Step 8, control border |
+| `--dui-color-indigo-dark-9` | `oklch(53% 0.215 272deg)` | `oklch(53% 0.215 272deg)` | Step 9, solid accent |
+| `--dui-color-indigo-dark-10` | `oklch(64% 0.15 272deg)` | `oklch(64% 0.15 272deg)` | Step 10, solid hover |
+| `--dui-color-indigo-dark-11` | `oklch(78% 0.11 272deg)` | `oklch(78% 0.11 272deg)` | Step 11, accent text |
+| `--dui-color-indigo-dark-12` | `oklch(91% 0.025 272deg)` | `oklch(91% 0.025 272deg)` | Step 12, text |
+
+### Red. Steps 3, 9 and 11. Hue 27
+
+| Token | Light | Dark | Description |
+| --- | --- | --- | --- |
+| `--dui-color-red-3` | `oklch(95.5% 0.018 27deg)` | `oklch(95.5% 0.018 27deg)` | Step 3, element tint |
+| `--dui-color-red-9` | `oklch(55% 0.19 27deg)` | `oklch(55% 0.19 27deg)` | Step 9, solid |
+| `--dui-color-red-11` | `oklch(48% 0.16 27deg)` | `oklch(48% 0.16 27deg)` | Step 11, danger text |
+| `--dui-color-red-dark-3` | `oklch(28% 0.05 27deg)` | `oklch(28% 0.05 27deg)` | Step 3, element tint |
+| `--dui-color-red-dark-9` | `oklch(65% 0.17 27deg)` | `oklch(65% 0.17 27deg)` | Step 9, solid |
+| `--dui-color-red-dark-11` | `oklch(80% 0.114 27deg)` | `oklch(80% 0.114 27deg)` | Step 11, danger text |
+
+### Green. Steps 3, 9 and 11. Hue 150
+
+| Token | Light | Dark | Description |
+| --- | --- | --- | --- |
+| `--dui-color-green-3` | `oklch(96% 0.018 150deg)` | `oklch(96% 0.018 150deg)` | Step 3, element tint |
+| `--dui-color-green-9` | `oklch(55% 0.14 150deg)` | `oklch(55% 0.14 150deg)` | Step 9, solid |
+| `--dui-color-green-11` | `oklch(47% 0.128 150deg)` | `oklch(47% 0.128 150deg)` | Step 11, success text |
+| `--dui-color-green-dark-3` | `oklch(28% 0.04 150deg)` | `oklch(28% 0.04 150deg)` | Step 3, element tint |
+| `--dui-color-green-dark-9` | `oklch(68% 0.14 150deg)` | `oklch(68% 0.14 150deg)` | Step 9, solid |
+| `--dui-color-green-dark-11` | `oklch(80% 0.12 150deg)` | `oklch(80% 0.12 150deg)` | Step 11, success text |
+
+### Amber. Steps 3, 9 and 11. Hue 75
+
+| Token | Light | Dark | Description |
+| --- | --- | --- | --- |
+| `--dui-color-amber-3` | `oklch(96.5% 0.02 75deg)` | `oklch(96.5% 0.02 75deg)` | Step 3, element tint |
+| `--dui-color-amber-9` | `oklch(62% 0.12 75deg)` | `oklch(62% 0.12 75deg)` | Step 9, solid |
+| `--dui-color-amber-11` | `oklch(47% 0.098 75deg)` | `oklch(47% 0.098 75deg)` | Step 11, warning text |
+| `--dui-color-amber-dark-3` | `oklch(30% 0.04 75deg)` | `oklch(30% 0.04 75deg)` | Step 3, element tint |
+| `--dui-color-amber-dark-9` | `oklch(72% 0.12 75deg)` | `oklch(72% 0.12 75deg)` | Step 9, solid |
+| `--dui-color-amber-dark-11` | `oklch(80% 0.12 75deg)` | `oklch(80% 0.12 75deg)` | Step 11, warning text |
+
+### Blue, for info, separate from the indigo accent. Hue 245
+
+| Token | Light | Dark | Description |
+| --- | --- | --- | --- |
+| `--dui-color-blue-3` | `oklch(96% 0.014 245deg)` | `oklch(96% 0.014 245deg)` | Step 3, element tint |
+| `--dui-color-blue-9` | `oklch(55% 0.135 245deg)` | `oklch(55% 0.135 245deg)` | Step 9, solid |
+| `--dui-color-blue-11` | `oklch(48% 0.12 245deg)` | `oklch(48% 0.12 245deg)` | Step 11, info text |
+| `--dui-color-blue-dark-3` | `oklch(28% 0.04 245deg)` | `oklch(28% 0.04 245deg)` | Step 3, element tint |
+| `--dui-color-blue-dark-9` | `oklch(68% 0.12 245deg)` | `oklch(68% 0.12 245deg)` | Step 9, solid |
+| `--dui-color-blue-dark-11` | `oklch(80% 0.108 245deg)` | `oklch(80% 0.108 245deg)` | Step 11, info text |
+
+### Code-highlight hues that are not a status color, and the mark fill
+
+| Token | Light | Dark | Description |
+| --- | --- | --- | --- |
+| `--dui-color-purple-11` | `oklch(46.2% 0.195 299deg)` | `oklch(46.2% 0.195 299deg)` | Visited links and code keywords, light |
+| `--dui-color-purple-dark-11` | `oklch(80.1% 0.127 306deg)` | `oklch(80.1% 0.127 306deg)` | Visited links and code keywords, dark |
+| `--dui-color-teal-11` | `oklch(49.1% 0.081 203deg)` | `oklch(49.1% 0.081 203deg)` | Code properties, light |
+| `--dui-color-teal-dark-11` | `oklch(77.3% 0.099 203deg)` | `oklch(77.3% 0.099 203deg)` | Code properties, dark |
+| `--dui-color-yellow-3` | `oklch(95.3% 0.093 99deg)` | `oklch(95.3% 0.093 99deg)` | Mark background, light |
+| `--dui-color-yellow-dark-9` | `oklch(83.4% 0.141 97deg)` | `oklch(83.4% 0.141 97deg)` | Mark background, dark |
+
+### White, and black scrims
+
+| Token | Light | Dark | Description |
+| --- | --- | --- | --- |
+| `--dui-color-white` | `oklch(100% 0 0deg)` | `oklch(100% 0 0deg)` | White, for text on a solid fill |
+| `--dui-color-black-a40` | `oklch(0% 0 0deg / 40%)` | `oklch(0% 0 0deg / 40%)` | Scrim, 40% black |
+| `--dui-color-black-a60` | `oklch(0% 0 0deg / 60%)` | `oklch(0% 0 0deg / 60%)` | Scrim, 60% black |
 
 ### Font stacks
 
@@ -1402,55 +1536,60 @@ A theme is an override of these tokens on `:root` or on a scoped element. No reb
 
 Colors use [`light-dark()`](https://developer.mozilla.org/en-US/docs/Web/CSS/color_value/light-dark), which picks a value from the used color-scheme of the element where the token is read.
 
-136 tokens in [`css/tokens/semantic.css`](https://github.com/odonckers/domestic-ui/blob/main/css/tokens/semantic.css). **Light** and **Dark** resolve every `var()` and take one side of [`light-dark()`](https://developer.mozilla.org/en-US/docs/Web/CSS/color_value/light-dark). Previews are decorative. † marks a description taken from the semantic token table in [Theming](https://odonckers.github.io/domestic-ui/principles/theming.md).
+140 tokens in [`css/tokens/semantic.css`](https://github.com/odonckers/domestic-ui/blob/main/css/tokens/semantic.css). **Light** and **Dark** resolve every `var()` and take one side of [`light-dark()`](https://developer.mozilla.org/en-US/docs/Web/CSS/color_value/light-dark). Previews are decorative. † marks a description taken from the semantic token table in [Theming](https://odonckers.github.io/domestic-ui/principles/theming.md).
 
 ### Surfaces and text
 
 | Token | Light | Dark | Description |
 | --- | --- | --- | --- |
-| `--dui-color-surface` | `#fff` | `#12151b` | Page and control background † |
-| `--dui-color-surface-raised` | `#f6f7f9` | `#1b1f27` | Slightly lifted areas: neutral buttons, zebra rows, cards † |
-| `--dui-color-surface-sunken` | `#eceef2` | `#252a34` | Recessed areas: code, button hover † |
-| `--dui-color-text` | `#12151b` | `#eceef2` | Body text † |
-| `--dui-color-text-muted` | `#545b68` | `#a3aab6` | Secondary text, captions, list markers (still 4.5:1) † |
+| `--dui-color-surface` | `oklch(99.3% 0.002 265deg)` | `oklch(16.5% 0.006 265deg)` | Page background |
+| `--dui-color-surface-raised` | `oklch(98.2% 0.003 265deg)` | `oklch(19% 0.007 265deg)` | Slightly lifted areas: neutral buttons, zebra rows, cards |
+| `--dui-color-surface-sunken` | `oklch(96.2% 0.005 265deg)` | `oklch(22% 0.009 265deg)` | Recessed areas: code, button hover |
+| `--dui-color-text` | `oklch(21.5% 0.012 265deg)` | `oklch(95% 0.004 265deg)` | Body text |
+| `--dui-color-text-muted` | `oklch(47.5% 0.016 265deg)` | `oklch(76% 0.012 265deg)` | Secondary text, still 4.5:1 |
 
 ### Borders
 
-Decorative hairlines vs. control boundaries (3:1, WCAG 1.4.11).
+| Token | Light | Dark | Description |
+| --- | --- | --- | --- |
+| `--dui-color-border` | `oklch(21.5% 0.012 265deg / 11%)` | `oklch(95% 0.004 265deg / 10%)` | Decorative hairline |
+| `--dui-color-border-control` | `oklch(58.5% 0.016 265deg)` | `oklch(58% 0.016 265deg)` | Form control and button boundaries, 3:1 |
+
+### Primary
 
 | Token | Light | Dark | Description |
 | --- | --- | --- | --- |
-| `--dui-color-border` | `#dde0e6` | `#3a404b` | Decorative hairlines: tables, hr, details, fieldset † |
-| `--dui-color-border-control` | `#7a8291` | `#7a8291` | Form control and button boundaries (3:1) † |
+| `--dui-color-primary` | `oklch(21.5% 0.012 265deg)` | `oklch(95% 0.004 265deg)` | Primary fill |
+| `--dui-color-primary-contrast` | `oklch(100% 0 0deg)` | `oklch(16.5% 0.006 265deg)` | Text on the primary fill |
 
 ### Accent and status
 
 | Token | Light | Dark | Description |
 | --- | --- | --- | --- |
-| `--dui-color-accent` | `#3451d1` | `#8ea2ff` | Brand color: primary button fill, checks, links and focus by default † |
-| `--dui-color-accent-contrast` | `#fff` | `#12151b` | Text on accent † |
-| `--dui-color-link-visited` | `#6b2fb3` | `#d2a8ff` | Visited links † |
-| `--dui-color-danger` | `#b42318` | `#ff8a80` | Errors, :user-invalid borders † |
-| `--dui-color-success` | `#17773a` | `#5fd38d` | Success messages † |
-| `--dui-color-warning` | `#8a5a00` | `#f2c14e` | Warning badges and messages † |
-| `--dui-color-info` | `#2b43b0` | `#a8b7ff` | Informational alerts and toasts (separate from the accent, so a brand color never reads as a status) † |
-| `--dui-color-mark` | `#fff1a8` | `#e3c84f` | mark and ::selection background † |
-| `--dui-color-mark-text` | `#12151b` | `#12151b` | Text on mark † |
-| `--dui-color-backdrop` | `rgb(0 0 0 / 40%)` | `rgb(0 0 0 / 60%)` | dialog::backdrop † |
-| `--dui-color-shadow` | `rgb(0 0 0 / 10%)` | `rgb(0 0 0 / 40%)` | Shadow color † |
+| `--dui-color-accent` | `oklch(53% 0.215 272deg)` | `oklch(53% 0.215 272deg)` | Accent solid for focus rings, selection and checks |
+| `--dui-color-accent-contrast` | `oklch(100% 0 0deg)` | `oklch(100% 0 0deg)` | Text on the accent fill, white in both schemes |
+| `--dui-color-link-visited` | `oklch(46.2% 0.195 299deg)` | `oklch(80.1% 0.127 306deg)` | Visited links |
+| `--dui-color-danger` | `oklch(48% 0.16 27deg)` | `oklch(80% 0.114 27deg)` | Errors and invalid borders |
+| `--dui-color-success` | `oklch(47% 0.128 150deg)` | `oklch(80% 0.12 150deg)` | Success messages |
+| `--dui-color-warning` | `oklch(47% 0.098 75deg)` | `oklch(80% 0.12 75deg)` | Warning badges and messages |
+| `--dui-color-info` | `oklch(48% 0.12 245deg)` | `oklch(80% 0.108 245deg)` | Informational alerts, separate from the accent |
+| `--dui-color-mark` | `oklch(95.3% 0.093 99deg)` | `oklch(83.4% 0.141 97deg)` | mark and ::selection background |
+| `--dui-color-mark-text` | `oklch(21.5% 0.012 265deg)` | `oklch(21.5% 0.012 265deg)` | Text on mark, the light text color in both schemes |
+| `--dui-color-backdrop` | `oklch(0% 0 0deg / 40%)` | `oklch(0% 0 0deg / 60%)` | dialog::backdrop |
+| `--dui-color-shadow` | `oklch(25% 0.015 265deg / 12%)` | `oklch(14% 0.015 265deg / 46%)` | Shadow color, tinted with the neutral hue |
 
 ### Code highlighting (css/base/typography.css, explainers/code-highlighting.md). Each meets 4.5:1 on --dui-color-surface-sunken, the <pre> background (WCAG 1.4.3)
 
 | Token | Light | Dark | Description |
 | --- | --- | --- | --- |
-| `--dui-color-code-keyword` | `#6b2fb3` | `#d2a8ff` | JS keywords and CSS at-rules: const, return, @layer |
-| `--dui-color-code-string` | `#17773a` | `#5fd38d` | Quoted strings in JS and CSS, and HTML attribute values |
-| `--dui-color-code-comment` | `#545b68` | `#a3aab6` | Comments in HTML, CSS and JS |
-| `--dui-color-code-tag` | `#2b43b0` | `#a8b7ff` | HTML tag names and CSS selectors |
-| `--dui-color-code-attribute` | `#8a5a00` | `#f2c14e` | HTML attribute names |
-| `--dui-color-code-property` | `#0b6e75` | `#5cc8d1` | CSS properties and custom properties, JS object properties |
-| `--dui-color-code-number` | `#b42318` | `#ff8a80` | Numbers with their units: 0.5rem, 100%, 42 |
-| `--dui-color-code-punctuation` | `#3a404b` | `#c4c9d2` | Brackets, braces, angle brackets, colons, semicolons, commas |
+| `--dui-color-code-keyword` | `oklch(46.2% 0.195 299deg)` | `oklch(80.1% 0.127 306deg)` | JS keywords and CSS at-rules: const, return, @layer |
+| `--dui-color-code-string` | `oklch(47% 0.128 150deg)` | `oklch(80% 0.12 150deg)` | Quoted strings in JS and CSS, and HTML attribute values |
+| `--dui-color-code-comment` | `oklch(47.5% 0.016 265deg)` | `oklch(76% 0.012 265deg)` | Comments in HTML, CSS and JS |
+| `--dui-color-code-tag` | `oklch(48% 0.12 245deg)` | `oklch(80% 0.108 245deg)` | HTML tag names and CSS selectors |
+| `--dui-color-code-attribute` | `oklch(47% 0.098 75deg)` | `oklch(80% 0.12 75deg)` | HTML attribute names |
+| `--dui-color-code-property` | `oklch(49.1% 0.081 203deg)` | `oklch(77.3% 0.099 203deg)` | CSS properties and custom properties, JS object properties |
+| `--dui-color-code-number` | `oklch(48% 0.16 27deg)` | `oklch(80% 0.114 27deg)` | Numbers with their units: 0.5rem, 100%, 42 |
+| `--dui-color-code-punctuation` | `oklch(37% 0.016 265deg)` | `oklch(83.5% 0.01 265deg)` | Brackets, braces, angle brackets, colons, semicolons, commas |
 
 ### Type
 
@@ -1571,9 +1710,11 @@ Defined in terms of other semantic tokens.
 
 | Token | Light | Dark | Description |
 | --- | --- | --- | --- |
-| `--dui-color-link` | `#3451d1` | `#8ea2ff` | Links † |
-| `--dui-color-focus` | `#3451d1` | `#8ea2ff` | Focus ring (3:1 against surfaces) † |
-| `--dui-color-accent-hover` | `color-mix(in oklab, #3451d1 82%, #12151b)` | `color-mix(in oklab, #8ea2ff 82%, #eceef2)` | Primary button hover † |
+| `--dui-color-accent-text` | `oklch(from oklch(53% 0.215 272deg) 47% calc(c * 0.19 / 0.215) h)` | `oklch(from oklch(53% 0.215 272deg) 78% calc(c * 0.11 / 0.215) h)` | Accent as text. Relative color of the accent, same hue, 4.5:1. https://www.w3.org/TR/css-color-5/#relative-colors |
+| `--dui-color-link` | `oklch(from oklch(53% 0.215 272deg) 47% calc(c * 0.19 / 0.215) h)` | `oklch(from oklch(53% 0.215 272deg) 78% calc(c * 0.11 / 0.215) h)` | Links |
+| `--dui-color-focus` | `oklch(53% 0.215 272deg)` | `oklch(from oklch(53% 0.215 272deg) 78% calc(c * 0.11 / 0.215) h)` | Focus ring: the accent solid in light, the accent text in dark, so it stays 3:1 |
+| `--dui-color-accent-hover` | `oklch(from oklch(53% 0.215 272deg) calc(l - 0.02) c h)` | `oklch(from oklch(53% 0.215 272deg) calc(l - 0.02) c h)` | Accent solid hover. Our choice: 0.02 darker in OKLCH lightness, so white text stays 4.5:1 |
+| `--dui-color-primary-hover` | `oklch(from oklch(21.5% 0.012 265deg) 32% calc(c + 0.002) h)` | `oklch(from oklch(95% 0.004 265deg) 86% calc(c + 0.004) h)` | Primary fill hover, same hue as the primary |
 | `--dui-font-heading` | `system-ui, sans-serif` | `system-ui, sans-serif` | Heading font stack † |
 
 ### Tinted surfaces for status badges
@@ -1582,18 +1723,18 @@ A little of the tone mixed into the surface.
 
 | Token | Light | Dark | Description |
 | --- | --- | --- | --- |
-| `--dui-color-accent-surface` | `color-mix(in oklab, #3451d1 8%, #fff)` | `color-mix(in oklab, #8ea2ff 8%, #12151b)` | Accent badge background † |
-| `--dui-color-success-surface` | `color-mix(in oklab, #17773a 8%, #fff)` | `color-mix(in oklab, #5fd38d 8%, #12151b)` | Success badge background † |
-| `--dui-color-warning-surface` | `color-mix(in oklab, #8a5a00 8%, #fff)` | `color-mix(in oklab, #f2c14e 8%, #12151b)` | Warning badge background † |
-| `--dui-color-danger-surface` | `color-mix(in oklab, #b42318 8%, #fff)` | `color-mix(in oklab, #ff8a80 8%, #12151b)` | Danger badge and alert background † |
-| `--dui-color-info-surface` | `color-mix(in oklab, #2b43b0 8%, #fff)` | `color-mix(in oklab, #a8b7ff 8%, #12151b)` | Info alert background † |
+| `--dui-color-accent-surface` | `color-mix(in oklab, oklch(53% 0.215 272deg) 8%, oklch(99.3% 0.002 265deg))` | `color-mix(in oklab, oklch(53% 0.215 272deg) 8%, oklch(16.5% 0.006 265deg))` | Accent badge background † |
+| `--dui-color-success-surface` | `color-mix(in oklab, oklch(47% 0.128 150deg) 8%, oklch(99.3% 0.002 265deg))` | `color-mix(in oklab, oklch(80% 0.12 150deg) 8%, oklch(16.5% 0.006 265deg))` | Success badge background † |
+| `--dui-color-warning-surface` | `color-mix(in oklab, oklch(47% 0.098 75deg) 8%, oklch(99.3% 0.002 265deg))` | `color-mix(in oklab, oklch(80% 0.12 75deg) 8%, oklch(16.5% 0.006 265deg))` | Warning badge background † |
+| `--dui-color-danger-surface` | `color-mix(in oklab, oklch(48% 0.16 27deg) 8%, oklch(99.3% 0.002 265deg))` | `color-mix(in oklab, oklch(80% 0.114 27deg) 8%, oklch(16.5% 0.006 265deg))` | Danger badge and alert background † |
+| `--dui-color-info-surface` | `color-mix(in oklab, oklch(48% 0.12 245deg) 8%, oklch(99.3% 0.002 265deg))` | `color-mix(in oklab, oklch(80% 0.108 245deg) 8%, oklch(16.5% 0.006 265deg))` | Info alert background † |
 
 ### Inverse pair for small overlays on top of content (tooltips): text and surface swapped
 
 | Token | Light | Dark | Description |
 | --- | --- | --- | --- |
-| `--dui-color-surface-inverse` | `#12151b` | `#eceef2` | Tooltip background † |
-| `--dui-color-text-inverse` | `#fff` | `#12151b` | Tooltip text † |
+| `--dui-color-surface-inverse` | `oklch(21.5% 0.012 265deg)` | `oklch(95% 0.004 265deg)` | Tooltip background † |
+| `--dui-color-text-inverse` | `oklch(99.3% 0.002 265deg)` | `oklch(16.5% 0.006 265deg)` | Tooltip text † |
 
 ### Motion
 
@@ -1613,17 +1754,17 @@ A shadow and a surface per level. Light scheme: the shadow does the work and eve
 
 | Token | Light | Dark | Description |
 | --- | --- | --- | --- |
-| `--dui-elevation-shadow-color` | `color-mix(in srgb, rgb(0 0 0 / 10%) 100%, transparent)` | `color-mix(in srgb, rgb(0 0 0 / 40%) 100%, transparent)` | Shadow color after strength; retune --dui-color-shadow and --dui-elevation-strength |
+| `--dui-elevation-shadow-color` | `color-mix(in srgb, oklch(25% 0.015 265deg / 12%) 100%, transparent)` | `color-mix(in srgb, oklch(14% 0.015 265deg / 46%) 100%, transparent)` | Shadow color after strength; retune --dui-color-shadow and --dui-elevation-strength |
 | `--dui-elevation-0` | `none` | `none` | Level 0, flat: no shadow |
-| `--dui-elevation-1` | `0 1px 2px 0 color-mix(in srgb, rgb(0 0 0 / 10%) 100%, transparent), 0 1px 3px 1px color-mix(in srgb, rgb(0 0 0 / 10%) 100%, transparent)` | `0 1px 2px 0 color-mix(in srgb, rgb(0 0 0 / 40%) 100%, transparent), 0 1px 3px 1px color-mix(in srgb, rgb(0 0 0 / 40%) 100%, transparent)` | Level 1 shadow |
-| `--dui-elevation-2` | `0 1px 3px 0 color-mix(in srgb, rgb(0 0 0 / 10%) 100%, transparent), 0 4px 8px 2px color-mix(in srgb, rgb(0 0 0 / 10%) 100%, transparent)` | `0 1px 3px 0 color-mix(in srgb, rgb(0 0 0 / 40%) 100%, transparent), 0 4px 8px 2px color-mix(in srgb, rgb(0 0 0 / 40%) 100%, transparent)` | Level 2 shadow |
-| `--dui-elevation-3` | `0 2px 4px 0 color-mix(in srgb, rgb(0 0 0 / 10%) 100%, transparent), 0 8px 16px 2px color-mix(in srgb, rgb(0 0 0 / 10%) 100%, transparent)` | `0 2px 4px 0 color-mix(in srgb, rgb(0 0 0 / 40%) 100%, transparent), 0 8px 16px 2px color-mix(in srgb, rgb(0 0 0 / 40%) 100%, transparent)` | Level 3 shadow |
-| `--dui-elevation-4` | `0 4px 8px 0 color-mix(in srgb, rgb(0 0 0 / 10%) 100%, transparent), 0 16px 40px 4px color-mix(in srgb, rgb(0 0 0 / 10%) 100%, transparent)` | `0 4px 8px 0 color-mix(in srgb, rgb(0 0 0 / 40%) 100%, transparent), 0 16px 40px 4px color-mix(in srgb, rgb(0 0 0 / 40%) 100%, transparent)` | Level 4 shadow |
-| `--dui-elevation-0-surface` | `#fff` | `#12151b` | Level 0 surface: the page |
-| `--dui-elevation-1-surface` | `#fff` | `color-mix(in oklab, #eceef2 3%, #12151b)` | Level 1 surface: one step lighter in dark |
-| `--dui-elevation-2-surface` | `#fff` | `color-mix(in oklab, #eceef2 calc(3% * 2), #12151b)` | Level 2 surface: two steps lighter in dark |
-| `--dui-elevation-3-surface` | `#fff` | `color-mix(in oklab, #eceef2 calc(3% * 3), #12151b)` | Level 3 surface: three steps lighter in dark |
-| `--dui-elevation-4-surface` | `#fff` | `color-mix(in oklab, #eceef2 calc(3% * 4), #12151b)` | Level 4 surface: four steps lighter in dark |
+| `--dui-elevation-1` | `0 1px 2px 0 color-mix(in srgb, oklch(25% 0.015 265deg / 12%) 100%, transparent), 0 1px 3px 1px color-mix(in srgb, oklch(25% 0.015 265deg / 12%) 100%, transparent)` | `0 1px 2px 0 color-mix(in srgb, oklch(14% 0.015 265deg / 46%) 100%, transparent), 0 1px 3px 1px color-mix(in srgb, oklch(14% 0.015 265deg / 46%) 100%, transparent)` | Level 1 shadow |
+| `--dui-elevation-2` | `0 1px 3px 0 color-mix(in srgb, oklch(25% 0.015 265deg / 12%) 100%, transparent), 0 4px 8px 2px color-mix(in srgb, oklch(25% 0.015 265deg / 12%) 100%, transparent)` | `0 1px 3px 0 color-mix(in srgb, oklch(14% 0.015 265deg / 46%) 100%, transparent), 0 4px 8px 2px color-mix(in srgb, oklch(14% 0.015 265deg / 46%) 100%, transparent)` | Level 2 shadow |
+| `--dui-elevation-3` | `0 2px 4px 0 color-mix(in srgb, oklch(25% 0.015 265deg / 12%) 100%, transparent), 0 8px 16px 2px color-mix(in srgb, oklch(25% 0.015 265deg / 12%) 100%, transparent)` | `0 2px 4px 0 color-mix(in srgb, oklch(14% 0.015 265deg / 46%) 100%, transparent), 0 8px 16px 2px color-mix(in srgb, oklch(14% 0.015 265deg / 46%) 100%, transparent)` | Level 3 shadow |
+| `--dui-elevation-4` | `0 4px 8px 0 color-mix(in srgb, oklch(25% 0.015 265deg / 12%) 100%, transparent), 0 16px 40px 4px color-mix(in srgb, oklch(25% 0.015 265deg / 12%) 100%, transparent)` | `0 4px 8px 0 color-mix(in srgb, oklch(14% 0.015 265deg / 46%) 100%, transparent), 0 16px 40px 4px color-mix(in srgb, oklch(14% 0.015 265deg / 46%) 100%, transparent)` | Level 4 shadow |
+| `--dui-elevation-0-surface` | `oklch(99.3% 0.002 265deg)` | `oklch(16.5% 0.006 265deg)` | Level 0 surface: the page |
+| `--dui-elevation-1-surface` | `oklch(99.3% 0.002 265deg)` | `color-mix(in oklab, oklch(95% 0.004 265deg) 3%, oklch(16.5% 0.006 265deg))` | Level 1 surface: one step lighter in dark |
+| `--dui-elevation-2-surface` | `oklch(99.3% 0.002 265deg)` | `color-mix(in oklab, oklch(95% 0.004 265deg) calc(3% * 2), oklch(16.5% 0.006 265deg))` | Level 2 surface: two steps lighter in dark |
+| `--dui-elevation-3-surface` | `oklch(99.3% 0.002 265deg)` | `color-mix(in oklab, oklch(95% 0.004 265deg) calc(3% * 3), oklch(16.5% 0.006 265deg))` | Level 3 surface: three steps lighter in dark |
+| `--dui-elevation-4-surface` | `oklch(99.3% 0.002 265deg)` | `color-mix(in oklab, oklch(95% 0.004 265deg) calc(3% * 4), oklch(16.5% 0.006 265deg))` | Level 4 surface: four steps lighter in dark |
 
 ### Elevation by role
 
@@ -1632,15 +1773,15 @@ Components use these, never the numbers.
 | Token | Light | Dark | Description |
 | --- | --- | --- | --- |
 | `--dui-elevation-flat` | `none` | `none` | Shadow of content on the page |
-| `--dui-elevation-flat-surface` | `#fff` | `#12151b` | Surface of content on the page |
-| `--dui-elevation-raised` | `0 1px 2px 0 color-mix(in srgb, rgb(0 0 0 / 10%) 100%, transparent), 0 1px 3px 1px color-mix(in srgb, rgb(0 0 0 / 10%) 100%, transparent)` | `0 1px 2px 0 color-mix(in srgb, rgb(0 0 0 / 40%) 100%, transparent), 0 1px 3px 1px color-mix(in srgb, rgb(0 0 0 / 40%) 100%, transparent)` | Shadow of cards |
-| `--dui-elevation-raised-surface` | `#fff` | `color-mix(in oklab, #eceef2 3%, #12151b)` | Surface of cards |
-| `--dui-elevation-overlay` | `0 1px 3px 0 color-mix(in srgb, rgb(0 0 0 / 10%) 100%, transparent), 0 4px 8px 2px color-mix(in srgb, rgb(0 0 0 / 10%) 100%, transparent)` | `0 1px 3px 0 color-mix(in srgb, rgb(0 0 0 / 40%) 100%, transparent), 0 4px 8px 2px color-mix(in srgb, rgb(0 0 0 / 40%) 100%, transparent)` | Shadow of toasts and other non-modal layers over the page |
-| `--dui-elevation-overlay-surface` | `#fff` | `color-mix(in oklab, #eceef2 calc(3% * 2), #12151b)` | Surface of non-modal layers over the page |
-| `--dui-elevation-popover` | `0 2px 4px 0 color-mix(in srgb, rgb(0 0 0 / 10%) 100%, transparent), 0 8px 16px 2px color-mix(in srgb, rgb(0 0 0 / 10%) 100%, transparent)` | `0 2px 4px 0 color-mix(in srgb, rgb(0 0 0 / 40%) 100%, transparent), 0 8px 16px 2px color-mix(in srgb, rgb(0 0 0 / 40%) 100%, transparent)` | Shadow of popovers, menus, tooltips and nav dropdowns |
-| `--dui-elevation-popover-surface` | `#fff` | `color-mix(in oklab, #eceef2 calc(3% * 3), #12151b)` | Surface of popovers, menus and nav dropdowns |
-| `--dui-elevation-dialog` | `0 4px 8px 0 color-mix(in srgb, rgb(0 0 0 / 10%) 100%, transparent), 0 16px 40px 4px color-mix(in srgb, rgb(0 0 0 / 10%) 100%, transparent)` | `0 4px 8px 0 color-mix(in srgb, rgb(0 0 0 / 40%) 100%, transparent), 0 16px 40px 4px color-mix(in srgb, rgb(0 0 0 / 40%) 100%, transparent)` | Shadow of dialogs and drawers |
-| `--dui-elevation-dialog-surface` | `#fff` | `color-mix(in oklab, #eceef2 calc(3% * 4), #12151b)` | Surface of dialogs and drawers |
+| `--dui-elevation-flat-surface` | `oklch(99.3% 0.002 265deg)` | `oklch(16.5% 0.006 265deg)` | Surface of content on the page |
+| `--dui-elevation-raised` | `0 1px 2px 0 color-mix(in srgb, oklch(25% 0.015 265deg / 12%) 100%, transparent), 0 1px 3px 1px color-mix(in srgb, oklch(25% 0.015 265deg / 12%) 100%, transparent)` | `0 1px 2px 0 color-mix(in srgb, oklch(14% 0.015 265deg / 46%) 100%, transparent), 0 1px 3px 1px color-mix(in srgb, oklch(14% 0.015 265deg / 46%) 100%, transparent)` | Shadow of cards |
+| `--dui-elevation-raised-surface` | `oklch(99.3% 0.002 265deg)` | `color-mix(in oklab, oklch(95% 0.004 265deg) 3%, oklch(16.5% 0.006 265deg))` | Surface of cards |
+| `--dui-elevation-overlay` | `0 1px 3px 0 color-mix(in srgb, oklch(25% 0.015 265deg / 12%) 100%, transparent), 0 4px 8px 2px color-mix(in srgb, oklch(25% 0.015 265deg / 12%) 100%, transparent)` | `0 1px 3px 0 color-mix(in srgb, oklch(14% 0.015 265deg / 46%) 100%, transparent), 0 4px 8px 2px color-mix(in srgb, oklch(14% 0.015 265deg / 46%) 100%, transparent)` | Shadow of toasts and other non-modal layers over the page |
+| `--dui-elevation-overlay-surface` | `oklch(99.3% 0.002 265deg)` | `color-mix(in oklab, oklch(95% 0.004 265deg) calc(3% * 2), oklch(16.5% 0.006 265deg))` | Surface of non-modal layers over the page |
+| `--dui-elevation-popover` | `0 2px 4px 0 color-mix(in srgb, oklch(25% 0.015 265deg / 12%) 100%, transparent), 0 8px 16px 2px color-mix(in srgb, oklch(25% 0.015 265deg / 12%) 100%, transparent)` | `0 2px 4px 0 color-mix(in srgb, oklch(14% 0.015 265deg / 46%) 100%, transparent), 0 8px 16px 2px color-mix(in srgb, oklch(14% 0.015 265deg / 46%) 100%, transparent)` | Shadow of popovers, menus, tooltips and nav dropdowns |
+| `--dui-elevation-popover-surface` | `oklch(99.3% 0.002 265deg)` | `color-mix(in oklab, oklch(95% 0.004 265deg) calc(3% * 3), oklch(16.5% 0.006 265deg))` | Surface of popovers, menus and nav dropdowns |
+| `--dui-elevation-dialog` | `0 4px 8px 0 color-mix(in srgb, oklch(25% 0.015 265deg / 12%) 100%, transparent), 0 16px 40px 4px color-mix(in srgb, oklch(25% 0.015 265deg / 12%) 100%, transparent)` | `0 4px 8px 0 color-mix(in srgb, oklch(14% 0.015 265deg / 46%) 100%, transparent), 0 16px 40px 4px color-mix(in srgb, oklch(14% 0.015 265deg / 46%) 100%, transparent)` | Shadow of dialogs and drawers |
+| `--dui-elevation-dialog-surface` | `oklch(99.3% 0.002 265deg)` | `color-mix(in oklab, oklch(95% 0.004 265deg) calc(3% * 4), oklch(16.5% 0.006 265deg))` | Surface of dialogs and drawers |
 
 ### Density
 
@@ -1662,7 +1803,7 @@ See CHANGELOG.md.
 
 | Token | Light | Dark | Description |
 | --- | --- | --- | --- |
-| `--dui-shadow-raised` | `0 1px 2px 0 color-mix(in srgb, rgb(0 0 0 / 10%) 100%, transparent), 0 1px 3px 1px color-mix(in srgb, rgb(0 0 0 / 10%) 100%, transparent)` | `0 1px 2px 0 color-mix(in srgb, rgb(0 0 0 / 40%) 100%, transparent), 0 1px 3px 1px color-mix(in srgb, rgb(0 0 0 / 40%) 100%, transparent)` | Deprecated: use --dui-elevation-raised (level 1) |
+| `--dui-shadow-raised` | `0 1px 2px 0 color-mix(in srgb, oklch(25% 0.015 265deg / 12%) 100%, transparent), 0 1px 3px 1px color-mix(in srgb, oklch(25% 0.015 265deg / 12%) 100%, transparent)` | `0 1px 2px 0 color-mix(in srgb, oklch(14% 0.015 265deg / 46%) 100%, transparent), 0 1px 3px 1px color-mix(in srgb, oklch(14% 0.015 265deg / 46%) 100%, transparent)` | Deprecated: use --dui-elevation-raised (level 1) |
 | `--dui-duration-fast` | `calc(150ms * 1 * 1)` | `calc(150ms * 1 * 1)` | Deprecated: use --dui-motion-duration-fast |
 | `--dui-duration-normal` | `calc(250ms * 1 * 1)` | `calc(250ms * 1 * 1)` | Deprecated: use --dui-motion-duration-normal |
 | `--dui-easing-standard` | `cubic-bezier(0.2, 0, 0, 1)` | `cubic-bezier(0.2, 0, 0, 1)` | Deprecated: use --dui-motion-easing-standard |
@@ -1861,6 +2002,7 @@ None: write semantic HTML.
 - [W3C labels](https://www.w3.org/WAI/tutorials/forms/labels/)
 - [MDN `:user-invalid`](https://developer.mozilla.org/en-US/docs/Web/CSS/:user-invalid)
 - [MDN `accent-color`](https://developer.mozilla.org/en-US/docs/Web/CSS/accent-color)
+- [MDN `forced-colors`](https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/At-rules/@media/forced-colors)
 - [WHATWG interactive elements](https://html.spec.whatwg.org/multipage/interactive-elements.html)
 - [MDN `dialog`](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/dialog)
 - [APG dialog modal](https://www.w3.org/WAI/ARIA/apg/patterns/dialog-modal/)

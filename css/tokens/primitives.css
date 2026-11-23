@@ -9,47 +9,142 @@
  * Primitives are NOT public API: they may be renamed, added or
  * removed in any release. Theme with semantic tokens.
  *
+ * Colors are OKLCH, in the sRGB gamut (CSS Color 4).
+ * https://www.w3.org/TR/css-color-4/#ok-lab
+ * https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/Values/color_value/oklch
+ *
+ * Neutral and indigo each have 12 steps in light and in dark. The step
+ * number is the role, the same idea as Radix's scales (for comparison:
+ * https://www.radix-ui.com/colors/docs/palette-composition/understanding-the-scale):
+ *   1 page, 2 raised, 3 sunken or element, 4 hover, 5 active or selected,
+ *   6 subtle border, 7 border, 8 control border, 9 solid, 10 solid hover,
+ *   11 muted or accent text, 12 text.
+ * Red, green, amber and blue have steps 3, 9 and 11 only. Purple, teal
+ * and yellow keep the code-highlight and mark hues.
+ * Our choice: the primary action uses neutral 12 (near-black or near-white),
+ * and indigo is the accent for links, focus and selection.
+ *
  * Custom properties: https://developer.mozilla.org/en-US/docs/Web/CSS/--*
  */
 
 :root,
 ::backdrop {
-  /* Neutral gray, cool tint */
-  --dui-color-gray-0: #fff;
-  --dui-color-gray-50: #f6f7f9;
-  --dui-color-gray-100: #eceef2;
-  --dui-color-gray-200: #dde0e6;
-  --dui-color-gray-300: #c4c9d2;
-  --dui-color-gray-400: #a3aab6;
-  --dui-color-gray-500: #7a8291;
-  --dui-color-gray-600: #545b68;
-  --dui-color-gray-700: #3a404b;
-  --dui-color-gray-800: #252a34;
-  --dui-color-gray-850: #1b1f27;
-  --dui-color-gray-900: #12151b;
+  /* Neutral, light. Hue 265. */
 
-  /* Hues */
-  --dui-color-blue-300: #a8b7ff;
-  --dui-color-blue-400: #8ea2ff;
-  --dui-color-blue-600: #3451d1;
-  --dui-color-blue-700: #2b43b0;
-  --dui-color-purple-300: #d2a8ff;
-  --dui-color-purple-700: #6b2fb3;
-  --dui-color-red-300: #ff8a80;
-  --dui-color-red-700: #b42318;
-  --dui-color-green-300: #5fd38d;
-  --dui-color-green-700: #17773a;
-  --dui-color-yellow-100: #fff1a8;
-  --dui-color-yellow-300: #e3c84f;
-  --dui-color-amber-300: #f2c14e;
-  --dui-color-amber-700: #8a5a00;
-  --dui-color-teal-300: #5cc8d1;
-  --dui-color-teal-700: #0b6e75;
+  --dui-color-neutral-1: oklch(99.3% 0.002 265deg); /* Step 1, page */
+  --dui-color-neutral-2: oklch(98.2% 0.003 265deg); /* Step 2, raised */
+  --dui-color-neutral-3: oklch(96.2% 0.005 265deg); /* Step 3, sunken or element */
+  --dui-color-neutral-4: oklch(94% 0.006 265deg); /* Step 4, hover */
+  --dui-color-neutral-5: oklch(91% 0.008 265deg); /* Step 5, active or selected */
+  --dui-color-neutral-6: oklch(84% 0.01 265deg); /* Step 6, subtle border */
+  --dui-color-neutral-7: oklch(72% 0.013 265deg); /* Step 7, border */
+  --dui-color-neutral-8: oklch(58.5% 0.016 265deg); /* Step 8, control border, 3:1 on the page */
+  --dui-color-neutral-9: oklch(52% 0.016 265deg); /* Step 9, solid */
+  --dui-color-neutral-10: oklch(50% 0.016 265deg); /* Step 10, solid hover */
+  --dui-color-neutral-11: oklch(47.5% 0.016 265deg); /* Step 11, muted text */
+  --dui-color-neutral-12: oklch(21.5% 0.012 265deg); /* Step 12, text, and the light primary fill */
+  --dui-color-neutral-12-a11: oklch(21.5% 0.012 265deg / 11%); /* Hairline: the text color at 11% alpha */
+  --dui-color-neutral-punctuation: oklch(37% 0.016 265deg); /* Code punctuation, darker than muted text */
+  --dui-color-neutral-shadow: oklch(25% 0.015 265deg / 12%); /* Shadow tinted with the neutral hue */
 
-  /* Translucent black, for overlays and shadows */
-  --dui-color-black-a10: rgb(0 0 0 / 10%);
-  --dui-color-black-a40: rgb(0 0 0 / 40%);
-  --dui-color-black-a60: rgb(0 0 0 / 60%);
+  /* Neutral, dark. Hue 265. Lightness rises with the step. */
+
+  --dui-color-neutral-dark-1: oklch(16.5% 0.006 265deg); /* Step 1, page */
+  --dui-color-neutral-dark-2: oklch(19% 0.007 265deg); /* Step 2, raised */
+  --dui-color-neutral-dark-3: oklch(22% 0.009 265deg); /* Step 3, sunken or element */
+  --dui-color-neutral-dark-4: oklch(26% 0.011 265deg); /* Step 4, hover */
+  --dui-color-neutral-dark-5: oklch(31% 0.012 265deg); /* Step 5, active or selected */
+  --dui-color-neutral-dark-6: oklch(38% 0.014 265deg); /* Step 6, subtle border */
+  --dui-color-neutral-dark-7: oklch(48% 0.015 265deg); /* Step 7, border */
+  --dui-color-neutral-dark-8: oklch(58% 0.016 265deg); /* Step 8, control border, 3:1 on the page */
+  --dui-color-neutral-dark-9: oklch(66% 0.014 265deg); /* Step 9, solid */
+  --dui-color-neutral-dark-10: oklch(71% 0.013 265deg); /* Step 10, solid hover */
+  --dui-color-neutral-dark-11: oklch(76% 0.012 265deg); /* Step 11, muted text */
+  --dui-color-neutral-dark-12: oklch(95% 0.004 265deg); /* Step 12, text, and the dark primary fill */
+  --dui-color-neutral-dark-12-a10: oklch(95% 0.004 265deg / 10%); /* Hairline: the text color at 10% alpha */
+  --dui-color-neutral-dark-punctuation: oklch(83.5% 0.01 265deg); /* Code punctuation, lighter than muted text */
+  --dui-color-neutral-dark-shadow: oklch(14% 0.015 265deg / 46%); /* Shadow tinted with the neutral hue */
+
+  /* Indigo, the accent, light. Hue 272. */
+
+  --dui-color-indigo-1: oklch(98.4% 0.006 272deg); /* Step 1, page */
+  --dui-color-indigo-2: oklch(96.8% 0.012 272deg); /* Step 2, raised */
+  --dui-color-indigo-3: oklch(94.8% 0.022 272deg); /* Step 3, sunken or element */
+  --dui-color-indigo-4: oklch(92.4% 0.032 272deg); /* Step 4, hover */
+  --dui-color-indigo-5: oklch(89.2% 0.045 272deg); /* Step 5, active or selected */
+  --dui-color-indigo-6: oklch(84.5% 0.055 272deg); /* Step 6, subtle border */
+  --dui-color-indigo-7: oklch(76% 0.07 272deg); /* Step 7, border */
+  --dui-color-indigo-8: oklch(66% 0.11 272deg); /* Step 8, control border */
+  --dui-color-indigo-9: oklch(53% 0.215 272deg); /* Step 9, solid accent */
+  --dui-color-indigo-10: oklch(48.5% 0.2 272deg); /* Step 10, solid hover */
+  --dui-color-indigo-11: oklch(47% 0.19 272deg); /* Step 11, accent text */
+  --dui-color-indigo-12: oklch(36% 0.13 272deg); /* Step 12, text */
+
+  /* Indigo, the accent, dark. Hue 272. Step 9 matches the light solid. */
+
+  --dui-color-indigo-dark-1: oklch(19% 0.02 272deg); /* Step 1, page */
+  --dui-color-indigo-dark-2: oklch(22% 0.028 272deg); /* Step 2, raised */
+  --dui-color-indigo-dark-3: oklch(26% 0.04 272deg); /* Step 3, sunken or element */
+  --dui-color-indigo-dark-4: oklch(30% 0.052 272deg); /* Step 4, hover */
+  --dui-color-indigo-dark-5: oklch(35% 0.065 272deg); /* Step 5, active or selected */
+  --dui-color-indigo-dark-6: oklch(40% 0.075 272deg); /* Step 6, subtle border */
+  --dui-color-indigo-dark-7: oklch(45% 0.09 272deg); /* Step 7, border */
+  --dui-color-indigo-dark-8: oklch(50% 0.13 272deg); /* Step 8, control border */
+  --dui-color-indigo-dark-9: oklch(53% 0.215 272deg); /* Step 9, solid accent */
+  --dui-color-indigo-dark-10: oklch(64% 0.15 272deg); /* Step 10, solid hover */
+  --dui-color-indigo-dark-11: oklch(78% 0.11 272deg); /* Step 11, accent text */
+  --dui-color-indigo-dark-12: oklch(91% 0.025 272deg); /* Step 12, text */
+
+  /* Red. Steps 3, 9 and 11. Hue 27. */
+
+  --dui-color-red-3: oklch(95.5% 0.018 27deg); /* Step 3, element tint */
+  --dui-color-red-9: oklch(55% 0.19 27deg); /* Step 9, solid */
+  --dui-color-red-11: oklch(48% 0.16 27deg); /* Step 11, danger text */
+  --dui-color-red-dark-3: oklch(28% 0.05 27deg); /* Step 3, element tint */
+  --dui-color-red-dark-9: oklch(65% 0.17 27deg); /* Step 9, solid */
+  --dui-color-red-dark-11: oklch(80% 0.114 27deg); /* Step 11, danger text */
+
+  /* Green. Steps 3, 9 and 11. Hue 150. */
+
+  --dui-color-green-3: oklch(96% 0.018 150deg); /* Step 3, element tint */
+  --dui-color-green-9: oklch(55% 0.14 150deg); /* Step 9, solid */
+  --dui-color-green-11: oklch(47% 0.128 150deg); /* Step 11, success text */
+  --dui-color-green-dark-3: oklch(28% 0.04 150deg); /* Step 3, element tint */
+  --dui-color-green-dark-9: oklch(68% 0.14 150deg); /* Step 9, solid */
+  --dui-color-green-dark-11: oklch(80% 0.12 150deg); /* Step 11, success text */
+
+  /* Amber. Steps 3, 9 and 11. Hue 75. */
+
+  --dui-color-amber-3: oklch(96.5% 0.02 75deg); /* Step 3, element tint */
+  --dui-color-amber-9: oklch(62% 0.12 75deg); /* Step 9, solid */
+  --dui-color-amber-11: oklch(47% 0.098 75deg); /* Step 11, warning text */
+  --dui-color-amber-dark-3: oklch(30% 0.04 75deg); /* Step 3, element tint */
+  --dui-color-amber-dark-9: oklch(72% 0.12 75deg); /* Step 9, solid */
+  --dui-color-amber-dark-11: oklch(80% 0.12 75deg); /* Step 11, warning text */
+
+  /* Blue, for info, separate from the indigo accent. Hue 245. */
+
+  --dui-color-blue-3: oklch(96% 0.014 245deg); /* Step 3, element tint */
+  --dui-color-blue-9: oklch(55% 0.135 245deg); /* Step 9, solid */
+  --dui-color-blue-11: oklch(48% 0.12 245deg); /* Step 11, info text */
+  --dui-color-blue-dark-3: oklch(28% 0.04 245deg); /* Step 3, element tint */
+  --dui-color-blue-dark-9: oklch(68% 0.12 245deg); /* Step 9, solid */
+  --dui-color-blue-dark-11: oklch(80% 0.108 245deg); /* Step 11, info text */
+
+  /* Code-highlight hues that are not a status color, and the mark fill. */
+
+  --dui-color-purple-11: oklch(46.2% 0.195 299deg); /* Visited links and code keywords, light */
+  --dui-color-purple-dark-11: oklch(80.1% 0.127 306deg); /* Visited links and code keywords, dark */
+  --dui-color-teal-11: oklch(49.1% 0.081 203deg); /* Code properties, light */
+  --dui-color-teal-dark-11: oklch(77.3% 0.099 203deg); /* Code properties, dark */
+  --dui-color-yellow-3: oklch(95.3% 0.093 99deg); /* Mark background, light */
+  --dui-color-yellow-dark-9: oklch(83.4% 0.141 97deg); /* Mark background, dark */
+
+  /* White, and black scrims. */
+
+  --dui-color-white: oklch(100% 0 0deg); /* White, for text on a solid fill */
+  --dui-color-black-a40: oklch(0% 0 0deg / 40%); /* Scrim, 40% black */
+  --dui-color-black-a60: oklch(0% 0 0deg / 60%); /* Scrim, 60% black */
 
   /*
    * Font stacks: system fonts only, no downloads.

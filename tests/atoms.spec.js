@@ -53,6 +53,34 @@ test.describe("buttons", () => {
     }
   });
 
+  test("primary buttons use system button colors in forced colors", async ({ page, browserName }) => {
+    test.skip(browserName !== "chromium", "forced-colors emulation is Chromium-only in Playwright");
+    await page.emulateMedia({ forcedColors: "active" });
+    await page.goto("examples/atoms/button.html");
+    const colors = await page.evaluate(() => {
+      const probe = document.body.appendChild(document.createElement("span"));
+      const system = (name) => {
+        probe.style.color = name;
+        return getComputedStyle(probe).color;
+      };
+      const face = system("ButtonFace");
+      const text = system("ButtonText");
+      const highlight = system("Highlight");
+      probe.remove();
+      const read = (selector) => {
+        const style = getComputedStyle(document.querySelector(selector));
+        return { bg: style.backgroundColor, fg: style.color };
+      };
+      return { face, text, highlight, submit: read('button[type="submit"]'), primary: read('[data-button~="primary"]') };
+    });
+    for (const button of [colors.submit, colors.primary]) {
+      const face = button.bg === colors.face || button.bg === colors.highlight;
+      const ink = button.fg === colors.text || button.fg === colors.highlight;
+      expect(face, JSON.stringify(button)).toBe(true);
+      expect(ink, JSON.stringify(button)).toBe(true);
+    }
+  });
+
   test("a submit button is primary by default and data-button overrides it", async ({ page }) => {
     const bg = (name) => page.getByRole("button", { name, exact: true, disabled: false }).evaluate((el) => getComputedStyle(el).backgroundColor);
     expect(await bg("Publish")).not.toBe(await bg("Save draft"));

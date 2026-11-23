@@ -638,7 +638,7 @@ test.describe("tokens from css/tokens/", () => {
     const primitives = read(join(SITE_DIR, "tokens/primitives.html"));
     expect(primitives).toContain('<span class="token-missing">No description yet</span>');
     const semantic = read(join(SITE_DIR, "tokens/semantic.html"));
-    expect(semantic).toContain('<span class="token-chip" style="--preview: #12151b"></span>');
+    expect(semantic).toContain('<span class="token-chip" style="--preview: oklch(21.5% 0.012 265deg)"></span>');
     expect(semantic).toMatch(/With <code>@media \(prefers-reduced-motion: reduce\)<\/code>: <code>var\(--dui-factor-0\)<\/code>, resolves to <code>0<\/code>\./);
     expect(read(join(SITE_DIR, "tokens/index.md"))).toMatch(/Primitive.*Internal, may change in any release/);
   });
@@ -701,11 +701,21 @@ test.describe("docs pages in the browser", () => {
         expect(described, `${p.path}: aria-describedby points at the <desc>`).toBe(desc);
         await expect(svg, p.path).toHaveAccessibleDescription(desc);
         await expect(svg).not.toHaveAttribute("aria-hidden", /.*/);
-        // The accent is a token: its computed colour changes with the colour scheme.
-        strokes.push(await svg.locator('g[stroke="var(--dui-color-accent)"]').first().evaluate((g) => getComputedStyle(g).stroke));
+        // The accent resolves to a painted color. The page surface follows the scheme
+        // (the accent solid is the same indigo in light and dark).
+        const sample = await svg.evaluate((el) => {
+          const accent = el.querySelector('g[stroke="var(--dui-color-accent)"]');
+          const frame = el.querySelector('[fill="var(--dui-color-surface)"]');
+          return {
+            accent: accent ? getComputedStyle(accent).stroke : "",
+            surface: frame ? getComputedStyle(frame).fill : "",
+          };
+        });
+        strokes.push(sample);
       }
-      expect(strokes[0], `${p.path}: accent stroke resolves to a colour`).not.toMatch(/var\(|none/);
-      expect(strokes[1], `${p.path}: accent stroke differs in dark mode`).not.toBe(strokes[0]);
+      expect(strokes[0].accent, `${p.path}: accent stroke resolves to a colour`).not.toMatch(/var\(|none|^$/);
+      expect(strokes[1].accent, `${p.path}: accent stroke resolves in dark mode`).not.toMatch(/var\(|none|^$/);
+      expect(strokes[1].surface, `${p.path}: page surface differs in dark mode`).not.toBe(strokes[0].surface);
     }
   });
 
@@ -897,7 +907,7 @@ test.describe("docs pages in the browser", () => {
     await expect(page.locator("tbody tr:visible")).toHaveCount(1);
     await expect(page.locator("[data-token-group]:visible")).toHaveCount(1);
     // Matches values and descriptions too.
-    await input.fill("#3451d1");
+    await input.fill("0.215");
     await expect(page.locator("tbody tr:visible").first()).toContainText("--dui-color-accent");
     await input.fill("");
     await expect(page.getByRole("status")).toHaveText(`${total} tokens shown`);

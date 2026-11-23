@@ -86,7 +86,7 @@
 
 [role="toolbar"] [aria-pressed="true"] {
   background-color: var(--dui-color-accent-surface);
-  color: var(--dui-color-accent);
+  color: var(--dui-color-accent-text);
   border-color: var(--dui-color-accent);
   box-shadow: inset 0 0 0 var(--dui-border-width) var(--dui-color-accent);
 }

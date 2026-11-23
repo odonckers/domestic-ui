@@ -16,41 +16,45 @@
 /* 1. Independent tokens: resolve once on :root, inherit everywhere. */
 :root {
   /* Surfaces and text */
-  --dui-color-surface: light-dark(var(--dui-color-gray-0), var(--dui-color-gray-900));
-  --dui-color-surface-raised: light-dark(var(--dui-color-gray-50), var(--dui-color-gray-850));
-  --dui-color-surface-sunken: light-dark(var(--dui-color-gray-100), var(--dui-color-gray-800));
-  --dui-color-text: light-dark(var(--dui-color-gray-900), var(--dui-color-gray-100));
-  --dui-color-text-muted: light-dark(var(--dui-color-gray-600), var(--dui-color-gray-400));
+  --dui-color-surface: light-dark(var(--dui-color-neutral-1), var(--dui-color-neutral-dark-1)); /* Page background */
+  --dui-color-surface-raised: light-dark(var(--dui-color-neutral-2), var(--dui-color-neutral-dark-2)); /* Slightly lifted areas: neutral buttons, zebra rows, cards */
+  --dui-color-surface-sunken: light-dark(var(--dui-color-neutral-3), var(--dui-color-neutral-dark-3)); /* Recessed areas: code, button hover */
+  --dui-color-text: light-dark(var(--dui-color-neutral-12), var(--dui-color-neutral-dark-12)); /* Body text */
+  --dui-color-text-muted: light-dark(var(--dui-color-neutral-11), var(--dui-color-neutral-dark-11)); /* Secondary text, still 4.5:1 */
 
-  /* Borders: decorative hairlines vs. control boundaries (3:1, WCAG 1.4.11) */
-  --dui-color-border: light-dark(var(--dui-color-gray-200), var(--dui-color-gray-700));
-  --dui-color-border-control: light-dark(var(--dui-color-gray-500), var(--dui-color-gray-500));
+  /* Borders */
+  --dui-color-border: light-dark(var(--dui-color-neutral-12-a11), var(--dui-color-neutral-dark-12-a10)); /* Decorative hairline */
+  --dui-color-border-control: light-dark(var(--dui-color-neutral-8), var(--dui-color-neutral-dark-8)); /* Form control and button boundaries, 3:1 */
+
+  /* Primary */
+  --dui-color-primary: light-dark(var(--dui-color-neutral-12), var(--dui-color-neutral-dark-12)); /* Primary fill */
+  --dui-color-primary-contrast: light-dark(var(--dui-color-white), var(--dui-color-neutral-dark-1)); /* Text on the primary fill */
 
   /* Accent and status */
-  --dui-color-accent: light-dark(var(--dui-color-blue-600), var(--dui-color-blue-400));
-  --dui-color-accent-contrast: light-dark(var(--dui-color-gray-0), var(--dui-color-gray-900));
-  --dui-color-link-visited: light-dark(var(--dui-color-purple-700), var(--dui-color-purple-300));
-  --dui-color-danger: light-dark(var(--dui-color-red-700), var(--dui-color-red-300));
-  --dui-color-success: light-dark(var(--dui-color-green-700), var(--dui-color-green-300));
-  --dui-color-warning: light-dark(var(--dui-color-amber-700), var(--dui-color-amber-300));
-  --dui-color-info: light-dark(var(--dui-color-blue-700), var(--dui-color-blue-300));
-  --dui-color-mark: light-dark(var(--dui-color-yellow-100), var(--dui-color-yellow-300));
-  --dui-color-mark-text: light-dark(var(--dui-color-gray-900), var(--dui-color-gray-900));
-  --dui-color-backdrop: light-dark(var(--dui-color-black-a40), var(--dui-color-black-a60));
-  --dui-color-shadow: light-dark(var(--dui-color-black-a10), var(--dui-color-black-a40));
+  --dui-color-accent: light-dark(var(--dui-color-indigo-9), var(--dui-color-indigo-dark-9)); /* Accent solid for focus rings, selection and checks */
+  --dui-color-accent-contrast: var(--dui-color-white); /* Text on the accent fill, white in both schemes */
+  --dui-color-link-visited: light-dark(var(--dui-color-purple-11), var(--dui-color-purple-dark-11)); /* Visited links */
+  --dui-color-danger: light-dark(var(--dui-color-red-11), var(--dui-color-red-dark-11)); /* Errors and invalid borders */
+  --dui-color-success: light-dark(var(--dui-color-green-11), var(--dui-color-green-dark-11)); /* Success messages */
+  --dui-color-warning: light-dark(var(--dui-color-amber-11), var(--dui-color-amber-dark-11)); /* Warning badges and messages */
+  --dui-color-info: light-dark(var(--dui-color-blue-11), var(--dui-color-blue-dark-11)); /* Informational alerts, separate from the accent */
+  --dui-color-mark: light-dark(var(--dui-color-yellow-3), var(--dui-color-yellow-dark-9)); /* mark and ::selection background */
+  --dui-color-mark-text: var(--dui-color-neutral-12); /* Text on mark, the light text color in both schemes */
+  --dui-color-backdrop: light-dark(var(--dui-color-black-a40), var(--dui-color-black-a60)); /* dialog::backdrop */
+  --dui-color-shadow: light-dark(var(--dui-color-neutral-shadow), var(--dui-color-neutral-dark-shadow)); /* Shadow color, tinted with the neutral hue */
 
   /*
    * Code highlighting (css/base/typography.css, explainers/code-highlighting.md).
    * Each meets 4.5:1 on --dui-color-surface-sunken, the <pre> background (WCAG 1.4.3).
    */
-  --dui-color-code-keyword: light-dark(var(--dui-color-purple-700), var(--dui-color-purple-300)); /* JS keywords and CSS at-rules: const, return, @layer */
-  --dui-color-code-string: light-dark(var(--dui-color-green-700), var(--dui-color-green-300)); /* Quoted strings in JS and CSS, and HTML attribute values */
-  --dui-color-code-comment: light-dark(var(--dui-color-gray-600), var(--dui-color-gray-400)); /* Comments in HTML, CSS and JS */
-  --dui-color-code-tag: light-dark(var(--dui-color-blue-700), var(--dui-color-blue-300)); /* HTML tag names and CSS selectors */
-  --dui-color-code-attribute: light-dark(var(--dui-color-amber-700), var(--dui-color-amber-300)); /* HTML attribute names */
-  --dui-color-code-property: light-dark(var(--dui-color-teal-700), var(--dui-color-teal-300)); /* CSS properties and custom properties, JS object properties */
-  --dui-color-code-number: light-dark(var(--dui-color-red-700), var(--dui-color-red-300)); /* Numbers with their units: 0.5rem, 100%, 42 */
-  --dui-color-code-punctuation: light-dark(var(--dui-color-gray-700), var(--dui-color-gray-300)); /* Brackets, braces, angle brackets, colons, semicolons, commas */
+  --dui-color-code-keyword: light-dark(var(--dui-color-purple-11), var(--dui-color-purple-dark-11)); /* JS keywords and CSS at-rules: const, return, @layer */
+  --dui-color-code-string: light-dark(var(--dui-color-green-11), var(--dui-color-green-dark-11)); /* Quoted strings in JS and CSS, and HTML attribute values */
+  --dui-color-code-comment: light-dark(var(--dui-color-neutral-11), var(--dui-color-neutral-dark-11)); /* Comments in HTML, CSS and JS */
+  --dui-color-code-tag: light-dark(var(--dui-color-blue-11), var(--dui-color-blue-dark-11)); /* HTML tag names and CSS selectors */
+  --dui-color-code-attribute: light-dark(var(--dui-color-amber-11), var(--dui-color-amber-dark-11)); /* HTML attribute names */
+  --dui-color-code-property: light-dark(var(--dui-color-teal-11), var(--dui-color-teal-dark-11)); /* CSS properties and custom properties, JS object properties */
+  --dui-color-code-number: light-dark(var(--dui-color-red-11), var(--dui-color-red-dark-11)); /* Numbers with their units: 0.5rem, 100%, 42 */
+  --dui-color-code-punctuation: light-dark(var(--dui-color-neutral-punctuation), var(--dui-color-neutral-dark-punctuation)); /* Brackets, braces, angle brackets, colons, semicolons, commas */
 
   /* Type */
   --dui-font-body: var(--dui-font-stack-system-ui);
@@ -141,6 +145,10 @@
  * on :root, overriding --dui-color-accent on a scoped element would not
  * update --dui-color-link below it. So they are re-declared on every
  * theme scope: an element with a data-theme attribute or a theme-* class.
+ * Same for --dui-color-primary and --dui-color-primary-hover.
+ * --dui-color-accent-text and --dui-color-accent-hover are relative colors
+ * of the accent (CSS Color 5), so one accent token sets the link and the hover.
+ * https://www.w3.org/TR/css-color-5/#relative-colors
  * https://drafts.csswg.org/css-variables/#cycles (substitution timing)
  *
  * Motion tokens follow --dui-motion-scale, --dui-motion-enabled and
@@ -153,9 +161,11 @@
  */
 :root,
 :where([data-theme], [class^="theme-"], [class*=" theme-"], [data-motion], [data-density]) {
-  --dui-color-link: var(--dui-color-accent);
-  --dui-color-focus: var(--dui-color-accent);
-  --dui-color-accent-hover: color-mix(in oklab, var(--dui-color-accent) 82%, var(--dui-color-text));
+  --dui-color-accent-text: light-dark(oklch(from var(--dui-color-accent) 47% calc(c * 0.19 / 0.215) h), oklch(from var(--dui-color-accent) 78% calc(c * 0.11 / 0.215) h)); /* Accent as text. Relative color of the accent, same hue, 4.5:1. https://www.w3.org/TR/css-color-5/#relative-colors */
+  --dui-color-link: var(--dui-color-accent-text); /* Links */
+  --dui-color-focus: light-dark(var(--dui-color-accent), var(--dui-color-accent-text)); /* Focus ring: the accent solid in light, the accent text in dark, so it stays 3:1 */
+  --dui-color-accent-hover: oklch(from var(--dui-color-accent) calc(l - 0.02) c h); /* Accent solid hover. Our choice: 0.02 darker in OKLCH lightness, so white text stays 4.5:1 */
+  --dui-color-primary-hover: light-dark(oklch(from var(--dui-color-primary) 32% calc(c + 0.002) h), oklch(from var(--dui-color-primary) 86% calc(c + 0.004) h)); /* Primary fill hover, same hue as the primary */
   --dui-font-heading: var(--dui-font-body);
 
   /* Tinted surfaces for status badges: a little of the tone mixed into the surface. */

@@ -113,7 +113,8 @@ legend {
 
 /*
  * Buttons. Our choice: an explicit type="submit" is the primary action
- * and gets the accent fill; every other button is neutral.
+ * and gets the primary fill; every other button is neutral. The accent
+ * is for links, focus and selection, not this fill.
  */
 button,
 input:is([type="button"], [type="submit"], [type="reset"]),
@@ -147,14 +148,14 @@ input:is([type="button"], [type="submit"], [type="reset"]),
 }
 
 :is(button, input)[type="submit"] {
-  background-color: var(--dui-color-accent);
-  color: var(--dui-color-accent-contrast);
-  border-color: var(--dui-color-accent);
+  background-color: var(--dui-color-primary);
+  color: var(--dui-color-primary-contrast);
+  border-color: var(--dui-color-primary);
 }
 
 :is(button, input)[type="submit"]:hover:not(:disabled, [aria-disabled="true"]) {
-  background-color: var(--dui-color-accent-hover);
-  border-color: var(--dui-color-accent-hover);
+  background-color: var(--dui-color-primary-hover);
+  border-color: var(--dui-color-primary-hover);
 }
 
 :is(button, input):active:not(:disabled, [aria-disabled="true"]) {
@@ -178,6 +179,17 @@ input[type="file"] {
   select,
   textarea,
   ::file-selector-button {
+    border-color: buttonborder;
+  }
+
+  /*
+   * Primary actions use the system button colors, not the theme's
+   * near-black or near-white fill.
+   * https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/At-rules/@media/forced-colors
+   */
+  :is(button, input)[type="submit"]:not([data-button~="secondary"], [data-button~="quiet"]) {
+    background-color: buttonface;
+    color: buttontext;
     border-color: buttonborder;
   }
 }

@@ -12,7 +12,8 @@
  *    unitless numbers, keywords such as currentcolor/inherit/transparent,
  *    and CSS system colors (for forced-colors mode).
  * 3. css/tokens/semantic.css may not contain literal colors: it must
- *    point at primitives.
+ *    point at primitives. A relative color (oklch(from var(--dui-…) …))
+ *    is a derivation, not a literal, and is allowed.
  * 4. css/tokens/primitives.css must only declare --dui-* properties.
  *
  * Zero dependencies on purpose.
@@ -70,7 +71,11 @@ const HEX = /#[0-9a-f]{3,8}\b/i;
 const DIMENSION = /(?<![\w.#-])(-?(?:\d+\.?\d*|\.\d+))(px|rem|em|ex|ch|cap|ic|lh|rlh|vw|vh|vi|vb|vmin|vmax|svh|lvh|dvh|svw|lvw|dvw|cqw|cqh|cqi|cqb|cqmin|cqmax|pt|pc|cm|mm|q|in|ms|s|deg|rad|grad|turn)\b/gi;
 
 const literalColor = (value) => {
-  const bare = value.replace(/var\(\s*--[\w-]+/g, "var(").replace(/"[^"]*"|'[^']*'/g, "");
+  const bare = value
+    .replace(/var\(\s*--[\w-]+/g, "var(")
+    .replace(/"[^"]*"|'[^']*'/g, "")
+    // oklch(from var(--dui-…)) derives a channel from a token. It is not a palette literal.
+    .replace(/\b(?:rgba?|hsla?|hwb|lab|lch|oklab|oklch|color)\(\s*from\b/gi, "relative(");
   if (HEX.test(bare)) return bare.match(HEX)[0];
   if (COLOR_FUNCTION.test(bare)) return bare.match(COLOR_FUNCTION)[0];
   const word = bare.toLowerCase().match(/[a-z]+/g)?.find((w) => NAMED_COLORS.has(w));

@@ -156,14 +156,18 @@ test.describe("visited links (real :visited, Firefox)", () => {
 
   const resolve = (page, values) =>
     page.evaluate((values) => {
-      return values.map((value) => {
-        const probe = document.createElement("span");
+      const probe = document.body.appendChild(document.createElement("span"));
+      const ctx = document.createElement("canvas").getContext("2d", { willReadFrequently: true });
+      const out = values.map((value) => {
         probe.style.color = value;
-        document.body.append(probe);
-        const color = getComputedStyle(probe).color;
-        probe.remove();
-        return color;
+        ctx.clearRect(0, 0, 1, 1);
+        ctx.fillStyle = getComputedStyle(probe).color;
+        ctx.fillRect(0, 0, 1, 1);
+        const [r, g, b] = ctx.getImageData(0, 0, 1, 1).data;
+        return `rgb(${r}, ${g}, ${b})`;
       });
+      probe.remove();
+      return out;
     }, values);
 
   for (const scheme of schemes) {

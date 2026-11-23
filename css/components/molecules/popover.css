@@ -175,7 +175,15 @@
 }
 
 @media (forced-colors: active) {
+  /*
+   * The top layer does not always get the automatic Canvas/CanvasText
+   * revert, so a hint whose text color is the page surface can land on a
+   * white system background. Set both explicitly.
+   * https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/At-rules/@media/forced-colors
+   */
   [popover]:is([data-popover], [role="tooltip"]) {
+    background-color: canvas;
+    color: canvastext;
     border-color: canvastext;
   }
 }

@@ -52,7 +52,7 @@
 
 [data-badge~="accent"] {
   background-color: var(--dui-color-accent-surface);
-  color: var(--dui-color-accent);
+  color: var(--dui-color-accent-text);
 }
 
 [data-badge~="success"] {

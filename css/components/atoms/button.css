@@ -2,7 +2,7 @@
  * Atom: button variants, sizes and states
  *
  * Plain <button> is already styled in css/base/forms.css: type="submit" gets
- * the accent fill, every other button is neutral. This atom adds explicit
+ * the primary fill, every other button is neutral. This atom adds explicit
  * variants, a size scale, aria-disabled and aria-busy states, and lets a
  * link (<a href>) look like a button while keeping link semantics.
  * https://html.spec.whatwg.org/multipage/form-elements.html#the-button-element
@@ -113,11 +113,11 @@ a[data-button] {
   background-color: var(--dui-color-surface-sunken);
 }
 
-/* Primary: accent fill, same as the base type="submit" default. */
+/* Primary: the primary fill, same as the base type="submit" default. */
 [data-button~="primary"] {
-  background-color: var(--dui-color-accent);
-  color: var(--dui-color-accent-contrast);
-  border-color: var(--dui-color-accent);
+  background-color: var(--dui-color-primary);
+  color: var(--dui-color-primary-contrast);
+  border-color: var(--dui-color-primary);
 }
 
 /* Inner ring on filled buttons: the text color contrasts with the fill by design. */
@@ -127,14 +127,14 @@ a[data-button] {
 }
 
 [data-button~="primary"]:hover:not(:disabled, [aria-disabled="true"]) {
-  background-color: var(--dui-color-accent-hover);
-  border-color: var(--dui-color-accent-hover);
+  background-color: var(--dui-color-primary-hover);
+  border-color: var(--dui-color-primary-hover);
 }
 
 /* Quiet: no fill or border until hovered. For low-emphasis actions next to others. */
 [data-button~="quiet"] {
   background-color: transparent;
-  color: var(--dui-color-accent);
+  color: var(--dui-color-accent-text);
   border-color: transparent;
 }
 
@@ -176,6 +176,13 @@ a[data-button] {
 @media (forced-colors: active) {
   a[data-button],
   [data-button~="quiet"] {
+    border-color: buttonborder;
+  }
+
+  /* Same system button colors as type="submit" in css/base/forms.css. */
+  :is(button, input, a)[data-button~="primary"] {
+    background-color: buttonface;
+    color: buttontext;
     border-color: buttonborder;
   }
 }

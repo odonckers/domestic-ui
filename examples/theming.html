@@ -44,6 +44,8 @@
         --dui-color-border: light-dark(#d8d1bf, #34433a);
         --dui-color-accent: light-dark(#2f6b3f, #7fcf95);
         --dui-color-accent-contrast: light-dark(#fff, #0f1a13);
+        --dui-color-primary: light-dark(#173528, #d7f5e3);
+        --dui-color-primary-contrast: light-dark(#fff, #0f1a13);
         --dui-font-heading: charter, "Bitstream Charter", "Sitka Text", cambria, serif;
         --dui-radius-control: 0.125rem;
         --dui-radius-surface: 0.25rem;
@@ -81,9 +83,11 @@
         which is the only difference between the two panels.
       </p>
       <p>
-        Links, focus rings, button hover colors and the tinted badge backgrounds follow <code>--dui-color-accent</code>
-        and <code>--dui-color-surface</code> automatically, because those tokens are re-derived on every
-        <code>[data-theme]</code> scope. The <a href="atoms/index.html">atoms</a> in each panel (badges, a field with a hint
+        Links, the focus ring, the accent hover and the tinted badge backgrounds follow <code>--dui-color-accent</code>
+        (through <code>--dui-color-accent-text</code>, <code>--dui-color-accent-hover</code> and <code>--dui-color-accent-surface</code>).
+        Primary buttons, including <code>type="submit"</code>, follow <code>--dui-color-primary</code> and its hover.
+        The forest panel sets the accent and the primary and leaves those derived tokens alone, so one accent
+        recolors the links and one primary recolors Publish. The <a href="atoms/index.html">atoms</a> in each panel (badges, a field with a hint
         and an error, a switch and button variants) and the <a href="molecules/index.html">molecules</a> (a breadcrumb, an alert,
         tabs and a card) pick up the theme with no extra CSS.
         Both themes follow your system light or dark preference through

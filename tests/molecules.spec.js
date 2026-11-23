@@ -175,7 +175,10 @@ test.describe("dialog and drawer", () => {
       const probe = document.createElement("span");
       probe.style.color = "var(--dui-color-code-string)";
       document.body.append(probe);
-      const rgb = getComputedStyle(probe).color.match(/\d+/g)?.slice(0, 3).map(Number) ?? [];
+      const ctx = document.createElement("canvas").getContext("2d", { willReadFrequently: true });
+      ctx.fillStyle = getComputedStyle(probe).color;
+      ctx.fillRect(0, 0, 1, 1);
+      const rgb = [...ctx.getImageData(0, 0, 1, 1).data.slice(0, 3)];
       probe.remove();
       return rgb;
     });
