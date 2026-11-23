@@ -204,12 +204,13 @@
         }
         document.getElementById("order-count").textContent = `${shown} ${shown === 1 ? "order" : "orders"}`;
       };
-      form.addEventListener("submit", (event) => {
+      // Each live example renders one snippet, so the order form may not be on the page.
+      form?.addEventListener("submit", (event) => {
         event.preventDefault();
         apply();
       });
       // Reset clears the fields after this event, so apply on the next task.
-      form.addEventListener("reset", () => setTimeout(apply));
+      form?.addEventListener("reset", () => setTimeout(apply));
       document.addEventListener("submit", (event) => event.preventDefault());
     </script>
   </body>
