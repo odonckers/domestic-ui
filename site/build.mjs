@@ -18,7 +18,7 @@ import { NAV, navEntryOf, navLabel, navTree } from "./lib/nav.mjs";
 import { generateLlms, generateLlmsFull, generateReadme, searchIndex } from "./lib/outputs.mjs";
 import { redirectMarkdown, redirectPage, renderPage } from "./lib/live.mjs";
 import { addOtherSystems, loadOtherSystems } from "./lib/other-systems.mjs";
-import { buildPages } from "./lib/pages.mjs";
+import { LIVE_DEMO, buildPages } from "./lib/pages.mjs";
 import { renderHtml, renderMarkdown } from "./lib/templates.mjs";
 
 export { extractSnippets, loadModel } from "./lib/discovery.mjs";
@@ -121,6 +121,8 @@ export function build({ root = ROOT, outDir, writeRoot = true } = {}) {
   // Copied unchanged, so docs and render pages load the real CSS and web components by relative path.
   cpSync(join(root, "css"), join(out, "css"), { recursive: true });
   if (existsSync(join(root, "web-components"))) cpSync(join(root, "web-components"), join(out, "web-components"), { recursive: true });
+  // The plain HTML demo needs no build: publish it as-is, at the same depth, so ../../css/ resolves.
+  if (existsSync(join(root, LIVE_DEMO))) cpSync(join(root, LIVE_DEMO), join(out, LIVE_DEMO), { recursive: true, filter: (src) => !src.endsWith(".md") });
   cpSync(join(ASSETS, "site.css"), join(out, "site.css"));
   cpSync(join(ASSETS, "site.js"), join(out, "site.js"));
   cpSync(join(ASSETS, "highlight.js"), join(out, "highlight.js"));

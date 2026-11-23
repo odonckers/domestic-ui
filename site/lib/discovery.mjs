@@ -111,6 +111,15 @@ export const PATTERN_EXAMPLE_DIRS = /** @type {const} */ (["molecules", "organis
  */
 
 /**
+ * @typedef {object} Explainer
+ * @property {string} slug
+ * @property {string} title
+ * @property {string} body       Markdown without the H1, links repo-relative
+ * @property {string} path       "explainers/toast.md"
+ * @property {string} sitePath   "explainers/toast.html"
+ */
+
+/**
  * Parse simple front matter: `key: value` and `- item` lists only.
  * @param {string} text
  * @returns {{ data: Record<string, string | string[]>, body: string }}
@@ -555,6 +564,25 @@ export function loadModel(root) {
     return { slug, title: str(data.title) || titleFromName(slug), summary: str(data.summary), body, contentPath: path, sitePath: `guides/${slug}.html` };
   });
 
+  /**
+   * Explainers (explainers/*.md): one docs page each, the README as their
+   * index. Links are made repo-relative; the H1 is the page heading.
+   * @type {Explainer[]}
+   */
+  const explainers = exists("explainers")
+    ? list("explainers", ".md")
+        .filter((f) => f !== "README.md")
+        .map((f) => {
+          const path = `explainers/${f}`;
+          const text = rootLinks(read(path), "explainers");
+          const title = text.match(/^#\s+(.+)$/m)?.[1].trim() ?? titleFromName(f.replace(/\.md$/, ""));
+          return { slug: f.replace(/\.md$/, ""), title, body: text.replace(/^#\s+.+\n+/m, "").trim(), path, sitePath: `explainers/${f.replace(/\.md$/, ".html")}` };
+        })
+    : [];
+  const explainersReadme = exists("explainers/README.md") ? rootLinks(read("explainers/README.md"), "explainers").replace(/^#\s+.+\n+/m, "").trim() : "";
+  // web-components/README.md, published as the Web components page.
+  const webComponentsReadme = exists("web-components/README.md") ? rootLinks(read("web-components/README.md"), "web-components").replace(/^#\s+.+\n+/m, "").trim() : "";
+
   // Base elements: one page for every file in css/base/, live example examples/base.html.
   const baseFiles = list("css/base", ".css").map((f) => {
     const css = read(`css/base/${f}`);
@@ -662,6 +690,9 @@ export function loadModel(root) {
     base,
     patterns,
     guides,
+    explainers,
+    explainersReadme,
+    webComponentsReadme,
     readmes,
     demos,
     demosIntro,

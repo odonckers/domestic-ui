@@ -35,5 +35,8 @@ export const redirectPages = allHtml.filter((name) => name === "examples.html" |
 /** Render pages: one per snippet, framed on its docs page (live/…). */
 export const livePages = allHtml.filter((name) => name.startsWith("live/"));
 
-/** Every built docs page: each .html file in _site/ that is not a redirect, a render page or under css/ or web-components/. */
-export const builtPages = allHtml.filter((name) => !redirectPages.includes(name) && !livePages.includes(name) && !/^(?:css|web-components)\//.test(name));
+/** The published plain HTML demo (demos/vanilla/, copied as-is; demos/a11y checks it). */
+export const demoPages = allHtml.filter((name) => name.startsWith("demos/"));
+
+/** Every built docs page: each .html file in _site/ that is not a redirect, a render page, the demo or under css/ or web-components/. */
+export const builtPages = allHtml.filter((name) => !redirectPages.includes(name) && !livePages.includes(name) && !demoPages.includes(name) && !/^(?:css|web-components)\//.test(name));

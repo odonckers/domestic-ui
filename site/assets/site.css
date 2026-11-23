@@ -234,6 +234,15 @@ main :is(p, li, dt, dd, h1, h2, h3, h4) a {
   white-space: nowrap;
 }
 
+/*
+ * The description is the last column: on a narrow screen the table
+ * squeezed it to a word a line, making every row hundreds of pixels tall.
+ * Give it room for a short line; the table scrolls in its region instead.
+ */
+.token-table td:last-child {
+  min-inline-size: var(--dui-size-column-min);
+}
+
 .token-missing {
   color: var(--dui-color-text-muted);
   font-style: italic;

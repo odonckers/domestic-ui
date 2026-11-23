@@ -27,7 +27,7 @@ import { BLOB_URL, REPO_URL, archiveUrl, byString, escapeHtml, escapeMdCell, fen
  * @typedef {import("./discovery.mjs").Snippet} Snippet
  * @typedef {{ link: (target: string) => string, heading: (level: number, text: string) => string }} HtmlContext
  * @typedef {{ md: string, html?: (ctx: HtmlContext) => string, inFull?: false }} Block  inFull false: on the page and its twin, not in llms-full.txt
- * @typedef {"home" | "principles" | "tokens" | "base" | "layouts" | "atoms" | "molecules" | "organisms" | "patterns" | "guides" | "demos" | "contributing" | "changelog"} Section
+ * @typedef {"home" | "principles" | "tokens" | "base" | "layouts" | "atoms" | "molecules" | "organisms" | "patterns" | "web-components" | "guides" | "explainers" | "demos" | "contributing" | "changelog"} Section
  * @typedef {object} Page
  * @property {string} path         site path of the HTML page, e.g. "tokens/semantic.html"
  * @property {Section} section     where it is listed in the Docs sidebar (see ./nav.mjs)
@@ -94,6 +94,10 @@ export function repoTarget(href, model) {
   }
   if (path === "CONTRIBUTING.md") return `site:contributing.html${hash}`;
   if (path === "CHANGELOG.md") return `site:changelog.html${hash}`;
+  if (path === "explainers/README.md" && model.explainersReadme) return `site:explainers/index.html${hash}`;
+  const explainer = model.explainers?.find((e) => e.path === path);
+  if (explainer) return `site:${explainer.sitePath}${hash}`;
+  if (path === "web-components/README.md" && model.webComponentsReadme) return `site:${WEB_COMPONENTS_PATH}${hash}`;
   const tokenFile = model.tokenFiles.find((f) => f.path === path);
   if (tokenFile) return `site:${tokenFile.sitePath}${hash}`;
   if (path.startsWith("css/base/")) return "site:components/base.html";
@@ -229,7 +233,7 @@ const specLink = (s) => `[${s.label}](${s.url})`;
 export const followsMd = (p) => (p.standards.length ? p.standards.map(specLink).join(", ") : `**Our choice:** ${p.ourChoice}`);
 
 /** @param {Pattern} p */
-const patternLine = (p) => `- [${p.title}](site:${p.sitePath}): ${p.summary} ${patternStatus(p)}.`;
+const patternLine = (p) => `- [${p.title}](site:${p.sitePath}): ${p.summary}${p.available ? "" : ` ${patternStatus(p)}.`}`;
 
 /* ------------------------------------------------------------------ */
 /* Pages                                                               */
@@ -252,8 +256,10 @@ export function buildPages(model) {
     ...COMPONENT_GROUPS.flatMap(({ group }) => [levelIndex(model, group), ...model.components[group].map((c) => as(componentPage(model, c), /** @type {Section} */ (group)))]),
     patternsIndex(model),
     ...sortedPatterns(model).map((p) => patternPage(model, p)),
+    ...(model.webComponentsReadme ? [webComponentsPage(model)] : []),
     guidesIndex(model),
     ...model.guides.map((g) => guidePage(model, g)),
+    ...(model.explainers?.length ? [explainersIndex(model), ...model.explainers.map((e) => explainerPage(model, e))] : []),
     demosPage(model),
     repoFilePage(model, "CONTRIBUTING.md", model.contributing, "contributing"),
     repoFilePage(model, "CHANGELOG.md", model.changelog, "changelog"),
@@ -297,7 +303,7 @@ export const ATOMIC_DESIGN_URL = "https://atomicdesign.bradfrost.com/";
 /** How the sidebar is organized, in one paragraph. @param {Model} model */
 const organizationMd = (model) => {
   const levels = COMPONENT_GROUPS.map(({ group, title }) => `[${title.toLowerCase()}](site:${group}/index.html)`);
-  return `The sidebar follows Brad Frost's [Atomic Design](${ATOMIC_DESIGN_URL}): [tokens](site:tokens/index.html), then [base elements](site:${model.base.sitePath}) and [layouts](site:layouts/index.html), then ${levels.slice(0, -1).join(", ")} and ${levels.at(-1)}. [Patterns](site:patterns/index.html) combine them. The [principles](site:principles/index.html) explain each choice.`;
+  return `The sidebar follows Brad Frost's [Atomic Design](${ATOMIC_DESIGN_URL}): [tokens](site:tokens/index.html), then [base elements](site:${model.base.sitePath}) and [layouts](site:layouts/index.html), then ${levels.slice(0, -1).join(", ")} and ${levels.at(-1)}. [Patterns](site:patterns/index.html) combine them, and [web components](site:${WEB_COMPONENTS_PATH}) add the behavior HTML lacks. The [principles](site:principles/index.html) explain each choice; [explainers](site:explainers/index.html) cover the patterns no standard does.`;
 };
 
 /** @param {Model} model */
@@ -331,7 +337,7 @@ function groupDetailsMd(model, group, level) {
   if (!readme) return { choices: "", notShipped: "" };
   const src = `[\`${readme.path}\`](${BLOB_URL}${readme.path})`;
   return {
-    choices: readme.choices.length ? `From ${src}:\n\n${readme.choices.map((c) => `- ${rewriteRepoLinks(c, model)}`).join("\n")}` : "",
+    choices: readme.choices.length ? `From ${src}:\n\n${readme.choices.map((c) => `- ${titledLinks(model, rewriteRepoLinks(c, model))}`).join("\n")}` : "",
     notShipped: readme.notShipped ? `${"#".repeat(level)} Not shipped, and why\n\n${rewriteRepoLinks(readme.notShipped, model)}` : "",
   };
 }
@@ -647,9 +653,9 @@ function levelIndex(model, group) {
     ),
   ];
   const details = groupDetailsMd(model, group, 2);
-  if (details.choices) blocks.push(md(details.choices));
   // The list repeats each page's summary, which opens that page's own part of llms-full.txt.
   blocks.push({ ...md(`## Pages\n\n${[...items, ...patterns].join("\n") || `Coming in ${milestone}; see the [components README](${BLOB_URL}css/components/README.md).`}`), inFull: false });
+  if (details.choices) blocks.push(md(`## Our choices\n\n${details.choices}`));
   if (details.notShipped) blocks.push(md(details.notShipped));
   return {
     path: `${group}/index.html`,
@@ -665,6 +671,7 @@ function levelIndex(model, group) {
 
 /** @param {Model} model @returns {Page} */
 function layoutsIndex(model) {
+  const layoutPatterns = sortedPatterns(model).filter((p) => p.level === "layouts");
   return {
     path: "layouts/index.html",
     inFull: false,
@@ -675,7 +682,8 @@ function layoutsIndex(model) {
     source: edit(model.layouts[0]?.cssPath ?? "PRINCIPLES.md"),
     blocks: [
       md(`Layout primitives arrange their children and nothing else ([Layout primitives](site:${principleLink(model, "layout-primitives")})). Each is one class or attribute, tuned with custom properties.`),
-      md(`## All layouts\n\n${levelMd(model, "layouts")}`),
+      md(`## Primitives\n\nArrange the children of one element.\n\n${model.layouts.map(componentLine).join("\n")}`),
+      ...(layoutPatterns.length ? [md(`## Page layouts\n\nWhole-page and whole-region arrangements built from the primitives.\n\n${layoutPatterns.map(patternLine).join("\n")}`)] : []),
     ],
   };
 }
@@ -888,8 +896,12 @@ function demosLine(model, sitePath) {
 function demoViewsBlocks(model) {
   const data = model.demoViews;
   if (!data) return [];
-  const note = `The demos are not published on GitHub Pages; run them locally as [\`demos/README.md\`](${BLOB_URL}demos/README.md) explains.`;
-  const items = data.views.map((v) => `- **${v.title}**: ${v.description} Source: ${demoAppLinksMd(model.root, data, v)}.`);
+  const live = (/** @type {typeof data.views[number]} */ v) => {
+    const path = v.paths?.vanilla;
+    return path?.startsWith(`${LIVE_DEMO}/`) && existsSync(join(model.root, path)) ? `[Open live](site:${path}). ` : "";
+  };
+  const note = `The plain HTML views run live on this site (each **Open live** link). The React, Angular and Astro apps need a build; run them locally as [\`demos/README.md\`](${BLOB_URL}demos/README.md) explains.`;
+  const items = data.views.map((v) => `- **${v.title}**: ${v.description} ${live(v)}Source: ${demoAppLinksMd(model.root, data, v)}.`);
   return [md(`## Views\n\n${note}\n\n${items.join("\n")}`)];
 }
 
@@ -927,7 +939,11 @@ function demosPage(model) {
 function repoFilePage(model, file, text, section) {
   const title = section === "contributing" ? "Contributing" : "Changelog";
   const h1 = text.match(/^#\s+(.+)$/m)?.[1].trim() ?? title;
-  const body = text.replace(/^#\s+.+\n+/m, "").trim();
+  // A release heading with nothing under it (an empty "[Unreleased]") is left out.
+  const body = text
+    .replace(/^#\s+.+\n+/m, "")
+    .replace(/^##\s+.+\n+(?=##\s|$(?![\s\S]))/gm, "")
+    .trim();
   const note = `From [\`${file}\`](${BLOB_URL}${file}); [edit ${file} on GitHub](${REPO_URL}/edit/main/${file}).`;
   return {
     path: `${section}.html`,
@@ -943,7 +959,9 @@ function repoFilePage(model, file, text, section) {
 
 /** @param {Model} model @returns {Page} */
 function patternsIndex(model) {
-  const row = (/** @type {Pattern} */ p) => `| [${p.title}](site:${p.sitePath}) | ${patternStatus(p)} | ${escapeMdCell(p.standards.length ? followsMd(p) : "Our choice")} |`;
+  // The Status column only while something is still planned.
+  const planned = model.patterns.some((p) => !p.available);
+  const row = (/** @type {Pattern} */ p) => `| [${p.title}](site:${p.sitePath}) |${planned ? ` ${patternStatus(p)} |` : ""} ${escapeMdCell(p.standards.length ? followsMd(p) : "Our choice")} |`;
   // Grouped by level, as in the sidebar.
   const levels = LEVELS.filter((l) => model.patterns.some((p) => p.level === l.level));
   const guide = model.guides[0];
@@ -960,7 +978,8 @@ function patternsIndex(model) {
       md(`${patternIntroMd}${guideMd}`),
       ...levels.map((l) => {
         const rows = sortedPatterns(model).filter((p) => p.level === l.level).map(row);
-        return md(`## ${l.title}\n\n| Pattern | Status | Follows |\n| --- | --- | --- |\n${rows.join("\n")}`);
+        const head = planned ? "| Pattern | Status | Follows |\n| --- | --- | --- |" : "| Pattern | Follows |\n| --- | --- |";
+        return md(`## ${l.title}\n\n${head}\n${rows.join("\n")}`);
       }),
     ],
   };
@@ -1143,5 +1162,91 @@ function guidePage(model, g) {
     description: plainMd(g.summary),
     source: edit(g.contentPath),
     blocks: [md(rewriteRepoLinks(expandGuide(model, g), model))],
+  };
+}
+
+/** The demo app published with the docs: it needs no build (site/build.mjs copies it). */
+export const LIVE_DEMO = "demos/vanilla";
+
+/** Site path of the Web components page. */
+export const WEB_COMPONENTS_PATH = "components/web-components.html";
+
+/**
+ * web-components/README.md as a docs page: the rule, the index and the
+ * events of every custom element.
+ * @param {Model} model
+ * @returns {Page}
+ */
+function webComponentsPage(model) {
+  return {
+    path: WEB_COMPONENTS_PATH,
+    section: "web-components",
+    title: "Web components",
+    heading: "Web components",
+    description: "The custom elements domestic-ui ships for what HTML cannot do yet: what each one adds, its events and how to load it.",
+    source: edit("web-components/README.md"),
+    blocks: [md(`From [\`web-components/README.md\`](${BLOB_URL}web-components/README.md). Each element's attributes, keyboard and accessibility are on the page of the pattern it enhances.\n\n${titledLinks(model, rewriteRepoLinks(indexAsSections(model.webComponentsReadme), model))}`)],
+  };
+}
+
+/**
+ * Links whose text is a file name ("tabs.html", "toast.md") that now point
+ * at a docs page get that page's title instead.
+ * @param {Model} model
+ * @param {string} text
+ */
+const titledLinks = (model, text) =>
+  text.replace(/\[([\w.-]+\.(?:html|md))\]\(site:([^)#\s]+)\)/g, (m, _file, path) => {
+    const explainer = model.explainers.find((e) => e.sitePath === path);
+    const title = explainer ? `${explainer.title} explainer` : pageTitle(model, path);
+    return title === path ? m : `[${title}](site:${path})`;
+  });
+
+/**
+ * The README's five-column Index table, one "###" section per element:
+ * why it exists, then its CSS, example and source as one line. A wide
+ * table squeezed the prose column to a few words a line.
+ * @param {string} readme
+ */
+function indexAsSections(readme) {
+  const table = tokenize(readme).find((b) => b.type === "table" && /^Element$/i.test(b.rows[0]?.[0]?.trim() ?? "") && b.rows[0].length >= 5);
+  if (!table || table.type !== "table") return readme;
+  const [, ...rows] = table.rows;
+  const sections = rows.map(([element, file, why, css, example]) =>
+    `### ${element.trim()}\n\n${why.trim()}\n\nStyles: ${css.trim()}. Example: ${example.trim()}. Source: ${file.trim()}.`,
+  );
+  return readme.replace(table.raw, sections.join("\n\n"));
+}
+
+/** @param {Model} model @returns {Page} */
+function explainersIndex(model) {
+  return {
+    path: "explainers/index.html",
+    section: "explainers",
+    title: "Explainers",
+    heading: "Explainers",
+    description: "Proposals, in the W3C TAG explainer format, for the patterns that have no native element and no APG pattern.",
+    source: edit("explainers/README.md"),
+    blocks: [md(titledLinks(model, rewriteRepoLinks(model.explainersReadme, model)))],
+  };
+}
+
+/**
+ * One explainer, rendered read-only from explainers/<slug>.md.
+ * @param {Model} model
+ * @param {import("./discovery.mjs").Explainer} e
+ * @returns {Page}
+ */
+function explainerPage(model, e) {
+  const firstPara = tokenize(e.body).find((b) => b.type === "paragraph" && !/^Status:/.test(b.text));
+  return {
+    path: e.sitePath,
+    section: "explainers",
+    title: `${e.title} explainer`,
+    navLabel: e.title,
+    heading: e.title,
+    description: firstPara ? firstSentence(plainMd(firstPara.text)) : `The ${e.title} explainer.`,
+    source: edit(e.path),
+    blocks: [md(titledLinks(model, rewriteRepoLinks(e.body, model)))],
   };
 }

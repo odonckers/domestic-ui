@@ -20,8 +20,8 @@ Link `css/domestic.css` (copy `css/` from the v0.1.0 release, https://github.com
 - [Elevation](https://odonckers.github.io/domestic-ui/principles/elevation.md): Elevation says which layer is on top.
 - [Opinions we hold](https://odonckers.github.io/domestic-ui/principles/opinions-we-hold.md): Each of these is a choice between valid options, not a standard.
 - [Layout primitives](https://odonckers.github.io/domestic-ui/principles/layout-primitives.md): Class: .stack, .cluster, .grid, [data-scroll="inline"], [data-scroll="block inline"].
-- [Web components](https://odonckers.github.io/domestic-ui/principles/web-components.md): HTML still has no element for tabs, menus, roving focus in a toolbar, hover tooltips or a toast stack.
-- [Explainers](https://odonckers.github.io/domestic-ui/principles/explainers.md): A pattern with no native element and no APG pattern is written up like a platform proposal in explainers/: problem, use cases, goals and non-goals, markup and API, keyboard, accessibility mappings, alternatives, prior art and open questions, with normative text in RFC 2119 keywords.
+- [Web components (Principles)](https://odonckers.github.io/domestic-ui/principles/web-components.md): HTML still has no element for tabs, menus, roving focus in a toolbar, hover tooltips or a toast stack.
+- [Explainers (Principles)](https://odonckers.github.io/domestic-ui/principles/explainers.md): A pattern with no native element and no APG pattern is written up like a platform proposal in explainers/: problem, use cases, goals and non-goals, markup and API, keyboard, accessibility mappings, alternatives, prior art and open questions, with normative text in RFC 2119 keywords.
 - [Tooling](https://odonckers.github.io/domestic-ui/principles/tooling.md): npm test runs, in order, and fails if any step fails.
 - [Edges and alignment](https://odonckers.github.io/domestic-ui/principles/edges-and-alignment.md): Our choice: every container has a few named vertical lines, written in tokens, and every item sits on one of them or has a written reason, because edges picked by eye drift by a few pixels per panel and nobody can say which was meant.
 
@@ -87,6 +87,10 @@ Link `css/domestic.css` (copy `css/` from the v0.1.0 release, https://github.com
 - [Filter bar](https://odonckers.github.io/domestic-ui/patterns/filter-bar.md): Available. A row of native form controls that narrows a list or table. **Our choice:** No standard exists: a `<form>` in `<search>` with labelled controls, and the result count as a status message.
 - [Large forms](https://odonckers.github.io/domestic-ui/patterns/large-forms.md): Available. Long forms split into labelled groups, in one or more columns. Follows [HTML `<form>` element](https://html.spec.whatwg.org/multipage/forms.html#the-form-element), [HTML `<fieldset>` element](https://html.spec.whatwg.org/multipage/form-elements.html#the-fieldset-element).
 
+## Web components
+
+- [Web components (Web components)](https://odonckers.github.io/domestic-ui/components/web-components.md): The custom elements domestic-ui ships for what HTML cannot do yet: what each one adds, its events and how to load it.
+
 ## Patterns
 
 - [Patterns](https://odonckers.github.io/domestic-ui/patterns/index.md): Planned and available interface patterns, from site navigation to app shells, with the standard each one follows.
@@ -95,6 +99,20 @@ Link `css/domestic.css` (copy `css/` from the v0.1.0 release, https://github.com
 
 - [Guides](https://odonckers.github.io/domestic-ui/guides/index.md): Step-by-step guides for building with domestic-ui.
 - [From a simple site to an ERP app](https://odonckers.github.io/domestic-ui/guides/simple-site-to-erp-app.md): Five steps from a plain content page to a dense business application, with what is available today.
+
+## Explainers
+
+- [Explainers (Explainers)](https://odonckers.github.io/domestic-ui/explainers/index.md): Proposals, in the W3C TAG explainer format, for the patterns that have no native element and no APG pattern.
+- [App shell explainer](https://odonckers.github.io/domestic-ui/explainers/app-shell.md): The key words MUST, MUST NOT, SHOULD, SHOULD NOT and MAY are to be interpreted as described in RFC 2119 and RFC 8174 when, and only when, they appear in all capitals.
+- [Auxiliary sidebar explainer](https://odonckers.github.io/domestic-ui/explainers/aux-sidebar.md): The key words MUST, MUST NOT, SHOULD, SHOULD NOT and MAY are to be interpreted as described in RFC 2119 and RFC 8174 when, and only when, they appear in all capitals.
+- [Card explainer](https://odonckers.github.io/domestic-ui/explainers/card.md): The key words MUST, MUST NOT, SHOULD, SHOULD NOT and MAY are to be interpreted as described in RFC 2119 and RFC 8174 when, and only when, they appear in all capitals.
+- [Code highlighting explainer](https://odonckers.github.io/domestic-ui/explainers/code-highlighting.md): The key words MUST, MUST NOT, SHOULD, SHOULD NOT and MAY are to be interpreted as described in RFC 2119 and RFC 8174 when, and only when, they appear in all capitals.
+- [Combobox (typeahead) explainer](https://odonckers.github.io/domestic-ui/explainers/combobox.md): The key words MUST, MUST NOT, SHOULD, SHOULD NOT and MAY are to be interpreted as described in RFC 2119 and RFC 8174 when, and only when, they appear in all capitals.
+- [Density explainer](https://odonckers.github.io/domestic-ui/explainers/density.md): The key words MUST, MUST NOT, SHOULD, SHOULD NOT and MAY are to be interpreted as described in RFC 2119 and RFC 8174 when, and only when, they appear in all capitals.
+- [Drawer explainer](https://odonckers.github.io/domestic-ui/explainers/drawer.md): The key words MUST, MUST NOT, SHOULD, SHOULD NOT and MAY are to be interpreted as described in RFC 2119 and RFC 8174 when, and only when, they appear in all capitals.
+- [Pagination explainer](https://odonckers.github.io/domestic-ui/explainers/pagination.md): The key words MUST, MUST NOT, SHOULD, SHOULD NOT and MAY are to be interpreted as described in RFC 2119 and RFC 8174 when, and only when, they appear in all capitals.
+- [Split view explainer](https://odonckers.github.io/domestic-ui/explainers/split-view.md): The key words MUST, MUST NOT, SHOULD, SHOULD NOT and MAY are to be interpreted as described in RFC 2119 and RFC 8174 when, and only when, they appear in all capitals.
+- [Toast explainer](https://odonckers.github.io/domestic-ui/explainers/toast.md): The key words MUST, MUST NOT, SHOULD, SHOULD NOT and MAY are to be interpreted as described in RFC 2119 and RFC 8174 when, and only when, they appear in all capitals.
 
 ## Demos
 

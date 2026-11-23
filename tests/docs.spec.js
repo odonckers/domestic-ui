@@ -485,7 +485,11 @@ test.describe("atoms from the group README", () => {
       // Relative links in the sentence point at GitHub or the site, so compare the text up to the first link.
       expect(demos.slice(demos.indexOf(start) + start.length).split("\n")[0].split("](")[0]).toBe(sentence.split("](")[0]);
     }
-    expect(existsSync(join(SITE_DIR, "demos")), "demos are not copied into _site/").toBe(false);
+    // Only the plain HTML demo is published (it needs no build), file for file, without its README.
+    expect(readdirSync(join(SITE_DIR, "demos")), "only demos/vanilla/ is copied into _site/").toEqual(["vanilla"]);
+    const vanilla = readdirSync(join(ROOT, "demos/vanilla")).filter((f) => !f.endsWith(".md")).sort();
+    expect(readdirSync(join(SITE_DIR, "demos/vanilla")).sort()).toEqual(vanilla);
+    for (const view of ["index", "settings", "orders"]) expect(demos).toContain(`[Open live](https://odonckers.github.io/domestic-ui/demos/vanilla/${view}.html)`);
   });
 
   test("Contributing and Changelog are rendered read-only from the repository files", () => {
@@ -494,9 +498,27 @@ test.describe("atoms from the group README", () => {
       const source = read(join(ROOT, file));
       expect(md).toContain(`# ${source.match(/^#\s+(.+)$/m)?.[1]}`);
       expect(md).toContain(`[edit ${file} on GitHub](https://github.com/odonckers/domestic-ui/edit/main/${file})`);
-      for (const [, heading] of source.matchAll(/^##+\s+(.+)$/gm)) expect(md, `${file}: ${heading}`).toContain(heading);
+      // Every heading with something under it; an empty one ("[Unreleased]" between releases) is left out.
+      for (const [, heading, after] of source.matchAll(/^##+\s+(.+)\n+(.?.?)/gm)) {
+        if (after.startsWith("##") && !after.startsWith("###")) expect(md, `${file}: empty ${heading}`).not.toContain(`## ${heading}\n`);
+        else expect(md, `${file}: ${heading}`).toContain(heading);
+      }
       // No relative links left: each points at a site page or GitHub.
       expect(md).not.toMatch(/\]\((?![a-z]+:|#)[^)]*\)/);
+    }
+  });
+
+  test("web components and explainers have docs pages, and every docs link to them stays on the site", () => {
+    const wc = read(join(SITE_DIR, "components/web-components.md"));
+    for (const f of readdirSync(join(ROOT, "web-components")).filter((f) => /^dui-.+\.js$/.test(f))) {
+      expect(wc, `${f} has its own section`).toContain(`### \`<${f.replace(/\.js$/, "")}>\``);
+    }
+    expect(wc).toContain("## Events");
+    const explainers = readdirSync(join(ROOT, "explainers")).filter((f) => f.endsWith(".md") && f !== "README.md");
+    for (const f of explainers) expect(existsSync(join(SITE_DIR, "explainers", f.replace(/\.md$/, ".html"))), f).toBe(true);
+    for (const p of builtPages) {
+      const html = read(join(SITE_DIR, p));
+      expect(html, `${p} links an explainer or the web components README on GitHub`).not.toMatch(/github\.com\/odonckers\/domestic-ui\/blob\/main\/(?:explainers\/|web-components\/README\.md)/);
     }
   });
 
@@ -814,7 +836,8 @@ test.describe("docs pages in the browser", () => {
       await expect(page.locator('nav[aria-label="Sections"] a[aria-current]'), p.path).toHaveCount(1);
       // Breadcrumb: the last item is the page.
       const crumbs = page.locator('nav[aria-label="Breadcrumb"]');
-      if (p.path === "index.html") await expect(crumbs).toHaveCount(0);
+      // None on the home page, or where the top section is the page itself ("Demos / Demos").
+      if (p.path === "index.html" || p.path === "demos.html") await expect(crumbs).toHaveCount(0);
       else {
         await expect(crumbs.locator("li").last().locator('a[aria-current="page"]'), p.path).toHaveCount(1);
         await expect(crumbs.locator('a[aria-current="page"]'), p.path).toHaveCount(1);
@@ -835,8 +858,10 @@ test.describe("docs pages in the browser", () => {
       "Atoms",
       "Molecules",
       "Organisms",
+      "Web components",
       "Patterns",
       "Guides",
+      "Explainers",
       "Demos",
       "Contributing",
       "Changelog",
@@ -1048,7 +1073,7 @@ test("discovery picks up a new component with no site changes", async ({ browser
     expect(atomPaths[atomPaths.length - 1]).toBe("components/atoms/demo.html");
     expect(page).toMatch(/<details open>\s*<summary>Atoms<\/summary>[\s\S]*aria-current="page">Demo<\/a>/);
     const molecules = out("molecules/index.md");
-    expect(molecules).toContain("[Tabs](https://odonckers.github.io/domestic-ui/patterns/tabs.md): Sections of content shown one at a time, chosen from a list of tabs. Available.");
+    expect(molecules, "an available pattern has no status note").toContain("[Tabs](https://odonckers.github.io/domestic-ui/patterns/tabs.md): Sections of content shown one at a time, chosen from a list of tabs.\n");
     expect(molecules).toContain("Coming in M3.");
     expect(page, "an available pattern has no status note in the sidebar").toContain('<a href="../../patterns/tabs.html">Tabs</a>');
     expect(page).toContain('<a href="../../patterns/disclosure.html">Disclosure <span class="docs-nav-note">(coming in M3)</span></a>');
@@ -1081,7 +1106,8 @@ test("discovery picks up a new component with no site changes", async ({ browser
     expect(patternsIndex.indexOf("## Molecules")).toBeLessThan(patternsIndex.indexOf("[Tabs]"));
     expect(patternsIndex).not.toMatch(/^## M3/m);
     const guide = out("guides/simple-site-to-erp-app.md");
-    expect(guide).toContain("chosen from a list of tabs. Available.");
+    expect(guide).toContain("chosen from a list of tabs.\n");
+    expect(guide).not.toContain("tabs. Available.");
     expect(guide).not.toContain("Tabs (M3)");
     expect(guide).toContain("Not available yet: Disclosure (M3), Dialog and drawer (M3),");
 

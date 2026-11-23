@@ -112,8 +112,10 @@ pages of its sections below it, in the order `buildPages()` returns them.
 | Base | `components/base.html` | utilities (`components/utilities/<name>.html`) |
 | Layout | `layouts/index.html` | the layout primitives, then the patterns at level `layout` |
 | Atoms, Molecules, Organisms | `<group>/index.html` | `components/<group>/<name>.html`, then the patterns at that level, with "(coming in M3)" while planned |
+| Web components | `components/web-components.html` | (one page, from `web-components/README.md`; its Index table becomes one section per element) |
 | Patterns | `patterns/index.html` | (every pattern is under its level) |
 | Guides | `guides/index.html` | every guide |
+| Explainers | `explainers/index.html` (from `explainers/README.md`) | one page per `explainers/<name>.md`, rendered read-only |
 | Demos | `demos.html` | |
 | Contributing | `contributing.html` | |
 | Changelog | `changelog.html` | |
@@ -174,8 +176,11 @@ level index).
 | `css/components/<group>/README.md`, "Our choices" and "Not shipped, and why" | `<group>/index.html` |
 | `site/content/patterns/<slug>.md`, filled in by matching example and CSS files | `patterns/<slug>.html`, listed on `patterns/index.html` |
 | `site/content/guides/<slug>.md` | `guides/<slug>.html`, listed on `guides/index.html` |
+| `web-components/README.md` | `components/web-components.html`: the Index table as one `###` section per element, then the rest as written |
+| `explainers/README.md`, `explainers/<name>.md` | `explainers/index.html`, `explainers/<name>.html`: read-only, H1 as the page heading; links to explainers anywhere in the docs point at these pages |
+| `CHANGELOG.md`, a release heading with nothing under it | Left out of `changelog.html` (an empty `[Unreleased]` between releases) |
 | `examples/*.html`, `examples/*/*.html` | Not published. Their snippets go on docs pages, each rendered from `live/` (see [Snippet convention](#snippet-convention)); their old URLs redirect (see [Render pages and redirects](#render-pages-and-redirects)). |
-| `demos/README.md`, first paragraph; `demos/<name>/README.md`, its H1 and the first sentence of its first paragraph | `demos.html`: each demo by name (the H1 without "domestic-ui demo: "), with a link to `demos/<name>` on GitHub; also in `README.md` and `llms.txt`. With no demos the page says "Coming in M5." Demos are not copied into `_site/`. |
+| `demos/README.md`, first paragraph; `demos/<name>/README.md`, its H1 and the first sentence of its first paragraph | `demos.html`: each demo by name (the H1 without "domestic-ui demo: "), with a link to `demos/<name>` on GitHub; also in `README.md` and `llms.txt`. With no demos the page says "Coming in M5." Only `demos/vanilla/` is copied into `_site/` (no build needed; see [Demo views](#demo-views)). |
 | `site/data/demo-views.json` | `demos.html#views`: one list item per view, in the app list's format (title, description, then "Source:" with each app linking the view's source on GitHub); a "Views" line in `README.md` and `llms.txt`; a "Demos:" line under See also on each page a view uses (see [Demo views](#demo-views)) |
 | `CONTRIBUTING.md`, `CHANGELOG.md` | `contributing.html`, `changelog.html`: read-only, H1 as the page heading, relative links rewritten to site pages or GitHub, with a link to edit the file on GitHub |
 
@@ -258,8 +263,10 @@ a path does not exist or a page is not built. The file is read only when `demos/
 To link a demo view from a page, add the page to the view's `pages` after reading the view's source:
 list only the patterns the markup really uses. The page's See also then gets one line, "Demos:
 Orders view (Plain HTML, React, Angular, Astro)", each app linking its source; a page several views
-use gets them on the same line, separated by semicolons. The demos are not published, so nothing
-links a demo URL on GitHub Pages.
+use gets them on the same line, separated by semicolons. The plain HTML demo (`LIVE_DEMO` in
+`site/lib/pages.mjs`) needs no build, so `site/build.mjs` copies it to `_site/demos/vanilla/` and the
+Views list on `demos.html` gives each view an **Open live** link. The React, Angular and Astro apps
+need a build and are not published.
 
 ## Component API convention
 

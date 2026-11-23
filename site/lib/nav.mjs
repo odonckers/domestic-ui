@@ -45,8 +45,10 @@ export const NAV = [
   { title: "Atoms", path: "atoms/index.html", sections: ["atoms"], top: "Components" },
   { title: "Molecules", path: "molecules/index.html", sections: ["molecules"], top: "Components" },
   { title: "Organisms", path: "organisms/index.html", sections: ["organisms"], top: "Components" },
+  { title: "Web components", path: "components/web-components.html", sections: ["web-components"], top: "Components" },
   { title: "Patterns", path: "patterns/index.html", sections: ["patterns"], top: "Patterns & guides" },
   { title: "Guides", path: "guides/index.html", sections: ["guides"], top: "Patterns & guides" },
+  { title: "Explainers", path: "explainers/index.html", sections: ["explainers"], top: "Patterns & guides" },
   { title: "Demos", path: "demos.html", sections: ["demos"], top: "Demos" },
   { title: "Contributing", path: "contributing.html", sections: ["contributing"], top: "Get started" },
   { title: "Changelog", path: "changelog.html", sections: ["changelog"], top: "Get started" },
@@ -155,8 +157,10 @@ ${items.join("\n")}
 export function renderBreadcrumb(page, link) {
   const entry = navEntryOf(page);
   if (!entry || page.path === "index.html") return "";
-  const items = [`<li><span>${escapeHtml(entry.top)}</span></li>`];
+  // The top section, unless it only repeats the page's own name ("Demos / Demos").
+  const items = entry.top === navLabel(page) ? [] : [`<li><span>${escapeHtml(entry.top)}</span></li>`];
   if (entry.path !== page.path) items.push(`<li><a href="${escapeHtml(link(entry.path))}">${escapeHtml(entry.title)}</a></li>`);
+  if (!items.length) return "";
   items.push(`<li><a href="${escapeHtml(link(page.path))}" aria-current="page">${escapeHtml(navLabel(page))}</a></li>`);
   return `<nav aria-label="Breadcrumb" data-breadcrumb>
 <ol>

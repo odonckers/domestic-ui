@@ -42,7 +42,7 @@ Layout primitives and utilities: `data-action-bar`, `.cluster`, `.grid`, `data-s
 
 ### How these docs are organized
 
-The sidebar follows Brad Frost's [Atomic Design](https://atomicdesign.bradfrost.com/): [tokens](https://odonckers.github.io/domestic-ui/tokens/index.md), then [base elements](https://odonckers.github.io/domestic-ui/components/base.md) and [layouts](https://odonckers.github.io/domestic-ui/layouts/index.md), then [atoms](https://odonckers.github.io/domestic-ui/atoms/index.md), [molecules](https://odonckers.github.io/domestic-ui/molecules/index.md) and [organisms](https://odonckers.github.io/domestic-ui/organisms/index.md). [Patterns](https://odonckers.github.io/domestic-ui/patterns/index.md) combine them. The [principles](https://odonckers.github.io/domestic-ui/principles/index.md) explain each choice.
+The sidebar follows Brad Frost's [Atomic Design](https://atomicdesign.bradfrost.com/): [tokens](https://odonckers.github.io/domestic-ui/tokens/index.md), then [base elements](https://odonckers.github.io/domestic-ui/components/base.md) and [layouts](https://odonckers.github.io/domestic-ui/layouts/index.md), then [atoms](https://odonckers.github.io/domestic-ui/atoms/index.md), [molecules](https://odonckers.github.io/domestic-ui/molecules/index.md) and [organisms](https://odonckers.github.io/domestic-ui/organisms/index.md). [Patterns](https://odonckers.github.io/domestic-ui/patterns/index.md) combine them, and [web components](https://odonckers.github.io/domestic-ui/components/web-components.md) add the behavior HTML lacks. The [principles](https://odonckers.github.io/domestic-ui/principles/index.md) explain each choice; [explainers](https://odonckers.github.io/domestic-ui/explainers/index.md) cover the patterns no standard does.
 
 ### For coding agents
 
@@ -107,7 +107,7 @@ Humans and coding agents should be able to write a whole view from this document
 - **Paths are API.** `css/domestic.css` and every file under `css/` keep their paths.
   Renaming or moving a file is a breaking change.
 - **No hidden JS behavior.** CSS never depends on script. Any script an example uses is
-  inline, short, and commented, or one of the documented [web components](https://github.com/odonckers/domestic-ui/blob/main/web-components/README.md).
+  inline, short, and commented, or one of the documented [web components](https://odonckers.github.io/domestic-ui/components/web-components.md).
 - **Our choice:** class and attribute APIs over custom elements, because they work with
   any templating language and need no JavaScript. Custom elements are used only for behavior
   HTML cannot do, and enhance markup that already works without them.
@@ -126,7 +126,7 @@ Every example must pass, and every token pair is tested against, these criteria:
 | Focus visible | Every focusable element shows a `:focus-visible` outline | [2.4.7 Focus Visible](https://www.w3.org/WAI/WCAG22/Understanding/focus-visible.html) |
 | Focus not obscured | `scroll-padding` keeps focused elements clear of sticky edges | [2.4.11 Focus Not Obscured (Minimum)](https://www.w3.org/WAI/WCAG22/Understanding/focus-not-obscured-minimum.html) |
 | Focus appearance (AAA, optional) | The default 2px solid outline with a 2px offset aims to meet it | [2.4.13 Focus Appearance](https://www.w3.org/WAI/WCAG22/Understanding/focus-appearance.html) |
-| Target size | Controls are at least 44px tall (32px with `data-density="compact"`, see [Density](https://github.com/odonckers/domestic-ui/blob/main/explainers/density.md)), above the 24px minimum | [2.5.8 Target Size (Minimum)](https://www.w3.org/WAI/WCAG22/Understanding/target-size-minimum.html) |
+| Target size | Controls are at least 44px tall (32px with `data-density="compact"`, see [Density](https://odonckers.github.io/domestic-ui/explainers/density.md)), above the 24px minimum | [2.5.8 Target Size (Minimum)](https://www.w3.org/WAI/WCAG22/Understanding/target-size-minimum.html) |
 | Reduced motion | Under `prefers-reduced-motion: reduce` movement stops and fades stay; `data-motion="none"` turns transitions off (see [Motion](https://odonckers.github.io/domestic-ui/principles/motion.md)) | [MDN `prefers-reduced-motion`](https://developer.mozilla.org/en-US/docs/Web/CSS/@media/prefers-reduced-motion), [2.3.3 Animation from Interactions](https://www.w3.org/WAI/WCAG22/Understanding/animation-from-interactions.html) |
 | Color scheme | `color-scheme: light dark` plus [`light-dark()`](https://developer.mozilla.org/en-US/docs/Web/CSS/color_value/light-dark) in every semantic color | [MDN `color-scheme`](https://developer.mozilla.org/en-US/docs/Web/CSS/color-scheme) |
 | Forced colors | Borders and outlines switch to system colors | [MDN `forced-colors`](https://developer.mozilla.org/en-US/docs/Web/CSS/@media/forced-colors) |
@@ -374,7 +374,7 @@ is the default and restores it inside a compact area. Density changes space only
   because both shrink text against the user's text size and scale targets below 24px.
 
 [`examples/patterns/density.html`](https://odonckers.github.io/domestic-ui/patterns/density.md) shows the same form, table and toolbar at
-both densities side by side; [`explainers/density.md`](https://github.com/odonckers/domestic-ui/blob/main/explainers/density.md) has the full contract.
+both densities side by side; [`explainers/density.md`](https://odonckers.github.io/domestic-ui/explainers/density.md) has the full contract.
 
 ### Live example
 
@@ -865,17 +865,17 @@ Each of these is a choice between valid options, not a standard.
     [APG recommends](https://www.w3.org/WAI/ARIA/apg/patterns/tabs/#deciding-when-to-make-selection-automatically-follow-focus)
     when panels show at once; `activation="manual"` is available.
   - **Our choice:** the drawer is a `<dialog>` variant, so the browser handles modality, focus and
-    <kbd>Esc</kbd> ([explainer](https://github.com/odonckers/domestic-ui/blob/main/explainers/drawer.md)).
+    <kbd>Esc</kbd> ([explainer](https://odonckers.github.io/domestic-ui/explainers/drawer.md)).
   - **Our choice:** a clickable card links its heading and stretches that link over the card, so the
-    accessible name stays the heading ([explainer](https://github.com/odonckers/domestic-ui/blob/main/explainers/card.md)).
-  - **Our choice:** toasts never dismiss themselves and never take focus ([explainer](https://github.com/odonckers/domestic-ui/blob/main/explainers/toast.md)).
+    accessible name stays the heading ([explainer](https://odonckers.github.io/domestic-ui/explainers/card.md)).
+  - **Our choice:** toasts never dismiss themselves and never take focus ([explainer](https://odonckers.github.io/domestic-ui/explainers/toast.md)).
   - **Our choice:** the typeahead (`<dui-combobox>`) upgrades a native `<input list>` + `<datalist>`, not a
     `<select>`, because the value is free text and the upgrade reuses the same input and options. It
     follows the [APG Combobox](https://www.w3.org/WAI/ARIA/apg/patterns/combobox/) list autocomplete
     variant, filters by "contains" like the native
     [`<datalist>`](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/datalist) popups
     in Chromium and Firefox, and positions its listbox under the input rather than in the top layer, so
-    it is never wider than the field ([explainer](https://github.com/odonckers/domestic-ui/blob/main/explainers/combobox.md)).
+    it is never wider than the field ([explainer](https://odonckers.github.io/domestic-ui/explainers/combobox.md)).
 - **Our choice:** organisms (page header, filter bar, form sections, data table) follow the same one-attribute rule
   (`data-page-header`, `data-filter-bar`, `data-form-sections`, `data-table`) and take the rest of their layout from their
   children's native elements. Their choices are listed in the
@@ -1021,7 +1021,7 @@ source order (the reading and Tab order) in both. A settings page needs no API o
 - **Our choice:** the app shell is the landmarks HTML already has, in source order, placed with
   `grid-template-areas`; parts are recognized by element and position, so none needs an attribute
   ([APG Landmark Regions](https://www.w3.org/WAI/ARIA/apg/practices/landmark-regions/),
-  [explainer](https://github.com/odonckers/domestic-ui/blob/main/explainers/app-shell.md)). Without JavaScript both sidebars are always shown (stacked when narrow)
+  [explainer](https://odonckers.github.io/domestic-ui/explainers/app-shell.md)). Without JavaScript both sidebars are always shown (stacked when narrow)
   and the toggles stay `hidden`, so no button does nothing.
 - **Our choice:** one copy of each sidebar. Beside main it is a plain landmark that its toggle hides with
   `hidden`; on a narrow shell `<dui-app-shell>` moves the same element into a modal drawer `<dialog>` while the
@@ -1040,7 +1040,7 @@ source order (the reading and Tab order) in both. A settings page needs no API o
   [1.4.11](https://www.w3.org/WAI/WCAG22/Understanding/non-text-contrast.html)).
 - **Our choice:** splits have a fixed ratio and no draggable divider; a resizable one would follow the
   [APG Window Splitter](https://www.w3.org/WAI/ARIA/apg/patterns/windowsplitter/) pattern
-  ([explainer](https://github.com/odonckers/domestic-ui/blob/main/explainers/split-view.md)).
+  ([explainer](https://odonckers.github.io/domestic-ui/explainers/split-view.md)).
 
 Wrap any table that may not fit a 320px screen in `data-scroll="inline"`, named by its caption:
 
@@ -1070,7 +1070,7 @@ A `<pre>` already scrolls (`overflow-x: auto`); authors MUST give every `<pre>` 
 Page: https://odonckers.github.io/domestic-ui/principles/web-components.html
 
 HTML still has no element for tabs, menus, roving focus in a toolbar, hover tooltips or a toast
-stack. For those, and only those, [`web-components/`](https://github.com/odonckers/domestic-ui/blob/main/web-components/README.md) has one small
+stack. For those, and only those, [`web-components/`](https://odonckers.github.io/domestic-ui/components/web-components.md) has one small
 custom element each: `<dui-tabs>`, `<dui-menu>`, `<dui-combobox>`, `<dui-toolbar>`, `<dui-tooltip>`,
 `<dui-toaster>`, `<dui-table>` (sorting rows and selecting them, which a `<table>` cannot do) and `<dui-app-shell>`
 (collapsing sidebars and turning them into modal drawers on a narrow shell, which a button cannot do by itself). HTML does have `<datalist>`, but its popup cannot be styled and differs between engines,
@@ -1084,7 +1084,7 @@ so `<dui-combobox>` upgrades it to a listbox the page owns.
 - **ARIA with behavior, or not at all.** An element adds roles such as `menu` or `tab` only together
   with the keyboard support those roles promise ([APG](https://www.w3.org/WAI/ARIA/apg/)).
 - **Why each exists** is written at the top of its file, and the
-  [web components index](https://github.com/odonckers/domestic-ui/blob/main/web-components/README.md) lists them. Each one is a plain ES module with no
+  [web components index](https://odonckers.github.io/domestic-ui/components/web-components.md) lists them. Each one is a plain ES module with no
   dependencies and no build: `<script type="module" src="web-components/dui-tabs.js"></script>`.
 
 ## Explainers
@@ -1092,7 +1092,7 @@ so `<dui-combobox>` upgrades it to a listbox the page owns.
 Page: https://odonckers.github.io/domestic-ui/principles/explainers.html
 
 A pattern with no native element and no APG pattern is written up like a platform proposal in
-[`explainers/`](https://github.com/odonckers/domestic-ui/blob/main/explainers/README.md): problem, use cases, goals and non-goals, markup and API,
+[`explainers/`](https://odonckers.github.io/domestic-ui/explainers/index.md): problem, use cases, goals and non-goals, markup and API,
 keyboard, accessibility mappings, alternatives, prior art and open questions, with normative
 text in [RFC 2119](https://www.rfc-editor.org/rfc/rfc2119) keywords. The card, pagination, drawer
 and toast molecules have one, and so do density, the combobox, the split view, the app shell and
@@ -2340,6 +2340,8 @@ Page: https://odonckers.github.io/domestic-ui/atoms/index.html
 
 Small additions to the base layer, for what a native element cannot express on its own. A level of [Atomic Design](https://atomicdesign.bradfrost.com/); APIs follow the [component API convention](https://odonckers.github.io/domestic-ui/index.md#component-api).
 
+### Our choices
+
 From [`css/components/atoms/README.md`](https://github.com/odonckers/domestic-ui/blob/main/css/components/atoms/README.md):
 
 - **Our choice:** one `data-<atom>` attribute per atom, whose value is a space-separated list matched with [`~=`](https://developer.mozilla.org/en-US/docs/Web/CSS/Attribute_selectors). One attribute is one API to learn, it reads as a sentence (`data-button="primary small"`), and it cannot pile up like modifier classes.
@@ -3204,24 +3206,26 @@ Page: https://odonckers.github.io/domestic-ui/molecules/index.html
 
 Small groups of atoms that work as one unit. A level of [Atomic Design](https://atomicdesign.bradfrost.com/); APIs follow the [component API convention](https://odonckers.github.io/domestic-ui/index.md#component-api).
 
+### Our choices
+
 From [`css/components/molecules/README.md`](https://github.com/odonckers/domestic-ui/blob/main/css/components/molecules/README.md):
 
 - **Our choice:** native first, even where it differs from the APG example. The accordion is `<details name>`, so there are no heading wrappers and no arrow keys between headers (both optional in the APG); nav groups are `<details>` rather than scripted disclosure buttons, so they do not close on <kbd>Esc</kbd>. Both work with no script and keep find-in-page.
-- **Our choice:** the drawer is a `<dialog>` variant (`data-dialog="drawer"`), not a new element or a popover, so it gets modality, inertness, focus handling and <kbd>Esc</kbd> from the browser. See [drawer.md](https://github.com/odonckers/domestic-ui/blob/main/explainers/drawer.md).
+- **Our choice:** the drawer is a `<dialog>` variant (`data-dialog="drawer"`), not a new element or a popover, so it gets modality, inertness, focus handling and <kbd>Esc</kbd> from the browser. See [Drawer explainer](https://odonckers.github.io/domestic-ui/explainers/drawer.md).
 - **Our choice:** dialog and drawer motion uses `@starting-style` and `transition-behavior: allow-discrete`, declared after a plain transition, so engines without them simply open and close instantly. Duration tokens are `0s` under reduced motion.
 - **Our choice:** anchored popovers fall back to the bottom center of the viewport where CSS anchor positioning is missing, rather than the browser's default center, so they never cover the middle of the content.
 - **Our choice:** automatic tab activation (selection follows focus), as the [APG recommends](https://www.w3.org/WAI/ARIA/apg/patterns/tabs/#deciding-when-to-make-selection-automatically-follow-focus) when panels show without delay; `activation="manual"` is one attribute away.
 - **Our choice:** tabs are written as a `<nav>` of in-page links and `<section>` panels, so they read as a table of contents with JavaScript off. Once upgraded, each panel's first heading is visually hidden (it repeats the tab label) but stays in the accessibility tree.
 - **Our choice:** `<dui-menu>` adds `role="menu"` and `role="menuitem"` itself. Without the script there are no menu roles, so assistive technology is never promised arrow keys that do not work. A list of links is never a menu; use a disclosure.
-- **Our choice:** `<dui-combobox>` upgrades a native `<input list>` + `<datalist>`, not a `<select>`, because the value is free text and the upgrade reuses the same input and options. Its listbox is positioned under the input inside the component (not a top-layer popover), so it is never wider than the field. Options are filtered by "contains", case-insensitive, like the native datalist popups in Chromium and Firefox. See [combobox.md](https://github.com/odonckers/domestic-ui/blob/main/explainers/combobox.md).
+- **Our choice:** `<dui-combobox>` upgrades a native `<input list>` + `<datalist>`, not a `<select>`, because the value is free text and the upgrade reuses the same input and options. Its listbox is positioned under the input inside the component (not a top-layer popover), so it is never wider than the field. Options are filtered by "contains", case-insensitive, like the native datalist popups in Chromium and Firefox. See [Combobox (typeahead) explainer](https://odonckers.github.io/domestic-ui/explainers/combobox.md).
 - **Our choice:** `<dui-toolbar>` keeps `role="toolbar"` in the markup, because a labelled group of Tab stops is still correct without the script; only the roving focus is added.
 - **Our choice:** navigation lists (nav, tabs, pagination) drop the link underline, because their role is clear from the list ([F73](https://www.w3.org/WAI/WCAG22/Techniques/failures/F73) is about links in running text); hover brings it back. Breadcrumb links keep it, because they read as text.
 - **Our choice:** "current" is never color alone: the nav item gets an accent bar, a tint and bold text (in a sidebar too: the nav molecule is the app shell's sidebar navigation, extended with decorative icons rather than forked into an organism, so there is one navigation API); the current page in pagination is filled and bold; the selected tab gets a bar and full-strength text.
-- **Our choice:** the current page in pagination stays a link with `aria-current="page"`, and a disabled Previous or Next is an `<a>` with no `href`, which HTML defines as a placeholder: not focusable and not a link. See [pagination.md](https://github.com/odonckers/domestic-ui/blob/main/explainers/pagination.md).
-- **Our choice:** a clickable card puts the link on its heading and stretches the link's hit area with a pseudo-element, so the card's accessible name is the heading and secondary actions in the footer stay separate links. See [card.md](https://github.com/odonckers/domestic-ui/blob/main/explainers/card.md).
+- **Our choice:** the current page in pagination stays a link with `aria-current="page"`, and a disabled Previous or Next is an `<a>` with no `href`, which HTML defines as a placeholder: not focusable and not a link. See [Pagination explainer](https://odonckers.github.io/domestic-ui/explainers/pagination.md).
+- **Our choice:** a clickable card puts the link on its heading and stretches the link's hit area with a pseudo-element, so the card's accessible name is the heading and secondary actions in the footer stay separate links. See [Card explainer](https://odonckers.github.io/domestic-ui/explainers/card.md).
 - **Our choice:** alert tones start with a word in the markup ("Warning:"), like the field's "Error:", and add a decorative icon drawn in CSS with empty alternative text.
 - **Our choice:** an `info` tone with its own token (`--dui-color-info`) instead of reusing the accent, so a green or red brand accent never makes an informational message look like success or danger.
-- **Our choice:** toasts never dismiss themselves and never take focus; each has a Dismiss button, and the region is a fixed element in the page (not a popover) so server-rendered messages show with JavaScript off. See [toast.md](https://github.com/odonckers/domestic-ui/blob/main/explainers/toast.md).
+- **Our choice:** toasts never dismiss themselves and never take focus; each has a Dismiss button, and the region is a fixed element in the page (not a popover) so server-rendered messages show with JavaScript off. See [Toast explainer](https://odonckers.github.io/domestic-ui/explainers/toast.md).
 - **Our choice:** the tooltip uses inverse colors (`--dui-color-surface-inverse` and `--dui-color-text-inverse`, derived from the text and surface tokens), so every theme gets a readable tooltip with no extra overrides.
 
 ### Not shipped, and why
@@ -3233,7 +3237,7 @@ From [`css/components/molecules/README.md`](https://github.com/odonckers/domesti
 | Menubar, submenus | Not added. Application menubars are rare on the web, and submenus are hard to use; a menu button covers actions. |
 | Arrow-key navigation between accordion headers | Not added. It is optional in the APG Accordion pattern, and native `<details>` gives every summary a Tab stop. |
 | Tree view for navigation | Not used. An [APG Tree View](https://www.w3.org/WAI/ARIA/apg/patterns/treeview/) is for hierarchies users navigate as data (file trees), with one Tab stop and arrow keys; site navigation is links, so the sidebar navigation is disclosure groups and links ([APG Disclosure Navigation](https://www.w3.org/WAI/ARIA/apg/patterns/disclosure/examples/disclosure-navigation/)). |
-| Auto-dismissing toasts | Not added on purpose; see Our choices and [toast.md](https://github.com/odonckers/domestic-ui/blob/main/explainers/toast.md). |
+| Auto-dismissing toasts | Not added on purpose; see Our choices and [toast.md](https://odonckers.github.io/domestic-ui/explainers/toast.md). |
 | `interestfor` tooltips | Not used yet. It is the coming standard for hover and focus invokers but ships only in Chromium; `<dui-tooltip>` does the job until it is interoperable. |
 
 ## Organisms
@@ -3241,6 +3245,8 @@ From [`css/components/molecules/README.md`](https://github.com/odonckers/domesti
 Page: https://odonckers.github.io/domestic-ui/organisms/index.html
 
 Larger sections of an interface built from molecules and atoms. A level of [Atomic Design](https://atomicdesign.bradfrost.com/); APIs follow the [component API convention](https://odonckers.github.io/domestic-ui/index.md#component-api).
+
+### Our choices
 
 From [`css/components/organisms/README.md`](https://github.com/odonckers/domestic-ui/blob/main/css/components/organisms/README.md):
 
@@ -3259,7 +3265,7 @@ From [`css/components/organisms/README.md`](https://github.com/odonckers/domesti
 | --- | --- |
 | Filters that apply on every keystroke | Not built in. A page MAY apply on change, but the default is a submit button, so several filters can be set without interruptions and the form works without JavaScript. |
 | A `<fieldset>` as the top-level form section | Not used. A `<legend>` cannot be placed in a grid column; sections are headed `<section>` elements, with fieldsets for groups inside them. |
-| App shell, sidebar navigation | Not organisms. The app shell is a layout ([`app-shell.css`](https://odonckers.github.io/domestic-ui/patterns/app-shell.md), with [`<dui-app-shell>`](https://github.com/odonckers/domestic-ui/blob/main/web-components/dui-app-shell.js)) and the sidebar navigation is the [nav molecule](https://odonckers.github.io/domestic-ui/patterns/nav.md) (`data-nav="vertical"`); see [app-shell.md](https://github.com/odonckers/domestic-ui/blob/main/explainers/app-shell.md). |
+| App shell, sidebar navigation | Not organisms. The app shell is a layout ([`app-shell.css`](https://odonckers.github.io/domestic-ui/patterns/app-shell.md), with [`<dui-app-shell>`](https://github.com/odonckers/domestic-ui/blob/main/web-components/dui-app-shell.js)) and the sidebar navigation is the [nav molecule](https://odonckers.github.io/domestic-ui/patterns/nav.md) (`data-nav="vertical"`); see [app-shell.md](https://odonckers.github.io/domestic-ui/explainers/app-shell.md). |
 | Tree view for navigation | Not used. An [APG Tree View](https://www.w3.org/WAI/ARIA/apg/patterns/treeview/) is for hierarchies users navigate as data; site navigation is disclosure groups and links. |
 | Editable cells, arrow keys between cells | Not in the data table. Cells that are edited in place make the table an [APG Grid](https://www.w3.org/WAI/ARIA/apg/patterns/grid/), a different widget with its own keyboard model. |
 | Announcing the new order after a sort | Not done. As in the APG Sortable Table example, `aria-sort` on the header is the announcement; a caption hint says which headers sort. |
@@ -6461,3 +6467,1617 @@ For comparison only; these are not the standard this system follows.
 - [Apple Human Interface Guidelines: Split views](https://developer.apple.com/design/human-interface-guidelines/split-views)
 - [Material Design 3: Scaffold: Panes](https://m3.material.io/foundations/layout/scaffold/panes)
 - Vercel Geist: No equivalent
+
+## Web components
+
+Page: https://odonckers.github.io/domestic-ui/components/web-components.html
+
+From [`web-components/README.md`](https://github.com/odonckers/domestic-ui/blob/main/web-components/README.md). Each element's attributes, keyboard and accessibility are on the page of the pattern it enhances.
+
+A few small [custom elements](https://developer.mozilla.org/en-US/docs/Web/API/Web_components/Using_custom_elements),
+each added only because native HTML cannot do the job. Before reaching for one, check whether an
+element already covers it: `<dialog>`, `<details>`, the
+[`popover`](https://developer.mozilla.org/en-US/docs/Web/HTML/Global_attributes/popover)
+attribute and [invoker commands](https://developer.mozilla.org/en-US/docs/Web/API/Invoker_Commands_API)
+handle many cases that used to need script, and most molecules need none.
+
+### The rule
+
+Every element here:
+
+- exists because HTML or CSS cannot do something, and its header comment says what;
+- enhances native markup that already works without JavaScript
+  ([progressive enhancement](https://developer.mozilla.org/en-US/docs/Glossary/Progressive_Enhancement)):
+  content stays readable and links, buttons and sections stay usable with the script off;
+- uses the **light DOM**: no shadow root, so the [molecule CSS](https://github.com/odonckers/domestic-ui/blob/main/css/components/molecules/README.md)
+  and your own CSS style the markup directly, and there is no second styling API;
+- follows the matching [ARIA Authoring Practices Guide](https://www.w3.org/WAI/ARIA/apg/) pattern,
+  and adds ARIA roles only when it also adds the keyboard behavior those roles promise;
+- is one ES module with no dependencies and no build step, named with the `dui-` prefix, and
+  documents its API, events and keyboard in its header comment.
+
+Load one from a page with a module script; it upgrades matching elements already in the page and
+any added later:
+
+```html
+<script type="module" src="web-components/dui-tabs.js"></script>
+```
+
+### Index
+
+#### `<dui-tabs>`
+
+No tabs element: one panel at a time, roving tabindex and arrow keys ([APG Tabs](https://www.w3.org/WAI/ARIA/apg/patterns/tabs/)). Upgrades a `<nav>` of in-page links and `<section>` panels; `aria-current="true"` on a link selects it on load.
+
+Styles: [tabs.css](https://odonckers.github.io/domestic-ui/patterns/tabs.md). Example: [Tabs](https://odonckers.github.io/domestic-ui/patterns/tabs.md). Source: [`dui-tabs.js`](https://github.com/odonckers/domestic-ui/blob/main/web-components/dui-tabs.js).
+
+#### `<dui-menu>`
+
+`popovertarget` opens the list, but there is no menu widget: arrow keys, Home/End, typeahead, opening on a chosen item ([APG Menu Button](https://www.w3.org/WAI/ARIA/apg/patterns/menu-button/)).
+
+Styles: [menu-button.css](https://odonckers.github.io/domestic-ui/patterns/menu-button.md). Example: [Menu button](https://odonckers.github.io/domestic-ui/patterns/menu-button.md). Source: [`dui-menu.js`](https://github.com/odonckers/domestic-ui/blob/main/web-components/dui-menu.js).
+
+#### `<dui-combobox>`
+
+`<input list>` suggests values, but the browser draws the popup: it cannot be styled, filters differently per engine and announces no result count. Builds an APG list autocomplete listbox from the `<datalist>` and keeps the same input ([APG Combobox](https://www.w3.org/WAI/ARIA/apg/patterns/combobox/)). See [Combobox (typeahead) explainer](https://odonckers.github.io/domestic-ui/explainers/combobox.md).
+
+Styles: [combobox.css](https://odonckers.github.io/domestic-ui/patterns/typeahead.md). Example: [Typeahead](https://odonckers.github.io/domestic-ui/patterns/typeahead.md). Source: [`dui-combobox.js`](https://github.com/odonckers/domestic-ui/blob/main/web-components/dui-combobox.js).
+
+#### `<dui-toolbar>`
+
+No roving focus in HTML: one Tab stop with arrow keys between controls ([APG Toolbar](https://www.w3.org/WAI/ARIA/apg/patterns/toolbar/)).
+
+Styles: [toolbar.css](https://odonckers.github.io/domestic-ui/patterns/toolbar.md). Example: [Toolbar](https://odonckers.github.io/domestic-ui/patterns/toolbar.md). Source: [`dui-toolbar.js`](https://github.com/odonckers/domestic-ui/blob/main/web-components/dui-toolbar.js).
+
+#### `<dui-tooltip>`
+
+A popover cannot open on hover or focus yet. [`interestfor`](https://open-ui.org/components/interest-invokers.explainer/) is the coming standard (Chromium only today); this element stands in until it is interoperable.
+
+Styles: [popover.css](https://odonckers.github.io/domestic-ui/patterns/popover.md). Example: [Popover](https://odonckers.github.io/domestic-ui/patterns/popover.md). Source: [`dui-tooltip.js`](https://github.com/odonckers/domestic-ui/blob/main/web-components/dui-tooltip.js).
+
+#### `<dui-toaster>`
+
+A live region announces messages, but nothing builds a toast, adds its Dismiss button and moves focus sensibly when one goes away. See [Toast explainer](https://odonckers.github.io/domestic-ui/explainers/toast.md).
+
+Styles: [alerts.css](https://odonckers.github.io/domestic-ui/patterns/alerts.md). Example: [Alerts](https://odonckers.github.io/domestic-ui/patterns/alerts.md). Source: [`dui-toaster.js`](https://github.com/odonckers/domestic-ui/blob/main/web-components/dui-toaster.js).
+
+#### `<dui-app-shell>`
+
+A button cannot hide another element and keep `aria-expanded` in step, and a sidebar that is part of the page when wide must become a modal drawer only when the shell is narrow. Toggles `hidden` on a sidebar beside main, moves the one copy of a sidebar into a `<dialog data-dialog="drawer">` (`showModal()`) while it is open on a narrow shell, and switches mode on the shell's own width ([`ResizeObserver`](https://developer.mozilla.org/en-US/docs/Web/API/ResizeObserver)); toggles are `hidden` until it upgrades. See [App shell explainer](https://odonckers.github.io/domestic-ui/explainers/app-shell.md).
+
+Styles: [app-shell.css](https://odonckers.github.io/domestic-ui/patterns/app-shell.md) (layout). Example: [App shell](https://odonckers.github.io/domestic-ui/patterns/app-shell.md). Source: [`dui-app-shell.js`](https://github.com/odonckers/domestic-ui/blob/main/web-components/dui-app-shell.js).
+
+#### `<dui-table>`
+
+A table cannot reorder its rows, and a checkbox cannot check its siblings, count them or be indeterminate from markup. Adds sortable column buttons with `aria-sort` ([APG Sortable Table](https://www.w3.org/WAI/ARIA/apg/patterns/table/examples/sortable-table/)), a "select all" checkbox, the selection count and bulk-action enabling to a native `<table>`; without it the table is a plain table with ordinary checkboxes.
+
+Styles: [data-table.css](https://odonckers.github.io/domestic-ui/patterns/data-table.md). Example: [Data table](https://odonckers.github.io/domestic-ui/patterns/data-table.md). Source: [`dui-table.js`](https://github.com/odonckers/domestic-ui/blob/main/web-components/dui-table.js).
+
+### Events
+
+| Element | Event | When |
+| --- | --- | --- |
+| `<dui-tabs>` | `dui-tabs-change` | After the selected tab changes; `event.detail` is `{ tab, panel }`. Bubbles. |
+| `<dui-combobox>` | `dui-combobox-filter` | On every input, before filtering; `event.detail` is `{ query }`. Bubbles; cancelable: cancel it to load options yourself, then call `setOptions()`. |
+| `<dui-combobox>` | `change` (on the input) | When an option is accepted with Enter or a click, as a native control would. |
+| `<dui-toaster>` | `dui-toast-dismiss` | Before a toast is removed. Bubbles; cancelable. |
+| `<dui-app-shell>` | `dui-app-shell-toggle` | After a sidebar is expanded, collapsed, opened or closed; `event.detail` is `{ sidebar, edge, expanded, drawer }`. Bubbles. |
+| `<dui-table>` | `dui-table-sort` | Before the rows move; `event.detail` is `{ column, index, direction }` (the `<th>`, its column index, `"ascending"` or `"descending"`). Bubbles; cancelable: cancel it to sort on the server, then set `aria-sort` and replace the rows yourself. |
+
+`<dui-menu>`, `<dui-toolbar>` and `<dui-tooltip>` fire no events of their own (nor does `<dui-table>` for selection: listen for `change` on its checkboxes): listen for the native
+`click` on items and controls, and the native `toggle` on popovers.
+
+## Explainers
+
+Page: https://odonckers.github.io/domestic-ui/explainers/index.html
+
+An explainer describes a pattern that has **no native HTML element and no
+[APG pattern](https://www.w3.org/WAI/ARIA/apg/patterns/)**, written the way a platform feature
+would be proposed. The format follows the [W3C TAG explainer guidance](https://tag.w3.org/explainers/)
+and the explainers published by [Open UI](https://open-ui.org/). Nothing here is a standard; each
+file says which parts are **Our choice** and why.
+
+### When an explainer is required
+
+domestic-ui uses, in order: a native element, then the matching APG pattern, then ARIA only where
+native HTML cannot express something ([PRINCIPLES.md](https://odonckers.github.io/domestic-ui/principles/index.md)). A molecule that ends up
+with neither a native element nor an APG pattern MUST have an explainer here, linked from the
+header comment of its CSS file and from the
+[molecules index](https://github.com/odonckers/domestic-ui/blob/main/css/components/molecules/README.md). Layouts with no standard of their own (the [split view](https://odonckers.github.io/domestic-ui/explainers/split-view.md), the [app shell](https://odonckers.github.io/domestic-ui/explainers/app-shell.md)) may have one too.
+Patterns that are backed by a standard
+(dialog, details, popover, tabs, menu button, toolbar, breadcrumb, search) link to that standard
+instead.
+
+### Keywords
+
+The key words MUST, MUST NOT, SHOULD, SHOULD NOT and MAY are to be interpreted as described in
+[RFC 2119](https://www.rfc-editor.org/rfc/rfc2119) and [RFC 8174](https://www.rfc-editor.org/rfc/rfc8174)
+when, and only when, they appear in all capitals.
+
+### Sections
+
+Every explainer has these sections, in this order:
+
+1. **Problem**: what authors cannot do well today.
+2. **Use cases**: concrete situations.
+3. **Goals** and 4. **Non-goals**.
+5. **Proposed markup and API**: the attribute, element or methods we ship, with an example.
+6. **Keyboard interaction**.
+7. **Accessibility mappings**: roles, states, and what assistive technology users should hear.
+8. **Alternatives considered**, each with why it was rejected.
+9. **Prior art**, with links. We cite; we do not copy.
+10. **Open questions**.
+
+Names follow HTML and ARIA conventions (lowercase, no abbreviations, states in native attributes)
+so a pattern could map onto a future native element or attribute.
+
+### Index
+
+| Explainer | Summary | CSS | Example | Script |
+| --- | --- | --- | --- | --- |
+| [Card](https://odonckers.github.io/domestic-ui/explainers/card.md) | A self-contained summary with a heading, optional media and actions; a whole-card link whose name is the heading | [`card.css`](https://odonckers.github.io/domestic-ui/patterns/card.md) | [Card](https://odonckers.github.io/domestic-ui/patterns/card.md) | None |
+| [Pagination](https://odonckers.github.io/domestic-ui/explainers/pagination.md) | Links between pages of a list in a named `<nav>`, with `aria-current="page"` and non-link disabled ends | [`pagination.css`](https://odonckers.github.io/domestic-ui/patterns/pagination.md) | [Pagination](https://odonckers.github.io/domestic-ui/patterns/pagination.md) | None |
+| [Drawer](https://odonckers.github.io/domestic-ui/explainers/drawer.md) | A `<dialog>` variant at the inline-start or inline-end edge, full block size | [`dialog.css`](https://odonckers.github.io/domestic-ui/patterns/dialog.md) | [Dialog and drawer](https://odonckers.github.io/domestic-ui/patterns/dialog.md) | None |
+| [Toast](https://odonckers.github.io/domestic-ui/explainers/toast.md) | A fixed `role="status"` region that stacks short messages that never dismiss themselves | [`alerts.css`](https://odonckers.github.io/domestic-ui/patterns/alerts.md) | [Alerts](https://odonckers.github.io/domestic-ui/patterns/alerts.md) | [`dui-toaster.js`](https://github.com/odonckers/domestic-ui/blob/main/web-components/dui-toaster.js) |
+| [Combobox](https://odonckers.github.io/domestic-ui/explainers/combobox.md) | How domestic-ui maps the APG list autocomplete combobox onto `<input list>` and `<datalist>`, and the choices the APG leaves open | [`combobox.css`](https://odonckers.github.io/domestic-ui/patterns/typeahead.md) | [Typeahead](https://odonckers.github.io/domestic-ui/patterns/typeahead.md) | [`dui-combobox.js`](https://github.com/odonckers/domestic-ui/blob/main/web-components/dui-combobox.js) |
+| [Density](https://odonckers.github.io/domestic-ui/explainers/density.md) | `data-density="compact"` on any element: tighter control heights, padding and table cells, same text size, targets at least 24px | [`semantic.css`](https://odonckers.github.io/domestic-ui/tokens/semantic.md) | [Compact density](https://odonckers.github.io/domestic-ui/patterns/density.md) | None |
+| [App shell](https://odonckers.github.io/domestic-ui/explainers/app-shell.md) | `data-app-shell`: app bar, primary sidebar, main and an auxiliary sidebar as native landmarks in named grid areas; one copy of each sidebar, collapsible beside main and a modal drawer when the shell is narrow; why not a dialog, popover, `<details>`, checkbox hack or duplicated navigation | [`app-shell.css`](https://odonckers.github.io/domestic-ui/patterns/app-shell.md) | [App shell](https://odonckers.github.io/domestic-ui/patterns/app-shell.md) | [`dui-app-shell.js`](https://github.com/odonckers/domestic-ui/blob/main/web-components/dui-app-shell.js) |
+| [Auxiliary sidebar](https://odonckers.github.io/domestic-ui/explainers/aux-sidebar.md) | The `<aside>` after `<main>` in an app shell: context for the selection, beside main from 64rem, a drawer at the end below; stable name, polite status on change | [`app-shell.css`](https://odonckers.github.io/domestic-ui/patterns/app-shell.md) | [App shell](https://odonckers.github.io/domestic-ui/patterns/app-shell.md) | [`dui-app-shell.js`](https://github.com/odonckers/domestic-ui/blob/main/web-components/dui-app-shell.js) |
+| [Split view](https://odonckers.github.io/domestic-ui/explainers/split-view.md) | Two regions side by side at a fixed ratio (`data-split`) or a list of links beside a detail pane (`data-list-detail`), switched by a container query; why there is no draggable divider | [`split.css`](https://odonckers.github.io/domestic-ui/patterns/split.md), [`list-detail.css`](https://odonckers.github.io/domestic-ui/patterns/list-detail.md) | [Split](https://odonckers.github.io/domestic-ui/patterns/split.md) | None |
+| [Code highlighting](https://odonckers.github.io/domestic-ui/explainers/code-highlighting.md) | `::highlight(dui-code-*)` names a page registers with the CSS Custom Highlight API, each colored by a `--dui-color-code-*` token at 4.5:1 on the code background | [`typography.css`](https://odonckers.github.io/domestic-ui/components/base.md) | [Base elements](https://odonckers.github.io/domestic-ui/components/base.md) | None (the page registers ranges) |
+
+## App shell
+
+Page: https://odonckers.github.io/domestic-ui/explainers/app-shell.html
+
+Status: shipped in domestic-ui as a layout (`data-app-shell`) plus one web component (`<dui-app-shell>`).
+CSS: [`css/layout/app-shell.css`](https://odonckers.github.io/domestic-ui/patterns/app-shell.md) ·
+Script: [`web-components/dui-app-shell.js`](https://github.com/odonckers/domestic-ui/blob/main/web-components/dui-app-shell.js) ·
+Examples: [`examples/app-shell.html`](https://odonckers.github.io/domestic-ui/patterns/app-shell.md) (a full orders screen),
+[`examples/layouts/app-shell.html`](https://odonckers.github.io/domestic-ui/patterns/app-shell.md) (a contained shell)
+
+The key words MUST, MUST NOT, SHOULD, SHOULD NOT and MAY are to be interpreted as described in
+[RFC 2119](https://www.rfc-editor.org/rfc/rfc2119) and [RFC 8174](https://www.rfc-editor.org/rfc/rfc8174)
+when, and only when, they appear in all capitals.
+
+### Problem
+
+Business applications share one frame: an app bar across the top, navigation down one side, the work in
+the middle, and often a second sidebar with the context of what is selected. HTML has the landmarks for
+every part (`<header>`, `<nav>`, `<main>`, `<aside>`, `<footer>`) and the
+[APG Landmark Regions](https://www.w3.org/WAI/ARIA/apg/practices/landmark-regions/) practice says how to
+label them, but no standard says how they become an app frame that collapses its sidebars and turns them
+into drawers on a phone. Common implementations:
+
+- render the navigation twice (a sidebar and a mobile menu), so screen reader users meet two
+  navigation landmarks and the markup drifts apart;
+- keep the sidebar in a `role="dialog"` at every width, so the permanent sidebar of a desktop page is
+  announced as a dialog;
+- switch on the viewport width, so a shell inside a docs page or a resizable panel picks the wrong mode;
+- hide the sidebar with a CSS checkbox hack or `transform`, leaving it in the Tab order or with no
+  `aria-expanded` on its button;
+- show a "Menu" button that does nothing before (or without) JavaScript.
+
+### Use cases
+
+- An operations screen: orders in a table, the main navigation on the left, the selected order on the right.
+- A settings area: navigation groups beside a long form.
+- The same application on a phone: navigation and details open as drawers from their edges.
+- A shell embedded in a page section (a documentation example, a preview pane), sized by its box.
+
+### Goals
+
+- Native landmarks in source order, which is also the reading and Tab order at every width
+  ([2.4.3 Focus Order](https://www.w3.org/WAI/WCAG22/Understanding/focus-order.html)).
+- One copy of each sidebar in the DOM, in every mode.
+- Everything visible and usable with JavaScript off: no dead buttons, the current page marked.
+- Wide: each sidebar collapses and expands with a disclosure button; main takes the space.
+- Narrow: each sidebar opens as a modal drawer with everything a modal dialog does.
+- The mode follows the shell's own width, so a contained shell works anywhere.
+- Layouts and organisms inside main respond to the width main actually has.
+- No horizontal scrolling at 320px ([1.4.10 Reflow](https://www.w3.org/WAI/WCAG22/Understanding/reflow.html));
+  motion from the tokens, off under reduced motion
+  ([2.3.3](https://www.w3.org/WAI/WCAG22/Understanding/animation-from-interactions.html)).
+
+### Non-goals
+
+- Resizable sidebars (see [Open questions](#open-questions)).
+- A sidebar shrunk to a rail of icons. A rail needs tooltips or visible names for every icon and a second
+  layout of the same links; collapsing to hidden is simpler and fully accessible.
+- Persisting the collapsed state across visits (an event makes it possible; storage is the page's job).
+- Routing: links in the navigation load pages; a single-page app may intercept them.
+
+### Proposed markup and API
+
+- The shell MUST be one element with `data-app-shell`: `<dui-app-shell data-app-shell>` to get the
+  toggles' behavior, or any wrapper element for a static shell.
+- A skip link to `<main>` MUST come before the shell, as its own first focusable element
+  ([2.4.1 Bypass Blocks](https://www.w3.org/WAI/WCAG22/Understanding/bypass-blocks.html)).
+- Its children, in this order: a `<header>` (the app bar); the primary sidebar; `<main>`; an optional
+  auxiliary `<aside>`; an optional `<footer>`. Parts are recognized by element and position, so they need
+  no attributes: the `<nav>` or `<aside>` before `<main>` is the primary sidebar, the `<aside>` after it the
+  auxiliary one.
+- The primary sidebar SHOULD be a `<nav aria-label>` (usually with `data-nav="vertical"`). It MAY be an
+  `<aside aria-label>` holding the primary `<nav>` when it also holds things that are not links (a
+  workspace switcher). It MUST NOT be a `<div>`: it would not be a landmark.
+- Every `<nav>` and `<aside>` MUST have an accessible name that does not repeat its role ("Main",
+  "Order details"); two landmarks of the same kind MUST have different names.
+- A sidebar with a toggle MUST have an `id`. Its toggle is a `<button type="button" aria-controls="id"
+  aria-expanded="true" hidden>`; it MUST carry `hidden` in the markup, so it never shows without the
+  script. `aria-expanded="false"` in the markup starts the sidebar collapsed when it sits beside main (an
+  aux sidebar on a busy screen). At least one toggle MUST be outside the sidebar.
+- `data-app-shell="contained"` makes the shell `--dui-size-pane` tall with its own scroll area; set
+  `--dui-size-pane` on it to size it.
+- Tokens: `--dui-size-sidebar` (16rem) and `--dui-size-sidebar-aux` (20rem) are the sidebar widths beside
+  main; `--dui-size-pane` bounds a sidebar's height beside main.
+
+```html
+<a class="visually-hidden" href="#main">Skip to main content</a>
+<dui-app-shell data-app-shell>
+  <header>
+    <button type="button" aria-controls="app-nav" aria-expanded="true" hidden>Menu</button>
+    <a href="/">Northwind Operations</a>
+    <button type="button" aria-controls="app-aux" aria-expanded="true" hidden>Details</button>
+  </header>
+  <nav id="app-nav" aria-label="Main" data-nav="vertical">…</nav>
+  <main id="main">…</main>
+  <aside id="app-aux" aria-label="Order details">…</aside>
+</dui-app-shell>
+<script type="module" src="web-components/dui-app-shell.js"></script>
+```
+
+#### Modes
+
+| Shell width | Primary sidebar | Auxiliary sidebar | Without JavaScript |
+| --- | --- | --- | --- |
+| under 48rem | drawer at the start | drawer at the end | both stacked, above and below main |
+| 48rem to 64rem | beside main, collapsible | drawer at the end | aux stacked under main |
+| 64rem and up | beside main, collapsible | beside main, collapsible | both beside main |
+
+The breakpoints are lengths in `@container dui-app-shell` rules (a container query cannot read a custom
+property), and the same two numbers are in the script.
+
+- In a drawer the sidebar element is moved into a `<dialog data-dialog="drawer start | end" closedby="any">`
+  ([drawer explainer](https://odonckers.github.io/domestic-ui/explainers/drawer.md)) that the element builds once, with a heading (the toggle's text) and a
+  Close button, opened with [`showModal()`](https://developer.mozilla.org/en-US/docs/Web/API/HTMLDialogElement/showModal).
+  When it closes, the sidebar is moved back to where it was.
+- `<main>` and each sidebar are named size containers (`dui-app-shell-main`, `dui-app-shell-start`,
+  `dui-app-shell-end`); every layout and organism in domestic-ui switches on its own box, so they adapt to
+  main's width. A page MAY write its own `@container dui-app-shell-main` rules.
+- Methods `show(edge)`, `hide(edge)`, `toggle(edge)` and `isDrawer(edge)` (`"start"` or `"end"`) let a page
+  open the details when a record is chosen. A `dui-app-shell-toggle` event reports every change.
+
+**Our choice:** one copy of each sidebar, a plain landmark in its grid area, moved into a drawer only while
+the drawer is open, so screen readers never hear "dialog" around a sidebar that is part of the page.
+
+**Our choice:** the mode follows the shell's width (a `ResizeObserver` and container queries), not the
+viewport, so a contained shell behaves like a full-window one.
+
+### Keyboard interaction
+
+- Tab / Shift+Tab: the skip link, the app bar, the primary sidebar, main, the auxiliary sidebar, the
+  footer, in source order. A collapsed sidebar is `hidden`, so it is skipped.
+- Enter / Space on a toggle (native button): collapses or expands its sidebar; on a narrow shell, opens it
+  as a drawer and moves focus to the drawer's first focusable element (its Close button).
+- Esc in a drawer: closes it; focus returns to the element that opened it (the toggle, or a link that
+  called `show()`), and the toggle's `aria-expanded` becomes `false`.
+- A click on the backdrop closes a drawer (`closedby="any"`, with a script fallback where it is not supported).
+- Enter / Space on a group summary in the navigation: opens or closes the group (native `<details>`).
+
+### Accessibility mappings
+
+| Element | Role | Name / state |
+| --- | --- | --- |
+| `<header>` (not inside a sectioning element) | `banner` ([HTML-AAM](https://www.w3.org/TR/html-aam-1.0/#el-header)) | |
+| `<nav aria-label="Main">` | `navigation` | "Main" |
+| `<main>` | `main` | |
+| `<aside aria-label="Order details">` | `complementary` ([HTML-AAM](https://www.w3.org/TR/html-aam-1.0/#el-aside)) | "Order details" |
+| `<footer>` | `contentinfo` | |
+| Toggle | `button` | its text; [`aria-expanded`](https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Reference/Attributes/aria-expanded) true while shown or open; [`aria-controls`](https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Reference/Attributes/aria-controls) the sidebar |
+| Collapsed sidebar | none ([`hidden`](https://developer.mozilla.org/en-US/docs/Web/HTML/Global_attributes/hidden)) | removed from the accessibility tree and the Tab order |
+| Drawer | `dialog`, modal | its heading (the toggle's text); the rest of the page is inert |
+
+What a screen reader user hears, for example: on a wide screen, "Menu, button, expanded", and in the
+landmarks list "banner, Main navigation, main, Order details complementary, content information". On a
+phone, "Menu, button, collapsed"; after Enter, "Menu, dialog, Close, button", then the "Main" navigation
+inside it; after Esc, focus is back on "Menu, button, collapsed".
+
+### Alternatives considered
+
+- **(a) The sidebar always lives in a `<dialog>`**, opened with `show()` (non-modal, placed in the grid)
+  when wide and `showModal()` when narrow. One copy, no DOM moves. Rejected: the permanent sidebar of a
+  desktop page is announced as a dialog, a non-modal `<dialog>` is not a landmark, and with JavaScript off
+  a closed dialog hides the navigation (an `open` attribute in the markup works around that but is
+  discouraged by HTML).
+- **(b) The sidebar is a plain landmark, moved into a drawer `<dialog>` while narrow.** Chosen, with one
+  refinement: it is moved only while the drawer is open, not for the whole narrow mode, so between opens it
+  sits hidden in its own place and a mode change never moves it.
+- **(c) A [`popover`](https://developer.mozilla.org/en-US/docs/Web/HTML/Global_attributes/popover) instead
+  of a dialog for the narrow mode.** A popover can be the sidebar itself (no move) and light-dismisses, but
+  it is not modal: the page behind stays in the Tab order and the accessibility tree, which a full-height
+  navigation drawer covering the page should not allow. Rejected for the drawer; it remains a candidate for
+  a non-modal side panel (see the drawer explainer).
+- **[`<details>`](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/details) for
+  collapse.** Works without script, but the summary must sit inside the sidebar, so the toggle cannot live
+  in the app bar; the content cannot be a drawer; and a closed `<details>` cannot be shown again at a wider
+  width without script. Rejected.
+- **CSS-only checkbox hacks** (`:checked ~ nav`). The checkbox is announced as a checkbox, not a button with
+  an expanded state, it stays in the Tab order with nothing to toggle when CSS lays everything out, and the
+  drawer has no modality or Esc. Rejected.
+- **Duplicated navigation** (a sidebar and a separate mobile menu). Two navigation landmarks with the same
+  links, two places to mark the current page, and twice the markup for server rendering. Rejected.
+- **Viewport media queries for the mode.** Break a shell inside a page section or a resizable pane.
+  Rejected in favor of container queries and a `ResizeObserver` on the shell.
+
+### Prior art
+
+- [APG Landmark Regions](https://www.w3.org/WAI/ARIA/apg/practices/landmark-regions/) and the
+  [APG Disclosure pattern](https://www.w3.org/WAI/ARIA/apg/patterns/disclosure/) (the toggles).
+- [APG Dialog (Modal)](https://www.w3.org/WAI/ARIA/apg/patterns/dialog-modal/) and the WHATWG
+  [`<main>`](https://html.spec.whatwg.org/multipage/grouping-content.html#the-main-element) and
+  [`<aside>`](https://html.spec.whatwg.org/multipage/sections.html#the-aside-element) elements.
+- MDN [`grid-template-areas`](https://developer.mozilla.org/en-US/docs/Web/CSS/grid-template-areas),
+  [container queries](https://developer.mozilla.org/en-US/docs/Web/CSS/Guides/Containment/Container_queries) and
+  [`ResizeObserver`](https://developer.mozilla.org/en-US/docs/Web/API/ResizeObserver).
+- Design systems: Apple HIG [Sidebars](https://developer.apple.com/design/human-interface-guidelines/sidebars),
+  Carbon [UI shell header](https://carbondesignsystem.com/components/UI-shell-header/usage/),
+  Primer [PageLayout](https://primer.style/components/page-layout),
+  Atlassian [Page layout](https://atlassian.design/components/page-layout),
+  GOV.UK [Service navigation](https://design-system.service.gov.uk/components/service-navigation/).
+- [Open UI](https://open-ui.org/) has no app shell or sidebar proposal; this explainer is written so the
+  parts could map onto native landmarks unchanged.
+
+### Open questions
+
+- **Resizable sidebars.** A draggable edge would follow the
+  [APG Window Splitter](https://www.w3.org/WAI/ARIA/apg/patterns/windowsplitter/) pattern (a focusable
+  `role="separator"` with `aria-valuenow` and arrow keys), as noted for the [split view](https://odonckers.github.io/domestic-ui/explainers/split-view.md). Not
+  built until a real use needs it.
+- **Persisting the collapsed state.** The `dui-app-shell-toggle` event carries `expanded`; a page MAY store
+  it (a cookie the server reads, so the markup can start with `aria-expanded="false"`, avoids a flash;
+  [`localStorage`](https://developer.mozilla.org/en-US/docs/Web/API/Window/localStorage) works too).
+  Should the element do this itself?
+- **A flash on narrow screens.** With JavaScript on, the stacked sidebars show until the module runs. A
+  server that knows the client is narrow can render the sidebars `hidden` and the toggles visible; should
+  the element offer a hook for that?
+- **Rails.** Is there a version of an icon rail that keeps names visible and needs no duplicate links?
+
+## Auxiliary sidebar
+
+Page: https://odonckers.github.io/domestic-ui/explainers/aux-sidebar.html
+
+Status: shipped in domestic-ui as part of the [app shell](https://odonckers.github.io/domestic-ui/explainers/app-shell.md): the `<aside>` after `<main>` in a
+`data-app-shell`.
+CSS: [`css/layout/app-shell.css`](https://odonckers.github.io/domestic-ui/patterns/app-shell.md) ·
+Script: [`web-components/dui-app-shell.js`](https://github.com/odonckers/domestic-ui/blob/main/web-components/dui-app-shell.js) ·
+Example: [`examples/app-shell.html`](https://odonckers.github.io/domestic-ui/patterns/app-shell.md)
+
+The key words MUST, MUST NOT, SHOULD, SHOULD NOT and MAY are to be interpreted as described in
+[RFC 2119](https://www.rfc-editor.org/rfc/rfc2119) and [RFC 8174](https://www.rfc-editor.org/rfc/rfc8174)
+when, and only when, they appear in all capitals.
+
+### Problem
+
+Work screens often show the context of what is selected next to the list it came from: the order chosen in
+a table, the filters for a report, the activity on a record. HTML's
+[`<aside>`](https://html.spec.whatwg.org/multipage/sections.html#the-aside-element) is the element for
+content related to the main content, but there is no standard for an aside that sits at the inline end of a
+screen when there is room, gets out of the way when there is not, and can be dismissed. Common
+implementations open a second, non-modal overlay that covers the table with no way to reach it by keyboard,
+or rebuild the panel as a modal on phones with a second copy of its content.
+
+### Use cases
+
+- Details of the selected order beside the orders table (the
+  [orders example](https://odonckers.github.io/domestic-ui/patterns/app-shell.md)).
+- Filters for a long report, kept open while scrolling it.
+- An activity feed or comments on the record in main.
+
+### Goals
+
+- A complementary landmark with a name, after `<main>` in source order, so it is read and tabbed after
+  the content it describes.
+- Beside main when the shell is wide, stacked under main or a drawer at the end when it is not.
+- Collapsible with a disclosure button, like the primary sidebar, and optionally collapsed from the start.
+- Updated in place when the selection changes, with the change announced politely.
+- Visible and usable with JavaScript off.
+
+### Non-goals
+
+- A non-modal overlay floating over main.
+- More than one auxiliary sidebar.
+- Tabs inside it: use [tabs](https://odonckers.github.io/domestic-ui/patterns/tabs.md) in the aside when it needs them.
+
+### Proposed markup and API
+
+- It MUST be an `<aside>` that is a child of the shell, after `<main>`, with an `id` and an accessible name
+  (`aria-label` or `aria-labelledby`) that stays the same when its content changes ("Order details", not
+  "Order 1042").
+- Its toggle is a `<button type="button" aria-controls="id" aria-expanded="true" hidden>` in the app bar
+  (see the [app shell explainer](https://odonckers.github.io/domestic-ui/explainers/app-shell.md)); `aria-expanded="false"` in the markup starts it collapsed.
+- It sits beside main from 64rem of the shell's width (`--dui-size-sidebar-aux` wide, 20rem by default).
+  Between 48rem and 64rem it is stacked under main without JavaScript and a drawer at the end with it, so
+  on mid widths it starts collapsed; below 48rem it is a drawer at the end. **Our choice:** 64rem, because
+  below that main would be narrower than a data table needs once both sidebars take their space.
+- When a page changes its content (a row selected), it SHOULD say so in a polite
+  [`role="status"`](https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Reference/Roles/status_role)
+  element inside it, present from load, and it SHOULD NOT move focus. When the user explicitly asks to see a
+  record (activates its link) and the aside is a drawer, the page MAY call `shell.show("end")`; focus moves
+  into the drawer and returns to the link on Esc.
+- Without JavaScript every record link SHOULD load a URL that renders the aside for that record (`?order=1042`).
+
+```html
+<aside id="app-aux" aria-label="Order details">
+  <h2>Order 1042</h2>
+  <dl>…</dl>
+  <p role="status" class="visually-hidden"></p>
+</aside>
+```
+
+**Our choice:** the aside's name is stable and its heading carries the record, so the landmarks list does not
+change under the user, while heading navigation finds the record.
+
+### Keyboard interaction
+
+- Tab: reaches the aside after main (source order), when it is shown.
+- Enter / Space on its toggle: collapses or expands it; when narrow, opens it as a drawer at the end.
+- Esc in the drawer: closes it and returns focus to the element that opened it.
+
+### Accessibility mappings
+
+| Element | Role | Name / state |
+| --- | --- | --- |
+| `<aside aria-label="Order details">` | `complementary` ([HTML-AAM](https://www.w3.org/TR/html-aam-1.0/#el-aside)) | "Order details" |
+| Toggle | `button` | "Details"; `aria-expanded`; `aria-controls` the aside |
+| Status inside | `status` (polite) | "Order 1040 shown in Order details." after a change |
+| Drawer (narrow) | `dialog`, modal | the toggle's text |
+
+A screen reader user selecting a row hears the checkbox state, then "Order 1040 shown in Order details."
+without losing their place in the table.
+
+### Alternatives considered
+
+- **A popover at the inline end.** Non-modal and light-dismissed, so it covers the table while the table is
+  still in the Tab order behind it. Rejected.
+- **The details inside main, under the table** (a list-detail). Good when the details are the point of the
+  screen; use [`data-list-detail`](https://odonckers.github.io/domestic-ui/patterns/list-detail.md) then. The aside is for context that the
+  user may hide.
+- **A second copy of the details for phones.** Rejected for the same reason as a duplicated navigation: one
+  copy, moved into the drawer while it is open.
+- **Announcing every update with `aria-live` on the whole aside.** Rereads the whole panel on each change.
+  Rejected for one short status message.
+
+### Prior art
+
+- [APG Landmark Regions](https://www.w3.org/WAI/ARIA/apg/practices/landmark-regions/) (complementary).
+- [WCAG 4.1.3 Status Messages](https://www.w3.org/WAI/WCAG22/Understanding/status-messages.html).
+- Atlassian [Page layout](https://atlassian.design/components/page-layout) (right sidebar) and Primer
+  [PageLayout](https://primer.style/components/page-layout) (pane).
+
+### Open questions
+
+- Should the aside remember its own collapsed state separately from the primary sidebar? The
+  `dui-app-shell-toggle` event reports each edge separately, so a page can.
+- Should a selection on a narrow screen open the drawer automatically? Today only an explicit link
+  activation does, because opening a modal on every checkbox would be disruptive.
+
+## Card
+
+Page: https://odonckers.github.io/domestic-ui/explainers/card.html
+
+Status: shipped in domestic-ui as a styling contract.
+CSS: [`css/components/molecules/card.css`](https://odonckers.github.io/domestic-ui/patterns/card.md) ·
+Example: [`examples/molecules/card.html`](https://odonckers.github.io/domestic-ui/patterns/card.md)
+
+The key words MUST, MUST NOT, SHOULD, SHOULD NOT and MAY are to be interpreted as described in
+[RFC 2119](https://www.rfc-editor.org/rfc/rfc2119) and [RFC 8174](https://www.rfc-editor.org/rfc/rfc8174)
+when, and only when, they appear in all capitals.
+
+### Problem
+
+Cards are everywhere: lists of articles, products, projects. HTML has no card element and the
+APG has no card pattern. Authors often make the whole card clickable by wrapping it in one big
+`<a>` or by adding a click handler to a `<div>`. The first gives the link a very long accessible
+name made of every word in the card. The second is invisible to keyboard and assistive
+technology users. Secondary actions inside the card then become nested interactive content,
+which HTML does not allow.
+
+### Use cases
+
+- A grid of articles where each card links to the article.
+- A pricing grid where each card has a heading, details and one button.
+- A project card that opens the project, with an "Edit" action next to it.
+
+### Goals
+
+- A card is ordinary sectioning content with a heading, so users can navigate by heading.
+- A whole-card link keeps the heading as its accessible name.
+- Secondary actions stay reachable with the pointer and the keyboard.
+- Keyboard focus on the card link is clearly visible on the whole card.
+- No JavaScript.
+
+### Non-goals
+
+- Layout of the card grid (use `.grid` from the layout layer).
+- Selectable cards (checkbox cards) and draggable cards.
+- Image loading, aspect ratios beyond `object-fit: cover`.
+
+### Proposed markup and API
+
+- A card MUST be an `<article>` when it makes sense on its own, else a `<section>` or `<li>`.
+- A card MUST contain a heading (`h2`–`h6`).
+- `data-card` on the element makes it a card. `data-card="link"` makes the whole card follow
+  the first link inside its heading.
+- Optional media is the first child: `<img>`, `<picture>` or `<video>`. Media SHOULD have
+  `alt=""` when it only decorates.
+- Actions go in a `<footer>` child. In a link card, every interactive element other than the
+  heading link MUST be inside that `<footer>`.
+
+```html
+<article data-card="link">
+  <img src="cover.jpg" alt="" width="640" height="360">
+  <h3><a href="/guides/theming/">Theming guide</a></h3>
+  <p>Override semantic tokens to make a theme.</p>
+  <footer>
+    <a href="/guides/theming/edit">Edit</a>
+  </footer>
+</article>
+```
+
+How it works: the heading link gets an `::after` pseudo-element with `position: absolute;
+inset: 0`, so its hit area covers the card (the card is `position: relative`). The footer is
+positioned above it with `z-index: 1`. The link's focus outline moves to the pseudo-element.
+
+**Our choice:** the link lives in the heading, because the heading is the shortest text that
+names the destination (WCAG 2.4.4).
+
+### Keyboard interaction
+
+- Tab: moves to the heading link, then to each footer action, in DOM order.
+- Enter: follows the focused link.
+
+A link card is one Tab stop plus its footer actions; body text is not focusable.
+
+### Accessibility mappings
+
+| Element | Role | Name |
+| --- | --- | --- |
+| `<article data-card>` | `article` | none (not needed) |
+| Heading | `heading` with its level | its text |
+| Heading `<a href>` | `link` | the heading text only |
+| Footer actions | `link` or `button` | their own text |
+
+A screen reader user hears, for example, "heading level 3, link, Theming guide". Moving by
+heading or by link reaches each card once. The media is skipped when `alt=""`.
+
+### Alternatives considered
+
+- **Wrap the whole card in `<a>`.** Rejected: the accessible name becomes every word in the
+  card, and any button or link inside is nested interactive content, which the
+  [HTML content model for `a`](https://html.spec.whatwg.org/multipage/text-level-semantics.html#the-a-element)
+  forbids.
+- **A click handler on the card.** Rejected as the default: it needs JavaScript, and users of
+  middle-click, "open in new tab" and link previews lose them. It does allow text selection;
+  see the open questions.
+- **`role="link"` on the card element.** Rejected: ARIA cannot give a `<div>` real link
+  behavior, and it breaks the first rule of ARIA use
+  ([Using ARIA](https://www.w3.org/TR/using-aria/#rule1)).
+
+### Prior art
+
+- Heydon Pickering, [Inclusive Components: Cards](https://inclusive-components.design/cards/),
+  which describes both the pseudo-element overlay and the "redundant click event".
+- [WHATWG `article` element](https://html.spec.whatwg.org/multipage/sections.html#the-article-element).
+- [WCAG 2.2 Understanding 2.4.4 Link Purpose (In Context)](https://www.w3.org/WAI/WCAG22/Understanding/link-purpose-in-context.html)
+  and [2.4.7 Focus Visible](https://www.w3.org/WAI/WCAG22/Understanding/focus-visible.html).
+- [W3C images tutorial: decorative images](https://www.w3.org/WAI/tutorials/images/decorative/).
+
+### Mapping to a future standard
+
+`data-card="link"` describes "this region activates its primary link". If HTML gains a way to
+declare a block-level click target that delegates to a link (an idea discussed in Open UI and
+elsewhere), the attribute would map onto it and the pseudo-element would go away.
+
+### Open questions
+
+- Text in a link card cannot be selected with the mouse, because the overlay sits on top.
+  Should a variant use the redundant click event (script) instead to allow selection?
+- Should the card expose a hover style for touch users, who have no hover?
+- Should cards in a list be `<li>` with `data-card`, so the list count is announced?
+
+## Code highlighting
+
+Page: https://odonckers.github.io/domestic-ui/explainers/code-highlighting.html
+
+Status: shipped in domestic-ui as CSS only. The page registers the ranges.
+CSS: [`css/base/typography.css`](https://odonckers.github.io/domestic-ui/components/base.md) ·
+Tokens: [`css/tokens/semantic.css`](https://odonckers.github.io/domestic-ui/tokens/semantic.md) ·
+Example: [`examples/base.html`](https://odonckers.github.io/domestic-ui/components/base.md)
+
+The key words MUST, MUST NOT, SHOULD, SHOULD NOT and MAY are to be interpreted as described in
+[RFC 2119](https://www.rfc-editor.org/rfc/rfc2119) and [RFC 8174](https://www.rfc-editor.org/rfc/rfc8174)
+when, and only when, they appear in all capitals.
+
+### Problem
+
+Code samples read faster when keywords, strings and tags stand out. Most highlighters wrap every
+token in a `<span class="...">`, which multiplies the DOM, ties the markup to one library's class
+names, and puts colors in a theme file that ignores the system's tokens and dark scheme. HTML has
+no element or attribute for a token's kind.
+
+### Use cases
+
+- Documentation pages that show HTML, CSS and JavaScript snippets.
+- A product's own help or settings page that shows a config file.
+
+### Goals
+
+- No change to the markup: a `<pre><code>` stays plain text in the DOM.
+- Colors come from semantic tokens, follow the color scheme and can be themed.
+- Every color meets 4.5:1 on the code background in light and dark (WCAG 1.4.3).
+- Without JavaScript the code is plain text, which is fine.
+- No build step for users.
+
+### Non-goals
+
+- A tokenizer. Which ranges get which name is up to the page; the domestic-ui docs site registers
+  them from `site/assets/highlight.js`.
+- Languages other than HTML, CSS and JavaScript, line numbers, and diff markers.
+- Bold or italic tokens: `::highlight()` cannot set `font-weight` or `font-style`.
+
+### Proposed markup and API
+
+The system ships one `::highlight()` rule per name, each setting `color` from a token. The page
+creates [`Highlight`](https://developer.mozilla.org/en-US/docs/Web/API/Highlight) objects from
+`Range`s over the text in `<code>` and registers them in `CSS.highlights` under these names:
+
+| Highlight name | Covers | Token |
+| --- | --- | --- |
+| `dui-code-keyword` | JS keywords (`const`, `return`, `import`), CSS at-rules (`@layer`, `@media`) | `--dui-color-code-keyword` |
+| `dui-code-string` | Quoted strings in JS and CSS, HTML attribute values | `--dui-color-code-string` |
+| `dui-code-comment` | `<!-- -->`, `/* */` and `//` comments | `--dui-color-code-comment` |
+| `dui-code-tag` | HTML tag names, CSS selectors | `--dui-color-code-tag` |
+| `dui-code-attribute` | HTML attribute names | `--dui-color-code-attribute` |
+| `dui-code-property` | CSS properties and custom properties, JS object properties | `--dui-color-code-property` |
+| `dui-code-number` | Numbers with their units (`0.5rem`, `100%`, `42`) | `--dui-color-code-number` |
+| `dui-code-punctuation` | `<`, `>`, `</`, `/>`, `{`, `}`, `(`, `)`, `[`, `]`, `:`, `;`, `,`, `=` | `--dui-color-code-punctuation` |
+
+Anything not covered (CSS keyword values, identifiers, text content) stays `--dui-color-text`.
+A range SHOULD NOT belong to two names; if it does, the later-registered highlight wins
+([priority](https://drafts.csswg.org/css-highlight-api-1/#priorities)).
+
+```js
+const keywords = new Highlight(...rangesFor("keyword"));
+CSS.highlights.set("dui-code-keyword", keywords);
+```
+
+**Our choice:** no `dui-code-value` name. HTML attribute values are strings, and coloring every
+CSS keyword value made declarations harder to scan, not easier.
+
+### Keyboard interaction
+
+None. Highlights do not change focus, selection or the text.
+
+### Accessibility mappings
+
+- Highlights are not in the accessibility tree; screen readers read the plain text, as with no
+  highlighting at all.
+- Color is the only difference between tokens, and nothing depends on it (WCAG 1.4.1).
+- In forced-colors mode every highlight is `CanvasText`.
+- Text selection (`::selection`) still paints over highlights.
+
+### Alternatives considered
+
+- **`<span>` markup with our own classes.** Rejected: many extra elements per snippet, and the
+  markup copied from the docs would carry presentational spans.
+- **Prism or highlight.js classes (`.token.keyword`, `.hljs-keyword`).** Rejected: ties the
+  system to one library's class names and its themes, which do not use our tokens.
+- **Server-side highlighting with inline styles.** Rejected: literal colors bypass theming and
+  the dark scheme.
+
+### Prior art
+
+- [CSS Custom Highlight API Module Level 1](https://drafts.csswg.org/css-highlight-api-1/)
+- [MDN: CSS Custom Highlight API](https://developer.mozilla.org/en-US/docs/Web/API/CSS_Custom_Highlight_API),
+  including its syntax highlighting example.
+- [Prism](https://prismjs.com/) and [highlight.js](https://highlightjs.org/) token names, which
+  the names above loosely follow.
+
+### Open questions
+
+- Should JS template literals and regular expressions get names of their own?
+
+## Combobox (typeahead)
+
+Page: https://odonckers.github.io/domestic-ui/explainers/combobox.html
+
+Status: shipped in domestic-ui as a web component over native markup.
+CSS: [`css/components/molecules/combobox.css`](https://odonckers.github.io/domestic-ui/patterns/typeahead.md) ·
+Script: [`web-components/dui-combobox.js`](https://github.com/odonckers/domestic-ui/blob/main/web-components/dui-combobox.js) ·
+Example: [`examples/molecules/combobox.html`](https://odonckers.github.io/domestic-ui/patterns/typeahead.md)
+
+The key words MUST, MUST NOT, SHOULD, SHOULD NOT and MAY are to be interpreted as described in
+[RFC 2119](https://www.rfc-editor.org/rfc/rfc2119) and [RFC 8174](https://www.rfc-editor.org/rfc/rfc8174)
+when, and only when, they appear in all capitals.
+
+Unlike the other explainers here, this pattern **has** an APG pattern: the
+[APG Combobox pattern](https://www.w3.org/WAI/ARIA/apg/patterns/combobox/), in its
+[list autocomplete variant](https://www.w3.org/WAI/ARIA/apg/patterns/combobox/examples/combobox-autocomplete-list/).
+This file records how domestic-ui maps it onto native HTML and the choices the APG leaves open.
+
+### Problem
+
+HTML can suggest values for a text field: an `<input list>` with a
+[`<datalist>`](https://html.spec.whatwg.org/multipage/form-elements.html#the-datalist-element).
+But the suggestion popup is drawn by the browser. It cannot be styled or themed, it looks and
+filters differently in each engine and on mobile, it cannot show how many suggestions match, and
+its support in assistive technology varies. Authors who need a consistent typeahead build one
+from scratch, and many of those get the ARIA combobox contract wrong: focus moved into the list,
+no `aria-expanded`, or results that change silently.
+
+### Use cases
+
+- Picking a city, a carrier or a product from a known list, while still allowing free text.
+- Searching a long list held by a server: the page loads matching options as the user types.
+- Filling a form field from suggestions, then submitting the form as usual.
+
+### Goals
+
+- The same markup works with JavaScript off, as a native `<input list>`.
+- After the upgrade it follows the APG list autocomplete combobox exactly: focus stays in the
+  input, the active option is conveyed with `aria-activedescendant`.
+- The value is the input's value: forms, labels, `name` and validation do not change.
+- Screen reader users hear how many options match after typing.
+- Works at 320px wide, with targets at least 24 by 24 CSS pixels at every density.
+- No fetch code inside the component; the page decides where options come from.
+
+### Non-goals
+
+- Select-only comboboxes, where the value must be one of the options: use `<select>`.
+- Inline autocomplete (the rest of the top match typed into the input, `aria-autocomplete="both"`).
+- Multiple values, grouped options, or rich option content.
+- Fuzzy matching and ranking.
+
+### Proposed markup and API
+
+- The component MUST wrap a `<label>`, an `<input list="id">` and the `<datalist id="id">` it
+  points to. **Our choice:** `<input list>` + `<datalist>` as the native fallback, not `<select>`,
+  because the value is free text and the upgrade reuses the same input and the same options.
+- The input MUST have an accessible name from its `<label>`. It SHOULD be the last visible child
+  of `<dui-combobox>`: put hints and errors after the component and point at them with
+  `aria-describedby`.
+- Each `<option value>` in the datalist is a suggestion. An option MAY have a `label` that is
+  shown as a hint after the value; filtering matches both.
+- On upgrade the component MUST keep the same `<input>` element, MUST remove its `list`
+  attribute (so the native popup never shows beside the listbox) and MUST add `role="combobox"`,
+  `aria-autocomplete="list"`, `aria-expanded`, `aria-controls` and `autocomplete="off"`.
+- It MUST build a `<ul role="listbox">` after the input, labelled by the same `<label>`, with one
+  `<li role="option">` per option, and a visually hidden `role="status"` region that exists from the
+  upgrade on, before it is first updated.
+- Filtering is built in. **Our choice:** case-insensitive "contains", not "starts with", because
+  users often remember a word from the middle ("York" for "New York"), and the native datalist
+  popups in Chromium and Firefox match the same way.
+- On every `input` the component MUST dispatch `dui-combobox-filter` on itself (bubbles, cancelable,
+  `detail: { query }`). A page that loads options itself MUST cancel it, then replace the options
+  with `element.setOptions(values)` (strings or `{ value, label }` objects) or by changing the
+  datalist's children; the component watches the datalist and re-reads it. While the event is
+  canceled the component shows the options as given, unfiltered.
+- When an option is accepted the component MUST set the input's value and dispatch `change` on the
+  input, so forms and frameworks see the new value.
+- The status region SHOULD say "N results", "1 result" or "No results" once typing pauses
+  (400ms), not on every keystroke.
+- **Our choice:** the listbox is absolutely positioned under the input inside `<dui-combobox>`,
+  not a popover in the top layer. It is exactly as wide as the field, so it never overflows the
+  viewport sideways, and it needs neither anchor positioning nor the popover fallback that
+  centers a panel at the bottom of the viewport. The cost: an ancestor that clips its overflow also
+  clips the list.
+
+```html
+<dui-combobox>
+  <label for="city">City</label>
+  <input type="text" id="city" name="city" list="city-options">
+  <datalist id="city-options">
+    <option value="Amsterdam"></option>
+    <option value="Berlin"></option>
+    <option value="Copenhagen"></option>
+  </datalist>
+</dui-combobox>
+<script type="module" src="web-components/dui-combobox.js"></script>
+```
+
+Options from a server:
+
+```js
+combobox.addEventListener("dui-combobox-filter", async (event) => {
+  event.preventDefault();
+  const response = await fetch(`/cities?q=${encodeURIComponent(event.detail.query)}`);
+  combobox.setOptions(await response.json());
+});
+```
+
+Visuals: the list sits at the popover elevation and fades and grows in like a popover (the zoom is
+dropped under reduced motion; every duration is `0s` with `data-motion="none"`). The active option
+has an outline in the focus color and a tint, so it is not shown by color alone. Option heights
+follow [density](https://odonckers.github.io/domestic-ui/explainers/density.md).
+
+### Keyboard interaction
+
+Focus stays in the input throughout.
+
+- Down Arrow: opens the list and moves to the next option (the first if none); wraps from last to first.
+- Up Arrow: opens the list and moves to the previous option (the last if none); wraps from first to last.
+- Alt+Down Arrow: opens the list without moving to an option. Alt+Up Arrow closes it.
+- Enter: accepts the active option and closes the list. With no active option it does nothing
+  special, so it submits the form.
+- Escape: closes the list; if it is already closed, clears the input (as in the APG example).
+  An empty, closed combobox lets Escape through, so a surrounding dialog still closes.
+- Home / End: move the caret to the start or end of the input, and the list loses its active
+  option. **Our choice:** follow the APG for editable comboboxes, where Home and End belong to the
+  text field ("returns focus to the combobox and places the cursor"), rather than jumping to the
+  first or last option, because the input is free text and the caret keys must keep working.
+  Left and Right Arrow do the same.
+- Typing: filters the options and opens the list when any match.
+- Tab: accepts nothing, closes the list and moves on.
+- Pointer: clicking an option accepts it; focus stays in the input.
+
+### Accessibility mappings
+
+| Element | Role | Name / state |
+| --- | --- | --- |
+| `<input>` | `combobox` | From its `<label>`; `aria-expanded`, `aria-autocomplete="list"`, `aria-controls`, `aria-activedescendant` while an option is active |
+| `<ul>` | `listbox` | The same label (`aria-labelledby`) |
+| `<li>` | `option` | Its value, plus the hint; `aria-selected="true"` on the active option |
+| `<p class="visually-hidden">` | `status` | "5 results", polite ([WCAG 4.1.3](https://www.w3.org/WAI/WCAG22/Understanding/status-messages.html)) |
+
+A screen reader user hears, for example, "City, combobox, collapsed, editable", then after typing
+"ber": "2 results", and on Down Arrow "Berlin, 1 of 2". Following the APG example, `aria-selected`
+marks the option with visual focus; once accepted, the value lives in the input.
+
+### Alternatives considered
+
+- **`<datalist>` alone.** Kept as the no-script fallback. Rejected as the whole answer: the popup
+  cannot be styled, differs between engines, gives no result count and is unreliable with some
+  assistive technology.
+- **`<select>` as the fallback.** Rejected: a select allows only its options and its enhanced form
+  would be a select-only combobox; this pattern is free text with suggestions. Use `<select>` when
+  the value must be one of a fixed set.
+- **Customizable select (`appearance: base-select`).** The
+  [customizable select](https://developer.mozilla.org/en-US/docs/Learn_web_development/Extensions/Forms/Customizable_select)
+  work ([`appearance`](https://developer.mozilla.org/en-US/docs/Web/CSS/appearance),
+  [Open UI explainer](https://open-ui.org/components/customizable-select.explainer/)) makes the
+  `<select>` popup stylable. It is not interoperable yet, and it is still a select: no free text and
+  no typing to filter. When it ships everywhere it is the answer for select-only comboboxes.
+- **Open UI combobox research.** The [Open UI combobox explainer](https://open-ui.org/components/combobox.explainer/)
+  explores a native, stylable combobox element. Nothing has shipped; we follow its direction (a
+  native input plus options in the DOM) so a future element can replace the component.
+- **Moving DOM focus into the list.** Rejected: the APG list autocomplete pattern keeps focus in
+  the input so typing can continue; `aria-activedescendant` conveys the active option.
+- **A popover in the top layer.** Rejected for now; see Our choice above.
+
+### Prior art
+
+- [APG Combobox pattern](https://www.w3.org/WAI/ARIA/apg/patterns/combobox/) and its
+  [editable combobox with list autocomplete example](https://www.w3.org/WAI/ARIA/apg/patterns/combobox/examples/combobox-autocomplete-list/).
+- [GOV.UK accessible-autocomplete](https://github.com/alphagov/accessible-autocomplete).
+- [Adrian Roselli: Under-Engineered Comboboxen?](https://adrianroselli.com/2023/06/under-engineered-comboboxen.html),
+  on how far native `<datalist>` gets you.
+- [MDN `combobox` role](https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Reference/Roles/combobox_role)
+  and [`aria-activedescendant`](https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Reference/Attributes/aria-activedescendant).
+
+### Mapping to a future standard
+
+The contract is "a text input with a list of suggestions it owns". The markup is already the
+native one (`<input list>` and `<datalist>`), so if browsers make the datalist popup stylable and
+accessible, or ship the combobox element Open UI is researching, removing the `<dui-combobox>`
+wrapper and its script is all a page needs to do.
+
+### Open questions
+
+- Should the list flip above the input near the bottom of the viewport? That needs anchor
+  positioning (inside `@supports`) or a popover in the top layer.
+- Should matching text in each option be marked, for example with `<mark>`?
+- Should the component set `aria-busy` on the listbox while the page loads options?
+- Should a select-only combobox wait for customizable `<select>` instead of a second component?
+
+## Density
+
+Page: https://odonckers.github.io/domestic-ui/explainers/density.html
+
+Status: shipped in domestic-ui as semantic tokens and one attribute.
+CSS: the density tokens in [`css/tokens/semantic.css`](https://odonckers.github.io/domestic-ui/tokens/semantic.md) (sections 2 and 4) ·
+Example: [`examples/patterns/density.html`](https://odonckers.github.io/domestic-ui/patterns/density.md)
+
+The key words MUST, MUST NOT, SHOULD, SHOULD NOT and MAY are to be interpreted as described in
+[RFC 2119](https://www.rfc-editor.org/rfc/rfc2119) and [RFC 8174](https://www.rfc-editor.org/rfc/rfc8174)
+when, and only when, they appear in all capitals.
+
+### Problem
+
+Data-heavy screens (tables, admin forms, toolbars) need to show more on one screen than a
+marketing page or a settings form does. There is no web standard for density: no media query, no
+user preference, no HTML attribute. Design systems invent their own, often a second set of
+components or a scaled-down copy of the whole UI, and many make compact controls smaller than
+people can reliably hit, or shrink the text with them.
+
+### Use cases
+
+- An order table with a filter form and a toolbar above it, where comfortable spacing shows ten
+  rows and compact shows fifteen.
+- An app shell whose main area is compact while a settings dialog inside it stays comfortable.
+- A theme that makes controls a little taller everywhere, with compact following it.
+
+### Goals
+
+- One attribute on any element; everything inside follows, including nested components.
+- Density changes space only: control heights, padding, gaps and table cells. Text size never
+  changes ([WCAG 1.4.4](https://www.w3.org/WAI/WCAG22/Understanding/resize-text.html) is about
+  the user's text size, which density must not fight).
+- Compact keeps every target at least 24 by 24 CSS pixels
+  ([WCAG 2.5.8 Target Size (Minimum)](https://www.w3.org/WAI/WCAG22/Understanding/target-size-minimum.html)).
+- Comfortable is the default; no attribute means comfortable.
+- Plain CSS custom properties; themes can retune it.
+
+### Non-goals
+
+- A user-facing density preference. A page MAY offer one and set the attribute itself.
+- Changing type sizes, icon sizes or layout (columns, breakpoints).
+- More than two named levels.
+
+### Proposed markup and API
+
+- `data-density="compact"` on any element MUST tighten every component inside it.
+  `data-density="comfortable"` MUST restore the default values inside a compact area.
+- **Our choice:** an attribute on any ancestor, not a media query, because density follows the
+  task (a data table, a toolbar), not the device or the viewport, and parts of one page often need
+  different densities.
+- The attribute sets one knob, `--dui-density-scale`: `1` comfortable, `0` compact. Components never
+  read the knob. They read density-aware semantic tokens derived from it:
+
+  | Token | Comfortable | Compact | Used by |
+  | --- | --- | --- | --- |
+  | `--dui-size-control` | 44px (`--dui-size-target`) | 32px (`--dui-size-target-small`) | min block size of inputs, selects, buttons, check labels, summaries, tabs, nav, menu, pagination and listbox items |
+  | `--dui-space-control-block` | 0.5rem | 0.25rem | block padding of the same |
+  | `--dui-space-control-inline` | 0.75rem | 0.5rem | inline padding of text fields and items |
+  | `--dui-space-button-inline` | 1rem | 0.75rem | inline padding of buttons and tabs |
+  | `--dui-space-gap` | 0.5rem | 0.25rem | gap between the parts of a control |
+  | `--dui-space-gap-tight` | 0.25rem | 0.125rem | gap and padding in groups: field, toolbar, pagination, menu |
+  | `--dui-space-cell` | 0.5rem | 0.25rem | table cell padding |
+
+- These tokens MUST be re-declared on every `[data-density]` element, as dependent tokens are on
+  `[data-theme]` and `[data-motion]`: a custom property's `var()` references are resolved where it is
+  declared ([CSS Variables, substitution](https://www.w3.org/TR/css-variables-1/#cycles)), so a
+  token computed once on `:root` would not follow a knob changed lower down.
+- Each token interpolates between its comfortable and compact value:
+  `compact + (comfortable − compact) × --dui-density-scale`. A theme MAY set the knob between `0`
+  and `1`; it MUST NOT go below `0`, which could take targets under 24px.
+- Comfortable values come from other semantic tokens (`--dui-size-target`, the space scale), so a
+  theme that changes them moves comfortable density with it.
+- `small` and `large` buttons keep their sizes at every density.
+
+```html
+<main data-density="compact">
+  <table>…</table>
+  <dialog data-density="comfortable">…</dialog>
+</main>
+```
+
+### Keyboard interaction
+
+None. Density changes no behavior.
+
+### Accessibility mappings
+
+None: density is presentation only. It does not change roles, names or states, and it does not
+change text size. Every interactive target stays at least 24 by 24 CSS pixels in compact (32px tall
+controls; checkboxes, radios and switches are targeted through their 32px tall `<label>`).
+`tests/density.spec.js` measures every control in the compact demo.
+
+### Alternatives considered
+
+- **A media query** (for example a viewport width or `pointer: coarse`). Rejected: density is a
+  property of the content, not of the device, and a media query cannot give one part of a page a
+  different density.
+- **[`zoom`](https://developer.mozilla.org/en-US/docs/Web/CSS/zoom) or scaling the root font size.**
+  Rejected: both shrink text along with space, against the user's chosen text size, and scale
+  targets proportionally, so a 44px control at `zoom: 0.5` would be 22px, under the WCAG 2.5.8
+  minimum.
+- **A second set of compact components** (`data-button="compact"` and the like on every component).
+  Rejected: one attribute on an ancestor covers every component, including ones added later.
+- **Separate compact tokens that authors swap by hand.** Rejected: nesting (comfortable inside
+  compact) would need every token overridden twice.
+
+### Prior art
+
+- [Cloudscape Design System: Content density](https://cloudscape.design/foundation/visual-foundation/content-density/),
+  which offers a comfortable and a compact mode.
+- [WCAG 2.2 Understanding 2.5.8 Target Size (Minimum)](https://www.w3.org/WAI/WCAG22/Understanding/target-size-minimum.html).
+- [MDN: Using CSS custom properties](https://developer.mozilla.org/en-US/docs/Web/CSS/Using_CSS_custom_properties)
+  (inheritance and scoping).
+
+### Mapping to a future standard
+
+If a density user preference ever arrives as a media feature, a page would set
+`data-density="compact"` on `:root` inside that media query; nothing else changes.
+
+### Open questions
+
+- Should compact also tighten the flow rhythm between blocks (`--dui-space-m`), or only space
+  inside components, as now?
+- Should there be a third, "spacious" level for touch-first screens?
+- Should `small` buttons get smaller in compact, down to the 24px minimum?
+
+## Drawer
+
+Page: https://odonckers.github.io/domestic-ui/explainers/drawer.html
+
+Status: shipped in domestic-ui as a `<dialog>` variant.
+CSS: [`css/components/molecules/dialog.css`](https://odonckers.github.io/domestic-ui/patterns/dialog.md) ·
+Example: [`examples/molecules/dialog.html`](https://odonckers.github.io/domestic-ui/patterns/dialog.md)
+
+The key words MUST, MUST NOT, SHOULD, SHOULD NOT and MAY are to be interpreted as described in
+[RFC 2119](https://www.rfc-editor.org/rfc/rfc2119) and [RFC 8174](https://www.rfc-editor.org/rfc/rfc8174)
+when, and only when, they appear in all capitals.
+
+### Problem
+
+A drawer (side sheet, off-canvas panel) slides in from an edge of the viewport to hold
+filters, navigation or details. HTML has no drawer element and the APG has no drawer pattern.
+Many implementations are a positioned `<div>` that does not trap focus, does not close on
+Esc, leaves the page behind it reachable, and is hard-coded to the left or right edge.
+
+### Use cases
+
+- Filters for a list, next to the results.
+- Site navigation on small screens.
+- Details of a selected row, without leaving the table.
+
+### Goals
+
+- Everything a modal dialog does: focus moves in, the rest of the page is inert, Esc closes,
+  focus returns to the opener.
+- Start and end edges that follow the writing direction.
+- Full block size of the viewport; the content scrolls with the header kept in view.
+- An open and close transition that is off under reduced motion and harmless where unsupported.
+- No JavaScript.
+
+### Non-goals
+
+- Swipe gestures.
+- Drawers that push the page content aside.
+- Top and bottom sheets.
+
+### Proposed markup and API
+
+- A drawer MUST be a `<dialog>` with `data-dialog="drawer"`, plus `start` or `end`
+  (`end` is the default): `data-dialog="drawer start"`.
+- It MUST have an accessible name, normally `aria-labelledby` pointing at its heading.
+- It SHOULD be opened with `showModal()` or `command="show-modal" commandfor="id"`, so it is modal.
+- It MUST contain a visible way to close it: a `command="close"` button or a
+  `<form method="dialog">` submit button.
+- It MAY have `closedby="any"` so a click on the backdrop closes it. Where `closedby` is not
+  supported, Esc and the close button still work.
+- An optional `<header>` (heading and close button) stays at the top while the body scrolls;
+  an optional `<footer>` holds actions.
+
+```html
+<button type="button" commandfor="filters" command="show-modal">Filters</button>
+<dialog id="filters" data-dialog="drawer end" closedby="any" aria-labelledby="filters-title">
+  <header>
+    <h2 id="filters-title">Filters</h2>
+    <button type="button" commandfor="filters" command="close">Close</button>
+  </header>
+  <form method="dialog">
+    …
+    <footer><button type="submit">Apply</button></footer>
+  </form>
+</dialog>
+```
+
+**Our choice:** a drawer is a dialog variant, not a new element, because every behavior users
+rely on (inertness, focus, Esc, the top layer) already comes with `<dialog>`.
+
+### Keyboard interaction
+
+- Enter / Space on the opener: opens the drawer and moves focus to its first focusable element
+  (or the element with `autofocus`).
+- Tab / Shift+Tab: move between focusable elements inside the drawer.
+- Esc: closes the drawer and returns focus to the opener.
+
+### Accessibility mappings
+
+| Element | Role | Name / state |
+| --- | --- | --- |
+| `<dialog>` opened with `showModal()` | `dialog`, modal | its heading, via `aria-labelledby` |
+| Content outside | inert | not reachable |
+| Close button | `button` | "Close" |
+
+A screen reader user hears, for example, "Filters, dialog" and then the focused control. The
+drawer's position is visual only; nothing about "start" or "end" is announced.
+
+### Alternatives considered
+
+- **A new `<dui-drawer>` element.** Rejected: it would re-implement focus trapping, inertness
+  and Esc, all of which `<dialog>` already does correctly.
+- **A `popover` element positioned at an edge.** Rejected as the default: a popover is not
+  modal, so the page behind stays interactive and is not inert. It MAY be a reasonable
+  non-modal drawer; see the open questions.
+- **`left`/`right` keywords.** Rejected: they break in right-to-left languages. `start` and
+  `end` follow [logical properties](https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_logical_properties_and_values).
+
+### Prior art
+
+- [WHATWG `dialog` element](https://html.spec.whatwg.org/multipage/interactive-elements.html#the-dialog-element)
+  and [MDN `<dialog>`](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/dialog),
+  including `closedby`.
+- [APG Dialog (Modal) pattern](https://www.w3.org/WAI/ARIA/apg/patterns/dialog-modal/).
+- [MDN Invoker Commands API](https://developer.mozilla.org/en-US/docs/Web/API/Invoker_Commands_API).
+- [MDN `@starting-style`](https://developer.mozilla.org/en-US/docs/Web/CSS/@starting-style) and
+  [`transition-behavior`](https://developer.mozilla.org/en-US/docs/Web/CSS/transition-behavior).
+- [WCAG 2.2 Understanding 2.3.3 Animation from Interactions](https://www.w3.org/WAI/WCAG22/Understanding/animation-from-interactions.html).
+
+### Mapping to a future standard
+
+The variant only changes position and motion. It could become a presentational hint on
+`<dialog>` itself, or be expressed entirely in CSS with no attribute at all if a standard
+"edge" placement for top-layer elements appears.
+
+### Open questions
+
+- Swipe to close on touch screens needs script; should a small component offer it?
+- Non-modal drawers (a side panel that leaves the page usable): `dialog.show()` or a popover?
+- Should a `start` drawer used for navigation be closed automatically when the viewport
+  becomes wide enough to show the navigation inline?
+
+## Pagination
+
+Page: https://odonckers.github.io/domestic-ui/explainers/pagination.html
+
+Status: shipped in domestic-ui as a styling contract.
+CSS: [`css/components/molecules/pagination.css`](https://odonckers.github.io/domestic-ui/patterns/pagination.md) ·
+Example: [`examples/molecules/pagination.html`](https://odonckers.github.io/domestic-ui/patterns/pagination.md)
+
+The key words MUST, MUST NOT, SHOULD, SHOULD NOT and MAY are to be interpreted as described in
+[RFC 2119](https://www.rfc-editor.org/rfc/rfc2119) and [RFC 8174](https://www.rfc-editor.org/rfc/rfc8174)
+when, and only when, they appear in all capitals.
+
+### Problem
+
+Long lists and search results are split into pages. HTML has `rel="prev"` and `rel="next"`,
+and ARIA has `aria-current="page"`, but there is no pagination element and no APG pattern
+that says how to combine them. Common implementations announce bare numbers ("link, 5"),
+use buttons for navigation, or leave a disabled "Previous" link that still receives focus
+and goes nowhere.
+
+### Use cases
+
+- Search results with ten pages.
+- An archive with hundreds of pages, where only nearby page numbers are shown.
+- A table of records loaded one page at a time from the server.
+
+### Goals
+
+- Works with plain links and server rendering. No JavaScript.
+- Every link has a complete accessible name ("Page 5", "Next page").
+- The current page is announced as current, and looks different by more than color.
+- Disabled ends are not focusable and not announced as links.
+- Targets are at least 44 by 44 CSS pixels.
+
+### Non-goals
+
+- Deciding which page numbers to show (that is server logic).
+- "Load more" buttons and infinite scroll.
+- Client-side paging of a table already in the page.
+
+### Proposed markup and API
+
+- The container MUST be a `<nav>` with `data-pagination` and an `aria-label`. The label
+  SHOULD be "Pagination", and MUST differ when a page has more than one pagination.
+- Pages MUST be a list (`<ul>` or `<ol>`) of `<li>` items, each with one `<a href>`.
+- Number links MUST have an accessible name that includes "Page", for example with a
+  visually hidden "Page " before the number.
+- The current page link MUST have `aria-current="page"`. **Our choice:** it stays a link, so it
+  is announced in place and the list count does not change between pages.
+- Previous and Next links SHOULD have `rel="prev"` and `rel="next"`, and MUST say "page" in their
+  accessible name.
+- At the first or last page, Previous or Next MUST be an `<a>` without `href` (a
+  [placeholder link](https://html.spec.whatwg.org/multipage/text-level-semantics.html#the-a-element)).
+  It is not focusable and has no link role. **Our choice:** keep it visible, so the row does not
+  shift between pages.
+- A gap in the numbers MAY be `<li aria-hidden="true">…</li>`.
+
+```html
+<nav aria-label="Pagination" data-pagination>
+  <ul>
+    <li><a href="?page=4" rel="prev">Previous<span class="visually-hidden"> page</span></a></li>
+    <li><a href="?page=1"><span class="visually-hidden">Page </span>1</a></li>
+    <li aria-hidden="true">…</li>
+    <li><a href="?page=5" aria-current="page"><span class="visually-hidden">Page </span>5</a></li>
+    <li><a href="?page=6"><span class="visually-hidden">Page </span>6</a></li>
+    <li><a href="?page=6" rel="next">Next<span class="visually-hidden"> page</span></a></li>
+  </ul>
+</nav>
+```
+
+Visuals: links are outlined boxes; the current page is filled with the accent color and bold,
+with an inner focus ring in its text color; a disabled end has muted text (still 4.5:1) and a
+dashed border.
+
+### Keyboard interaction
+
+- Tab: moves to the next page link / Shift+Tab: previous. Disabled ends are skipped.
+- Enter: follows the focused link.
+
+No arrow-key behavior: this is a list of links, not a composite widget.
+
+### Accessibility mappings
+
+| Element | Role | Name / state |
+| --- | --- | --- |
+| `<nav aria-label>` | `navigation` | "Pagination" |
+| `<ul>` | `list` | item count |
+| `<a href>` | `link` | "Page 4", "Previous page" |
+| Current `<a>` | `link`, `aria-current="page"` | "Page 5, current page" |
+| `<a>` without `href` | none (generic) | text only, not focusable |
+| Gap `<li aria-hidden="true">` | hidden | not announced |
+
+A screen reader user hears, for example, "Pagination, navigation, list, 6 items, link, Page 5,
+current page".
+
+### Alternatives considered
+
+- **Buttons instead of links.** Rejected: pages are URLs. Links can be opened in a new tab,
+  bookmarked and crawled, and need no script.
+- **The current page as plain text.** A valid choice (some systems do it). Rejected as the
+  default because the item is then announced without "link", and users who navigate by links
+  skip it.
+- **`aria-disabled="true"` on a real link for disabled ends.** Rejected: the link still has a
+  role and focus, and goes nowhere, so it needs script to block activation. A placeholder link
+  says less and does less, which is right.
+- **Hiding disabled ends.** Rejected: the controls jump position between pages.
+
+### Prior art
+
+- [GOV.UK Design System: Pagination](https://design-system.service.gov.uk/components/pagination/).
+- [WHATWG link types `next` and `prev`](https://html.spec.whatwg.org/multipage/links.html#link-type-next).
+- [MDN `aria-current`](https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Reference/Attributes/aria-current).
+- [WCAG 2.2 Understanding 2.4.4 Link Purpose (In Context)](https://www.w3.org/WAI/WCAG22/Understanding/link-purpose-in-context.html)
+  and [2.5.8 Target Size (Minimum)](https://www.w3.org/WAI/WCAG22/Understanding/target-size-minimum.html).
+
+### Mapping to a future standard
+
+The contract is "a navigation landmark of page links with one current page". The names already
+used (`nav`, `aria-current`, `rel`) are the standard ones; a future native element would need
+none of the `data-pagination` styling hooks.
+
+### Open questions
+
+- Should "load more" and infinite scroll get their own explainer, including focus management
+  and a live region for new items?
+- For very long ranges, should there be a "go to page" form instead of more numbers?
+- Search engines no longer use `rel="prev"`/`rel="next"` for indexing; is it still worth
+  recommending for other user agents?
+
+## Split view
+
+Page: https://odonckers.github.io/domestic-ui/explainers/split-view.html
+
+Status: shipped in domestic-ui as two layouts, `data-split` and `data-list-detail`; no resizable divider.
+CSS: [`css/layout/split.css`](https://odonckers.github.io/domestic-ui/patterns/split.md), [`css/layout/list-detail.css`](https://odonckers.github.io/domestic-ui/patterns/list-detail.md) ·
+Examples: [`examples/layouts/split.html`](https://odonckers.github.io/domestic-ui/patterns/split.md),
+[`examples/layouts/list-detail.html`](https://odonckers.github.io/domestic-ui/patterns/list-detail.md)
+
+The key words MUST, MUST NOT, SHOULD, SHOULD NOT and MAY are to be interpreted as described in
+[RFC 2119](https://www.rfc-editor.org/rfc/rfc2119) and [RFC 8174](https://www.rfc-editor.org/rfc/rfc8174)
+when, and only when, they appear in all capitals.
+
+### Problem
+
+Business applications show two related things at once: an invoice beside its payments, a list of orders
+beside the open order, a form beside its preview. HTML has no element for "two regions side by side", and
+the APG has a pattern only for the draggable divider between them
+([Window Splitter](https://www.w3.org/WAI/ARIA/apg/patterns/windowsplitter/)), not for the layout itself.
+Common implementations:
+
+- switch to a stacked layout with a viewport media query, so the split breaks when it sits in a narrower
+  region (a dialog, a sidebar layout, the main area of an app shell);
+- reorder the regions visually with `order` or grid placement, so the reading and Tab order no longer
+  match what is on screen;
+- make the second region a fixed-height scroller at every width, so phones get a scroll area inside a
+  scroll area;
+- add a draggable divider that only works with a mouse.
+
+### Use cases
+
+- An invoice with its line items beside the payment history (`2:1`).
+- Shipping and billing addresses next to each other (`1:1`).
+- A short customer summary beside a long activity feed (`1:2`).
+- A list of orders beside the selected order, where each list item is a link to the order's URL
+  (list-detail).
+- A settings page: links to its sections beside the forms that edit them (list-detail of in-page links).
+
+### Goals
+
+- Two regions side by side when their wrapper is wide enough, stacked when it is not, from 320px up,
+  whatever the viewport size ([WCAG 1.4.10 Reflow](https://www.w3.org/WAI/WCAG22/Understanding/reflow.html)).
+- A short list of ratios that keeps splits consistent across an application.
+- Source order is the reading and Tab order in both arrangements
+  ([1.3.2 Meaningful Sequence](https://www.w3.org/WAI/WCAG22/Understanding/meaningful-sequence.html),
+  [2.4.3 Focus Order](https://www.w3.org/WAI/WCAG22/Understanding/focus-order.html)).
+- Each region is a landmark screen reader users can jump to.
+- For list-detail: real links, so URLs, history and the no-JavaScript case work; the detail scrolls on its
+  own when side by side, so a long list does not push it out of view.
+- No JavaScript.
+
+### Non-goals
+
+- A resizable or collapsible divider (see [Open questions](#open-questions)).
+- More than two regions; nest a split inside a region instead.
+- Remembering a user's preferred ratio.
+- Swapping the order of the regions at some widths.
+
+### Proposed markup and API
+
+#### Split
+
+`data-split` on a wrapper of exactly two regions:
+
+```html
+<div data-split="2:1">
+  <section aria-labelledby="invoice-title">
+    <h2 id="invoice-title">Invoice INV-2025-0318</h2>
+    …
+  </section>
+  <aside aria-labelledby="payments-title">
+    <h2 id="payments-title">Payments</h2>
+    …
+  </aside>
+</div>
+```
+
+- The value MUST be empty, `1:1`, `1:2` or `2:1`: the share of the inline size each region takes, in source
+  order. Empty means `1:1`.
+- The wrapper MUST have exactly two element children. Each SHOULD be a `<section>` named by its heading
+  with `aria-labelledby`, or an `<aside>` when it is complementary to the other.
+- The regions MUST be side by side when the wrapper is at least 40rem wide, and stacked, first region on
+  top, when it is narrower. Implementations SHOULD decide this with a container query on the wrapper,
+  not a viewport media query.
+- Authors MUST NOT reorder the regions with CSS.
+
+#### List-detail
+
+`data-list-detail` on a wrapper of a list and a detail:
+
+```html
+<div data-list-detail>
+  <nav aria-label="Orders">
+    <ul>
+      <li><a href="?order=1042" aria-current="page">Order 1042 <small>Ada Lovelace</small></a></li>
+      <li><a href="?order=1041">Order 1041 <small>Alan Turing</small></a></li>
+    </ul>
+  </nav>
+  <section aria-labelledby="order-title" tabindex="0">
+    <h2 id="order-title">Order 1042</h2>
+    …
+  </section>
+</div>
+```
+
+- The first child MUST hold a `<ul>` or `<ol>` whose items are each one `<a href>`; it SHOULD be a
+  `<nav>` with an `aria-label`. Items MAY be `<button>`s only when the detail has no URL of its own.
+- The selected item MUST have `aria-current="page"` (on a link) or `aria-current="true"` (on a button), and
+  MUST be shown with more than color: implementations draw an accent bar, a tint and bold text.
+- The second child MUST be a `<section>` or `<article>` named by its heading.
+- When side by side (wrapper at least 40rem), the detail sticks to the top of its scroll area and is at most
+  `--dui-size-pane` (the small viewport height) tall, scrolling on its own. It SHOULD then have
+  `tabindex="0"` so keyboard users can scroll it. When stacked it is part of the page and does not scroll
+  by itself.
+- Selecting an item SHOULD load the item's URL. A page that swaps the detail with script MUST update
+  `aria-current` and the URL, and MUST NOT move focus without a page load.
+
+### Keyboard interaction
+
+No new keys. Tab follows source order:
+
+| Key | Action |
+| --- | --- |
+| <kbd>Tab</kbd> | Split: through the first region, then the second. List-detail: through the list links, then into the detail pane and its contents |
+| <kbd>Enter</kbd> | On a list link: opens that item's detail |
+| Arrow keys, <kbd>Page Up</kbd> / <kbd>Page Down</kbd> | Scroll the detail pane once it has focus |
+
+### Accessibility mappings
+
+| Markup | Role | Name | State |
+| --- | --- | --- | --- |
+| `<section aria-labelledby>` | `region` ([HTML-AAM](https://www.w3.org/TR/html-aam-1.0/#el-section)) | its heading | none |
+| `<aside aria-labelledby>` | `complementary` ([HTML-AAM](https://www.w3.org/TR/html-aam-1.0/#el-aside)) | its heading | none |
+| `<nav aria-label>` | `navigation` | the label ("Orders") | none |
+| `<a aria-current="page">` | `link` | its text | current page ([MDN](https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Reference/Attributes/aria-current)) |
+| wrapper (`<div>`) | none (generic) | none | none |
+
+A screen reader user hears the landmarks in source order whatever the arrangement, and "current page" on the
+selected item.
+
+### Alternatives considered
+
+- **A draggable divider ([APG Window Splitter](https://www.w3.org/WAI/ARIA/apg/patterns/windowsplitter/)).**
+  A focusable `role="separator"` with `aria-valuenow`, `aria-valuemin`, `aria-valuemax` and
+  `aria-controls`, moved with the arrow keys, <kbd>Home</kbd>, <kbd>End</kbd> and (optionally)
+  <kbd>Enter</kbd> to collapse. It needs script for both the keys and the pointer, a minimum size for each
+  pane, and storage for the chosen position. Rejected for now: the use cases above are served by fixed
+  ratios, and a half-built splitter is worse than none. It is the documented path if one is added.
+- **CSS [`resize`](https://developer.mozilla.org/en-US/docs/Web/CSS/resize) on the first region.** Gives
+  a resize handle with no script, but only to pointer users: the handle cannot be focused or operated from
+  the keyboard and has no accessible name or value, so it fails
+  [2.1.1 Keyboard](https://www.w3.org/WAI/WCAG22/Understanding/keyboard.html) as the only way to resize.
+  It also needs `overflow` other than `visible`, clipping focus rings. Rejected.
+- **Flexbox with a wrapping threshold** ([Every Layout's Switcher](https://every-layout.dev/layouts/switcher/)
+  and [Sidebar](https://every-layout.dev/layouts/sidebar/), built on
+  [flexbox](https://developer.mozilla.org/en-US/docs/Web/CSS/Guides/Flexible_box_layout)). Switches
+  without any query, and the threshold can be a custom property. Rejected because the switch cannot change
+  anything else (the list-detail pane must stop scrolling on its own when stacked), and exact ratios with a
+  gap are harder to keep than with grid tracks. Container queries were not interoperable when those
+  techniques were written; they are now.
+- **A viewport media query.** Simple, but wrong for a split inside a narrower region, which is the common
+  case inside an app shell. Rejected in favor of
+  [container queries](https://developer.mozilla.org/en-US/docs/Web/CSS/Guides/Containment/Container_queries).
+- **A free ratio as a custom property** (`--split-ratio: 0.4`). Rejected: three ratios cover the use cases,
+  and a closed list keeps an application's screens consistent.
+
+### Prior art
+
+- [APG Window Splitter pattern](https://www.w3.org/WAI/ARIA/apg/patterns/windowsplitter/): the keyboard
+  and ARIA contract for a movable divider.
+- [MDN `separator` role](https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Reference/Roles/separator_role):
+  a focusable separator is a widget with a value.
+- [Every Layout: The Sidebar](https://every-layout.dev/layouts/sidebar/) and
+  [The Switcher](https://every-layout.dev/layouts/switcher/): intrinsic two-region layouts without queries.
+- [Primer SplitPageLayout](https://primer.style/product/components/split-page-layout/): a pane beside
+  content, stacked on narrow screens, with an optional resizable pane.
+- [Apple Human Interface Guidelines: Split views](https://developer.apple.com/design/human-interface-guidelines/split-views):
+  list and detail columns that collapse to one on compact widths.
+
+### Open questions
+
+- **A resizable divider.** If added, it MUST follow the APG Window Splitter pattern (a focusable
+  `role="separator"` with a value, arrow keys, and a pointer handle at least 24 by 24 CSS pixels), and would
+  be a small web component around the existing `data-split` markup, with the fixed ratio as the no-script
+  fallback. Where to store the position (URL, `localStorage`, server) is open.
+- **Breakpoints as tokens.** Container query conditions cannot read custom properties, so the 40rem
+  switch is a length in the CSS. A future
+  [CSS Conditional Rules Level 5](https://drafts.csswg.org/css-conditional-5/) feature or custom media
+  queries could let a theme move it.
+- **Collapsing the list.** On a medium width a list-detail could hide its list behind a button (a drawer)
+  instead of stacking. That is the app shell's job (a later session) and may reuse the
+  [drawer](https://odonckers.github.io/domestic-ui/explainers/drawer.md).
+- **Focus after a selection without a page load.** Whether moving focus to the detail heading or keeping it
+  on the list link is better for screen reader users needs testing with users; the current rule (leave it)
+  is the conservative one.
+
+## Toast
+
+Page: https://odonckers.github.io/domestic-ui/explainers/toast.html
+
+Status: shipped in domestic-ui as a CSS region plus a small web component.
+CSS: [`css/components/molecules/alerts.css`](https://odonckers.github.io/domestic-ui/patterns/alerts.md) ·
+Script: [`web-components/dui-toaster.js`](https://github.com/odonckers/domestic-ui/blob/main/web-components/dui-toaster.js) ·
+Example: [`examples/molecules/alerts.html`](https://odonckers.github.io/domestic-ui/patterns/alerts.md)
+
+The key words MUST, MUST NOT, SHOULD, SHOULD NOT and MAY are to be interpreted as described in
+[RFC 2119](https://www.rfc-editor.org/rfc/rfc2119) and [RFC 8174](https://www.rfc-editor.org/rfc/rfc8174)
+when, and only when, they appear in all capitals.
+
+### Problem
+
+After an action ("Link copied", "Export started") apps show a short message in a corner of the
+screen. HTML has live regions (`role="status"`, `role="alert"`) but no toast element, and the APG
+has no toast pattern. Common implementations create the live region at the same moment as the
+message, so screen readers stay silent; dismiss the message after a few seconds, before some
+users have read it; move focus to the message; or say "error" only with red.
+
+### Use cases
+
+- Confirming a background action: "Draft saved."
+- Reporting that something started and will finish later: "Export started. We will email you."
+- Reporting a recoverable failure: "Sync failed. Check your connection."
+- A server-rendered "flash" message after a form post.
+
+### Goals
+
+- Every message is announced, without moving focus (WCAG 4.1.3).
+- No message disappears on a timer (WCAG 2.2.1).
+- The tone is a word as well as a color and an icon (WCAG 1.4.1).
+- Each message can be dismissed, and focus goes somewhere sensible afterwards (WCAG 2.4.3).
+- Server-rendered messages work without JavaScript.
+
+### Non-goals
+
+- Messages with actions such as "Undo" (see the open questions).
+- Queueing, de-duplication, or a maximum number of messages.
+- Errors that block the user: those belong next to their cause, in an inline `role="alert"`.
+
+### Proposed markup and API
+
+- The region MUST be in the page from the start, before any message is added:
+  `<dui-toaster data-alert="toasts" role="status"></dui-toaster>`. The component adds
+  `role="status"` if it is missing. `data-alert="toasts"` positions it at the bottom inline-end
+  corner and stacks messages, newest last.
+- A message is a child with a tone, `data-alert="info | success | warning | danger"`, whose text
+  MUST start with a word for the tone ("Success:").
+- `element.show(text, { tone, prefix })` builds a message and returns it. `tone` defaults to
+  `"info"`. `prefix` defaults to "Info:", "Success:", "Warning:" or "Error:"; pass your own for
+  other languages, or `""` for none.
+- Each message gets a Dismiss button (`data-alert="dismiss"`) whose description is the message.
+  `data-dismiss-label` on the region changes its text (default "Dismiss").
+- `element.dismiss(toast)` removes a message. It first fires `dui-toast-dismiss` on the toast;
+  the event bubbles and is cancelable.
+- Messages MUST NOT be removed on a timer by the component. **Our choice:** no timeout option at
+  all, so nobody can opt into breaking WCAG 2.2.1 by accident.
+- Messages rendered by the server inside the region show with JavaScript off; the component
+  adds their Dismiss buttons when it loads.
+
+```html
+<dui-toaster data-alert="toasts" role="status"></dui-toaster>
+<script type="module" src="web-components/dui-toaster.js"></script>
+<script type="module">
+  document.querySelector("dui-toaster").show("Draft saved.", { tone: "success" });
+</script>
+```
+
+### Keyboard interaction
+
+- A new message never takes focus.
+- Tab: reaches each message's Dismiss button, in order.
+- Enter / Space on Dismiss: removes the message. Focus moves to the next message's Dismiss
+  button, else the previous one, else back to the element that had focus before the user
+  entered the region.
+
+### Accessibility mappings
+
+| Element | Role | Name / state |
+| --- | --- | --- |
+| `<dui-toaster>` | `status` (polite live region, atomic false) | none |
+| Message | none (generic) | its text, read when added |
+| Dismiss button | `button` | "Dismiss", described by the message |
+
+When a message is added, a screen reader user hears it at the next pause, for example
+"Success: Draft saved." Some screen readers also read the new button's text ("Dismiss").
+
+### Alternatives considered
+
+- **A `popover="manual"` region in the top layer.** Rejected as the default: it needs script to
+  show, so server-rendered messages would be hidden with JavaScript off. It would draw above
+  modal dialogs, which a fixed region does not.
+- **Auto-dismiss after a few seconds.** Rejected: users who read slowly, use magnification or
+  are interrupted lose the message (WCAG 2.2.1).
+- **`role="alert"` for every message.** Rejected: assertive announcements interrupt whatever the
+  user is doing. Use `role="alert"` only for urgent errors, inline.
+- **Moving focus to each message.** Rejected: it pulls keyboard and screen reader users away from
+  their task for a message that needs no action.
+
+### Prior art
+
+- Heydon Pickering, [Inclusive Components: Notifications](https://inclusive-components.design/notifications/).
+- [MDN `status` role](https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Reference/Roles/status_role)
+  and [`alert` role](https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Reference/Roles/alert_role).
+- [WCAG 2.2 Understanding 4.1.3 Status Messages](https://www.w3.org/WAI/WCAG22/Understanding/status-messages.html),
+  [2.2.1 Timing Adjustable](https://www.w3.org/WAI/WCAG22/Understanding/timing-adjustable.html)
+  and techniques [ARIA22](https://www.w3.org/WAI/WCAG22/Techniques/aria/ARIA22) and
+  [ARIA19](https://www.w3.org/WAI/WCAG22/Techniques/aria/ARIA19).
+- [Open UI](https://open-ui.org/), where toast and notification components have been discussed.
+
+### Mapping to a future standard
+
+The region is "a live region for transient status messages, positioned at a viewport edge".
+If HTML or Open UI standardizes a toast or notification element, `<dui-toaster>` would map to it
+and `show()` would become that element's method or a declarative child.
+
+### Open questions
+
+- While a modal `<dialog>` is open, everything outside it is inert, including the region, so its
+  messages are neither announced nor dismissible. Should the component move the region into the
+  open dialog?
+- Should the Dismiss button be kept out of the announcement (for example by adding it a moment
+  after the text)?
+- Messages with an action ("Undo") need a way to reach them quickly; is a keyboard shortcut
+  acceptable, and how is it discovered?
+- Should there be a limit on the number of messages kept on screen?
