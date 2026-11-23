@@ -190,7 +190,10 @@ export const plainText = (text) => unescapeHtml(inline(text).replace(/<[^>]*>/g,
  * @param {Set<string>} ids
  */
 export function uniqueId(text, ids) {
-  const base = slugify(text) || "section";
+  const slug = slugify(text) || "section";
+  // Version headings ("0.1.0 - 2026-11-23" in the changelog) would start with a digit; html-validate's
+  // valid-id rule wants a letter first, so they read "v010-2026-11-23".
+  const base = /^\d/.test(slug) ? `v${slug}` : slug;
   let id = base;
   for (let n = 2; ids.has(id); n++) id = `${base}-${n}`;
   ids.add(id);
