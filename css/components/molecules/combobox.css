@@ -105,7 +105,7 @@ dui-combobox > [role="listbox"] {
   overscroll-behavior: contain;
   list-style: none;
   background-color: var(--dui-elevation-popover-surface);
-  border: var(--dui-border-width) solid var(--dui-color-border);
+  border: var(--dui-border-width) solid transparent;
   border-radius: var(--dui-radius-surface);
   box-shadow: var(--dui-elevation-popover);
   transform-origin: top center;

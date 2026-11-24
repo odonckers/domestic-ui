@@ -102,9 +102,8 @@
   --dui-size-pane: var(--dui-size-100svh); /* Max block size of a pane that scrolls on its own beside others, such as the detail of a list-detail or a data-scroll="block inline" table */
 
   /* Shape */
-  --dui-radius-control: var(--dui-radius-2);
-  --dui-radius-surface: var(--dui-radius-3);
-  --dui-radius-pill: var(--dui-radius-round);
+  --dui-radius-scale: var(--dui-factor-1); /* Radius knob: multiplies the control and surface radii. 1 is the default, 0 gives square corners, 1.5 rounder */
+  --dui-radius-pill: var(--dui-radius-round); /* Fully rounded ends; not scaled, so pills stay round */
   --dui-border-width: var(--dui-border-1);
   --dui-border-width-emphasis: var(--dui-border-4);
   --dui-border-width-indicator: var(--dui-border-3);
@@ -123,6 +122,9 @@
   --dui-motion-easing-standard: var(--dui-easing-ease-out); /* Easing for state changes that stay on screen: hover, press, switch */
   --dui-motion-easing-enter: var(--dui-easing-decelerate); /* Easing for things arriving: dialogs, drawers, popovers, toasts */
   --dui-motion-easing-exit: var(--dui-easing-accelerate); /* Easing for things leaving */
+
+  /* Floating panels: sidebars and side panels inset from the frame edge */
+  --dui-space-panel-inset: var(--dui-space-xs); /* Gap between a floating panel and the viewport or frame edge */
 
   /* Elevation knobs */
   --dui-elevation-strength: var(--dui-mix-100); /* How much of --dui-color-shadow each shadow uses, 0% to 100% */
@@ -167,6 +169,8 @@
   --dui-color-accent-hover: oklch(from var(--dui-color-accent) calc(l - 0.02) c h); /* Accent solid hover. Our choice: 0.02 darker in OKLCH lightness, so white text stays 4.5:1 */
   --dui-color-primary-hover: light-dark(oklch(from var(--dui-color-primary) 32% calc(c + 0.002) h), oklch(from var(--dui-color-primary) 86% calc(c + 0.004) h)); /* Primary fill hover, same hue as the primary */
   --dui-font-heading: var(--dui-font-body);
+  --dui-radius-control: calc(var(--dui-radius-2) * var(--dui-radius-scale)); /* Controls, buttons, inline code: 8px times the radius scale */
+  --dui-radius-surface: calc(var(--dui-radius-3) * var(--dui-radius-scale)); /* Panels, cards, pre, dialogs, details, media: 12px times the radius scale */
 
   /* Tinted surfaces for status badges: a little of the tone mixed into the surface. */
   --dui-color-accent-surface: color-mix(in oklab, var(--dui-color-accent) var(--dui-tint-amount), var(--dui-color-surface));
@@ -187,17 +191,24 @@
   --dui-motion-zoom: calc(1 - (1 - var(--dui-ratio-95)) * var(--dui-motion-movement)); /* Scale a popover or menu grows from; 1 (no zoom) with reduced motion */
 
   /*
-   * Elevation: a shadow and a surface per level. Light scheme: the shadow
-   * does the work and every level keeps --dui-color-surface. Dark scheme:
-   * shadows barely show on a dark page, so each level also mixes
-   * --dui-elevation-surface-step more of the text color into its surface.
+   * Elevation: a shadow and a surface per level. Every level from 1 up is
+   * a 1px ring in the hairline color (--dui-color-border) plus layers with
+   * a negative spread, so an elevated component needs no border of its
+   * own. Light scheme: the shadow does the work and every level keeps
+   * --dui-color-surface. Dark scheme: shadows barely show on a dark page,
+   * so each level also mixes --dui-elevation-surface-step more of the
+   * text color into its surface, and levels 2 to 4 add a 1px top inset
+   * highlight. The ring reads slightly brighter in dark, because the dark
+   * hairline is the light text color at low alpha.
    */
   --dui-elevation-shadow-color: color-mix(in srgb, var(--dui-color-shadow) var(--dui-elevation-strength), transparent); /* Shadow color after strength; retune --dui-color-shadow and --dui-elevation-strength */
+  --dui-elevation-ring: var(--dui-shadow-ring) var(--dui-color-border); /* The 1px hairline ring included in every elevated role */
+  --dui-elevation-highlight: var(--dui-shadow-highlight) light-dark(transparent, var(--dui-color-neutral-dark-12-a6)); /* Dark scheme only: a 1px top inset highlight on levels 2 to 4 */
   --dui-elevation-0: var(--dui-shadow-none); /* Level 0, flat: no shadow */
-  --dui-elevation-1: var(--dui-shadow-1-key) var(--dui-elevation-shadow-color), var(--dui-shadow-1-ambient) var(--dui-elevation-shadow-color); /* Level 1 shadow */
-  --dui-elevation-2: var(--dui-shadow-2-key) var(--dui-elevation-shadow-color), var(--dui-shadow-2-ambient) var(--dui-elevation-shadow-color); /* Level 2 shadow */
-  --dui-elevation-3: var(--dui-shadow-3-key) var(--dui-elevation-shadow-color), var(--dui-shadow-3-ambient) var(--dui-elevation-shadow-color); /* Level 3 shadow */
-  --dui-elevation-4: var(--dui-shadow-4-key) var(--dui-elevation-shadow-color), var(--dui-shadow-4-ambient) var(--dui-elevation-shadow-color); /* Level 4 shadow */
+  --dui-elevation-1: var(--dui-elevation-ring), var(--dui-shadow-1-key) var(--dui-elevation-shadow-color); /* Level 1: the ring and a 1px shadow */
+  --dui-elevation-2: var(--dui-elevation-highlight), var(--dui-elevation-ring), var(--dui-shadow-2-key) var(--dui-elevation-shadow-color), var(--dui-shadow-2-ambient) var(--dui-elevation-shadow-color); /* Level 2: ring, two layers, dark highlight */
+  --dui-elevation-3: var(--dui-elevation-highlight), var(--dui-elevation-ring), var(--dui-shadow-3-key) var(--dui-elevation-shadow-color), var(--dui-shadow-3-ambient) var(--dui-elevation-shadow-color); /* Level 3: ring, two layers, dark highlight */
+  --dui-elevation-4: var(--dui-elevation-highlight), var(--dui-elevation-ring), var(--dui-shadow-4-key) var(--dui-elevation-shadow-color), var(--dui-shadow-4-ambient) var(--dui-elevation-shadow-color); /* Level 4: ring, two layers, dark highlight */
   --dui-elevation-0-surface: var(--dui-color-surface); /* Level 0 surface: the page */
   --dui-elevation-1-surface: light-dark(var(--dui-color-surface), color-mix(in oklab, var(--dui-color-text) var(--dui-elevation-surface-step), var(--dui-color-surface))); /* Level 1 surface: one step lighter in dark */
   --dui-elevation-2-surface: light-dark(var(--dui-color-surface), color-mix(in oklab, var(--dui-color-text) calc(var(--dui-elevation-surface-step) * 2), var(--dui-color-surface))); /* Level 2 surface: two steps lighter in dark */
@@ -209,6 +220,8 @@
   --dui-elevation-flat-surface: var(--dui-elevation-0-surface); /* Surface of content on the page */
   --dui-elevation-raised: var(--dui-elevation-1); /* Shadow of cards */
   --dui-elevation-raised-surface: var(--dui-elevation-1-surface); /* Surface of cards */
+  --dui-elevation-panel: var(--dui-elevation-2); /* Shadow of floating panels: an app shell's sidebars, the docs sidebar and table of contents */
+  --dui-elevation-panel-surface: var(--dui-color-surface-raised); /* Surface of floating panels: the raised surface, one step off the page */
   --dui-elevation-overlay: var(--dui-elevation-2); /* Shadow of toasts and other non-modal layers over the page */
   --dui-elevation-overlay-surface: var(--dui-elevation-2-surface); /* Surface of non-modal layers over the page */
   --dui-elevation-popover: var(--dui-elevation-3); /* Shadow of popovers, menus, tooltips and nav dropdowns */

@@ -6,8 +6,8 @@
 /*
  * Dialog. Open with showModal() or a command="show-modal" button so the
  * browser handles focus, Escape and inertness. Dialog elevation: the
- * level 4 shadow and surface; the border stays, so forced colors (which
- * drop box-shadow) still draw the edge.
+ * level 4 shadow and surface, with the role's 1px ring; the transparent
+ * border is what forced colors (which drop box-shadow) paint.
  * https://developer.mozilla.org/en-US/docs/Web/HTML/Element/dialog
  * APG modal dialog pattern: https://www.w3.org/WAI/ARIA/apg/patterns/dialog-modal/
  */
@@ -18,7 +18,7 @@ dialog {
   padding: var(--dui-space-l);
   background-color: var(--dui-elevation-dialog-surface);
   color: var(--dui-color-text);
-  border: var(--dui-border-width) solid var(--dui-color-border);
+  border: var(--dui-border-width) solid transparent;
   border-radius: var(--dui-radius-surface);
   box-shadow: var(--dui-elevation-dialog);
 }

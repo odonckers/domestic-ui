@@ -118,7 +118,7 @@ export const PAIRS = [
   // control borders and the focus ring on every level's surface and every role's surface.
   // The accent solid is one indigo in both schemes, so on the lightest dark elevation
   // steps it can fall under 3:1. The focus ring uses accent text in dark, which is the pair below.
-  ...[0, 1, 2, 3, 4, "flat", "raised", "overlay", "popover", "dialog"].flatMap((level) => {
+  ...[0, 1, 2, 3, 4, "flat", "raised", "panel", "overlay", "popover", "dialog"].flatMap((level) => {
     const surface = `--dui-elevation-${level}-surface`;
     return [
       ["--dui-color-text", surface, 4.5],

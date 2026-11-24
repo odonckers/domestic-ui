@@ -237,6 +237,9 @@ with a `data-theme` attribute or a `theme-*` class to scope it:
 ```
 
 [`examples/theming.html`](https://odonckers.github.io/domestic-ui/principles/theming.md) shows a full scoped theme next to the default.
+Shape has one knob: `--dui-radius-scale` multiplies `--dui-radius-control` (8px) and
+`--dui-radius-surface` (12px); `0` gives square corners and `1.5` rounder ones, while pills stay round.
+Radix Themes has the same idea ([`--radius-factor`](https://www.radix-ui.com/themes/docs/theme/radius)), for comparison.
 Check your theme's contrast in both schemes; `tests/tokens.spec.js` shows how.
 
 A few semantic tokens are defined in terms of others (`--dui-color-accent-text`,
@@ -327,9 +330,11 @@ may change. Fluid `--dui-step-*` values are `clamp()` expressions; see `primitiv
 | `--dui-size-sidebar` | Inline size of an app shell's primary sidebar beside main | `size-16` (16rem) |
 | `--dui-size-sidebar-aux` | Inline size of an app shell's auxiliary (inline-end) sidebar beside main | `size-20` (20rem) |
 | `--dui-size-pane` | Max block size of a pane that scrolls on its own beside others (the detail of a list-detail when side by side) | `size-100svh` (100svh, the small viewport height) |
-| `--dui-radius-control` | Controls, buttons, inline code | `radius-2` (0.375rem) |
-| `--dui-radius-surface` | Panels, pre, dialog, details, media | `radius-3` (0.625rem) |
-| `--dui-radius-pill` | Fully rounded ends | `radius-round` (999rem) |
+| `--dui-radius-scale` | Radius knob: multiplies the control and surface radii; `0` gives square corners | `factor-1` (1) |
+| `--dui-radius-control` | Controls, buttons, inline code | `radius-2` (0.5rem, 8px) × `--dui-radius-scale` |
+| `--dui-radius-surface` | Panels, cards, pre, dialog, details, media | `radius-3` (0.75rem, 12px) × `--dui-radius-scale` |
+| `--dui-radius-pill` | Fully rounded ends (not scaled) | `radius-round` (999rem) |
+| `--dui-space-panel-inset` | Gap between a floating panel and the viewport or frame edge | `--dui-space-xs` (0.5rem) |
 | `--dui-border-width` | Hairline width | `border-1` (1px) |
 | `--dui-border-width-emphasis` | blockquote rule, alert start rule, invalid field | `border-4` (0.25rem) |
 | `--dui-border-width-indicator` | Selected tab, current nav item (3:1 against the surface) | `border-3` (3px) |
@@ -369,6 +374,8 @@ may change. Fluid `--dui-step-*` values are `clamp()` expressions; see `primitiv
 | `--dui-motion-distance` | How far a dialog or toast lifts as it fades in | `space-4` (0.75rem) × `--dui-motion-movement` |
 | `--dui-motion-zoom` | Scale a popover or menu grows from | 0.95, or 1 when `--dui-motion-movement` is 0 |
 | `--dui-elevation-shadow-color` | Shadow color after strength | `color-mix()` of `--dui-color-shadow` at `--dui-elevation-strength` |
+| `--dui-elevation-ring` | The 1px ring in the hairline color that every elevated level includes | `0 0 0 1px` `--dui-color-border` |
+| `--dui-elevation-highlight` | Dark scheme only: a 1px top inset highlight on levels 2 to 4 | `inset 0 1px 0 0`, transparent in light, the dark text color at 6% in dark |
 | `--dui-size-control` | Min block size of controls, buttons, check labels and nav, menu and listbox items | `--dui-size-target` (44px), `--dui-size-target-small` (32px) when compact |
 | `--dui-space-control-block` | Block padding of controls, buttons and items | `space-3` (0.5rem), `space-2` (0.25rem) when compact |
 | `--dui-space-control-inline` | Inline padding of text fields and items | `space-4` (0.75rem), `space-3` (0.5rem) when compact |
@@ -376,10 +383,12 @@ may change. Fluid `--dui-step-*` values are `clamp()` expressions; see `primitiv
 | `--dui-space-gap` | Gap between the parts of a control (icon and label, check and label) | `space-3` (0.5rem), `space-2` (0.25rem) when compact |
 | `--dui-space-gap-tight` | Gap and padding in groups of controls: field, toolbar, pagination, menu | `space-2` (0.25rem), `space-1` (0.125rem) when compact |
 | `--dui-space-cell` | Table cell padding | `space-3` (0.5rem), `space-2` (0.25rem) when compact |
-| `--dui-elevation-0` … `--dui-elevation-4` | Shadow per level | `none`, then two layers (key and ambient) growing with the level |
+| `--dui-elevation-0` … `--dui-elevation-4` | Shadow per level | `none`; level 1 is the ring and `0 1px 2px -1px`; levels 2 to 4 add the dark highlight, the ring and two layers with a negative spread |
 | `--dui-elevation-0-surface` … `--dui-elevation-4-surface` | Surface per level | light: `--dui-color-surface`<br>dark: `--dui-color-surface` with N × `--dui-elevation-surface-step` of `--dui-color-text` |
 | `--dui-elevation-flat`, `-raised`, `-overlay`, `-popover`, `-dialog` | Shadow by role | levels 0, 1, 2, 3, 4 |
 | `--dui-elevation-flat-surface`, `-raised-surface`, `-overlay-surface`, `-popover-surface`, `-dialog-surface` | Surface by role | level 0 to 4 surfaces |
+| `--dui-elevation-panel` | Shadow of floating panels: app shell sidebars, the docs sidebar and table of contents | `--dui-elevation-2` |
+| `--dui-elevation-panel-surface` | Surface of floating panels | `--dui-color-surface-raised` |
 | `--dui-shadow-raised` | **Deprecated**, removed in the next release: use `--dui-elevation-raised` | `--dui-elevation-1` |
 | `--dui-duration-fast` | **Deprecated**, removed in the next release | `--dui-motion-duration-fast` |
 | `--dui-duration-normal` | **Deprecated**, removed in the next release | `--dui-motion-duration-normal` |
@@ -388,7 +397,7 @@ may change. Fluid `--dui-step-*` values are `clamp()` expressions; see `primitiv
 Derived (re-resolved on each theme scope and on every `[data-motion]` and `[data-density]` element): `--dui-color-accent-text`, `--dui-color-link`,
 `--dui-color-focus`, `--dui-color-accent-hover`, `--dui-color-primary-hover`, `--dui-font-heading`, `--dui-color-accent-surface`,
 `--dui-color-success-surface`, `--dui-color-warning-surface`, `--dui-color-danger-surface`,
-`--dui-color-info-surface`, `--dui-color-surface-inverse`, `--dui-color-text-inverse`, every
+`--dui-color-info-surface`, `--dui-color-surface-inverse`, `--dui-color-text-inverse`, `--dui-radius-control`, `--dui-radius-surface`, every
 `--dui-motion-duration-*`, `--dui-motion-distance`, `--dui-motion-zoom`, every `--dui-elevation-*`
 except the two knobs, the seven density tokens (`--dui-size-control` and the `--dui-space-control-*`,
 `-button-inline`, `-gap*` and `-cell` spaces), and the deprecated aliases.
@@ -499,6 +508,37 @@ In the `<head>` of the live example above.
     --dui-radius-surface: 0.25rem;
   }
 </style>
+```
+
+#### Radius scale
+
+```html
+<div class="grid">
+  <section class="radius-panel stack" data-theme style="--dui-radius-scale: 0" aria-labelledby="radius-0-title">
+    <h3 id="radius-0-title">Scale 0</h3>
+    <p><button type="button">Secondary</button> <button type="submit">Save</button></p>
+    <article data-card>
+      <h4>A card</h4>
+      <p>Square corners.</p>
+    </article>
+  </section>
+  <section class="radius-panel stack" data-theme style="--dui-radius-scale: 1" aria-labelledby="radius-1-title">
+    <h3 id="radius-1-title">Scale 1</h3>
+    <p><button type="button">Secondary</button> <button type="submit">Save</button></p>
+    <article data-card>
+      <h4>A card</h4>
+      <p>The default corners.</p>
+    </article>
+  </section>
+  <section class="radius-panel stack" data-theme style="--dui-radius-scale: 1.5" aria-labelledby="radius-15-title">
+    <h3 id="radius-15-title">Scale 1.5</h3>
+    <p><button type="button">Secondary</button> <button type="submit">Save</button></p>
+    <article data-card>
+      <h4>A card</h4>
+      <p>Rounder corners.</p>
+    </article>
+  </section>
+</div>
 ```
 
 ## Motion
@@ -711,17 +751,27 @@ Elevation says which layer is on top. Five levels, each a
 | `--dui-elevation-2` | `--dui-elevation-overlay` | Toasts |
 | `--dui-elevation-3` | `--dui-elevation-popover` | Popovers, menus, tooltips, nav dropdowns |
 | `--dui-elevation-4` | `--dui-elevation-dialog` | Dialogs and drawers |
+| `--dui-elevation-2` | `--dui-elevation-panel` | Floating sidebars and side panels, on `--dui-elevation-panel-surface` (the raised surface) |
 
 Each has a `-surface` twin (`--dui-elevation-2-surface`, `--dui-elevation-overlay-surface`).
 **Components use the role tokens only**, never the numbers, so a theme can move a role to another level.
 
+- **A ring plus soft layers.** Every level from 1 up is a 1px ring in the hairline color
+  (`--dui-elevation-ring`) plus one or two layers with a negative spread, at 12% alpha or less in
+  light: level 1 is `0 1px 2px -1px`; level 2 `0 2px 4px -2px` and `0 4px 12px -4px`; level 3
+  `0 4px 8px -4px` and `0 12px 24px -8px`; level 4 `0 8px 16px -8px` and `0 24px 48px -12px`. The ring is
+  part of the role, so **an elevated component draws no border of its own**; it keeps a transparent
+  border for forced colors (below). Radix Themes builds its shadows the same way
+  ([shadows](https://www.radix-ui.com/themes/docs/theme/shadows)), for comparison.
 - **Light scheme: the shadow does the work.** Every level keeps `--dui-color-surface`; shadows grow
-  with the level (a tight key shadow and a wide ambient one).
+  with the level.
 - **Dark scheme: lighter surfaces.** Shadows barely show on a dark page, so each level mixes
   `--dui-elevation-surface-step` more of the text color into the surface with
   [`color-mix()`](https://developer.mozilla.org/en-US/docs/Web/CSS/color_value/color-mix)
   ([CSS Color 5](https://www.w3.org/TR/css-color-5/#color-mix)), picked per scheme by
   [`light-dark()`](https://developer.mozilla.org/en-US/docs/Web/CSS/color_value/light-dark).
+  Levels 2 to 4 add a 1px top inset highlight (`--dui-elevation-highlight`) in dark only, and the ring
+  reads slightly brighter because the dark hairline is the light text color at low alpha.
   Text, muted text, links, control borders and the focus ring meet
   [4.5:1](https://www.w3.org/WAI/WCAG22/Understanding/contrast-minimum.html) and
   [3:1](https://www.w3.org/WAI/WCAG22/Understanding/non-text-contrast.html) on every level, in light and
@@ -731,7 +781,11 @@ Each has a `-surface` twin (`--dui-elevation-2-surface`, `--dui-elevation-overla
   scope, like the other dependent tokens.
 - **Forced colors: borders, not shadows.** In [forced colors mode](https://developer.mozilla.org/en-US/docs/Web/CSS/@media/forced-colors)
   `box-shadow` computes to `none` ([CSS Color Adjustment](https://www.w3.org/TR/css-color-adjust-1/#forced-colors-properties)),
-  so every elevated component keeps a border, drawn in `CanvasText` there.
+  so every elevated component keeps a transparent border, which forced colors paints in a system
+  color (`CanvasText`) there.
+- **Floating panels.** `--dui-elevation-panel` and `--dui-elevation-panel-surface`, with
+  `--dui-radius-surface` corners and `--dui-space-panel-inset` from the frame edge, are for sidebars
+  that float on the page background instead of being glued to the viewport edge.
 - **Our choice:** toasts sit at the overlay level, below popovers and dialogs, because they are
   non-modal and must not cover an open menu or dialog.
 - **Our choice:** the dark-scheme step mixes in the text color rather than white, so a theme's tint
@@ -769,6 +823,10 @@ release. [`examples/elevation.html`](https://odonckers.github.io/domestic-ui/pri
         <strong>Level 4: dialog</strong>
         <span class="level-note">Dialogs and drawers. <a href="#levels-title">Link</a></span>
       </li>
+      <li class="level" style="--level-shadow: var(--dui-elevation-panel); --level-surface: var(--dui-elevation-panel-surface)">
+        <strong>Role: panel</strong>
+        <span class="level-note">Floating sidebars and side panels: the level 2 shadow on the raised surface. <a href="#levels-title">Link</a></span>
+      </li>
     </ol>
   </section>
   <section class="panel stack" data-color-scheme="dark" aria-labelledby="dark-title">
@@ -794,6 +852,10 @@ release. [`examples/elevation.html`](https://odonckers.github.io/domestic-ui/pri
         <strong>Level 4: dialog</strong>
         <span class="level-note">Dialogs and drawers. <a href="#levels-title">Link</a></span>
       </li>
+      <li class="level" style="--level-shadow: var(--dui-elevation-panel); --level-surface: var(--dui-elevation-panel-surface)">
+        <strong>Role: panel</strong>
+        <span class="level-note">Floating sidebars and side panels: the level 2 shadow on the raised surface. <a href="#levels-title">Link</a></span>
+      </li>
     </ol>
   </section>
 </div>
@@ -814,7 +876,7 @@ In the `<head>` of the live example above.
     padding: var(--dui-space-m);
     background-color: var(--level-surface);
     color: var(--dui-color-text);
-    border: var(--dui-border-width) solid var(--dui-color-border);
+    border: var(--dui-border-width) solid transparent;
     border-radius: var(--dui-radius-surface);
     box-shadow: var(--level-shadow);
   }
@@ -1236,7 +1298,7 @@ Neutral and indigo each have 12 steps in light and in dark. The step number is t
 
 [Custom properties](https://developer.mozilla.org/en-US/docs/Web/CSS/--*).
 
-165 tokens in [`css/tokens/primitives.css`](https://github.com/odonckers/domestic-ui/blob/main/css/tokens/primitives.css). **Light** and **Dark** resolve every `var()` and take one side of [`light-dark()`](https://developer.mozilla.org/en-US/docs/Web/CSS/color_value/light-dark). Previews are decorative.
+167 tokens in [`css/tokens/primitives.css`](https://github.com/odonckers/domestic-ui/blob/main/css/tokens/primitives.css). **Light** and **Dark** resolve every `var()` and take one side of [`light-dark()`](https://developer.mozilla.org/en-US/docs/Web/CSS/color_value/light-dark). Previews are decorative.
 
 ### Neutral, light. Hue 265
 
@@ -1277,6 +1339,7 @@ Neutral and indigo each have 12 steps in light and in dark. The step number is t
 | `--dui-color-neutral-dark-12-a10` | `oklch(95% 0.004 265deg / 10%)` | `oklch(95% 0.004 265deg / 10%)` | Hairline: the text color at 10% alpha |
 | `--dui-color-neutral-dark-punctuation` | `oklch(83.5% 0.01 265deg)` | `oklch(83.5% 0.01 265deg)` | Code punctuation, lighter than muted text |
 | `--dui-color-neutral-dark-shadow` | `oklch(14% 0.015 265deg / 46%)` | `oklch(14% 0.015 265deg / 46%)` | Shadow tinted with the neutral hue |
+| `--dui-color-neutral-dark-12-a6` | `oklch(95% 0.004 265deg / 6%)` | `oklch(95% 0.004 265deg / 6%)` | Top highlight on raised dark surfaces: the text color at 6% alpha |
 
 ### Indigo, the accent, light. Hue 272
 
@@ -1458,8 +1521,8 @@ Rem, so it follows the user's font size setting.
 | --- | --- | --- | --- |
 | `--dui-radius-0` | `0` | `0` | No description yet. |
 | `--dui-radius-1` | `0.125rem` | `0.125rem` | No description yet. |
-| `--dui-radius-2` | `0.375rem` | `0.375rem` | No description yet. |
-| `--dui-radius-3` | `0.625rem` | `0.625rem` | No description yet. |
+| `--dui-radius-2` | `0.5rem` | `0.5rem` | 8px: controls |
+| `--dui-radius-3` | `0.75rem` | `0.75rem` | 12px: surfaces |
 | `--dui-radius-round` | `999rem` | `999rem` | No description yet. |
 
 ### Border widths
@@ -1502,18 +1565,19 @@ Rem, so it follows the user's font size setting.
 
 ### Shadow geometry
 
-X offset, y offset, blur, spread. The color is added by the semantic elevation tokens. A tight "key" layer and a wide "ambient" layer per level, a common two-light model. <https://developer.mozilla.org/en-US/docs/Web/CSS/box-shadow>.
+X offset, y offset, blur, spread. The color is added by the semantic elevation tokens. Each level is a 1px ring plus one or two layers with a negative spread, so the shadow stays tucked under the edge and reads as a crisp lift rather than a smudge. <https://developer.mozilla.org/en-US/docs/Web/CSS/box-shadow> For comparison: Radix Themes shadows (a 1px ring plus layers, <https://www.radix-ui.com/themes/docs/theme/shadows>) and Tailwind v4 (negative spread, <https://tailwindcss.com/docs/box-shadow>).
 
 | Token | Light | Dark | Description |
 | --- | --- | --- | --- |
-| `--dui-shadow-1-key` | `0 1px 2px 0` | `0 1px 2px 0` | No description yet. |
-| `--dui-shadow-1-ambient` | `0 1px 3px 1px` | `0 1px 3px 1px` | No description yet. |
-| `--dui-shadow-2-key` | `0 1px 3px 0` | `0 1px 3px 0` | No description yet. |
-| `--dui-shadow-2-ambient` | `0 4px 8px 2px` | `0 4px 8px 2px` | No description yet. |
-| `--dui-shadow-3-key` | `0 2px 4px 0` | `0 2px 4px 0` | No description yet. |
-| `--dui-shadow-3-ambient` | `0 8px 16px 2px` | `0 8px 16px 2px` | No description yet. |
-| `--dui-shadow-4-key` | `0 4px 8px 0` | `0 4px 8px 0` | No description yet. |
-| `--dui-shadow-4-ambient` | `0 16px 40px 4px` | `0 16px 40px 4px` | No description yet. |
+| `--dui-shadow-ring` | `0 0 0 1px` | `0 0 0 1px` | The 1px ring every elevated role draws in the hairline color |
+| `--dui-shadow-highlight` | `inset 0 1px 0 0` | `inset 0 1px 0 0` | Dark scheme: a 1px top highlight on levels 2 to 4 |
+| `--dui-shadow-1-key` | `0 1px 2px -1px` | `0 1px 2px -1px` | No description yet. |
+| `--dui-shadow-2-key` | `0 2px 4px -2px` | `0 2px 4px -2px` | No description yet. |
+| `--dui-shadow-2-ambient` | `0 4px 12px -4px` | `0 4px 12px -4px` | No description yet. |
+| `--dui-shadow-3-key` | `0 4px 8px -4px` | `0 4px 8px -4px` | No description yet. |
+| `--dui-shadow-3-ambient` | `0 12px 24px -8px` | `0 12px 24px -8px` | No description yet. |
+| `--dui-shadow-4-key` | `0 8px 16px -8px` | `0 8px 16px -8px` | No description yet. |
+| `--dui-shadow-4-ambient` | `0 24px 48px -12px` | `0 24px 48px -12px` | No description yet. |
 | `--dui-shadow-none` | `none` | `none` | No shadow |
 
 ### Opacity and mix amounts
@@ -1536,7 +1600,7 @@ A theme is an override of these tokens on `:root` or on a scoped element. No reb
 
 Colors use [`light-dark()`](https://developer.mozilla.org/en-US/docs/Web/CSS/color_value/light-dark), which picks a value from the used color-scheme of the element where the token is read.
 
-140 tokens in [`css/tokens/semantic.css`](https://github.com/odonckers/domestic-ui/blob/main/css/tokens/semantic.css). **Light** and **Dark** resolve every `var()` and take one side of [`light-dark()`](https://developer.mozilla.org/en-US/docs/Web/CSS/color_value/light-dark). Previews are decorative. † marks a description taken from the semantic token table in [Theming](https://odonckers.github.io/domestic-ui/principles/theming.md).
+146 tokens in [`css/tokens/semantic.css`](https://github.com/odonckers/domestic-ui/blob/main/css/tokens/semantic.css). **Light** and **Dark** resolve every `var()` and take one side of [`light-dark()`](https://developer.mozilla.org/en-US/docs/Web/CSS/color_value/light-dark). Previews are decorative. † marks a description taken from the semantic token table in [Theming](https://odonckers.github.io/domestic-ui/principles/theming.md).
 
 ### Surfaces and text
 
@@ -1649,9 +1713,8 @@ Colors use [`light-dark()`](https://developer.mozilla.org/en-US/docs/Web/CSS/col
 
 | Token | Light | Dark | Description |
 | --- | --- | --- | --- |
-| `--dui-radius-control` | `0.375rem` | `0.375rem` | Controls, buttons, inline code † |
-| `--dui-radius-surface` | `0.625rem` | `0.625rem` | Panels, pre, dialog, details, media † |
-| `--dui-radius-pill` | `999rem` | `999rem` | Fully rounded ends † |
+| `--dui-radius-scale` | `1` | `1` | Radius knob: multiplies the control and surface radii. 1 is the default, 0 gives square corners, 1.5 rounder |
+| `--dui-radius-pill` | `999rem` | `999rem` | Fully rounded ends; not scaled, so pills stay round |
 | `--dui-border-width` | `1px` | `1px` | Hairline width † |
 | `--dui-border-width-emphasis` | `0.25rem` | `0.25rem` | blockquote rule, alert start rule, invalid field † |
 | `--dui-border-width-indicator` | `3px` | `3px` | Selected tab, current nav item (3:1 against the surface) † |
@@ -1680,6 +1743,14 @@ Durations and distances (section 2) are derived from these.
 | `--dui-motion-easing-standard` | `cubic-bezier(0.2, 0, 0, 1)` | `cubic-bezier(0.2, 0, 0, 1)` | Easing for state changes that stay on screen: hover, press, switch |
 | `--dui-motion-easing-enter` | `cubic-bezier(0, 0, 0, 1)` | `cubic-bezier(0, 0, 0, 1)` | Easing for things arriving: dialogs, drawers, popovers, toasts |
 | `--dui-motion-easing-exit` | `cubic-bezier(0.3, 0, 1, 1)` | `cubic-bezier(0.3, 0, 1, 1)` | Easing for things leaving |
+
+### Floating panels
+
+Sidebars and side panels inset from the frame edge.
+
+| Token | Light | Dark | Description |
+| --- | --- | --- | --- |
+| `--dui-space-panel-inset` | `0.5rem` | `0.5rem` | Gap between a floating panel and the viewport or frame edge |
 
 ### Elevation knobs
 
@@ -1716,6 +1787,8 @@ Defined in terms of other semantic tokens.
 | `--dui-color-accent-hover` | `oklch(from oklch(53% 0.215 272deg) calc(l - 0.02) c h)` | `oklch(from oklch(53% 0.215 272deg) calc(l - 0.02) c h)` | Accent solid hover. Our choice: 0.02 darker in OKLCH lightness, so white text stays 4.5:1 |
 | `--dui-color-primary-hover` | `oklch(from oklch(21.5% 0.012 265deg) 32% calc(c + 0.002) h)` | `oklch(from oklch(95% 0.004 265deg) 86% calc(c + 0.004) h)` | Primary fill hover, same hue as the primary |
 | `--dui-font-heading` | `system-ui, sans-serif` | `system-ui, sans-serif` | Heading font stack † |
+| `--dui-radius-control` | `calc(0.5rem * 1)` | `calc(0.5rem * 1)` | Controls, buttons, inline code: 8px times the radius scale |
+| `--dui-radius-surface` | `calc(0.75rem * 1)` | `calc(0.75rem * 1)` | Panels, cards, pre, dialogs, details, media: 12px times the radius scale |
 
 ### Tinted surfaces for status badges
 
@@ -1750,16 +1823,18 @@ Durations times --dui-motion-scale and --dui-motion-enabled, distances times --d
 
 ### Elevation
 
-A shadow and a surface per level. Light scheme: the shadow does the work and every level keeps --dui-color-surface. Dark scheme: shadows barely show on a dark page, so each level also mixes --dui-elevation-surface-step more of the text color into its surface.
+A shadow and a surface per level. Every level from 1 up is a 1px ring in the hairline color (--dui-color-border) plus layers with a negative spread, so an elevated component needs no border of its own. Light scheme: the shadow does the work and every level keeps --dui-color-surface. Dark scheme: shadows barely show on a dark page, so each level also mixes --dui-elevation-surface-step more of the text color into its surface, and levels 2 to 4 add a 1px top inset highlight. The ring reads slightly brighter in dark, because the dark hairline is the light text color at low alpha.
 
 | Token | Light | Dark | Description |
 | --- | --- | --- | --- |
 | `--dui-elevation-shadow-color` | `color-mix(in srgb, oklch(25% 0.015 265deg / 12%) 100%, transparent)` | `color-mix(in srgb, oklch(14% 0.015 265deg / 46%) 100%, transparent)` | Shadow color after strength; retune --dui-color-shadow and --dui-elevation-strength |
+| `--dui-elevation-ring` | `0 0 0 1px oklch(21.5% 0.012 265deg / 11%)` | `0 0 0 1px oklch(95% 0.004 265deg / 10%)` | The 1px hairline ring included in every elevated role |
+| `--dui-elevation-highlight` | `inset 0 1px 0 0 transparent` | `inset 0 1px 0 0 oklch(95% 0.004 265deg / 6%)` | Dark scheme only: a 1px top inset highlight on levels 2 to 4 |
 | `--dui-elevation-0` | `none` | `none` | Level 0, flat: no shadow |
-| `--dui-elevation-1` | `0 1px 2px 0 color-mix(in srgb, oklch(25% 0.015 265deg / 12%) 100%, transparent), 0 1px 3px 1px color-mix(in srgb, oklch(25% 0.015 265deg / 12%) 100%, transparent)` | `0 1px 2px 0 color-mix(in srgb, oklch(14% 0.015 265deg / 46%) 100%, transparent), 0 1px 3px 1px color-mix(in srgb, oklch(14% 0.015 265deg / 46%) 100%, transparent)` | Level 1 shadow |
-| `--dui-elevation-2` | `0 1px 3px 0 color-mix(in srgb, oklch(25% 0.015 265deg / 12%) 100%, transparent), 0 4px 8px 2px color-mix(in srgb, oklch(25% 0.015 265deg / 12%) 100%, transparent)` | `0 1px 3px 0 color-mix(in srgb, oklch(14% 0.015 265deg / 46%) 100%, transparent), 0 4px 8px 2px color-mix(in srgb, oklch(14% 0.015 265deg / 46%) 100%, transparent)` | Level 2 shadow |
-| `--dui-elevation-3` | `0 2px 4px 0 color-mix(in srgb, oklch(25% 0.015 265deg / 12%) 100%, transparent), 0 8px 16px 2px color-mix(in srgb, oklch(25% 0.015 265deg / 12%) 100%, transparent)` | `0 2px 4px 0 color-mix(in srgb, oklch(14% 0.015 265deg / 46%) 100%, transparent), 0 8px 16px 2px color-mix(in srgb, oklch(14% 0.015 265deg / 46%) 100%, transparent)` | Level 3 shadow |
-| `--dui-elevation-4` | `0 4px 8px 0 color-mix(in srgb, oklch(25% 0.015 265deg / 12%) 100%, transparent), 0 16px 40px 4px color-mix(in srgb, oklch(25% 0.015 265deg / 12%) 100%, transparent)` | `0 4px 8px 0 color-mix(in srgb, oklch(14% 0.015 265deg / 46%) 100%, transparent), 0 16px 40px 4px color-mix(in srgb, oklch(14% 0.015 265deg / 46%) 100%, transparent)` | Level 4 shadow |
+| `--dui-elevation-1` | `0 0 0 1px oklch(21.5% 0.012 265deg / 11%), 0 1px 2px -1px color-mix(in srgb, oklch(25% 0.015 265deg / 12%) 100%, transparent)` | `0 0 0 1px oklch(95% 0.004 265deg / 10%), 0 1px 2px -1px color-mix(in srgb, oklch(14% 0.015 265deg / 46%) 100%, transparent)` | Level 1: the ring and a 1px shadow |
+| `--dui-elevation-2` | `inset 0 1px 0 0 transparent, 0 0 0 1px oklch(21.5% 0.012 265deg / 11%), 0 2px 4px -2px color-mix(in srgb, oklch(25% 0.015 265deg / 12%) 100%, transparent), 0 4px 12px -4px color-mix(in srgb, oklch(25% 0.015 265deg / 12%) 100%, transparent)` | `inset 0 1px 0 0 oklch(95% 0.004 265deg / 6%), 0 0 0 1px oklch(95% 0.004 265deg / 10%), 0 2px 4px -2px color-mix(in srgb, oklch(14% 0.015 265deg / 46%) 100%, transparent), 0 4px 12px -4px color-mix(in srgb, oklch(14% 0.015 265deg / 46%) 100%, transparent)` | Level 2: ring, two layers, dark highlight |
+| `--dui-elevation-3` | `inset 0 1px 0 0 transparent, 0 0 0 1px oklch(21.5% 0.012 265deg / 11%), 0 4px 8px -4px color-mix(in srgb, oklch(25% 0.015 265deg / 12%) 100%, transparent), 0 12px 24px -8px color-mix(in srgb, oklch(25% 0.015 265deg / 12%) 100%, transparent)` | `inset 0 1px 0 0 oklch(95% 0.004 265deg / 6%), 0 0 0 1px oklch(95% 0.004 265deg / 10%), 0 4px 8px -4px color-mix(in srgb, oklch(14% 0.015 265deg / 46%) 100%, transparent), 0 12px 24px -8px color-mix(in srgb, oklch(14% 0.015 265deg / 46%) 100%, transparent)` | Level 3: ring, two layers, dark highlight |
+| `--dui-elevation-4` | `inset 0 1px 0 0 transparent, 0 0 0 1px oklch(21.5% 0.012 265deg / 11%), 0 8px 16px -8px color-mix(in srgb, oklch(25% 0.015 265deg / 12%) 100%, transparent), 0 24px 48px -12px color-mix(in srgb, oklch(25% 0.015 265deg / 12%) 100%, transparent)` | `inset 0 1px 0 0 oklch(95% 0.004 265deg / 6%), 0 0 0 1px oklch(95% 0.004 265deg / 10%), 0 8px 16px -8px color-mix(in srgb, oklch(14% 0.015 265deg / 46%) 100%, transparent), 0 24px 48px -12px color-mix(in srgb, oklch(14% 0.015 265deg / 46%) 100%, transparent)` | Level 4: ring, two layers, dark highlight |
 | `--dui-elevation-0-surface` | `oklch(99.3% 0.002 265deg)` | `oklch(16.5% 0.006 265deg)` | Level 0 surface: the page |
 | `--dui-elevation-1-surface` | `oklch(99.3% 0.002 265deg)` | `color-mix(in oklab, oklch(95% 0.004 265deg) 3%, oklch(16.5% 0.006 265deg))` | Level 1 surface: one step lighter in dark |
 | `--dui-elevation-2-surface` | `oklch(99.3% 0.002 265deg)` | `color-mix(in oklab, oklch(95% 0.004 265deg) calc(3% * 2), oklch(16.5% 0.006 265deg))` | Level 2 surface: two steps lighter in dark |
@@ -1774,13 +1849,15 @@ Components use these, never the numbers.
 | --- | --- | --- | --- |
 | `--dui-elevation-flat` | `none` | `none` | Shadow of content on the page |
 | `--dui-elevation-flat-surface` | `oklch(99.3% 0.002 265deg)` | `oklch(16.5% 0.006 265deg)` | Surface of content on the page |
-| `--dui-elevation-raised` | `0 1px 2px 0 color-mix(in srgb, oklch(25% 0.015 265deg / 12%) 100%, transparent), 0 1px 3px 1px color-mix(in srgb, oklch(25% 0.015 265deg / 12%) 100%, transparent)` | `0 1px 2px 0 color-mix(in srgb, oklch(14% 0.015 265deg / 46%) 100%, transparent), 0 1px 3px 1px color-mix(in srgb, oklch(14% 0.015 265deg / 46%) 100%, transparent)` | Shadow of cards |
+| `--dui-elevation-raised` | `0 0 0 1px oklch(21.5% 0.012 265deg / 11%), 0 1px 2px -1px color-mix(in srgb, oklch(25% 0.015 265deg / 12%) 100%, transparent)` | `0 0 0 1px oklch(95% 0.004 265deg / 10%), 0 1px 2px -1px color-mix(in srgb, oklch(14% 0.015 265deg / 46%) 100%, transparent)` | Shadow of cards |
 | `--dui-elevation-raised-surface` | `oklch(99.3% 0.002 265deg)` | `color-mix(in oklab, oklch(95% 0.004 265deg) 3%, oklch(16.5% 0.006 265deg))` | Surface of cards |
-| `--dui-elevation-overlay` | `0 1px 3px 0 color-mix(in srgb, oklch(25% 0.015 265deg / 12%) 100%, transparent), 0 4px 8px 2px color-mix(in srgb, oklch(25% 0.015 265deg / 12%) 100%, transparent)` | `0 1px 3px 0 color-mix(in srgb, oklch(14% 0.015 265deg / 46%) 100%, transparent), 0 4px 8px 2px color-mix(in srgb, oklch(14% 0.015 265deg / 46%) 100%, transparent)` | Shadow of toasts and other non-modal layers over the page |
+| `--dui-elevation-panel` | `inset 0 1px 0 0 transparent, 0 0 0 1px oklch(21.5% 0.012 265deg / 11%), 0 2px 4px -2px color-mix(in srgb, oklch(25% 0.015 265deg / 12%) 100%, transparent), 0 4px 12px -4px color-mix(in srgb, oklch(25% 0.015 265deg / 12%) 100%, transparent)` | `inset 0 1px 0 0 oklch(95% 0.004 265deg / 6%), 0 0 0 1px oklch(95% 0.004 265deg / 10%), 0 2px 4px -2px color-mix(in srgb, oklch(14% 0.015 265deg / 46%) 100%, transparent), 0 4px 12px -4px color-mix(in srgb, oklch(14% 0.015 265deg / 46%) 100%, transparent)` | Shadow of floating panels: an app shell's sidebars, the docs sidebar and table of contents |
+| `--dui-elevation-panel-surface` | `oklch(98.2% 0.003 265deg)` | `oklch(19% 0.007 265deg)` | Surface of floating panels: the raised surface, one step off the page |
+| `--dui-elevation-overlay` | `inset 0 1px 0 0 transparent, 0 0 0 1px oklch(21.5% 0.012 265deg / 11%), 0 2px 4px -2px color-mix(in srgb, oklch(25% 0.015 265deg / 12%) 100%, transparent), 0 4px 12px -4px color-mix(in srgb, oklch(25% 0.015 265deg / 12%) 100%, transparent)` | `inset 0 1px 0 0 oklch(95% 0.004 265deg / 6%), 0 0 0 1px oklch(95% 0.004 265deg / 10%), 0 2px 4px -2px color-mix(in srgb, oklch(14% 0.015 265deg / 46%) 100%, transparent), 0 4px 12px -4px color-mix(in srgb, oklch(14% 0.015 265deg / 46%) 100%, transparent)` | Shadow of toasts and other non-modal layers over the page |
 | `--dui-elevation-overlay-surface` | `oklch(99.3% 0.002 265deg)` | `color-mix(in oklab, oklch(95% 0.004 265deg) calc(3% * 2), oklch(16.5% 0.006 265deg))` | Surface of non-modal layers over the page |
-| `--dui-elevation-popover` | `0 2px 4px 0 color-mix(in srgb, oklch(25% 0.015 265deg / 12%) 100%, transparent), 0 8px 16px 2px color-mix(in srgb, oklch(25% 0.015 265deg / 12%) 100%, transparent)` | `0 2px 4px 0 color-mix(in srgb, oklch(14% 0.015 265deg / 46%) 100%, transparent), 0 8px 16px 2px color-mix(in srgb, oklch(14% 0.015 265deg / 46%) 100%, transparent)` | Shadow of popovers, menus, tooltips and nav dropdowns |
+| `--dui-elevation-popover` | `inset 0 1px 0 0 transparent, 0 0 0 1px oklch(21.5% 0.012 265deg / 11%), 0 4px 8px -4px color-mix(in srgb, oklch(25% 0.015 265deg / 12%) 100%, transparent), 0 12px 24px -8px color-mix(in srgb, oklch(25% 0.015 265deg / 12%) 100%, transparent)` | `inset 0 1px 0 0 oklch(95% 0.004 265deg / 6%), 0 0 0 1px oklch(95% 0.004 265deg / 10%), 0 4px 8px -4px color-mix(in srgb, oklch(14% 0.015 265deg / 46%) 100%, transparent), 0 12px 24px -8px color-mix(in srgb, oklch(14% 0.015 265deg / 46%) 100%, transparent)` | Shadow of popovers, menus, tooltips and nav dropdowns |
 | `--dui-elevation-popover-surface` | `oklch(99.3% 0.002 265deg)` | `color-mix(in oklab, oklch(95% 0.004 265deg) calc(3% * 3), oklch(16.5% 0.006 265deg))` | Surface of popovers, menus and nav dropdowns |
-| `--dui-elevation-dialog` | `0 4px 8px 0 color-mix(in srgb, oklch(25% 0.015 265deg / 12%) 100%, transparent), 0 16px 40px 4px color-mix(in srgb, oklch(25% 0.015 265deg / 12%) 100%, transparent)` | `0 4px 8px 0 color-mix(in srgb, oklch(14% 0.015 265deg / 46%) 100%, transparent), 0 16px 40px 4px color-mix(in srgb, oklch(14% 0.015 265deg / 46%) 100%, transparent)` | Shadow of dialogs and drawers |
+| `--dui-elevation-dialog` | `inset 0 1px 0 0 transparent, 0 0 0 1px oklch(21.5% 0.012 265deg / 11%), 0 8px 16px -8px color-mix(in srgb, oklch(25% 0.015 265deg / 12%) 100%, transparent), 0 24px 48px -12px color-mix(in srgb, oklch(25% 0.015 265deg / 12%) 100%, transparent)` | `inset 0 1px 0 0 oklch(95% 0.004 265deg / 6%), 0 0 0 1px oklch(95% 0.004 265deg / 10%), 0 8px 16px -8px color-mix(in srgb, oklch(14% 0.015 265deg / 46%) 100%, transparent), 0 24px 48px -12px color-mix(in srgb, oklch(14% 0.015 265deg / 46%) 100%, transparent)` | Shadow of dialogs and drawers |
 | `--dui-elevation-dialog-surface` | `oklch(99.3% 0.002 265deg)` | `color-mix(in oklab, oklch(95% 0.004 265deg) calc(3% * 4), oklch(16.5% 0.006 265deg))` | Surface of dialogs and drawers |
 
 ### Density
@@ -1803,7 +1880,7 @@ See CHANGELOG.md.
 
 | Token | Light | Dark | Description |
 | --- | --- | --- | --- |
-| `--dui-shadow-raised` | `0 1px 2px 0 color-mix(in srgb, oklch(25% 0.015 265deg / 12%) 100%, transparent), 0 1px 3px 1px color-mix(in srgb, oklch(25% 0.015 265deg / 12%) 100%, transparent)` | `0 1px 2px 0 color-mix(in srgb, oklch(14% 0.015 265deg / 46%) 100%, transparent), 0 1px 3px 1px color-mix(in srgb, oklch(14% 0.015 265deg / 46%) 100%, transparent)` | Deprecated: use --dui-elevation-raised (level 1) |
+| `--dui-shadow-raised` | `0 0 0 1px oklch(21.5% 0.012 265deg / 11%), 0 1px 2px -1px color-mix(in srgb, oklch(25% 0.015 265deg / 12%) 100%, transparent)` | `0 0 0 1px oklch(95% 0.004 265deg / 10%), 0 1px 2px -1px color-mix(in srgb, oklch(14% 0.015 265deg / 46%) 100%, transparent)` | Deprecated: use --dui-elevation-raised (level 1) |
 | `--dui-duration-fast` | `calc(150ms * 1 * 1)` | `calc(150ms * 1 * 1)` | Deprecated: use --dui-motion-duration-fast |
 | `--dui-duration-normal` | `calc(250ms * 1 * 1)` | `calc(250ms * 1 * 1)` | Deprecated: use --dui-motion-duration-normal |
 | `--dui-easing-standard` | `cubic-bezier(0.2, 0, 0, 1)` | `cubic-bezier(0.2, 0, 0, 1)` | Deprecated: use --dui-motion-easing-standard |
@@ -2186,7 +2263,7 @@ Our choice: the bar is the last child of the \<form> it submits, so its buttons 
 
 #### Elevation
 
-`--dui-elevation-overlay` and its surface (level 2), with a border, so it reads as above the fields it covers and forced colors mode still draws its edge.
+`--dui-elevation-overlay` and its surface (level 2), whose 1px ring draws the edge so it reads as above the fields it covers; the transparent border is what forced colors mode paints.
 
 #### Keyboard
 
@@ -3745,7 +3822,7 @@ Children: an optional first `<img>` (or `<picture>`, `<video>`) as media, a head
 
 #### Elevation
 
-`--dui-elevation-raised` and `--dui-elevation-raised-surface` (level 1). The border stays, so forced colors mode, which drops box-shadow, still draws the edge.
+`--dui-elevation-raised` and `--dui-elevation-raised-surface` (level 1), whose 1px ring draws the edge. The border is transparent; forced colors mode, which drops box-shadow, paints it in canvastext.
 
 #### Keyboard
 
@@ -3882,7 +3959,7 @@ Dialogs fade and lift and drawers slide and fade, with `@starting-style` and tra
 
 #### Elevation
 
-Dialogs and drawers use `--dui-elevation-dialog` and its surface (the highest level). The border stays, so forced colors mode, which drops box-shadow, still draws the edge.
+Dialogs and drawers use `--dui-elevation-dialog` and its surface (the highest level). The role's 1px ring draws the edge; the border is transparent, and forced colors mode, which drops box-shadow, paints it in a system color.
 
 #### Keyboard
 
@@ -4284,7 +4361,7 @@ A `data-popover` panel fades and grows from `--dui-motion-zoom` over `--dui-moti
 
 #### Elevation
 
-Panels use `--dui-elevation-popover` and `--dui-elevation-popover-surface`; tooltips use the popover shadow on their inverse surface. Both keep a border, which forced colors mode draws in place of the dropped shadow.
+Panels use `--dui-elevation-popover` and `--dui-elevation-popover-surface`; tooltips use the popover shadow on their inverse surface. The role's 1px ring draws the edge. Both keep a transparent border, which forced colors mode paints in place of the dropped shadow.
 
 #### Keyboard
 
@@ -5384,7 +5461,7 @@ Tiles: `<section aria-labelledby>` (or `<article>`, `<li>`) with a heading first
 
 #### Elevation
 
-Tiles use `--dui-elevation-raised` and its surface (level 1), with a border, so forced colors mode still draws the edge.
+Tiles use `--dui-elevation-raised` and its surface (level 1), whose 1px ring draws the edge, and a transparent border that forced colors mode paints in canvastext.
 
 #### Breakpoint
 

@@ -23,8 +23,8 @@
  * with the mouse; see the explainer.
  *
  * Elevation: --dui-elevation-raised and --dui-elevation-raised-surface
- * (level 1). The border stays, so forced colors mode, which drops box-
- * shadow, still draws the edge.
+ * (level 1), whose 1px ring draws the edge. The border is transparent;
+ * forced colors mode, which drops box-shadow, paints it in canvastext.
  *
  * API
  *   data-card          on <article> (or <section>, <li>): the card
@@ -62,7 +62,7 @@
   padding: var(--dui-space-l);
   background-color: var(--dui-elevation-raised-surface);
   color: var(--dui-color-text);
-  border: var(--dui-border-width) solid var(--dui-color-border);
+  border: var(--dui-border-width) solid transparent;
   border-radius: var(--dui-radius-surface);
   box-shadow: var(--dui-elevation-raised);
 }

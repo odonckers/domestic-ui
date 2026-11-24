@@ -51,7 +51,7 @@
         padding: var(--dui-space-m);
         background-color: var(--level-surface);
         color: var(--dui-color-text);
-        border: var(--dui-border-width) solid var(--dui-color-border);
+        border: var(--dui-border-width) solid transparent;
         border-radius: var(--dui-radius-surface);
         box-shadow: var(--level-shadow);
       }
@@ -93,14 +93,15 @@
       <h1>Elevation</h1>
       <p>
         Five levels, <code>--dui-elevation-0</code> to <code>--dui-elevation-4</code>, each a shadow paired with a surface
-        (<code>--dui-elevation-0-surface</code> to <code>--dui-elevation-4-surface</code>). In the light scheme the shadow does the work.
+        (<code>--dui-elevation-0-surface</code> to <code>--dui-elevation-4-surface</code>). Every level from 1 up is a 1px ring in the
+        hairline color plus soft layers with a negative spread, so an elevated component needs no border of its own. In the light scheme the shadow does the work.
         In the dark scheme shadows barely show, so each level also mixes a little more of the text color into its surface.
         Source: <a href="../css/tokens/semantic.css"><code>css/tokens/semantic.css</code></a>.
       </p>
 
       <section aria-labelledby="levels-title">
         <h2 id="levels-title">Levels in light and dark</h2>
-        <p>The same five swatches, forced to each scheme with <code>data-color-scheme</code>. Text, muted text and links meet 4.5:1 on every surface.</p>
+        <p>The same five levels and the floating panel role, forced to each scheme with <code>data-color-scheme</code>. Text, muted text and links meet 4.5:1 on every surface.</p>
         <!-- dui:snippet name="Levels in light and dark" page="principles/elevation" -->
         <div class="grid">
           <section class="panel stack" data-color-scheme="light" aria-labelledby="light-title">
@@ -125,6 +126,10 @@
               <li class="level" style="--level-shadow: var(--dui-elevation-4); --level-surface: var(--dui-elevation-4-surface)">
                 <strong>Level 4: dialog</strong>
                 <span class="level-note">Dialogs and drawers. <a href="#levels-title">Link</a></span>
+              </li>
+              <li class="level" style="--level-shadow: var(--dui-elevation-panel); --level-surface: var(--dui-elevation-panel-surface)">
+                <strong>Role: panel</strong>
+                <span class="level-note">Floating sidebars and side panels: the level 2 shadow on the raised surface. <a href="#levels-title">Link</a></span>
               </li>
             </ol>
           </section>
@@ -151,6 +156,10 @@
                 <strong>Level 4: dialog</strong>
                 <span class="level-note">Dialogs and drawers. <a href="#levels-title">Link</a></span>
               </li>
+              <li class="level" style="--level-shadow: var(--dui-elevation-panel); --level-surface: var(--dui-elevation-panel-surface)">
+                <strong>Role: panel</strong>
+                <span class="level-note">Floating sidebars and side panels: the level 2 shadow on the raised surface. <a href="#levels-title">Link</a></span>
+              </li>
             </ol>
           </section>
         </div>
@@ -162,7 +171,8 @@
         <p>
           Components use the role names, never the numbers: <code>--dui-elevation-raised</code> for cards,
           <code>--dui-elevation-overlay</code> for toasts, <code>--dui-elevation-popover</code> for popovers, menus and tooltips,
-          <code>--dui-elevation-dialog</code> for dialogs and drawers, each with a matching <code>-surface</code> token.
+          <code>--dui-elevation-dialog</code> for dialogs and drawers, and <code>--dui-elevation-panel</code> for floating sidebars,
+          each with a matching <code>-surface</code> token.
         </p>
         <div class="demo">
           <!-- dui:snippet name="Components by role" page="principles/elevation" -->

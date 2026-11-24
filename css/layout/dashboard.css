@@ -25,7 +25,8 @@
  * 1.4.10); wrap a table in a tile in data-scroll="inline".
  *
  * Elevation: tiles use --dui-elevation-raised and its surface (level 1),
- * with a border, so forced colors mode still draws the edge.
+ * whose 1px ring draws the edge, and a transparent border that forced
+ * colors mode paints in canvastext.
  *
  * Breakpoint: a wide tile spans two columns from 33.5rem of the wrapper's
  * own inline size (two 16rem columns and the 1.5rem gap). A container query
@@ -78,7 +79,7 @@
   padding: var(--dui-space-l);
   background-color: var(--dui-elevation-raised-surface);
   color: var(--dui-color-text);
-  border: var(--dui-border-width) solid var(--dui-color-border);
+  border: var(--dui-border-width) solid transparent;
   border-radius: var(--dui-radius-surface);
   box-shadow: var(--dui-elevation-raised);
   overflow-wrap: break-word;

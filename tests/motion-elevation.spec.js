@@ -1,4 +1,5 @@
 // @ts-check
+import { readFileSync } from "node:fs";
 import { test, expect } from "@playwright/test";
 import { examples, schemes, withoutMotion } from "./helpers.js";
 
@@ -362,6 +363,48 @@ test("elevation knobs retune a theme scope", async ({ page }) => {
   expect(result.off.shadow).toMatch(/rgba\(0, 0, 0, 0\)|\/ 0\)|transparent/);
 });
 
+test("shadow primitives never spread outward, and every elevated role includes the 1px ring", async ({ page }) => {
+  // https://developer.mozilla.org/en-US/docs/Web/CSS/box-shadow: the fourth length is the spread.
+  const primitives = readFileSync(new URL("../css/tokens/primitives.css", import.meta.url), "utf8").replace(/\/\*[\s\S]*?\*\//g, "");
+  const layers = [...primitives.matchAll(/--dui-shadow-\d-(?:key|ambient):\s*([^;]+);/g)].map((m) => m[1].trim());
+  expect(layers.length).toBeGreaterThan(0);
+  for (const layer of layers) {
+    const lengths = layer.split(/\s+/);
+    expect(lengths, layer).toHaveLength(4);
+    expect(Number.parseFloat(lengths[3]), layer).toBeLessThanOrEqual(0);
+  }
+  await page.goto("examples/elevation.html");
+  const shadows = await page.evaluate(() => {
+    const probe = document.createElement("div");
+    document.body.append(probe);
+    const out = Object.fromEntries(
+      ["raised", "panel", "overlay", "popover", "dialog"].map((role) => {
+        probe.style.boxShadow = `var(--dui-elevation-${role})`;
+        return [role, getComputedStyle(probe).boxShadow];
+      }),
+    );
+    probe.remove();
+    return out;
+  });
+  for (const [role, shadow] of Object.entries(shadows)) expect(shadow, role).toMatch(/0px 0px 0px 1px/);
+});
+
+test("--dui-radius-scale: 0 gives square corners, 1.5 rounder ones", async ({ page }) => {
+  await page.goto("examples/theming.html");
+  const radii = await page.evaluate(() =>
+    ["radius-0-title", "radius-1-title", "radius-15-title"].map((id) => {
+      const panel = /** @type {Element} */ (document.getElementById(id)?.closest("section"));
+      return {
+        button: getComputedStyle(/** @type {Element} */ (panel.querySelector("button"))).borderTopLeftRadius,
+        card: getComputedStyle(/** @type {Element} */ (panel.querySelector("[data-card]"))).borderTopLeftRadius,
+      };
+    }),
+  );
+  expect(radii[0]).toEqual({ button: "0px", card: "0px" });
+  expect(radii[1]).toEqual({ button: "8px", card: "12px" });
+  expect(radii[2]).toEqual({ button: "12px", card: "18px" });
+});
+
 test.describe("forced colors", () => {
   test.beforeEach(async ({ page }) => {
     await withoutMotion(page);
@@ -380,8 +423,9 @@ test.describe("forced colors", () => {
     });
   };
 
-  test("card, popover, menu and dialog keep a visible border in place of their shadow", async ({ page }) => {
+  test("card, panel, popover, menu and dialog keep a visible border in place of their shadow", async ({ page }) => {
     expect(await page.locator("[data-card]").first().evaluate(border)).toEqual([true, true, true, true]);
+    for (const panel of await page.locator(".level", { hasText: "Role: panel" }).all()) expect(await panel.evaluate(border)).toEqual([true, true, true, true]);
 
     await page.getByRole("button", { name: "Popover" }).click();
     await expect(page.locator("#role-popover")).toBeVisible();

@@ -241,7 +241,7 @@
   margin-block-start: var(--dui-space-2xs);
   padding: var(--dui-space-gap-tight);
   background-color: var(--dui-elevation-popover-surface);
-  border: var(--dui-border-width) solid var(--dui-color-border);
+  border: var(--dui-border-width) solid transparent;
   border-radius: var(--dui-radius-surface);
   box-shadow: var(--dui-elevation-popover);
 }

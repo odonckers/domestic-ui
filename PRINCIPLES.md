@@ -159,6 +159,9 @@ with a `data-theme` attribute or a `theme-*` class to scope it:
 ```
 
 [`examples/theming.html`](examples/theming.html) shows a full scoped theme next to the default.
+Shape has one knob: `--dui-radius-scale` multiplies `--dui-radius-control` (8px) and
+`--dui-radius-surface` (12px); `0` gives square corners and `1.5` rounder ones, while pills stay round.
+Radix Themes has the same idea ([`--radius-factor`](https://www.radix-ui.com/themes/docs/theme/radius)), for comparison.
 Check your theme's contrast in both schemes; `tests/tokens.spec.js` shows how.
 
 A few semantic tokens are defined in terms of others (`--dui-color-accent-text`,
@@ -249,9 +252,11 @@ may change. Fluid `--dui-step-*` values are `clamp()` expressions; see `primitiv
 | `--dui-size-sidebar` | Inline size of an app shell's primary sidebar beside main | `size-16` (16rem) |
 | `--dui-size-sidebar-aux` | Inline size of an app shell's auxiliary (inline-end) sidebar beside main | `size-20` (20rem) |
 | `--dui-size-pane` | Max block size of a pane that scrolls on its own beside others (the detail of a list-detail when side by side) | `size-100svh` (100svh, the small viewport height) |
-| `--dui-radius-control` | Controls, buttons, inline code | `radius-2` (0.375rem) |
-| `--dui-radius-surface` | Panels, pre, dialog, details, media | `radius-3` (0.625rem) |
-| `--dui-radius-pill` | Fully rounded ends | `radius-round` (999rem) |
+| `--dui-radius-scale` | Radius knob: multiplies the control and surface radii; `0` gives square corners | `factor-1` (1) |
+| `--dui-radius-control` | Controls, buttons, inline code | `radius-2` (0.5rem, 8px) × `--dui-radius-scale` |
+| `--dui-radius-surface` | Panels, cards, pre, dialog, details, media | `radius-3` (0.75rem, 12px) × `--dui-radius-scale` |
+| `--dui-radius-pill` | Fully rounded ends (not scaled) | `radius-round` (999rem) |
+| `--dui-space-panel-inset` | Gap between a floating panel and the viewport or frame edge | `--dui-space-xs` (0.5rem) |
 | `--dui-border-width` | Hairline width | `border-1` (1px) |
 | `--dui-border-width-emphasis` | blockquote rule, alert start rule, invalid field | `border-4` (0.25rem) |
 | `--dui-border-width-indicator` | Selected tab, current nav item (3:1 against the surface) | `border-3` (3px) |
@@ -291,6 +296,8 @@ may change. Fluid `--dui-step-*` values are `clamp()` expressions; see `primitiv
 | `--dui-motion-distance` | How far a dialog or toast lifts as it fades in | `space-4` (0.75rem) × `--dui-motion-movement` |
 | `--dui-motion-zoom` | Scale a popover or menu grows from | 0.95, or 1 when `--dui-motion-movement` is 0 |
 | `--dui-elevation-shadow-color` | Shadow color after strength | `color-mix()` of `--dui-color-shadow` at `--dui-elevation-strength` |
+| `--dui-elevation-ring` | The 1px ring in the hairline color that every elevated level includes | `0 0 0 1px` `--dui-color-border` |
+| `--dui-elevation-highlight` | Dark scheme only: a 1px top inset highlight on levels 2 to 4 | `inset 0 1px 0 0`, transparent in light, the dark text color at 6% in dark |
 | `--dui-size-control` | Min block size of controls, buttons, check labels and nav, menu and listbox items | `--dui-size-target` (44px), `--dui-size-target-small` (32px) when compact |
 | `--dui-space-control-block` | Block padding of controls, buttons and items | `space-3` (0.5rem), `space-2` (0.25rem) when compact |
 | `--dui-space-control-inline` | Inline padding of text fields and items | `space-4` (0.75rem), `space-3` (0.5rem) when compact |
@@ -298,10 +305,12 @@ may change. Fluid `--dui-step-*` values are `clamp()` expressions; see `primitiv
 | `--dui-space-gap` | Gap between the parts of a control (icon and label, check and label) | `space-3` (0.5rem), `space-2` (0.25rem) when compact |
 | `--dui-space-gap-tight` | Gap and padding in groups of controls: field, toolbar, pagination, menu | `space-2` (0.25rem), `space-1` (0.125rem) when compact |
 | `--dui-space-cell` | Table cell padding | `space-3` (0.5rem), `space-2` (0.25rem) when compact |
-| `--dui-elevation-0` … `--dui-elevation-4` | Shadow per level | `none`, then two layers (key and ambient) growing with the level |
+| `--dui-elevation-0` … `--dui-elevation-4` | Shadow per level | `none`; level 1 is the ring and `0 1px 2px -1px`; levels 2 to 4 add the dark highlight, the ring and two layers with a negative spread |
 | `--dui-elevation-0-surface` … `--dui-elevation-4-surface` | Surface per level | light: `--dui-color-surface`<br>dark: `--dui-color-surface` with N × `--dui-elevation-surface-step` of `--dui-color-text` |
 | `--dui-elevation-flat`, `-raised`, `-overlay`, `-popover`, `-dialog` | Shadow by role | levels 0, 1, 2, 3, 4 |
 | `--dui-elevation-flat-surface`, `-raised-surface`, `-overlay-surface`, `-popover-surface`, `-dialog-surface` | Surface by role | level 0 to 4 surfaces |
+| `--dui-elevation-panel` | Shadow of floating panels: app shell sidebars, the docs sidebar and table of contents | `--dui-elevation-2` |
+| `--dui-elevation-panel-surface` | Surface of floating panels | `--dui-color-surface-raised` |
 | `--dui-shadow-raised` | **Deprecated**, removed in the next release: use `--dui-elevation-raised` | `--dui-elevation-1` |
 | `--dui-duration-fast` | **Deprecated**, removed in the next release | `--dui-motion-duration-fast` |
 | `--dui-duration-normal` | **Deprecated**, removed in the next release | `--dui-motion-duration-normal` |
@@ -310,7 +319,7 @@ may change. Fluid `--dui-step-*` values are `clamp()` expressions; see `primitiv
 Derived (re-resolved on each theme scope and on every `[data-motion]` and `[data-density]` element): `--dui-color-accent-text`, `--dui-color-link`,
 `--dui-color-focus`, `--dui-color-accent-hover`, `--dui-color-primary-hover`, `--dui-font-heading`, `--dui-color-accent-surface`,
 `--dui-color-success-surface`, `--dui-color-warning-surface`, `--dui-color-danger-surface`,
-`--dui-color-info-surface`, `--dui-color-surface-inverse`, `--dui-color-text-inverse`, every
+`--dui-color-info-surface`, `--dui-color-surface-inverse`, `--dui-color-text-inverse`, `--dui-radius-control`, `--dui-radius-surface`, every
 `--dui-motion-duration-*`, `--dui-motion-distance`, `--dui-motion-zoom`, every `--dui-elevation-*`
 except the two knobs, the seven density tokens (`--dui-size-control` and the `--dui-space-control-*`,
 `-button-inline`, `-gap*` and `-cell` spaces), and the deprecated aliases.
@@ -404,17 +413,27 @@ Elevation says which layer is on top. Five levels, each a
 | `--dui-elevation-2` | `--dui-elevation-overlay` | Toasts |
 | `--dui-elevation-3` | `--dui-elevation-popover` | Popovers, menus, tooltips, nav dropdowns |
 | `--dui-elevation-4` | `--dui-elevation-dialog` | Dialogs and drawers |
+| `--dui-elevation-2` | `--dui-elevation-panel` | Floating sidebars and side panels, on `--dui-elevation-panel-surface` (the raised surface) |
 
 Each has a `-surface` twin (`--dui-elevation-2-surface`, `--dui-elevation-overlay-surface`).
 **Components use the role tokens only**, never the numbers, so a theme can move a role to another level.
 
+- **A ring plus soft layers.** Every level from 1 up is a 1px ring in the hairline color
+  (`--dui-elevation-ring`) plus one or two layers with a negative spread, at 12% alpha or less in
+  light: level 1 is `0 1px 2px -1px`; level 2 `0 2px 4px -2px` and `0 4px 12px -4px`; level 3
+  `0 4px 8px -4px` and `0 12px 24px -8px`; level 4 `0 8px 16px -8px` and `0 24px 48px -12px`. The ring is
+  part of the role, so **an elevated component draws no border of its own**; it keeps a transparent
+  border for forced colors (below). Radix Themes builds its shadows the same way
+  ([shadows](https://www.radix-ui.com/themes/docs/theme/shadows)), for comparison.
 - **Light scheme: the shadow does the work.** Every level keeps `--dui-color-surface`; shadows grow
-  with the level (a tight key shadow and a wide ambient one).
+  with the level.
 - **Dark scheme: lighter surfaces.** Shadows barely show on a dark page, so each level mixes
   `--dui-elevation-surface-step` more of the text color into the surface with
   [`color-mix()`](https://developer.mozilla.org/en-US/docs/Web/CSS/color_value/color-mix)
   ([CSS Color 5](https://www.w3.org/TR/css-color-5/#color-mix)), picked per scheme by
   [`light-dark()`](https://developer.mozilla.org/en-US/docs/Web/CSS/color_value/light-dark).
+  Levels 2 to 4 add a 1px top inset highlight (`--dui-elevation-highlight`) in dark only, and the ring
+  reads slightly brighter because the dark hairline is the light text color at low alpha.
   Text, muted text, links, control borders and the focus ring meet
   [4.5:1](https://www.w3.org/WAI/WCAG22/Understanding/contrast-minimum.html) and
   [3:1](https://www.w3.org/WAI/WCAG22/Understanding/non-text-contrast.html) on every level, in light and
@@ -424,7 +443,11 @@ Each has a `-surface` twin (`--dui-elevation-2-surface`, `--dui-elevation-overla
   scope, like the other dependent tokens.
 - **Forced colors: borders, not shadows.** In [forced colors mode](https://developer.mozilla.org/en-US/docs/Web/CSS/@media/forced-colors)
   `box-shadow` computes to `none` ([CSS Color Adjustment](https://www.w3.org/TR/css-color-adjust-1/#forced-colors-properties)),
-  so every elevated component keeps a border, drawn in `CanvasText` there.
+  so every elevated component keeps a transparent border, which forced colors paints in a system
+  color (`CanvasText`) there.
+- **Floating panels.** `--dui-elevation-panel` and `--dui-elevation-panel-surface`, with
+  `--dui-radius-surface` corners and `--dui-space-panel-inset` from the frame edge, are for sidebars
+  that float on the page background instead of being glued to the viewport edge.
 - **Our choice:** toasts sit at the overlay level, below popovers and dialogs, because they are
   non-modal and must not cover an open menu or dialog.
 - **Our choice:** the dark-scheme step mixes in the text color rather than white, so a theme's tint

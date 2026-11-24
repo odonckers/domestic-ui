@@ -43,8 +43,9 @@
  * https://www.w3.org/WAI/WCAG22/Understanding/animation-from-interactions.html
  *
  * Elevation: dialogs and drawers use --dui-elevation-dialog and its
- * surface (the highest level). The border stays, so forced colors mode,
- * which drops box-shadow, still draws the edge.
+ * surface (the highest level). The role's 1px ring draws the edge; the
+ * border is transparent, and forced colors mode, which drops box-shadow,
+ * paints it in a system color.
  *
  * API
  *   data-dialog                         on <dialog>: header, body and footer layout

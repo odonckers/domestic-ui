@@ -28,9 +28,9 @@
  * three short labels, so it never wraps to a third row at 320px; put
  * further actions in a menu button.
  *
- * Elevation: --dui-elevation-overlay and its surface (level 2), with a
- * border, so it reads as above the fields it covers and forced colors mode
- * still draws its edge.
+ * Elevation: --dui-elevation-overlay and its surface (level 2), whose 1px
+ * ring draws the edge so it reads as above the fields it covers; the
+ * transparent border is what forced colors mode paints.
  *
  * API
  *   data-action-bar   on a <footer> (or <div>) that is the last child of a
@@ -67,7 +67,7 @@
   gap: var(--dui-space-xs);
   padding: var(--dui-space-s) var(--dui-space-m);
   background-color: var(--dui-elevation-overlay-surface);
-  border: var(--dui-border-width) solid var(--dui-color-border);
+  border: var(--dui-border-width) solid transparent;
   border-radius: var(--dui-radius-surface);
   box-shadow: var(--dui-elevation-overlay);
 }

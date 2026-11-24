@@ -29,7 +29,8 @@
         color: var(--dui-color-text-muted);
       }
 
-      .panel {
+      .panel,
+      .radius-panel {
         padding: var(--dui-space-l);
         border: var(--dui-border-width) solid var(--dui-color-border);
         border-radius: var(--dui-radius-surface);
@@ -217,6 +218,42 @@
         </section>
         <!-- /dui:snippet -->
       </div>
+
+      <section aria-labelledby="radius-title" class="stack">
+        <h2 id="radius-title">Radius scale</h2>
+        <p>
+          <code>--dui-radius-scale</code> multiplies the control and surface radii. <code>0</code> gives square corners everywhere,
+          <code>1</code> is the default (8px controls, 12px surfaces) and <code>1.5</code> is rounder. Pills stay round.
+        </p>
+        <!-- dui:snippet name="Radius scale" page="principles/theming" -->
+        <div class="grid">
+          <section class="radius-panel stack" data-theme style="--dui-radius-scale: 0" aria-labelledby="radius-0-title">
+            <h3 id="radius-0-title">Scale 0</h3>
+            <p><button type="button">Secondary</button> <button type="submit">Save</button></p>
+            <article data-card>
+              <h4>A card</h4>
+              <p>Square corners.</p>
+            </article>
+          </section>
+          <section class="radius-panel stack" data-theme style="--dui-radius-scale: 1" aria-labelledby="radius-1-title">
+            <h3 id="radius-1-title">Scale 1</h3>
+            <p><button type="button">Secondary</button> <button type="submit">Save</button></p>
+            <article data-card>
+              <h4>A card</h4>
+              <p>The default corners.</p>
+            </article>
+          </section>
+          <section class="radius-panel stack" data-theme style="--dui-radius-scale: 1.5" aria-labelledby="radius-15-title">
+            <h3 id="radius-15-title">Scale 1.5</h3>
+            <p><button type="button">Secondary</button> <button type="submit">Save</button></p>
+            <article data-card>
+              <h4>A card</h4>
+              <p>Rounder corners.</p>
+            </article>
+          </section>
+        </div>
+        <!-- /dui:snippet -->
+      </section>
     </main>
 
     <footer>

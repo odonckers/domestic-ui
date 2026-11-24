@@ -57,8 +57,8 @@
  *
  * Elevation: panels use --dui-elevation-popover and --dui-elevation-
  * popover-surface; tooltips use the popover shadow on their inverse
- * surface. Both keep a border, which forced colors mode draws in place
- * of the dropped shadow.
+ * surface. The role's 1px ring draws the edge. Both keep a transparent
+ * border, which forced colors mode paints in place of the dropped shadow.
  *
  * API
  *   data-popover                    on a [popover] element: panel look, anchored
@@ -107,7 +107,7 @@
 [popover][data-popover] {
   padding: var(--dui-space-s) var(--dui-space-m);
   background-color: var(--dui-elevation-popover-surface);
-  border: var(--dui-border-width) solid var(--dui-color-border);
+  border: var(--dui-border-width) solid transparent;
   border-radius: var(--dui-radius-surface);
   box-shadow: var(--dui-elevation-popover);
   opacity: 0;
