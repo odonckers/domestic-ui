@@ -12,6 +12,14 @@
  * Colors are OKLCH, in the sRGB gamut (CSS Color 4).
  * https://www.w3.org/TR/css-color-4/#ok-lab
  * https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/Values/color_value/oklch
+ * On a Display P3 screen (@media (color-gamut: p3), at the end of this
+ * file) the accent solids (indigo 9 and 10) and the status solids (step 9)
+ * take more chroma: the sRGB chroma times how much further P3 reaches at
+ * that lightness and hue, so they are as saturated relative to P3 as they
+ * are to sRGB. Lightness and hue stay, so contrast stays; text steps (11
+ * and 12) and neutrals do not change.
+ * https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/At-rules/@media/color-gamut
+ * https://www.w3.org/TR/css-color-4/#gamut-mapping
  *
  * Neutral and indigo each have 12 steps in light and in dark. The step
  * number is the role, the same idea as Radix's scales (for comparison:
@@ -290,4 +298,23 @@
   --dui-mix-8: 8%;
   --dui-mix-35: 35%;
   --dui-mix-100: 100%;
+}
+
+/* Display P3: more vivid accent and status solids at the same lightness and hue. */
+@media (color-gamut: p3) {
+  :root,
+  ::backdrop {
+    --dui-color-indigo-9: oklch(53% 0.23 272deg); /* Step 9, solid accent (P3) */
+    --dui-color-indigo-10: oklch(48.5% 0.213 272deg); /* Step 10, solid hover (P3) */
+    --dui-color-indigo-dark-9: oklch(53% 0.23 272deg); /* Step 9, solid accent (P3) */
+    --dui-color-indigo-dark-10: oklch(64% 0.162 272deg); /* Step 10, solid hover (P3) */
+    --dui-color-red-9: oklch(55% 0.214 27deg); /* Step 9, solid (P3) */
+    --dui-color-red-dark-9: oklch(65% 0.215 27deg); /* Step 9, solid (P3) */
+    --dui-color-green-9: oklch(55% 0.195 150deg); /* Step 9, solid (P3) */
+    --dui-color-green-dark-9: oklch(68% 0.195 150deg); /* Step 9, solid (P3) */
+    --dui-color-amber-9: oklch(62% 0.138 75deg); /* Step 9, solid (P3) */
+    --dui-color-amber-dark-9: oklch(72% 0.138 75deg); /* Step 9, solid (P3) */
+    --dui-color-blue-9: oklch(55% 0.175 245deg); /* Step 9, solid (P3) */
+    --dui-color-blue-dark-9: oklch(68% 0.137 245deg); /* Step 9, solid (P3) */
+  }
 }

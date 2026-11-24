@@ -173,12 +173,14 @@ const measure = (scopeSelector, pairs) => {
 
 /**
  * Run the contrast pairs against one theme scope, in light and dark.
- * contrast emulates prefers-contrast (for example "more").
- * @param {{ name: string, selector: string, pagePath?: string, pairs?: typeof PAIRS, contrast?: "more" | "no-preference" }} scope
+ * contrast emulates prefers-contrast (for example "more"); setup runs
+ * before the page loads (for example to emulate another media feature).
+ * @param {{ name: string, selector: string, pagePath?: string, pairs?: typeof PAIRS, contrast?: "more" | "no-preference", setup?: (args: { page: import("@playwright/test").Page, browserName: string }) => Promise<void> }} scope
  */
-export function registerContrastTests({ name, selector, pagePath = "examples/theming.html", pairs = PAIRS, contrast }) {
+export function registerContrastTests({ name, selector, pagePath = "examples/theming.html", pairs = PAIRS, contrast, setup }) {
   for (const colorScheme of schemes) {
-    test(`${name} token pairs meet WCAG 2.2 AA (${colorScheme})`, async ({ page }) => {
+    test(`${name} token pairs meet WCAG 2.2 AA (${colorScheme})`, async ({ page, browserName }) => {
+      await setup?.({ page, browserName });
       await page.emulateMedia(contrast ? { colorScheme, contrast } : { colorScheme });
       await page.goto(pagePath);
       const results = await page.evaluate(([s, p]) => (0, eval)(`(${s})`)(...p), [measure.toString(), [selector, pairs]]);
