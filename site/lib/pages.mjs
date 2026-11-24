@@ -12,12 +12,12 @@ import { apiMd, codeMd, labelledMd } from "./api-table.mjs";
 import { findUrls, specName } from "./css-comments.mjs";
 import { demoAppLinksMd, demoViewMd } from "./demo-views.mjs";
 import { diagramBlock, diagramName } from "./diagrams.mjs";
-import { COMPONENT_GROUPS, LEVELS } from "./discovery.mjs";
+import { COMPONENT_GROUPS, LEVELS, THEMES_PAGE } from "./discovery.mjs";
 import { inline, plainText, shiftHeadings, tokenize } from "./markdown.mjs";
 import { previewKind } from "./tokens.mjs";
 import { existsSync, readFileSync } from "node:fs";
 import { join } from "node:path";
-import { BLOB_URL, REPO_URL, archiveUrl, byString, escapeHtml, escapeMdCell, fence, firstSentence, mdCode, releaseUrl, slugify } from "./util.mjs";
+import { BLOB_URL, REPO_URL, THEMES, archiveUrl, byString, escapeHtml, escapeMdCell, fence, firstSentence, mdCode, releaseUrl, slugify } from "./util.mjs";
 
 /**
  * @typedef {import("./discovery.mjs").Model} Model
@@ -246,7 +246,7 @@ export function buildPages(model) {
   return [
     homePage(model),
     principlesIndex(model),
-    ...model.principles.sections.map((s) => principlePage(model, s)),
+    ...model.principles.sections.flatMap((s) => (s.slug === "theming" ? [principlePage(model, s), themesPage(model)] : [principlePage(model, s)])),
     tokensIndex(model),
     ...model.tokenFiles.map((f) => tokenFilePage(model, f)),
     as(componentPage(model, model.base), "base"),
@@ -443,6 +443,77 @@ function principlePage(model, s) {
     description: firstSentenceOf(s.body) || s.title,
     source: edit("PRINCIPLES.md"),
     blocks: [md(shiftHeadings(rewriteRepoLinks(s.body, model), -1)), ...(snippets.length ? liveExampleBlocks(model, snippets) : [])],
+    snippets,
+  };
+}
+
+
+/**
+ * Each token a theme file overrides, with the default value from
+ * css/tokens/semantic.css and the theme's value, read from the files at
+ * build time so the table cannot drift.
+ * @param {string} root repository root
+ */
+export function themeDiffs(root) {
+  const strip = (/** @type {string} */ css) => css.replace(/\/\*[\s\S]*?\*\//g, "");
+  const semanticPath = join(root, "css/tokens/semantic.css");
+  const semantic = existsSync(semanticPath) ? strip(readFileSync(semanticPath, "utf8")) : "";
+  const defaultOf = (/** @type {string} */ name) => semantic.match(new RegExp(`${name}\\s*:\\s*([^;]+);`))?.[1].trim() ?? "";
+  return THEMES.filter((t) => existsSync(join(root, `css/themes/${t.id}.css`))).map((t) => {
+    const file = `css/themes/${t.id}.css`;
+    const css = strip(readFileSync(join(root, file), "utf8"));
+    const tokens = [...css.matchAll(/(--dui-[\w-]+)\s*:\s*([^;]+);/g)].map((m) => ({ name: m[1], value: m[2].trim(), default: defaultOf(m[1]) }));
+    return { ...t, file, tokens };
+  });
+}
+
+/**
+ * The Themes page: how to load a theme, a radio group for the preview,
+ * the themes side by side (snippets from examples/themes.html), and one
+ * generated table per theme of the tokens it changes.
+ * @param {Model} model
+ * @returns {Page}
+ */
+function themesPage(model) {
+  const snippets = model.principleSnippets[THEMES_PAGE] ?? [];
+  const diffs = themeDiffs(model.root);
+  const tables = diffs.map(
+    (d) => `### ${d.title}
+
+[\`${d.file}\`](${BLOB_URL}${d.file}), \`data-theme="${d.id}"\`.
+
+| Token | Default | ${d.title} |
+| --- | --- | --- |
+${d.tokens.map((t) => `| \`${t.name}\` | ${t.default ? mdCode(t.default) : "none"} | ${mdCode(t.value)} |`).join("\n")}`,
+  );
+  const picker = `<fieldset class="docs-theme-picker" data-theme-picker hidden>
+<legend>Preview theme</legend>
+${[{ id: "", title: "Default" }, ...THEMES].map((t) => `<label><input type="radio" name="preview-theme" value="${t.id}"${t.id ? "" : " checked"}> ${t.title}</label>`).join("\n")}
+</fieldset>`;
+  return {
+    path: THEMES_PAGE,
+    section: "principles",
+    title: "Prebuilt themes",
+    heading: "Prebuilt themes",
+    navLabel: "Themes",
+    description: "Three opt-in themes, calm, soft and compact, each one CSS file of semantic token overrides, and the tokens each one changes.",
+    source: edit("css/themes/README.md"),
+    blocks: [
+      md(`Three opt-in themes ship in \`css/themes/\`. \`css/domestic.css\` imports none of them. Link one after \`css/domestic.css\` and set \`data-theme\` to its name on \`:root\` or any element; scopes nest. Each file sets semantic tokens only, with light and dark values. How themes work and how to write your own: [Theming](site:${principleLink(model, "theming")}).
+
+\`\`\`html
+<html lang="en" data-theme="soft">
+  <head>
+    <link rel="stylesheet" href="css/domestic.css">
+    <link rel="stylesheet" href="css/themes/soft.css">
+  </head>
+\`\`\`
+
+The theme menu in the app bar of these docs applies a theme to every page and remembers it in this browser.`),
+      { md: "", html: () => picker },
+      ...liveExampleBlocks(model, snippets),
+      md(`## Tokens each theme changes\n\nGenerated from the theme files and \`css/tokens/semantic.css\`.\n\n${tables.join("\n\n")}`),
+    ],
     snippets,
   };
 }

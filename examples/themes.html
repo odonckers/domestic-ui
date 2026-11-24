@@ -58,7 +58,70 @@
         Each theme is one opt-in file in <code>css/themes/</code>, linked after <code>css/domestic.css</code> and applied with
         <code>data-theme</code> on <code>:root</code> or any element. They set semantic tokens only.
       </p>
-      <!-- dui:snippet name="Calm, soft and compact" page="principles/theming" -->
+      <!-- dui:snippet name="Theme preview" page="principles/themes" -->
+      <section class="panel stack" aria-labelledby="preview-title">
+        <h2 id="preview-title">Orders</h2>
+        <p class="cluster">
+          <button type="submit">Save</button>
+          <button type="button" data-button="secondary">Export</button>
+          <button type="button" data-button="quiet">Cancel</button>
+          <button type="button" commandfor="preview-dialog" command="show-modal">Delete order…</button>
+        </p>
+        <div data-field>
+          <label for="preview-customer">Customer</label>
+          <input id="preview-customer" name="customer" type="text" value="Ada Lovelace" aria-describedby="preview-customer-hint">
+          <p id="preview-customer-hint" data-field="hint">As it appears on the invoice.</p>
+        </div>
+        <p class="cluster">
+          <span data-badge>Draft</span>
+          <span data-badge="accent">New</span>
+          <span data-badge="success">Paid</span>
+          <span data-badge="danger">Overdue</span>
+        </p>
+        <dui-tabs>
+          <nav aria-label="Order, preview">
+            <ul>
+              <li><a href="#preview-tab-items">Items</a></li>
+              <li><a href="#preview-tab-history">History</a></li>
+            </ul>
+          </nav>
+          <section id="preview-tab-items">
+            <h3>Items</h3>
+            <section data-scroll="inline" aria-labelledby="preview-caption" tabindex="0">
+              <table data-table>
+                <caption id="preview-caption">Items in order 1042</caption>
+                <thead>
+                  <tr><th scope="col">Item</th><th scope="col" data-table="number">Qty</th><th scope="col" data-table="number">Total</th></tr>
+                </thead>
+                <tbody>
+                  <tr><td>Brass gears</td><td data-table="number">12</td><td data-table="number">€ 480.00</td></tr>
+                  <tr><td>Punched cards</td><td data-table="number">500</td><td data-table="number">€ 760.00</td></tr>
+                </tbody>
+              </table>
+            </section>
+          </section>
+          <section id="preview-tab-history">
+            <h3>History</h3>
+            <p>Placed 12 March, shipped 14 March.</p>
+          </section>
+        </dui-tabs>
+        <article data-card>
+          <h3>Analytical Engines Ltd.</h3>
+          <p>Customer since 2019 · 14 orders.</p>
+        </article>
+        <dialog id="preview-dialog" data-dialog closedby="any" aria-labelledby="preview-dialog-title">
+          <header>
+            <h2 id="preview-dialog-title">Delete order 1042?</h2>
+          </header>
+          <p>This cannot be undone.</p>
+          <form method="dialog" class="cluster">
+            <button type="submit" value="delete">Delete</button>
+            <button type="submit" value="cancel" data-button="secondary">Cancel</button>
+          </form>
+        </dialog>
+      </section>
+      <!-- /dui:snippet -->
+      <!-- dui:snippet name="Calm, soft and compact" page="principles/themes" -->
       <div class="grid">
         <section class="panel stack" data-theme="calm" aria-labelledby="calm-title">
           <nav aria-label="Breadcrumb, calm theme" data-breadcrumb>

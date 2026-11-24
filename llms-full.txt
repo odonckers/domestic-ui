@@ -248,7 +248,7 @@ Check your theme's contrast in both schemes; `tests/tokens.spec.js` shows how.
 
 Three opt-in themes ship in `css/themes/`. `css/domestic.css` imports none of them, so the default ships no
 extra bytes. Link one after `css/domestic.css` and put its name in `data-theme` on `:root` or any element
-([`examples/themes.html`](https://odonckers.github.io/domestic-ui/principles/theming.md)). Each file sets semantic tokens only (`npm run lint:tokens`
+([`examples/themes.html`](https://odonckers.github.io/domestic-ui/principles/themes.md)). Each file sets semantic tokens only (`npm run lint:tokens`
 checks it), with light and dark values, so scopes nest, and forced colors keep the base behavior.
 
 | Theme | `data-theme` | Tokens it changes |
@@ -462,6 +462,207 @@ both densities side by side; [`explainers/density.md`](https://odonckers.github.
 
 ### Live example
 
+#### Forest theme
+
+```html
+<section class="panel stack" data-theme="forest" aria-labelledby="forest-title">
+  <nav aria-label="Breadcrumb, forest theme" data-breadcrumb>
+    <ol>
+      <li><a href="#forest-title">Home</a></li>
+      <li><a href="#forest-title">Releases</a></li>
+      <li><a href="#forest-title" aria-current="page">Release notes</a></li>
+    </ol>
+  </nav>
+  <h2 id="forest-title">Forest theme</h2>
+  <p>Release notes are ready for review. <a href="#forest-title">Read the summary</a> before the meeting.</p>
+  <p class="cluster">
+    <span data-badge>Draft</span>
+    <span data-badge="accent">New</span>
+    <span data-badge="success">Passing</span>
+    <span data-badge="warning">Review</span>
+    <span data-badge="danger">Blocked</span>
+  </p>
+  <form action="#forest-title" class="stack">
+    <div data-field>
+      <label for="forest-email">Email</label>
+      <input id="forest-email" name="email" type="email" autocomplete="email" value="ada@" aria-invalid="true" aria-describedby="forest-email-hint forest-email-error">
+      <p id="forest-email-hint" data-field="hint">Release notes go to this address.</p>
+      <p id="forest-email-error" data-field="error">Error: enter an email address like name@example.com.</p>
+    </div>
+    <label><input type="checkbox" role="switch" name="notify" checked> Notify subscribers</label>
+    <div class="cluster">
+      <button type="submit">Publish</button>
+      <button type="button" data-button="secondary">Save draft</button>
+      <button type="button" data-button="quiet">Discard</button>
+    </div>
+  </form>
+  <div data-alert="warning">
+    <p><strong>Warning:</strong> Two checks are still running.</p>
+  </div>
+  <dui-tabs>
+    <nav aria-label="Release, forest theme">
+      <ul>
+        <li><a href="#forest-tab-notes">Notes</a></li>
+        <li><a href="#forest-tab-checks">Checks</a></li>
+      </ul>
+    </nav>
+    <section id="forest-tab-notes">
+      <h3>Notes</h3>
+      <p>Two bug fixes and a new token.</p>
+    </section>
+    <section id="forest-tab-checks">
+      <h3>Checks</h3>
+      <p>Lint passed. Tests are running.</p>
+    </section>
+  </dui-tabs>
+  <article data-card="link">
+    <h3><a href="#forest-title">Upgrade guide</a></h3>
+    <p>What to change when you update.</p>
+  </article>
+  <details>
+    <summary>What changed?</summary>
+    <p>Two bug fixes and a new <code>--dui-color-success</code> token.</p>
+  </details>
+</section>
+```
+
+#### Forest theme CSS
+
+In the `<head>` of the live example above.
+
+```html
+<style id="forest-theme">
+  [data-theme="forest"] {
+    --dui-color-surface: light-dark(#f7f5ef, #141a16);
+    --dui-color-surface-raised: light-dark(#eeeadf, #1d2620);
+    --dui-color-text: light-dark(#1d2a22, #e4ebe3);
+    --dui-color-border: light-dark(#d8d1bf, #34433a);
+    --dui-color-accent: light-dark(#2f6b3f, #7fcf95);
+    --dui-color-accent-contrast: light-dark(#fff, #0f1a13);
+    --dui-color-primary: light-dark(#173528, #d7f5e3);
+    --dui-color-primary-contrast: light-dark(#fff, #0f1a13);
+    --dui-font-heading: charter, "Bitstream Charter", "Sitka Text", cambria, serif;
+    --dui-radius-control: 0.125rem;
+    --dui-radius-surface: 0.25rem;
+  }
+</style>
+```
+
+#### Radius scale
+
+```html
+<div class="grid">
+  <section class="radius-panel stack" data-theme style="--dui-radius-scale: 0" aria-labelledby="radius-0-title">
+    <h3 id="radius-0-title">Scale 0</h3>
+    <p><button type="button">Secondary</button> <button type="submit">Save</button></p>
+    <article data-card>
+      <h4>A card</h4>
+      <p>Square corners.</p>
+    </article>
+  </section>
+  <section class="radius-panel stack" data-theme style="--dui-radius-scale: 1" aria-labelledby="radius-1-title">
+    <h3 id="radius-1-title">Scale 1</h3>
+    <p><button type="button">Secondary</button> <button type="submit">Save</button></p>
+    <article data-card>
+      <h4>A card</h4>
+      <p>The default corners.</p>
+    </article>
+  </section>
+  <section class="radius-panel stack" data-theme style="--dui-radius-scale: 1.5" aria-labelledby="radius-15-title">
+    <h3 id="radius-15-title">Scale 1.5</h3>
+    <p><button type="button">Secondary</button> <button type="submit">Save</button></p>
+    <article data-card>
+      <h4>A card</h4>
+      <p>Rounder corners.</p>
+    </article>
+  </section>
+</div>
+```
+
+## Prebuilt themes
+
+Page: https://odonckers.github.io/domestic-ui/principles/themes.html
+
+Three opt-in themes ship in `css/themes/`. `css/domestic.css` imports none of them. Link one after `css/domestic.css` and set `data-theme` to its name on `:root` or any element; scopes nest. Each file sets semantic tokens only, with light and dark values. How themes work and how to write your own: [Theming](https://odonckers.github.io/domestic-ui/principles/theming.md).
+
+```html
+<html lang="en" data-theme="soft">
+  <head>
+    <link rel="stylesheet" href="css/domestic.css">
+    <link rel="stylesheet" href="css/themes/soft.css">
+  </head>
+```
+
+The theme menu in the app bar of these docs applies a theme to every page and remembers it in this browser.
+
+### Live example
+
+#### Theme preview
+
+```html
+<section class="panel stack" aria-labelledby="preview-title">
+  <h2 id="preview-title">Orders</h2>
+  <p class="cluster">
+    <button type="submit">Save</button>
+    <button type="button" data-button="secondary">Export</button>
+    <button type="button" data-button="quiet">Cancel</button>
+    <button type="button" commandfor="preview-dialog" command="show-modal">Delete order…</button>
+  </p>
+  <div data-field>
+    <label for="preview-customer">Customer</label>
+    <input id="preview-customer" name="customer" type="text" value="Ada Lovelace" aria-describedby="preview-customer-hint">
+    <p id="preview-customer-hint" data-field="hint">As it appears on the invoice.</p>
+  </div>
+  <p class="cluster">
+    <span data-badge>Draft</span>
+    <span data-badge="accent">New</span>
+    <span data-badge="success">Paid</span>
+    <span data-badge="danger">Overdue</span>
+  </p>
+  <dui-tabs>
+    <nav aria-label="Order, preview">
+      <ul>
+        <li><a href="#preview-tab-items">Items</a></li>
+        <li><a href="#preview-tab-history">History</a></li>
+      </ul>
+    </nav>
+    <section id="preview-tab-items">
+      <h3>Items</h3>
+      <section data-scroll="inline" aria-labelledby="preview-caption" tabindex="0">
+        <table data-table>
+          <caption id="preview-caption">Items in order 1042</caption>
+          <thead>
+            <tr><th scope="col">Item</th><th scope="col" data-table="number">Qty</th><th scope="col" data-table="number">Total</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Brass gears</td><td data-table="number">12</td><td data-table="number">€ 480.00</td></tr>
+            <tr><td>Punched cards</td><td data-table="number">500</td><td data-table="number">€ 760.00</td></tr>
+          </tbody>
+        </table>
+      </section>
+    </section>
+    <section id="preview-tab-history">
+      <h3>History</h3>
+      <p>Placed 12 March, shipped 14 March.</p>
+    </section>
+  </dui-tabs>
+  <article data-card>
+    <h3>Analytical Engines Ltd.</h3>
+    <p>Customer since 2019 · 14 orders.</p>
+  </article>
+  <dialog id="preview-dialog" data-dialog closedby="any" aria-labelledby="preview-dialog-title">
+    <header>
+      <h2 id="preview-dialog-title">Delete order 1042?</h2>
+    </header>
+    <p>This cannot be undone.</p>
+    <form method="dialog" class="cluster">
+      <button type="submit" value="delete">Delete</button>
+      <button type="submit" value="cancel" data-button="secondary">Cancel</button>
+    </form>
+  </dialog>
+</section>
+```
+
 #### Calm, soft and compact
 
 ```html
@@ -646,122 +847,57 @@ both densities side by side; [`explainers/density.md`](https://odonckers.github.
 </div>
 ```
 
-#### Forest theme
+### Tokens each theme changes
 
-```html
-<section class="panel stack" data-theme="forest" aria-labelledby="forest-title">
-  <nav aria-label="Breadcrumb, forest theme" data-breadcrumb>
-    <ol>
-      <li><a href="#forest-title">Home</a></li>
-      <li><a href="#forest-title">Releases</a></li>
-      <li><a href="#forest-title" aria-current="page">Release notes</a></li>
-    </ol>
-  </nav>
-  <h2 id="forest-title">Forest theme</h2>
-  <p>Release notes are ready for review. <a href="#forest-title">Read the summary</a> before the meeting.</p>
-  <p class="cluster">
-    <span data-badge>Draft</span>
-    <span data-badge="accent">New</span>
-    <span data-badge="success">Passing</span>
-    <span data-badge="warning">Review</span>
-    <span data-badge="danger">Blocked</span>
-  </p>
-  <form action="#forest-title" class="stack">
-    <div data-field>
-      <label for="forest-email">Email</label>
-      <input id="forest-email" name="email" type="email" autocomplete="email" value="ada@" aria-invalid="true" aria-describedby="forest-email-hint forest-email-error">
-      <p id="forest-email-hint" data-field="hint">Release notes go to this address.</p>
-      <p id="forest-email-error" data-field="error">Error: enter an email address like name@example.com.</p>
-    </div>
-    <label><input type="checkbox" role="switch" name="notify" checked> Notify subscribers</label>
-    <div class="cluster">
-      <button type="submit">Publish</button>
-      <button type="button" data-button="secondary">Save draft</button>
-      <button type="button" data-button="quiet">Discard</button>
-    </div>
-  </form>
-  <div data-alert="warning">
-    <p><strong>Warning:</strong> Two checks are still running.</p>
-  </div>
-  <dui-tabs>
-    <nav aria-label="Release, forest theme">
-      <ul>
-        <li><a href="#forest-tab-notes">Notes</a></li>
-        <li><a href="#forest-tab-checks">Checks</a></li>
-      </ul>
-    </nav>
-    <section id="forest-tab-notes">
-      <h3>Notes</h3>
-      <p>Two bug fixes and a new token.</p>
-    </section>
-    <section id="forest-tab-checks">
-      <h3>Checks</h3>
-      <p>Lint passed. Tests are running.</p>
-    </section>
-  </dui-tabs>
-  <article data-card="link">
-    <h3><a href="#forest-title">Upgrade guide</a></h3>
-    <p>What to change when you update.</p>
-  </article>
-  <details>
-    <summary>What changed?</summary>
-    <p>Two bug fixes and a new <code>--dui-color-success</code> token.</p>
-  </details>
-</section>
-```
+Generated from the theme files and `css/tokens/semantic.css`.
 
-#### Forest theme CSS
+#### Calm
 
-In the `<head>` of the live example above.
+[`css/themes/calm.css`](https://github.com/odonckers/domestic-ui/blob/main/css/themes/calm.css), `data-theme="calm"`.
 
-```html
-<style id="forest-theme">
-  [data-theme="forest"] {
-    --dui-color-surface: light-dark(#f7f5ef, #141a16);
-    --dui-color-surface-raised: light-dark(#eeeadf, #1d2620);
-    --dui-color-text: light-dark(#1d2a22, #e4ebe3);
-    --dui-color-border: light-dark(#d8d1bf, #34433a);
-    --dui-color-accent: light-dark(#2f6b3f, #7fcf95);
-    --dui-color-accent-contrast: light-dark(#fff, #0f1a13);
-    --dui-color-primary: light-dark(#173528, #d7f5e3);
-    --dui-color-primary-contrast: light-dark(#fff, #0f1a13);
-    --dui-font-heading: charter, "Bitstream Charter", "Sitka Text", cambria, serif;
-    --dui-radius-control: 0.125rem;
-    --dui-radius-surface: 0.25rem;
-  }
-</style>
-```
+| Token | Default | Calm |
+| --- | --- | --- |
+| `--dui-color-primary` | `light-dark(var(--dui-color-neutral-12), var(--dui-color-neutral-dark-12))` | `var(--dui-color-accent)` |
+| `--dui-color-primary-hover` | `light-dark(oklch(from var(--dui-color-primary) 32% calc(c + 0.002) h), oklch(from var(--dui-color-primary) 86% calc(c + 0.004) h))` | `var(--dui-color-accent-hover)` |
+| `--dui-color-primary-contrast` | `light-dark(var(--dui-color-white), var(--dui-color-neutral-dark-1))` | `var(--dui-color-accent-contrast)` |
+| `--dui-color-shadow` | `light-dark(var(--dui-color-neutral-shadow), var(--dui-color-neutral-dark-shadow))` | `light-dark(oklch(32% 0.06 272deg / 14%), oklch(12% 0.04 272deg / 50%))` |
 
-#### Radius scale
+#### Soft
 
-```html
-<div class="grid">
-  <section class="radius-panel stack" data-theme style="--dui-radius-scale: 0" aria-labelledby="radius-0-title">
-    <h3 id="radius-0-title">Scale 0</h3>
-    <p><button type="button">Secondary</button> <button type="submit">Save</button></p>
-    <article data-card>
-      <h4>A card</h4>
-      <p>Square corners.</p>
-    </article>
-  </section>
-  <section class="radius-panel stack" data-theme style="--dui-radius-scale: 1" aria-labelledby="radius-1-title">
-    <h3 id="radius-1-title">Scale 1</h3>
-    <p><button type="button">Secondary</button> <button type="submit">Save</button></p>
-    <article data-card>
-      <h4>A card</h4>
-      <p>The default corners.</p>
-    </article>
-  </section>
-  <section class="radius-panel stack" data-theme style="--dui-radius-scale: 1.5" aria-labelledby="radius-15-title">
-    <h3 id="radius-15-title">Scale 1.5</h3>
-    <p><button type="button">Secondary</button> <button type="submit">Save</button></p>
-    <article data-card>
-      <h4>A card</h4>
-      <p>Rounder corners.</p>
-    </article>
-  </section>
-</div>
-```
+[`css/themes/soft.css`](https://github.com/odonckers/domestic-ui/blob/main/css/themes/soft.css), `data-theme="soft"`.
+
+| Token | Default | Soft |
+| --- | --- | --- |
+| `--dui-color-surface` | `light-dark(var(--dui-color-neutral-1), var(--dui-color-neutral-dark-1))` | `light-dark(oklch(99.2% 0.004 70deg), oklch(17% 0.006 70deg))` |
+| `--dui-color-surface-raised` | `light-dark(var(--dui-color-neutral-2), var(--dui-color-neutral-dark-2))` | `light-dark(oklch(98% 0.006 70deg), oklch(19.5% 0.008 70deg))` |
+| `--dui-color-surface-sunken` | `light-dark(var(--dui-color-neutral-3), var(--dui-color-neutral-dark-3))` | `light-dark(oklch(96% 0.008 70deg), oklch(22.5% 0.01 70deg))` |
+| `--dui-color-surface-hover` | `light-dark(var(--dui-color-neutral-4), var(--dui-color-neutral-dark-4))` | `light-dark(oklch(93.8% 0.01 70deg), oklch(26.5% 0.012 70deg))` |
+| `--dui-color-surface-active` | `light-dark(var(--dui-color-neutral-5), var(--dui-color-neutral-dark-5))` | `light-dark(oklch(90.8% 0.012 70deg), oklch(31.5% 0.014 70deg))` |
+| `--dui-color-text` | `light-dark(var(--dui-color-neutral-12), var(--dui-color-neutral-dark-12))` | `light-dark(oklch(22% 0.014 70deg), oklch(95% 0.006 70deg))` |
+| `--dui-color-text-muted` | `light-dark(var(--dui-color-neutral-11), var(--dui-color-neutral-dark-11))` | `light-dark(oklch(47% 0.018 70deg), oklch(76% 0.014 70deg))` |
+| `--dui-color-border` | `light-dark(var(--dui-color-neutral-12-a11), var(--dui-color-neutral-dark-12-a10))` | `light-dark(oklch(22% 0.014 70deg / 11%), oklch(95% 0.006 70deg / 10%))` |
+| `--dui-color-border-control` | `light-dark(var(--dui-color-neutral-8), var(--dui-color-neutral-dark-8))` | `light-dark(oklch(58% 0.018 70deg), oklch(58.5% 0.018 70deg))` |
+| `--dui-color-border-control-hover` | `light-dark(var(--dui-color-neutral-9), var(--dui-color-neutral-dark-9))` | `light-dark(oklch(52% 0.018 70deg), oklch(66% 0.016 70deg))` |
+| `--dui-color-border-button` | `light-dark(var(--dui-color-neutral-7), var(--dui-color-neutral-dark-7))` | `light-dark(oklch(72% 0.016 70deg), oklch(48% 0.016 70deg))` |
+| `--dui-color-shadow` | `light-dark(var(--dui-color-neutral-shadow), var(--dui-color-neutral-dark-shadow))` | `light-dark(oklch(32% 0.03 50deg / 11%), oklch(12% 0.02 50deg / 48%))` |
+| `--dui-color-accent` | `light-dark(var(--dui-color-indigo-9), var(--dui-color-indigo-dark-9))` | `oklch(55% 0.15 40deg)` |
+| `--dui-color-primary` | `light-dark(var(--dui-color-neutral-12), var(--dui-color-neutral-dark-12))` | `var(--dui-color-accent)` |
+| `--dui-color-primary-hover` | `light-dark(oklch(from var(--dui-color-primary) 32% calc(c + 0.002) h), oklch(from var(--dui-color-primary) 86% calc(c + 0.004) h))` | `var(--dui-color-accent-hover)` |
+| `--dui-color-primary-contrast` | `light-dark(var(--dui-color-white), var(--dui-color-neutral-dark-1))` | `var(--dui-color-accent-contrast)` |
+| `--dui-radius-scale` | `var(--dui-factor-1)` | `1.5` |
+| `--dui-density-scale` | `var(--dui-factor-1)` | `1.25` |
+| `--dui-elevation-strength` | `var(--dui-mix-100)` | `80%` |
+
+#### Compact
+
+[`css/themes/compact.css`](https://github.com/odonckers/domestic-ui/blob/main/css/themes/compact.css), `data-theme="compact"`.
+
+| Token | Default | Compact |
+| --- | --- | --- |
+| `--dui-color-accent` | `light-dark(var(--dui-color-indigo-9), var(--dui-color-indigo-dark-9))` | `oklch(53% 0.15 250deg)` |
+| `--dui-radius-scale` | `var(--dui-factor-1)` | `0.25` |
+| `--dui-density-scale` | `var(--dui-factor-1)` | `0` |
+| `--dui-elevation-strength` | `var(--dui-mix-100)` | `35%` |
 
 ## Motion
 

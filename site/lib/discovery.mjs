@@ -661,7 +661,7 @@ export function loadModel(root) {
     c.usedIn = [...new Set(c.usedIn.flatMap((p) => snippets.filter((s) => s.source === p).map((s) => /** @type {string} */ (s.owner))))].filter((p) => p !== c.sitePath);
   }
   for (const p of patterns) p.snippets = ownedBy(p.sitePath);
-  const principleSnippets = Object.fromEntries(principles.sections.map((s) => [s.sitePath, ownedBy(s.sitePath)]));
+  const principleSnippets = Object.fromEntries([...principles.sections.map((s) => s.sitePath), THEMES_PAGE].map((path) => [path, ownedBy(path)]));
 
   /**
    * Where each old example URL now lives: the page that shows its snippets, a
@@ -708,6 +708,9 @@ export function loadModel(root) {
     exampleTargets,
   };
 }
+
+/** The Themes page (site/lib/pages.mjs), under Principles after Theming: it shows the snippets with page="principles/themes". */
+export const THEMES_PAGE = "principles/themes.html";
 
 /** "atoms" → "Atoms", from COMPONENT_GROUPS where listed. @param {string} group */
 const groupTitle = (group) => COMPONENT_GROUPS.find((g) => g.group === group)?.title ?? titleFromName(group);

@@ -20,7 +20,7 @@
  */
 import { markdownToHtml, uniqueId } from "./markdown.mjs";
 import { renderBreadcrumb, renderNav, renderPrevNext, renderSections } from "./nav.mjs";
-import { REPO_URL, SITE_URL, BLOB_URL, escapeHtml, relativeUrl } from "./util.mjs";
+import { REPO_URL, SITE_URL, BLOB_URL, THEMES, THEME_RESTORE, escapeHtml, relativeUrl } from "./util.mjs";
 
 /** @typedef {import("./pages.mjs").Page} Page */
 
@@ -52,6 +52,8 @@ export function renderHtml(page, tree) {
     <meta name="description" content="${escapeHtml(page.description)}">
     <link rel="stylesheet" href="${link("css/domestic.css")}">
     <link rel="stylesheet" href="${link("css/fonts/inter.css")}">
+${THEMES.map((t) => `    <link rel="stylesheet" href="${link(`css/themes/${t.id}.css`)}">`).join("\n")}
+    <script>${THEME_RESTORE}</script>
     <link rel="stylesheet" href="${link("site.css")}">
     <link rel="alternate" type="text/markdown" href="${link(page.path.replace(/\.html$/, ".md"))}">
     <script type="module" src="${link("web-components/dui-app-shell.js")}"></script>
@@ -75,6 +77,13 @@ export function renderHtml(page, tree) {
         ${renderSections(page, link)}
         <!-- Slot for the site search (M4): search-index.json. Empty and hidden until then. -->
         <div class="docs-search" data-docs-search hidden></div>
+        <div class="docs-theme" data-docs-theme hidden>
+          <label for="docs-theme-select">Theme</label>
+          <select id="docs-theme-select">
+            <option value="">Default</option>
+${THEMES.map((t) => `            <option value="${t.id}">${t.title}</option>`).join("\n")}
+          </select>
+        </div>
         <a class="docs-github" href="${REPO_URL}">GitHub</a>
       </header>
       ${renderNav(page, tree, link)}

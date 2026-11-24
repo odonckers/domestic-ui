@@ -890,7 +890,11 @@ test.describe("docs pages in the browser", () => {
       const next = page.locator('nav[aria-label="Previous and next"] a[rel="next"]');
       if (!(await next.count())) break;
       await expect(next).toHaveText(/^Next: /);
+      // Wait for the navigation itself: the click can return before the next page is in place.
+      const target = new URL(/** @type {string} */ (await next.getAttribute("href")), page.url()).href;
       await next.click();
+      await page.waitForURL(target);
+      await page.waitForLoadState();
       walked.push(new URL(page.url()).pathname.replace(/^\/_site\//, ""));
     }
     expect(walked).toEqual(linked);
@@ -1215,5 +1219,67 @@ test.describe("docs frame", () => {
       test.skip(!supported, "this engine has no prefers-reduced-transparency emulation");
       expect(await page.locator("dui-app-shell > header").evaluate((el) => getComputedStyle(el).backdropFilter)).toBe("none");
     });
+  });
+});
+
+test.describe("theme switcher and themes page", () => {
+  test.use({ viewport: { width: 1280, height: 800 } });
+
+  test("the app bar's theme select is labelled, applies data-theme without moving focus, and survives reload and navigation", async ({ page, baseURL }) => {
+    const external = await blockExternalRequests(page, /** @type {string} */ (baseURL));
+    await page.goto("_site/index.html");
+    const select = page.getByLabel("Theme", { exact: true });
+    await expect(select).toBeVisible();
+    await expect(select).toHaveValue("");
+    await select.focus();
+    await select.selectOption("soft");
+    await expect(select).toBeFocused();
+    await expect(page.locator("html")).toHaveAttribute("data-theme", "soft");
+    const radius = await page.locator(".docs-hero-actions a").first().evaluate((el) => getComputedStyle(el).borderTopLeftRadius);
+    expect(radius).toBe("12px");
+    await page.reload();
+    await expect(page.locator("html")).toHaveAttribute("data-theme", "soft");
+    await page.goto("_site/principles/index.html");
+    await expect(page.locator("html")).toHaveAttribute("data-theme", "soft");
+    await expect(page.getByLabel("Theme", { exact: true })).toHaveValue("soft");
+    await page.getByLabel("Theme", { exact: true }).selectOption("");
+    await expect(page.locator("html")).not.toHaveAttribute("data-theme");
+    await page.evaluate(() => localStorage.clear());
+    await page.reload();
+    await expect(page.locator("html")).not.toHaveAttribute("data-theme");
+    expect(external).toEqual([]);
+  });
+
+  test("an unknown stored theme is ignored", async ({ page }) => {
+    await page.addInitScript(() => localStorage.setItem("dui-docs-theme", "nope"));
+    await page.goto("_site/index.html");
+    await expect(page.locator("html")).not.toHaveAttribute("data-theme");
+  });
+
+  test("without JavaScript the theme select and the preview radios are hidden", async ({ browser, baseURL }) => {
+    const context = await browser.newContext({ javaScriptEnabled: false, baseURL });
+    const page = await context.newPage();
+    await page.goto("_site/principles/themes.html");
+    await expect(page.locator("[data-docs-theme]")).toBeHidden();
+    await expect(page.locator("[data-theme-picker]")).toBeHidden();
+    await context.close();
+  });
+
+  test("the themes page radio group themes the preview frame only, and lists every token each theme file sets", async ({ page }) => {
+    await page.goto("_site/principles/themes.html");
+    const group = page.getByRole("group", { name: "Preview theme" });
+    await expect(group).toBeVisible();
+    await group.getByLabel("Compact").check();
+    await expect(group.getByLabel("Compact")).toBeFocused();
+    const frame = page.frameLocator('iframe[title="Live example: Theme preview"]');
+    await expect(frame.locator("html")).toHaveAttribute("data-theme", "compact");
+    await expect(page.locator("html")).not.toHaveAttribute("data-theme");
+    for (const theme of ["calm", "soft", "compact"]) {
+      const css = readFileSync(join(ROOT, `css/themes/${theme}.css`), "utf8").replace(/\/\*[\s\S]*?\*\//g, "");
+      const names = [...css.matchAll(/(--dui-[\w-]+)\s*:/g)].map((m) => m[1]);
+      expect(names.length).toBeGreaterThan(0);
+      const table = page.locator("table").filter({ has: page.locator(`th:has-text("${theme[0].toUpperCase()}${theme.slice(1)}")`) });
+      for (const name of names) await expect(table.locator("th[scope=row] code", { hasText: new RegExp(`^${name}$`) })).toHaveCount(1);
+    }
   });
 });

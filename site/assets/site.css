@@ -110,8 +110,39 @@
   text-decoration-line: none;
 }
 
+/* The theme menu (shown by site.js): a labelled native select, before GitHub at the end of the app bar. */
+.docs-theme {
+  display: flex;
+  align-items: center;
+  gap: var(--dui-space-xs);
+  margin-inline-start: auto;
+  font-size: var(--dui-font-size-ui);
+}
+
+/*
+ * The select sits in the app bar row: no stacked-label gap, and no block
+ * padding beyond its control height, so the bar keeps one height in every
+ * engine (WebKit draws a select taller than its padding box otherwise).
+ */
+.docs-theme select {
+  inline-size: auto;
+  margin-block-start: 0;
+  padding-block: 0;
+}
+
 .docs-github {
   margin-inline-start: auto;
+}
+
+.docs-theme:not([hidden]) + .docs-github {
+  margin-inline-start: 0;
+}
+
+/* Themes page: the preview's radio group, one row. */
+.docs-theme-picker {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--dui-space-xs) var(--dui-space-m);
 }
 
 /* Skip link: hidden by .visually-hidden until focused, then pinned top-left. */

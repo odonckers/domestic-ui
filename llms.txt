@@ -16,6 +16,7 @@ Link `css/domestic.css` (copy `css/` from the v0.1.0 release, https://github.com
 - [Accessibility baseline: WCAG 2.2 AA](https://odonckers.github.io/domestic-ui/principles/accessibility-baseline-wcag-22-aa.md): Every example must pass, and every token pair is tested against, these criteria.
 - [Cascade layers](https://odonckers.github.io/domestic-ui/principles/cascade-layers.md): css/domestic.css declares the order once, before anything else (@layer on MDN, CSS Cascade 5).
 - [Theming](https://odonckers.github.io/domestic-ui/principles/theming.md): All tokens are custom properties on :root with the --dui- prefix.
+- [Prebuilt themes](https://odonckers.github.io/domestic-ui/principles/themes.md): Three opt-in themes, calm, soft and compact, each one CSS file of semantic token overrides, and the tokens each one changes.
 - [Motion](https://odonckers.github.io/domestic-ui/principles/motion.md): Motion is CSS-first, token-driven and close to platform behavior: short fades, a drawer that slides from its edge, popovers and menus that grow a little as they appear, and color changes on buttons, links and the switch.
 - [Elevation](https://odonckers.github.io/domestic-ui/principles/elevation.md): Elevation says which layer is on top.
 - [Opinions we hold](https://odonckers.github.io/domestic-ui/principles/opinions-we-hold.md): Each of these is a choice between valid options, not a standard.
