@@ -890,7 +890,11 @@ test.describe("docs pages in the browser", () => {
       const next = page.locator('nav[aria-label="Previous and next"] a[rel="next"]');
       if (!(await next.count())) break;
       await expect(next).toHaveText(/^Next: /);
+      // Wait for the navigation itself: the click can return before the next page is in place.
+      const target = new URL(/** @type {string} */ (await next.getAttribute("href")), page.url()).href;
       await next.click();
+      await page.waitForURL(target);
+      await page.waitForLoadState();
       walked.push(new URL(page.url()).pathname.replace(/^\/_site\//, ""));
     }
     expect(walked).toEqual(linked);
