@@ -241,6 +241,7 @@ may change. Fluid `--dui-step-*` values are `clamp()` expressions; see `primitiv
 | `--dui-color-surface-sunken` | Recessed areas: code, button hover (step 3) | light: `neutral-3` (`oklch(96.2% 0.005 265)`)<br>dark: `neutral-dark-3` (`oklch(22% 0.009 265)`) |
 | `--dui-color-surface-hover` | Hover fill of quiet buttons, nav, menu and listbox rows (step 4) | light: `neutral-4` (`oklch(94% 0.006 265)`)<br>dark: `neutral-dark-4` (`oklch(26% 0.011 265)`) |
 | `--dui-color-surface-active` | Pressed fill of quiet buttons (step 5) | light: `neutral-5` (`oklch(91% 0.008 265)`)<br>dark: `neutral-dark-5` (`oklch(31% 0.012 265)`) |
+| `--dui-color-surface-frame` | Background of an app shell's frame: the app bar and sidebars sit on it, around the main content panel | `--dui-color-surface-raised` |
 | `--dui-color-text` | Body text (step 12) | light: `neutral-12` (`oklch(21.5% 0.012 265)`)<br>dark: `neutral-dark-12` (`oklch(95% 0.004 265)`) |
 | `--dui-color-text-muted` | Secondary text, captions, list markers (step 11, still 4.5:1). Above `--dui-contrast` 1 it moves toward `--dui-color-text` | light: `neutral-11` (`oklch(47.5% 0.016 265)`)<br>dark: `neutral-dark-11` (`oklch(76% 0.012 265)`) |
 | `--dui-color-border` | Decorative hairline: the text color at about 11% alpha, times `--dui-contrast` | light: `neutral-12` at 11% (`oklch(21.5% 0.012 265 / 11%)`)<br>dark: `neutral-dark-12` at 10% (`oklch(95% 0.004 265 / 10%)`) |
@@ -380,8 +381,8 @@ may change. Fluid `--dui-step-*` values are `clamp()` expressions; see `primitiv
 | `--dui-elevation-0-surface` … `--dui-elevation-4-surface` | Surface per level | light: `--dui-color-surface`<br>dark: `--dui-color-surface` with N × `--dui-elevation-surface-step` of `--dui-color-text` |
 | `--dui-elevation-flat`, `-raised`, `-overlay`, `-popover`, `-dialog` | Shadow by role | levels 0, 1, 2, 3, 4 |
 | `--dui-elevation-flat-surface`, `-raised-surface`, `-overlay-surface`, `-popover-surface`, `-dialog-surface` | Surface by role | level 0 to 4 surfaces |
-| `--dui-elevation-panel` | Shadow of floating panels: app shell sidebars, the docs sidebar and table of contents | `--dui-elevation-2` |
-| `--dui-elevation-panel-surface` | Surface of floating panels | `--dui-color-surface-raised` |
+| `--dui-elevation-panel` | Shadow of floating panels: the app shell's main content panel | `--dui-elevation-1` |
+| `--dui-elevation-panel-surface` | Surface of floating panels | `--dui-color-surface` |
 | `--dui-shadow-raised` | **Deprecated**, removed in the next release: use `--dui-elevation-raised` | `--dui-elevation-1` |
 | `--dui-duration-fast` | **Deprecated**, removed in the next release | `--dui-motion-duration-fast` |
 | `--dui-duration-normal` | **Deprecated**, removed in the next release | `--dui-motion-duration-normal` |
@@ -501,7 +502,7 @@ Elevation says which layer is on top. Five levels, each a
 | `--dui-elevation-2` | `--dui-elevation-overlay` | Toasts |
 | `--dui-elevation-3` | `--dui-elevation-popover` | Popovers, menus, tooltips, nav dropdowns |
 | `--dui-elevation-4` | `--dui-elevation-dialog` | Dialogs and drawers |
-| `--dui-elevation-2` | `--dui-elevation-panel` | Floating sidebars and side panels, on `--dui-elevation-panel-surface` (the raised surface) |
+| `--dui-elevation-1` | `--dui-elevation-panel` | The app shell's main content panel on the frame, on `--dui-elevation-panel-surface` (the page surface) |
 
 Each has a `-surface` twin (`--dui-elevation-2-surface`, `--dui-elevation-overlay-surface`).
 **Components use the role tokens only**, never the numbers, so a theme can move a role to another level.
@@ -534,8 +535,11 @@ Each has a `-surface` twin (`--dui-elevation-2-surface`, `--dui-elevation-overla
   so every elevated component keeps a transparent border, which forced colors paints in a system
   color (`CanvasText`) there.
 - **Floating panels.** `--dui-elevation-panel` and `--dui-elevation-panel-surface`, with
-  `--dui-radius-surface` corners and `--dui-space-panel-inset` from the frame edge, are for sidebars
-  that float on the page background instead of being glued to the viewport edge.
+  `--dui-radius-surface` corners and `--dui-space-panel-inset` from the frame edge, are for the app
+  shell's main content panel. The app bar and the sidebars sit flat on `--dui-color-surface-frame`
+  around it, with no hairlines. **Our choice:** one inset content panel on a quiet frame, as
+  [Linear](https://linear.app/blog/how-we-redesigned-the-linear-ui) draws its app, because a single
+  edge separates the chrome from the content with less noise than floating every sidebar.
 - **Our choice:** toasts sit at the overlay level, below popovers and dialogs, because they are
   non-modal and must not cover an open menu or dialog.
 - **Our choice:** the dark-scheme step mixes in the text color rather than white, so a theme's tint
