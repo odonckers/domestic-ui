@@ -89,7 +89,7 @@ ${demoListMd(model)}${model.demoViews ? `\n\nViews: ${demoViewTitlesMd(model)}; 
 
 ## Contributing and license
 
-[Contributing](site:contributing.html), [Code of Conduct](${BLOB_URL}CODE_OF_CONDUCT.md), [Security](${BLOB_URL}SECURITY.md), [Changelog](site:changelog.html). \`npm test\` runs every check. [MIT](${BLOB_URL}LICENSE).
+[Contributing](site:contributing.html), [Code of Conduct](${BLOB_URL}CODE_OF_CONDUCT.md), [Security](${BLOB_URL}SECURITY.md), [Changelog](site:changelog.html). \`npm test\` runs every check. [MIT](${BLOB_URL}LICENSE). The optional \`css/fonts/inter.css\` ships [Inter](https://rsms.me/inter/) by Rasmus Andersson under the [SIL Open Font License 1.1](${BLOB_URL}css/fonts/OFL.txt).
 `;
   return link(md);
 }

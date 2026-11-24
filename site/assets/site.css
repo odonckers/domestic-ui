@@ -6,6 +6,15 @@
  */
 
 /*
+ * The docs opt into the optional self-hosted Inter (css/fonts/inter.css,
+ * linked by the page template). css/domestic.css alone makes no font
+ * requests; the system stack stays the fallback.
+ */
+:root {
+  --dui-font-body: inter, system-ui, sans-serif;
+}
+
+/*
  * The frame is the app shell (css/layout/app-shell.css, <dui-app-shell>):
  * app bar, Docs sidebar, main, "On this page" and footer. The 64rem
  * container queries below are app-shell.css's auxiliary-sidebar breakpoint

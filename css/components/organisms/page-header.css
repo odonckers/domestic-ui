@@ -73,6 +73,11 @@
   overflow-wrap: break-word;
 }
 
+/* An app page title, not a display heading: 30px at most (--dui-font-size-page-title). */
+[data-page-header] > h1 {
+  font-size: var(--dui-font-size-page-title);
+}
+
 [data-page-header] > p {
   color: var(--dui-color-text-muted);
 }

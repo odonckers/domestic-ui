@@ -118,4 +118,4 @@ Views: Dashboard, Account settings and Orders; [source per view and app](https:/
 
 ## Contributing and license
 
-[Contributing](https://odonckers.github.io/domestic-ui/contributing.html), [Code of Conduct](https://github.com/odonckers/domestic-ui/blob/main/CODE_OF_CONDUCT.md), [Security](https://github.com/odonckers/domestic-ui/blob/main/SECURITY.md), [Changelog](https://odonckers.github.io/domestic-ui/changelog.html). `npm test` runs every check. [MIT](https://github.com/odonckers/domestic-ui/blob/main/LICENSE).
+[Contributing](https://odonckers.github.io/domestic-ui/contributing.html), [Code of Conduct](https://github.com/odonckers/domestic-ui/blob/main/CODE_OF_CONDUCT.md), [Security](https://github.com/odonckers/domestic-ui/blob/main/SECURITY.md), [Changelog](https://odonckers.github.io/domestic-ui/changelog.html). `npm test` runs every check. [MIT](https://github.com/odonckers/domestic-ui/blob/main/LICENSE). The optional `css/fonts/inter.css` ships [Inter](https://rsms.me/inter/) by Rasmus Andersson under the [SIL Open Font License 1.1](https://github.com/odonckers/domestic-ui/blob/main/css/fonts/OFL.txt).

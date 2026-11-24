@@ -240,6 +240,8 @@ with a `data-theme` attribute or a `theme-*` class to scope it:
 Shape has one knob: `--dui-radius-scale` multiplies `--dui-radius-control` (8px) and
 `--dui-radius-surface` (12px); `0` gives square corners and `1.5` rounder ones, while pills stay round.
 Radix Themes has the same idea ([`--radius-factor`](https://www.radix-ui.com/themes/docs/theme/radius)), for comparison.
+Type has one opt-in: link `css/fonts/inter.css` and set `--dui-font-body: Inter, system-ui, sans-serif` to use the
+self-hosted Inter instead of the system stack (see "Opinions we hold"); nothing else changes.
 Check your theme's contrast in both schemes; `tests/tokens.spec.js` shows how.
 
 A few semantic tokens are defined in terms of others (`--dui-color-accent-text`,
@@ -291,23 +293,26 @@ may change. Fluid `--dui-step-*` values are `clamp()` expressions; see `primitiv
 | `--dui-color-code-property` | CSS and JS properties in highlighted code (4.5:1 on surface-sunken) | light: `teal-11` (`oklch(49.1% 0.081 203)`)<br>dark: `teal-dark-11` (`oklch(77.3% 0.099 203)`) |
 | `--dui-color-code-number` | Numbers and units in highlighted code (4.5:1 on surface-sunken) | light: `red-11` (`oklch(48% 0.16 27)`)<br>dark: `red-dark-11` (`oklch(80% 0.114 27)`) |
 | `--dui-color-code-punctuation` | Brackets, braces and separators in highlighted code (4.5:1 on surface-sunken) | light: `neutral-punctuation` (`oklch(37% 0.016 265)`)<br>dark: `neutral-dark-punctuation` (`oklch(83.5% 0.01 265)`) |
-| `--dui-font-body` | Body font stack | `--dui-font-stack-system-ui` (`system-ui, sans-serif`) |
+| `--dui-font-body` | Body font stack | `--dui-font-stack-system-ui` (`system-ui`, `-apple-system`, `"Segoe UI Variable Text"`, `"Segoe UI"`, Roboto, `"Noto Sans"`, `"Helvetica Neue"`, Arial, `sans-serif`) |
 | `--dui-font-mono` | Code font stack | `--dui-font-stack-monospace` (`ui-monospace`, …, `monospace`) |
 | `--dui-font-weight-body` | Body weight | `font-weight-400` (400) |
 | `--dui-font-weight-strong` | strong, labels, buttons, th | `font-weight-600` (600) |
-| `--dui-font-weight-heading` | h1–h6 | `font-weight-700` (700) |
-| `--dui-step--1` | small, captions | `--dui-font-size-fluid--1` |
-| `--dui-step-0` | Body text, h6 | `--dui-font-size-fluid-0` |
-| `--dui-step-1` | h5 | `--dui-font-size-fluid-1` |
-| `--dui-step-2` | h4 | `--dui-font-size-fluid-2` |
-| `--dui-step-3` | h3 | `--dui-font-size-fluid-3` |
-| `--dui-step-4` | h2 | `--dui-font-size-fluid-4` |
-| `--dui-step-5` | h1 | `--dui-font-size-fluid-5` |
+| `--dui-font-weight-heading` | h1–h6 | `font-weight-600` (600) |
+| `--dui-step--1` | small, captions, and the UI text size | `font-size-0-875` (0.875rem, 14px) |
+| `--dui-step-0` | Body text, h6 | `font-size-1` (1rem) |
+| `--dui-step-1` | h5 | `font-size-1-125` (1.125rem) |
+| `--dui-step-2` | h4 | `font-size-1-375` (1.375rem) |
+| `--dui-step-3` | h3, page titles | `font-size-fluid-3` (`clamp()`, 1.5rem to 1.875rem) |
+| `--dui-step-4` | h2 | `font-size-fluid-4` (`clamp()`, 1.75rem to 2.375rem) |
+| `--dui-step-5` | h1, docs and marketing heroes | `font-size-fluid-5` (`clamp()`, 2rem to 3rem) |
+| `--dui-font-size-ui` | Interface text: buttons, fields, selects, nav, menu and listbox items, tabs, badges, tooltips, table cells | `--dui-step--1` (14px) |
+| `--dui-font-size-page-title` | The `h1` of a page header or an app shell | `--dui-step-3` (1.875rem at most) |
 | `--dui-font-size-code` | code, kbd, samp, pre (relative) | `font-size-relative-90` (0.9em) |
-| `--dui-line-height-body` | Body text | `leading-160` (1.6) |
-| `--dui-line-height-heading` | Headings, buttons, pre | `leading-125` (1.25) |
+| `--dui-line-height-body` | Body text | `leading-150` (1.5) |
+| `--dui-line-height-heading` | Headings, buttons, pre | `leading-120` (1.2) |
 | `--dui-line-height-display` | h1 | `leading-110` (1.1) |
-| `--dui-letter-spacing-heading` | h1, h2 | `tracking-tight` (-0.015em) |
+| `--dui-letter-spacing-heading` | h2, h3 | `tracking-tight` (-0.02em) |
+| `--dui-letter-spacing-display` | h1 | `tracking-tighter` (-0.03em) |
 | `--dui-measure` | Max line length for prose | `size-65ch` (65ch) |
 | `--dui-space-3xs` | Space scale | `space-1` (0.125rem) |
 | `--dui-space-2xs` | Space scale | `space-2` (0.25rem) |
@@ -403,7 +408,7 @@ may change. Fluid `--dui-step-*` values are `clamp()` expressions; see `primitiv
 | `--dui-easing-standard` | **Deprecated**, removed in the next release | `--dui-motion-easing-standard` |
 
 Derived (re-resolved on each theme scope and on every `[data-motion]` and `[data-density]` element): `--dui-color-accent-text`, `--dui-color-link`,
-`--dui-color-focus`, `--dui-color-accent-hover`, `--dui-color-primary-hover`, `--dui-font-heading`, `--dui-color-accent-surface`,
+`--dui-color-focus`, `--dui-color-accent-hover`, `--dui-color-primary-hover`, `--dui-font-heading`, `--dui-font-size-ui`, `--dui-font-size-page-title`, `--dui-color-accent-surface`,
 `--dui-color-success-surface`, `--dui-color-warning-surface`, `--dui-color-danger-surface`,
 `--dui-color-info-surface`, `--dui-color-surface-inverse`, `--dui-color-text-inverse`, `--dui-radius-control`, `--dui-radius-surface`, every
 `--dui-motion-duration-*`, `--dui-motion-distance`, `--dui-motion-zoom`, `--dui-motion-press-scale`, every `--dui-elevation-*`
@@ -953,9 +958,21 @@ Each of these is a choice between valid options, not a standard.
   (`margin-block`, `inline-size`), so right-to-left and vertical writing modes work unchanged.
 - **Our choice:** keep link underlines, because color alone is not enough to spot a link (WCAG 1.4.1).
 - **Our choice:** system font stacks from [Modern Font Stacks](https://modernfontstacks.com/),
-  because they cost no network requests and match the platform.
-- **Our choice:** a fluid type scale with [`clamp()`](https://developer.mozilla.org/en-US/docs/Web/CSS/clamp)
-  in `rem`, so text grows with the viewport and still respects the user's font size.
+  because they cost no network requests and match the platform. `css/domestic.css` makes no font request.
+  For a consistent face across platforms (and pinned screenshots), the optional `css/fonts/inter.css` declares a
+  self-hosted [Inter](https://rsms.me/inter/) 4 variable font (Latin and Latin Extended subsets split by
+  [`unicode-range`](https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/At-rules/@font-face/unicode-range),
+  [`font-display: swap`](https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/At-rules/@font-face/font-display),
+  an optical size axis that [`font-optical-sizing`](https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/Properties/font-optical-sizing)
+  uses automatically, [SIL OFL 1.1](https://openfontlicense.org/)). Opt in by linking it and setting
+  `--dui-font-body: Inter, system-ui, sans-serif`; the docs site does.
+- **Our choice:** a productive and an expressive type scale (as [Carbon](https://carbondesignsystem.com/elements/typography/overview/)
+  splits them, for comparison): steps up to `--dui-step-2` are fixed, and `--dui-step-3` to `-5` are fluid with
+  [`clamp()`](https://developer.mozilla.org/en-US/docs/Web/CSS/clamp) in `rem`, so display text grows with the viewport
+  and everything respects the user's font size ([1.4.4 Resize Text](https://www.w3.org/WAI/WCAG22/Understanding/resize-text.html)).
+- **Our choice:** interface text (buttons, fields, nav, menus, tabs, badges, tooltips, table cells) is 14px
+  (`--dui-font-size-ui`), as in Primer, Fluent 2, Radix Themes and shadcn/ui, for comparison; prose stays 16px.
+  An app page title (`--dui-font-size-page-title`) is 30px at most; steps 4 and 5 are for docs and marketing heroes.
 - **Our choice:** a 65ch measure for prose, near the commonly cited 45 to 75 characters per line
   ([WCAG 1.4.8 Visual Presentation](https://www.w3.org/WAI/WCAG22/Understanding/visual-presentation.html) asks for 80 or fewer).
 - **Our choice:** rhythm from the "lobotomized owl" selector (`* + *`) inside flow containers
@@ -1310,7 +1327,7 @@ Neutral and indigo each have 12 steps in light and in dark. The step number is t
 
 [Custom properties](https://developer.mozilla.org/en-US/docs/Web/CSS/--*).
 
-174 tokens in [`css/tokens/primitives.css`](https://github.com/odonckers/domestic-ui/blob/main/css/tokens/primitives.css). **Light** and **Dark** resolve every `var()` and take one side of [`light-dark()`](https://developer.mozilla.org/en-US/docs/Web/CSS/color_value/light-dark). Previews are decorative.
+175 tokens in [`css/tokens/primitives.css`](https://github.com/odonckers/domestic-ui/blob/main/css/tokens/primitives.css). **Light** and **Dark** resolve every `var()` and take one side of [`light-dark()`](https://developer.mozilla.org/en-US/docs/Web/CSS/color_value/light-dark). Previews are decorative.
 
 ### Neutral, light. Hue 265
 
@@ -1452,11 +1469,11 @@ Neutral and indigo each have 12 steps in light and in dark. The step number is t
 
 ### Font stacks
 
-System fonts only, no downloads. Stacks follow <https://modernfontstacks.com/>.
+System fonts only, no downloads. The system-ui stack names the platform UI faces before the generic, so engines without system-ui (or with a poor mapping on Linux) still get a good face. Stacks follow <https://modernfontstacks.com/>.
 
 | Token | Light | Dark | Description |
 | --- | --- | --- | --- |
-| `--dui-font-stack-system-ui` | `system-ui, sans-serif` | `system-ui, sans-serif` | No description yet. |
+| `--dui-font-stack-system-ui` | `system-ui, -apple-system, "Segoe UI Variable Text", "Segoe UI", roboto, "Noto Sans", "Helvetica Neue", arial, sans-serif` | `system-ui, -apple-system, "Segoe UI Variable Text", "Segoe UI", roboto, "Noto Sans", "Helvetica Neue", arial, sans-serif` | No description yet. |
 | `--dui-font-stack-transitional` | `charter, "Bitstream Charter", "Sitka Text", cambria, serif` | `charter, "Bitstream Charter", "Sitka Text", cambria, serif` | No description yet. |
 | `--dui-font-stack-monospace` | `ui-monospace, "Cascadia Code", "Source Code Pro", menlo, consolas, "DejaVu Sans Mono", monospace` | `ui-monospace, "Cascadia Code", "Source Code Pro", menlo, consolas, "DejaVu Sans Mono", monospace` | No description yet. |
 
@@ -1469,19 +1486,17 @@ System fonts only, no downloads. Stacks follow <https://modernfontstacks.com/>.
 | `--dui-font-weight-600` | `600` | `600` | No description yet. |
 | `--dui-font-weight-700` | `700` | `700` | No description yet. |
 
-### Fluid font sizes
-
-A 1.2 ratio at small viewports growing to 1.25 at wide ones, interpolated with clamp(). <https://developer.mozilla.org/en-US/docs/Web/CSS/clamp>.
+### Font sizes. Productive steps (interface text and small headings) are fixed; expressive steps 3 to 5 (page titles and display headings) grow with the viewport between 320px and 1280px with clamp(). Every size is in rem, so text follows the user's font size (WCAG 1.4.4). https://developer.mozilla.org/en-US/docs/Web/CSS/clamp For comparison: Carbon's productive and expressive type sets (https://carbondesignsystem.com/elements/typography/overview/)
 
 | Token | Light | Dark | Description |
 | --- | --- | --- | --- |
-| `--dui-font-size-fluid--1` | `clamp(0.8333rem, 0.8101rem + 0.1159vw, 0.9rem)` | `clamp(0.8333rem, 0.8101rem + 0.1159vw, 0.9rem)` | No description yet. |
-| `--dui-font-size-fluid-0` | `clamp(1rem, 0.9565rem + 0.2174vw, 1.125rem)` | `clamp(1rem, 0.9565rem + 0.2174vw, 1.125rem)` | No description yet. |
-| `--dui-font-size-fluid-1` | `clamp(1.2rem, 1.1283rem + 0.3587vw, 1.4063rem)` | `clamp(1.2rem, 1.1283rem + 0.3587vw, 1.4063rem)` | No description yet. |
-| `--dui-font-size-fluid-2` | `clamp(1.44rem, 1.3295rem + 0.5527vw, 1.7578rem)` | `clamp(1.44rem, 1.3295rem + 0.5527vw, 1.7578rem)` | No description yet. |
-| `--dui-font-size-fluid-3` | `clamp(1.728rem, 1.5648rem + 0.8161vw, 2.1973rem)` | `clamp(1.728rem, 1.5648rem + 0.8161vw, 2.1973rem)` | No description yet. |
-| `--dui-font-size-fluid-4` | `clamp(2.0736rem, 1.8395rem + 1.1704vw, 2.7466rem)` | `clamp(2.0736rem, 1.8395rem + 1.1704vw, 2.7466rem)` | No description yet. |
-| `--dui-font-size-fluid-5` | `clamp(2.4883rem, 2.1597rem + 1.6428vw, 3.4332rem)` | `clamp(2.4883rem, 2.1597rem + 1.6428vw, 3.4332rem)` | No description yet. |
+| `--dui-font-size-0-875` | `0.875rem` | `0.875rem` | 14px: interface text |
+| `--dui-font-size-1` | `1rem` | `1rem` | 16px: body text |
+| `--dui-font-size-1-125` | `1.125rem` | `1.125rem` | 18px |
+| `--dui-font-size-1-375` | `1.375rem` | `1.375rem` | 22px |
+| `--dui-font-size-fluid-3` | `clamp(1.5rem, 1.375rem + 0.625vw, 1.875rem)` | `clamp(1.5rem, 1.375rem + 0.625vw, 1.875rem)` | 24px to 30px |
+| `--dui-font-size-fluid-4` | `clamp(1.75rem, 1.5417rem + 1.0417vw, 2.375rem)` | `clamp(1.75rem, 1.5417rem + 1.0417vw, 2.375rem)` | 28px to 38px |
+| `--dui-font-size-fluid-5` | `clamp(2rem, 1.6667rem + 1.6667vw, 3rem)` | `clamp(2rem, 1.6667rem + 1.6667vw, 3rem)` | 32px to 48px |
 | `--dui-font-size-relative-90` | `0.9em` | `0.9em` | No description yet. |
 
 ### Line heights and tracking
@@ -1489,9 +1504,10 @@ A 1.2 ratio at small viewports growing to 1.25 at wide ones, interpolated with c
 | Token | Light | Dark | Description |
 | --- | --- | --- | --- |
 | `--dui-leading-110` | `1.1` | `1.1` | No description yet. |
-| `--dui-leading-125` | `1.25` | `1.25` | No description yet. |
-| `--dui-leading-160` | `1.6` | `1.6` | No description yet. |
-| `--dui-tracking-tight` | `-0.015em` | `-0.015em` | No description yet. |
+| `--dui-leading-120` | `1.2` | `1.2` | No description yet. |
+| `--dui-leading-150` | `1.5` | `1.5` | No description yet. |
+| `--dui-tracking-tight` | `-0.02em` | `-0.02em` | No description yet. |
+| `--dui-tracking-tighter` | `-0.03em` | `-0.03em` | No description yet. |
 | `--dui-tracking-normal` | `normal` | `normal` | No description yet. |
 
 ### Spacing
@@ -1624,7 +1640,7 @@ A theme is an override of these tokens on `:root` or on a scoped element. No reb
 
 Colors use [`light-dark()`](https://developer.mozilla.org/en-US/docs/Web/CSS/color_value/light-dark), which picks a value from the used color-scheme of the element where the token is read.
 
-154 tokens in [`css/tokens/semantic.css`](https://github.com/odonckers/domestic-ui/blob/main/css/tokens/semantic.css). **Light** and **Dark** resolve every `var()` and take one side of [`light-dark()`](https://developer.mozilla.org/en-US/docs/Web/CSS/color_value/light-dark). Previews are decorative. † marks a description taken from the semantic token table in [Theming](https://odonckers.github.io/domestic-ui/principles/theming.md).
+157 tokens in [`css/tokens/semantic.css`](https://github.com/odonckers/domestic-ui/blob/main/css/tokens/semantic.css). **Light** and **Dark** resolve every `var()` and take one side of [`light-dark()`](https://developer.mozilla.org/en-US/docs/Web/CSS/color_value/light-dark). Previews are decorative. † marks a description taken from the semantic token table in [Theming](https://odonckers.github.io/domestic-ui/principles/theming.md).
 
 ### Surfaces and text
 
@@ -1683,23 +1699,24 @@ Colors use [`light-dark()`](https://developer.mozilla.org/en-US/docs/Web/CSS/col
 
 | Token | Light | Dark | Description |
 | --- | --- | --- | --- |
-| `--dui-font-body` | `system-ui, sans-serif` | `system-ui, sans-serif` | Body font stack † |
+| `--dui-font-body` | `system-ui, -apple-system, "Segoe UI Variable Text", "Segoe UI", roboto, "Noto Sans", "Helvetica Neue", arial, sans-serif` | `system-ui, -apple-system, "Segoe UI Variable Text", "Segoe UI", roboto, "Noto Sans", "Helvetica Neue", arial, sans-serif` | Body font stack † |
 | `--dui-font-mono` | `ui-monospace, "Cascadia Code", "Source Code Pro", menlo, consolas, "DejaVu Sans Mono", monospace` | `ui-monospace, "Cascadia Code", "Source Code Pro", menlo, consolas, "DejaVu Sans Mono", monospace` | Code font stack † |
 | `--dui-font-weight-body` | `400` | `400` | Body weight † |
 | `--dui-font-weight-strong` | `600` | `600` | strong, labels, buttons, th † |
-| `--dui-font-weight-heading` | `700` | `700` | h1–h6 † |
-| `--dui-step--1` | `clamp(0.8333rem, 0.8101rem + 0.1159vw, 0.9rem)` | `clamp(0.8333rem, 0.8101rem + 0.1159vw, 0.9rem)` | small, captions † |
-| `--dui-step-0` | `clamp(1rem, 0.9565rem + 0.2174vw, 1.125rem)` | `clamp(1rem, 0.9565rem + 0.2174vw, 1.125rem)` | Body text, h6 † |
-| `--dui-step-1` | `clamp(1.2rem, 1.1283rem + 0.3587vw, 1.4063rem)` | `clamp(1.2rem, 1.1283rem + 0.3587vw, 1.4063rem)` | h5 † |
-| `--dui-step-2` | `clamp(1.44rem, 1.3295rem + 0.5527vw, 1.7578rem)` | `clamp(1.44rem, 1.3295rem + 0.5527vw, 1.7578rem)` | h4 † |
-| `--dui-step-3` | `clamp(1.728rem, 1.5648rem + 0.8161vw, 2.1973rem)` | `clamp(1.728rem, 1.5648rem + 0.8161vw, 2.1973rem)` | h3 † |
-| `--dui-step-4` | `clamp(2.0736rem, 1.8395rem + 1.1704vw, 2.7466rem)` | `clamp(2.0736rem, 1.8395rem + 1.1704vw, 2.7466rem)` | h2 † |
-| `--dui-step-5` | `clamp(2.4883rem, 2.1597rem + 1.6428vw, 3.4332rem)` | `clamp(2.4883rem, 2.1597rem + 1.6428vw, 3.4332rem)` | h1 † |
+| `--dui-font-weight-heading` | `600` | `600` | h1–h6 † |
+| `--dui-step--1` | `0.875rem` | `0.875rem` | 14px: small text, captions, and the UI text size |
+| `--dui-step-0` | `1rem` | `1rem` | 16px: body text, h6 |
+| `--dui-step-1` | `1.125rem` | `1.125rem` | 18px: h5 |
+| `--dui-step-2` | `1.375rem` | `1.375rem` | 22px: h4 |
+| `--dui-step-3` | `clamp(1.5rem, 1.375rem + 0.625vw, 1.875rem)` | `clamp(1.5rem, 1.375rem + 0.625vw, 1.875rem)` | 24px to 30px: h3, page titles |
+| `--dui-step-4` | `clamp(1.75rem, 1.5417rem + 1.0417vw, 2.375rem)` | `clamp(1.75rem, 1.5417rem + 1.0417vw, 2.375rem)` | 28px to 38px: h2 |
+| `--dui-step-5` | `clamp(2rem, 1.6667rem + 1.6667vw, 3rem)` | `clamp(2rem, 1.6667rem + 1.6667vw, 3rem)` | 32px to 48px: h1, docs and marketing heroes |
 | `--dui-font-size-code` | `0.9em` | `0.9em` | code, kbd, samp, pre (relative) † |
-| `--dui-line-height-body` | `1.6` | `1.6` | Body text † |
-| `--dui-line-height-heading` | `1.25` | `1.25` | Headings, buttons, pre † |
+| `--dui-line-height-body` | `1.5` | `1.5` | Body text † |
+| `--dui-line-height-heading` | `1.2` | `1.2` | Headings, buttons, pre † |
 | `--dui-line-height-display` | `1.1` | `1.1` | h1 † |
-| `--dui-letter-spacing-heading` | `-0.015em` | `-0.015em` | h1, h2 † |
+| `--dui-letter-spacing-heading` | `-0.02em` | `-0.02em` | h1 to h3 |
+| `--dui-letter-spacing-display` | `-0.03em` | `-0.03em` | h1 and page titles |
 | `--dui-measure` | `65ch` | `65ch` | Max line length for prose † |
 
 ### Space
@@ -1816,7 +1833,9 @@ Defined in terms of other semantic tokens.
 | `--dui-color-focus` | `oklch(53% 0.215 272deg)` | `oklch(from oklch(53% 0.215 272deg) 78% calc(c * 0.11 / 0.215) h)` | Focus ring: the accent solid in light, the accent text in dark, so it stays 3:1 |
 | `--dui-color-accent-hover` | `oklch(from oklch(53% 0.215 272deg) calc(l - 0.02) c h)` | `oklch(from oklch(53% 0.215 272deg) calc(l - 0.02) c h)` | Accent solid hover. Our choice: 0.02 darker in OKLCH lightness, so white text stays 4.5:1 |
 | `--dui-color-primary-hover` | `oklch(from oklch(21.5% 0.012 265deg) 32% calc(c + 0.002) h)` | `oklch(from oklch(95% 0.004 265deg) 86% calc(c + 0.004) h)` | Primary fill hover, same hue as the primary |
-| `--dui-font-heading` | `system-ui, sans-serif` | `system-ui, sans-serif` | Heading font stack † |
+| `--dui-font-heading` | `system-ui, -apple-system, "Segoe UI Variable Text", "Segoe UI", roboto, "Noto Sans", "Helvetica Neue", arial, sans-serif` | `system-ui, -apple-system, "Segoe UI Variable Text", "Segoe UI", roboto, "Noto Sans", "Helvetica Neue", arial, sans-serif` | Heading font stack † |
+| `--dui-font-size-ui` | `0.875rem` | `0.875rem` | Interface text: buttons, fields, selects, nav, menu and listbox items, tabs, badges, tooltips, table cells. 14px at the default font size |
+| `--dui-font-size-page-title` | `clamp(1.5rem, 1.375rem + 0.625vw, 1.875rem)` | `clamp(1.5rem, 1.375rem + 0.625vw, 1.875rem)` | The h1 of a page header or an app shell: 30px at most |
 | `--dui-radius-control` | `calc(0.5rem * 1)` | `calc(0.5rem * 1)` | Controls, buttons, inline code: 8px times the radius scale |
 | `--dui-radius-surface` | `calc(0.75rem * 1)` | `calc(0.75rem * 1)` | Panels, cards, pre, dialogs, details, media: 12px times the radius scale |
 

@@ -218,6 +218,11 @@
   padding: var(--dui-space-m);
 }
 
+/* An app page title, not a display heading: 30px at most (--dui-font-size-page-title). */
+[data-app-shell] > main h1 {
+  font-size: var(--dui-font-size-page-title);
+}
+
 /* The auxiliary sidebar: after main in the source. */
 [data-app-shell] > main ~ aside {
   container: dui-app-shell-end / inline-size;

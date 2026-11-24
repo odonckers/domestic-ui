@@ -148,10 +148,12 @@
   --dui-color-black-a60: oklch(0% 0 0deg / 60%); /* Scrim, 60% black */
 
   /*
-   * Font stacks: system fonts only, no downloads.
+   * Font stacks: system fonts only, no downloads. The system-ui stack
+   * names the platform UI faces before the generic, so engines without
+   * system-ui (or with a poor mapping on Linux) still get a good face.
    * Stacks follow https://modernfontstacks.com/
    */
-  --dui-font-stack-system-ui: system-ui, sans-serif;
+  --dui-font-stack-system-ui: system-ui, -apple-system, "Segoe UI Variable Text", "Segoe UI", roboto, "Noto Sans", "Helvetica Neue", arial, sans-serif;
   --dui-font-stack-transitional: charter, "Bitstream Charter", "Sitka Text", cambria, serif;
   --dui-font-stack-monospace: ui-monospace, "Cascadia Code", "Source Code Pro", menlo, consolas, "DejaVu Sans Mono", monospace;
 
@@ -162,24 +164,29 @@
   --dui-font-weight-700: 700;
 
   /*
-   * Fluid font sizes: a 1.2 ratio at small viewports growing to 1.25
-   * at wide ones, interpolated with clamp().
+   * Font sizes. Productive steps (interface text and small headings) are
+   * fixed; expressive steps 3 to 5 (page titles and display headings)
+   * grow with the viewport between 320px and 1280px with clamp().
+   * Every size is in rem, so text follows the user's font size (WCAG 1.4.4).
    * https://developer.mozilla.org/en-US/docs/Web/CSS/clamp
+   * For comparison: Carbon's productive and expressive type sets
+   * (https://carbondesignsystem.com/elements/typography/overview/).
    */
-  --dui-font-size-fluid--1: clamp(0.8333rem, 0.8101rem + 0.1159vw, 0.9rem);
-  --dui-font-size-fluid-0: clamp(1rem, 0.9565rem + 0.2174vw, 1.125rem);
-  --dui-font-size-fluid-1: clamp(1.2rem, 1.1283rem + 0.3587vw, 1.4063rem);
-  --dui-font-size-fluid-2: clamp(1.44rem, 1.3295rem + 0.5527vw, 1.7578rem);
-  --dui-font-size-fluid-3: clamp(1.728rem, 1.5648rem + 0.8161vw, 2.1973rem);
-  --dui-font-size-fluid-4: clamp(2.0736rem, 1.8395rem + 1.1704vw, 2.7466rem);
-  --dui-font-size-fluid-5: clamp(2.4883rem, 2.1597rem + 1.6428vw, 3.4332rem);
+  --dui-font-size-0-875: 0.875rem; /* 14px: interface text */
+  --dui-font-size-1: 1rem; /* 16px: body text */
+  --dui-font-size-1-125: 1.125rem; /* 18px */
+  --dui-font-size-1-375: 1.375rem; /* 22px */
+  --dui-font-size-fluid-3: clamp(1.5rem, 1.375rem + 0.625vw, 1.875rem); /* 24px to 30px */
+  --dui-font-size-fluid-4: clamp(1.75rem, 1.5417rem + 1.0417vw, 2.375rem); /* 28px to 38px */
+  --dui-font-size-fluid-5: clamp(2rem, 1.6667rem + 1.6667vw, 3rem); /* 32px to 48px */
   --dui-font-size-relative-90: 0.9em;
 
   /* Line heights and tracking */
   --dui-leading-110: 1.1;
-  --dui-leading-125: 1.25;
-  --dui-leading-160: 1.6;
-  --dui-tracking-tight: -0.015em;
+  --dui-leading-120: 1.2;
+  --dui-leading-150: 1.5;
+  --dui-tracking-tight: -0.02em;
+  --dui-tracking-tighter: -0.03em;
   --dui-tracking-normal: normal;
 
   /* Spacing (rem, so it follows the user's font size setting) */

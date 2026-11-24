@@ -51,6 +51,7 @@ export function renderHtml(page, tree) {
     <title>${escapeHtml(page.title)} · domestic-ui docs</title>
     <meta name="description" content="${escapeHtml(page.description)}">
     <link rel="stylesheet" href="${link("css/domestic.css")}">
+    <link rel="stylesheet" href="${link("css/fonts/inter.css")}">
     <link rel="stylesheet" href="${link("site.css")}">
     <link rel="alternate" type="text/markdown" href="${link(page.path.replace(/\.html$/, ".md"))}">
     <script type="module" src="${link("web-components/dui-app-shell.js")}"></script>

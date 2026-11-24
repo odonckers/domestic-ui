@@ -61,19 +61,20 @@
   --dui-font-mono: var(--dui-font-stack-monospace);
   --dui-font-weight-body: var(--dui-font-weight-400);
   --dui-font-weight-strong: var(--dui-font-weight-600);
-  --dui-font-weight-heading: var(--dui-font-weight-700);
-  --dui-step--1: var(--dui-font-size-fluid--1);
-  --dui-step-0: var(--dui-font-size-fluid-0);
-  --dui-step-1: var(--dui-font-size-fluid-1);
-  --dui-step-2: var(--dui-font-size-fluid-2);
-  --dui-step-3: var(--dui-font-size-fluid-3);
-  --dui-step-4: var(--dui-font-size-fluid-4);
-  --dui-step-5: var(--dui-font-size-fluid-5);
+  --dui-font-weight-heading: var(--dui-font-weight-600);
+  --dui-step--1: var(--dui-font-size-0-875); /* 14px: small text, captions, and the UI text size */
+  --dui-step-0: var(--dui-font-size-1); /* 16px: body text, h6 */
+  --dui-step-1: var(--dui-font-size-1-125); /* 18px: h5 */
+  --dui-step-2: var(--dui-font-size-1-375); /* 22px: h4 */
+  --dui-step-3: var(--dui-font-size-fluid-3); /* 24px to 30px: h3, page titles */
+  --dui-step-4: var(--dui-font-size-fluid-4); /* 28px to 38px: h2 */
+  --dui-step-5: var(--dui-font-size-fluid-5); /* 32px to 48px: h1, docs and marketing heroes */
   --dui-font-size-code: var(--dui-font-size-relative-90);
-  --dui-line-height-body: var(--dui-leading-160);
-  --dui-line-height-heading: var(--dui-leading-125);
+  --dui-line-height-body: var(--dui-leading-150);
+  --dui-line-height-heading: var(--dui-leading-120);
   --dui-line-height-display: var(--dui-leading-110);
-  --dui-letter-spacing-heading: var(--dui-tracking-tight);
+  --dui-letter-spacing-heading: var(--dui-tracking-tight); /* h1 to h3 */
+  --dui-letter-spacing-display: var(--dui-tracking-tighter); /* h1 and page titles */
   --dui-measure: var(--dui-size-65ch);
 
   /* Space */
@@ -175,6 +176,8 @@
   --dui-color-accent-hover: oklch(from var(--dui-color-accent) calc(l - 0.02) c h); /* Accent solid hover. Our choice: 0.02 darker in OKLCH lightness, so white text stays 4.5:1 */
   --dui-color-primary-hover: light-dark(oklch(from var(--dui-color-primary) 32% calc(c + 0.002) h), oklch(from var(--dui-color-primary) 86% calc(c + 0.004) h)); /* Primary fill hover, same hue as the primary */
   --dui-font-heading: var(--dui-font-body);
+  --dui-font-size-ui: var(--dui-step--1); /* Interface text: buttons, fields, selects, nav, menu and listbox items, tabs, badges, tooltips, table cells. 14px at the default font size */
+  --dui-font-size-page-title: var(--dui-step-3); /* The h1 of a page header or an app shell: 30px at most */
   --dui-radius-control: calc(var(--dui-radius-2) * var(--dui-radius-scale)); /* Controls, buttons, inline code: 8px times the radius scale */
   --dui-radius-surface: calc(var(--dui-radius-3) * var(--dui-radius-scale)); /* Panels, cards, pre, dialogs, details, media: 12px times the radius scale */
 

@@ -21,7 +21,7 @@ h6 {
 h1 {
   font-size: var(--dui-step-5);
   line-height: var(--dui-line-height-display);
-  letter-spacing: var(--dui-letter-spacing-heading);
+  letter-spacing: var(--dui-letter-spacing-display);
 }
 
 /*
@@ -36,6 +36,7 @@ h2 {
 
 h3 {
   font-size: var(--dui-step-2);
+  letter-spacing: var(--dui-letter-spacing-heading);
 }
 
 h4 {
