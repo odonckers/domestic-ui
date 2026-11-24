@@ -161,6 +161,22 @@
 }
 
 /*
+ * Narrow app bars: the label is visually hidden (it still names the
+ * select), so the app bar keeps one row at 320px (WCAG 1.4.10). Same
+ * clipping as css/utilities/visually-hidden.css.
+ */
+@container dui-app-shell (inline-size < 30rem) {
+  .docs-theme label {
+    position: absolute;
+    inline-size: 1px;
+    block-size: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+}
+
+/*
  * The select sits in the app bar row: no stacked-label gap, and no block
  * padding beyond its control height, so the bar keeps one height in every
  * engine (WebKit draws a select taller than its padding box otherwise).
