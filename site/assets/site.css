@@ -141,6 +141,7 @@
  * (a container query cannot read a custom property).
  */
 .docs-name {
+  color: var(--dui-color-text);
   font-weight: var(--dui-font-weight-heading);
   text-decoration-line: none;
 }
@@ -151,7 +152,12 @@
   align-items: center;
   gap: var(--dui-space-xs);
   margin-inline-start: auto;
+  color: var(--dui-color-text-muted);
   font-size: var(--dui-font-size-ui);
+}
+
+.docs-theme label {
+  font-weight: var(--dui-font-weight-body);
 }
 
 /*
