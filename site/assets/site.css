@@ -119,8 +119,15 @@
   font-size: var(--dui-font-size-ui);
 }
 
+/*
+ * The select sits in the app bar row: no stacked-label gap, and no block
+ * padding beyond its control height, so the bar keeps one height in every
+ * engine (WebKit draws a select taller than its padding box otherwise).
+ */
 .docs-theme select {
   inline-size: auto;
+  margin-block-start: 0;
+  padding-block: 0;
 }
 
 .docs-github {

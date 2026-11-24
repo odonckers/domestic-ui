@@ -52,6 +52,8 @@ if (picker instanceof HTMLFieldSetElement && preview instanceof HTMLIFrameElemen
   picker.hidden = false;
   picker.addEventListener("change", apply);
   preview.addEventListener("load", apply);
+  // The frame may have loaded before this module ran.
+  if (preview.contentDocument?.readyState === "complete") apply();
 }
 
 for (const frame of document.querySelectorAll("iframe[data-live]")) {
