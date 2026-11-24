@@ -8,8 +8,51 @@
  * - Live examples are frames of a fixed height (site.css), loaded with the
  *   page (not lazily, so the page does not jump as you scroll). Here each is
  *   fitted to its content, and refitted when the content changes size.
+ * - The theme menu in the app bar is hidden without JavaScript (the default
+ *   look shows). Here it is shown; a choice sets data-theme on :root (every
+ *   theme file is already linked from this origin) and is saved in
+ *   localStorage; an inline script in <head> restores it before first paint.
+ *   Changing it moves no focus (WCAG 3.2.2).
+ * - The Themes page's radio group applies a theme to the preview frame only.
  * No network requests.
  */
+
+const THEME_KEY = "dui-docs-theme";
+const themeMenu = document.querySelector("[data-docs-theme]");
+const themeSelect = document.getElementById("docs-theme-select");
+if (themeMenu instanceof HTMLElement && themeSelect instanceof HTMLSelectElement) {
+  const known = [...themeSelect.options].map((o) => o.value);
+  const current = document.documentElement.getAttribute("data-theme") ?? "";
+  themeSelect.value = known.includes(current) ? current : "";
+  themeMenu.hidden = false;
+  themeSelect.addEventListener("change", () => {
+    const theme = themeSelect.value;
+    if (theme) document.documentElement.setAttribute("data-theme", theme);
+    else document.documentElement.removeAttribute("data-theme");
+    try {
+      if (theme) localStorage.setItem(THEME_KEY, theme);
+      else localStorage.removeItem(THEME_KEY);
+    } catch {
+      // Storage blocked: the choice lasts for this page only.
+    }
+  });
+}
+
+const picker = document.querySelector("[data-theme-picker]");
+const preview = document.querySelector('iframe[title="Live example: Theme preview"]');
+if (picker instanceof HTMLFieldSetElement && preview instanceof HTMLIFrameElement) {
+  const apply = () => {
+    const checked = picker.querySelector("input:checked");
+    const theme = checked instanceof HTMLInputElement ? checked.value : "";
+    const root = preview.contentDocument?.documentElement;
+    if (!root) return;
+    if (theme) root.setAttribute("data-theme", theme);
+    else root.removeAttribute("data-theme");
+  };
+  picker.hidden = false;
+  picker.addEventListener("change", apply);
+  preview.addEventListener("load", apply);
+}
 
 for (const frame of document.querySelectorAll("iframe[data-live]")) {
   if (!(frame instanceof HTMLIFrameElement)) continue;

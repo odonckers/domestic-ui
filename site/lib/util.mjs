@@ -102,3 +102,20 @@ export function mdCode(text) {
   const pad = text.startsWith("`") || text.endsWith("`") ? " " : "";
   return `${ticks}${pad}${text}${pad}${ticks}`;
 }
+
+/** The prebuilt themes (css/themes/), in the order the docs switcher and the Themes page list them. */
+export const THEMES = [
+  { id: "calm", title: "Calm" },
+  { id: "soft", title: "Soft" },
+  { id: "compact", title: "Compact" },
+];
+
+/** localStorage key of the docs theme choice. */
+export const THEME_KEY = "dui-docs-theme";
+
+/**
+ * The inline script in every docs page's <head>: restores the saved theme
+ * before first paint, so there is no flash of the default. Only a known
+ * theme name is applied; any storage error leaves the default.
+ */
+export const THEME_RESTORE = `try{var t=localStorage.getItem(${JSON.stringify(THEME_KEY)});if(${JSON.stringify(THEMES.map((t) => t.id))}.indexOf(t)>=0)document.documentElement.setAttribute("data-theme",t)}catch(e){}`;
