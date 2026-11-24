@@ -22,10 +22,8 @@
   --dui-color-surface-hover: light-dark(var(--dui-color-neutral-4), var(--dui-color-neutral-dark-4)); /* Hover fill of quiet buttons and rows (neutral step 4) */
   --dui-color-surface-active: light-dark(var(--dui-color-neutral-5), var(--dui-color-neutral-dark-5)); /* Pressed fill of quiet buttons (neutral step 5) */
   --dui-color-text: light-dark(var(--dui-color-neutral-12), var(--dui-color-neutral-dark-12)); /* Body text */
-  --dui-color-text-muted: light-dark(var(--dui-color-neutral-11), var(--dui-color-neutral-dark-11)); /* Secondary text, still 4.5:1 */
 
   /* Borders */
-  --dui-color-border: light-dark(var(--dui-color-neutral-12-a11), var(--dui-color-neutral-dark-12-a10)); /* Decorative hairline */
   --dui-color-border-control: light-dark(var(--dui-color-neutral-8), var(--dui-color-neutral-dark-8)); /* Boundaries of fields, selects, checkboxes, radios and switches, 3:1 */
   --dui-color-border-control-hover: light-dark(var(--dui-color-neutral-9), var(--dui-color-neutral-dark-9)); /* Field border on hover, one step stronger */
   --dui-color-border-button: light-dark(var(--dui-color-neutral-7), var(--dui-color-neutral-dark-7)); /* Secondary button border: softer than a field, because its visible label identifies it */
@@ -146,8 +144,9 @@
 
   /* State */
   --dui-opacity-disabled: var(--dui-opacity-60);
-  --dui-tint-amount: var(--dui-mix-8);
-  --dui-border-tint-amount: var(--dui-mix-35);
+
+  /* Contrast knob: muted text, hairlines and tints follow it (section 2). */
+  --dui-contrast: var(--dui-factor-1); /* 1 is the default look; 1.5 (prefers-contrast: more or data-contrast="more") gives stronger muted text, hairlines and tints. Below 1 softens hairlines and tints only: text never drops under 4.5:1 */
 }
 
 /*
@@ -173,7 +172,11 @@
  * attribute (or class) is the whole scoping API.
  */
 :root,
-:where([data-theme], [class^="theme-"], [class*=" theme-"], [data-motion], [data-density]) {
+:where([data-theme], [class^="theme-"], [class*=" theme-"], [data-motion], [data-density], [data-contrast]) {
+  --dui-color-text-muted: color-mix(in oklab, var(--dui-color-text) clamp(0%, (var(--dui-contrast) - 1) * 100%, 100%), light-dark(var(--dui-color-neutral-11), var(--dui-color-neutral-dark-11))); /* Secondary text, still 4.5:1. Above contrast 1 it moves toward --dui-color-text (halfway at 1.5); below 1 it stays */
+  --dui-color-border: light-dark(oklch(from var(--dui-color-neutral-12-a11) l c h / calc(alpha * var(--dui-contrast))), oklch(from var(--dui-color-neutral-dark-12-a10) l c h / calc(alpha * var(--dui-contrast)))); /* Decorative hairline. Its alpha scales with --dui-contrast */
+  --dui-tint-amount: calc(var(--dui-mix-8) * var(--dui-contrast)); /* How much of a status or accent color tints a surface: 8% times --dui-contrast */
+  --dui-border-tint-amount: calc(var(--dui-mix-35) * var(--dui-contrast)); /* How much of a status color a tinted border uses: 35% times --dui-contrast */
   --dui-color-accent-text: light-dark(oklch(from var(--dui-color-accent) 47% calc(c * 0.19 / 0.215) h), oklch(from var(--dui-color-accent) 78% calc(c * 0.11 / 0.215) h)); /* Accent as text. Relative color of the accent, same hue, 4.5:1. https://www.w3.org/TR/css-color-5/#relative-colors */
   --dui-color-link: var(--dui-color-accent-text); /* Links */
   --dui-color-focus: light-dark(var(--dui-color-accent), var(--dui-color-accent-text)); /* Focus ring: the accent solid in light, the accent text in dark, so it stays 3:1 */
@@ -299,7 +302,7 @@
  */
 @media (pointer: coarse) {
   :root,
-  :where([data-theme], [class^="theme-"], [class*=" theme-"], [data-motion], [data-density]) {
+  :where([data-theme], [class^="theme-"], [class*=" theme-"], [data-motion], [data-density], [data-contrast]) {
     --dui-font-size-field: max(var(--dui-font-size-ui), var(--dui-step-0));
   }
 }
@@ -362,4 +365,31 @@
 
 [data-density="compact"] {
   --dui-density-scale: var(--dui-factor-0);
+}
+
+/*
+ * 5. Contrast.
+ *
+ * --dui-contrast is the third theme input beside the neutrals and the
+ * accent. Muted text moves toward the text color, the hairline's alpha and
+ * the tint amounts scale with it (section 2), through color-mix() and
+ * relative colors, so it works in both schemes.
+ * https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/At-rules/@media/prefers-contrast
+ * https://developer.mozilla.org/en-US/docs/Web/CSS/color_value/color-mix
+ * https://www.w3.org/TR/css-color-5/#relative-colors
+ *
+ * API: data-contrast="more" on any element behaves like the media query
+ * for everything inside it; an empty data-contrast is a scope for your own
+ * --dui-contrast. Forced colors are handled separately and are unchanged.
+ * Our choice: no "less" value, so a page never overrides a user's request
+ * for more contrast, and text stays at 4.5:1 or more at every setting.
+ */
+@media (prefers-contrast: more) {
+  :root {
+    --dui-contrast: var(--dui-factor-1-5);
+  }
+}
+
+[data-contrast="more"] {
+  --dui-contrast: var(--dui-factor-1-5);
 }

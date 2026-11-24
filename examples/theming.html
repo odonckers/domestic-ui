@@ -29,6 +29,10 @@
         color: var(--dui-color-text-muted);
       }
 
+      .muted {
+        color: var(--dui-color-text-muted);
+      }
+
       .panel,
       .radius-panel {
         padding: var(--dui-space-l);
@@ -272,6 +276,43 @@
               <h4>A card</h4>
               <p>Rounder corners.</p>
             </article>
+          </section>
+        </div>
+        <!-- /dui:snippet -->
+      </section>
+
+      <section aria-labelledby="contrast-title" class="stack">
+        <h2 id="contrast-title">Contrast</h2>
+        <p>
+          <code>--dui-contrast</code> is the third input beside the neutrals and the accent. Above <code>1</code>, muted
+          text moves toward the text color and hairlines and tints get stronger; <code>prefers-contrast: more</code> and
+          <code>data-contrast="more"</code> set it to <code>1.5</code>. Below <code>1</code> only hairlines and tints soften.
+        </p>
+        <!-- dui:snippet name="Contrast" page="principles/theming" -->
+        <div class="grid">
+          <section class="radius-panel stack" data-contrast style="--dui-contrast: 0.8" aria-labelledby="contrast-08-title">
+            <h3 id="contrast-08-title">0.8</h3>
+            <p>Body text. <span class="muted">Muted text stays at 4.5:1.</span></p>
+            <p><span data-badge="accent">New</span> <span data-badge="danger">Overdue</span></p>
+            <div data-alert="info">
+              <p><strong>Info:</strong> A tinted surface with a tinted border.</p>
+            </div>
+          </section>
+          <section class="radius-panel stack" data-contrast aria-labelledby="contrast-1-title">
+            <h3 id="contrast-1-title">1, the default</h3>
+            <p>Body text. <span class="muted">Muted text.</span></p>
+            <p><span data-badge="accent">New</span> <span data-badge="danger">Overdue</span></p>
+            <div data-alert="info">
+              <p><strong>Info:</strong> A tinted surface with a tinted border.</p>
+            </div>
+          </section>
+          <section class="radius-panel stack" data-contrast="more" aria-labelledby="contrast-more-title">
+            <h3 id="contrast-more-title">More</h3>
+            <p>Body text. <span class="muted">Muted text, closer to the body text.</span></p>
+            <p><span data-badge="accent">New</span> <span data-badge="danger">Overdue</span></p>
+            <div data-alert="info">
+              <p><strong>Info:</strong> A tinted surface with a tinted border.</p>
+            </div>
           </section>
         </div>
         <!-- /dui:snippet -->

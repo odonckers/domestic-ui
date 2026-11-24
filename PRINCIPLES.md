@@ -159,6 +159,22 @@ with a `data-theme` attribute or a `theme-*` class to scope it:
 ```
 
 [`examples/theming.html`](examples/theming.html) shows a full scoped theme next to the default.
+
+A theme has three inputs: the neutrals (surface and text), the accent, and contrast. Linear builds its themes from
+the same trio ([how they redesigned the UI](https://linear.app/blog/how-we-redesigned-the-linear-ui)), for comparison.
+`--dui-contrast` (default `1`) is the contrast input. Above `1`, `--dui-color-text-muted` moves toward
+`--dui-color-text` with [`color-mix()`](https://developer.mozilla.org/en-US/docs/Web/CSS/color_value/color-mix)
+(halfway at `1.5`), the alpha of `--dui-color-border` scales through a
+[relative color](https://www.w3.org/TR/css-color-5/#relative-colors), and `--dui-tint-amount` and
+`--dui-border-tint-amount` scale, so tinted surfaces and borders stand out more.
+[`prefers-contrast: more`](https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/At-rules/@media/prefers-contrast)
+sets it to `1.5`, and so does `data-contrast="more"` on any element for its subtree; an empty `data-contrast`
+scopes your own value. Forced colors are handled separately. Our choice: below `1` only hairlines and tints
+soften and muted text never moves, and there is no "less" value, so text stays at 4.5:1
+([1.4.3](https://www.w3.org/WAI/WCAG22/Understanding/contrast-minimum.html)) and control boundaries at 3:1
+([1.4.11](https://www.w3.org/WAI/WCAG22/Understanding/non-text-contrast.html)) at every setting; `npm test`
+checks the pairs at 0.8, 1 and 1.5. A theme that sets `--dui-color-text-muted` or `--dui-color-border` itself
+(the soft theme does) takes those values as they are.
 Shape has one knob: `--dui-radius-scale` multiplies `--dui-radius-control` (8px) and
 `--dui-radius-surface` (12px); `0` gives square corners and `1.5` rounder ones, while pills stay round.
 Radix Themes has the same idea ([`--radius-factor`](https://www.radix-ui.com/themes/docs/theme/radius)), for comparison.
@@ -224,8 +240,8 @@ may change. Fluid `--dui-step-*` values are `clamp()` expressions; see `primitiv
 | `--dui-color-surface-hover` | Hover fill of quiet buttons, nav, menu and listbox rows (step 4) | light: `neutral-4` (`oklch(94% 0.006 265)`)<br>dark: `neutral-dark-4` (`oklch(26% 0.011 265)`) |
 | `--dui-color-surface-active` | Pressed fill of quiet buttons (step 5) | light: `neutral-5` (`oklch(91% 0.008 265)`)<br>dark: `neutral-dark-5` (`oklch(31% 0.012 265)`) |
 | `--dui-color-text` | Body text (step 12) | light: `neutral-12` (`oklch(21.5% 0.012 265)`)<br>dark: `neutral-dark-12` (`oklch(95% 0.004 265)`) |
-| `--dui-color-text-muted` | Secondary text, captions, list markers (step 11, still 4.5:1) | light: `neutral-11` (`oklch(47.5% 0.016 265)`)<br>dark: `neutral-dark-11` (`oklch(76% 0.012 265)`) |
-| `--dui-color-border` | Decorative hairline: the text color at about 11% alpha | light: `neutral-12` at 11% (`oklch(21.5% 0.012 265 / 11%)`)<br>dark: `neutral-dark-12` at 10% (`oklch(95% 0.004 265 / 10%)`) |
+| `--dui-color-text-muted` | Secondary text, captions, list markers (step 11, still 4.5:1). Above `--dui-contrast` 1 it moves toward `--dui-color-text` | light: `neutral-11` (`oklch(47.5% 0.016 265)`)<br>dark: `neutral-dark-11` (`oklch(76% 0.012 265)`) |
+| `--dui-color-border` | Decorative hairline: the text color at about 11% alpha, times `--dui-contrast` | light: `neutral-12` at 11% (`oklch(21.5% 0.012 265 / 11%)`)<br>dark: `neutral-dark-12` at 10% (`oklch(95% 0.004 265 / 10%)`) |
 | `--dui-color-border-control` | Boundaries of fields, selects, checkboxes, radios and switches (step 8, 3:1) | light: `neutral-8` (`oklch(58.5% 0.016 265)`)<br>dark: `neutral-dark-8` (`oklch(58% 0.016 265)`) |
 | `--dui-color-border-control-hover` | Field border on hover (step 9) | light: `neutral-9` (`oklch(52% 0.016 265)`)<br>dark: `neutral-dark-9` (`oklch(66% 0.014 265)`) |
 | `--dui-color-border-button` | Secondary button border (step 7): softer, because the visible label identifies the button | light: `neutral-7` (`oklch(72% 0.013 265)`)<br>dark: `neutral-dark-7` (`oklch(48% 0.015 265)`) |
@@ -323,8 +339,9 @@ may change. Fluid `--dui-step-*` values are `clamp()` expressions; see `primitiv
 | `--dui-elevation-surface-step` | Dark scheme: text color mixed into the surface per level | `mix-3` (3%) |
 | `--dui-density-scale` | Density knob: `1` comfortable, `0` compact (`data-density`); in between interpolates, never below `0` | `factor-1` (1) |
 | `--dui-opacity-disabled` | Disabled controls, `disabled` and `aria-disabled="true"` | `opacity-60` (0.6) |
-| `--dui-tint-amount` | How much of a tone goes into a tinted surface | `mix-8` (8%) |
-| `--dui-border-tint-amount` | How much of the text color goes into a tinted border (badges) | `mix-35` (35%) |
+| `--dui-contrast` | Contrast knob: `1` default, `1.5` under `prefers-contrast: more` or `data-contrast="more"`; below `1` softens hairlines and tints only | `factor-1` (1) |
+| `--dui-tint-amount` | How much of a tone goes into a tinted surface | `mix-8` (8%) × `--dui-contrast` |
+| `--dui-border-tint-amount` | How much of the text color goes into a tinted border (badges) | `mix-35` (35%) × `--dui-contrast` |
 | `--dui-color-accent-text` | Accent as text (links, quiet buttons, accent badges). Relative color of `--dui-color-accent` | light: `oklch(47% 0.19 272)`<br>dark: `oklch(78% 0.11 272)` |
 | `--dui-color-link` | Links | `--dui-color-accent-text` |
 | `--dui-color-focus` | Focus ring (3:1 against surfaces) | light: `--dui-color-accent`<br>dark: `--dui-color-accent-text` |
@@ -367,7 +384,7 @@ may change. Fluid `--dui-step-*` values are `clamp()` expressions; see `primitiv
 | `--dui-duration-normal` | **Deprecated**, removed in the next release | `--dui-motion-duration-normal` |
 | `--dui-easing-standard` | **Deprecated**, removed in the next release | `--dui-motion-easing-standard` |
 
-Derived (re-resolved on each theme scope and on every `[data-motion]` and `[data-density]` element): `--dui-color-accent-text`, `--dui-color-link`,
+Derived (re-resolved on each theme scope and on every `[data-motion]`, `[data-density]` and `[data-contrast]` element): `--dui-color-text-muted`, `--dui-color-border`, `--dui-tint-amount`, `--dui-border-tint-amount`, `--dui-color-accent-text`, `--dui-color-link`,
 `--dui-color-focus`, `--dui-color-accent-hover`, `--dui-color-primary-hover`, `--dui-font-heading`, `--dui-font-size-ui`, `--dui-font-size-field`, `--dui-font-size-page-title`, `--dui-color-accent-surface`,
 `--dui-color-success-surface`, `--dui-color-warning-surface`, `--dui-color-danger-surface`,
 `--dui-color-info-surface`, `--dui-color-surface-inverse`, `--dui-color-text-inverse`, `--dui-radius-control`, `--dui-radius-surface`, `--dui-radius-nested`, every
