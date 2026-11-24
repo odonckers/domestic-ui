@@ -45,8 +45,9 @@ const revealCurrent = (scroller) => {
   const top = Math.max(box.top, 0);
   const bottom = Math.min(box.bottom, window.innerHeight);
   const r = current.getBoundingClientRect();
-  if (r.top < top) scroller.scrollTop -= top - r.top;
-  else if (r.bottom > bottom) scroller.scrollTop += r.bottom - bottom;
+  // Whole pixels, rounded away from the link, so a fractional offset never leaves it clipped.
+  if (r.top < top) scroller.scrollTop -= Math.ceil(top - r.top);
+  else if (r.bottom > bottom) scroller.scrollTop += Math.ceil(r.bottom - bottom);
 };
 
 const docsNav = document.getElementById("docs-nav");
