@@ -115,6 +115,9 @@ for (const path of examples) {
             await expect(toggle).toBeFocused();
           }
           if (size) await page.setViewportSize(size);
+          // Back at full width, dui-app-shell docks the sidebars a frame or more later (ResizeObserver);
+          // wait for that before settle() waits for their columns to open, or axe sees them mid-way over main.
+          if (size && size.width >= 1024) for (const toggle of await toggles.all()) await expect(toggle).toHaveAttribute("aria-expanded", "true");
         }
 
         // Every details element open at once. Drop name first, or exclusive groups would close all but one.
