@@ -55,6 +55,41 @@
   }
 }
 
+/*
+ * Cross-document view transitions: moving between docs pages cross-fades
+ * main while the app bar and the Docs sidebar stay in place. CSS only; a
+ * browser without support navigates as before. The motion tokens set the
+ * duration and easing, so data-motion="none" on the root element gives 0s,
+ * and prefers-reduced-motion turns it off (WCAG 2.3.3).
+ * https://www.w3.org/TR/css-view-transitions-2/
+ * https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/At-rules/@view-transition
+ * https://www.w3.org/WAI/WCAG22/Understanding/animation-from-interactions.html
+ */
+@view-transition {
+  navigation: auto;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  @view-transition {
+    navigation: none;
+  }
+}
+
+.docs-shell > header {
+  view-transition-name: docs-header;
+}
+
+#docs-nav {
+  view-transition-name: docs-nav;
+}
+
+::view-transition-group(*),
+::view-transition-old(*),
+::view-transition-new(*) {
+  animation-duration: var(--dui-motion-duration-normal);
+  animation-timing-function: var(--dui-motion-easing-standard);
+}
+
 /* Docs nav rows: muted, no underline; the current page is the tinted row with its bar (nav.css). */
 .docs-shell [data-nav] a:hover {
   text-decoration-line: none;

@@ -6,6 +6,32 @@
     <title>Motion · domestic-ui</title>
     <meta name="description" content="The named transitions (fade, slide, scale, color), the motion scale multiplier, and reduced and no-motion scopes side by side.">
     <link rel="stylesheet" href="../css/domestic.css">
+    <!-- dui:snippet name="Page transitions CSS" page="principles/motion" -->
+    <style id="page-transitions">
+      /* Opt in on every page of your site: same-origin navigations cross-fade. */
+      @view-transition {
+        navigation: auto;
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        @view-transition {
+          navigation: none;
+        }
+      }
+
+      /* Chrome that stays put while the content cross-fades: one unique name each. */
+      body > header {
+        view-transition-name: page-header;
+      }
+
+      ::view-transition-group(*),
+      ::view-transition-old(*),
+      ::view-transition-new(*) {
+        animation-duration: var(--dui-motion-duration-normal);
+        animation-timing-function: var(--dui-motion-easing-standard);
+      }
+    </style>
+    <!-- /dui:snippet -->
     <style>
       /* Page-only layout, written with semantic tokens like any consumer would. */
       body > :is(header, main, footer) {

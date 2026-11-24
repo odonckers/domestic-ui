@@ -475,6 +475,19 @@ accelerating exit, because short transitions keep the UI responsive and the curv
 arrive and leave. [`examples/motion.html`](examples/motion.html) shows each transition, the scale, and reduced
 and no-motion scopes side by side.
 
+### Page transitions (opt-in)
+
+`css/domestic.css` does not turn on page transitions. A site that wants them adds the
+"Page transitions CSS" snippet below to its own stylesheet:
+[`@view-transition { navigation: auto }`](https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/At-rules/@view-transition)
+makes same-origin navigations cross-fade ([CSS View Transitions Level 2](https://www.w3.org/TR/css-view-transitions-2/)),
+a unique `view-transition-name` keeps persistent chrome such as the header in place, and the motion tokens set the
+duration and easing, so `data-motion="none"` on the root element makes it instant. Under
+`prefers-reduced-motion: reduce` it is off ([2.3.3 Animation from Interactions](https://www.w3.org/WAI/WCAG22/Understanding/animation-from-interactions.html)).
+Browsers without support navigate as before, with no script. These docs use it: the app bar and the Docs
+sidebar stay while main cross-fades. Smashing Magazine lists it among
+[front-end features for designers](https://smashingmagazine.com/2024/12/new-front-end-features-for-designers-in-2025), for comparison.
+
 ## 7. Elevation
 
 Elevation says which layer is on top. Five levels, each a
