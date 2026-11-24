@@ -902,7 +902,7 @@ test.describe("docs pages in the browser", () => {
     const input = page.getByRole("searchbox", { name: "Filter tokens" });
     await expect(input).toBeVisible();
     const total = await page.locator("tbody tr").count();
-    await input.fill("surface-raised");
+    await input.fill("panel-inset");
     await expect(page.getByRole("status")).toHaveText("1 token shown");
     await expect(page.locator("tbody tr:visible")).toHaveCount(1);
     await expect(page.locator("[data-token-group]:visible")).toHaveCount(1);
