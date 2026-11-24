@@ -102,6 +102,7 @@ const pages = [
   { id: "data-table", path: "examples/organisms/data-table.html" },
   { id: "nav", path: "examples/molecules/nav.html" },
   { id: "app-shell", path: "examples/app-shell.html" },
+  { id: "themes-page", path: "_site/principles/themes.html" },
 ];
 
 /** CSS viewports. 1280×800 is a desktop window; 390×844 is the narrow reflow width. */
@@ -120,7 +121,7 @@ const appearances = [
 /** @type {ThemeScope[]} */
 const themeScopes = [
   { id: "default" },
-  ...["calm", "soft", "compact"].map((theme) => ({ id: theme, theme, stylesheet: `css/themes/${theme}.css`, pages: ["button", "field", "card", "data-table", "app-shell"] })),
+  ...["calm", "soft", "compact"].map((theme) => ({ id: theme, theme, stylesheet: `css/themes/${theme}.css`, pages: ["button", "field", "card", "data-table", "app-shell", "themes-page"] })),
 ];
 
 test.use({ locale: "en-US", timezoneId: "UTC" });
