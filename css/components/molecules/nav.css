@@ -154,6 +154,11 @@
   font-weight: var(--dui-font-weight-strong);
 }
 
+/* Links in a dropdown: concentric with its corners (--dui-radius-nested). */
+[data-nav~="horizontal"] details > :is(ul, ol) a:any-link {
+  border-radius: var(--dui-radius-nested);
+}
+
 /* Decorative icons: as tall as a line of text, never shrunk by a long label. */
 [data-nav] :is(a, summary) > svg {
   flex: none;

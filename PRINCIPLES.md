@@ -162,6 +162,17 @@ with a `data-theme` attribute or a `theme-*` class to scope it:
 Shape has one knob: `--dui-radius-scale` multiplies `--dui-radius-control` (8px) and
 `--dui-radius-surface` (12px); `0` gives square corners and `1.5` rounder ones, while pills stay round.
 Radix Themes has the same idea ([`--radius-factor`](https://www.radix-ui.com/themes/docs/theme/radius)), for comparison.
+
+Nested corners are concentric: an item inside a rounded container takes the container's radius less the
+padding between them, never below 0, so the two curves share a centre. `--dui-radius-nested` is
+`max(0px, calc(--dui-radius-surface - --dui-space-gap-tight))`, used by menu items, listbox options and the
+links in a horizontal nav dropdown ([`border-radius`](https://developer.mozilla.org/en-US/docs/Web/CSS/border-radius),
+[`calc()`](https://developer.mozilla.org/en-US/docs/Web/CSS/calc), [`max()`](https://developer.mozilla.org/en-US/docs/Web/CSS/max)).
+It follows `--dui-radius-scale` and density, and at scale `0` it is square. Apple's
+[2025 design language](https://www.apple.com/newsroom/2025/06/apple-introduces-a-delightful-and-elegant-new-software-design/)
+and Vercel's [Web Interface Guidelines](https://vercel.com/design/guidelines) ask for the same, for comparison.
+Our choice: nav rows in a sidebar, code blocks in cards and the floating panels keep their own radii, because
+their padding is as large as the outer radius or larger, so the concentric value would be square.
 Type has one opt-in: link `css/fonts/inter.css` and set `--dui-font-body: Inter, system-ui, sans-serif` to use the
 self-hosted Inter instead of the system stack (see "Opinions we hold"); nothing else changes.
 Check your theme's contrast in both schemes; `tests/tokens.spec.js` shows how.
@@ -290,6 +301,7 @@ may change. Fluid `--dui-step-*` values are `clamp()` expressions; see `primitiv
 | `--dui-radius-scale` | Radius knob: multiplies the control and surface radii; `0` gives square corners | `factor-1` (1) |
 | `--dui-radius-control` | Controls, buttons, inline code | `radius-2` (0.5rem, 8px) × `--dui-radius-scale` |
 | `--dui-radius-surface` | Panels, cards, pre, dialog, details, media | `radius-3` (0.75rem, 12px) × `--dui-radius-scale` |
+| `--dui-radius-nested` | Items inside a surface padded by `--dui-space-gap-tight` (menu, listbox, nav dropdown): concentric corners | `--dui-radius-surface` − `--dui-space-gap-tight`, at least 0 (8px at scale 1) |
 | `--dui-radius-pill` | Fully rounded ends (not scaled) | `radius-round` (999rem) |
 | `--dui-space-panel-inset` | Gap between a floating panel and the viewport or frame edge | `--dui-space-xs` (0.5rem) |
 | `--dui-border-width` | Hairline width | `border-1` (1px) |
@@ -358,7 +370,7 @@ may change. Fluid `--dui-step-*` values are `clamp()` expressions; see `primitiv
 Derived (re-resolved on each theme scope and on every `[data-motion]` and `[data-density]` element): `--dui-color-accent-text`, `--dui-color-link`,
 `--dui-color-focus`, `--dui-color-accent-hover`, `--dui-color-primary-hover`, `--dui-font-heading`, `--dui-font-size-ui`, `--dui-font-size-field`, `--dui-font-size-page-title`, `--dui-color-accent-surface`,
 `--dui-color-success-surface`, `--dui-color-warning-surface`, `--dui-color-danger-surface`,
-`--dui-color-info-surface`, `--dui-color-surface-inverse`, `--dui-color-text-inverse`, `--dui-radius-control`, `--dui-radius-surface`, every
+`--dui-color-info-surface`, `--dui-color-surface-inverse`, `--dui-color-text-inverse`, `--dui-radius-control`, `--dui-radius-surface`, `--dui-radius-nested`, every
 `--dui-motion-duration-*`, `--dui-motion-distance`, `--dui-motion-zoom`, `--dui-motion-press-scale`, every `--dui-elevation-*`
 except the two knobs, the eight density tokens (`--dui-size-control`, `--dui-size-row` and the `--dui-space-control-*`,
 `-button-inline`, `-gap*` and `-cell` spaces), and the deprecated aliases.

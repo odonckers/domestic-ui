@@ -149,3 +149,37 @@ test.describe("prebuilt themes (css/themes/)", () => {
     });
   });
 });
+
+test.describe("concentric nested radius (--dui-radius-nested)", () => {
+  // Each pair: a rounded container with small padding and the item inside it.
+  const PROBE = `
+    <div data-probe="menu"><dui-menu><div popover data-popover data-probe-outer><button type="button" data-probe-inner>Item</button></div></dui-menu></div>
+    <div data-probe="listbox"><dui-combobox><input role="combobox" aria-label="Probe" aria-expanded="false" aria-controls="probe-list"><ul role="listbox" id="probe-list" data-probe-outer><li role="option" aria-selected="false" data-probe-inner>Item</li></ul></dui-combobox></div>
+    <nav data-nav="horizontal" aria-label="Probe" data-probe="dropdown"><ul><li><details open><summary>Group</summary><ul data-probe-outer><li><a href="#x" data-probe-inner>Item</a></li></ul></details></li></ul></nav>`;
+
+  for (const [scale, slug] of [["0", "0"], ["1", "1"], ["1.5", "15"]]) {
+    test(`at --dui-radius-scale ${scale} each item's radius is the container's radius less its padding, never below 0`, async ({ page }) => {
+      await page.goto("examples/theming.html");
+      const panel = page.locator(`[aria-labelledby="radius-${slug}-title"]`);
+      await panel.evaluate((el, html) => el.insertAdjacentHTML("beforeend", html), PROBE);
+      // The real menu in the example, opened.
+      await panel.getByRole("button", { name: "Menu" }).click();
+      const pairs = await panel.evaluate((el) => {
+        const px = (v) => parseFloat(v) || 0;
+        const read = (outer, inner) => {
+          const o = getComputedStyle(outer);
+          return { outer: px(o.borderTopLeftRadius), pad: px(o.paddingTop), inner: px(getComputedStyle(inner).borderTopLeftRadius) };
+        };
+        const menu = el.querySelector("dui-menu > [popover]:popover-open");
+        const out = { "example menu": read(menu, menu.querySelector("button")) };
+        for (const probe of el.querySelectorAll("[data-probe]")) out[probe.dataset.probe] = read(probe.querySelector("[data-probe-outer]"), probe.querySelector("[data-probe-inner]"));
+        return out;
+      });
+      for (const [name, { outer, pad, inner }] of Object.entries(pairs)) {
+        expect(pad, `${name}: padding`).toBeGreaterThan(0);
+        expect(inner, `${name} at scale ${scale}`).toBeCloseTo(Math.max(0, outer - pad), 1);
+        if (scale === "0") expect([outer, inner], `${name}: square at scale 0`).toEqual([0, 0]);
+      }
+    });
+  }
+});

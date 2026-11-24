@@ -223,13 +223,21 @@
         <h2 id="radius-title">Radius scale</h2>
         <p>
           <code>--dui-radius-scale</code> multiplies the control and surface radii. <code>0</code> gives square corners everywhere,
-          <code>1</code> is the default (8px controls, 12px surfaces) and <code>1.5</code> is rounder. Pills stay round.
+          <code>1</code> is the default (8px controls, 12px surfaces) and <code>1.5</code> is rounder. Pills stay round. Open a
+          menu: its items use <code>--dui-radius-nested</code>, the menu's radius less its padding, so the corners stay concentric.
         </p>
         <!-- dui:snippet name="Radius scale" page="principles/theming" -->
         <div class="grid">
           <section class="radius-panel stack" data-theme style="--dui-radius-scale: 0" aria-labelledby="radius-0-title">
             <h3 id="radius-0-title">Scale 0</h3>
             <p><button type="button">Secondary</button> <button type="submit">Save</button></p>
+            <dui-menu>
+              <button type="button" popovertarget="radius-0-menu">Menu</button>
+              <div id="radius-0-menu" popover data-popover>
+                <button type="button">Rename</button>
+                <button type="button">Archive</button>
+              </div>
+            </dui-menu>
             <article data-card>
               <h4>A card</h4>
               <p>Square corners.</p>
@@ -238,6 +246,13 @@
           <section class="radius-panel stack" data-theme style="--dui-radius-scale: 1" aria-labelledby="radius-1-title">
             <h3 id="radius-1-title">Scale 1</h3>
             <p><button type="button">Secondary</button> <button type="submit">Save</button></p>
+            <dui-menu>
+              <button type="button" popovertarget="radius-1-menu">Menu</button>
+              <div id="radius-1-menu" popover data-popover>
+                <button type="button">Rename</button>
+                <button type="button">Archive</button>
+              </div>
+            </dui-menu>
             <article data-card>
               <h4>A card</h4>
               <p>The default corners.</p>
@@ -246,6 +261,13 @@
           <section class="radius-panel stack" data-theme style="--dui-radius-scale: 1.5" aria-labelledby="radius-15-title">
             <h3 id="radius-15-title">Scale 1.5</h3>
             <p><button type="button">Secondary</button> <button type="submit">Save</button></p>
+            <dui-menu>
+              <button type="button" popovertarget="radius-15-menu">Menu</button>
+              <div id="radius-15-menu" popover data-popover>
+                <button type="button">Rename</button>
+                <button type="button">Archive</button>
+              </div>
+            </dui-menu>
             <article data-card>
               <h4>A card</h4>
               <p>Rounder corners.</p>
@@ -259,6 +281,7 @@
     <footer>
       <p><small>Every color pair in both themes meets WCAG 2.2 AA in light and dark. <code>npm test</code> checks it.</small></p>
     </footer>
+    <script type="module" src="../web-components/dui-menu.js"></script>
     <script type="module" src="../web-components/dui-tabs.js"></script>
   </body>
 </html>

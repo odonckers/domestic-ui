@@ -95,7 +95,7 @@
   background-color: transparent;
   color: var(--dui-color-text);
   border: 0;
-  border-radius: var(--dui-radius-control);
+  border-radius: var(--dui-radius-nested);
   box-shadow: none;
   font-size: var(--dui-font-size-ui);
   font-weight: var(--dui-font-weight-body);
