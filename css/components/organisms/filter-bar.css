@@ -22,7 +22,7 @@
  * <label> (WCAG 1.3.1, 3.3.2); a typeahead is a <dui-combobox>. The status
  * text says what changed ("24 orders match"), and is announced politely
  * without moving focus (WCAG 4.1.3 Status Messages). Controls keep their
- * size (44px, 32px compact: above the 24px of WCAG 2.5.8).
+ * size (36px, 32px compact, 44px on touch: above the 24px of WCAG 2.5.8).
  * https://html.spec.whatwg.org/multipage/grouping-content.html#the-search-element
  *
  * Breakpoint: 30rem of the bar's own inline size. A container query

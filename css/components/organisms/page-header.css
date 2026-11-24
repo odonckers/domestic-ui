@@ -21,7 +21,7 @@
  * reference it from the main content with aria-describedby only if it is
  * needed to understand it. Actions keep source order after the title, so
  * the Tab order matches the reading order in both layouts (WCAG 2.4.3), and
- * keep their target size (44px, 32px compact; WCAG 2.5.8). A <header>
+ * keep their target size (36px, 32px compact, 44px on touch; WCAG 2.5.8). A <header>
  * inside <main> has no landmark role
  * (https://www.w3.org/TR/html-aam-1.0/#el-header).
  *

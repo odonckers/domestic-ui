@@ -125,7 +125,7 @@
 [popover][data-popover]:popover-open {
   opacity: 1;
   scale: 1;
-  transition-timing-function: var(--dui-motion-easing-enter);
+  transition-timing-function: var(--dui-motion-easing-spring);
 }
 
 @starting-style {

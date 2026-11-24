@@ -49,7 +49,7 @@ test.describe("density", () => {
   test("compact reduces control heights and table cell padding; text size is unchanged", async ({ page }) => {
     const comfortable = await measure(page, "comfortable");
     const compact = await measure(page, "compact");
-    expect(comfortable.inputMin).toBe(44);
+    expect(comfortable.inputMin).toBe(36);
     expect(compact.inputMin).toBe(32);
     for (const key of /** @type {const} */ (["inputHeight", "selectHeight", "buttonHeight", "toolbarButtonHeight", "checkLabelHeight", "switchLabelHeight", "cellPadding", "cellPaddingInline"])) {
       expect(compact[key], key).toBeLessThan(comfortable[key]);
@@ -66,7 +66,7 @@ test.describe("density", () => {
       probe.remove();
       return { value, scale: getComputedStyle(document.documentElement).getPropertyValue("--dui-density-scale").trim() };
     });
-    expect(root.value).toBe("44px");
+    expect(root.value).toBe("36px");
     expect(Number(root.scale)).toBe(1);
   });
 
@@ -101,7 +101,7 @@ test.describe("density", () => {
       return out;
     });
     expect(values.compact).toBe("32px");
-    expect(values.comfortable).toBe("44px");
+    expect(values.comfortable).toBe("36px");
     expect(values.compactCell).toBe("4px");
     expect(values.comfortableCell).toBe("8px");
     expect(values.nestedTokens).toEqual(values.rootTokens);
@@ -140,5 +140,46 @@ test.describe("--dui-size-page", () => {
     });
     expect(token).toBe(72);
     expect(Number.parseFloat(main)).toBe(72 * 16);
+  });
+});
+
+test.describe("rows and controls", () => {
+  /** @param {import("@playwright/test").Page} page */
+  const sizes = (page) =>
+    page.evaluate(() => {
+      const read = (/** @type {string | null} */ density) => {
+        const scope = document.createElement("div");
+        if (density) scope.dataset.density = density;
+        scope.innerHTML = "<div></div><div></div>";
+        document.body.append(scope);
+        const [control, row] = /** @type {HTMLElement[]} */ ([...scope.children]);
+        control.style.blockSize = "var(--dui-size-control)";
+        row.style.blockSize = "var(--dui-size-row)";
+        const out = { control: control.getBoundingClientRect().height, row: row.getBoundingClientRect().height };
+        scope.remove();
+        return out;
+      };
+      return { comfortable: read(null), compact: read("compact"), coarse: matchMedia("(pointer: coarse)").matches };
+    });
+
+  test("controls are 36px and rows 32px; compact gives 32px and 28px, all over 24px (WCAG 2.5.8)", async ({ page }) => {
+    await page.goto("examples/molecules/nav.html");
+    const out = await sizes(page);
+    expect(out.coarse).toBe(false);
+    expect(out.comfortable).toEqual({ control: 36, row: 32 });
+    expect(out.compact).toEqual({ control: 32, row: 28 });
+    const link = await page.locator("[data-nav] a").first().evaluate((el) => getComputedStyle(el).minBlockSize);
+    expect(link).toBe("32px");
+  });
+
+  test.describe("coarse pointer", () => {
+    test.use({ hasTouch: true });
+    test("controls and rows are 44px at every density", async ({ page, browserName }) => {
+      await page.goto("examples/molecules/nav.html");
+      const out = await sizes(page);
+      test.skip(!out.coarse, `${browserName} does not report a coarse pointer with hasTouch`);
+      expect(out.comfortable).toEqual({ control: 44, row: 44 });
+      expect(out.compact).toEqual({ control: 44, row: 44 });
+    });
   });
 });

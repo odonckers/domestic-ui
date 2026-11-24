@@ -195,8 +195,12 @@
   --dui-space-9: 4rem;
 
   /* Sizes */
+  --dui-size-1: 1rem;
   --dui-size-1-25: 1.25rem;
+  --dui-size-1-75: 1.75rem;
   --dui-size-2: 2rem;
+  --dui-size-2-25: 2.25rem;
+  --dui-size-2-5: 2.5rem;
   --dui-size-2-75: 2.75rem;
   --dui-size-12: 12rem;
   --dui-size-3-25: 3.25rem;
@@ -227,18 +231,29 @@
 
   /* Motion */
   --dui-duration-0: 0s;
-  --dui-duration-150: 150ms;
-  --dui-duration-250: 250ms;
-  --dui-duration-350: 350ms; /* Long enough for a full-height drawer to travel its width */
+  --dui-duration-120: 120ms;
+  --dui-duration-200: 200ms;
+  --dui-duration-300: 300ms; /* Long enough for a full-height drawer to travel its width */
   --dui-easing-ease-out: cubic-bezier(0.2, 0, 0, 1);
   --dui-easing-decelerate: cubic-bezier(0, 0, 0, 1); /* Starts fast, settles gently: things arriving */
   --dui-easing-accelerate: cubic-bezier(0.3, 0, 1, 1); /* Starts slowly, leaves fast: things departing */
   --dui-easing-linear: linear;
 
+  /*
+   * A critically damped spring written with linear(): a fast start and a
+   * long, soft settle with no overshoot, so a drawer never pulls away from
+   * its edge. Browsers without linear() ignore it; the semantic token
+   * falls back to the enter easing (semantic.css).
+   * https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/Values/easing-function/linear
+   */
+  --dui-easing-spring: linear(0, 0.16 4%, 0.46 11%, 0.71 19%, 0.86 28%, 0.94 38%, 0.98 51%, 0.995 66%, 1);
+
   /* Unitless factors and ratios */
   --dui-factor-0: 0; /* Off: multiplies a duration or distance to nothing */
   --dui-factor-1: 1; /* On: leaves a duration or distance as it is */
   --dui-ratio-95: 0.95; /* 95% of full size */
+  --dui-ratio-98: 0.98; /* 98% of full size: a pressed button */
+  --dui-stroke-1-75: 1.75; /* Icon stroke width in SVG user units (Lucide draws on a 24-unit grid) */
 
   /*
    * Shadow geometry: x offset, y offset, blur, spread. The color is added

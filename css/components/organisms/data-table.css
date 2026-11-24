@@ -48,7 +48,7 @@
  * screen reader hears the caption, the column headers and the page's
  * status message ("Loading orders"), not blank cells. The skeleton shimmer
  * stops under reduced motion and data-motion="none". Header buttons and
- * checkbox labels are --dui-size-control tall (44px, 32px compact), above
+ * checkbox labels are --dui-size-control tall (36px, 32px compact, 44px on touch), above
  * the 24px of WCAG 2.5.8.
  *
  * API

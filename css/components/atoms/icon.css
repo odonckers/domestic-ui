@@ -34,9 +34,16 @@
  *     Search
  *   </button>
  *
- * Size: --dui-size-icon (1.25rem), the size nav and app bar icons already
- * use. Inside a button or link the flex gap spaces it from the label; in
- * running text it sits on the middle of the line.
+ * Size: --dui-size-icon (1.25rem) on its own and in nav links;
+ * --dui-size-icon-inline (1rem) inside buttons, menu items, options and
+ * toolbars, so the icon matches the text beside it. Inside a button or
+ * link the flex gap spaces it from the label; in running text it sits on
+ * the middle of the line.
+ *
+ * Stroke: the CSS stroke-width property (--dui-icon-stroke-width, 1.75)
+ * overrides Lucide's stroke-width="2" presentation attribute, a lighter
+ * line at the smaller size.
+ * https://developer.mozilla.org/en-US/docs/Web/SVG/Reference/Attribute/stroke-width
  *
  * Direction: data-icon="mirror" flips the icon with :dir(rtl), which follows
  * the nearest dir attribute, so a dir="ltr" island inside an RTL page stays
@@ -59,6 +66,13 @@ svg[data-icon] {
   block-size: var(--dui-size-icon);
   vertical-align: middle;
   color: inherit;
+  stroke-width: var(--dui-icon-stroke-width);
+}
+
+/* Inside buttons, menu items, options and toolbars: the inline size, beside 14 to 16px text. */
+:is(button, a[data-button], [role^="menuitem"], [role="option"], [data-toolbar]) svg[data-icon] {
+  inline-size: var(--dui-size-icon-inline);
+  block-size: var(--dui-size-icon-inline);
 }
 
 svg[data-icon~="mirror"]:dir(rtl) {

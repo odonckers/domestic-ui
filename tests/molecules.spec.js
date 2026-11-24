@@ -792,12 +792,12 @@ test.describe("pagination", () => {
     await expect(first.getByRole("link", { name: "Page 1" })).toHaveAttribute("aria-current", "page");
   });
 
-  test("every page link is at least 44 by 44 pixels", async ({ page }) => {
+  test("every page link is at least the 36px control size", async ({ page }) => {
     await page.goto("examples/molecules/pagination.html");
     for (const link of await page.locator("[data-pagination] a").all()) {
       const box = await link.boundingBox();
-      expect(box?.width).toBeGreaterThanOrEqual(44);
-      expect(box?.height).toBeGreaterThanOrEqual(44);
+      expect(box?.width).toBeGreaterThanOrEqual(36);
+      expect(box?.height).toBeGreaterThanOrEqual(36);
     }
   });
 });

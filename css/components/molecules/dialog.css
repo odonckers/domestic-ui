@@ -199,7 +199,7 @@
 [data-dialog~="drawer"][open] {
   opacity: 1;
   translate: 0 0;
-  transition-timing-function: var(--dui-motion-easing-enter);
+  transition-timing-function: var(--dui-motion-easing-spring);
 }
 
 @starting-style {

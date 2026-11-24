@@ -25,7 +25,7 @@
  *
  * Keep the label the same in both states (APG): the state is "on" or "off",
  * not a different label. Wrapping the input in its <label> also makes the
- * whole label the click target (--dui-size-control tall: 44px, 32px with
+ * whole label the click target (--dui-size-control tall: 36px, 44px on touch, 32px with
  * data-density="compact"; see css/base/forms.css).
  *
  * State does not rely on color alone (WCAG 1.4.1): the thumb moves to the

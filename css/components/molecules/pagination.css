@@ -19,7 +19,7 @@
  * count stable. At the first and last page, Previous or Next is a placeholder
  * <a> with no href: it is not a link, not focusable, and looks disabled. Gaps
  * are an "…" item hidden from assistive technology. Every link is at least
- * --dui-size-control square (44px, 32px compact; WCAG 2.5.8) and keeps the base focus ring; the current page
+ * --dui-size-control square (36px, 32px compact, 44px on touch; WCAG 2.5.8) and keeps the base focus ring; the current page
  * adds an inner ring in its text color, like the primary button.
  * https://www.w3.org/WAI/WCAG22/Understanding/link-purpose-in-context.html
  * https://html.spec.whatwg.org/multipage/links.html#link-type-next

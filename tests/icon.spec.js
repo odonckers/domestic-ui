@@ -47,7 +47,7 @@ test.describe("icon-only buttons", () => {
       for (const name of ICON_ONLY) {
         const box = await iconButton(page, name).boundingBox();
         expect(box, name).not.toBeNull();
-        expect(box?.width, name).toBeGreaterThanOrEqual(density === "compact" ? 32 : 44);
+        expect(box?.width, name).toBeGreaterThanOrEqual(density === "compact" ? 32 : 36);
         expect(box?.height, name).toBeGreaterThanOrEqual(24);
         expect(Math.abs((box?.width ?? 0) - (box?.height ?? 0)), `${name} is square`).toBeLessThan(1);
       }
@@ -95,7 +95,7 @@ test.describe("icons", () => {
     await page.goto(PAGE);
   });
 
-  test("icons in buttons and links are decorative and sized --dui-size-icon", async ({ page }) => {
+  test("icons in buttons and links are decorative and sized --dui-size-icon-inline in buttons, --dui-size-icon elsewhere", async ({ page }) => {
     const icons = page.locator("main :is(button, a) svg");
     expect(await icons.count()).toBeGreaterThanOrEqual(6);
     for (const icon of await icons.all()) {
@@ -104,7 +104,7 @@ test.describe("icons", () => {
       await expect(icon).toHaveAttribute("focusable", "false");
       const size = await icon.evaluate((el) => {
         const probe = document.createElement("div");
-        probe.style.inlineSize = "var(--dui-size-icon)";
+        probe.style.inlineSize = el.closest("button, a[data-button]") ? "var(--dui-size-icon-inline)" : "var(--dui-size-icon)";
         document.body.append(probe);
         const want = probe.getBoundingClientRect().width;
         probe.remove();

@@ -90,10 +90,14 @@ test("forest panel actually differs from the default panel", async ({ page }) =>
 test("reduced motion keeps color transitions and stops movement", async ({ page }) => {
   await page.emulateMedia({ reducedMotion: "reduce" });
   await page.goto("examples/base.html");
-  const { duration, movement } = await page.evaluate(() => ({
-    duration: getComputedStyle(document.querySelector("button")).transitionDuration,
-    movement: getComputedStyle(document.documentElement).getPropertyValue("--dui-motion-movement").trim(),
-  }));
-  expect(duration.split(",").every((d) => Number.parseFloat(d) > 0)).toBe(true);
+  const { durations, movement } = await page.evaluate(() => {
+    const style = getComputedStyle(/** @type {Element} */ (document.querySelector("button")));
+    const names = style.transitionProperty.split(",").map((p) => p.trim());
+    const times = style.transitionDuration.split(",").map((d) => Number.parseFloat(d));
+    return { durations: Object.fromEntries(names.map((n, i) => [n, times[i]])), movement: getComputedStyle(document.documentElement).getPropertyValue("--dui-motion-movement").trim() };
+  });
+  expect(durations["background-color"]).toBeGreaterThan(0);
+  expect(durations["border-color"]).toBeGreaterThan(0);
+  expect(durations.scale).toBe(0);
   expect(Number(movement)).toBe(0);
 });

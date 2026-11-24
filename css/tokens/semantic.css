@@ -88,15 +88,20 @@
   --dui-space-3xl: var(--dui-space-9);
 
   /* Sizes */
-  --dui-size-target: var(--dui-size-2-75);
-  --dui-size-target-small: var(--dui-size-2);
-  --dui-size-target-large: var(--dui-size-3-25);
+  --dui-size-target: var(--dui-size-2-25); /* Comfortable control height: 36px, 44px under a coarse pointer */
+  --dui-size-target-compact: var(--dui-size-2); /* Compact control height: 32px, 44px under a coarse pointer */
+  --dui-size-target-small: var(--dui-size-2); /* Small buttons: 32px at every pointer */
+  --dui-size-target-large: var(--dui-size-2-5); /* Large buttons: 40px, 52px under a coarse pointer */
+  --dui-size-target-row: var(--dui-size-2); /* Comfortable row height of nav, menu, listbox and list items: 32px, 44px under a coarse pointer */
+  --dui-size-target-row-compact: var(--dui-size-1-75); /* Compact row height: 28px, 44px under a coarse pointer */
   --dui-size-check: var(--dui-size-1-25);
   --dui-size-column-min: var(--dui-size-16);
   --dui-size-menu-min: var(--dui-size-12);
   --dui-size-drawer: var(--dui-size-24);
   --dui-size-page: var(--dui-size-72); /* Max inline size of a page's content column: header, main and footer */
   --dui-size-icon: var(--dui-size-1-25); /* Decorative icons beside a label: nav links and group summaries */
+  --dui-size-icon-inline: var(--dui-size-1); /* Icons inside buttons, menu items and toolbars, beside 14 to 16px text */
+  --dui-icon-stroke-width: var(--dui-stroke-1-75); /* Stroke width of [data-icon] SVGs, set with the CSS stroke-width property */
   --dui-size-sidebar: var(--dui-size-16); /* Inline size of an app shell's primary sidebar when it sits beside main */
   --dui-size-sidebar-aux: var(--dui-size-20); /* Inline size of an app shell's auxiliary (inline-end) sidebar when it sits beside main */
   --dui-size-pane: var(--dui-size-100svh); /* Max block size of a pane that scrolls on its own beside others, such as the detail of a list-detail or a data-scroll="block inline" table */
@@ -122,6 +127,7 @@
   --dui-motion-easing-standard: var(--dui-easing-ease-out); /* Easing for state changes that stay on screen: hover, press, switch */
   --dui-motion-easing-enter: var(--dui-easing-decelerate); /* Easing for things arriving: dialogs, drawers, popovers, toasts */
   --dui-motion-easing-exit: var(--dui-easing-accelerate); /* Easing for things leaving */
+  --dui-motion-easing-spring: var(--dui-easing-decelerate); /* Easing for popover, menu and drawer entrances: a linear() spring where supported (below), the enter easing elsewhere */
 
   /* Floating panels: sidebars and side panels inset from the frame edge */
   --dui-space-panel-inset: var(--dui-space-xs); /* Gap between a floating panel and the viewport or frame edge */
@@ -184,11 +190,12 @@
   --dui-color-text-inverse: var(--dui-color-surface);
 
   /* Motion: durations times --dui-motion-scale and --dui-motion-enabled, distances times --dui-motion-movement. */
-  --dui-motion-duration-fast: calc(var(--dui-duration-150) * var(--dui-motion-scale) * var(--dui-motion-enabled)); /* Small state changes: hover, press, switch, popovers and menus */
-  --dui-motion-duration-normal: calc(var(--dui-duration-250) * var(--dui-motion-scale) * var(--dui-motion-enabled)); /* Dialogs and toasts */
-  --dui-motion-duration-slow: calc(var(--dui-duration-350) * var(--dui-motion-scale) * var(--dui-motion-enabled)); /* Large surfaces that travel: the drawer */
+  --dui-motion-duration-fast: calc(var(--dui-duration-120) * var(--dui-motion-scale) * var(--dui-motion-enabled)); /* Small state changes: hover, press, switch, popovers and menus */
+  --dui-motion-duration-normal: calc(var(--dui-duration-200) * var(--dui-motion-scale) * var(--dui-motion-enabled)); /* Dialogs and toasts */
+  --dui-motion-duration-slow: calc(var(--dui-duration-300) * var(--dui-motion-scale) * var(--dui-motion-enabled)); /* Large surfaces that travel: the drawer */
   --dui-motion-distance: calc(var(--dui-space-4) * var(--dui-motion-movement)); /* How far a dialog or toast lifts as it fades in; 0 with reduced motion */
   --dui-motion-zoom: calc(1 - (1 - var(--dui-ratio-95)) * var(--dui-motion-movement)); /* Scale a popover or menu grows from; 1 (no zoom) with reduced motion */
+  --dui-motion-press-scale: calc(1 - (1 - var(--dui-ratio-98)) * var(--dui-motion-movement)); /* Scale of a pressed (:active) button: 0.98, or 1 with reduced motion */
 
   /*
    * Elevation: a shadow and a surface per level. Every level from 1 up is
@@ -235,7 +242,8 @@
    * Compact controls stay 32px tall, above the 24px of WCAG 2.5.8. Type
    * sizes never change with density.
    */
-  --dui-size-control: calc(var(--dui-size-target-small) + (var(--dui-size-target) - var(--dui-size-target-small)) * var(--dui-density-scale)); /* Min block size of controls, buttons and nav, menu and listbox items: 44px comfortable, 32px compact */
+  --dui-size-control: calc(var(--dui-size-target-compact) + (var(--dui-size-target) - var(--dui-size-target-compact)) * var(--dui-density-scale)); /* Min block size of controls and buttons: 36px comfortable, 32px compact, 44px under a coarse pointer */
+  --dui-size-row: calc(var(--dui-size-target-row-compact) + (var(--dui-size-target-row) - var(--dui-size-target-row-compact)) * var(--dui-density-scale)); /* Min block size of nav, menu, listbox, combobox option and list-detail items: 32px comfortable, 28px compact, 44px under a coarse pointer */
   --dui-space-control-block: calc(var(--dui-space-2xs) + (var(--dui-space-xs) - var(--dui-space-2xs)) * var(--dui-density-scale)); /* Block padding inside controls, buttons and items: 0.5rem comfortable, 0.25rem compact */
   --dui-space-control-inline: calc(var(--dui-space-xs) + (var(--dui-space-s) - var(--dui-space-xs)) * var(--dui-density-scale)); /* Inline padding of text fields and nav, menu and listbox items: 0.75rem comfortable, 0.5rem compact */
   --dui-space-button-inline: calc(var(--dui-space-s) + (var(--dui-space-m) - var(--dui-space-s)) * var(--dui-density-scale)); /* Inline padding of buttons: 1rem comfortable, 0.75rem compact */
@@ -248,6 +256,35 @@
   --dui-duration-fast: var(--dui-motion-duration-fast); /* Deprecated: use --dui-motion-duration-fast */
   --dui-duration-normal: var(--dui-motion-duration-normal); /* Deprecated: use --dui-motion-duration-normal */
   --dui-easing-standard: var(--dui-motion-easing-standard); /* Deprecated: use --dui-motion-easing-standard */
+}
+
+/*
+ * 2a. Pointer and easing support.
+ *
+ * A coarse pointer (touch) restores 44px controls and rows, the size
+ * WCAG 2.5.5 (AAA) asks for, at every density.
+ * https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/At-rules/@media/pointer
+ * https://www.w3.org/WAI/WCAG22/Understanding/target-size-enhanced.html
+ *
+ * The spring easing is a linear() function; browsers without it keep the
+ * enter easing, because an unsupported value would drop the transition.
+ * Our choice: 36px controls on fine pointers, between Primer and Radix at
+ * 32px and Material at 40px, for comparison.
+ */
+@media (pointer: coarse) {
+  :root {
+    --dui-size-target: var(--dui-size-2-75);
+    --dui-size-target-compact: var(--dui-size-2-75);
+    --dui-size-target-large: var(--dui-size-3-25);
+    --dui-size-target-row: var(--dui-size-2-75);
+    --dui-size-target-row-compact: var(--dui-size-2-75);
+  }
+}
+
+@supports (transition-timing-function: linear(0, 1)) {
+  :root {
+    --dui-motion-easing-spring: var(--dui-easing-spring);
+  }
 }
 
 /*

@@ -27,7 +27,7 @@
  * the bar has 3:1 against the surface (WCAG 1.4.11). In forced colors mode
  * the tint is dropped by the browser and the bar is drawn in Highlight, so
  * the marker stays. Rows are at least
- * --dui-size-control tall (44px, 32px compact; WCAG 2.5.8). The detail is a
+ * --dui-size-row tall (32px, 28px compact, 44px on touch; WCAG 2.5.8). The detail is a
  * <section> or <article> named by its heading (aria-labelledby), so it is a
  * region landmark. Give it tabindex="0" when it can scroll, so keyboard
  * users can scroll it (WCAG 2.1.1). Source order is list, then detail, which
@@ -115,7 +115,7 @@
   justify-content: space-between;
   gap: 0 var(--dui-space-gap);
   inline-size: 100%;
-  min-block-size: var(--dui-size-control);
+  min-block-size: var(--dui-size-row);
   padding: var(--dui-space-control-block) var(--dui-space-control-inline);
   background-color: transparent;
   color: var(--dui-color-text);

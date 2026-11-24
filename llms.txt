@@ -27,9 +27,9 @@ Link `css/domestic.css` (copy `css/` from the v0.1.0 release, https://github.com
 
 ## Tokens
 
-- [Tokens](https://odonckers.github.io/domestic-ui/tokens/index.md): The two tiers of domestic-ui design tokens: 313 custom properties with their light and dark values.
-- [Primitive tokens](https://odonckers.github.io/domestic-ui/tokens/primitives.md): All 167 primitive tokens in css/tokens/primitives.css (internal), with resolved light and dark values.
-- [Semantic tokens](https://odonckers.github.io/domestic-ui/tokens/semantic.md): All 146 semantic tokens in css/tokens/semantic.css (public theming API), with resolved light and dark values.
+- [Tokens](https://odonckers.github.io/domestic-ui/tokens/index.md): The two tiers of domestic-ui design tokens: 328 custom properties with their light and dark values.
+- [Primitive tokens](https://odonckers.github.io/domestic-ui/tokens/primitives.md): All 174 primitive tokens in css/tokens/primitives.css (internal), with resolved light and dark values.
+- [Semantic tokens](https://odonckers.github.io/domestic-ui/tokens/semantic.md): All 154 semantic tokens in css/tokens/semantic.css (public theming API), with resolved light and dark values.
 - [Compact density](https://odonckers.github.io/domestic-ui/patterns/density.md): Available. A compact density token that tightens spacing for data-heavy screens. **Our choice:** No standard exists: `data-density="compact"` on any ancestor re-derives the density tokens; text size never changes and targets stay at least 24 by 24 CSS pixels.
 
 ## Base

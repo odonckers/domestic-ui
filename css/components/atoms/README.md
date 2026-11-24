@@ -53,7 +53,8 @@ Each is a choice between valid options, not a standard.
   shared outline, so the indicator contrasts with the fill as well as the surface. This is the
   double-ring technique described in
   [WCAG technique C40](https://www.w3.org/WAI/WCAG22/Techniques/css/C40).
-- **Our choice:** small buttons are 32px tall: below the 44px default, above the
+- **Our choice:** default buttons and fields are 36px tall and large ones 40px, and a coarse (touch) pointer
+  restores 44px, between Primer and Radix (32px) and Material (40px), for comparison. Small buttons are 32px tall, above the
   [24px minimum](https://www.w3.org/WAI/WCAG22/Understanding/target-size-minimum.html).
 - **Our choice:** `aria-disabled="true"` looks exactly like `disabled`. Prefer native `disabled`;
   use `aria-disabled` when users should be able to reach the control and read why it is unavailable.

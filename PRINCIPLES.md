@@ -52,7 +52,7 @@ Every example must pass, and every token pair is tested against, these criteria:
 | Focus visible | Every focusable element shows a `:focus-visible` outline | [2.4.7 Focus Visible](https://www.w3.org/WAI/WCAG22/Understanding/focus-visible.html) |
 | Focus not obscured | `scroll-padding` keeps focused elements clear of sticky edges | [2.4.11 Focus Not Obscured (Minimum)](https://www.w3.org/WAI/WCAG22/Understanding/focus-not-obscured-minimum.html) |
 | Focus appearance (AAA, optional) | The default 2px solid outline with a 2px offset aims to meet it | [2.4.13 Focus Appearance](https://www.w3.org/WAI/WCAG22/Understanding/focus-appearance.html) |
-| Target size | Controls are at least 44px tall (32px with `data-density="compact"`, see [Density](explainers/density.md)), above the 24px minimum | [2.5.8 Target Size (Minimum)](https://www.w3.org/WAI/WCAG22/Understanding/target-size-minimum.html) |
+| Target size | Controls are at least 36px tall and rows 32px (32px and 28px with `data-density="compact"`, see [Density](explainers/density.md); 44px under a coarse pointer), above the 24px minimum | [2.5.8 Target Size (Minimum)](https://www.w3.org/WAI/WCAG22/Understanding/target-size-minimum.html) |
 | Reduced motion | Under `prefers-reduced-motion: reduce` movement stops and fades stay; `data-motion="none"` turns transitions off (see [Motion](PRINCIPLES.md#6-motion)) | [MDN `prefers-reduced-motion`](https://developer.mozilla.org/en-US/docs/Web/CSS/@media/prefers-reduced-motion), [2.3.3 Animation from Interactions](https://www.w3.org/WAI/WCAG22/Understanding/animation-from-interactions.html) |
 | Color scheme | `color-scheme: light dark` plus [`light-dark()`](https://developer.mozilla.org/en-US/docs/Web/CSS/color_value/light-dark) in every semantic color | [MDN `color-scheme`](https://developer.mozilla.org/en-US/docs/Web/CSS/color-scheme) |
 | Forced colors | Borders and outlines switch to system colors | [MDN `forced-colors`](https://developer.mozilla.org/en-US/docs/Web/CSS/@media/forced-colors) |
@@ -240,15 +240,20 @@ may change. Fluid `--dui-step-*` values are `clamp()` expressions; see `primitiv
 | `--dui-space-xl` | Space scale; space above h1–h3 | `space-7` (2rem) |
 | `--dui-space-2xl` | Space scale | `space-8` (3rem) |
 | `--dui-space-3xl` | Space scale | `space-9` (4rem) |
-| `--dui-size-target` | Min height of controls and buttons (WCAG 2.5.8 needs 24px; this gives 44px) | `size-2-75` (2.75rem) |
-| `--dui-size-target-small` | Small buttons (32px: under 44px, over the 24px minimum) | `size-2` (2rem) |
-| `--dui-size-target-large` | Large buttons | `size-3-25` (3.25rem) |
+| `--dui-size-target` | Comfortable control height (WCAG 2.5.8 needs 24px; this gives 36px) | `size-2-25` (2.25rem); `size-2-75` (2.75rem) under `pointer: coarse` |
+| `--dui-size-target-compact` | Compact control height | `size-2` (2rem); `size-2-75` under `pointer: coarse` |
+| `--dui-size-target-small` | Small buttons (32px at every pointer, over the 24px minimum) | `size-2` (2rem) |
+| `--dui-size-target-large` | Large buttons | `size-2-5` (2.5rem); `size-3-25` (3.25rem) under `pointer: coarse` |
+| `--dui-size-target-row` | Comfortable row height of nav, menu, listbox and list items | `size-2` (2rem); `size-2-75` under `pointer: coarse` |
+| `--dui-size-target-row-compact` | Compact row height | `size-1-75` (1.75rem); `size-2-75` under `pointer: coarse` |
 | `--dui-size-check` | Checkbox and radio size | `size-1-25` (1.25rem) |
 | `--dui-size-column-min` | Default .grid min column width | `size-16` (16rem) |
 | `--dui-size-menu-min` | Min width of menus and nav dropdowns | `size-12` (12rem) |
 | `--dui-size-drawer` | Drawer width (all of the viewport when narrower) | `size-24` (24rem) |
 | `--dui-size-page` | Max inline size of a page's content column (the examples' header, main and footer) | `size-72` (72rem) |
-| `--dui-size-icon` | Decorative icons beside a label: nav links and group summaries, app bar buttons | `size-1-25` (1.25rem) |
+| `--dui-size-icon` | Decorative icons beside a label: nav links and group summaries | `size-1-25` (1.25rem) |
+| `--dui-size-icon-inline` | Icons inside buttons, menu items, options and toolbars | `size-1` (1rem) |
+| `--dui-icon-stroke-width` | Stroke width of `[data-icon]` SVGs, set with the CSS `stroke-width` property | `stroke-1-75` (1.75) |
 | `--dui-size-sidebar` | Inline size of an app shell's primary sidebar beside main | `size-16` (16rem) |
 | `--dui-size-sidebar-aux` | Inline size of an app shell's auxiliary (inline-end) sidebar beside main | `size-20` (20rem) |
 | `--dui-size-pane` | Max block size of a pane that scrolls on its own beside others (the detail of a list-detail when side by side) | `size-100svh` (100svh, the small viewport height) |
@@ -271,6 +276,7 @@ may change. Fluid `--dui-step-*` values are `clamp()` expressions; see `primitiv
 | `--dui-motion-easing-standard` | State changes that stay on screen: hover, press, switch | `easing-ease-out` (`cubic-bezier(0.2, 0, 0, 1)`) |
 | `--dui-motion-easing-enter` | Things arriving: dialogs, drawers, popovers, toasts | `easing-decelerate` (`cubic-bezier(0, 0, 0, 1)`) |
 | `--dui-motion-easing-exit` | Things leaving | `easing-accelerate` (`cubic-bezier(0.3, 0, 1, 1)`) |
+| `--dui-motion-easing-spring` | Popover, menu and drawer entrances | `easing-spring` (a [`linear()`](https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/Values/easing-function/linear) spring with no overshoot); `--dui-motion-easing-enter`'s curve where `linear()` is unsupported |
 | `--dui-elevation-strength` | How much of `--dui-color-shadow` each shadow uses (0% to 100%) | `mix-100` (100%) |
 | `--dui-elevation-surface-step` | Dark scheme: text color mixed into the surface per level | `mix-3` (3%) |
 | `--dui-density-scale` | Density knob: `1` comfortable, `0` compact (`data-density`); in between interpolates, never below `0` | `factor-1` (1) |
@@ -290,15 +296,17 @@ may change. Fluid `--dui-step-*` values are `clamp()` expressions; see `primitiv
 | `--dui-color-info-surface` | Info alert background | same, with `--dui-color-info` |
 | `--dui-color-surface-inverse` | Tooltip background | `--dui-color-text` |
 | `--dui-color-text-inverse` | Tooltip text | `--dui-color-surface` |
-| `--dui-motion-duration-fast` | Hover, press, switch, popovers and menus | `duration-150` (150ms) × `--dui-motion-scale` × `--dui-motion-enabled` |
-| `--dui-motion-duration-normal` | Dialogs and toasts | `duration-250` (250ms) × `--dui-motion-scale` × `--dui-motion-enabled` |
-| `--dui-motion-duration-slow` | The drawer | `duration-350` (350ms) × `--dui-motion-scale` × `--dui-motion-enabled` |
+| `--dui-motion-duration-fast` | Hover, press, switch, popovers and menus | `duration-120` (120ms) × `--dui-motion-scale` × `--dui-motion-enabled` |
+| `--dui-motion-duration-normal` | Dialogs and toasts | `duration-200` (200ms) × `--dui-motion-scale` × `--dui-motion-enabled` |
+| `--dui-motion-duration-slow` | The drawer | `duration-300` (300ms) × `--dui-motion-scale` × `--dui-motion-enabled` |
 | `--dui-motion-distance` | How far a dialog or toast lifts as it fades in | `space-4` (0.75rem) × `--dui-motion-movement` |
 | `--dui-motion-zoom` | Scale a popover or menu grows from | 0.95, or 1 when `--dui-motion-movement` is 0 |
+| `--dui-motion-press-scale` | Scale of a pressed (`:active`) button | 0.98, or 1 when `--dui-motion-movement` is 0 |
 | `--dui-elevation-shadow-color` | Shadow color after strength | `color-mix()` of `--dui-color-shadow` at `--dui-elevation-strength` |
 | `--dui-elevation-ring` | The 1px ring in the hairline color that every elevated level includes | `0 0 0 1px` `--dui-color-border` |
 | `--dui-elevation-highlight` | Dark scheme only: a 1px top inset highlight on levels 2 to 4 | `inset 0 1px 0 0`, transparent in light, the dark text color at 6% in dark |
-| `--dui-size-control` | Min block size of controls, buttons, check labels and nav, menu and listbox items | `--dui-size-target` (44px), `--dui-size-target-small` (32px) when compact |
+| `--dui-size-control` | Min block size of controls, buttons and check labels | `--dui-size-target` (36px), `--dui-size-target-compact` (32px) when compact; 44px under `pointer: coarse` |
+| `--dui-size-row` | Min block size of nav, menu, listbox, combobox option and list-detail items | `--dui-size-target-row` (32px), `--dui-size-target-row-compact` (28px) when compact; 44px under `pointer: coarse` |
 | `--dui-space-control-block` | Block padding of controls, buttons and items | `space-3` (0.5rem), `space-2` (0.25rem) when compact |
 | `--dui-space-control-inline` | Inline padding of text fields and items | `space-4` (0.75rem), `space-3` (0.5rem) when compact |
 | `--dui-space-button-inline` | Inline padding of buttons and tabs | `space-5` (1rem), `space-4` (0.75rem) when compact |
@@ -320,15 +328,15 @@ Derived (re-resolved on each theme scope and on every `[data-motion]` and `[data
 `--dui-color-focus`, `--dui-color-accent-hover`, `--dui-color-primary-hover`, `--dui-font-heading`, `--dui-color-accent-surface`,
 `--dui-color-success-surface`, `--dui-color-warning-surface`, `--dui-color-danger-surface`,
 `--dui-color-info-surface`, `--dui-color-surface-inverse`, `--dui-color-text-inverse`, `--dui-radius-control`, `--dui-radius-surface`, every
-`--dui-motion-duration-*`, `--dui-motion-distance`, `--dui-motion-zoom`, every `--dui-elevation-*`
-except the two knobs, the seven density tokens (`--dui-size-control` and the `--dui-space-control-*`,
+`--dui-motion-duration-*`, `--dui-motion-distance`, `--dui-motion-zoom`, `--dui-motion-press-scale`, every `--dui-elevation-*`
+except the two knobs, the eight density tokens (`--dui-size-control`, `--dui-size-row` and the `--dui-space-control-*`,
 `-button-inline`, `-gap*` and `-cell` spaces), and the deprecated aliases.
 
 ### Density
 
 `data-density="compact"` on any element tightens every component inside it; `data-density="comfortable"`
 is the default and restores it inside a compact area. Density changes space only: control heights
-(44px to 32px), padding, gaps and table cells. Text size never changes, and every target stays at least
+(36px to 32px), row heights (32px to 28px), padding, gaps and table cells. Text size never changes, and every target stays at least
 24 by 24 CSS pixels ([2.5.8 Target Size (Minimum)](https://www.w3.org/WAI/WCAG22/Understanding/target-size-minimum.html)).
 
 - The attribute sets one knob, `--dui-density-scale` (`1` comfortable, `0` compact). Components read the
@@ -360,9 +368,12 @@ buttons, links and the switch. Nothing waits on a transition to work.
 - **Tokens drive every duration and easing.** `--dui-motion-duration-fast`, `-normal` and `-slow`
   are primitives times `--dui-motion-scale` (default `1`), so one value on `:root` makes all motion
   slower (`2`) or off (`0`). Easings: `--dui-motion-easing-standard` for state changes,
-  `--dui-motion-easing-enter` for things arriving, `--dui-motion-easing-exit` for things leaving.
+  `--dui-motion-easing-enter` for things arriving, `--dui-motion-easing-exit` for things leaving, and
+  `--dui-motion-easing-spring` for popover, menu and drawer entrances: a critically damped spring written with
+  [`linear()`](https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/Values/easing-function/linear), set only
+  inside `@supports`, so an engine without `linear()` keeps the enter curve.
 - **Movement is a separate knob.** `--dui-motion-movement` is `1` by default. Distances
-  (`--dui-motion-distance`, `--dui-motion-zoom`, the drawer's off-screen offset) and the duration of
+  (`--dui-motion-distance`, `--dui-motion-zoom`, `--dui-motion-press-scale`, the drawer's off-screen offset) and the duration of
   every [`translate`](https://developer.mozilla.org/en-US/docs/Web/CSS/translate) or
   [`scale`](https://developer.mozilla.org/en-US/docs/Web/CSS/scale) transition are multiplied by it.
 - **Reduced motion keeps fades and drops movement.** Under
@@ -391,12 +402,13 @@ buttons, links and the switch. Nothing waits on a transition to work.
 | Transition | Components | Duration | Moves |
 | --- | --- | --- | --- |
 | Fade and lift | Dialog, toast | `--dui-motion-duration-normal` | `translate` by `--dui-motion-distance` |
-| Slide and fade | Drawer | `--dui-motion-duration-slow` | `translate` by 100% of its width |
-| Scale and fade | Popover, menu | `--dui-motion-duration-fast` | `scale` from `--dui-motion-zoom` |
+| Slide and fade | Drawer | `--dui-motion-duration-slow`, spring | `translate` by 100% of its width |
+| Scale and fade | Popover, menu | `--dui-motion-duration-fast`, spring | `scale` from `--dui-motion-zoom` |
 | Color | Buttons, links, switch track | `--dui-motion-duration-fast` | No |
+| Press | Buttons (`:active`) | `--dui-motion-duration-fast` | `scale` to `--dui-motion-press-scale` (0.98) |
 | Thumb slide | Switch | `--dui-motion-duration-fast` | `translate` |
 
-**Our choice:** 150, 250 and 350ms, longer for larger surfaces, with a decelerating enter and an
+**Our choice:** 120, 200 and 300ms, longer for larger surfaces, with a decelerating (or spring) enter and an
 accelerating exit, because short transitions keep the UI responsive and the curves match how things
 arrive and leave. [`examples/motion.html`](examples/motion.html) shows each transition, the scale, and reduced
 and no-motion scopes side by side.
@@ -582,7 +594,7 @@ link's visited status "is not an author responsibility". The visited color still
     The tooltip is `<dui-tooltip>` with a `popover="hint"`: no browser can show a popover on hover and focus without
     script except Chromium, through [`interestfor`](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/button#interestfor),
     which Firefox and Safari do not support yet;
-  - is a square of `--dui-size-control` (32px compact, 44px comfortable), never smaller than 24 by 24 pixels
+  - is a square of `--dui-size-control` (36px comfortable, 32px compact, 44px under a coarse pointer), never smaller than 24 by 24 pixels
     ([2.5.8 Target Size (Minimum)](https://www.w3.org/WAI/WCAG22/Understanding/target-size-minimum.html)).
 - **Our choice:** no icon-only destructive actions. Delete, remove, empty and reset always show their word; a trash icon
   may sit beside it. For that reason delete is not on the list above, even in a toolbar.

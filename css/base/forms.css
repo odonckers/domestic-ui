@@ -135,7 +135,8 @@ input:is([type="button"], [type="submit"], [type="reset"]),
   cursor: pointer;
   transition:
     background-color var(--dui-motion-duration-fast) var(--dui-motion-easing-standard),
-    border-color var(--dui-motion-duration-fast) var(--dui-motion-easing-standard);
+    border-color var(--dui-motion-duration-fast) var(--dui-motion-easing-standard),
+    scale calc(var(--dui-motion-duration-fast) * var(--dui-motion-movement)) var(--dui-motion-easing-standard);
 }
 
 ::file-selector-button {

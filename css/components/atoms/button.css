@@ -27,8 +27,8 @@
  *   <a href="/signup" data-button="primary large">Create account</a>
  *
  * Icon only: data-button="icon" makes the button a square of the control
- * size (32px compact, 44px comfortable, never under the 24px of WCAG
- * 2.5.8), for a short list of well-known actions only (PRINCIPLES.md,
+ * size (36px comfortable, 32px compact, 44px under a coarse pointer, never
+ * under the 24px of WCAG 2.5.8), with a 1rem icon, for a short list of well-known actions only (PRINCIPLES.md,
  * Icons). The name is visually hidden text in the button, so it is real
  * content that translation tools and every engine see; the SVG is hidden.
  * <dui-tooltip> shows the same words on hover and focus, and Esc hides
@@ -53,10 +53,11 @@
  *                         region; nothing here hides the label.
  *                         https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Reference/Attributes/aria-busy
  *
- * Sizes: default and large are at least 44px tall. small is 32px: below the
- * 44px default but above the 24px minimum of WCAG 2.5.8 Target Size (Minimum).
- * The default size follows density (--dui-size-control): 32px inside
- * data-density="compact". small and large keep their size at every density.
+ * Sizes: default is 36px and large 40px tall, both 44px or more under a
+ * coarse pointer. small is 32px, above the 24px minimum of WCAG 2.5.8
+ * Target Size (Minimum). The default size follows density
+ * (--dui-size-control): 32px inside data-density="compact". small and
+ * large keep their size at every density.
  * https://www.w3.org/WAI/WCAG22/Understanding/target-size-minimum.html
  *
  * Focus: every variant keeps the base :focus-visible outline. Filled (primary)
@@ -65,8 +66,10 @@
  * https://www.w3.org/WAI/WCAG22/Understanding/focus-appearance.html
  *
  * Motion: background and border colors fade over --dui-motion-duration-
- * fast with --dui-motion-easing-standard. Focus rings, disabled and
- * aria-busy change at once: they are essential feedback.
+ * fast with --dui-motion-easing-standard. A pressed (:active) button
+ * scales to --dui-motion-press-scale (0.98), which is 1 under reduced
+ * motion (WCAG 2.3.3). Focus rings, disabled and aria-busy change at once:
+ * they are essential feedback.
  *
  * Specs
  *   https://html.spec.whatwg.org/multipage/form-elements.html#the-button-element
@@ -97,7 +100,13 @@ a[data-button] {
   text-decoration-line: none;
   transition:
     background-color var(--dui-motion-duration-fast) var(--dui-motion-easing-standard),
-    border-color var(--dui-motion-duration-fast) var(--dui-motion-easing-standard);
+    border-color var(--dui-motion-duration-fast) var(--dui-motion-easing-standard),
+    scale calc(var(--dui-motion-duration-fast) * var(--dui-motion-movement)) var(--dui-motion-easing-standard);
+}
+
+/* Press feedback: a pressed button shrinks to 98%; 1 (no change) with reduced motion. */
+:is(button, input:is([type="button"], [type="submit"], [type="reset"]), a[data-button]):active:not(:disabled, [aria-disabled="true"]) {
+  scale: var(--dui-motion-press-scale);
 }
 
 /* Secondary: neutral. The default for links and an opt-out for submit buttons. */

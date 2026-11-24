@@ -21,7 +21,7 @@
  * with two rows of buttons, so when Tab moves to a field under the bar, the
  * browser scrolls it clear above the bar (WCAG technique C43). Because it is
  * set on every ancestor, it works in whichever one scrolls: the page or a
- * pane that scrolls on its own. Buttons keep their target size (44px, 32px compact; WCAG 2.5.8).
+ * pane that scrolls on its own. Buttons keep their target size (36px, 32px compact, 44px on touch; WCAG 2.5.8).
  * The bar is a <footer> of the form, which is not a landmark inside a form.
  * Give the bar no role; its buttons say what they do ("Save customer").
  * The reserved space covers two rows of buttons: keep the bar to two or

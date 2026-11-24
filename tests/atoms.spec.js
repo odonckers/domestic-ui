@@ -88,11 +88,29 @@ test.describe("buttons", () => {
     expect(await bg("Primary")).toBe(await bg("Default"));
   });
 
-  test("sizes keep the target size: small at least 24px, others at least 44px", async ({ page }) => {
+  test("sizes keep the target size: small 32px, default 36px, large 40px, all over 24px", async ({ page }) => {
     const height = (name) => page.getByRole("button", { name, exact: true }).evaluate((el) => el.getBoundingClientRect().height);
-    expect(await height("Small")).toBeGreaterThanOrEqual(24);
-    expect(await height("Default")).toBeGreaterThanOrEqual(44);
-    expect(await height("Large")).toBeGreaterThanOrEqual(44);
+    expect(await height("Small")).toBeGreaterThanOrEqual(32);
+    expect(await height("Default")).toBeGreaterThanOrEqual(36);
+    expect(await height("Large")).toBeGreaterThanOrEqual(40);
+  });
+
+  test("a pressed button scales to 0.98, and not at all under reduced motion", async ({ page }) => {
+    const pressed = async () => {
+      const button = page.getByRole("button", { name: "Default", exact: true });
+      // Read the end state, not the first frame of the transition.
+      await button.evaluate((el) => el.style.setProperty("transition", "none"));
+      await button.scrollIntoViewIfNeeded();
+      const box = /** @type {{ x: number, y: number, width: number, height: number }} */ (await button.boundingBox());
+      await page.mouse.move(box.x + box.width / 2, box.y + box.height / 2);
+      await page.mouse.down();
+      const scale = await button.evaluate((el) => getComputedStyle(el).scale);
+      await page.mouse.up();
+      return scale;
+    };
+    expect(await pressed()).toBe("0.98");
+    await page.emulateMedia({ reducedMotion: "reduce" });
+    expect(await pressed()).toBe("1");
   });
 
   test("every variant shows a :focus-visible outline", async ({ page }) => {

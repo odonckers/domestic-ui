@@ -442,3 +442,23 @@ test.describe("forced colors", () => {
     expect(await page.locator("#role-dialog").evaluate(border)).toEqual([true, true, true, true]);
   });
 });
+
+test("durations are 120, 200 and 300ms, and the spring easing is linear() where supported", async ({ page }) => {
+  await page.goto("examples/motion.html");
+  const out = await page.evaluate(() => {
+    const probe = document.createElement("div");
+    document.body.append(probe);
+    const read = (/** @type {string} */ token) => {
+      probe.style.transitionDuration = `var(${token})`;
+      return getComputedStyle(probe).transitionDuration;
+    };
+    probe.style.transitionTimingFunction = "var(--dui-motion-easing-spring)";
+    const spring = getComputedStyle(probe).transitionTimingFunction;
+    const out = { fast: read("--dui-motion-duration-fast"), normal: read("--dui-motion-duration-normal"), slow: read("--dui-motion-duration-slow"), spring, supported: CSS.supports("transition-timing-function", "linear(0, 1)") };
+    probe.remove();
+    return out;
+  });
+  expect([out.fast, out.normal, out.slow]).toEqual(["0.12s", "0.2s", "0.3s"]);
+  if (out.supported) expect(out.spring).toMatch(/^linear\(/);
+  else expect(out.spring).toMatch(/^cubic-bezier\(/);
+});
