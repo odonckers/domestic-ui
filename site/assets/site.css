@@ -32,7 +32,7 @@
     position: sticky;
     inset-block-start: 0;
     z-index: 2;
-    background-color: color-mix(in oklab, var(--dui-color-surface) 80%, transparent);
+    background-color: color-mix(in oklab, var(--dui-color-surface-frame) 80%, transparent);
     backdrop-filter: blur(var(--dui-space-s)) saturate(1.5);
   }
 
@@ -50,7 +50,7 @@
 
 @media (prefers-reduced-transparency: reduce), (forced-colors: active) {
   .docs-shell > header {
-    background-color: var(--dui-color-surface);
+    background-color: var(--dui-color-surface-frame);
     backdrop-filter: none;
   }
 }

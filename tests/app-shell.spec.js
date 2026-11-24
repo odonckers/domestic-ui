@@ -101,11 +101,11 @@ test.describe("landmarks", () => {
     expect(areas).toContainEqual(["aside", "end"]);
     const [header, nav, main, aside] = await Promise.all(["dui-app-shell > header", "#app-nav", "dui-app-shell > main", "#app-aux"].map((s) => box(page.locator(s))));
     expect(nav.y).toBeGreaterThanOrEqual(header.y + header.height - 1);
-    // Floating panels sit --dui-space-panel-inset below the top of main's row.
+    // The sidebars and the main panel are all inset by --dui-space-panel-inset, so their tops line up.
     const inset = await page.locator("#app-nav").evaluate((el) => parseFloat(getComputedStyle(el).marginBlockStart));
     expect(inset).toBeGreaterThan(0);
-    expect(Math.abs(nav.y - inset - main.y)).toBeLessThan(2);
-    expect(Math.abs(aside.y - inset - main.y)).toBeLessThan(2);
+    expect(Math.abs(nav.y - main.y)).toBeLessThan(2);
+    expect(Math.abs(aside.y - main.y)).toBeLessThan(2);
     expect(main.x).toBeGreaterThanOrEqual(nav.x + nav.width - 1);
     expect(aside.x).toBeGreaterThanOrEqual(main.x + main.width - 1);
   });
@@ -144,26 +144,48 @@ test.describe("landmarks", () => {
 test.describe("floating panels", () => {
   test.use({ viewport: WIDE });
 
-  test("beside main each sidebar is inset, rounded and elevated, on the panel surface", async ({ page }) => {
+  test("beside main the sidebars sit flat on the frame and main is the inset, rounded, elevated panel", async ({ page }) => {
     await page.goto(ERP);
+    const shell = await page.locator("dui-app-shell").evaluate((el) => getComputedStyle(el).backgroundColor);
+    const frame = await page.locator("dui-app-shell").evaluate((el) => {
+      const p = document.createElement("div");
+      p.style.backgroundColor = "var(--dui-color-surface-frame)";
+      el.append(p);
+      const bg = getComputedStyle(p).backgroundColor;
+      p.remove();
+      return bg;
+    });
+    expect(shell).toBe(frame);
     for (const selector of ["#app-nav", "#app-aux"]) {
       const style = await page.locator(selector).evaluate((el) => {
         const cs = getComputedStyle(el);
-        const probe = document.createElement("div");
-        probe.style.cssText = "background-color: var(--dui-elevation-panel-surface); padding: var(--dui-space-panel-inset); border-radius: var(--dui-radius-surface)";
-        el.append(probe);
-        const p = getComputedStyle(probe);
-        const out = { margin: cs.marginBlockStart, inset: p.paddingTop, radius: cs.borderTopLeftRadius, panelRadius: p.borderTopLeftRadius, shadow: cs.boxShadow, bg: cs.backgroundColor, panelBg: p.backgroundColor, position: cs.position, top: cs.top };
-        probe.remove();
-        return out;
+        const p = document.createElement("div");
+        p.style.padding = "var(--dui-space-panel-inset)";
+        el.append(p);
+        const inset = getComputedStyle(p).paddingTop;
+        p.remove();
+        return { margin: cs.marginBlockStart, inset, shadow: cs.boxShadow, bg: cs.backgroundColor, position: cs.position, top: cs.top };
       });
       expect(style.margin, selector).toBe(style.inset);
       expect(style.top, selector).toBe(style.inset);
       expect(style.position).toBe("sticky");
-      expect(style.radius).toBe(style.panelRadius);
-      expect(style.shadow).not.toBe("none");
-      expect(style.bg).toBe(style.panelBg);
+      expect(style.shadow).toBe("none");
+      expect(style.bg).toBe("rgba(0, 0, 0, 0)");
     }
+    const main = await page.locator("dui-app-shell > main").evaluate((el) => {
+      const cs = getComputedStyle(el);
+      const p = document.createElement("div");
+      p.style.cssText = "background-color: var(--dui-elevation-panel-surface); padding: var(--dui-space-panel-inset); border-radius: var(--dui-radius-surface)";
+      el.append(p);
+      const ps = getComputedStyle(p);
+      const out = { margin: cs.marginBlockStart, inset: ps.paddingTop, radius: cs.borderTopLeftRadius, panelRadius: ps.borderTopLeftRadius, shadow: cs.boxShadow, bg: cs.backgroundColor, panelBg: ps.backgroundColor };
+      p.remove();
+      return out;
+    });
+    expect(main.margin).toBe(main.inset);
+    expect(main.radius).toBe(main.panelRadius);
+    expect(main.shadow).not.toBe("none");
+    expect(main.bg).toBe(main.panelBg);
   });
 
   test("sticky panels stay in view while main scrolls", async ({ page }) => {
@@ -202,9 +224,9 @@ test.describe("floating panels", () => {
   test.describe("forced colors", () => {
     test.use({ colorScheme: "light", forcedColors: "active" });
 
-    test("each panel keeps a visible border", async ({ page }) => {
+    test("the main panel keeps a visible border", async ({ page }) => {
       await page.goto(ERP);
-      for (const selector of ["#app-nav", "#app-aux"]) {
+      for (const selector of ["dui-app-shell > main"]) {
         const border = await page.locator(selector).evaluate((el) => {
           const cs = getComputedStyle(el);
           return { width: parseFloat(cs.borderTopWidth), style: cs.borderTopStyle, color: cs.borderTopColor, bg: cs.backgroundColor };
