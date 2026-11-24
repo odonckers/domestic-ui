@@ -1058,11 +1058,10 @@ for (const colorScheme of schemes) {
       expect(await measure(link, (el, surface) => [getComputedStyle(el, "::after").outlineColor, surface(el.closest("article"))])).toBeGreaterThanOrEqual(3);
     }
 
-    // Nav: the current bar against its own tint and against the page surface; the focus ring on the tint.
+    // Nav: the current link's text on its pill fill; the focus ring on the fill.
     await page.goto("examples/molecules/nav.html");
     const current = page.locator("[data-nav] a[aria-current='page']").first();
-    expect(await measure(current, (el) => [getComputedStyle(el).borderInlineStartColor, getComputedStyle(el).backgroundColor])).toBeGreaterThanOrEqual(3);
-    expect(await measure(current, (el, surface) => [getComputedStyle(el).borderInlineStartColor, surface(el)])).toBeGreaterThanOrEqual(3);
+    expect(await measure(current, (el) => [getComputedStyle(el).color, getComputedStyle(el).backgroundColor])).toBeGreaterThanOrEqual(4.5);
     await current.focus();
     expect(await measure(current, (el) => [getComputedStyle(el).outlineColor, getComputedStyle(el).backgroundColor])).toBeGreaterThanOrEqual(3);
 
