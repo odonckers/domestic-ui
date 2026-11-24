@@ -1199,11 +1199,11 @@ test.describe("docs frame", () => {
   test.describe("forced colors", () => {
     test.use({ forcedColors: "active" });
 
-    test("the app bar is solid and the floating panels keep a visible border", async ({ page }) => {
+    test("the app bar is solid and the main panel keeps a visible border", async ({ page }) => {
       await page.goto("_site/index.html");
       const filter = await page.locator("dui-app-shell > header").evaluate((el) => getComputedStyle(el).backdropFilter);
       expect(filter).toBe("none");
-      for (const selector of ["#docs-nav", ".docs-toc"]) {
+      for (const selector of ["dui-app-shell > main"]) {
         const border = await page.locator(selector).evaluate((el) => {
           const cs = getComputedStyle(el);
           return { width: parseFloat(cs.borderTopWidth), color: cs.borderTopColor, bg: cs.backgroundColor };
