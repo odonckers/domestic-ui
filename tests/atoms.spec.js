@@ -278,7 +278,7 @@ test("atoms in the forest panel re-theme from the token overrides alone", async 
         const style = (selector, property) => getComputedStyle(panel.querySelector(selector))[property];
         return {
           primary: style('button[type="submit"]', "backgroundColor"),
-          quiet: style('[data-button~="quiet"]', "color"),
+          link: style('[data-card~="link"] a', "color"),
           switchOn: style('[role="switch"]:checked', "backgroundColor"),
           badgeAccent: style('[data-badge~="accent"]', "backgroundColor"),
           badgeSuccess: style('[data-badge~="success"]', "backgroundColor"),
