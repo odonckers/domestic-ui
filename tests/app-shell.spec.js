@@ -101,8 +101,11 @@ test.describe("landmarks", () => {
     expect(areas).toContainEqual(["aside", "end"]);
     const [header, nav, main, aside] = await Promise.all(["dui-app-shell > header", "#app-nav", "dui-app-shell > main", "#app-aux"].map((s) => box(page.locator(s))));
     expect(nav.y).toBeGreaterThanOrEqual(header.y + header.height - 1);
-    expect(Math.abs(nav.y - main.y)).toBeLessThan(2);
-    expect(Math.abs(aside.y - main.y)).toBeLessThan(2);
+    // Floating panels sit --dui-space-panel-inset below the top of main's row.
+    const inset = await page.locator("#app-nav").evaluate((el) => parseFloat(getComputedStyle(el).marginBlockStart));
+    expect(inset).toBeGreaterThan(0);
+    expect(Math.abs(nav.y - inset - main.y)).toBeLessThan(2);
+    expect(Math.abs(aside.y - inset - main.y)).toBeLessThan(2);
     expect(main.x).toBeGreaterThanOrEqual(nav.x + nav.width - 1);
     expect(aside.x).toBeGreaterThanOrEqual(main.x + main.width - 1);
   });
@@ -135,6 +138,122 @@ test.describe("landmarks", () => {
     await expect(skip).toBeFocused();
     await expect(skip).toHaveAttribute("href", "#main");
     await expect(page.locator("main#main")).toHaveCount(1);
+  });
+});
+
+test.describe("floating panels", () => {
+  test.use({ viewport: WIDE });
+
+  test("beside main each sidebar is inset, rounded and elevated, on the panel surface", async ({ page }) => {
+    await page.goto(ERP);
+    for (const selector of ["#app-nav", "#app-aux"]) {
+      const style = await page.locator(selector).evaluate((el) => {
+        const cs = getComputedStyle(el);
+        const probe = document.createElement("div");
+        probe.style.cssText = "background-color: var(--dui-elevation-panel-surface); padding: var(--dui-space-panel-inset); border-radius: var(--dui-radius-surface)";
+        el.append(probe);
+        const p = getComputedStyle(probe);
+        const out = { margin: cs.marginBlockStart, inset: p.paddingTop, radius: cs.borderTopLeftRadius, panelRadius: p.borderTopLeftRadius, shadow: cs.boxShadow, bg: cs.backgroundColor, panelBg: p.backgroundColor, position: cs.position, top: cs.top };
+        probe.remove();
+        return out;
+      });
+      expect(style.margin, selector).toBe(style.inset);
+      expect(style.top, selector).toBe(style.inset);
+      expect(style.position).toBe("sticky");
+      expect(style.radius).toBe(style.panelRadius);
+      expect(style.shadow).not.toBe("none");
+      expect(style.bg).toBe(style.panelBg);
+    }
+  });
+
+  test("sticky panels stay in view while main scrolls", async ({ page }) => {
+    await page.setViewportSize({ width: 1440, height: 600 });
+    await page.goto(ERP);
+    await page.evaluate(() => window.scrollBy(0, 400));
+    await expect.poll(() => page.evaluate(() => window.scrollY)).toBeGreaterThan(0);
+    for (const selector of ["#app-nav", "#app-aux"]) {
+      const b = await box(page.locator(selector));
+      expect(b.y, selector).toBeGreaterThanOrEqual(0);
+      expect(b.y, selector).toBeLessThan(40);
+    }
+  });
+
+  test("Tab moves through the landmarks in source order: banner, navigation, main, aside, footer", async ({ page }) => {
+    await page.goto(ERP);
+    await page.locator("body").focus();
+    const order = ["header", "nav", "main", "aside", "footer"];
+    /** @type {number[]} */
+    const seen = [];
+    for (let i = 0; i < 120; i++) {
+      await page.keyboard.press("Tab");
+      const where = await page.evaluate(() => {
+        const el = document.activeElement;
+        const part = el?.closest("dui-app-shell > *");
+        return part ? part.localName : "";
+      });
+      if (where) seen.push(order.indexOf(where));
+      if (where === "footer") break;
+    }
+    expect(seen.length).toBeGreaterThan(5);
+    expect(seen, "landmark order never goes back").toEqual([...seen].sort((x, y) => x - y));
+    expect(new Set(seen)).toEqual(new Set([0, 1, 2, 3, 4]));
+  });
+
+  test.describe("forced colors", () => {
+    test.use({ colorScheme: "light", forcedColors: "active" });
+
+    test("each panel keeps a visible border", async ({ page }) => {
+      await page.goto(ERP);
+      for (const selector of ["#app-nav", "#app-aux"]) {
+        const border = await page.locator(selector).evaluate((el) => {
+          const cs = getComputedStyle(el);
+          return { width: parseFloat(cs.borderTopWidth), style: cs.borderTopStyle, color: cs.borderTopColor, bg: cs.backgroundColor };
+        });
+        expect(border.width, selector).toBeGreaterThanOrEqual(1);
+        expect(border.style).toBe("solid");
+        expect(border.color).not.toBe("rgba(0, 0, 0, 0)");
+        expect(border.color).not.toBe(border.bg);
+      }
+    });
+  });
+});
+
+test.describe("icon-only chrome", () => {
+  test.use({ viewport: WIDE });
+
+  test("toggles and the drawer's Close are icon-only, named, with a matching tooltip and a 36px target", async ({ page }) => {
+    await page.goto(ERP);
+    for (const [name, icon] of /** @type {const} */ ([["Menu", "panel-left"], ["Details", "panel-right"]])) {
+      const button = page.getByRole("button", { name, exact: true });
+      await expect(button).toBeVisible();
+      await expect(button).toHaveAttribute("data-button", /\bicon\b/);
+      await expect(button.locator("svg")).toHaveAttribute("aria-hidden", "true");
+      expect(await button.evaluate((el) => el.innerHTML), "the Lucide icon").toContain(`Lucide: ${icon}`);
+      const tip = button.locator("xpath=../span[@role='tooltip']");
+      await expect(tip).toHaveText(name);
+      const b = await box(button);
+      expect(b.width).toBeGreaterThanOrEqual(36 - 0.5);
+      expect(b.height).toBeGreaterThanOrEqual(36 - 0.5);
+      await button.focus();
+      await expect(tip).toBeVisible();
+    }
+  });
+
+  test.describe("narrow", () => {
+    test.use({ viewport: NARROW });
+    test.beforeEach(async ({ page }) => withoutMotion(page));
+
+    test("the drawer's Close is an icon-only button whose tooltip repeats its name", async ({ page }) => {
+      await page.goto(ERP);
+      await menu(page).click();
+      const close = page.locator("dialog[open]").getByRole("button", { name: "Close" });
+      await expect(close).toBeFocused();
+      await expect(close).toHaveAttribute("data-button", "quiet icon");
+      await expect(close.locator("svg")).toHaveAttribute("aria-hidden", "true");
+      await expect(close.locator("xpath=../span[@role='tooltip']")).toHaveText("Close");
+      const b = await box(close);
+      expect(b.width).toBeGreaterThanOrEqual(36 - 0.5);
+    });
   });
 });
 
