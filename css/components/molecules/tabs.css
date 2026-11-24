@@ -12,8 +12,8 @@
  * APG: https://www.w3.org/WAI/ARIA/apg/patterns/tabs/
  * https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Reference/Roles/tab_role
  *
- * Accessibility: the selected tab has a 3:1 accent bar and full-strength
- * text, unselected tabs have muted text and no bar, so selection does not
+ * Accessibility: the selected tab has a 3:1 accent bar, an accent tint
+ * and full-strength text, unselected tabs have muted text and no bar, so selection does not
  * rely on color alone (WCAG 1.4.1, 1.4.11). Only the selected tab is in the
  * tab order; arrow keys move between tabs. Panels with no focusable content
  * get tabindex="0" so keyboard users can reach and scroll them. Each panel
@@ -89,6 +89,8 @@
   border: 0;
   border-block-end: var(--dui-border-width-indicator) solid transparent;
   border-radius: var(--dui-radius-control) var(--dui-radius-control) 0 0;
+  box-shadow: none;
+  font-size: var(--dui-font-size-ui);
   font-weight: var(--dui-font-weight-strong);
   line-height: var(--dui-line-height-heading);
   text-decoration-line: none;
@@ -96,11 +98,13 @@
 }
 
 [role="tab"]:hover {
-  background-color: var(--dui-color-surface-sunken);
+  background-color: var(--dui-color-surface-hover);
   color: var(--dui-color-text);
 }
 
+/* Selected: full-strength text, the accent bar, and an accent tint behind the label. */
 [role="tab"][aria-selected="true"] {
+  background-color: var(--dui-color-accent-surface);
   color: var(--dui-color-text);
   border-block-end-color: var(--dui-color-accent);
 }

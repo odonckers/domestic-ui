@@ -51,8 +51,14 @@
  * grid columns for --dui-motion-duration-slow times --dui-motion-movement,
  * so reduced motion and data-motion="none" make it instant (WCAG 2.3.3);
  * the drawer is dialog.css's drawer and moves like it. Elevation: the app
- * bar and sidebars are on the page (flat) and separated by hairlines; the
- * drawer is at the dialog level.
+ * bar is on the page (flat) and separated by a hairline. Sidebars that
+ * sit beside main are floating panels: inset by --dui-space-panel-inset,
+ * --dui-radius-surface corners, the --dui-elevation-panel shadow and
+ * surface, and a transparent border that forced colors draw (a 1px line
+ * in the system color). Stacked sidebars stay flat; the drawer is at the
+ * dialog level. Our choice: floating panels separate the chrome from the
+ * content without hairlines across the whole frame; source and focus
+ * order do not change.
  *
  * Breakpoints: the primary sidebar sits beside main from 48rem of the
  * shell's own inline size, the auxiliary sidebar from 64rem (between the
@@ -73,7 +79,10 @@
  *   <button type="button" aria-controls="sidebar-id" aria-expanded="true" hidden>
  *                                 a sidebar's toggle; <dui-app-shell> shows it.
  *                                 aria-expanded="false" in the markup starts the
- *                                 sidebar collapsed when it sits beside main
+ *                                 sidebar collapsed when it sits beside main.
+ *                                 Icon only (data-button="quiet icon", Lucide
+ *                                 panel-left or panel-right, visually hidden
+ *                                 name) inside a <dui-tooltip> with the same words
  *   --dui-size-sidebar, --dui-size-sidebar-aux   sidebar widths beside main
  *   --dui-size-pane               max block size of a sidebar beside main; the
  *                                 block size of a contained shell
@@ -179,6 +188,11 @@
   margin: 0;
 }
 
+/* A toggle's tooltip wrapper takes no room while its toggle is hidden (script off). */
+[data-app-shell] > header > dui-tooltip:has(> button[hidden]) {
+  display: none;
+}
+
 [data-app-shell] > header > search {
   flex: 1 1 var(--dui-size-column-min);
 }
@@ -261,14 +275,19 @@
 @container dui-app-shell (inline-size >= 48rem) {
   [data-app-shell] > :is(nav, aside):has(~ main) {
     position: sticky;
-    inset-block-start: 0;
+    inset-block-start: var(--dui-space-panel-inset);
     grid-row: start-start / -1;
     grid-column: start;
-    max-block-size: var(--dui-size-pane);
+    align-self: start;
+    max-block-size: calc(var(--dui-size-pane) - var(--dui-space-panel-inset) * 2);
+    margin: var(--dui-space-panel-inset);
+    margin-inline-end: 0;
     overflow: hidden auto;
     overscroll-behavior: contain;
-    border-block-end: 0;
-    border-inline-end: var(--dui-border-width) solid var(--dui-color-border);
+    background-color: var(--dui-elevation-panel-surface);
+    border: var(--dui-border-width) solid transparent;
+    border-radius: var(--dui-radius-surface);
+    box-shadow: var(--dui-elevation-panel);
 
     /* Stays drawn while its column closes, then hides (no transition where unsupported). */
     transition: display calc(var(--dui-motion-duration-slow) * var(--dui-motion-movement)) allow-discrete;
@@ -276,7 +295,7 @@
 
   /* The content keeps its width while the column opens or closes, so it never rewraps mid-way. */
   [data-app-shell] > :is(nav, aside):has(~ main) > * {
-    min-inline-size: calc(var(--dui-size-sidebar) - var(--dui-space-m) * 2 - var(--dui-border-width));
+    min-inline-size: calc(var(--dui-size-sidebar) - var(--dui-space-panel-inset) - var(--dui-space-m) * 2 - var(--dui-border-width) * 2);
   }
 
   /* Between the two breakpoints main also takes the auxiliary column; the aside stacks under it. */
@@ -303,23 +322,41 @@
 
   [data-app-shell] > main ~ aside {
     position: sticky;
-    inset-block-start: 0;
+    inset-block-start: var(--dui-space-panel-inset);
     grid-row: end-start / -1;
     grid-column: end;
-    max-block-size: var(--dui-size-pane);
+    align-self: start;
+    max-block-size: calc(var(--dui-size-pane) - var(--dui-space-panel-inset) * 2);
+    margin: var(--dui-space-panel-inset);
+    margin-inline-start: 0;
     overflow: hidden auto;
     overscroll-behavior: contain;
-    border-block-start: 0;
-    border-inline-start: var(--dui-border-width) solid var(--dui-color-border);
+    background-color: var(--dui-elevation-panel-surface);
+    border: var(--dui-border-width) solid transparent;
+    border-radius: var(--dui-radius-surface);
+    box-shadow: var(--dui-elevation-panel);
     transition: display calc(var(--dui-motion-duration-slow) * var(--dui-motion-movement)) allow-discrete;
   }
 
   [data-app-shell] > main ~ aside > * {
-    min-inline-size: calc(var(--dui-size-sidebar-aux) - var(--dui-space-m) * 2 - var(--dui-border-width));
+    min-inline-size: calc(var(--dui-size-sidebar-aux) - var(--dui-space-panel-inset) - var(--dui-space-m) * 2 - var(--dui-border-width) * 2);
   }
 
   [data-app-shell] > footer {
     grid-column: main;
+  }
+}
+
+/*
+ * Floating panels draw their border in the system text color under forced
+ * colors. Set explicitly, as for the drawer, so the outline does not rely
+ * on the browser replacing a transparent border color.
+ * https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/At-rules/@media/forced-colors
+ */
+@media (forced-colors: active) {
+  [data-app-shell] > :is(nav, aside):has(~ main),
+  [data-app-shell] > main ~ aside {
+    border-color: canvastext;
   }
 }
 

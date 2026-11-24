@@ -43,8 +43,8 @@
    * (not a stadium that cuts into the text) when a long badge wraps in a
    * narrow column. Our choice: let badges wrap rather than widen the page.
    */
-  border-radius: calc(var(--dui-line-height-body) * var(--dui-step--1) / 2 + var(--dui-border-width));
-  font-size: var(--dui-step--1);
+  border-radius: calc(var(--dui-line-height-body) * var(--dui-font-size-ui) / 2 + var(--dui-border-width));
+  font-size: var(--dui-font-size-ui);
   font-weight: var(--dui-font-weight-strong);
   line-height: var(--dui-line-height-body);
   vertical-align: baseline;

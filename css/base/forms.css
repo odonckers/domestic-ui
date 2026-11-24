@@ -18,10 +18,26 @@
   color: var(--dui-color-text);
   border: var(--dui-border-width) solid var(--dui-color-border-control);
   border-radius: var(--dui-radius-control);
+  font-size: var(--dui-font-size-ui);
+}
+
+/*
+ * Our choice: on touch screens fields keep the body size, because iOS
+ * Safari zooms the page into any focused field whose text is smaller
+ * than 16px.
+ */
+@media (pointer: coarse) {
+  :where(
+    input:not([type="checkbox"], [type="radio"], [type="range"], [type="color"], [type="file"], [type="button"], [type="submit"], [type="reset"], [type="image"], [type="hidden"]),
+    select,
+    textarea
+  ) {
+    font-size: max(var(--dui-font-size-ui), var(--dui-step-0));
+  }
 }
 
 :where(input, select, textarea):hover:not(:disabled) {
-  border-color: var(--dui-color-text-muted);
+  border-color: var(--dui-color-border-control-hover);
 }
 
 textarea {
@@ -126,10 +142,12 @@ input:is([type="button"], [type="submit"], [type="reset"]),
   min-block-size: var(--dui-size-control);
   min-inline-size: var(--dui-size-control);
   padding: var(--dui-space-control-block) var(--dui-space-button-inline);
-  background-color: var(--dui-color-surface-raised);
+  background-color: var(--dui-color-surface);
   color: var(--dui-color-text);
-  border: var(--dui-border-width) solid var(--dui-color-border-control);
+  border: var(--dui-border-width) solid var(--dui-color-border-button);
   border-radius: var(--dui-radius-control);
+  box-shadow: var(--dui-elevation-control);
+  font-size: var(--dui-font-size-ui);
   font-weight: var(--dui-font-weight-strong);
   line-height: var(--dui-line-height-heading);
   cursor: pointer;
@@ -145,7 +163,7 @@ input:is([type="button"], [type="submit"], [type="reset"]),
 
 :is(button, input:is([type="button"], [type="submit"], [type="reset"])):hover:not(:disabled, [aria-disabled="true"]),
 ::file-selector-button:hover {
-  background-color: var(--dui-color-surface-sunken);
+  background-color: var(--dui-color-surface-raised);
 }
 
 :is(button, input)[type="submit"] {

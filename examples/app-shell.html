@@ -19,15 +19,17 @@
     -->
     <dui-app-shell data-app-shell>
       <header>
-        <button type="button" aria-controls="app-nav" aria-expanded="true" hidden>
-          <!-- Lucide: menu -->
-          <svg data-icon xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
-            <path d="M4 5h16" />
-            <path d="M4 12h16" />
-            <path d="M4 19h16" />
-          </svg>
-          Menu
-        </button>
+        <dui-tooltip>
+          <button type="button" data-button="quiet icon" aria-controls="app-nav" aria-expanded="true" hidden>
+            <!-- Lucide: panel-left -->
+            <svg data-icon xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+              <rect width="18" height="18" x="3" y="3" rx="2" />
+              <path d="M9 3v18" />
+            </svg>
+            <span class="visually-hidden">Menu</span>
+          </button>
+          <span popover="hint" role="tooltip" aria-hidden="true">Menu</span>
+        </dui-tooltip>
         <a href="?view=home" data-link="quiet"><strong>Northwind Operations</strong></a>
         <search aria-label="Customers and orders">
           <form method="get" id="app-search">
@@ -55,14 +57,17 @@
             <button type="submit">Search</button>
           </form>
         </search>
-        <button type="button" aria-controls="app-aux" aria-expanded="true" hidden>
-          <!-- Lucide: panel-right -->
-          <svg data-icon xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
-            <rect width="18" height="18" x="3" y="3" rx="2" />
-            <path d="M15 3v18" />
-          </svg>
-          Details
-        </button>
+        <dui-tooltip>
+          <button type="button" data-button="quiet icon" aria-controls="app-aux" aria-expanded="true" hidden>
+            <!-- Lucide: panel-right -->
+            <svg data-icon xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+              <rect width="18" height="18" x="3" y="3" rx="2" />
+              <path d="M15 3v18" />
+            </svg>
+            <span class="visually-hidden">Details</span>
+          </button>
+          <span popover="hint" role="tooltip" aria-hidden="true">Details</span>
+        </dui-tooltip>
         <dui-menu>
           <button type="button" popovertarget="user-menu">Ada Lovelace</button>
           <div id="user-menu" popover data-popover>
@@ -377,6 +382,7 @@
     <script type="module" src="../web-components/dui-menu.js"></script>
     <script type="module" src="../web-components/dui-table.js"></script>
     <script type="module" src="../web-components/dui-toolbar.js"></script>
+    <script type="module" src="../web-components/dui-tooltip.js"></script>
     <script>
       // Demo only: nothing is loaded or saved. Each link and form works without this script (a server would render the result).
       const $ = (id) => document.getElementById(id);

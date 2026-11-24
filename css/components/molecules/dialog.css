@@ -109,7 +109,7 @@
   font-size: var(--dui-step-2);
 }
 
-[data-dialog] > header > button {
+[data-dialog] > header > :is(button, dui-tooltip) {
   flex-shrink: 0;
 }
 

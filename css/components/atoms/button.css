@@ -94,6 +94,7 @@ a[data-button] {
   padding: var(--dui-space-control-block) var(--dui-space-button-inline);
   border: var(--dui-border-width) solid;
   border-radius: var(--dui-radius-control);
+  font-size: var(--dui-font-size-ui);
   font-weight: var(--dui-font-weight-strong);
   line-height: var(--dui-line-height-heading);
   text-align: center;
@@ -109,17 +110,25 @@ a[data-button] {
   scale: var(--dui-motion-press-scale);
 }
 
-/* Secondary: neutral. The default for links and an opt-out for submit buttons. */
+/*
+ * Secondary: neutral, on the surface with a softer border and a 1px
+ * shadow. The default for links and an opt-out for submit buttons.
+ * Our choice: the border is --dui-color-border-button, under 3:1, because
+ * the visible text label identifies the button; WCAG 1.4.11 asks for 3:1
+ * only where the boundary is needed to identify the control.
+ * https://www.w3.org/WAI/WCAG22/Understanding/non-text-contrast.html
+ */
 :where(a)[data-button],
 [data-button~="secondary"] {
-  background-color: var(--dui-color-surface-raised);
+  background-color: var(--dui-color-surface);
   color: var(--dui-color-text);
-  border-color: var(--dui-color-border-control);
+  border-color: var(--dui-color-border-button);
+  box-shadow: var(--dui-elevation-control);
 }
 
 :where(a)[data-button]:hover:not(:disabled, [aria-disabled="true"]),
 [data-button~="secondary"]:hover:not(:disabled, [aria-disabled="true"]) {
-  background-color: var(--dui-color-surface-sunken);
+  background-color: var(--dui-color-surface-raised);
 }
 
 /* Primary: the primary fill, same as the base type="submit" default. */
@@ -145,10 +154,15 @@ a[data-button] {
   background-color: transparent;
   color: var(--dui-color-accent-text);
   border-color: transparent;
+  box-shadow: none;
 }
 
 [data-button~="quiet"]:hover:not(:disabled, [aria-disabled="true"]) {
-  background-color: var(--dui-color-surface-sunken);
+  background-color: var(--dui-color-surface-hover);
+}
+
+[data-button~="quiet"]:active:not(:disabled, [aria-disabled="true"]) {
+  background-color: var(--dui-color-surface-active);
 }
 
 /* Sizes */
@@ -156,7 +170,6 @@ a[data-button] {
   min-block-size: var(--dui-size-target-small);
   min-inline-size: var(--dui-size-target-small);
   padding: var(--dui-space-2xs) var(--dui-space-s);
-  font-size: var(--dui-step--1);
 }
 
 [data-button~="large"] {

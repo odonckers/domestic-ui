@@ -121,7 +121,7 @@ Every example must pass, and every token pair is tested against, these criteria:
 | Topic | Rule | Source |
 | --- | --- | --- |
 | Text contrast | 4.5:1 for body text, in light **and** dark | [1.4.3 Contrast (Minimum)](https://www.w3.org/WAI/WCAG22/Understanding/contrast-minimum.html) |
-| Non-text contrast | 3:1 for control boundaries and the focus indicator | [1.4.11 Non-text Contrast](https://www.w3.org/WAI/WCAG22/Understanding/non-text-contrast.html) |
+| Non-text contrast | 3:1 for the boundaries of fields, selects, checkboxes, radios and switches, and for the focus indicator. A button with a visible text label is identified by its label, so its border is not required to reach 3:1 | [1.4.11 Non-text Contrast](https://www.w3.org/WAI/WCAG22/Understanding/non-text-contrast.html) |
 | Links | Links keep their underline; color is never the only cue | [1.4.1 Use of Color](https://www.w3.org/WAI/WCAG22/Understanding/use-of-color.html) |
 | Focus visible | Every focusable element shows a `:focus-visible` outline | [2.4.7 Focus Visible](https://www.w3.org/WAI/WCAG22/Understanding/focus-visible.html) |
 | Focus not obscured | `scroll-padding` keeps focused elements clear of sticky edges | [2.4.11 Focus Not Obscured (Minimum)](https://www.w3.org/WAI/WCAG22/Understanding/focus-not-obscured-minimum.html) |
@@ -212,7 +212,7 @@ Red, green, amber and blue have steps 3, 9 and 11. [Radix Colors](https://www.ra
 
 `--dui-color-accent-text` is a relative color of `--dui-color-accent`: the same hue, with lightness and chroma set for [1.4.3 Contrast (Minimum)](https://www.w3.org/WAI/WCAG22/Understanding/contrast-minimum.html). `--dui-color-link` points at it. `--dui-color-focus` is the accent solid in light and the accent text in dark, so the ring meets [1.4.11 Non-text Contrast](https://www.w3.org/WAI/WCAG22/Understanding/non-text-contrast.html) on a dark page. `--dui-color-accent-hover` and `--dui-color-accent-surface` are derived from the accent too, so a theme that sets only `--dui-color-accent` still gets a matching link, hover and tint. `--dui-color-accent-contrast` is white in both schemes.
 
-`--dui-color-border` is the text color at about 11% alpha, a hairline in the neutral hue. `--dui-color-border-control` stays an opaque step at 3:1. `--dui-color-shadow` is tinted with the neutral hue.
+`--dui-color-border` is the text color at about 11% alpha, a hairline in the neutral hue. `--dui-color-border-control` stays an opaque step at 3:1 for fields, selects, checkboxes, radios and switches, whose boundary is what shows where to click or type. **Our choice:** the secondary button's border, `--dui-color-border-button`, is a softer step, because its visible text label identifies it and [1.4.11](https://www.w3.org/WAI/WCAG22/Understanding/non-text-contrast.html) asks for 3:1 only for the visual information needed to identify a component. `--dui-color-shadow` is tinted with the neutral hue.
 
 Light and dark values use [`light-dark()`](https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/Values/color_value/light-dark) ([CSS Color 5](https://www.w3.org/TR/css-color-5/)). `tests/contrast.js` checks the pairs below, and the status and code colors, against these thresholds. It takes a theme scope, so another theme can reuse it.
 
@@ -268,10 +268,14 @@ may change. Fluid `--dui-step-*` values are `clamp()` expressions; see `primitiv
 | `--dui-color-surface` | Page and control background (neutral step 1) | light: `neutral-1` (`oklch(99.3% 0.002 265)`)<br>dark: `neutral-dark-1` (`oklch(16.5% 0.006 265)`) |
 | `--dui-color-surface-raised` | Slightly lifted areas: neutral buttons, zebra rows, cards (step 2) | light: `neutral-2` (`oklch(98.2% 0.003 265)`)<br>dark: `neutral-dark-2` (`oklch(19% 0.007 265)`) |
 | `--dui-color-surface-sunken` | Recessed areas: code, button hover (step 3) | light: `neutral-3` (`oklch(96.2% 0.005 265)`)<br>dark: `neutral-dark-3` (`oklch(22% 0.009 265)`) |
+| `--dui-color-surface-hover` | Hover fill of quiet buttons, nav, menu and listbox rows (step 4) | light: `neutral-4` (`oklch(94% 0.006 265)`)<br>dark: `neutral-dark-4` (`oklch(26% 0.011 265)`) |
+| `--dui-color-surface-active` | Pressed fill of quiet buttons (step 5) | light: `neutral-5` (`oklch(91% 0.008 265)`)<br>dark: `neutral-dark-5` (`oklch(31% 0.012 265)`) |
 | `--dui-color-text` | Body text (step 12) | light: `neutral-12` (`oklch(21.5% 0.012 265)`)<br>dark: `neutral-dark-12` (`oklch(95% 0.004 265)`) |
 | `--dui-color-text-muted` | Secondary text, captions, list markers (step 11, still 4.5:1) | light: `neutral-11` (`oklch(47.5% 0.016 265)`)<br>dark: `neutral-dark-11` (`oklch(76% 0.012 265)`) |
 | `--dui-color-border` | Decorative hairline: the text color at about 11% alpha | light: `neutral-12` at 11% (`oklch(21.5% 0.012 265 / 11%)`)<br>dark: `neutral-dark-12` at 10% (`oklch(95% 0.004 265 / 10%)`) |
-| `--dui-color-border-control` | Form control and button boundaries (step 8, 3:1) | light: `neutral-8` (`oklch(58.5% 0.016 265)`)<br>dark: `neutral-dark-8` (`oklch(58% 0.016 265)`) |
+| `--dui-color-border-control` | Boundaries of fields, selects, checkboxes, radios and switches (step 8, 3:1) | light: `neutral-8` (`oklch(58.5% 0.016 265)`)<br>dark: `neutral-dark-8` (`oklch(58% 0.016 265)`) |
+| `--dui-color-border-control-hover` | Field border on hover (step 9) | light: `neutral-9` (`oklch(52% 0.016 265)`)<br>dark: `neutral-dark-9` (`oklch(66% 0.014 265)`) |
+| `--dui-color-border-button` | Secondary button border (step 7): softer, because the visible label identifies the button | light: `neutral-7` (`oklch(72% 0.013 265)`)<br>dark: `neutral-dark-7` (`oklch(48% 0.015 265)`) |
 | `--dui-color-primary` | Primary action fill (neutral step 12) | light: `neutral-12` (`oklch(21.5% 0.012 265)`)<br>dark: `neutral-dark-12` (`oklch(95% 0.004 265)`) |
 | `--dui-color-primary-contrast` | Text on the primary fill | light: `white` (`oklch(100% 0 0)`)<br>dark: `neutral-dark-1` (`oklch(16.5% 0.006 265)`) |
 | `--dui-color-accent` | Accent solid for focus rings, selection and checks (indigo step 9) | light: `indigo-9` (`oklch(53% 0.215 272)`)<br>dark: `indigo-dark-9` (`oklch(53% 0.215 272)`) |
@@ -396,6 +400,7 @@ may change. Fluid `--dui-step-*` values are `clamp()` expressions; see `primitiv
 | `--dui-space-gap` | Gap between the parts of a control (icon and label, check and label) | `space-3` (0.5rem), `space-2` (0.25rem) when compact |
 | `--dui-space-gap-tight` | Gap and padding in groups of controls: field, toolbar, pagination, menu | `space-2` (0.25rem), `space-1` (0.125rem) when compact |
 | `--dui-space-cell` | Table cell padding | `space-3` (0.5rem), `space-2` (0.25rem) when compact |
+| `--dui-elevation-control` | A 1px shadow under secondary buttons, without the ring (they have a border) | `0 1px 2px -1px` `--dui-elevation-shadow-color` |
 | `--dui-elevation-0` … `--dui-elevation-4` | Shadow per level | `none`; level 1 is the ring and `0 1px 2px -1px`; levels 2 to 4 add the dark highlight, the ring and two layers with a negative spread |
 | `--dui-elevation-0-surface` … `--dui-elevation-4-surface` | Surface per level | light: `--dui-color-surface`<br>dark: `--dui-color-surface` with N × `--dui-elevation-surface-step` of `--dui-color-text` |
 | `--dui-elevation-flat`, `-raised`, `-overlay`, `-popover`, `-dialog` | Shadow by role | levels 0, 1, 2, 3, 4 |
@@ -1079,7 +1084,7 @@ link's visited status "is not an author responsibility". The visited color still
   mind at once. If the label is visible, the accessible name contains it
   ([2.5.3 Label in Name](https://www.w3.org/WAI/WCAG22/Understanding/label-in-name.html)).
 - **Our choice:** icon only (`data-button="icon"`) is allowed only for these widely recognized actions: search, close,
-  open or close navigation (menu), play, pause, stop, skip, expand and collapse, back, forward, edit, more (overflow),
+  open or close navigation (menu), show or hide a sidebar or panel, play, pause, stop, skip, expand and collapse, back, forward, edit, more (overflow),
   settings in an app bar, and add item in a dense toolbar. A product-specific metaphor is never icon only. The button
   - is named for the action ("Search", "Close"), never the picture ("Magnifying glass", "X"), with visually hidden text
     inside it;
@@ -1640,7 +1645,7 @@ A theme is an override of these tokens on `:root` or on a scoped element. No reb
 
 Colors use [`light-dark()`](https://developer.mozilla.org/en-US/docs/Web/CSS/color_value/light-dark), which picks a value from the used color-scheme of the element where the token is read.
 
-157 tokens in [`css/tokens/semantic.css`](https://github.com/odonckers/domestic-ui/blob/main/css/tokens/semantic.css). **Light** and **Dark** resolve every `var()` and take one side of [`light-dark()`](https://developer.mozilla.org/en-US/docs/Web/CSS/color_value/light-dark). Previews are decorative. † marks a description taken from the semantic token table in [Theming](https://odonckers.github.io/domestic-ui/principles/theming.md).
+162 tokens in [`css/tokens/semantic.css`](https://github.com/odonckers/domestic-ui/blob/main/css/tokens/semantic.css). **Light** and **Dark** resolve every `var()` and take one side of [`light-dark()`](https://developer.mozilla.org/en-US/docs/Web/CSS/color_value/light-dark). Previews are decorative. † marks a description taken from the semantic token table in [Theming](https://odonckers.github.io/domestic-ui/principles/theming.md).
 
 ### Surfaces and text
 
@@ -1649,6 +1654,8 @@ Colors use [`light-dark()`](https://developer.mozilla.org/en-US/docs/Web/CSS/col
 | `--dui-color-surface` | `oklch(99.3% 0.002 265deg)` | `oklch(16.5% 0.006 265deg)` | Page background |
 | `--dui-color-surface-raised` | `oklch(98.2% 0.003 265deg)` | `oklch(19% 0.007 265deg)` | Slightly lifted areas: neutral buttons, zebra rows, cards |
 | `--dui-color-surface-sunken` | `oklch(96.2% 0.005 265deg)` | `oklch(22% 0.009 265deg)` | Recessed areas: code, button hover |
+| `--dui-color-surface-hover` | `oklch(94% 0.006 265deg)` | `oklch(26% 0.011 265deg)` | Hover fill of quiet buttons and rows (neutral step 4) |
+| `--dui-color-surface-active` | `oklch(91% 0.008 265deg)` | `oklch(31% 0.012 265deg)` | Pressed fill of quiet buttons (neutral step 5) |
 | `--dui-color-text` | `oklch(21.5% 0.012 265deg)` | `oklch(95% 0.004 265deg)` | Body text |
 | `--dui-color-text-muted` | `oklch(47.5% 0.016 265deg)` | `oklch(76% 0.012 265deg)` | Secondary text, still 4.5:1 |
 
@@ -1657,7 +1664,9 @@ Colors use [`light-dark()`](https://developer.mozilla.org/en-US/docs/Web/CSS/col
 | Token | Light | Dark | Description |
 | --- | --- | --- | --- |
 | `--dui-color-border` | `oklch(21.5% 0.012 265deg / 11%)` | `oklch(95% 0.004 265deg / 10%)` | Decorative hairline |
-| `--dui-color-border-control` | `oklch(58.5% 0.016 265deg)` | `oklch(58% 0.016 265deg)` | Form control and button boundaries, 3:1 |
+| `--dui-color-border-control` | `oklch(58.5% 0.016 265deg)` | `oklch(58% 0.016 265deg)` | Boundaries of fields, selects, checkboxes, radios and switches, 3:1 |
+| `--dui-color-border-control-hover` | `oklch(52% 0.016 265deg)` | `oklch(66% 0.014 265deg)` | Field border on hover, one step stronger |
+| `--dui-color-border-button` | `oklch(72% 0.013 265deg)` | `oklch(48% 0.015 265deg)` | Secondary button border: softer than a field, because its visible label identifies it |
 
 ### Primary
 
@@ -1881,6 +1890,7 @@ A shadow and a surface per level. Every level from 1 up is a 1px ring in the hai
 | `--dui-elevation-ring` | `0 0 0 1px oklch(21.5% 0.012 265deg / 11%)` | `0 0 0 1px oklch(95% 0.004 265deg / 10%)` | The 1px hairline ring included in every elevated role |
 | `--dui-elevation-highlight` | `inset 0 1px 0 0 transparent` | `inset 0 1px 0 0 oklch(95% 0.004 265deg / 6%)` | Dark scheme only: a 1px top inset highlight on levels 2 to 4 |
 | `--dui-elevation-0` | `none` | `none` | Level 0, flat: no shadow |
+| `--dui-elevation-control` | `0 1px 2px -1px color-mix(in srgb, oklch(25% 0.015 265deg / 12%) 100%, transparent)` | `0 1px 2px -1px color-mix(in srgb, oklch(14% 0.015 265deg / 46%) 100%, transparent)` | A 1px shadow under secondary buttons, without the ring: they have a border |
 | `--dui-elevation-1` | `0 0 0 1px oklch(21.5% 0.012 265deg / 11%), 0 1px 2px -1px color-mix(in srgb, oklch(25% 0.015 265deg / 12%) 100%, transparent)` | `0 0 0 1px oklch(95% 0.004 265deg / 10%), 0 1px 2px -1px color-mix(in srgb, oklch(14% 0.015 265deg / 46%) 100%, transparent)` | Level 1: the ring and a 1px shadow |
 | `--dui-elevation-2` | `inset 0 1px 0 0 transparent, 0 0 0 1px oklch(21.5% 0.012 265deg / 11%), 0 2px 4px -2px color-mix(in srgb, oklch(25% 0.015 265deg / 12%) 100%, transparent), 0 4px 12px -4px color-mix(in srgb, oklch(25% 0.015 265deg / 12%) 100%, transparent)` | `inset 0 1px 0 0 oklch(95% 0.004 265deg / 6%), 0 0 0 1px oklch(95% 0.004 265deg / 10%), 0 2px 4px -2px color-mix(in srgb, oklch(14% 0.015 265deg / 46%) 100%, transparent), 0 4px 12px -4px color-mix(in srgb, oklch(14% 0.015 265deg / 46%) 100%, transparent)` | Level 2: ring, two layers, dark highlight |
 | `--dui-elevation-3` | `inset 0 1px 0 0 transparent, 0 0 0 1px oklch(21.5% 0.012 265deg / 11%), 0 4px 8px -4px color-mix(in srgb, oklch(25% 0.015 265deg / 12%) 100%, transparent), 0 12px 24px -8px color-mix(in srgb, oklch(25% 0.015 265deg / 12%) 100%, transparent)` | `inset 0 1px 0 0 oklch(95% 0.004 265deg / 6%), 0 0 0 1px oklch(95% 0.004 265deg / 10%), 0 4px 8px -4px color-mix(in srgb, oklch(14% 0.015 265deg / 46%) 100%, transparent), 0 12px 24px -8px color-mix(in srgb, oklch(14% 0.015 265deg / 46%) 100%, transparent)` | Level 3: ring, two layers, dark highlight |
@@ -2616,7 +2626,9 @@ From [`css/components/atoms/README.md`](https://github.com/odonckers/domestic-ui
 
 - **Our choice:** one `data-<atom>` attribute per atom, whose value is a space-separated list matched with [`~=`](https://developer.mozilla.org/en-US/docs/Web/CSS/Attribute_selectors). One attribute is one API to learn, it reads as a sentence (`data-button="primary small"`), and it cannot pile up like modifier classes.
 - **Our choice:** `data-button` with no variant word keeps the native default (a submit button is primary, everything else is secondary), so M1 markup keeps working and the attribute is only needed when the native type does not match the emphasis you want.
-- **Our choice:** the quiet button uses the accent color for its text, so it still reads as interactive without a border. Use it next to other buttons, not inside running text, where a real link belongs.
+- **Our choice:** the secondary button sits on the page surface with a softer border (`--dui-color-border-button`, neutral step 7) and a 1px shadow. Its visible text label identifies it, so [WCAG 1.4.11](https://www.w3.org/WAI/WCAG22/Understanding/non-text-contrast.html) does not require a 3:1 boundary; fields, selects, checkboxes, radios and switches keep the 3:1 `--dui-color-border-control`.
+- **Our choice:** the quiet button uses the accent color for its text, so it still reads as interactive without a border, and its hover and pressed fills are neutral steps 4 and 5. Use it next to other buttons, not inside running text, where a real link belongs.
+- **Our choice:** buttons, fields, selects and badges use the 14px interface size (`--dui-font-size-ui`). Under a coarse pointer, fields keep the 16px body size, because iOS Safari zooms into a focused field with smaller text.
 - **Our choice:** primary buttons add an inner focus ring in their text color on top of the shared outline, so the indicator contrasts with the fill as well as the surface. This is the double-ring technique described in [WCAG technique C40](https://www.w3.org/WAI/WCAG22/Techniques/css/C40).
 - **Our choice:** default buttons and fields are 36px tall and large ones 40px, and a coarse (touch) pointer restores 44px, between Primer and Radix (32px) and Material (40px), for comparison.
 - **Our choice:** small buttons are 32px tall: below the 36px default, above the [24px minimum](https://www.w3.org/WAI/WCAG22/Understanding/target-size-minimum.html).
@@ -3490,6 +3502,7 @@ From [`css/components/molecules/README.md`](https://github.com/odonckers/domesti
 - **Our choice:** the drawer is a `<dialog>` variant (`data-dialog="drawer"`), not a new element or a popover, so it gets modality, inertness, focus handling and <kbd>Esc</kbd> from the browser. See [Drawer explainer](https://odonckers.github.io/domestic-ui/explainers/drawer.md).
 - **Our choice:** dialog and drawer motion uses `@starting-style` and `transition-behavior: allow-discrete`, declared after a plain transition, so engines without them simply open and close instantly. Duration tokens are `0s` under reduced motion.
 - **Our choice:** anchored popovers fall back to the bottom center of the viewport where CSS anchor positioning is missing, rather than the browser's default center, so they never cover the middle of the content.
+- **Our choice:** inactive nav rows use the muted text color (still 4.5:1) and get full-strength text on hover and when current; the current row and the selected tab also get an accent tint behind the label and keep their accent bar, so the state never relies on color alone. Nav, menu and listbox rows and tabs use the 14px interface size.
 - **Our choice:** automatic tab activation (selection follows focus), as the [APG recommends](https://www.w3.org/WAI/ARIA/apg/patterns/tabs/#deciding-when-to-make-selection-automatically-follow-focus) when panels show without delay; `activation="manual"` is one attribute away.
 - **Our choice:** tabs are written as a `<nav>` of in-page links and `<section>` panels, so they read as a table of contents with JavaScript off. Once upgraded, each panel's first heading is visually hidden (it repeats the tab label) but stays in the accessibility tree.
 - **Our choice:** `<dui-menu>` adds `role="menu"` and `role="menuitem"` itself. Without the script there are no menu roles, so assistive technology is never promised arrow keys that do not work. A list of links is never a menu; use a disclosure.
@@ -3530,6 +3543,7 @@ From [`css/components/organisms/README.md`](https://github.com/odonckers/domesti
 - **Our choice:** the filter bar is a plain `<form method="get">` in `<search>` with an Apply button, so the filters live in the URL, work with JavaScript off, and do not interrupt screen reader users while they set several; the result count is a `role="status"` element present from page load, so changes are announced.
 - **Our choice:** form sections are `<section>` elements with a `<header>` and one body, not fieldsets with legends, because a legend cannot be placed in a grid column and headed sections show up in the headings list; related controls are still grouped in a `<fieldset>` inside the body.
 - **Our choice:** the data table's sortable headers are plain text in the markup and `<dui-table>` turns them into buttons, so with JavaScript off there are no buttons that do nothing; following the [APG Sortable Table](https://www.w3.org/WAI/ARIA/apg/patterns/table/examples/sortable-table/) example, `aria-sort` is on the sorted header only, the arrow is hidden from assistive technology and the caption gets a visually hidden hint once the buttons exist.
+- **Our choice:** the data table has hairline row separators and no zebra stripes; the row under the pointer gets the raised surface, and cells use the 14px interface size.
 - **Our choice:** a selected row is marked by its checked checkbox, a bar on its leading edge and a tint, never color alone; the count is a `role="status"` element in the page from load, and the bulk actions are disabled until a row is selected. The "select all" checkbox is added by the script, since it would do nothing without it.
 - **Our choice:** a sticky table header sticks to the nearest scroll container: put the table in `data-scroll="block inline"` (at most `--dui-size-pane` tall), or in no scroll container to stick to the viewport. In `data-scroll="inline"` alone it cannot stick.
 - **Our choice:** numeric columns are marked per cell (`data-table="number"`), the same attribute as the table, because words on the table cannot target a column.
@@ -5223,13 +5237,13 @@ Children, in source order:
 | `<main id>` | the content |
 | `<aside aria-label>` | optional auxiliary sidebar (after `<main>`) |
 | `<footer>` | optional |
-| `<button type="button" aria-controls="sidebar-id" aria-expanded="true" hidden>` | a sidebar's toggle; `<dui-app-shell>` shows it. `aria-expanded="false"` in the markup starts the sidebar collapsed when it sits beside main |
+| `<button type="button" aria-controls="sidebar-id" aria-expanded="true" hidden>` | a sidebar's toggle; `<dui-app-shell>` shows it. `aria-expanded="false"` in the markup starts the sidebar collapsed when it sits beside main. Icon only (`data-button="quiet icon"`, Lucide panel-left or panel-right, visually hidden name) inside a `<dui-tooltip>` with the same words |
 | `--dui-size-sidebar, --dui-size-sidebar-aux` | sidebar widths beside main |
 | `--dui-size-pane` | max block size of a sidebar beside main; the block size of a contained shell |
 
 #### Motion
 
-Collapsing and expanding a sidebar beside main animates the grid columns for `--dui-motion-duration-slow` times `--dui-motion-movement`, so reduced motion and `data-motion="none"` make it instant (WCAG 2.3.3); the drawer is `dialog.css`'s drawer and moves like it. Elevation: the app bar and sidebars are on the page (flat) and separated by hairlines; the drawer is at the dialog level.
+Collapsing and expanding a sidebar beside main animates the grid columns for `--dui-motion-duration-slow` times `--dui-motion-movement`, so reduced motion and `data-motion="none"` make it instant (WCAG 2.3.3); the drawer is `dialog.css`'s drawer and moves like it. Elevation: the app bar is on the page (flat) and separated by a hairline. Sidebars that sit beside main are floating panels: inset by `--dui-space-panel-inset`, `--dui-radius-surface` corners, the `--dui-elevation-panel` shadow and surface, and a transparent border that forced colors draw (a 1px line in the system color). Stacked sidebars stay flat; the drawer is at the dialog level. Our choice: floating panels separate the chrome from the content without hairlines across the whole frame; source and focus order do not change.
 
 #### Breakpoints
 
