@@ -283,7 +283,7 @@ function homePage(model) {
     description: firstSentence(plainMd(model.intro)),
     source: edit("site/content/readme-intro.md"),
     blocks: [
-      md(model.intro),
+      { md: model.intro, html: (/** @type {HtmlContext} */ ctx) => heroHtml(model, ctx) },
       md(`## Install and use\n\n${installMd(model)}`),
       md(`## Layer order\n\n${layersMd(model)}`),
       md(`## Theming\n\n${themingMd(model)}`),
@@ -296,6 +296,43 @@ ${organizationMd(model)}`),
 [llms.txt](site:llms.txt) ([format](https://llmstxt.org/)) indexes these docs; [llms-full.txt](site:llms-full.txt) has every page. Each page has a Markdown twin: same path, \`.md\`.`),
     ],
   };
+}
+
+/**
+ * The live examples the home hero shows, by source and snippet name: a
+ * field, cards and a table, rendered from their own snippets (no copies).
+ */
+const HERO_SNIPPETS = [
+  ["examples/atoms/field.html", "With a hint"],
+  ["examples/molecules/card.html", "Cards in a grid"],
+  ["examples/organisms/data-table.html", "Sortable table"],
+];
+
+/**
+ * The home hero: the value in one line, Get started as the one primary
+ * action and GitHub as secondary, the rest of the intro, then live renders
+ * of three snippets. Its Markdown twin is the intro alone.
+ * @param {Model} model
+ * @param {HtmlContext} ctx
+ */
+function heroHtml(model, ctx) {
+  const resolveLink = (/** @type {string} */ href) => (href.startsWith("site:") ? ctx.link(href.slice(5)) : href);
+  const intro = model.intro.replace(/\s+/g, " ").trim();
+  const lead = firstSentence(intro);
+  const rest = intro.slice(lead.length).trim();
+  const frames = HERO_SNIPPETS.map(([source, name]) => {
+    const s = model.snippets.find((x) => x.source === source && x.name === name);
+    if (!s?.live) throw new Error(`home hero: no live snippet "${name}" in ${source}`);
+    return `<iframe class="example-frame" data-live src="${escapeHtml(ctx.link(s.live))}" title="Live example: ${escapeHtml(name)}" loading="lazy"></iframe>`;
+  });
+  return `<div class="docs-hero">
+<p class="docs-hero-lead">${inline(lead, { resolveLink })}</p>
+<p class="docs-hero-actions"><a href="#install-and-use" data-button="primary">Get started</a> <a href="${REPO_URL}" data-button="secondary">GitHub</a></p>
+${rest ? `<p>${inline(rest, { resolveLink })}</p>` : ""}
+<div class="docs-hero-preview" role="group" aria-label="Live examples">
+${frames.join("\n")}
+</div>
+</div>`;
 }
 
 /** Brad Frost's Atomic Design, which the component levels follow. */

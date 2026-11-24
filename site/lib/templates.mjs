@@ -55,6 +55,7 @@ export function renderHtml(page, tree) {
     <link rel="stylesheet" href="${link("site.css")}">
     <link rel="alternate" type="text/markdown" href="${link(page.path.replace(/\.html$/, ".md"))}">
     <script type="module" src="${link("web-components/dui-app-shell.js")}"></script>
+    <script type="module" src="${link("web-components/dui-tooltip.js")}"></script>
     <script src="${link("site.js")}" defer></script>
     <script src="${link("highlight.js")}" defer></script>
   </head>
@@ -63,10 +64,13 @@ export function renderHtml(page, tree) {
 
     <dui-app-shell data-app-shell class="docs-shell">
       <header>
-        <button type="button" aria-controls="docs-nav" aria-expanded="true" hidden>
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true" focusable="false"><path d="M4 6h16M4 12h16M4 18h16"></path></svg>
-          Menu
-        </button>
+        <dui-tooltip>
+          <button type="button" data-button="quiet icon" aria-controls="docs-nav" aria-expanded="true" hidden>
+            <svg data-icon viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect width="18" height="18" x="3" y="3" rx="2"></rect><path d="M9 3v18"></path></svg>
+            <span class="visually-hidden">Menu</span>
+          </button>
+          <span popover="hint" role="tooltip" aria-hidden="true">Menu</span>
+        </dui-tooltip>
         <a class="docs-name" href="${link("index.html")}">domestic-ui</a>
         ${renderSections(page, link)}
         <!-- Slot for the site search (M4): search-index.json. Empty and hidden until then. -->
