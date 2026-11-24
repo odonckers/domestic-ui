@@ -118,7 +118,10 @@ const appearances = [
 ];
 
 /** @type {ThemeScope[]} */
-const themeScopes = [{ id: "default" }];
+const themeScopes = [
+  { id: "default" },
+  ...["calm", "soft", "compact"].map((theme) => ({ id: theme, theme, stylesheet: `css/themes/${theme}.css`, pages: ["button", "field", "card", "data-table", "app-shell"] })),
+];
 
 test.use({ locale: "en-US", timezoneId: "UTC" });
 test.describe.configure({ timeout: 45_000 });

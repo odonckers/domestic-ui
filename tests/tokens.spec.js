@@ -1,9 +1,11 @@
 // @ts-check
 import { test, expect } from "@playwright/test";
+import { readFileSync } from "node:fs";
 import { registerContrastTests } from "./contrast.js";
 
 registerContrastTests({ name: "default theme", selector: ":root body" });
 registerContrastTests({ name: "forest theme", selector: '[data-theme="forest"]' });
+for (const theme of ["calm", "soft", "compact"]) registerContrastTests({ name: `${theme} theme`, selector: `[data-theme="${theme}"]`, pagePath: "examples/themes.html" });
 
 test("a theme that sets only the accent re-derives link, hover and surface; primary recolors submit", async ({ page }) => {
   await page.goto("examples/theming.html");
@@ -100,4 +102,50 @@ test("reduced motion keeps color transitions and stops movement", async ({ page 
   expect(durations["border-color"]).toBeGreaterThan(0);
   expect(durations.scale).toBe(0);
   expect(Number(movement)).toBe(0);
+});
+
+test.describe("prebuilt themes (css/themes/)", () => {
+  test("css/domestic.css imports no theme file", () => {
+    const entry = readFileSync(new URL("../css/domestic.css", import.meta.url), "utf8");
+    expect(entry).not.toMatch(/themes\//);
+  });
+
+  test("each theme changes its tokens only inside its scope, and scopes nest", async ({ page }) => {
+    await page.goto("examples/themes.html");
+    const read = await page.evaluate(() => {
+      const probe = (/** @type {Element} */ el) => {
+        const button = document.createElement("button");
+        button.type = "button";
+        button.textContent = "Probe";
+        el.append(button);
+        const cs = getComputedStyle(button);
+        const out = { radius: cs.borderTopLeftRadius, height: button.getBoundingClientRect().height };
+        button.remove();
+        return out;
+      };
+      const soft = /** @type {Element} */ (document.querySelector('[data-theme="soft"]'));
+      const nested = document.createElement("div");
+      nested.setAttribute("data-theme", "compact");
+      soft.append(nested);
+      const result = { root: probe(document.body), soft: probe(soft), nested: probe(nested), compact: probe(/** @type {Element} */ (document.querySelector('[data-theme="compact"]'))) };
+      nested.remove();
+      return result;
+    });
+    expect(read.root.radius).toBe("8px");
+    expect(read.soft.radius).toBe("12px");
+    expect(read.compact.radius).toBe("2px");
+    expect(read.nested.radius, "compact inside soft").toBe("2px");
+    expect(read.compact.height).toBeCloseTo(32, 0);
+    expect(read.soft.height).toBeGreaterThan(read.root.height);
+  });
+
+  test.describe("compact on a coarse pointer", () => {
+    test.use({ hasTouch: true, isMobile: true, viewport: { width: 390, height: 844 } });
+    test("controls stay 44px", async ({ page, browserName }) => {
+      test.skip(browserName === "firefox", "Firefox has no isMobile emulation");
+      await page.goto("examples/themes.html");
+      const height = await page.locator('[data-theme="compact"] button[type="submit"]').evaluate((el) => el.getBoundingClientRect().height);
+      expect(height).toBeGreaterThanOrEqual(44 - 0.5);
+    });
+  });
 });

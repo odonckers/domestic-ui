@@ -1,0 +1,46 @@
+/*
+ * Theme: soft (opt-in, not imported by css/domestic.css)
+ *
+ * Warm neutrals (hue 70, chroma at most 0.02) and a terracotta accent,
+ * oklch(55% 0.15 40), as the primary fill with white text; corners at
+ * 1.5 times the default (12 / 18px); roomier padding (density scale
+ * 1.25); softer, warm-tinted shadows.
+ *
+ * Apply with data-theme="soft" on :root or on any element, after linking
+ * this file. It sets semantic --dui-* tokens only, with light and dark
+ * values; forced colors keep the base behavior.
+ *
+ * Our choice: the neutral steps keep the default's lightness, so every
+ * contrast pair of the default holds with the warmer hue.
+ *
+ * Specs
+ *   https://developer.mozilla.org/en-US/docs/Web/CSS/--*
+ *   https://www.w3.org/TR/css-color-4/#ok-lab
+ *   https://www.w3.org/WAI/WCAG22/Understanding/contrast-minimum.html
+ *   https://www.w3.org/WAI/WCAG22/Understanding/non-text-contrast.html
+ */
+@layer reset, tokens, base, layout, components, utilities;
+
+@layer tokens {
+  [data-theme="soft"] {
+    --dui-color-surface: light-dark(oklch(99.2% 0.004 70deg), oklch(17% 0.006 70deg));
+    --dui-color-surface-raised: light-dark(oklch(98% 0.006 70deg), oklch(19.5% 0.008 70deg));
+    --dui-color-surface-sunken: light-dark(oklch(96% 0.008 70deg), oklch(22.5% 0.01 70deg));
+    --dui-color-surface-hover: light-dark(oklch(93.8% 0.01 70deg), oklch(26.5% 0.012 70deg));
+    --dui-color-surface-active: light-dark(oklch(90.8% 0.012 70deg), oklch(31.5% 0.014 70deg));
+    --dui-color-text: light-dark(oklch(22% 0.014 70deg), oklch(95% 0.006 70deg));
+    --dui-color-text-muted: light-dark(oklch(47% 0.018 70deg), oklch(76% 0.014 70deg));
+    --dui-color-border: light-dark(oklch(22% 0.014 70deg / 11%), oklch(95% 0.006 70deg / 10%));
+    --dui-color-border-control: light-dark(oklch(58% 0.018 70deg), oklch(58.5% 0.018 70deg));
+    --dui-color-border-control-hover: light-dark(oklch(52% 0.018 70deg), oklch(66% 0.016 70deg));
+    --dui-color-border-button: light-dark(oklch(72% 0.016 70deg), oklch(48% 0.016 70deg));
+    --dui-color-shadow: light-dark(oklch(32% 0.03 50deg / 11%), oklch(12% 0.02 50deg / 48%));
+    --dui-color-accent: oklch(55% 0.15 40deg);
+    --dui-color-primary: var(--dui-color-accent);
+    --dui-color-primary-hover: var(--dui-color-accent-hover);
+    --dui-color-primary-contrast: var(--dui-color-accent-contrast);
+    --dui-radius-scale: 1.5;
+    --dui-density-scale: 1.25;
+    --dui-elevation-strength: 80%;
+  }
+}
