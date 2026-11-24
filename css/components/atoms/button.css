@@ -83,8 +83,12 @@
  *   https://www.w3.org/WAI/ARIA/apg/practices/names-and-descriptions/
  */
 
-/* Links that look like buttons: the box that base gives <button>. */
-a[data-button] {
+/*
+ * Links that look like buttons: the box that base gives <button>. :where()
+ * keeps it at the variants' specificity, so the variant and size rules
+ * below set the border color, fill and padding of links too.
+ */
+:where(a)[data-button] {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -92,7 +96,8 @@ a[data-button] {
   min-block-size: var(--dui-size-control);
   min-inline-size: var(--dui-size-control);
   padding: var(--dui-space-control-block) var(--dui-space-button-inline);
-  border: var(--dui-border-width) solid;
+  border-width: var(--dui-border-width);
+  border-style: solid;
   border-radius: var(--dui-radius-control);
   font-size: var(--dui-font-size-ui);
   font-weight: var(--dui-font-weight-ui);
