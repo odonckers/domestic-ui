@@ -1,0 +1,28 @@
+/*
+ * Theme: compact (opt-in, not imported by css/domestic.css)
+ *
+ * Neutral grays with a blue accent, oklch(53% 0.15 250); sharp corners
+ * (radius scale 0.25, so 2 / 3px); compact density (density scale 0:
+ * 32px controls, 44px under a coarse pointer); hairlines carry the edges
+ * and shadows are faint (elevation strength 35%).
+ *
+ * Apply with data-theme="compact" on :root or on any element, after
+ * linking this file. It sets semantic --dui-* tokens only; forced colors
+ * keep the base behavior. Density never changes type sizes, and every
+ * target stays at least 24px (WCAG 2.5.8).
+ *
+ * Specs
+ *   https://developer.mozilla.org/en-US/docs/Web/CSS/--*
+ *   https://www.w3.org/WAI/WCAG22/Understanding/target-size-minimum.html
+ *   https://www.w3.org/WAI/WCAG22/Understanding/non-text-contrast.html
+ */
+@layer reset, tokens, base, layout, components, utilities;
+
+@layer tokens {
+  [data-theme="compact"] {
+    --dui-color-accent: oklch(53% 0.15 250deg);
+    --dui-radius-scale: 0.25;
+    --dui-density-scale: 0;
+    --dui-elevation-strength: 35%;
+  }
+}

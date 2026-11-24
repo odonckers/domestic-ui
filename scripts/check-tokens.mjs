@@ -15,6 +15,9 @@
  *    point at primitives. A relative color (oklch(from var(--dui-…) …))
  *    is a derivation, not a literal, and is allowed.
  * 4. css/tokens/primitives.css must only declare --dui-* properties.
+ * 5. css/themes/*.css (opt-in prebuilt themes) may only declare semantic
+ *    --dui-* tokens, so a theme works scoped to any element. Their values
+ *    may be literals or semantic tokens, never primitives.
  *
  * Zero dependencies on purpose.
  */
@@ -25,6 +28,7 @@ import { fileURLToPath } from "node:url";
 const root = fileURLToPath(new URL("..", import.meta.url));
 const cssDir = join(root, "css");
 const tokensDir = join(cssDir, "tokens");
+const themesDir = join(cssDir, "themes");
 
 const walk = (dir) =>
   readdirSync(dir, { withFileTypes: true }).flatMap((entry) => {
@@ -117,8 +121,20 @@ for (const { property, value, line } of declarations(semanticCss)) {
   if (color) report(semanticFile, line, `${property}: literal color "${color}"; point at a primitive instead`);
 }
 
+for (const file of walk(cssDir).filter((f) => f.startsWith(themesDir + sep))) {
+  const css = stripComments(readFileSync(file, "utf8"));
+  for (const m of css.matchAll(/var\(\s*(--dui-[\w-]+)/g)) {
+    const line = css.slice(0, m.index).split("\n").length;
+    if (primitives.has(m[1])) report(file, line, `uses primitive token ${m[1]}; themes use literals or semantic tokens`);
+    else if (!semantics.has(m[1])) report(file, line, `unknown token ${m[1]}`);
+  }
+  for (const { property, line } of declarations(css)) {
+    if (!semantics.has(property)) report(file, line, `a theme may only set semantic --dui-* tokens, found "${property}"`);
+  }
+}
+
 for (const file of walk(cssDir)) {
-  if (file.startsWith(tokensDir + sep)) continue;
+  if (file.startsWith(tokensDir + sep) || file.startsWith(themesDir + sep)) continue;
   const css = stripComments(readFileSync(file, "utf8"));
 
   for (const m of css.matchAll(/var\(\s*(--dui-[\w-]+)/g)) {

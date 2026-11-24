@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Prebuilt themes · domestic-ui</title>
+    <meta name="description" content="The three opt-in prebuilt themes, calm, soft and compact, each scoped with data-theme on a section, in light and dark.">
+    <link rel="stylesheet" href="../css/domestic.css">
+    <link rel="stylesheet" href="../css/themes/calm.css">
+    <link rel="stylesheet" href="../css/themes/soft.css">
+    <link rel="stylesheet" href="../css/themes/compact.css">
+    <style>
+      /* Page-only layout, written with semantic tokens like any consumer would. */
+      body > :is(header, main, footer) {
+        max-inline-size: var(--dui-size-page);
+        margin-inline: auto;
+        padding-inline: var(--dui-space-l);
+      }
+
+      body > header {
+        padding-block: var(--dui-space-m);
+        border-block-end: var(--dui-border-width) solid var(--dui-color-border);
+      }
+
+      body > main {
+        padding-block: var(--dui-space-2xl);
+      }
+
+      body > footer {
+        padding-block: var(--dui-space-l);
+        border-block-start: var(--dui-border-width) solid var(--dui-color-border);
+        color: var(--dui-color-text-muted);
+      }
+
+      .panel {
+        padding: var(--dui-space-l);
+        border: var(--dui-border-width) solid var(--dui-color-border);
+        border-radius: var(--dui-radius-surface);
+      }
+    </style>
+  </head>
+  <body>
+    <a class="visually-hidden" href="#main">Skip to main content</a>
+
+    <header class="cluster" style="--cluster-justify: space-between">
+      <p><strong>domestic-ui</strong></p>
+      <nav aria-label="Examples">
+        <ul class="cluster">
+          <li><a href="theming.html">Theming</a></li>
+          <li><a href="themes.html" aria-current="page">Prebuilt themes</a></li>
+        </ul>
+      </nav>
+    </header>
+
+    <main id="main" class="stack">
+      <h1>Prebuilt themes</h1>
+      <p>
+        Each theme is one opt-in file in <code>css/themes/</code>, linked after <code>css/domestic.css</code> and applied with
+        <code>data-theme</code> on <code>:root</code> or any element. They set semantic tokens only.
+      </p>
+      <!-- dui:snippet name="Calm, soft and compact" page="principles/theming" -->
+      <div class="grid">
+        <section class="panel stack" data-theme="calm" aria-labelledby="calm-title">
+          <nav aria-label="Breadcrumb, calm theme" data-breadcrumb>
+            <ol>
+              <li><a href="#calm-title">Home</a></li>
+              <li><a href="#calm-title">Releases</a></li>
+              <li><a href="#calm-title" aria-current="page">Release notes</a></li>
+            </ol>
+          </nav>
+          <h2 id="calm-title">Calm theme</h2>
+          <p>Release notes are ready for review. <a href="#calm-title">Read the summary</a> before the meeting.</p>
+          <p class="cluster">
+            <span data-badge>Draft</span>
+            <span data-badge="accent">New</span>
+            <span data-badge="success">Passing</span>
+            <span data-badge="warning">Review</span>
+            <span data-badge="danger">Blocked</span>
+          </p>
+          <form action="#calm-title" class="stack">
+            <div data-field>
+              <label for="calm-email">Email</label>
+              <input id="calm-email" name="email" type="email" autocomplete="email" value="ada@" aria-invalid="true" aria-describedby="calm-email-hint calm-email-error">
+              <p id="calm-email-hint" data-field="hint">Release notes go to this address.</p>
+              <p id="calm-email-error" data-field="error">Error: enter an email address like name@example.com.</p>
+            </div>
+            <label><input type="checkbox" role="switch" name="notify" checked> Notify subscribers</label>
+            <div class="cluster">
+              <button type="submit">Publish</button>
+              <button type="button" data-button="secondary">Save draft</button>
+              <button type="button" data-button="quiet">Discard</button>
+            </div>
+          </form>
+          <div data-alert="warning">
+            <p><strong>Warning:</strong> Two checks are still running.</p>
+          </div>
+          <dui-tabs>
+            <nav aria-label="Release, calm theme">
+              <ul>
+                <li><a href="#calm-tab-notes">Notes</a></li>
+                <li><a href="#calm-tab-checks">Checks</a></li>
+              </ul>
+            </nav>
+            <section id="calm-tab-notes">
+              <h3>Notes</h3>
+              <p>Two bug fixes and a new token.</p>
+            </section>
+            <section id="calm-tab-checks">
+              <h3>Checks</h3>
+              <p>Lint passed. Tests are running.</p>
+            </section>
+          </dui-tabs>
+          <article data-card="link">
+            <h3><a href="#calm-title">Upgrade guide</a></h3>
+            <p>What to change when you update.</p>
+          </article>
+          <details>
+            <summary>What changed?</summary>
+            <p>Two bug fixes and a new <code>--dui-color-success</code> token.</p>
+          </details>
+        </section>
+        <section class="panel stack" data-theme="soft" aria-labelledby="soft-title">
+          <nav aria-label="Breadcrumb, soft theme" data-breadcrumb>
+            <ol>
+              <li><a href="#soft-title">Home</a></li>
+              <li><a href="#soft-title">Releases</a></li>
+              <li><a href="#soft-title" aria-current="page">Release notes</a></li>
+            </ol>
+          </nav>
+          <h2 id="soft-title">Soft theme</h2>
+          <p>Release notes are ready for review. <a href="#soft-title">Read the summary</a> before the meeting.</p>
+          <p class="cluster">
+            <span data-badge>Draft</span>
+            <span data-badge="accent">New</span>
+            <span data-badge="success">Passing</span>
+            <span data-badge="warning">Review</span>
+            <span data-badge="danger">Blocked</span>
+          </p>
+          <form action="#soft-title" class="stack">
+            <div data-field>
+              <label for="soft-email">Email</label>
+              <input id="soft-email" name="email" type="email" autocomplete="email" value="ada@" aria-invalid="true" aria-describedby="soft-email-hint soft-email-error">
+              <p id="soft-email-hint" data-field="hint">Release notes go to this address.</p>
+              <p id="soft-email-error" data-field="error">Error: enter an email address like name@example.com.</p>
+            </div>
+            <label><input type="checkbox" role="switch" name="notify" checked> Notify subscribers</label>
+            <div class="cluster">
+              <button type="submit">Publish</button>
+              <button type="button" data-button="secondary">Save draft</button>
+              <button type="button" data-button="quiet">Discard</button>
+            </div>
+          </form>
+          <div data-alert="warning">
+            <p><strong>Warning:</strong> Two checks are still running.</p>
+          </div>
+          <dui-tabs>
+            <nav aria-label="Release, soft theme">
+              <ul>
+                <li><a href="#soft-tab-notes">Notes</a></li>
+                <li><a href="#soft-tab-checks">Checks</a></li>
+              </ul>
+            </nav>
+            <section id="soft-tab-notes">
+              <h3>Notes</h3>
+              <p>Two bug fixes and a new token.</p>
+            </section>
+            <section id="soft-tab-checks">
+              <h3>Checks</h3>
+              <p>Lint passed. Tests are running.</p>
+            </section>
+          </dui-tabs>
+          <article data-card="link">
+            <h3><a href="#soft-title">Upgrade guide</a></h3>
+            <p>What to change when you update.</p>
+          </article>
+          <details>
+            <summary>What changed?</summary>
+            <p>Two bug fixes and a new <code>--dui-color-success</code> token.</p>
+          </details>
+        </section>
+        <section class="panel stack" data-theme="compact" aria-labelledby="compact-title">
+          <nav aria-label="Breadcrumb, compact theme" data-breadcrumb>
+            <ol>
+              <li><a href="#compact-title">Home</a></li>
+              <li><a href="#compact-title">Releases</a></li>
+              <li><a href="#compact-title" aria-current="page">Release notes</a></li>
+            </ol>
+          </nav>
+          <h2 id="compact-title">Compact theme</h2>
+          <p>Release notes are ready for review. <a href="#compact-title">Read the summary</a> before the meeting.</p>
+          <p class="cluster">
+            <span data-badge>Draft</span>
+            <span data-badge="accent">New</span>
+            <span data-badge="success">Passing</span>
+            <span data-badge="warning">Review</span>
+            <span data-badge="danger">Blocked</span>
+          </p>
+          <form action="#compact-title" class="stack">
+            <div data-field>
+              <label for="compact-email">Email</label>
+              <input id="compact-email" name="email" type="email" autocomplete="email" value="ada@" aria-invalid="true" aria-describedby="compact-email-hint compact-email-error">
+              <p id="compact-email-hint" data-field="hint">Release notes go to this address.</p>
+              <p id="compact-email-error" data-field="error">Error: enter an email address like name@example.com.</p>
+            </div>
+            <label><input type="checkbox" role="switch" name="notify" checked> Notify subscribers</label>
+            <div class="cluster">
+              <button type="submit">Publish</button>
+              <button type="button" data-button="secondary">Save draft</button>
+              <button type="button" data-button="quiet">Discard</button>
+            </div>
+          </form>
+          <div data-alert="warning">
+            <p><strong>Warning:</strong> Two checks are still running.</p>
+          </div>
+          <dui-tabs>
+            <nav aria-label="Release, compact theme">
+              <ul>
+                <li><a href="#compact-tab-notes">Notes</a></li>
+                <li><a href="#compact-tab-checks">Checks</a></li>
+              </ul>
+            </nav>
+            <section id="compact-tab-notes">
+              <h3>Notes</h3>
+              <p>Two bug fixes and a new token.</p>
+            </section>
+            <section id="compact-tab-checks">
+              <h3>Checks</h3>
+              <p>Lint passed. Tests are running.</p>
+            </section>
+          </dui-tabs>
+          <article data-card="link">
+            <h3><a href="#compact-title">Upgrade guide</a></h3>
+            <p>What to change when you update.</p>
+          </article>
+          <details>
+            <summary>What changed?</summary>
+            <p>Two bug fixes and a new <code>--dui-color-success</code> token.</p>
+          </details>
+        </section>
+      </div>
+      <!-- /dui:snippet -->
+    </main>
+
+    <footer>
+      <p><small>Every theme meets WCAG 2.2 AA in light and dark. <code>npm test</code> checks it.</small></p>
+    </footer>
+    <script type="module" src="../web-components/dui-tabs.js"></script>
+  </body>
+</html>

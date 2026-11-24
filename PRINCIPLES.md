@@ -166,6 +166,26 @@ Type has one opt-in: link `css/fonts/inter.css` and set `--dui-font-body: Inter,
 self-hosted Inter instead of the system stack (see "Opinions we hold"); nothing else changes.
 Check your theme's contrast in both schemes; `tests/tokens.spec.js` shows how.
 
+### Prebuilt themes
+
+Three opt-in themes ship in `css/themes/`. `css/domestic.css` imports none of them, so the default ships no
+extra bytes. Link one after `css/domestic.css` and put its name in `data-theme` on `:root` or any element
+([`examples/themes.html`](examples/themes.html)). Each file sets semantic tokens only (`npm run lint:tokens`
+checks it), with light and dark values, so scopes nest, and forced colors keep the base behavior.
+
+| Theme | `data-theme` | Tokens it changes |
+| --- | --- | --- |
+| Calm | `calm` | `--dui-color-primary`, `-primary-hover` and `-primary-contrast` follow the indigo accent (white text); `--dui-color-shadow` tinted with the accent hue. Radius and density stay the default. |
+| Soft | `soft` | Warm neutrals (hue 70, chroma 0.02 at most) for every surface, text and border token; `--dui-color-accent` terracotta `oklch(55% 0.15 40)` as the primary with white text; `--dui-radius-scale` 1.5 (12 / 18px); `--dui-density-scale` 1.25 (roomier padding); `--dui-elevation-strength` 80% and a warm `--dui-color-shadow`. |
+| Compact | `compact` | `--dui-color-accent` blue `oklch(53% 0.15 250)`; `--dui-radius-scale` 0.25 (2 / 3px); `--dui-density-scale` 0 (32px controls, 44px under a coarse pointer); `--dui-elevation-strength` 35%, so hairlines carry the edges. |
+
+To write your own, copy one of these files: keep the `@layer` statement and the `@layer tokens` block,
+set only semantic tokens, give each color a light and a dark value, and add your scope to
+`registerContrastTests` in `tests/tokens.spec.js`. **Our choice:** each file repeats the layer order and
+puts its overrides in the tokens layer, so it works linked before or after `css/domestic.css` and your
+unlayered CSS still wins. Themes never change type sizes; density changes spacing and targets only.
+Radix Themes, shadcn/ui and Carbon ship themes the same way, as token sets, for comparison.
+
 A few semantic tokens are defined in terms of others (`--dui-color-accent-text`,
 `--dui-color-link`, `--dui-color-focus`, `--dui-color-accent-hover` and
 `--dui-color-accent-surface` follow `--dui-color-accent`; `--dui-color-primary-hover`
