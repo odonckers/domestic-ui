@@ -95,7 +95,7 @@ a[data-button] {
   border: var(--dui-border-width) solid;
   border-radius: var(--dui-radius-control);
   font-size: var(--dui-font-size-ui);
-  font-weight: var(--dui-font-weight-strong);
+  font-weight: var(--dui-font-weight-ui);
   line-height: var(--dui-line-height-heading);
   text-align: center;
   text-decoration-line: none;
@@ -152,13 +152,14 @@ a[data-button] {
 /* Quiet: no fill or border until hovered. For low-emphasis actions next to others. */
 [data-button~="quiet"] {
   background-color: transparent;
-  color: var(--dui-color-accent-text);
+  color: var(--dui-color-text-muted);
   border-color: transparent;
   box-shadow: none;
 }
 
 [data-button~="quiet"]:hover:not(:disabled, [aria-disabled="true"]) {
   background-color: var(--dui-color-surface-hover);
+  color: var(--dui-color-text);
 }
 
 [data-button~="quiet"]:active:not(:disabled, [aria-disabled="true"]) {

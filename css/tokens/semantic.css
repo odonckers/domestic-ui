@@ -26,7 +26,7 @@
   /* Borders */
   --dui-color-border-control: light-dark(var(--dui-color-neutral-8), var(--dui-color-neutral-dark-8)); /* Boundaries of fields, selects, checkboxes, radios and switches, 3:1 */
   --dui-color-border-control-hover: light-dark(var(--dui-color-neutral-9), var(--dui-color-neutral-dark-9)); /* Field border on hover, one step stronger */
-  --dui-color-border-button: light-dark(var(--dui-color-neutral-7), var(--dui-color-neutral-dark-7)); /* Secondary button border: softer than a field, because its visible label identifies it */
+  --dui-color-border-button: light-dark(var(--dui-color-neutral-6), var(--dui-color-neutral-dark-6)); /* Secondary button border: the subtle border step, softer than a field, because its visible label identifies it */
 
   /* Primary */
   --dui-color-primary: light-dark(var(--dui-color-neutral-12), var(--dui-color-neutral-dark-12)); /* Primary fill */
@@ -63,7 +63,7 @@
   --dui-font-mono: var(--dui-font-stack-monospace);
   --dui-font-weight-body: var(--dui-font-weight-400);
   --dui-font-weight-strong: var(--dui-font-weight-600);
-  --dui-font-weight-ui: var(--dui-font-weight-500); /* Interface labels: buttons, nav rows, tabs and field labels. Between body and strong, as Radix and shadcn set them */
+  --dui-font-weight-ui: var(--dui-font-weight-500); /* Interface labels: buttons, nav rows and field labels. Between body and strong, as Radix and shadcn set them */
   --dui-font-weight-heading: var(--dui-font-weight-600);
   --dui-step--1: var(--dui-font-size-0-875); /* 14px: small text, captions, and the UI text size */
   --dui-step-0: var(--dui-font-size-1); /* 16px: body text, h6 */

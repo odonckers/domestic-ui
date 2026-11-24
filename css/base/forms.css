@@ -79,7 +79,7 @@ input[type="color"] {
 /* Labels sit above their control; labels that wrap a check sit beside it. */
 label {
   display: block;
-  font-weight: var(--dui-font-weight-strong);
+  font-weight: var(--dui-font-weight-ui);
 }
 
 label + :where(input, select, textarea) {
@@ -133,7 +133,7 @@ input:is([type="button"], [type="submit"], [type="reset"]),
   border-radius: var(--dui-radius-control);
   box-shadow: var(--dui-elevation-control);
   font-size: var(--dui-font-size-ui);
-  font-weight: var(--dui-font-weight-strong);
+  font-weight: var(--dui-font-weight-ui);
   line-height: var(--dui-line-height-heading);
   cursor: pointer;
   transition:
