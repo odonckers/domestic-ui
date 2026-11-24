@@ -220,8 +220,8 @@ test.describe("docs build", () => {
         const target = posix.join(posix.dirname(p.path), unescapeHtml(m[1]));
         frames.set(target, [...(frames.get(target) ?? []), { page: p.path, code: unescapeHtml(m[2]) }]);
       }
-      // Every frame on a docs page is a live example followed by its code.
-      expect((html.match(/<iframe\b/g) ?? []).length, `${p.path}: frames`).toBe([...html.matchAll(/<\/iframe>\n<pre data-snippet=/g)].length);
+      // Every frame on a docs page is a live example followed by its code, except the home page's previews (data-preview), whose code is on their own pages.
+      expect((html.match(/<iframe\b(?![^>]*\bdata-preview\b)/g) ?? []).length, `${p.path}: frames`).toBe([...html.matchAll(/<\/iframe>\n<pre data-snippet=/g)].length);
     }
     const all = site.model.snippets;
     for (const s of all.filter((x) => !x.head)) {
@@ -1147,4 +1147,73 @@ test("discovery picks up a new component with no site changes", async ({ browser
   } finally {
     rmSync(fixture, { recursive: true, force: true });
   }
+});
+
+test.describe("docs frame", () => {
+  test.use({ viewport: { width: 1280, height: 800 } });
+
+  test("the home hero has exactly one primary button, Get started, and live renders of a field, cards and a table", async ({ page }) => {
+    await page.goto("_site/index.html");
+    const primary = page.locator('[data-button~="primary"], button[type="submit"]:not([data-button~="secondary"], [data-button~="quiet"])');
+    await expect(primary).toHaveCount(1);
+    await expect(primary).toHaveText("Get started");
+    await expect(page.locator(".docs-hero-preview iframe")).toHaveCount(3);
+  });
+
+  test("the Docs toggle is icon-only, named Menu, with a tooltip that repeats the name", async ({ page }) => {
+    await page.goto("_site/index.html");
+    const menu = page.getByRole("button", { name: "Menu", exact: true });
+    await expect(menu).toHaveAttribute("data-button", /\bicon\b/);
+    await expect(menu.locator("svg")).toHaveAttribute("aria-hidden", "true");
+    await expect(menu.locator("xpath=../span[@role='tooltip']")).toHaveText("Menu");
+    const box = await menu.boundingBox();
+    expect(box && box.width >= 24 && box.height >= 24).toBe(true);
+  });
+
+  test("the app bar sticks, the Docs sidebar floats below it, and a focused heading link is never under it", async ({ page }) => {
+    await page.goto("_site/tokens/semantic.html");
+    await page.evaluate(() => window.scrollTo(0, 2000));
+    await expect.poll(() => page.evaluate(() => window.scrollY)).toBeGreaterThan(0);
+    const header = await page.locator("dui-app-shell > header").boundingBox();
+    const nav = await page.locator("#docs-nav").boundingBox();
+    expect(header && Math.abs(header.y) < 1).toBe(true);
+    expect(header && nav && nav.y >= header.y + header.height - 0.5).toBe(true);
+    // A target near the middle of the page lands below the app bar (scroll-padding).
+    const id = await page.locator("main h2[id]").nth(2).getAttribute("id");
+    await page.goto(`_site/tokens/semantic.html#${id}`);
+    // The scroll to the target may be smooth: wait until it settles.
+    let last = -1;
+    await expect.poll(async () => { const y = await page.evaluate(() => scrollY); const settled = y === last && y > 0; last = y; return settled; }, { intervals: [100] }).toBe(true);
+    const h2 = await page.locator(`[id="${id}"]`).boundingBox();
+    const bar = await page.locator("dui-app-shell > header").boundingBox();
+    expect(h2 && bar && h2.y >= bar.y + bar.height - 0.5, "target below the app bar").toBe(true);
+  });
+
+  test.describe("forced colors", () => {
+    test.use({ forcedColors: "active" });
+
+    test("the app bar is solid and the floating panels keep a visible border", async ({ page }) => {
+      await page.goto("_site/index.html");
+      const filter = await page.locator("dui-app-shell > header").evaluate((el) => getComputedStyle(el).backdropFilter);
+      expect(filter).toBe("none");
+      for (const selector of ["#docs-nav", ".docs-toc"]) {
+        const border = await page.locator(selector).evaluate((el) => {
+          const cs = getComputedStyle(el);
+          return { width: parseFloat(cs.borderTopWidth), color: cs.borderTopColor, bg: cs.backgroundColor };
+        });
+        expect(border.width, selector).toBeGreaterThanOrEqual(1);
+        expect(border.color, selector).not.toBe(border.bg);
+      }
+    });
+  });
+
+  test.describe("reduced transparency", () => {
+    test("the app bar is solid", async ({ page }) => {
+      await page.emulateMedia({ reducedTransparency: "reduce" }).catch(() => {});
+      await page.goto("_site/index.html");
+      const supported = await page.evaluate(() => matchMedia("(prefers-reduced-transparency: reduce)").matches);
+      test.skip(!supported, "this engine has no prefers-reduced-transparency emulation");
+      expect(await page.locator("dui-app-shell > header").evaluate((el) => getComputedStyle(el).backdropFilter)).toBe("none");
+    });
+  });
 });

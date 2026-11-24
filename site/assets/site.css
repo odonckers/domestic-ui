@@ -12,6 +12,91 @@
  */
 :root {
   --dui-font-body: inter, system-ui, sans-serif;
+
+  /* The app bar's block size on one row: a control, its block padding and the bottom hairline. */
+  --docs-header-size: calc(var(--dui-size-control) + var(--dui-space-xs) * 2 + var(--dui-border-width));
+}
+
+/*
+ * A sticky app bar where the sidebar sits beside main (app-shell.css's
+ * 48rem breakpoint). Translucent with backdrop-filter; solid under
+ * prefers-reduced-transparency and in forced colors. The floating panels
+ * stick below it, and scroll-padding keeps focused and targeted elements
+ * clear of it (WCAG 2.4.11).
+ * https://developer.mozilla.org/en-US/docs/Web/CSS/backdrop-filter
+ * https://developer.mozilla.org/en-US/docs/Web/CSS/@media/prefers-reduced-transparency
+ * https://www.w3.org/WAI/WCAG22/Understanding/focus-not-obscured-minimum.html
+ */
+@container dui-app-shell (inline-size >= 48rem) {
+  .docs-shell > header {
+    position: sticky;
+    inset-block-start: 0;
+    z-index: 2;
+    background-color: color-mix(in oklab, var(--dui-color-surface) 80%, transparent);
+    backdrop-filter: blur(var(--dui-space-s)) saturate(1.5);
+  }
+
+  .docs-shell > :is(nav, aside) {
+    inset-block-start: calc(var(--docs-header-size) + var(--dui-space-panel-inset));
+    max-block-size: calc(var(--dui-size-pane) - var(--docs-header-size) - var(--dui-space-panel-inset) * 2);
+  }
+}
+
+@media (min-width: 48rem) {
+  :root {
+    scroll-padding-block-start: calc(var(--docs-header-size) + var(--dui-space-s));
+  }
+}
+
+@media (prefers-reduced-transparency: reduce), (forced-colors: active) {
+  .docs-shell > header {
+    background-color: var(--dui-color-surface);
+    backdrop-filter: none;
+  }
+}
+
+/* Docs nav rows: muted, no underline; the current page is the tinted row with its bar (nav.css). */
+.docs-shell [data-nav] a:hover {
+  text-decoration-line: none;
+}
+
+/*
+ * Prose links keep their underline (WCAG 1.4.1) in a softer color, full
+ * strength on hover.
+ */
+.docs-content :is(p, li, dd, td, figcaption) a:not([data-button]) {
+  text-decoration-color: color-mix(in oklab, currentcolor var(--dui-border-tint-amount), transparent);
+}
+
+.docs-content :is(p, li, dd, td, figcaption) a:not([data-button]):hover {
+  text-decoration-color: currentcolor;
+}
+
+/* Code blocks: on the raised surface with a hairline. */
+.docs-content pre {
+  background-color: var(--dui-color-surface-raised);
+}
+
+/* Home hero: the value, one primary action, then live renders of three snippets. */
+.docs-hero > * + * {
+  margin-block-start: var(--dui-space-m);
+}
+
+.docs-hero-lead {
+  font-size: var(--dui-step-1);
+  line-height: var(--dui-line-height-heading);
+  text-wrap: balance;
+}
+
+.docs-hero-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--dui-space-xs);
+}
+
+.docs-hero-preview {
+  display: grid;
+  gap: var(--dui-space-s);
 }
 
 /*
@@ -57,7 +142,26 @@
   max-inline-size: none;
 }
 
-/* "On this page": a plain list of in-page links. */
+/* "On this page": a small uppercase label over a plain list of muted in-page links. */
+.docs-toc > h2 {
+  color: var(--dui-color-text-muted);
+  font-size: var(--dui-font-size-ui);
+  font-weight: var(--dui-font-weight-strong);
+  letter-spacing: normal;
+  text-transform: uppercase;
+}
+
+.docs-toc a {
+  color: var(--dui-color-text-muted);
+  font-size: var(--dui-font-size-ui);
+  text-decoration-line: none;
+}
+
+.docs-toc a:hover {
+  color: var(--dui-color-text);
+  text-decoration-line: underline;
+}
+
 .docs-toc ul {
   margin: 0;
   padding: 0;
