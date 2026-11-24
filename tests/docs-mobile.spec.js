@@ -71,8 +71,8 @@ test("at 375px the Menu button opens the Docs sidebar as a modal drawer by keybo
   await expect(menu).toHaveAttribute("aria-controls", "docs-nav");
   await expect(menu).toHaveAttribute("aria-expanded", "false");
   await expect(nav).toBeHidden();
-  // 44 CSS pixels, less sub-pixel rounding (Firefox reports 43.99…).
-  expect((await menu.boundingBox())?.height ?? 0, "button target size").toBeGreaterThanOrEqual(43.9);
+  // The 36px control size on a fine pointer (44px on a coarse one), less sub-pixel rounding.
+  expect((await menu.boundingBox())?.height ?? 0, "button target size").toBeGreaterThanOrEqual(35.9);
 
   await menu.focus();
   await page.keyboard.press("Enter");
@@ -90,7 +90,8 @@ test("at 375px the Menu button opens the Docs sidebar as a modal drawer by keybo
   for (let i = 0; i < 100 && !(await current.evaluate((a) => a === document.activeElement)); i++) await page.keyboard.press(tab);
   await expect(current).toBeFocused();
   await expect(current).toBeInViewport();
-  expect((await current.boundingBox())?.height ?? 0, "link target size").toBeGreaterThanOrEqual(43.9);
+  // The 32px row size on a fine pointer (44px on a coarse one), less sub-pixel rounding.
+  expect((await current.boundingBox())?.height ?? 0, "link target size").toBeGreaterThanOrEqual(31.9);
 
   await page.keyboard.press("Escape");
   await expect(drawer).toBeHidden();
