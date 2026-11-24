@@ -21,6 +21,7 @@
   --dui-color-surface-sunken: light-dark(var(--dui-color-neutral-3), var(--dui-color-neutral-dark-3)); /* Recessed areas: code, button hover */
   --dui-color-surface-hover: light-dark(var(--dui-color-neutral-4), var(--dui-color-neutral-dark-4)); /* Hover fill of quiet buttons and rows (neutral step 4) */
   --dui-color-surface-active: light-dark(var(--dui-color-neutral-5), var(--dui-color-neutral-dark-5)); /* Pressed fill of quiet buttons (neutral step 5) */
+  --dui-color-surface-frame: var(--dui-color-surface-raised); /* Background of an app shell's frame: the app bar and sidebars sit on it, around the main content panel */
   --dui-color-text: light-dark(var(--dui-color-neutral-12), var(--dui-color-neutral-dark-12)); /* Body text */
 
   /* Borders */
@@ -132,7 +133,7 @@
   --dui-motion-easing-exit: var(--dui-easing-accelerate); /* Easing for things leaving */
   --dui-motion-easing-spring: var(--dui-easing-decelerate); /* Easing for popover, menu and drawer entrances: a linear() spring where supported (below), the enter easing elsewhere */
 
-  /* Floating panels: sidebars and side panels inset from the frame edge */
+  /* Floating panels: the app shell's main content panel, inset from the frame edge */
   --dui-space-panel-inset: var(--dui-space-xs); /* Gap between a floating panel and the viewport or frame edge */
 
   /* Elevation knobs */
@@ -239,8 +240,8 @@
   --dui-elevation-flat-surface: var(--dui-elevation-0-surface); /* Surface of content on the page */
   --dui-elevation-raised: var(--dui-elevation-1); /* Shadow of cards */
   --dui-elevation-raised-surface: var(--dui-elevation-1-surface); /* Surface of cards */
-  --dui-elevation-panel: var(--dui-elevation-2); /* Shadow of floating panels: an app shell's sidebars, the docs sidebar and table of contents */
-  --dui-elevation-panel-surface: var(--dui-color-surface-raised); /* Surface of floating panels: the raised surface, one step off the page */
+  --dui-elevation-panel: var(--dui-elevation-1); /* Shadow of floating panels: an app shell's main content panel on the frame. The ring and a 1px shadow */
+  --dui-elevation-panel-surface: var(--dui-color-surface); /* Surface of floating panels: the page surface, one step off the frame */
   --dui-elevation-overlay: var(--dui-elevation-2); /* Shadow of toasts and other non-modal layers over the page */
   --dui-elevation-overlay-surface: var(--dui-elevation-2-surface); /* Surface of non-modal layers over the page */
   --dui-elevation-popover: var(--dui-elevation-3); /* Shadow of popovers, menus, tooltips and nav dropdowns */
