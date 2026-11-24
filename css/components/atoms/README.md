@@ -54,8 +54,8 @@ Each is a choice between valid options, not a standard.
   interactive without a border, and its hover and pressed fills are neutral steps 4 and 5. Use it
   next to other buttons, not inside running text, where a real link belongs.
 - **Our choice:** buttons, fields, selects and badges use the 14px interface size
-  (`--dui-font-size-ui`). Under a coarse pointer, fields keep the 16px body size, because iOS Safari
-  zooms into a focused field with smaller text.
+  (`--dui-font-size-ui`). Fields, selects and text areas use `--dui-font-size-field`, which is at least
+  16px under a coarse pointer, because iOS Safari zooms into a focused field with smaller text.
 - **Our choice:** primary buttons add an inner focus ring in their text color on top of the
   shared outline, so the indicator contrasts with the fill as well as the surface. This is the
   double-ring technique described in

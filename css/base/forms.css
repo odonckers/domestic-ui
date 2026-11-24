@@ -18,22 +18,7 @@
   color: var(--dui-color-text);
   border: var(--dui-border-width) solid var(--dui-color-border-control);
   border-radius: var(--dui-radius-control);
-  font-size: var(--dui-font-size-ui);
-}
-
-/*
- * Our choice: on touch screens fields keep the body size, because iOS
- * Safari zooms the page into any focused field whose text is smaller
- * than 16px.
- */
-@media (pointer: coarse) {
-  :where(
-    input:not([type="checkbox"], [type="radio"], [type="range"], [type="color"], [type="file"], [type="button"], [type="submit"], [type="reset"], [type="image"], [type="hidden"]),
-    select,
-    textarea
-  ) {
-    font-size: max(var(--dui-font-size-ui), var(--dui-step-0));
-  }
+  font-size: var(--dui-font-size-field);
 }
 
 :where(input, select, textarea):hover:not(:disabled) {

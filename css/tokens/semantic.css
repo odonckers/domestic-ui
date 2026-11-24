@@ -181,6 +181,7 @@
   --dui-color-primary-hover: light-dark(oklch(from var(--dui-color-primary) 32% calc(c + 0.002) h), oklch(from var(--dui-color-primary) 86% calc(c + 0.004) h)); /* Primary fill hover, same hue as the primary */
   --dui-font-heading: var(--dui-font-body);
   --dui-font-size-ui: var(--dui-step--1); /* Interface text: buttons, fields, selects, nav, menu and listbox items, tabs, badges, tooltips, table cells. 14px at the default font size */
+  --dui-font-size-field: var(--dui-font-size-ui); /* Text in fields, selects and text areas: the UI size, at least 16px under a coarse pointer (section 2a) */
   --dui-font-size-page-title: var(--dui-step-3); /* The h1 of a page header or an app shell: 30px at most */
   --dui-radius-control: calc(var(--dui-radius-2) * var(--dui-radius-scale)); /* Controls, buttons, inline code: 8px times the radius scale */
   --dui-radius-surface: calc(var(--dui-radius-3) * var(--dui-radius-scale)); /* Panels, cards, pre, dialogs, details, media: 12px times the radius scale */
@@ -286,6 +287,19 @@
     --dui-size-target-large: var(--dui-size-3-25);
     --dui-size-target-row: var(--dui-size-2-75);
     --dui-size-target-row-compact: var(--dui-size-2-75);
+  }
+}
+
+/*
+ * Fields keep 16px text under a coarse pointer: iOS Safari zooms the page
+ * into a focused field whose text is smaller than 16px. Re-declared on the
+ * same scopes as the dependent tokens (section 2), so a theme scope keeps it.
+ * https://developer.mozilla.org/en-US/docs/Web/CSS/max
+ */
+@media (pointer: coarse) {
+  :root,
+  :where([data-theme], [class^="theme-"], [class*=" theme-"], [data-motion], [data-density]) {
+    --dui-font-size-field: max(var(--dui-font-size-ui), var(--dui-step-0));
   }
 }
 

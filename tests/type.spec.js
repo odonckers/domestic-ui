@@ -79,3 +79,23 @@ test("headings balance and table numbers are tabular", async ({ page }) => {
   expect(out.wrap).toMatch(/balance/);
   expect(out.nums).toContain("tabular-nums");
 });
+
+test.describe("field text under a coarse pointer", () => {
+  test.use({ hasTouch: true, isMobile: true, viewport: { width: 390, height: 844 } });
+
+  test("text fields, selects and text areas are at least 16px; buttons keep the UI size", async ({ page, browserName }) => {
+    test.skip(browserName === "firefox", "Firefox has no isMobile emulation");
+    await page.goto("examples/atoms/field.html");
+    expect(await page.evaluate(() => matchMedia("(pointer: coarse)").matches)).toBe(true);
+    const sizes = await page.locator("input:not([type=checkbox], [type=radio], [type=range], [type=color], [type=file], [type=submit], [type=button], [type=reset], [type=hidden]), select, textarea").evaluateAll((els) => els.map((el) => parseFloat(getComputedStyle(el).fontSize)));
+    expect(sizes.length).toBeGreaterThan(0);
+    for (const size of sizes) expect(size).toBeGreaterThanOrEqual(16);
+  });
+});
+
+test("field text uses the UI size on a fine pointer", async ({ page }) => {
+  await page.goto("examples/atoms/field.html");
+  test.skip(await page.evaluate(() => matchMedia("(pointer: coarse)").matches), "needs a fine pointer");
+  const size = await page.locator("input[type=text], input:not([type])").first().evaluate((el) => parseFloat(getComputedStyle(el).fontSize));
+  expect(size).toBe(14);
+});
