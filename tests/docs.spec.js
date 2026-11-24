@@ -1187,13 +1187,16 @@ test.describe("docs frame", () => {
     // A target near the middle of the page lands below the app bar (scroll-padding).
     const id = await page.locator("main h2[id]").nth(2).getAttribute("id");
     await page.goto(`_site/tokens/semantic.html#${id}`);
-    // The scroll to the target may be smooth: wait until it settles. Compare across rendered frames, not a time span, since a slow frame can stall the scroll mid-way.
+    // The scroll to the target may be smooth, and Firefox first restores the previous position (2000, past the
+    // target) and can hold a frame mid-way, so a "settled" check can pass too early. The page scrolls back up to the
+    // target, so the heading only moves down the viewport: once it is below the app bar, its final position is too.
     await expect
-      .poll(() => page.evaluate(() => new Promise((resolve) => { const y = scrollY; requestAnimationFrame(() => requestAnimationFrame(() => resolve(y > 0 && scrollY === y))); })), { intervals: [100] })
+      .poll(async () => {
+        const h2 = await page.locator(`[id="${id}"]`).boundingBox();
+        const bar = await page.locator("dui-app-shell > header").boundingBox();
+        return Boolean(h2 && bar && h2.y >= bar.y + bar.height - 0.5);
+      }, { message: "target below the app bar", intervals: [100] })
       .toBe(true);
-    const h2 = await page.locator(`[id="${id}"]`).boundingBox();
-    const bar = await page.locator("dui-app-shell > header").boundingBox();
-    expect(h2 && bar && h2.y >= bar.y + bar.height - 0.5, "target below the app bar").toBe(true);
   });
 
   test.describe("forced colors", () => {

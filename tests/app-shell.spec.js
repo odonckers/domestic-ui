@@ -589,10 +589,10 @@ test.describe("sidebar navigation", () => {
     const [selected, other] = await Promise.all([current, nav.locator("details a:not([aria-current])").first()].map((l) =>
       l.evaluate((a) => {
         const s = getComputedStyle(a);
-        return { bar: s.borderInlineStartColor, weight: s.fontWeight };
+        return { fill: s.backgroundColor, weight: s.fontWeight };
       }),
     ));
-    expect(selected.bar).not.toBe(other.bar);
+    expect(selected.fill).not.toBe(other.fill);
     expect(selected.weight).not.toBe(other.weight);
   });
 
