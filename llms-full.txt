@@ -206,6 +206,8 @@ Color primitives are [`oklch()`](https://developer.mozilla.org/en-US/docs/Web/CS
 | 11 | Muted or accent text |
 | 12 | Text |
 
+On a Display P3 screen ([`@media (color-gamut: p3)`](https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/At-rules/@media/color-gamut)) the accent solids (indigo 9 and 10) and the status solids (step 9) take more chroma at the same lightness and hue: the sRGB chroma times how much further P3 reaches there, so they are as saturated relative to P3 as they are to sRGB, and stay inside it ([gamut mapping](https://www.w3.org/TR/css-color-4/#gamut-mapping)). Contrast pairs keep their ratios, and `npm test` checks them with P3 emulated. Text steps (11 and 12) and neutrals do not change. [Geist](https://vercel.com/geist/colors) also uses P3 where supported, for comparison.
+
 Red, green, amber and blue have steps 3, 9 and 11. [Radix Colors](https://www.radix-ui.com/colors/docs/palette-composition/understanding-the-scale) numbers a scale the same way; [Tailwind v4](https://tailwindcss.com/docs/colors) and [Geist](https://vercel.com/geist/colors) also ship OKLCH ramps. Those are other systems, for comparison.
 
 **Our choice:** the default is monochrome. `--dui-color-primary` is neutral step 12 (near-black on a light page, near-white on a dark page). `--dui-color-primary-contrast` is the text on that fill (white, or the dark page color). `--dui-color-primary-hover` is a [relative color](https://www.w3.org/TR/css-color-5/#relative-colors) of the primary ([MDN](https://developer.mozilla.org/en-US/docs/Web/CSS/Guides/Colors/Using_relative_colors)), so it keeps the primary's hue. Primary buttons and `type="submit"` read these three. The accent is indigo, for links, focus rings and selection. A theme that painted primary buttons with `--dui-color-accent` sets `--dui-color-primary` (and `--dui-color-primary-contrast` when the fill needs different text).
@@ -1753,7 +1755,7 @@ Page: https://odonckers.github.io/domestic-ui/tokens/primitives.html
 
 Primitives are NOT public API: they may be renamed, added or removed in any release. Theme with semantic tokens.
 
-Colors are OKLCH, in the sRGB gamut (CSS Color 4). [W3C ok lab](https://www.w3.org/TR/css-color-4/#ok-lab) [MDN `oklch`](https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/Values/color_value/oklch)
+Colors are OKLCH, in the sRGB gamut (CSS Color 4). On a Display P3 screen (@media (color-gamut: p3), at the end of this file) the accent solids (indigo 9 and 10) and the status solids (step 9) take more chroma: the sRGB chroma times how much further P3 reaches at that lightness and hue, so they are as saturated relative to P3 as they are to sRGB. Lightness and hue stay, so contrast stays; text steps (11 and 12) and neutrals do not change. [W3C ok lab](https://www.w3.org/TR/css-color-4/#ok-lab) [MDN `oklch`](https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/Values/color_value/oklch) [MDN `color-gamut`](https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/At-rules/@media/color-gamut) [W3C gamut mapping](https://www.w3.org/TR/css-color-4/#gamut-mapping)
 
 Neutral and indigo each have 12 steps in light and in dark. The step number is the role, the same idea as Radix's scales (for comparison: 1 page, 2 raised, 3 sunken or element, 4 hover, 5 active or selected, 6 subtle border, 7 border, 8 control border, 9 solid, 10 solid hover, 11 muted or accent text, 12 text. Red, green, amber and blue have steps 3, 9 and 11 only. Purple, teal and yellow keep the code-highlight and mark hues. Our choice: the primary action uses neutral 12 (near-black or near-white), and indigo is the accent for links, focus and selection. ([radix-ui.com understanding the scale](https://www.radix-ui.com/colors/docs/palette-composition/understanding-the-scale))
 
@@ -1814,8 +1816,8 @@ Neutral and indigo each have 12 steps in light and in dark. The step number is t
 | `--dui-color-indigo-6` | `oklch(84.5% 0.055 272deg)` | `oklch(84.5% 0.055 272deg)` | Step 6, subtle border |
 | `--dui-color-indigo-7` | `oklch(76% 0.07 272deg)` | `oklch(76% 0.07 272deg)` | Step 7, border |
 | `--dui-color-indigo-8` | `oklch(66% 0.11 272deg)` | `oklch(66% 0.11 272deg)` | Step 8, control border |
-| `--dui-color-indigo-9` | `oklch(53% 0.215 272deg)` | `oklch(53% 0.215 272deg)` | Step 9, solid accent |
-| `--dui-color-indigo-10` | `oklch(48.5% 0.2 272deg)` | `oklch(48.5% 0.2 272deg)` | Step 10, solid hover |
+| `--dui-color-indigo-9` | `oklch(53% 0.215 272deg)` | `oklch(53% 0.215 272deg)` | Step 9, solid accent With `@media (color-gamut: p3)`: `oklch(53% 0.23 272deg)`. |
+| `--dui-color-indigo-10` | `oklch(48.5% 0.2 272deg)` | `oklch(48.5% 0.2 272deg)` | Step 10, solid hover With `@media (color-gamut: p3)`: `oklch(48.5% 0.213 272deg)`. |
 | `--dui-color-indigo-11` | `oklch(47% 0.19 272deg)` | `oklch(47% 0.19 272deg)` | Step 11, accent text |
 | `--dui-color-indigo-12` | `oklch(36% 0.13 272deg)` | `oklch(36% 0.13 272deg)` | Step 12, text |
 
@@ -1831,8 +1833,8 @@ Neutral and indigo each have 12 steps in light and in dark. The step number is t
 | `--dui-color-indigo-dark-6` | `oklch(40% 0.075 272deg)` | `oklch(40% 0.075 272deg)` | Step 6, subtle border |
 | `--dui-color-indigo-dark-7` | `oklch(45% 0.09 272deg)` | `oklch(45% 0.09 272deg)` | Step 7, border |
 | `--dui-color-indigo-dark-8` | `oklch(50% 0.13 272deg)` | `oklch(50% 0.13 272deg)` | Step 8, control border |
-| `--dui-color-indigo-dark-9` | `oklch(53% 0.215 272deg)` | `oklch(53% 0.215 272deg)` | Step 9, solid accent |
-| `--dui-color-indigo-dark-10` | `oklch(64% 0.15 272deg)` | `oklch(64% 0.15 272deg)` | Step 10, solid hover |
+| `--dui-color-indigo-dark-9` | `oklch(53% 0.215 272deg)` | `oklch(53% 0.215 272deg)` | Step 9, solid accent With `@media (color-gamut: p3)`: `oklch(53% 0.23 272deg)`. |
+| `--dui-color-indigo-dark-10` | `oklch(64% 0.15 272deg)` | `oklch(64% 0.15 272deg)` | Step 10, solid hover With `@media (color-gamut: p3)`: `oklch(64% 0.162 272deg)`. |
 | `--dui-color-indigo-dark-11` | `oklch(78% 0.11 272deg)` | `oklch(78% 0.11 272deg)` | Step 11, accent text |
 | `--dui-color-indigo-dark-12` | `oklch(91% 0.025 272deg)` | `oklch(91% 0.025 272deg)` | Step 12, text |
 
@@ -1841,10 +1843,10 @@ Neutral and indigo each have 12 steps in light and in dark. The step number is t
 | Token | Light | Dark | Description |
 | --- | --- | --- | --- |
 | `--dui-color-red-3` | `oklch(95.5% 0.018 27deg)` | `oklch(95.5% 0.018 27deg)` | Step 3, element tint |
-| `--dui-color-red-9` | `oklch(55% 0.19 27deg)` | `oklch(55% 0.19 27deg)` | Step 9, solid |
+| `--dui-color-red-9` | `oklch(55% 0.19 27deg)` | `oklch(55% 0.19 27deg)` | Step 9, solid With `@media (color-gamut: p3)`: `oklch(55% 0.214 27deg)`. |
 | `--dui-color-red-11` | `oklch(48% 0.16 27deg)` | `oklch(48% 0.16 27deg)` | Step 11, danger text |
 | `--dui-color-red-dark-3` | `oklch(28% 0.05 27deg)` | `oklch(28% 0.05 27deg)` | Step 3, element tint |
-| `--dui-color-red-dark-9` | `oklch(65% 0.17 27deg)` | `oklch(65% 0.17 27deg)` | Step 9, solid |
+| `--dui-color-red-dark-9` | `oklch(65% 0.17 27deg)` | `oklch(65% 0.17 27deg)` | Step 9, solid With `@media (color-gamut: p3)`: `oklch(65% 0.215 27deg)`. |
 | `--dui-color-red-dark-11` | `oklch(80% 0.114 27deg)` | `oklch(80% 0.114 27deg)` | Step 11, danger text |
 
 ### Green. Steps 3, 9 and 11. Hue 150
@@ -1852,10 +1854,10 @@ Neutral and indigo each have 12 steps in light and in dark. The step number is t
 | Token | Light | Dark | Description |
 | --- | --- | --- | --- |
 | `--dui-color-green-3` | `oklch(96% 0.018 150deg)` | `oklch(96% 0.018 150deg)` | Step 3, element tint |
-| `--dui-color-green-9` | `oklch(55% 0.14 150deg)` | `oklch(55% 0.14 150deg)` | Step 9, solid |
+| `--dui-color-green-9` | `oklch(55% 0.14 150deg)` | `oklch(55% 0.14 150deg)` | Step 9, solid With `@media (color-gamut: p3)`: `oklch(55% 0.195 150deg)`. |
 | `--dui-color-green-11` | `oklch(47% 0.128 150deg)` | `oklch(47% 0.128 150deg)` | Step 11, success text |
 | `--dui-color-green-dark-3` | `oklch(28% 0.04 150deg)` | `oklch(28% 0.04 150deg)` | Step 3, element tint |
-| `--dui-color-green-dark-9` | `oklch(68% 0.14 150deg)` | `oklch(68% 0.14 150deg)` | Step 9, solid |
+| `--dui-color-green-dark-9` | `oklch(68% 0.14 150deg)` | `oklch(68% 0.14 150deg)` | Step 9, solid With `@media (color-gamut: p3)`: `oklch(68% 0.195 150deg)`. |
 | `--dui-color-green-dark-11` | `oklch(80% 0.12 150deg)` | `oklch(80% 0.12 150deg)` | Step 11, success text |
 
 ### Amber. Steps 3, 9 and 11. Hue 75
@@ -1863,10 +1865,10 @@ Neutral and indigo each have 12 steps in light and in dark. The step number is t
 | Token | Light | Dark | Description |
 | --- | --- | --- | --- |
 | `--dui-color-amber-3` | `oklch(96.5% 0.02 75deg)` | `oklch(96.5% 0.02 75deg)` | Step 3, element tint |
-| `--dui-color-amber-9` | `oklch(62% 0.12 75deg)` | `oklch(62% 0.12 75deg)` | Step 9, solid |
+| `--dui-color-amber-9` | `oklch(62% 0.12 75deg)` | `oklch(62% 0.12 75deg)` | Step 9, solid With `@media (color-gamut: p3)`: `oklch(62% 0.138 75deg)`. |
 | `--dui-color-amber-11` | `oklch(47% 0.098 75deg)` | `oklch(47% 0.098 75deg)` | Step 11, warning text |
 | `--dui-color-amber-dark-3` | `oklch(30% 0.04 75deg)` | `oklch(30% 0.04 75deg)` | Step 3, element tint |
-| `--dui-color-amber-dark-9` | `oklch(72% 0.12 75deg)` | `oklch(72% 0.12 75deg)` | Step 9, solid |
+| `--dui-color-amber-dark-9` | `oklch(72% 0.12 75deg)` | `oklch(72% 0.12 75deg)` | Step 9, solid With `@media (color-gamut: p3)`: `oklch(72% 0.138 75deg)`. |
 | `--dui-color-amber-dark-11` | `oklch(80% 0.12 75deg)` | `oklch(80% 0.12 75deg)` | Step 11, warning text |
 
 ### Blue, for info, separate from the indigo accent. Hue 245
@@ -1874,10 +1876,10 @@ Neutral and indigo each have 12 steps in light and in dark. The step number is t
 | Token | Light | Dark | Description |
 | --- | --- | --- | --- |
 | `--dui-color-blue-3` | `oklch(96% 0.014 245deg)` | `oklch(96% 0.014 245deg)` | Step 3, element tint |
-| `--dui-color-blue-9` | `oklch(55% 0.135 245deg)` | `oklch(55% 0.135 245deg)` | Step 9, solid |
+| `--dui-color-blue-9` | `oklch(55% 0.135 245deg)` | `oklch(55% 0.135 245deg)` | Step 9, solid With `@media (color-gamut: p3)`: `oklch(55% 0.175 245deg)`. |
 | `--dui-color-blue-11` | `oklch(48% 0.12 245deg)` | `oklch(48% 0.12 245deg)` | Step 11, info text |
 | `--dui-color-blue-dark-3` | `oklch(28% 0.04 245deg)` | `oklch(28% 0.04 245deg)` | Step 3, element tint |
-| `--dui-color-blue-dark-9` | `oklch(68% 0.12 245deg)` | `oklch(68% 0.12 245deg)` | Step 9, solid |
+| `--dui-color-blue-dark-9` | `oklch(68% 0.12 245deg)` | `oklch(68% 0.12 245deg)` | Step 9, solid With `@media (color-gamut: p3)`: `oklch(68% 0.137 245deg)`. |
 | `--dui-color-blue-dark-11` | `oklch(80% 0.108 245deg)` | `oklch(80% 0.108 245deg)` | Step 11, info text |
 
 ### Code-highlight hues that are not a status color, and the mark fill

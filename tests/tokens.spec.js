@@ -12,6 +12,19 @@ registerContrastTests({ name: 'data-contrast="more"', selector: '[data-contrast=
 registerContrastTests({ name: "prefers-contrast: more", selector: ":root body", contrast: "more" });
 registerContrastTests({ name: "forest theme under prefers-contrast: more", selector: '[data-theme="forest"]', contrast: "more" });
 
+/**
+ * Emulate a Display P3 screen (#74). Playwright's emulateMedia has no color-gamut, so this uses the
+ * Chrome DevTools Protocol, which only Chromium has.
+ * @param {{ page: import("@playwright/test").Page, browserName: string }} args
+ */
+const emulateP3 = async ({ page, browserName }) => {
+  test.skip(browserName !== "chromium", "color-gamut is emulated through the Chrome DevTools Protocol");
+  const cdp = await page.context().newCDPSession(page);
+  await cdp.send("Emulation.setEmulatedMedia", { features: [{ name: "color-gamut", value: "p3" }] });
+};
+registerContrastTests({ name: "default theme on a Display P3 screen", selector: ":root body", setup: emulateP3 });
+registerContrastTests({ name: "forest theme on a Display P3 screen", selector: '[data-theme="forest"]', setup: emulateP3 });
+
 test("a theme that sets only the accent re-derives link, hover and surface; primary recolors submit", async ({ page }) => {
   await page.goto("examples/theming.html");
   const result = await page.evaluate(() => {
@@ -253,5 +266,47 @@ test.describe("contrast knob (--dui-contrast)", () => {
     const soft = await page.locator('[aria-labelledby="contrast-08-title"]').evaluate(read);
     expect(soft.muted).toEqual(base.muted);
     expect(soft.border[3]).toBeLessThan(base.border[3]);
+  });
+});
+
+test.describe("Display P3 accent and status solids", () => {
+  const P3 = {
+    "--dui-color-indigo-9": "oklch(0.53 0.23 272)",
+    "--dui-color-indigo-dark-10": "oklch(0.64 0.162 272)",
+    "--dui-color-red-9": "oklch(0.55 0.214 27)",
+    "--dui-color-green-dark-9": "oklch(0.68 0.195 150)",
+  };
+  /** The accent as computed, and the listed primitives resolved through a probe. */
+  const read = (names) => {
+    const probe = document.createElement("div");
+    document.body.append(probe);
+    const out = Object.fromEntries(
+      names.map((n) => {
+        probe.style.color = `var(${n})`;
+        return [n, getComputedStyle(probe).color];
+      }),
+    );
+    probe.style.color = "var(--dui-color-accent)";
+    out.accent = getComputedStyle(probe).color;
+    out.p3 = String(matchMedia("(color-gamut: p3)").matches);
+    probe.remove();
+    return out;
+  };
+
+  test("on an sRGB screen the solids keep their sRGB values", async ({ page }) => {
+    await page.goto("examples/theming.html");
+    const got = await page.evaluate(read, Object.keys(P3));
+    test.skip(got.p3 === "true", "this runner reports a P3 screen");
+    expect(got["--dui-color-indigo-9"]).toBe("oklch(0.53 0.215 272)");
+    expect(got.accent).toBe("oklch(0.53 0.215 272)");
+  });
+
+  test("with color-gamut: p3 the solids resolve to the P3 values, at the same lightness and hue", async ({ page, browserName }) => {
+    await emulateP3({ page, browserName });
+    await page.goto("examples/theming.html");
+    const got = await page.evaluate(read, Object.keys(P3));
+    expect(got.p3).toBe("true");
+    for (const [name, value] of Object.entries(P3)) expect(got[name], name).toBe(value);
+    expect(got.accent).toBe(P3["--dui-color-indigo-9"]);
   });
 });
