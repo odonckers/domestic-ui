@@ -25,7 +25,7 @@ import "./docs-helpers.js";
 const ROOT = fileURLToPath(new URL("..", import.meta.url));
 const INTER_CSS = "css/fonts/inter.css";
 
-/** @typedef {{ id: string, path: string, prepare?: (page: import("@playwright/test").Page) => Promise<void> }} VisualPage */
+/** @typedef {{ id: string, path: string, prepare?: (page: import("@playwright/test").Page) => Promise<void>, mask?: string[] }} VisualPage */
 /**
  * A theme scope applied to every shot it includes.
  * Prebuilt themes append an entry: `theme` is the data-theme value,
@@ -102,7 +102,8 @@ const pages = [
   { id: "data-table", path: "examples/organisms/data-table.html" },
   { id: "nav", path: "examples/molecules/nav.html" },
   { id: "app-shell", path: "examples/app-shell.html" },
-  { id: "themes-page", path: "_site/principles/themes.html" },
+  // The theme preview frame paints its heading face on its own schedule, so its pixels vary run to run; docs.spec covers what it shows.
+  { id: "themes-page", path: "_site/principles/themes.html", mask: ['iframe[title="Live example: Theme preview"]'] },
 ];
 
 /** CSS viewports. 1280×800 is a desktop window; 390×844 is the narrow reflow width. */
@@ -178,7 +179,9 @@ async function settle(/** @type {import("@playwright/test").Page} */ page) {
       frames.map(
         (frame) =>
           new Promise((resolve) => {
-            if (frame.contentDocument?.readyState === "complete") resolve(undefined);
+            // The initial about:blank document is already "complete"; wait for the frame's own page.
+            const doc = frame.contentDocument;
+            if (doc?.readyState === "complete" && doc.URL !== "about:blank") resolve(undefined);
             else frame.addEventListener("load", () => resolve(undefined), { once: true });
           }),
       ),
@@ -217,7 +220,7 @@ for (const scope of themeScopes) {
             await page.goto(shot.path);
             await settle(page);
             if (shot.prepare) await shot.prepare(page);
-            await expect(page).toHaveScreenshot(`${scope.id}-${shot.id}-${viewport.name}-${appearance.name}.png`);
+            await expect(page).toHaveScreenshot(`${scope.id}-${shot.id}-${viewport.name}-${appearance.name}.png`, { mask: shot.mask?.map((selector) => page.locator(selector)) });
             expect(external, "screenshot pages must not leave the local server").toEqual([]);
           });
         }
