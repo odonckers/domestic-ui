@@ -320,18 +320,19 @@ function heroHtml(model, ctx) {
   const intro = model.intro.replace(/\s+/g, " ").trim();
   const lead = firstSentence(intro);
   const rest = intro.slice(lead.length).trim();
-  const frames = HERO_SNIPPETS.map(([source, name]) => {
+  // A preview whose snippet is missing (a fork, a fixture repo) is left out, never an error.
+  const frames = HERO_SNIPPETS.flatMap(([source, name]) => {
     const s = model.snippets.find((x) => x.source === source && x.name === name);
-    if (!s?.live) throw new Error(`home hero: no live snippet "${name}" in ${source}`);
-    return `<iframe class="example-frame" data-live src="${escapeHtml(ctx.link(s.live))}" title="Live example: ${escapeHtml(name)}" loading="lazy"></iframe>`;
+    if (!s?.live) return [];
+    return `<iframe class="example-frame" data-live data-preview src="${escapeHtml(ctx.link(s.live))}" title="Live example: ${escapeHtml(name)}" loading="lazy"></iframe>`;
   });
   return `<div class="docs-hero">
 <p class="docs-hero-lead">${inline(lead, { resolveLink })}</p>
 <p class="docs-hero-actions"><a href="#install-and-use" data-button="primary">Get started</a> <a href="${REPO_URL}" data-button="secondary">GitHub</a></p>
 ${rest ? `<p>${inline(rest, { resolveLink })}</p>` : ""}
-<div class="docs-hero-preview" role="group" aria-label="Live examples">
+${frames.length ? `<div class="docs-hero-preview" role="group" aria-label="Live examples">
 ${frames.join("\n")}
-</div>
+</div>` : ""}
 </div>`;
 }
 

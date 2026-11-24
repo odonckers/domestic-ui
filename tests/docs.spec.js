@@ -220,8 +220,8 @@ test.describe("docs build", () => {
         const target = posix.join(posix.dirname(p.path), unescapeHtml(m[1]));
         frames.set(target, [...(frames.get(target) ?? []), { page: p.path, code: unescapeHtml(m[2]) }]);
       }
-      // Every frame on a docs page is a live example followed by its code.
-      expect((html.match(/<iframe\b/g) ?? []).length, `${p.path}: frames`).toBe([...html.matchAll(/<\/iframe>\n<pre data-snippet=/g)].length);
+      // Every frame on a docs page is a live example followed by its code, except the home page's previews (data-preview), whose code is on their own pages.
+      expect((html.match(/<iframe\b(?![^>]*\bdata-preview\b)/g) ?? []).length, `${p.path}: frames`).toBe([...html.matchAll(/<\/iframe>\n<pre data-snippet=/g)].length);
     }
     const all = site.model.snippets;
     for (const s of all.filter((x) => !x.head)) {
@@ -1181,6 +1181,9 @@ test.describe("docs frame", () => {
     // A target near the middle of the page lands below the app bar (scroll-padding).
     const id = await page.locator("main h2[id]").nth(2).getAttribute("id");
     await page.goto(`_site/tokens/semantic.html#${id}`);
+    // The scroll to the target may be smooth: wait until it settles.
+    let last = -1;
+    await expect.poll(async () => { const y = await page.evaluate(() => scrollY); const settled = y === last && y > 0; last = y; return settled; }, { intervals: [100] }).toBe(true);
     const h2 = await page.locator(`[id="${id}"]`).boundingBox();
     const bar = await page.locator("dui-app-shell > header").boundingBox();
     expect(h2 && bar && h2.y >= bar.y + bar.height - 0.5, "target below the app bar").toBe(true);
