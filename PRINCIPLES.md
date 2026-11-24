@@ -252,6 +252,7 @@ may change. Fluid `--dui-step-*` values are `clamp()` expressions; see `primitiv
 | `--dui-step-4` | h2 | `font-size-fluid-4` (`clamp()`, 1.75rem to 2.375rem) |
 | `--dui-step-5` | h1, docs and marketing heroes | `font-size-fluid-5` (`clamp()`, 2rem to 3rem) |
 | `--dui-font-size-ui` | Interface text: buttons, fields, selects, nav, menu and listbox items, tabs, badges, tooltips, table cells | `--dui-step--1` (14px) |
+| `--dui-font-size-field` | Text in fields, selects and text areas: the UI size, at least 16px under a coarse pointer | `--dui-font-size-ui`; `max(--dui-font-size-ui, --dui-step-0)` under `pointer: coarse` |
 | `--dui-font-size-page-title` | The `h1` of a page header or an app shell | `--dui-step-3` (1.875rem at most) |
 | `--dui-font-size-code` | code, kbd, samp, pre (relative) | `font-size-relative-90` (0.9em) |
 | `--dui-line-height-body` | Body text | `leading-150` (1.5) |
@@ -355,7 +356,7 @@ may change. Fluid `--dui-step-*` values are `clamp()` expressions; see `primitiv
 | `--dui-easing-standard` | **Deprecated**, removed in the next release | `--dui-motion-easing-standard` |
 
 Derived (re-resolved on each theme scope and on every `[data-motion]` and `[data-density]` element): `--dui-color-accent-text`, `--dui-color-link`,
-`--dui-color-focus`, `--dui-color-accent-hover`, `--dui-color-primary-hover`, `--dui-font-heading`, `--dui-font-size-ui`, `--dui-font-size-page-title`, `--dui-color-accent-surface`,
+`--dui-color-focus`, `--dui-color-accent-hover`, `--dui-color-primary-hover`, `--dui-font-heading`, `--dui-font-size-ui`, `--dui-font-size-field`, `--dui-font-size-page-title`, `--dui-color-accent-surface`,
 `--dui-color-success-surface`, `--dui-color-warning-surface`, `--dui-color-danger-surface`,
 `--dui-color-info-surface`, `--dui-color-surface-inverse`, `--dui-color-text-inverse`, `--dui-radius-control`, `--dui-radius-surface`, every
 `--dui-motion-duration-*`, `--dui-motion-distance`, `--dui-motion-zoom`, `--dui-motion-press-scale`, every `--dui-elevation-*`
@@ -521,6 +522,11 @@ Each of these is a choice between valid options, not a standard.
 - **Our choice:** interface text (buttons, fields, nav, menus, tabs, badges, tooltips, table cells) is 14px
   (`--dui-font-size-ui`), as in Primer, Fluent 2, Radix Themes and shadcn/ui, for comparison; prose stays 16px.
   An app page title (`--dui-font-size-page-title`) is 30px at most; steps 4 and 5 are for docs and marketing heroes.
+- **Our choice:** text fields, selects and text areas use `--dui-font-size-field`: the UI size on a fine pointer and at
+  least 16px under a coarse one ([`pointer`](https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/At-rules/@media/pointer),
+  [`max()`](https://developer.mozilla.org/en-US/docs/Web/CSS/max)), because iOS Safari zooms the page into a focused
+  field with smaller text. The 44px coarse-pointer field height already fits it. The viewport meta never limits zoom
+  ([1.4.4 Resize Text](https://www.w3.org/WAI/WCAG22/Understanding/resize-text.html)).
 - **Our choice:** a 65ch measure for prose, near the commonly cited 45 to 75 characters per line
   ([WCAG 1.4.8 Visual Presentation](https://www.w3.org/WAI/WCAG22/Understanding/visual-presentation.html) asks for 80 or fewer).
 - **Our choice:** rhythm from the "lobotomized owl" selector (`* + *`) inside flow containers

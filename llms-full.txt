@@ -330,6 +330,7 @@ may change. Fluid `--dui-step-*` values are `clamp()` expressions; see `primitiv
 | `--dui-step-4` | h2 | `font-size-fluid-4` (`clamp()`, 1.75rem to 2.375rem) |
 | `--dui-step-5` | h1, docs and marketing heroes | `font-size-fluid-5` (`clamp()`, 2rem to 3rem) |
 | `--dui-font-size-ui` | Interface text: buttons, fields, selects, nav, menu and listbox items, tabs, badges, tooltips, table cells | `--dui-step--1` (14px) |
+| `--dui-font-size-field` | Text in fields, selects and text areas: the UI size, at least 16px under a coarse pointer | `--dui-font-size-ui`; `max(--dui-font-size-ui, --dui-step-0)` under `pointer: coarse` |
 | `--dui-font-size-page-title` | The `h1` of a page header or an app shell | `--dui-step-3` (1.875rem at most) |
 | `--dui-font-size-code` | code, kbd, samp, pre (relative) | `font-size-relative-90` (0.9em) |
 | `--dui-line-height-body` | Body text | `leading-150` (1.5) |
@@ -433,7 +434,7 @@ may change. Fluid `--dui-step-*` values are `clamp()` expressions; see `primitiv
 | `--dui-easing-standard` | **Deprecated**, removed in the next release | `--dui-motion-easing-standard` |
 
 Derived (re-resolved on each theme scope and on every `[data-motion]` and `[data-density]` element): `--dui-color-accent-text`, `--dui-color-link`,
-`--dui-color-focus`, `--dui-color-accent-hover`, `--dui-color-primary-hover`, `--dui-font-heading`, `--dui-font-size-ui`, `--dui-font-size-page-title`, `--dui-color-accent-surface`,
+`--dui-color-focus`, `--dui-color-accent-hover`, `--dui-color-primary-hover`, `--dui-font-heading`, `--dui-font-size-ui`, `--dui-font-size-field`, `--dui-font-size-page-title`, `--dui-color-accent-surface`,
 `--dui-color-success-surface`, `--dui-color-warning-surface`, `--dui-color-danger-surface`,
 `--dui-color-info-surface`, `--dui-color-surface-inverse`, `--dui-color-text-inverse`, `--dui-radius-control`, `--dui-radius-surface`, every
 `--dui-motion-duration-*`, `--dui-motion-distance`, `--dui-motion-zoom`, `--dui-motion-press-scale`, every `--dui-elevation-*`
@@ -1318,6 +1319,11 @@ Each of these is a choice between valid options, not a standard.
 - **Our choice:** interface text (buttons, fields, nav, menus, tabs, badges, tooltips, table cells) is 14px
   (`--dui-font-size-ui`), as in Primer, Fluent 2, Radix Themes and shadcn/ui, for comparison; prose stays 16px.
   An app page title (`--dui-font-size-page-title`) is 30px at most; steps 4 and 5 are for docs and marketing heroes.
+- **Our choice:** text fields, selects and text areas use `--dui-font-size-field`: the UI size on a fine pointer and at
+  least 16px under a coarse one ([`pointer`](https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/At-rules/@media/pointer),
+  [`max()`](https://developer.mozilla.org/en-US/docs/Web/CSS/max)), because iOS Safari zooms the page into a focused
+  field with smaller text. The 44px coarse-pointer field height already fits it. The viewport meta never limits zoom
+  ([1.4.4 Resize Text](https://www.w3.org/WAI/WCAG22/Understanding/resize-text.html)).
 - **Our choice:** a 65ch measure for prose, near the commonly cited 45 to 75 characters per line
   ([WCAG 1.4.8 Visual Presentation](https://www.w3.org/WAI/WCAG22/Understanding/visual-presentation.html) asks for 80 or fewer).
 - **Our choice:** rhythm from the "lobotomized owl" selector (`* + *`) inside flow containers
@@ -1985,7 +1991,7 @@ A theme is an override of these tokens on `:root` or on a scoped element. No reb
 
 Colors use [`light-dark()`](https://developer.mozilla.org/en-US/docs/Web/CSS/color_value/light-dark), which picks a value from the used color-scheme of the element where the token is read.
 
-162 tokens in [`css/tokens/semantic.css`](https://github.com/odonckers/domestic-ui/blob/main/css/tokens/semantic.css). **Light** and **Dark** resolve every `var()` and take one side of [`light-dark()`](https://developer.mozilla.org/en-US/docs/Web/CSS/color_value/light-dark). Previews are decorative. † marks a description taken from the semantic token table in [Theming](https://odonckers.github.io/domestic-ui/principles/theming.md).
+163 tokens in [`css/tokens/semantic.css`](https://github.com/odonckers/domestic-ui/blob/main/css/tokens/semantic.css). **Light** and **Dark** resolve every `var()` and take one side of [`light-dark()`](https://developer.mozilla.org/en-US/docs/Web/CSS/color_value/light-dark). Previews are decorative. † marks a description taken from the semantic token table in [Theming](https://odonckers.github.io/domestic-ui/principles/theming.md).
 
 ### Surfaces and text
 
@@ -2184,6 +2190,7 @@ Defined in terms of other semantic tokens.
 | `--dui-color-primary-hover` | `oklch(from oklch(21.5% 0.012 265deg) 32% calc(c + 0.002) h)` | `oklch(from oklch(95% 0.004 265deg) 86% calc(c + 0.004) h)` | Primary fill hover, same hue as the primary |
 | `--dui-font-heading` | `system-ui, -apple-system, "Segoe UI Variable Text", "Segoe UI", roboto, "Noto Sans", "Helvetica Neue", arial, sans-serif` | `system-ui, -apple-system, "Segoe UI Variable Text", "Segoe UI", roboto, "Noto Sans", "Helvetica Neue", arial, sans-serif` | Heading font stack † |
 | `--dui-font-size-ui` | `0.875rem` | `0.875rem` | Interface text: buttons, fields, selects, nav, menu and listbox items, tabs, badges, tooltips, table cells. 14px at the default font size |
+| `--dui-font-size-field` | `0.875rem` | `0.875rem` | Text in fields, selects and text areas: the UI size, at least 16px under a coarse pointer (section 2a) With `@media (pointer: coarse)`: `max(var(--dui-font-size-ui), var(--dui-step-0))`, resolves to `max(0.875rem, 1rem)`. |
 | `--dui-font-size-page-title` | `clamp(1.5rem, 1.375rem + 0.625vw, 1.875rem)` | `clamp(1.5rem, 1.375rem + 0.625vw, 1.875rem)` | The h1 of a page header or an app shell: 30px at most |
 | `--dui-radius-control` | `calc(0.5rem * 1)` | `calc(0.5rem * 1)` | Controls, buttons, inline code: 8px times the radius scale |
 | `--dui-radius-surface` | `calc(0.75rem * 1)` | `calc(0.75rem * 1)` | Panels, cards, pre, dialogs, details, media: 12px times the radius scale |
@@ -2968,7 +2975,7 @@ From [`css/components/atoms/README.md`](https://github.com/odonckers/domestic-ui
 - **Our choice:** `data-button` with no variant word keeps the native default (a submit button is primary, everything else is secondary), so M1 markup keeps working and the attribute is only needed when the native type does not match the emphasis you want.
 - **Our choice:** the secondary button sits on the page surface with a softer border (`--dui-color-border-button`, neutral step 7) and a 1px shadow. Its visible text label identifies it, so [WCAG 1.4.11](https://www.w3.org/WAI/WCAG22/Understanding/non-text-contrast.html) does not require a 3:1 boundary; fields, selects, checkboxes, radios and switches keep the 3:1 `--dui-color-border-control`.
 - **Our choice:** the quiet button uses the accent color for its text, so it still reads as interactive without a border, and its hover and pressed fills are neutral steps 4 and 5. Use it next to other buttons, not inside running text, where a real link belongs.
-- **Our choice:** buttons, fields, selects and badges use the 14px interface size (`--dui-font-size-ui`). Under a coarse pointer, fields keep the 16px body size, because iOS Safari zooms into a focused field with smaller text.
+- **Our choice:** buttons, fields, selects and badges use the 14px interface size (`--dui-font-size-ui`). Fields, selects and text areas use `--dui-font-size-field`, which is at least 16px under a coarse pointer, because iOS Safari zooms into a focused field with smaller text.
 - **Our choice:** primary buttons add an inner focus ring in their text color on top of the shared outline, so the indicator contrasts with the fill as well as the surface. This is the double-ring technique described in [WCAG technique C40](https://www.w3.org/WAI/WCAG22/Techniques/css/C40).
 - **Our choice:** default buttons and fields are 36px tall and large ones 40px, and a coarse (touch) pointer restores 44px, between Primer and Radix (32px) and Material (40px), for comparison.
 - **Our choice:** small buttons are 32px tall: below the 36px default, above the [24px minimum](https://www.w3.org/WAI/WCAG22/Understanding/target-size-minimum.html).
