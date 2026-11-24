@@ -6,6 +6,11 @@ import { registerContrastTests } from "./contrast.js";
 registerContrastTests({ name: "default theme", selector: ":root body" });
 registerContrastTests({ name: "forest theme", selector: '[data-theme="forest"]' });
 for (const theme of ["calm", "soft", "compact"]) registerContrastTests({ name: `${theme} theme`, selector: `[data-theme="${theme}"]`, pagePath: "examples/themes.html" });
+// The contrast knob (#73) at every documented value: 0.8, 1.5 by attribute and 1.5 by prefers-contrast.
+registerContrastTests({ name: "contrast 0.8", selector: '[aria-labelledby="contrast-08-title"]' });
+registerContrastTests({ name: 'data-contrast="more"', selector: '[data-contrast="more"]' });
+registerContrastTests({ name: "prefers-contrast: more", selector: ":root body", contrast: "more" });
+registerContrastTests({ name: "forest theme under prefers-contrast: more", selector: '[data-theme="forest"]', contrast: "more" });
 
 test("a theme that sets only the accent re-derives link, hover and surface; primary recolors submit", async ({ page }) => {
   await page.goto("examples/theming.html");
@@ -182,4 +187,71 @@ test.describe("concentric nested radius (--dui-radius-nested)", () => {
       }
     });
   }
+});
+
+test.describe("contrast knob (--dui-contrast)", () => {
+  /** Muted text, hairline alpha and tint amount inside one element, as computed there. */
+  const read = (el) => {
+    const probe = document.createElement("div");
+    probe.style.cssText = "color: var(--dui-color-text-muted); border: 1px solid var(--dui-color-border); outline: 1px solid var(--dui-color-accent-surface)";
+    el.append(probe);
+    const cs = getComputedStyle(probe);
+    const knob = getComputedStyle(el).getPropertyValue("--dui-contrast").trim();
+    // Paint each on a canvas to compare what is drawn.
+    const c = document.createElement("canvas");
+    c.width = c.height = 1;
+    const x = /** @type {CanvasRenderingContext2D} */ (c.getContext("2d", { willReadFrequently: true }));
+    const px = (color) => {
+      x.clearRect(0, 0, 1, 1);
+      x.fillStyle = color;
+      x.fillRect(0, 0, 1, 1);
+      return [...x.getImageData(0, 0, 1, 1).data];
+    };
+    probe.style.backgroundColor = "var(--dui-color-text)";
+    const text = px(getComputedStyle(probe).backgroundColor);
+    probe.style.backgroundColor = "var(--dui-color-surface)";
+    const surface = px(getComputedStyle(probe).backgroundColor);
+    const tinted = px(cs.outlineColor);
+    // How far the accent tint is from the plain surface.
+    const tint = Math.hypot(tinted[0] - surface[0], tinted[1] - surface[1], tinted[2] - surface[2]);
+    const out = { knob, tint, muted: px(cs.color), text, border: px(cs.borderTopColor) };
+    probe.remove();
+    return out;
+  };
+  const distance = (a, b) => Math.hypot(a[0] - b[0], a[1] - b[1], a[2] - b[2]);
+
+  for (const colorScheme of ["light", "dark"]) {
+    test(`data-contrast="more" gives stronger muted text, hairlines and tints than the default (${colorScheme})`, async ({ page }) => {
+      await page.emulateMedia({ colorScheme });
+      await page.goto("examples/theming.html");
+      const base = await page.locator('[aria-labelledby="contrast-1-title"]').evaluate(read);
+      const more = await page.locator('[data-contrast="more"]').evaluate(read);
+      expect(base.knob).toBe("1");
+      expect(more.knob).toBe("1.5");
+      expect(distance(more.muted, more.text), "muted text is closer to the text color").toBeLessThan(distance(base.muted, base.text));
+      expect(more.border[3], "hairline alpha").toBeGreaterThan(base.border[3]);
+      expect(more.tint, "tint strength").toBeGreaterThan(base.tint);
+    });
+  }
+
+  test("prefers-contrast: more applies the high value; the default leaves it at 1", async ({ page }) => {
+    await page.goto("examples/theming.html");
+    const knob = () => page.evaluate(() => getComputedStyle(document.documentElement).getPropertyValue("--dui-contrast").trim());
+    expect(await knob()).toBe("1");
+    await page.emulateMedia({ contrast: "more" });
+    await page.reload();
+    test.skip(!(await page.evaluate(() => matchMedia("(prefers-contrast: more)").matches)), "this browser build does not emulate prefers-contrast");
+    expect(await knob()).toBe("1.5");
+    // A theme scope below re-derives its muted text from the inherited knob.
+    const forest = await page.locator('[data-theme="forest"]').first().evaluate(read);
+    expect(forest.knob).toBe("1.5");
+  });
+
+  test("below 1 muted text does not move: it stays at the default color", async ({ page }) => {
+    await page.goto("examples/theming.html");
+    const base = await page.locator('[aria-labelledby="contrast-1-title"]').evaluate(read);
+    const soft = await page.locator('[aria-labelledby="contrast-08-title"]').evaluate(read);
+    expect(soft.muted).toEqual(base.muted);
+    expect(soft.border[3]).toBeLessThan(base.border[3]);
+  });
 });

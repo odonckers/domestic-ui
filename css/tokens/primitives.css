@@ -258,6 +258,7 @@
   /* Unitless factors and ratios */
   --dui-factor-0: 0; /* Off: multiplies a duration or distance to nothing */
   --dui-factor-1: 1; /* On: leaves a duration or distance as it is */
+  --dui-factor-1-5: 1.5; /* One and a half: the high contrast setting */
   --dui-ratio-95: 0.95; /* 95% of full size */
   --dui-ratio-98: 0.98; /* 98% of full size: a pressed button */
   --dui-stroke-1-75: 1.75; /* Icon stroke width in SVG user units (Lucide draws on a 24-unit grid) */

@@ -41,6 +41,8 @@ for (const path of examples) {
           await page.keyboard.press("Escape");
           await expect(dialog).toHaveCount(0);
           await expect(opener).toBeFocused();
+          // The closed dialog still fades out: let it finish before the next check reads colors.
+          await settle(page);
         }
 
         // Popovers and menus: open each from its button, check, close.
@@ -54,6 +56,7 @@ for (const path of examples) {
           expect(open.violations, `#${id}\n${summarize(open.violations)}`).toEqual([]);
           await popover.evaluate((el) => el.hidePopover());
           await expect(popover).toBeHidden();
+          await settle(page);
         }
 
         // Comboboxes: open each list with an option active, check, close.
