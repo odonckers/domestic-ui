@@ -63,6 +63,7 @@
   --dui-font-mono: var(--dui-font-stack-monospace);
   --dui-font-weight-body: var(--dui-font-weight-400);
   --dui-font-weight-strong: var(--dui-font-weight-600);
+  --dui-font-weight-ui: var(--dui-font-weight-500); /* Interface labels: buttons, nav rows, tabs and field labels. Between body and strong, as Radix and shadcn set them */
   --dui-font-weight-heading: var(--dui-font-weight-600);
   --dui-step--1: var(--dui-font-size-0-875); /* 14px: small text, captions, and the UI text size */
   --dui-step-0: var(--dui-font-size-1); /* 16px: body text, h6 */

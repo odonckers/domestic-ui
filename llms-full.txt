@@ -350,6 +350,7 @@ may change. Fluid `--dui-step-*` values are `clamp()` expressions; see `primitiv
 | `--dui-font-mono` | Code font stack | `--dui-font-stack-monospace` (`ui-monospace`, …, `monospace`) |
 | `--dui-font-weight-body` | Body weight | `font-weight-400` (400) |
 | `--dui-font-weight-strong` | strong, labels, buttons, th | `font-weight-600` (600) |
+| `--dui-font-weight-ui` | Interface labels: nav rows (buttons, tabs and field labels follow) | `font-weight-500` (500) |
 | `--dui-font-weight-heading` | h1–h6 | `font-weight-600` (600) |
 | `--dui-step--1` | small, captions, and the UI text size | `font-size-0-875` (0.875rem, 14px) |
 | `--dui-step-0` | Body text, h6 | `font-size-1` (1rem) |
@@ -402,7 +403,7 @@ may change. Fluid `--dui-step-*` values are `clamp()` expressions; see `primitiv
 | `--dui-space-panel-inset` | Gap between a floating panel and the viewport or frame edge | `--dui-space-xs` (0.5rem) |
 | `--dui-border-width` | Hairline width | `border-1` (1px) |
 | `--dui-border-width-emphasis` | blockquote rule, alert start rule, invalid field | `border-4` (0.25rem) |
-| `--dui-border-width-indicator` | Selected tab, current nav item (3:1 against the surface) | `border-3` (3px) |
+| `--dui-border-width-indicator` | Selected tab (3:1 against the surface); the current nav item's bar in forced colors only | `border-3` (3px) |
 | `--dui-underline-offset` | Link underline offset | `underline-offset-015em` (0.15em) |
 | `--dui-underline-thickness` | Link underline | `underline-1` (0.0625em) |
 | `--dui-underline-thickness-hover` | Link underline on hover | `underline-2` (0.125em) |
@@ -2119,7 +2120,7 @@ A theme is an override of these tokens on `:root` or on a scoped element. No reb
 
 Colors use [`light-dark()`](https://developer.mozilla.org/en-US/docs/Web/CSS/color_value/light-dark), which picks a value from the used color-scheme of the element where the token is read.
 
-165 tokens in [`css/tokens/semantic.css`](https://github.com/odonckers/domestic-ui/blob/main/css/tokens/semantic.css). **Light** and **Dark** resolve every `var()` and take one side of [`light-dark()`](https://developer.mozilla.org/en-US/docs/Web/CSS/color_value/light-dark). Previews are decorative. † marks a description taken from the semantic token table in [Theming](https://odonckers.github.io/domestic-ui/principles/theming.md).
+166 tokens in [`css/tokens/semantic.css`](https://github.com/odonckers/domestic-ui/blob/main/css/tokens/semantic.css). **Light** and **Dark** resolve every `var()` and take one side of [`light-dark()`](https://developer.mozilla.org/en-US/docs/Web/CSS/color_value/light-dark). Previews are decorative. † marks a description taken from the semantic token table in [Theming](https://odonckers.github.io/domestic-ui/principles/theming.md).
 
 ### Surfaces and text
 
@@ -2184,6 +2185,7 @@ Colors use [`light-dark()`](https://developer.mozilla.org/en-US/docs/Web/CSS/col
 | `--dui-font-mono` | `ui-monospace, "Cascadia Code", "Source Code Pro", menlo, consolas, "DejaVu Sans Mono", monospace` | `ui-monospace, "Cascadia Code", "Source Code Pro", menlo, consolas, "DejaVu Sans Mono", monospace` | Code font stack † |
 | `--dui-font-weight-body` | `400` | `400` | Body weight † |
 | `--dui-font-weight-strong` | `600` | `600` | strong, labels, buttons, th † |
+| `--dui-font-weight-ui` | `500` | `500` | Interface labels: buttons, nav rows, tabs and field labels. Between body and strong, as Radix and shadcn set them |
 | `--dui-font-weight-heading` | `600` | `600` | h1–h6 † |
 | `--dui-step--1` | `0.875rem` | `0.875rem` | 14px: small text, captions, and the UI text size |
 | `--dui-step-0` | `1rem` | `1rem` | 16px: body text, h6 |
@@ -2244,7 +2246,7 @@ Colors use [`light-dark()`](https://developer.mozilla.org/en-US/docs/Web/CSS/col
 | `--dui-radius-pill` | `999rem` | `999rem` | Fully rounded ends; not scaled, so pills stay round |
 | `--dui-border-width` | `1px` | `1px` | Hairline width † |
 | `--dui-border-width-emphasis` | `0.25rem` | `0.25rem` | blockquote rule, alert start rule, invalid field † |
-| `--dui-border-width-indicator` | `3px` | `3px` | Selected tab, current nav item (3:1 against the surface) † |
+| `--dui-border-width-indicator` | `3px` | `3px` | Selected tab (3:1 against the surface); the current nav item's bar in forced colors only † |
 | `--dui-underline-offset` | `0.15em` | `0.15em` | Link underline offset † |
 | `--dui-underline-thickness` | `0.0625em` | `0.0625em` | Link underline † |
 | `--dui-underline-thickness-hover` | `0.125em` | `0.125em` | Link underline on hover † |

@@ -272,6 +272,7 @@ may change. Fluid `--dui-step-*` values are `clamp()` expressions; see `primitiv
 | `--dui-font-mono` | Code font stack | `--dui-font-stack-monospace` (`ui-monospace`, …, `monospace`) |
 | `--dui-font-weight-body` | Body weight | `font-weight-400` (400) |
 | `--dui-font-weight-strong` | strong, labels, buttons, th | `font-weight-600` (600) |
+| `--dui-font-weight-ui` | Interface labels: nav rows (buttons, tabs and field labels follow) | `font-weight-500` (500) |
 | `--dui-font-weight-heading` | h1–h6 | `font-weight-600` (600) |
 | `--dui-step--1` | small, captions, and the UI text size | `font-size-0-875` (0.875rem, 14px) |
 | `--dui-step-0` | Body text, h6 | `font-size-1` (1rem) |
@@ -324,7 +325,7 @@ may change. Fluid `--dui-step-*` values are `clamp()` expressions; see `primitiv
 | `--dui-space-panel-inset` | Gap between a floating panel and the viewport or frame edge | `--dui-space-xs` (0.5rem) |
 | `--dui-border-width` | Hairline width | `border-1` (1px) |
 | `--dui-border-width-emphasis` | blockquote rule, alert start rule, invalid field | `border-4` (0.25rem) |
-| `--dui-border-width-indicator` | Selected tab, current nav item (3:1 against the surface) | `border-3` (3px) |
+| `--dui-border-width-indicator` | Selected tab (3:1 against the surface); the current nav item's bar in forced colors only | `border-3` (3px) |
 | `--dui-underline-offset` | Link underline offset | `underline-offset-015em` (0.15em) |
 | `--dui-underline-thickness` | Link underline | `underline-1` (0.0625em) |
 | `--dui-underline-thickness-hover` | Link underline on hover | `underline-2` (0.125em) |
