@@ -143,7 +143,7 @@ dui-combobox [role="option"] {
   max-inline-size: none; /* full width of the list, not the prose measure of base <li> */
   margin: 0;
   padding: var(--dui-space-control-block) var(--dui-space-control-inline);
-  border-radius: var(--dui-radius-control);
+  border-radius: var(--dui-radius-nested);
   font-size: var(--dui-font-size-ui);
   line-height: var(--dui-line-height-heading);
   cursor: pointer;

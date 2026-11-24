@@ -258,6 +258,7 @@
   --dui-space-button-inline: calc(var(--dui-space-s) + (var(--dui-space-m) - var(--dui-space-s)) * var(--dui-density-scale)); /* Inline padding of buttons: 1rem comfortable, 0.75rem compact */
   --dui-space-gap: calc(var(--dui-space-2xs) + (var(--dui-space-xs) - var(--dui-space-2xs)) * var(--dui-density-scale)); /* Gap between the parts of a control: icon and label, check and label: 0.5rem comfortable, 0.25rem compact */
   --dui-space-gap-tight: calc(var(--dui-space-3xs) + (var(--dui-space-2xs) - var(--dui-space-3xs)) * var(--dui-density-scale)); /* Gap and padding in groups of controls: field, toolbar, pagination, menu: 0.25rem comfortable, 0.125rem compact */
+  --dui-radius-nested: max(0px, calc(var(--dui-radius-surface) - var(--dui-space-gap-tight))); /* Concentric corner for an item inside a --dui-radius-surface container padded by --dui-space-gap-tight (menu, listbox, dropdown): the outer radius less the gap, never below 0 */
   --dui-space-cell: calc(var(--dui-space-2xs) + (var(--dui-space-xs) - var(--dui-space-2xs)) * var(--dui-density-scale)); /* Table cell padding: 0.5rem comfortable, 0.25rem compact */
 
   /* Deprecated aliases, removed in the next release (see CHANGELOG.md). */
