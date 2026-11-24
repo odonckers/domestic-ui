@@ -70,6 +70,10 @@ Each is a choice between valid options, not a standard.
 - **Our choice:** anchored popovers fall back to the bottom center of the viewport where CSS anchor
   positioning is missing, rather than the browser's default center, so they never cover the
   middle of the content.
+- **Our choice:** inactive nav rows use the muted text color (still 4.5:1) and get full-strength text on
+  hover and when current; the current row and the selected tab also get an accent tint behind the label
+  and keep their accent bar, so the state never relies on color alone. Nav, menu and listbox rows and
+  tabs use the 14px interface size.
 - **Our choice:** automatic tab activation (selection follows focus), as the
   [APG recommends](https://www.w3.org/WAI/ARIA/apg/patterns/tabs/#deciding-when-to-make-selection-automatically-follow-focus)
   when panels show without delay; `activation="manual"` is one attribute away.

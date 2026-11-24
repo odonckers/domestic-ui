@@ -69,6 +69,8 @@ Each is a choice between valid options, not a standard.
   [APG Sortable Table](https://www.w3.org/WAI/ARIA/apg/patterns/table/examples/sortable-table/) example,
   `aria-sort` is on the sorted header only, the arrow is hidden from assistive technology and the caption gets a
   visually hidden hint once the buttons exist.
+- **Our choice:** the data table has hairline row separators and no zebra stripes; the row under the pointer
+  gets the raised surface, and cells use the 14px interface size.
 - **Our choice:** a selected row is marked by its checked checkbox, a bar on its leading edge and a tint, never
   color alone; the count is a `role="status"` element in the page from load, and the bulk actions are disabled
   until a row is selected. The "select all" checkbox is added by the script, since it would do nothing without it.

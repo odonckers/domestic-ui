@@ -47,7 +47,7 @@ Every example must pass, and every token pair is tested against, these criteria:
 | Topic | Rule | Source |
 | --- | --- | --- |
 | Text contrast | 4.5:1 for body text, in light **and** dark | [1.4.3 Contrast (Minimum)](https://www.w3.org/WAI/WCAG22/Understanding/contrast-minimum.html) |
-| Non-text contrast | 3:1 for control boundaries and the focus indicator | [1.4.11 Non-text Contrast](https://www.w3.org/WAI/WCAG22/Understanding/non-text-contrast.html) |
+| Non-text contrast | 3:1 for the boundaries of fields, selects, checkboxes, radios and switches, and for the focus indicator. A button with a visible text label is identified by its label, so its border is not required to reach 3:1 | [1.4.11 Non-text Contrast](https://www.w3.org/WAI/WCAG22/Understanding/non-text-contrast.html) |
 | Links | Links keep their underline; color is never the only cue | [1.4.1 Use of Color](https://www.w3.org/WAI/WCAG22/Understanding/use-of-color.html) |
 | Focus visible | Every focusable element shows a `:focus-visible` outline | [2.4.7 Focus Visible](https://www.w3.org/WAI/WCAG22/Understanding/focus-visible.html) |
 | Focus not obscured | `scroll-padding` keeps focused elements clear of sticky edges | [2.4.11 Focus Not Obscured (Minimum)](https://www.w3.org/WAI/WCAG22/Understanding/focus-not-obscured-minimum.html) |
@@ -134,7 +134,7 @@ Red, green, amber and blue have steps 3, 9 and 11. [Radix Colors](https://www.ra
 
 `--dui-color-accent-text` is a relative color of `--dui-color-accent`: the same hue, with lightness and chroma set for [1.4.3 Contrast (Minimum)](https://www.w3.org/WAI/WCAG22/Understanding/contrast-minimum.html). `--dui-color-link` points at it. `--dui-color-focus` is the accent solid in light and the accent text in dark, so the ring meets [1.4.11 Non-text Contrast](https://www.w3.org/WAI/WCAG22/Understanding/non-text-contrast.html) on a dark page. `--dui-color-accent-hover` and `--dui-color-accent-surface` are derived from the accent too, so a theme that sets only `--dui-color-accent` still gets a matching link, hover and tint. `--dui-color-accent-contrast` is white in both schemes.
 
-`--dui-color-border` is the text color at about 11% alpha, a hairline in the neutral hue. `--dui-color-border-control` stays an opaque step at 3:1. `--dui-color-shadow` is tinted with the neutral hue.
+`--dui-color-border` is the text color at about 11% alpha, a hairline in the neutral hue. `--dui-color-border-control` stays an opaque step at 3:1 for fields, selects, checkboxes, radios and switches, whose boundary is what shows where to click or type. **Our choice:** the secondary button's border, `--dui-color-border-button`, is a softer step, because its visible text label identifies it and [1.4.11](https://www.w3.org/WAI/WCAG22/Understanding/non-text-contrast.html) asks for 3:1 only for the visual information needed to identify a component. `--dui-color-shadow` is tinted with the neutral hue.
 
 Light and dark values use [`light-dark()`](https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/Values/color_value/light-dark) ([CSS Color 5](https://www.w3.org/TR/css-color-5/)). `tests/contrast.js` checks the pairs below, and the status and code colors, against these thresholds. It takes a theme scope, so another theme can reuse it.
 
@@ -190,10 +190,14 @@ may change. Fluid `--dui-step-*` values are `clamp()` expressions; see `primitiv
 | `--dui-color-surface` | Page and control background (neutral step 1) | light: `neutral-1` (`oklch(99.3% 0.002 265)`)<br>dark: `neutral-dark-1` (`oklch(16.5% 0.006 265)`) |
 | `--dui-color-surface-raised` | Slightly lifted areas: neutral buttons, zebra rows, cards (step 2) | light: `neutral-2` (`oklch(98.2% 0.003 265)`)<br>dark: `neutral-dark-2` (`oklch(19% 0.007 265)`) |
 | `--dui-color-surface-sunken` | Recessed areas: code, button hover (step 3) | light: `neutral-3` (`oklch(96.2% 0.005 265)`)<br>dark: `neutral-dark-3` (`oklch(22% 0.009 265)`) |
+| `--dui-color-surface-hover` | Hover fill of quiet buttons, nav, menu and listbox rows (step 4) | light: `neutral-4` (`oklch(94% 0.006 265)`)<br>dark: `neutral-dark-4` (`oklch(26% 0.011 265)`) |
+| `--dui-color-surface-active` | Pressed fill of quiet buttons (step 5) | light: `neutral-5` (`oklch(91% 0.008 265)`)<br>dark: `neutral-dark-5` (`oklch(31% 0.012 265)`) |
 | `--dui-color-text` | Body text (step 12) | light: `neutral-12` (`oklch(21.5% 0.012 265)`)<br>dark: `neutral-dark-12` (`oklch(95% 0.004 265)`) |
 | `--dui-color-text-muted` | Secondary text, captions, list markers (step 11, still 4.5:1) | light: `neutral-11` (`oklch(47.5% 0.016 265)`)<br>dark: `neutral-dark-11` (`oklch(76% 0.012 265)`) |
 | `--dui-color-border` | Decorative hairline: the text color at about 11% alpha | light: `neutral-12` at 11% (`oklch(21.5% 0.012 265 / 11%)`)<br>dark: `neutral-dark-12` at 10% (`oklch(95% 0.004 265 / 10%)`) |
-| `--dui-color-border-control` | Form control and button boundaries (step 8, 3:1) | light: `neutral-8` (`oklch(58.5% 0.016 265)`)<br>dark: `neutral-dark-8` (`oklch(58% 0.016 265)`) |
+| `--dui-color-border-control` | Boundaries of fields, selects, checkboxes, radios and switches (step 8, 3:1) | light: `neutral-8` (`oklch(58.5% 0.016 265)`)<br>dark: `neutral-dark-8` (`oklch(58% 0.016 265)`) |
+| `--dui-color-border-control-hover` | Field border on hover (step 9) | light: `neutral-9` (`oklch(52% 0.016 265)`)<br>dark: `neutral-dark-9` (`oklch(66% 0.014 265)`) |
+| `--dui-color-border-button` | Secondary button border (step 7): softer, because the visible label identifies the button | light: `neutral-7` (`oklch(72% 0.013 265)`)<br>dark: `neutral-dark-7` (`oklch(48% 0.015 265)`) |
 | `--dui-color-primary` | Primary action fill (neutral step 12) | light: `neutral-12` (`oklch(21.5% 0.012 265)`)<br>dark: `neutral-dark-12` (`oklch(95% 0.004 265)`) |
 | `--dui-color-primary-contrast` | Text on the primary fill | light: `white` (`oklch(100% 0 0)`)<br>dark: `neutral-dark-1` (`oklch(16.5% 0.006 265)`) |
 | `--dui-color-accent` | Accent solid for focus rings, selection and checks (indigo step 9) | light: `indigo-9` (`oklch(53% 0.215 272)`)<br>dark: `indigo-dark-9` (`oklch(53% 0.215 272)`) |
@@ -318,6 +322,7 @@ may change. Fluid `--dui-step-*` values are `clamp()` expressions; see `primitiv
 | `--dui-space-gap` | Gap between the parts of a control (icon and label, check and label) | `space-3` (0.5rem), `space-2` (0.25rem) when compact |
 | `--dui-space-gap-tight` | Gap and padding in groups of controls: field, toolbar, pagination, menu | `space-2` (0.25rem), `space-1` (0.125rem) when compact |
 | `--dui-space-cell` | Table cell padding | `space-3` (0.5rem), `space-2` (0.25rem) when compact |
+| `--dui-elevation-control` | A 1px shadow under secondary buttons, without the ring (they have a border) | `0 1px 2px -1px` `--dui-elevation-shadow-color` |
 | `--dui-elevation-0` … `--dui-elevation-4` | Shadow per level | `none`; level 1 is the ring and `0 1px 2px -1px`; levels 2 to 4 add the dark highlight, the ring and two layers with a negative spread |
 | `--dui-elevation-0-surface` … `--dui-elevation-4-surface` | Surface per level | light: `--dui-color-surface`<br>dark: `--dui-color-surface` with N × `--dui-elevation-surface-step` of `--dui-color-text` |
 | `--dui-elevation-flat`, `-raised`, `-overlay`, `-popover`, `-dialog` | Shadow by role | levels 0, 1, 2, 3, 4 |
@@ -602,7 +607,7 @@ link's visited status "is not an author responsibility". The visited color still
   mind at once. If the label is visible, the accessible name contains it
   ([2.5.3 Label in Name](https://www.w3.org/WAI/WCAG22/Understanding/label-in-name.html)).
 - **Our choice:** icon only (`data-button="icon"`) is allowed only for these widely recognized actions: search, close,
-  open or close navigation (menu), play, pause, stop, skip, expand and collapse, back, forward, edit, more (overflow),
+  open or close navigation (menu), show or hide a sidebar or panel, play, pause, stop, skip, expand and collapse, back, forward, edit, more (overflow),
   settings in an app bar, and add item in a dense toolbar. A product-specific metaphor is never icon only. The button
   - is named for the action ("Search", "Close"), never the picture ("Magnifying glass", "X"), with visually hidden text
     inside it;

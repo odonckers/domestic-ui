@@ -44,7 +44,8 @@
  *                               the sidebar collapsed when it sits beside
  *                               main. A sidebar without a toggle is left
  *                               alone (always shown).
- *   close-label="…"             the drawers' close button (default "Close")
+ *   close-label="…"             the accessible name and tooltip of the drawers'
+ *                               icon-only close button (default "Close")
  *   element.show(edge)          expands the "start" or "end" sidebar, or
  *                               opens it as a drawer when narrow
  *   element.hide(edge)          collapses it, or closes its drawer
@@ -244,12 +245,25 @@ class DuiAppShell extends HTMLElement {
     heading.id = `${sidebar.element.id}-drawer-title`;
     const toggle = sidebar.toggles[0];
     heading.textContent = (toggle.getAttribute("aria-label") ?? toggle.textContent ?? "").trim().replace(/\s+/g, " ");
+    // An icon-only close button (Lucide x): the name is visually hidden text, repeated by a tooltip.
+    const label = this.getAttribute("close-label") ?? "Close";
     const close = document.createElement("button");
     close.type = "button";
-    close.dataset.button = "quiet";
-    close.textContent = this.getAttribute("close-label") ?? "Close";
+    close.dataset.button = "quiet icon";
+    close.innerHTML = `<svg data-icon xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M18 6 6 18" /><path d="m6 6 12 12" /></svg><span class="visually-hidden"></span>`;
+    /** @type {HTMLElement} */ (close.lastElementChild).textContent = label;
     close.addEventListener("click", () => dialog.close());
-    header.append(heading, close);
+    let closeControl = /** @type {HTMLElement} */ (close);
+    if (customElements.get("dui-tooltip")) {
+      closeControl = document.createElement("dui-tooltip");
+      const tip = document.createElement("span");
+      tip.setAttribute("popover", "hint");
+      tip.setAttribute("role", "tooltip");
+      tip.setAttribute("aria-hidden", "true");
+      tip.textContent = label;
+      closeControl.append(close, tip);
+    } else close.title = label;
+    header.append(heading, closeControl);
     dialog.append(header);
     dialog.setAttribute("aria-labelledby", heading.id);
     // A click on the backdrop closes it where closedby="any" is not supported yet.

@@ -144,17 +144,18 @@ dui-combobox [role="option"] {
   margin: 0;
   padding: var(--dui-space-control-block) var(--dui-space-control-inline);
   border-radius: var(--dui-radius-control);
+  font-size: var(--dui-font-size-ui);
   line-height: var(--dui-line-height-heading);
   cursor: pointer;
 }
 
 dui-combobox [role="option"]:hover {
-  background-color: var(--dui-color-surface-sunken);
+  background-color: var(--dui-color-surface-hover);
 }
 
 /* The active option: an outline in the focus color and a tint, not color alone. */
 dui-combobox [role="option"][aria-selected="true"] {
-  background-color: var(--dui-color-surface-sunken);
+  background-color: var(--dui-color-surface-hover);
   outline: var(--dui-focus-width) solid var(--dui-color-focus);
   outline-offset: calc(var(--dui-focus-width) * -1);
 }

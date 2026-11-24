@@ -133,6 +133,17 @@ dui-table {
 table[data-table] {
   border-collapse: separate;
   border-spacing: 0;
+  font-size: var(--dui-font-size-ui);
+}
+
+/*
+ * Our choice: a data table has hairline row separators and no zebra
+ * stripes; the row under the pointer gets the raised surface instead, so
+ * the eye can follow a row without every other row being tinted. Hover is
+ * extra help, never the only cue.
+ */
+table[data-table] > tbody > tr:nth-child(even) {
+  background-color: transparent;
 }
 
 /* An opaque header surface, so rows never show through a sticky header. */
@@ -173,6 +184,7 @@ table[data-table] > thead > tr > th > button {
   background-color: transparent;
   border: 0;
   border-radius: 0;
+  box-shadow: none;
   color: inherit;
   font: inherit;
   text-align: inherit;
@@ -184,7 +196,7 @@ table[data-table] > thead > tr > th[data-table~="number"] > button {
 }
 
 table[data-table] > thead > tr > th > button:hover {
-  background-color: var(--dui-color-surface-sunken);
+  background-color: var(--dui-color-surface-hover);
 }
 
 /* Inside the cell, so the scroll container never clips the ring. */
@@ -223,6 +235,10 @@ table[data-table] > tbody > tr > td[colspan]:only-child > :first-child {
 
 table[data-table] > tbody > tr > td[colspan]:only-child > * + * {
   margin-block-start: var(--dui-space-xs);
+}
+
+table[data-table] > tbody > tr:not([aria-hidden="true"], :has(> td[colspan]:only-child)):hover > * {
+  background-color: var(--dui-color-surface-raised);
 }
 
 /* Selection: the checkbox cell, and a label that is the whole target. */

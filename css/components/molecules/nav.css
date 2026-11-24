@@ -113,7 +113,8 @@
   min-block-size: var(--dui-size-row);
   padding: var(--dui-space-control-block) var(--dui-space-control-inline);
   border-radius: var(--dui-radius-control);
-  color: var(--dui-color-text);
+  color: var(--dui-color-text-muted);
+  font-size: var(--dui-font-size-ui);
   font-weight: var(--dui-font-weight-body);
   line-height: var(--dui-line-height-heading);
 }
@@ -132,8 +133,14 @@
   text-decoration-line: none;
 }
 
+/*
+ * Our choice: inactive rows are muted (still 4.5:1, WCAG 1.4.3) and get
+ * full-strength text on hover and when current, so the current page and
+ * the content stand out from the navigation around them.
+ */
 [data-nav] :is(a, summary):hover {
-  background-color: var(--dui-color-surface-sunken);
+  background-color: var(--dui-color-surface-hover);
+  color: var(--dui-color-text);
 }
 
 [data-nav] a:hover {
@@ -182,6 +189,7 @@
 }
 
 [data-nav] details:has([aria-current="page"]) > summary {
+  color: var(--dui-color-text);
   font-weight: var(--dui-font-weight-strong);
 }
 

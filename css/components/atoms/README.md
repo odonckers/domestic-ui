@@ -46,9 +46,16 @@ Each is a choice between valid options, not a standard.
 - **Our choice:** `data-button` with no variant word keeps the native default (a submit button
   is primary, everything else is secondary), so M1 markup keeps working and the attribute
   is only needed when the native type does not match the emphasis you want.
+- **Our choice:** the secondary button sits on the page surface with a softer border
+  (`--dui-color-border-button`, neutral step 7) and a 1px shadow. Its visible text label identifies it, so
+  [WCAG 1.4.11](https://www.w3.org/WAI/WCAG22/Understanding/non-text-contrast.html) does not require a 3:1
+  boundary; fields, selects, checkboxes, radios and switches keep the 3:1 `--dui-color-border-control`.
 - **Our choice:** the quiet button uses the accent color for its text, so it still reads as
-  interactive without a border. Use it next to other buttons, not inside running text,
-  where a real link belongs.
+  interactive without a border, and its hover and pressed fills are neutral steps 4 and 5. Use it
+  next to other buttons, not inside running text, where a real link belongs.
+- **Our choice:** buttons, fields, selects and badges use the 14px interface size
+  (`--dui-font-size-ui`). Under a coarse pointer, fields keep the 16px body size, because iOS Safari
+  zooms into a focused field with smaller text.
 - **Our choice:** primary buttons add an inner focus ring in their text color on top of the
   shared outline, so the indicator contrasts with the fill as well as the surface. This is the
   double-ring technique described in

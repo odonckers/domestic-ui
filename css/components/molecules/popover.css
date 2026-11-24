@@ -144,7 +144,7 @@
   border: var(--dui-border-width) solid transparent;
   border-radius: var(--dui-radius-control);
   box-shadow: var(--dui-elevation-popover);
-  font-size: var(--dui-step--1);
+  font-size: var(--dui-font-size-ui);
   line-height: var(--dui-line-height-heading);
 }
 

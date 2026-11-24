@@ -19,12 +19,16 @@
   --dui-color-surface: light-dark(var(--dui-color-neutral-1), var(--dui-color-neutral-dark-1)); /* Page background */
   --dui-color-surface-raised: light-dark(var(--dui-color-neutral-2), var(--dui-color-neutral-dark-2)); /* Slightly lifted areas: neutral buttons, zebra rows, cards */
   --dui-color-surface-sunken: light-dark(var(--dui-color-neutral-3), var(--dui-color-neutral-dark-3)); /* Recessed areas: code, button hover */
+  --dui-color-surface-hover: light-dark(var(--dui-color-neutral-4), var(--dui-color-neutral-dark-4)); /* Hover fill of quiet buttons and rows (neutral step 4) */
+  --dui-color-surface-active: light-dark(var(--dui-color-neutral-5), var(--dui-color-neutral-dark-5)); /* Pressed fill of quiet buttons (neutral step 5) */
   --dui-color-text: light-dark(var(--dui-color-neutral-12), var(--dui-color-neutral-dark-12)); /* Body text */
   --dui-color-text-muted: light-dark(var(--dui-color-neutral-11), var(--dui-color-neutral-dark-11)); /* Secondary text, still 4.5:1 */
 
   /* Borders */
   --dui-color-border: light-dark(var(--dui-color-neutral-12-a11), var(--dui-color-neutral-dark-12-a10)); /* Decorative hairline */
-  --dui-color-border-control: light-dark(var(--dui-color-neutral-8), var(--dui-color-neutral-dark-8)); /* Form control and button boundaries, 3:1 */
+  --dui-color-border-control: light-dark(var(--dui-color-neutral-8), var(--dui-color-neutral-dark-8)); /* Boundaries of fields, selects, checkboxes, radios and switches, 3:1 */
+  --dui-color-border-control-hover: light-dark(var(--dui-color-neutral-9), var(--dui-color-neutral-dark-9)); /* Field border on hover, one step stronger */
+  --dui-color-border-button: light-dark(var(--dui-color-neutral-7), var(--dui-color-neutral-dark-7)); /* Secondary button border: softer than a field, because its visible label identifies it */
 
   /* Primary */
   --dui-color-primary: light-dark(var(--dui-color-neutral-12), var(--dui-color-neutral-dark-12)); /* Primary fill */
@@ -215,6 +219,7 @@
   --dui-elevation-ring: var(--dui-shadow-ring) var(--dui-color-border); /* The 1px hairline ring included in every elevated role */
   --dui-elevation-highlight: var(--dui-shadow-highlight) light-dark(transparent, var(--dui-color-neutral-dark-12-a6)); /* Dark scheme only: a 1px top inset highlight on levels 2 to 4 */
   --dui-elevation-0: var(--dui-shadow-none); /* Level 0, flat: no shadow */
+  --dui-elevation-control: var(--dui-shadow-1-key) var(--dui-elevation-shadow-color); /* A 1px shadow under secondary buttons, without the ring: they have a border */
   --dui-elevation-1: var(--dui-elevation-ring), var(--dui-shadow-1-key) var(--dui-elevation-shadow-color); /* Level 1: the ring and a 1px shadow */
   --dui-elevation-2: var(--dui-elevation-highlight), var(--dui-elevation-ring), var(--dui-shadow-2-key) var(--dui-elevation-shadow-color), var(--dui-shadow-2-ambient) var(--dui-elevation-shadow-color); /* Level 2: ring, two layers, dark highlight */
   --dui-elevation-3: var(--dui-elevation-highlight), var(--dui-elevation-ring), var(--dui-shadow-3-key) var(--dui-elevation-shadow-color), var(--dui-shadow-3-ambient) var(--dui-elevation-shadow-color); /* Level 3: ring, two layers, dark highlight */

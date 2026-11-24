@@ -96,13 +96,15 @@
   color: var(--dui-color-text);
   border: 0;
   border-radius: var(--dui-radius-control);
+  box-shadow: none;
+  font-size: var(--dui-font-size-ui);
   font-weight: var(--dui-font-weight-body);
   text-align: start;
   text-decoration-line: none;
 }
 
 :is([role="menu"], dui-menu > [popover]) :is(button, a):is(:hover, :focus) {
-  background-color: var(--dui-color-surface-sunken);
+  background-color: var(--dui-color-surface-hover);
 }
 
 :is([role="menu"], dui-menu > [popover]) :is(ul, ol) {
