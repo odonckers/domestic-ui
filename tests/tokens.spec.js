@@ -96,7 +96,7 @@ test("forest panel actually differs from the default panel", async ({ page }) =>
   const [defaultPanel, forestPanel] = await page.locator(".panel").evaluateAll((panels) =>
     panels.map((panel) => ({
       background: getComputedStyle(panel).backgroundColor,
-      link: getComputedStyle(panel.querySelector("a")).color,
+      link: getComputedStyle(panel.querySelector(":scope > p a")).color,
       heading: getComputedStyle(panel.querySelector("h2")).fontFamily,
       primary: getComputedStyle(panel.querySelector('button[type="submit"]')).backgroundColor,
     })),
