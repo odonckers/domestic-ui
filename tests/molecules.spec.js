@@ -1089,7 +1089,7 @@ test("molecules in the forest panel re-theme from the token overrides alone", as
       panels.map((panel) => {
         const style = (selector, property) => getComputedStyle(/** @type {Element} */ (panel.querySelector(selector)))[property];
         return {
-          breadcrumbLink: style("[data-breadcrumb] a", "color"),
+          breadcrumbCurrent: style("[data-breadcrumb] a[aria-current]", "color"),
           alert: style("[data-alert~='warning']", "backgroundColor"),
           tabBar: style("[role='tab'][aria-selected='true']", "borderBlockEndColor"),
           card: style("[data-card]", "backgroundColor"),

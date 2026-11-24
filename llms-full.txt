@@ -4317,6 +4317,7 @@ See the keyboard section of the [APG Breadcrumb pattern](https://www.w3.org/WAI/
 - [APG Breadcrumb pattern](https://www.w3.org/WAI/ARIA/apg/patterns/breadcrumb/)
 - [HTML `<nav>` element](https://html.spec.whatwg.org/multipage/sections.html#the-nav-element)
 - [MDN `aria-current`](https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Reference/Attributes/aria-current)
+- [WCAG F73](https://www.w3.org/WAI/WCAG22/Techniques/failures/F73)
 
 ### See also
 

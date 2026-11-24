@@ -14,9 +14,14 @@
  * (content: "/" / ""), so they are not read out; engines without the
  * alternative-text syntax keep the plain "/" and some screen readers may
  * read it (https://developer.mozilla.org/en-US/docs/Web/CSS/content#alternative_text).
- * The current page keeps its underline but uses the text color and bold
- * weight, so it differs from the other links by more than color (WCAG 1.4.1).
- * Links are at least 24px tall (WCAG 2.5.8).
+ * The trail is chrome, not prose: UI-size text, muted links with no
+ * underline until hover (a list of links in a named nav, outside running
+ * text, so WCAG failure F73 does not apply:
+ * https://www.w3.org/WAI/WCAG22/Techniques/failures/F73). The current page
+ * uses the text color and a heavier weight, so it differs from the other
+ * links by more than color (WCAG 1.4.1). Links are at least 24px tall
+ * (WCAG 2.5.8). Our choice: the trail is quieter than the content, so the
+ * page title leads.
  *
  * API
  *   data-breadcrumb       on <nav aria-label="Breadcrumb">
@@ -41,6 +46,7 @@
 
 [data-breadcrumb] > :is(ol, ul) {
   display: flex;
+  font-size: var(--dui-font-size-ui);
   flex-wrap: wrap;
   align-items: center;
   gap: var(--dui-space-2xs);
@@ -66,9 +72,16 @@
   display: inline-flex;
   align-items: center;
   min-block-size: var(--dui-size-target-small);
+  color: var(--dui-color-text-muted);
+  text-decoration-line: none;
+}
+
+[data-breadcrumb] a:hover {
+  color: var(--dui-color-text);
+  text-decoration-line: underline;
 }
 
 [data-breadcrumb] a[aria-current="page"] {
   color: var(--dui-color-text);
-  font-weight: var(--dui-font-weight-strong);
+  font-weight: var(--dui-font-weight-ui);
 }
