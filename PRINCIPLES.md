@@ -247,7 +247,7 @@ may change. Fluid `--dui-step-*` values are `clamp()` expressions; see `primitiv
 | `--dui-color-border` | Decorative hairline: the text color at about 11% alpha, times `--dui-contrast` | light: `neutral-12` at 11% (`oklch(21.5% 0.012 265 / 11%)`)<br>dark: `neutral-dark-12` at 10% (`oklch(95% 0.004 265 / 10%)`) |
 | `--dui-color-border-control` | Boundaries of fields, selects, checkboxes, radios and switches (step 8, 3:1) | light: `neutral-8` (`oklch(58.5% 0.016 265)`)<br>dark: `neutral-dark-8` (`oklch(58% 0.016 265)`) |
 | `--dui-color-border-control-hover` | Field border on hover (step 9) | light: `neutral-9` (`oklch(52% 0.016 265)`)<br>dark: `neutral-dark-9` (`oklch(66% 0.014 265)`) |
-| `--dui-color-border-button` | Secondary button border (step 7): softer, because the visible label identifies the button | light: `neutral-7` (`oklch(72% 0.013 265)`)<br>dark: `neutral-dark-7` (`oklch(48% 0.015 265)`) |
+| `--dui-color-border-button` | Secondary button border (step 6): softer, because the visible label identifies the button | light: `neutral-6` (`oklch(84% 0.01 265)`)<br>dark: `neutral-dark-6` (`oklch(38% 0.014 265)`) |
 | `--dui-color-primary` | Primary action fill (neutral step 12) | light: `neutral-12` (`oklch(21.5% 0.012 265)`)<br>dark: `neutral-dark-12` (`oklch(95% 0.004 265)`) |
 | `--dui-color-primary-contrast` | Text on the primary fill | light: `white` (`oklch(100% 0 0)`)<br>dark: `neutral-dark-1` (`oklch(16.5% 0.006 265)`) |
 | `--dui-color-accent` | Accent solid for focus rings, selection and checks (indigo step 9) | light: `indigo-9` (`oklch(53% 0.215 272)`)<br>dark: `indigo-dark-9` (`oklch(53% 0.215 272)`) |
@@ -272,8 +272,8 @@ may change. Fluid `--dui-step-*` values are `clamp()` expressions; see `primitiv
 | `--dui-font-body` | Body font stack | `--dui-font-stack-system-ui` (`system-ui`, `-apple-system`, `"Segoe UI Variable Text"`, `"Segoe UI"`, Roboto, `"Noto Sans"`, `"Helvetica Neue"`, Arial, `sans-serif`) |
 | `--dui-font-mono` | Code font stack | `--dui-font-stack-monospace` (`ui-monospace`, …, `monospace`) |
 | `--dui-font-weight-body` | Body weight | `font-weight-400` (400) |
-| `--dui-font-weight-strong` | strong, labels, buttons, th | `font-weight-600` (600) |
-| `--dui-font-weight-ui` | Interface labels: nav rows (buttons, tabs and field labels follow) | `font-weight-500` (500) |
+| `--dui-font-weight-strong` | strong, legends, th | `font-weight-600` (600) |
+| `--dui-font-weight-ui` | Interface labels: buttons, nav rows and field labels | `font-weight-500` (500) |
 | `--dui-font-weight-heading` | h1–h6 | `font-weight-600` (600) |
 | `--dui-step--1` | small, captions, and the UI text size | `font-size-0-875` (0.875rem, 14px) |
 | `--dui-step-0` | Body text, h6 | `font-size-1` (1rem) |
