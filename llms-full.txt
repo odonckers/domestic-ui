@@ -1046,6 +1046,19 @@ accelerating exit, because short transitions keep the UI responsive and the curv
 arrive and leave. [`examples/motion.html`](https://odonckers.github.io/domestic-ui/principles/motion.md) shows each transition, the scale, and reduced
 and no-motion scopes side by side.
 
+### Page transitions (opt-in)
+
+`css/domestic.css` does not turn on page transitions. A site that wants them adds the
+"Page transitions CSS" snippet below to its own stylesheet:
+[`@view-transition { navigation: auto }`](https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/At-rules/@view-transition)
+makes same-origin navigations cross-fade ([CSS View Transitions Level 2](https://www.w3.org/TR/css-view-transitions-2/)),
+a unique `view-transition-name` keeps persistent chrome such as the header in place, and the motion tokens set the
+duration and easing, so `data-motion="none"` on the root element makes it instant. Under
+`prefers-reduced-motion: reduce` it is off ([2.3.3 Animation from Interactions](https://www.w3.org/WAI/WCAG22/Understanding/animation-from-interactions.html)).
+Browsers without support navigate as before, with no script. These docs use it: the app bar and the Docs
+sidebar stay while main cross-fades. Smashing Magazine lists it among
+[front-end features for designers](https://smashingmagazine.com/2024/12/new-front-end-features-for-designers-in-2025), for comparison.
+
 ### Live example
 
 #### Fade: dialog
@@ -1063,6 +1076,37 @@ and no-motion scopes side by side.
     </footer>
   </form>
 </dialog>
+```
+
+#### Page transitions CSS
+
+In the `<head>` of the live example above.
+
+```html
+<style id="page-transitions">
+  /* Opt in on every page of your site: same-origin navigations cross-fade. */
+  @view-transition {
+    navigation: auto;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    @view-transition {
+      navigation: none;
+    }
+  }
+
+  /* Chrome that stays put while the content cross-fades: one unique name each. */
+  body > header {
+    view-transition-name: page-header;
+  }
+
+  ::view-transition-group(*),
+  ::view-transition-old(*),
+  ::view-transition-new(*) {
+    animation-duration: var(--dui-motion-duration-normal);
+    animation-timing-function: var(--dui-motion-easing-standard);
+  }
+</style>
 ```
 
 #### Slide: drawer

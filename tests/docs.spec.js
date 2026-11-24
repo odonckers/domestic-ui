@@ -858,6 +858,8 @@ test.describe("docs pages in the browser", () => {
   });
 
   test("the Docs sidebar lists every entry in order and reaches every page; previous and next follow it", async ({ page }) => {
+    // About 75 navigations: reduced motion turns the page cross-fade off, so the walk is not 75 transitions long.
+    await page.emulateMedia({ reducedMotion: "reduce" });
     await page.goto("_site/index.html");
     const top = await page.locator('nav[aria-label="Docs"] > ul > li > a, nav[aria-label="Docs"] > ul > li > details > summary').allTextContents();
     expect(top).toEqual([
@@ -1283,4 +1285,43 @@ test.describe("theme switcher and themes page", () => {
       for (const name of names) await expect(table.locator("th[scope=row] code", { hasText: new RegExp(`^${name}$`) })).toHaveCount(1);
     }
   });
+});
+
+test.describe("page transitions (cross-document view transitions)", () => {
+  // Records, on each new page, whether a view transition revealed it.
+  const RECORD = `addEventListener("pagereveal", (e) => { window.__dvt = { supported: true, transition: Boolean(e.viewTransition) }; });`;
+
+  test("the app bar and the Docs sidebar have their own view-transition-name", async ({ page }) => {
+    await page.setViewportSize({ width: 1280, height: 800 });
+    await page.goto("_site/tokens/semantic.html");
+    const names = await page.evaluate(() => ({
+      header: getComputedStyle(document.querySelector(".docs-shell > header")).getPropertyValue("view-transition-name"),
+      nav: getComputedStyle(document.getElementById("docs-nav")).getPropertyValue("view-transition-name"),
+    }));
+    test.skip(!names.header, "this browser has no view-transition-name");
+    expect(names).toEqual({ header: "docs-header", nav: "docs-nav" });
+  });
+
+  for (const reduce of [false, true]) {
+    test(`a docs link ${reduce ? "does not run" : "runs"} a view transition${reduce ? " under prefers-reduced-motion" : ""}, with no errors, and focus and scroll start fresh`, async ({ page }) => {
+      const errors = [];
+      page.on("pageerror", (e) => errors.push(e.message));
+      await page.addInitScript(RECORD);
+      if (reduce) await page.emulateMedia({ reducedMotion: "reduce" });
+      await page.setViewportSize({ width: 1280, height: 800 });
+      await page.goto("_site/tokens/semantic.html");
+      const supported = await page.evaluate(() => "onpagereveal" in window);
+      await page.locator('nav[aria-label="Docs"] a[href="primitives.html"]').click();
+      await page.waitForURL(/primitives\.html$/);
+      const header = page.locator(".docs-shell > header");
+      await expect(header).toBeVisible();
+      const state = await page.evaluate(() => /** @type {any} */ (window).__dvt ?? null);
+      if (supported) expect(state?.transition, "view transition").toBe(!reduce && (await page.evaluate(() => CSS.supports("view-transition-name: a"))));
+      // Normal navigation: the new page starts at the top, with focus on the document.
+      await page.waitForFunction(() => !document.documentElement.matches(":active-view-transition"), null, { timeout: 2000 }).catch(() => {});
+      expect(await page.evaluate(() => scrollY)).toBe(0);
+      expect(await page.evaluate(() => document.activeElement === document.body)).toBe(true);
+      expect(errors).toEqual([]);
+    });
+  }
 });
