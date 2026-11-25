@@ -894,7 +894,7 @@ The lines, measured from each container's inline-start edge (the trailing line m
 | --- | --- | --- | --- |
 | App shell frame: `<header>`, sidebars, `<footer>` | `--dui-space-m` | box line + the control's `--dui-space-button-inline` (app bar), or the nav's lines below | Trailing: `--dui-space-m`. Each frame region measures from its own edge |
 | App shell `<main>` | `--dui-space-l` beside a sidebar, `--dui-space-m` stacked | same as box line | |
-| Nav list (`data-nav="vertical"`) | the list's edge; a group's links `--dui-space-m` in | `--dui-border-width-indicator` + `--dui-space-control-inline`, plus `--dui-space-m` for links beside a group (the disclosure marker's width) and inside one | Icon column: starts on the text line, `--dui-size-icon` wide, then `--dui-space-gap` to the label |
+| Nav list (`data-nav="vertical"`) | the list's edge; a group's links `--dui-space-m` in, or on the group's label line when its summary has an icon | `--dui-border-width-indicator` + `--dui-space-control-inline` for links and group summaries alike | Icon column: starts on the text line, `--dui-size-icon` wide, then `--dui-space-gap` to the label. Trailing: a group's chevron ends `--dui-space-2xs` inside the row |
 | Toolbar (`role="toolbar"`) | `--dui-border-width` + `--dui-space-gap-tight` | box line + `--dui-space-button-inline` | One centre line |
 | Menus and popovers | menu items: `--dui-border-width` + `--dui-space-gap-tight` | `--dui-border-width` + `--dui-space-m` (a menu: `--dui-space-gap-tight` + `--dui-space-control-inline`, equal at comfortable density) | A horizontal nav's dropdown adds its `--dui-border-width-indicator` |
 | Tabs | the tab list's edge | box line + `--dui-space-button-inline` | Panel text on the tab list's edge |
