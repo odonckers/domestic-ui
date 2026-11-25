@@ -233,6 +233,9 @@
   --dui-radius-3: 0.75rem; /* 12px: surfaces */
   --dui-radius-round: 999rem;
 
+  /* Angles */
+  --dui-angle-45: 45deg;
+
   /* Border widths */
   --dui-border-1: 1px;
   --dui-border-2: 2px;

@@ -90,7 +90,7 @@
   animation-timing-function: var(--dui-motion-easing-standard);
 }
 
-/* Docs nav rows: muted, no underline; the current page is the tinted row with its bar (nav.css). */
+/* Docs nav rows: muted, no underline; the current page is the filled pill (nav.css). */
 .docs-shell [data-nav] a:hover {
   text-decoration-line: none;
 }

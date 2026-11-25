@@ -1784,7 +1784,7 @@ The lines, measured from each container's inline-start edge (the trailing line m
 | --- | --- | --- | --- |
 | App shell frame: `<header>`, sidebars, `<footer>` | `--dui-space-m` | box line + the control's `--dui-space-button-inline` (app bar), or the nav's lines below | Trailing: `--dui-space-m`. Each frame region measures from its own edge |
 | App shell `<main>` | `--dui-space-l` beside a sidebar, `--dui-space-m` stacked | same as box line | |
-| Nav list (`data-nav="vertical"`) | the list's edge; a group's links `--dui-space-m` in | `--dui-border-width-indicator` + `--dui-space-control-inline`, plus `--dui-space-m` for links beside a group (the disclosure marker's width) and inside one | Icon column: starts on the text line, `--dui-size-icon` wide, then `--dui-space-gap` to the label |
+| Nav list (`data-nav="vertical"`) | the list's edge; a group's links `--dui-space-m` in, or on the group's label line when its summary has an icon | `--dui-border-width-indicator` + `--dui-space-control-inline` for links and group summaries alike | Icon column: starts on the text line, `--dui-size-icon` wide, then `--dui-space-gap` to the label. Trailing: a group's chevron ends `--dui-space-2xs` inside the row |
 | Toolbar (`role="toolbar"`) | `--dui-border-width` + `--dui-space-gap-tight` | box line + `--dui-space-button-inline` | One centre line |
 | Menus and popovers | menu items: `--dui-border-width` + `--dui-space-gap-tight` | `--dui-border-width` + `--dui-space-m` (a menu: `--dui-space-gap-tight` + `--dui-space-control-inline`, equal at comfortable density) | A horizontal nav's dropdown adds its `--dui-border-width-indicator` |
 | Tabs | the tab list's edge | box line + `--dui-space-button-inline` | Panel text on the tab list's edge |
@@ -1810,7 +1810,7 @@ Neutral and indigo each have 12 steps in light and in dark. The step number is t
 
 [Custom properties](https://developer.mozilla.org/en-US/docs/Web/CSS/--*).
 
-176 tokens in [`css/tokens/primitives.css`](https://github.com/odonckers/domestic-ui/blob/main/css/tokens/primitives.css). **Light** and **Dark** resolve every `var()` and take one side of [`light-dark()`](https://developer.mozilla.org/en-US/docs/Web/CSS/color_value/light-dark). Previews are decorative.
+177 tokens in [`css/tokens/primitives.css`](https://github.com/odonckers/domestic-ui/blob/main/css/tokens/primitives.css). **Light** and **Dark** resolve every `var()` and take one side of [`light-dark()`](https://developer.mozilla.org/en-US/docs/Web/CSS/color_value/light-dark). Previews are decorative.
 
 ### Neutral, light. Hue 265
 
@@ -2040,6 +2040,12 @@ Rem, so it follows the user's font size setting.
 | `--dui-radius-3` | `0.75rem` | `0.75rem` | 12px: surfaces |
 | `--dui-radius-round` | `999rem` | `999rem` | No description yet. |
 
+### Angles
+
+| Token | Light | Dark | Description |
+| --- | --- | --- | --- |
+| `--dui-angle-45` | `45deg` | `45deg` | No description yet. |
+
 ### Border widths
 
 | Token | Light | Dark | Description |
@@ -2124,7 +2130,7 @@ A theme is an override of these tokens on `:root` or on a scoped element. No reb
 
 Colors use [`light-dark()`](https://developer.mozilla.org/en-US/docs/Web/CSS/color_value/light-dark), which picks a value from the used color-scheme of the element where the token is read.
 
-167 tokens in [`css/tokens/semantic.css`](https://github.com/odonckers/domestic-ui/blob/main/css/tokens/semantic.css). **Light** and **Dark** resolve every `var()` and take one side of [`light-dark()`](https://developer.mozilla.org/en-US/docs/Web/CSS/color_value/light-dark). Previews are decorative. † marks a description taken from the semantic token table in [Theming](https://odonckers.github.io/domestic-ui/principles/theming.md).
+170 tokens in [`css/tokens/semantic.css`](https://github.com/odonckers/domestic-ui/blob/main/css/tokens/semantic.css). **Light** and **Dark** resolve every `var()` and take one side of [`light-dark()`](https://developer.mozilla.org/en-US/docs/Web/CSS/color_value/light-dark). Previews are decorative. † marks a description taken from the semantic token table in [Theming](https://odonckers.github.io/domestic-ui/principles/theming.md).
 
 ### Surfaces and text
 
@@ -2238,6 +2244,7 @@ Colors use [`light-dark()`](https://developer.mozilla.org/en-US/docs/Web/CSS/col
 | `--dui-size-page` | `72rem` | `72rem` | Max inline size of a page's content column: header, main and footer |
 | `--dui-size-icon` | `1.25rem` | `1.25rem` | Decorative icons beside a label: nav links and group summaries |
 | `--dui-size-icon-inline` | `1rem` | `1rem` | Icons inside buttons, menu items and toolbars, beside 14 to 16px text |
+| `--dui-size-chevron` | `calc(0.25rem + 0.125rem)` | `calc(0.25rem + 0.125rem)` | Arm length of the CSS-drawn chevron on a sidebar nav group: 6px |
 | `--dui-icon-stroke-width` | `1.75` | `1.75` | Stroke width of [data-icon] SVGs, set with the CSS stroke-width property |
 | `--dui-size-sidebar` | `16rem` | `16rem` | Inline size of an app shell's primary sidebar when it sits beside main |
 | `--dui-size-sidebar-aux` | `20rem` | `20rem` | Inline size of an app shell's auxiliary (inline-end) sidebar when it sits beside main |
@@ -2252,6 +2259,8 @@ Colors use [`light-dark()`](https://developer.mozilla.org/en-US/docs/Web/CSS/col
 | `--dui-border-width` | `1px` | `1px` | Hairline width † |
 | `--dui-border-width-emphasis` | `0.25rem` | `0.25rem` | blockquote rule, alert start rule, invalid field † |
 | `--dui-border-width-indicator` | `3px` | `3px` | Selected tab (3:1 against the surface); the current nav item's bar in forced colors only † |
+| `--dui-angle-chevron` | `45deg` | `45deg` | Turn of the CSS-drawn sidebar group chevron: -1x points to the inline end, 1x points down (open), 3x points left in right-to-left text |
+| `--dui-border-width-chevron` | `calc(1px * 1.5)` | `calc(1px * 1.5)` | Stroke of the CSS-drawn chevron on a sidebar nav group, close to a 16px icon's 1.75 stroke |
 | `--dui-underline-offset` | `0.15em` | `0.15em` | Link underline offset † |
 | `--dui-underline-thickness` | `0.0625em` | `0.0625em` | Link underline † |
 | `--dui-underline-thickness-hover` | `0.125em` | `0.125em` | Link underline on hover † |

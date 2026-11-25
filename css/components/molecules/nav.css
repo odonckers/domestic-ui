@@ -185,6 +185,65 @@
   border-block-end: var(--dui-border-width-indicator) solid transparent;
 }
 
+/*
+ * Vertical lists (a sidebar): rows are --dui-size-row tall with no extra
+ * block padding, so a one-line row is exactly the row height.
+ *
+ * Our choice: a group's summary drops the native disclosure triangle for a
+ * muted chevron at the row's inline end that turns down when the group is
+ * open, as Linear and Radix draw sidebar groups. Every row's label then
+ * starts on one line, and the open state is shown by the chevron and the
+ * links below it. The chevron is decorative; <summary> still exposes
+ * aria-expanded (https://www.w3.org/TR/html-aam-1.0/#el-summary).
+ * https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/summary#changing_the_summarys_icon
+ */
+[data-nav]:not([data-nav~="horizontal"]) :is(a, summary) {
+  padding-block: var(--dui-space-2xs);
+}
+
+/* The same transparent leading bar as the links, so every label starts on one line. */
+[data-nav]:not([data-nav~="horizontal"]) details > summary {
+  display: flex;
+  align-items: center;
+  gap: var(--dui-space-gap);
+  border-inline-start: var(--dui-border-width-indicator) solid transparent;
+  list-style: none;
+}
+
+[data-nav]:not([data-nav~="horizontal"]) details > summary::-webkit-details-marker {
+  display: none;
+}
+
+[data-nav]:not([data-nav~="horizontal"]) details > summary > svg {
+  margin-inline-end: 0;
+}
+
+[data-nav]:not([data-nav~="horizontal"]) details > summary::after {
+  content: "";
+  flex: none;
+  inline-size: var(--dui-size-chevron);
+  block-size: var(--dui-size-chevron);
+  margin-inline: auto var(--dui-space-2xs);
+  border-block-end: var(--dui-border-width-chevron) solid currentcolor;
+  border-right: var(--dui-border-width-chevron) solid currentcolor;
+  color: var(--dui-color-text-muted);
+  rotate: calc(var(--dui-angle-chevron) * -1);
+  transition: rotate calc(var(--dui-motion-duration-fast) * var(--dui-motion-movement)) var(--dui-motion-easing-standard);
+}
+
+[data-nav]:not([data-nav~="horizontal"]) details > summary:dir(rtl)::after {
+  rotate: calc(var(--dui-angle-chevron) * 3);
+}
+
+[data-nav]:not([data-nav~="horizontal"]) details[open] > summary::after {
+  rotate: var(--dui-angle-chevron);
+}
+
+/* Under a summary with an icon, the group's links start on the summary's label line. */
+[data-nav]:not([data-nav~="horizontal"]) details:has(> summary > svg) > :is(ul, ol) {
+  padding-inline-start: calc(var(--dui-size-icon) + var(--dui-space-gap));
+}
+
 [data-nav] details[open] > summary {
   margin-inline: 0;
   padding-inline: var(--dui-space-control-inline);
@@ -243,20 +302,6 @@
   box-shadow: var(--dui-elevation-popover);
 }
 
-/*
- * Our choice (PRINCIPLES.md, Edges and alignment): in a vertical list that
- * holds groups, a link beside a group starts its icon and label on the
- * group's line. A summary's label sits after the native disclosure marker,
- * which takes about --dui-space-m plus the link's indicator width, the same
- * inset the group's own links get from their list's padding above. It is
- * exact in Chromium and WebKit at the 18px body text of a wide viewport; the
- * marker scales with the fluid text, so it is up to 2px narrower on a phone,
- * and Firefox draws it 2 to 3px narrower.
- */
-[data-nav]:not([data-nav~="horizontal"]) :is(ul, ol):has(> li > details) > li > a {
-  padding-inline-start: calc(var(--dui-space-control-inline) + var(--dui-space-m));
-}
-
 @media (forced-colors: active) {
   /*
    * Forced colors replace every border color, transparent included
@@ -267,7 +312,8 @@
   [data-nav] a,
   [data-nav~="horizontal"] > :is(ul, ol) > li > a:any-link,
   [data-nav~="horizontal"] > :is(ul, ol) > li > details > summary,
-  [data-nav] details[open] > summary {
+  [data-nav] details[open] > summary,
+  [data-nav]:not([data-nav~="horizontal"]) details > summary {
     border-color: canvas;
   }
 

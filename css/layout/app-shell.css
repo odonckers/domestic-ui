@@ -288,7 +288,9 @@
     max-block-size: calc(var(--dui-size-pane) - var(--dui-space-panel-inset) * 2);
     margin: var(--dui-space-panel-inset);
     margin-inline-end: 0;
-    padding-inline: var(--dui-space-xs);
+
+    /* The first row lines up with main's top edge; 2xs keeps the focus ring inside the scroll box. */
+    padding: var(--dui-space-2xs) var(--dui-space-xs);
     overflow: hidden auto;
     overscroll-behavior: contain;
     background-color: transparent;
