@@ -1186,6 +1186,7 @@ function patternPage(model, p) {
 
   const seeAlso = [
     level ? `[${level.title}](site:${level.level}/index.html)` : `[Patterns](site:patterns/index.html)`,
+    ...p.seeAlso,
     ...(p.available ? [`Source: ${[...p.cssPaths, ...p.examplePaths].map((s) => `[\`${s}\`](${BLOB_URL}${s})`).join(", ")}`] : []),
     ...demosLine(model, p.sitePath),
   ];

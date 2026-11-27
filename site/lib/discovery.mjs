@@ -88,6 +88,7 @@ export const PATTERN_EXAMPLE_DIRS = /** @type {const} */ (["molecules", "organis
  * @property {Spec[]} standards   the standards it follows (label is Markdown)
  * @property {string} ourChoice   Markdown, only when no standard exists
  * @property {Spec[]} specs       further reading
+ * @property {string[]} seeAlso   extra See also lines, Markdown (site: links to related pages)
  * @property {Key[]} keyboard     resolved: example comment, else CSS header, else front matter
  * @property {"example" | "css" | "front matter" | ""} keyboardFrom
  * @property {string} keyboardSource repo path the keyboard notes came from
@@ -540,6 +541,7 @@ export function loadModel(root) {
       standards,
       ourChoice,
       specs: specsFrom(strList(data.specs), []),
+      seeAlso: strList(data["see-also"]),
       keyboard,
       keyboardFrom,
       keyboardSource,

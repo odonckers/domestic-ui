@@ -250,7 +250,7 @@
   margin: 0;
 }
 
-/* Decorative icons in the app bar's buttons and links, as in the nav. */
+/* Decorative icons in the app bar's buttons and links. */
 [data-app-shell] > header svg {
   flex: none;
   inline-size: var(--dui-size-icon);
