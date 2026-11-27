@@ -29,52 +29,54 @@
  *   11 muted or accent text, 12 text.
  * Red, green, amber and blue have steps 3, 9 and 11 only. Purple, teal
  * and yellow keep the code-highlight and mark hues.
- * Our choice: the primary action uses neutral 12 (near-black or near-white),
- * and indigo is the accent for links, focus and selection.
+ * Our choice: the default is monochrome, like shadcn/ui's neutral theme
+ * (https://ui.shadcn.com/docs/theming): the primary action and the accent
+ * both use neutral 12 (near-black or near-white). Indigo stays as a
+ * primitive for themes such as calm.
  *
  * Custom properties: https://developer.mozilla.org/en-US/docs/Web/CSS/--*
  */
 
 :root,
 ::backdrop {
-  /* Neutral, light. Hue 265. */
+  /* Neutral, light. Achromatic (chroma 0), as shadcn/ui's neutral base. */
 
-  --dui-color-neutral-1: oklch(99.3% 0.002 265deg); /* Step 1, page */
-  --dui-color-neutral-2: oklch(98.2% 0.003 265deg); /* Step 2, raised */
-  --dui-color-neutral-3: oklch(96.2% 0.005 265deg); /* Step 3, sunken or element */
-  --dui-color-neutral-4: oklch(94% 0.006 265deg); /* Step 4, hover */
-  --dui-color-neutral-5: oklch(91% 0.008 265deg); /* Step 5, active or selected */
-  --dui-color-neutral-6: oklch(84% 0.01 265deg); /* Step 6, subtle border */
-  --dui-color-neutral-7: oklch(72% 0.013 265deg); /* Step 7, border */
-  --dui-color-neutral-8: oklch(58.5% 0.016 265deg); /* Step 8, control border, 3:1 on the page */
-  --dui-color-neutral-9: oklch(52% 0.016 265deg); /* Step 9, solid */
-  --dui-color-neutral-10: oklch(50% 0.016 265deg); /* Step 10, solid hover */
-  --dui-color-neutral-11: oklch(47.5% 0.016 265deg); /* Step 11, muted text */
-  --dui-color-neutral-12: oklch(21.5% 0.012 265deg); /* Step 12, text, and the light primary fill */
-  --dui-color-neutral-12-a11: oklch(21.5% 0.012 265deg / 11%); /* Hairline: the text color at 11% alpha */
-  --dui-color-neutral-punctuation: oklch(37% 0.016 265deg); /* Code punctuation, darker than muted text */
-  --dui-color-neutral-shadow: oklch(25% 0.015 265deg / 12%); /* Shadow tinted with the neutral hue */
+  --dui-color-neutral-1: oklch(100% 0 0deg); /* Step 1, page: white */
+  --dui-color-neutral-2: oklch(98.5% 0 0deg); /* Step 2, raised */
+  --dui-color-neutral-3: oklch(97% 0 0deg); /* Step 3, sunken or element */
+  --dui-color-neutral-4: oklch(96% 0 0deg); /* Step 4, hover */
+  --dui-color-neutral-5: oklch(93.5% 0 0deg); /* Step 5, active or selected */
+  --dui-color-neutral-6: oklch(92.2% 0 0deg); /* Step 6, subtle border */
+  --dui-color-neutral-7: oklch(87% 0 0deg); /* Step 7, border */
+  --dui-color-neutral-8: oklch(60% 0 0deg); /* Step 8, control border, 3:1 on steps 1 to 3 */
+  --dui-color-neutral-9: oklch(55.6% 0 0deg); /* Step 9, solid */
+  --dui-color-neutral-10: oklch(50% 0 0deg); /* Step 10, solid hover */
+  --dui-color-neutral-11: oklch(50.5% 0 0deg); /* Step 11, muted text, 4.5:1 on steps 1 to 5 and on status tints */
+  --dui-color-neutral-12: oklch(14.5% 0 0deg); /* Step 12, text, and the light primary fill */
+  --dui-color-neutral-12-a11: oklch(14.5% 0 0deg / 11%); /* Hairline: the text color at 11% alpha */
+  --dui-color-neutral-punctuation: oklch(37% 0 0deg); /* Code punctuation, darker than muted text */
+  --dui-color-neutral-shadow: oklch(0% 0 0deg / 10%); /* Shadow: black at 10% */
 
-  /* Neutral, dark. Hue 265. Lightness rises with the step. */
+  /* Neutral, dark. Achromatic. Lightness rises with the step. */
 
-  --dui-color-neutral-dark-1: oklch(16.5% 0.006 265deg); /* Step 1, page */
-  --dui-color-neutral-dark-2: oklch(19% 0.007 265deg); /* Step 2, raised */
-  --dui-color-neutral-dark-3: oklch(22% 0.009 265deg); /* Step 3, sunken or element */
-  --dui-color-neutral-dark-4: oklch(26% 0.011 265deg); /* Step 4, hover */
-  --dui-color-neutral-dark-5: oklch(31% 0.012 265deg); /* Step 5, active or selected */
-  --dui-color-neutral-dark-6: oklch(38% 0.014 265deg); /* Step 6, subtle border */
-  --dui-color-neutral-dark-7: oklch(48% 0.015 265deg); /* Step 7, border */
-  --dui-color-neutral-dark-8: oklch(58% 0.016 265deg); /* Step 8, control border, 3:1 on the page */
-  --dui-color-neutral-dark-9: oklch(66% 0.014 265deg); /* Step 9, solid */
-  --dui-color-neutral-dark-10: oklch(71% 0.013 265deg); /* Step 10, solid hover */
-  --dui-color-neutral-dark-11: oklch(76% 0.012 265deg); /* Step 11, muted text */
-  --dui-color-neutral-dark-12: oklch(95% 0.004 265deg); /* Step 12, text, and the dark primary fill */
-  --dui-color-neutral-dark-12-a10: oklch(95% 0.004 265deg / 10%); /* Hairline: the text color at 10% alpha */
-  --dui-color-neutral-dark-punctuation: oklch(83.5% 0.01 265deg); /* Code punctuation, lighter than muted text */
-  --dui-color-neutral-dark-shadow: oklch(14% 0.015 265deg / 46%); /* Shadow tinted with the neutral hue */
-  --dui-color-neutral-dark-12-a6: oklch(95% 0.004 265deg / 6%); /* Top highlight on raised dark surfaces: the text color at 6% alpha */
+  --dui-color-neutral-dark-1: oklch(14.5% 0 0deg); /* Step 1, page */
+  --dui-color-neutral-dark-2: oklch(20.5% 0 0deg); /* Step 2, raised */
+  --dui-color-neutral-dark-3: oklch(22% 0 0deg); /* Step 3, sunken or element */
+  --dui-color-neutral-dark-4: oklch(26.9% 0 0deg); /* Step 4, hover */
+  --dui-color-neutral-dark-5: oklch(31% 0 0deg); /* Step 5, active or selected */
+  --dui-color-neutral-dark-6: oklch(37.1% 0 0deg); /* Step 6, subtle border */
+  --dui-color-neutral-dark-7: oklch(44% 0 0deg); /* Step 7, border */
+  --dui-color-neutral-dark-8: oklch(58% 0 0deg); /* Step 8, control border, 3:1 on steps 1 to 3 and every elevation surface */
+  --dui-color-neutral-dark-9: oklch(65% 0 0deg); /* Step 9, solid */
+  --dui-color-neutral-dark-10: oklch(70% 0 0deg); /* Step 10, solid hover */
+  --dui-color-neutral-dark-11: oklch(70.8% 0 0deg); /* Step 11, muted text */
+  --dui-color-neutral-dark-12: oklch(98.5% 0 0deg); /* Step 12, text, and the dark primary fill */
+  --dui-color-neutral-dark-12-a10: oklch(98.5% 0 0deg / 10%); /* Hairline: the text color at 10% alpha */
+  --dui-color-neutral-dark-punctuation: oklch(83.5% 0 0deg); /* Code punctuation, lighter than muted text */
+  --dui-color-neutral-dark-shadow: oklch(0% 0 0deg / 46%); /* Shadow: black at 46% */
+  --dui-color-neutral-dark-12-a6: oklch(98.5% 0 0deg / 6%); /* Top highlight on raised dark surfaces: the text color at 6% alpha */
 
-  /* Indigo, the accent, light. Hue 272. */
+  /* Indigo, light. Hue 272. Used by the calm theme. */
 
   --dui-color-indigo-1: oklch(98.4% 0.006 272deg); /* Step 1, page */
   --dui-color-indigo-2: oklch(96.8% 0.012 272deg); /* Step 2, raised */
@@ -89,7 +91,7 @@
   --dui-color-indigo-11: oklch(47% 0.19 272deg); /* Step 11, accent text */
   --dui-color-indigo-12: oklch(36% 0.13 272deg); /* Step 12, text */
 
-  /* Indigo, the accent, dark. Hue 272. Step 9 matches the light solid. */
+  /* Indigo, dark. Hue 272. Step 9 matches the light solid. */
 
   --dui-color-indigo-dark-1: oklch(19% 0.02 272deg); /* Step 1, page */
   --dui-color-indigo-dark-2: oklch(22% 0.028 272deg); /* Step 2, raised */
@@ -240,6 +242,7 @@
   --dui-border-1: 1px;
   --dui-border-2: 2px;
   --dui-border-3: 3px;
+  --dui-border-0: 0; /* No width: a focus ring that hugs the edge */
   --dui-border-4: 0.25rem;
 
   /* Underline metrics, relative to the font */
