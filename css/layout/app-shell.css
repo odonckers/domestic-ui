@@ -233,8 +233,33 @@
   display: none;
 }
 
+/*
+ * Narrow shells: the bar keeps one row of brand and buttons, with the
+ * trailing buttons on the trailing line, and the search takes a full row
+ * under it. Our choice, after shadcn/ui's and GitHub's phone headers: the
+ * wrap otherwise left the account button alone on a third row. The search
+ * comes second in the tab order and shows last; the order still reads
+ * brand, search, panels, account (WCAG 2.4.3 Focus Order).
+ */
 [data-app-shell] > header > search {
-  flex: 1 1 var(--dui-size-column-min);
+  flex: 1 1 100%;
+  order: 1;
+}
+
+/* The brand takes the room left on the first row, wrapping its own text before the buttons wrap. */
+[data-app-shell] > header > :has(+ search) {
+  flex: 1 1 0;
+}
+
+@container dui-app-shell (inline-size >= 48rem) {
+  [data-app-shell] > header > search {
+    flex: 1 1 var(--dui-size-column-min);
+    order: 0;
+  }
+
+  [data-app-shell] > header > :has(+ search) {
+    flex: 0 1 auto;
+  }
 }
 
 /* A search form in the app bar: the field grows, its button keeps its size. */
@@ -244,10 +269,13 @@
   gap: var(--dui-space-xs);
 }
 
+[data-app-shell] > header > search > form > * {
+  margin: 0;
+}
+
 [data-app-shell] > header > search > form > :not(button) {
   flex: 1 1 auto;
   min-inline-size: 0;
-  margin: 0;
 }
 
 /* Decorative icons in the app bar's buttons and links. */

@@ -68,10 +68,16 @@
  * tabs (https://ui.shadcn.com/docs/components/tabs). The selected tab is a
  * raised segment whose border reaches 3:1 against the track (WCAG 1.4.11),
  * where shadcn/ui relies on a shadow alone.
+ *
+ * Phones: the strip scrolls sideways instead of wrapping onto a second
+ * line, so the tabs keep one row (shadcn/ui's tabs list does the same).
+ * Browsers scroll a focused tab into view, so arrow keys reach every tab.
  */
 [role="tablist"] {
   display: flex;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  scrollbar-width: none;
   gap: 0;
   inline-size: fit-content;
   max-inline-size: 100%;
@@ -93,7 +99,9 @@
   justify-content: center;
   min-block-size: calc(var(--dui-size-control) - var(--dui-space-3xs) * 2);
   margin: 0;
-  padding: var(--dui-space-gap-tight) var(--dui-space-control-inline);
+
+  /* The label sits on the text line: the tab list's edge plus --dui-space-button-inline (PRINCIPLES.md 13). */
+  padding: var(--dui-space-gap-tight) calc(var(--dui-space-button-inline) - var(--dui-space-3xs) - var(--dui-border-width));
   background-color: transparent;
   color: var(--dui-color-text-muted);
   border: var(--dui-border-width) solid transparent;
@@ -105,6 +113,11 @@
   white-space: nowrap;
   text-decoration-line: none;
   cursor: pointer;
+}
+
+/* Inset, so the scrolling strip never clips the ring. */
+[role="tab"]:focus-visible {
+  outline-offset: calc(var(--dui-focus-width) * -1);
 }
 
 [role="tab"]:hover {
