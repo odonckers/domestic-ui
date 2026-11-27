@@ -60,9 +60,10 @@
  * large keep their size at every density.
  * https://www.w3.org/WAI/WCAG22/Understanding/target-size-minimum.html
  *
- * Focus: every variant keeps the base :focus-visible outline. Filled (primary)
- * buttons add an inner ring in their text color, so the indicator contrasts
- * with the fill as well as with the surface (WCAG 1.4.11, 2.4.13).
+ * Focus: every variant keeps the base :focus-visible ring, which hugs the
+ * edge. Filled (primary) buttons add a 1px inner line in their text color,
+ * so the indicator contrasts with the fill as well as with the surface,
+ * whatever the theme (WCAG 1.4.11, 2.4.13).
  * https://www.w3.org/WAI/WCAG22/Understanding/focus-appearance.html
  *
  * Motion: background and border colors fade over --dui-motion-duration-
@@ -143,10 +144,10 @@
   border-color: var(--dui-color-primary);
 }
 
-/* Inner ring on filled buttons: the text color contrasts with the fill by design. */
+/* Inner ring on filled buttons: a 1px line in the text color, which contrasts with the fill by design, so the indicator holds in any theme. */
 [data-button~="primary"]:focus-visible,
 :is(button, input)[type="submit"]:not([data-button~="secondary"], [data-button~="quiet"]):focus-visible {
-  box-shadow: inset 0 0 0 var(--dui-focus-width) currentcolor;
+  box-shadow: inset 0 0 0 var(--dui-border-width) currentcolor;
 }
 
 [data-button~="primary"]:hover:not(:disabled, [aria-disabled="true"]) {
