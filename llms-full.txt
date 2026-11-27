@@ -126,7 +126,7 @@ Every example must pass, and every token pair is tested against, these criteria:
 | Links | Links keep their underline; color is never the only cue | [1.4.1 Use of Color](https://www.w3.org/WAI/WCAG22/Understanding/use-of-color.html) |
 | Focus visible | Every focusable element shows a `:focus-visible` outline | [2.4.7 Focus Visible](https://www.w3.org/WAI/WCAG22/Understanding/focus-visible.html) |
 | Focus not obscured | `scroll-padding` keeps focused elements clear of sticky edges | [2.4.11 Focus Not Obscured (Minimum)](https://www.w3.org/WAI/WCAG22/Understanding/focus-not-obscured-minimum.html) |
-| Focus appearance (AAA, optional) | The default 2px solid outline with a 2px offset aims to meet it | [2.4.13 Focus Appearance](https://www.w3.org/WAI/WCAG22/Understanding/focus-appearance.html) |
+| Focus appearance (AAA, optional) | The default 3px solid ring at 3:1, hugging the edge, aims to meet it | [2.4.13 Focus Appearance](https://www.w3.org/WAI/WCAG22/Understanding/focus-appearance.html) |
 | Target size | Controls are at least 36px tall and rows 32px (32px and 28px with `data-density="compact"`, see [Density](https://odonckers.github.io/domestic-ui/explainers/density.md); 44px under a coarse pointer), above the 24px minimum | [2.5.8 Target Size (Minimum)](https://www.w3.org/WAI/WCAG22/Understanding/target-size-minimum.html) |
 | Reduced motion | Under `prefers-reduced-motion: reduce` movement stops and fades stay; `data-motion="none"` turns transitions off (see [Motion](https://odonckers.github.io/domestic-ui/principles/motion.md)) | [MDN `prefers-reduced-motion`](https://developer.mozilla.org/en-US/docs/Web/CSS/@media/prefers-reduced-motion), [2.3.3 Animation from Interactions](https://www.w3.org/WAI/WCAG22/Understanding/animation-from-interactions.html) |
 | Color scheme | `color-scheme: light dark` plus [`light-dark()`](https://developer.mozilla.org/en-US/docs/Web/CSS/color_value/light-dark) in every semantic color | [MDN `color-scheme`](https://developer.mozilla.org/en-US/docs/Web/CSS/color-scheme) |
@@ -178,7 +178,7 @@ with the `--dui-` prefix.
 | Tier | File | Named by | Example | Public? |
 | --- | --- | --- | --- | --- |
 | Primitive | `css/tokens/primitives.css` | What it is | `--dui-color-indigo-9: oklch(53% 0.215 272);` `--dui-space-5: 1rem;` | No. Internal, may change in any release. |
-| Semantic | `css/tokens/semantic.css` | What it is for | `--dui-color-accent: light-dark(var(--dui-color-indigo-9), var(--dui-color-indigo-dark-9));` | **Yes.** The stable theming API. |
+| Semantic | `css/tokens/semantic.css` | What it is for | `--dui-color-accent: light-dark(var(--dui-color-neutral-12), var(--dui-color-neutral-dark-12));` | **Yes.** The stable theming API. |
 
 **Base, layout, utility and component CSS reference only semantic tokens.** They never use
 primitives and never hard-code colors or sizes (`0`, `1px` hairlines, percentages, `fr`,
@@ -211,11 +211,11 @@ On a Display P3 screen ([`@media (color-gamut: p3)`](https://developer.mozilla.o
 
 Red, green, amber and blue have steps 3, 9 and 11. [Radix Colors](https://www.radix-ui.com/colors/docs/palette-composition/understanding-the-scale) numbers a scale the same way; [Tailwind v4](https://tailwindcss.com/docs/colors) and [Geist](https://vercel.com/geist/colors) also ship OKLCH ramps. Those are other systems, for comparison.
 
-**Our choice:** the default is monochrome. `--dui-color-primary` is neutral step 12 (near-black on a light page, near-white on a dark page). `--dui-color-primary-contrast` is the text on that fill (white, or the dark page color). `--dui-color-primary-hover` is a [relative color](https://www.w3.org/TR/css-color-5/#relative-colors) of the primary ([MDN](https://developer.mozilla.org/en-US/docs/Web/CSS/Guides/Colors/Using_relative_colors)), so it keeps the primary's hue. Primary buttons and `type="submit"` read these three. The accent is indigo, for links, focus rings and selection. A theme that painted primary buttons with `--dui-color-accent` sets `--dui-color-primary` (and `--dui-color-primary-contrast` when the fill needs different text).
+**Our choice:** the default is monochrome. `--dui-color-primary` is neutral step 12 (near-black on a light page, near-white on a dark page). `--dui-color-primary-contrast` is the text on that fill (white, or the dark page color). `--dui-color-primary-hover` is a [relative color](https://www.w3.org/TR/css-color-5/#relative-colors) of the primary ([MDN](https://developer.mozilla.org/en-US/docs/Web/CSS/Guides/Colors/Using_relative_colors)), so it keeps the primary's hue. Primary buttons and `type="submit"` read these three. The accent is neutral step 12 too, so links read as underlined text and checks, switches and selection are near-black (near-white in dark), as in [shadcn/ui's neutral theme](https://ui.shadcn.com/docs/theming). `--dui-color-accent-indigo` keeps an indigo solid for themes such as calm. A theme that painted primary buttons with `--dui-color-accent` sets `--dui-color-primary` (and `--dui-color-primary-contrast` when the fill needs different text).
 
-`--dui-color-accent-text` is a relative color of `--dui-color-accent`: the same hue, with lightness and chroma set for [1.4.3 Contrast (Minimum)](https://www.w3.org/WAI/WCAG22/Understanding/contrast-minimum.html). `--dui-color-link` points at it. `--dui-color-focus` is the accent solid in light and the accent text in dark, so the ring meets [1.4.11 Non-text Contrast](https://www.w3.org/WAI/WCAG22/Understanding/non-text-contrast.html) on a dark page. `--dui-color-accent-hover` and `--dui-color-accent-surface` are derived from the accent too, so a theme that sets only `--dui-color-accent` still gets a matching link, hover and tint. `--dui-color-accent-contrast` is white in both schemes.
+`--dui-color-accent-text` is a relative color of `--dui-color-accent`: the same hue, with lightness and chroma set for [1.4.3 Contrast (Minimum)](https://www.w3.org/WAI/WCAG22/Understanding/contrast-minimum.html). `--dui-color-link` points at it. `--dui-color-focus` is the accent solid in light and the accent text in dark, so the ring meets [1.4.11 Non-text Contrast](https://www.w3.org/WAI/WCAG22/Understanding/non-text-contrast.html) on a dark page. **Our choice:** an achromatic accent (chroma 0, fading in up to 0.02) instead gives the text color for `--dui-color-accent-text` and a mid gray at 3:1 for the focus ring, so the neutral default looks like shadcn/ui's while a hued accent behaves as before. The ring is 3px and hugs the edge, like shadcn/ui's, but opaque rather than a translucent halo, so it keeps 3:1. `--dui-color-accent-hover` and `--dui-color-accent-surface` are derived from the accent too, so a theme that sets only `--dui-color-accent` still gets a matching link, hover and tint. `--dui-color-accent-contrast` is white, except on the neutral dark accent, where it is the dark page color.
 
-`--dui-color-border` is the text color at about 11% alpha, a hairline in the neutral hue. `--dui-color-border-control` stays an opaque step at 3:1 for fields, selects, checkboxes, radios and switches, whose boundary is what shows where to click or type. **Our choice:** the secondary button's border, `--dui-color-border-button`, is a softer step, because its visible text label identifies it and [1.4.11](https://www.w3.org/WAI/WCAG22/Understanding/non-text-contrast.html) asks for 3:1 only for the visual information needed to identify a component. `--dui-color-shadow` is tinted with the neutral hue.
+`--dui-color-border` is the text color at about 11% alpha, a neutral hairline. `--dui-color-border-control` stays an opaque step at 3:1 for fields, selects, checkboxes, radios and switches, whose boundary is what shows where to click or type. **Our choice:** the secondary button's border, `--dui-color-border-button`, is a softer step, because its visible text label identifies it and [1.4.11](https://www.w3.org/WAI/WCAG22/Understanding/non-text-contrast.html) asks for 3:1 only for the visual information needed to identify a component. `--dui-color-shadow` is black at low alpha.
 
 Light and dark values use [`light-dark()`](https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/Values/color_value/light-dark) ([CSS Color 5](https://www.w3.org/TR/css-color-5/)). `tests/contrast.js` checks the pairs below, and the status and code colors, against these thresholds. It takes a theme scope, so another theme can reuse it.
 
@@ -283,7 +283,7 @@ checks it), with light and dark values, so scopes nest, and forced colors keep t
 
 | Theme | `data-theme` | Tokens it changes |
 | --- | --- | --- |
-| Calm | `calm` | `--dui-color-primary`, `-primary-hover` and `-primary-contrast` follow the indigo accent (white text); `--dui-color-shadow` tinted with the accent hue. Radius and density stay the default. |
+| Calm | `calm` | `--dui-color-accent` is `--dui-color-accent-indigo`, and `--dui-color-primary`, `-primary-hover` and `-primary-contrast` follow it (white text), so links and focus are indigo too; `--dui-color-shadow` tinted with the accent hue. Radius and density stay the default. |
 | Soft | `soft` | Warm neutrals (hue 70, chroma 0.02 at most) for every surface, text and border token; `--dui-color-accent` terracotta `oklch(55% 0.15 40)` as the primary with white text; `--dui-radius-scale` 1.5 (12 / 18px); `--dui-density-scale` 1.25 (roomier padding); `--dui-elevation-strength` 80% and a warm `--dui-color-shadow`. |
 | Compact | `compact` | `--dui-color-accent` blue `oklch(53% 0.15 250)`; `--dui-radius-scale` 0.25 (2 / 3px); `--dui-density-scale` 0 (32px controls, 44px under a coarse pointer); `--dui-elevation-strength` 35%, so hairlines carry the edges. |
 
@@ -315,21 +315,22 @@ may change. Fluid `--dui-step-*` values are `clamp()` expressions; see `primitiv
 
 | Token | Purpose | Default (primitive, light / dark) |
 | --- | --- | --- |
-| `--dui-color-surface` | Page and control background (neutral step 1) | light: `neutral-1` (`oklch(99.3% 0.002 265)`)<br>dark: `neutral-dark-1` (`oklch(16.5% 0.006 265)`) |
-| `--dui-color-surface-raised` | Slightly lifted areas: neutral buttons, zebra rows, cards (step 2) | light: `neutral-2` (`oklch(98.2% 0.003 265)`)<br>dark: `neutral-dark-2` (`oklch(19% 0.007 265)`) |
-| `--dui-color-surface-sunken` | Recessed areas: code, button hover (step 3) | light: `neutral-3` (`oklch(96.2% 0.005 265)`)<br>dark: `neutral-dark-3` (`oklch(22% 0.009 265)`) |
-| `--dui-color-surface-hover` | Hover fill of quiet buttons, nav, menu and listbox rows (step 4) | light: `neutral-4` (`oklch(94% 0.006 265)`)<br>dark: `neutral-dark-4` (`oklch(26% 0.011 265)`) |
-| `--dui-color-surface-active` | Pressed fill of quiet buttons (step 5) | light: `neutral-5` (`oklch(91% 0.008 265)`)<br>dark: `neutral-dark-5` (`oklch(31% 0.012 265)`) |
+| `--dui-color-surface` | Page and control background (neutral step 1) | light: `neutral-1` (`oklch(100% 0 0)`)<br>dark: `neutral-dark-1` (`oklch(14.5% 0 0)`) |
+| `--dui-color-surface-raised` | Slightly lifted areas: neutral buttons, zebra rows, cards (step 2) | light: `neutral-2` (`oklch(98.5% 0 0)`)<br>dark: `neutral-dark-2` (`oklch(20.5% 0 0)`) |
+| `--dui-color-surface-sunken` | Recessed areas: code, button hover (step 3) | light: `neutral-3` (`oklch(97% 0 0)`)<br>dark: `neutral-dark-3` (`oklch(22% 0 0)`) |
+| `--dui-color-surface-hover` | Hover fill of quiet buttons, nav, menu and listbox rows (step 4) | light: `neutral-4` (`oklch(96% 0 0)`)<br>dark: `neutral-dark-4` (`oklch(26.9% 0 0)`) |
+| `--dui-color-surface-active` | Pressed fill of quiet buttons (step 5) | light: `neutral-5` (`oklch(93.5% 0 0)`)<br>dark: `neutral-dark-5` (`oklch(31% 0 0)`) |
 | `--dui-color-surface-frame` | Background of an app shell's frame: the app bar and sidebars sit on it, around the main content panel | `--dui-color-surface-raised` |
-| `--dui-color-text` | Body text (step 12) | light: `neutral-12` (`oklch(21.5% 0.012 265)`)<br>dark: `neutral-dark-12` (`oklch(95% 0.004 265)`) |
-| `--dui-color-text-muted` | Secondary text, captions, list markers (step 11, still 4.5:1). Above `--dui-contrast` 1 it moves toward `--dui-color-text` | light: `neutral-11` (`oklch(47.5% 0.016 265)`)<br>dark: `neutral-dark-11` (`oklch(76% 0.012 265)`) |
-| `--dui-color-border` | Decorative hairline: the text color at about 11% alpha, times `--dui-contrast` | light: `neutral-12` at 11% (`oklch(21.5% 0.012 265 / 11%)`)<br>dark: `neutral-dark-12` at 10% (`oklch(95% 0.004 265 / 10%)`) |
-| `--dui-color-border-control` | Boundaries of fields, selects, checkboxes, radios and switches (step 8, 3:1) | light: `neutral-8` (`oklch(58.5% 0.016 265)`)<br>dark: `neutral-dark-8` (`oklch(58% 0.016 265)`) |
-| `--dui-color-border-control-hover` | Field border on hover (step 9) | light: `neutral-9` (`oklch(52% 0.016 265)`)<br>dark: `neutral-dark-9` (`oklch(66% 0.014 265)`) |
-| `--dui-color-border-button` | Secondary button border (step 6): softer, because the visible label identifies the button | light: `neutral-6` (`oklch(84% 0.01 265)`)<br>dark: `neutral-dark-6` (`oklch(38% 0.014 265)`) |
-| `--dui-color-primary` | Primary action fill (neutral step 12) | light: `neutral-12` (`oklch(21.5% 0.012 265)`)<br>dark: `neutral-dark-12` (`oklch(95% 0.004 265)`) |
-| `--dui-color-primary-contrast` | Text on the primary fill | light: `white` (`oklch(100% 0 0)`)<br>dark: `neutral-dark-1` (`oklch(16.5% 0.006 265)`) |
-| `--dui-color-accent` | Accent solid for focus rings, selection and checks (indigo step 9) | light: `indigo-9` (`oklch(53% 0.215 272)`)<br>dark: `indigo-dark-9` (`oklch(53% 0.215 272)`) |
+| `--dui-color-text` | Body text (step 12) | light: `neutral-12` (`oklch(14.5% 0 0)`)<br>dark: `neutral-dark-12` (`oklch(98.5% 0 0)`) |
+| `--dui-color-text-muted` | Secondary text, captions, list markers (step 11, still 4.5:1). Above `--dui-contrast` 1 it moves toward `--dui-color-text` | light: `neutral-11` (`oklch(50.5% 0 0)`)<br>dark: `neutral-dark-11` (`oklch(70.8% 0 0)`) |
+| `--dui-color-border` | Decorative hairline: the text color at about 11% alpha, times `--dui-contrast` | light: `neutral-12` at 11% (`oklch(14.5% 0 0 / 11%)`)<br>dark: `neutral-dark-12` at 10% (`oklch(98.5% 0 0 / 10%)`) |
+| `--dui-color-border-control` | Boundaries of fields, selects, checkboxes, radios and switches (step 8, 3:1) | light: `neutral-8` (`oklch(60% 0 0)`)<br>dark: `neutral-dark-8` (`oklch(58% 0 0)`) |
+| `--dui-color-border-control-hover` | Field border on hover (step 9) | light: `neutral-9` (`oklch(55.6% 0 0)`)<br>dark: `neutral-dark-9` (`oklch(65% 0 0)`) |
+| `--dui-color-border-button` | Secondary button border (step 6): softer, because the visible label identifies the button | light: `neutral-6` (`oklch(92.2% 0 0)`)<br>dark: `neutral-dark-6` (`oklch(37.1% 0 0)`) |
+| `--dui-color-primary` | Primary action fill (neutral step 12) | light: `neutral-12` (`oklch(14.5% 0 0)`)<br>dark: `neutral-dark-12` (`oklch(98.5% 0 0)`) |
+| `--dui-color-primary-contrast` | Text on the primary fill | light: `white` (`oklch(100% 0 0)`)<br>dark: `neutral-dark-1` (`oklch(14.5% 0 0)`) |
+| `--dui-color-accent` | Accent solid for selection, checks, switches and focus (neutral step 12, so the default is monochrome) | light: `neutral-12` (`oklch(14.5% 0 0)`)<br>dark: `neutral-dark-12` (`oklch(98.5% 0 0)`) |
+| `--dui-color-accent-indigo` | An indigo accent solid, more vivid on a Display P3 screen; the calm theme's accent | light: `indigo-9` (`oklch(53% 0.215 272)`)<br>dark: `indigo-dark-9` (`oklch(53% 0.215 272)`) |
 | `--dui-color-accent-contrast` | Text on the accent fill, white in both schemes | `white` (`oklch(100% 0 0)`) |
 | `--dui-color-link-visited` | Visited links | light: `purple-11` (`oklch(46.2% 0.195 299)`)<br>dark: `purple-dark-11` (`oklch(80.1% 0.127 306)`) |
 | `--dui-color-danger` | Errors, :user-invalid borders (red step 11) | light: `red-11` (`oklch(48% 0.16 27)`)<br>dark: `red-dark-11` (`oklch(80% 0.114 27)`) |
@@ -337,17 +338,17 @@ may change. Fluid `--dui-step-*` values are `clamp()` expressions; see `primitiv
 | `--dui-color-warning` | Warning badges and messages (amber step 11) | light: `amber-11` (`oklch(47% 0.098 75)`)<br>dark: `amber-dark-11` (`oklch(80% 0.12 75)`) |
 | `--dui-color-info` | Informational alerts and toasts (blue step 11, separate from the accent, so a brand color never reads as a status) | light: `blue-11` (`oklch(48% 0.12 245)`)<br>dark: `blue-dark-11` (`oklch(80% 0.108 245)`) |
 | `--dui-color-mark` | mark and ::selection background | light: `yellow-3` (`oklch(95.3% 0.093 99)`)<br>dark: `yellow-dark-9` (`oklch(83.4% 0.141 97)`) |
-| `--dui-color-mark-text` | Text on mark | `neutral-12` (`oklch(21.5% 0.012 265)`) |
+| `--dui-color-mark-text` | Text on mark | `neutral-12` (`oklch(14.5% 0 0)`) |
 | `--dui-color-backdrop` | dialog::backdrop | light: `black-a40` (`oklch(0% 0 0 / 40%)`)<br>dark: `black-a60` (`oklch(0% 0 0 / 60%)`) |
-| `--dui-color-shadow` | Shadow color, tinted with the neutral hue | light: `neutral-shadow` (`oklch(25% 0.015 265 / 12%)`)<br>dark: `neutral-dark-shadow` (`oklch(14% 0.015 265 / 46%)`) |
+| `--dui-color-shadow` | Shadow color: black at low alpha | light: `neutral-shadow` (`oklch(0% 0 0 / 10%)`)<br>dark: `neutral-dark-shadow` (`oklch(0% 0 0 / 46%)`) |
 | `--dui-color-code-keyword` | JS keywords and CSS at-rules in highlighted code (4.5:1 on surface-sunken) | light: `purple-11` (`oklch(46.2% 0.195 299)`)<br>dark: `purple-dark-11` (`oklch(80.1% 0.127 306)`) |
 | `--dui-color-code-string` | Strings and HTML attribute values in highlighted code (4.5:1 on surface-sunken) | light: `green-11` (`oklch(47% 0.128 150)`)<br>dark: `green-dark-11` (`oklch(80% 0.12 150)`) |
-| `--dui-color-code-comment` | Comments in highlighted code (4.5:1 on surface-sunken) | light: `neutral-11` (`oklch(47.5% 0.016 265)`)<br>dark: `neutral-dark-11` (`oklch(76% 0.012 265)`) |
+| `--dui-color-code-comment` | Comments in highlighted code (4.5:1 on surface-sunken) | light: `neutral-11` (`oklch(50.5% 0 0)`)<br>dark: `neutral-dark-11` (`oklch(70.8% 0 0)`) |
 | `--dui-color-code-tag` | HTML tag names and CSS selectors in highlighted code (4.5:1 on surface-sunken) | light: `blue-11` (`oklch(48% 0.12 245)`)<br>dark: `blue-dark-11` (`oklch(80% 0.108 245)`) |
 | `--dui-color-code-attribute` | HTML attribute names in highlighted code (4.5:1 on surface-sunken) | light: `amber-11` (`oklch(47% 0.098 75)`)<br>dark: `amber-dark-11` (`oklch(80% 0.12 75)`) |
 | `--dui-color-code-property` | CSS and JS properties in highlighted code (4.5:1 on surface-sunken) | light: `teal-11` (`oklch(49.1% 0.081 203)`)<br>dark: `teal-dark-11` (`oklch(77.3% 0.099 203)`) |
 | `--dui-color-code-number` | Numbers and units in highlighted code (4.5:1 on surface-sunken) | light: `red-11` (`oklch(48% 0.16 27)`)<br>dark: `red-dark-11` (`oklch(80% 0.114 27)`) |
-| `--dui-color-code-punctuation` | Brackets, braces and separators in highlighted code (4.5:1 on surface-sunken) | light: `neutral-punctuation` (`oklch(37% 0.016 265)`)<br>dark: `neutral-dark-punctuation` (`oklch(83.5% 0.01 265)`) |
+| `--dui-color-code-punctuation` | Brackets, braces and separators in highlighted code (4.5:1 on surface-sunken) | light: `neutral-punctuation` (`oklch(37% 0 0)`)<br>dark: `neutral-dark-punctuation` (`oklch(83.5% 0 0)`) |
 | `--dui-font-body` | Body font stack | `--dui-font-stack-system-ui` (`system-ui`, `-apple-system`, `"Segoe UI Variable Text"`, `"Segoe UI"`, Roboto, `"Noto Sans"`, `"Helvetica Neue"`, Arial, `sans-serif`) |
 | `--dui-font-mono` | Code font stack | `--dui-font-stack-monospace` (`ui-monospace`, …, `monospace`) |
 | `--dui-font-weight-body` | Body weight | `font-weight-400` (400) |
@@ -409,8 +410,8 @@ may change. Fluid `--dui-step-*` values are `clamp()` expressions; see `primitiv
 | `--dui-underline-offset` | Link underline offset | `underline-offset-015em` (0.15em) |
 | `--dui-underline-thickness` | Link underline | `underline-1` (0.0625em) |
 | `--dui-underline-thickness-hover` | Link underline on hover | `underline-2` (0.125em) |
-| `--dui-focus-width` | Focus outline width | `border-2` (2px) |
-| `--dui-focus-offset` | Focus outline offset | `border-2` (2px) |
+| `--dui-focus-width` | Focus ring width | `border-3` (3px) |
+| `--dui-focus-offset` | Focus ring offset: the ring hugs the edge | `border-0` (0) |
 | `--dui-motion-scale` | Multiplies every motion duration | `factor-1` (1) |
 | `--dui-motion-movement` | Lets things slide, lift and zoom (1) or not (0); `0` with reduced motion | `factor-1` (1) |
 | `--dui-motion-enabled` | `0` with `data-motion="none"`: every duration is `0s`, whatever scale is set inside | `factor-1` (1) |
@@ -429,7 +430,7 @@ may change. Fluid `--dui-step-*` values are `clamp()` expressions; see `primitiv
 | `--dui-color-link` | Links | `--dui-color-accent-text` |
 | `--dui-color-focus` | Focus ring (3:1 against surfaces) | light: `--dui-color-accent`<br>dark: `--dui-color-accent-text` |
 | `--dui-color-accent-hover` | Accent solid hover | `oklch(from --dui-color-accent)` with lightness 0.02 lower |
-| `--dui-color-primary-hover` | Primary fill hover | light: `oklch(32% 0.014 265)`<br>dark: `oklch(86% 0.008 265)`, hue from `--dui-color-primary` |
+| `--dui-color-primary-hover` | Primary fill hover | light: `oklch(26% 0.002 0)`<br>dark: `oklch(90% 0.004 0)`, hue from `--dui-color-primary` |
 | `--dui-font-heading` | Heading font stack | `--dui-font-body` |
 | `--dui-color-accent-surface` | Accent badge background | `color-mix()` of `--dui-tint-amount` `--dui-color-accent` into `--dui-color-surface` |
 | `--dui-color-success-surface` | Success badge background | same, with `--dui-color-success` |
@@ -944,8 +945,9 @@ Generated from the theme files and `css/tokens/semantic.css`.
 
 | Token | Default | Calm |
 | --- | --- | --- |
+| `--dui-color-accent` | `light-dark(var(--dui-color-neutral-12), var(--dui-color-neutral-dark-12))` | `var(--dui-color-accent-indigo)` |
 | `--dui-color-primary` | `light-dark(var(--dui-color-neutral-12), var(--dui-color-neutral-dark-12))` | `var(--dui-color-accent)` |
-| `--dui-color-primary-hover` | `light-dark(oklch(from var(--dui-color-primary) 32% calc(c + 0.002) h), oklch(from var(--dui-color-primary) 86% calc(c + 0.004) h))` | `var(--dui-color-accent-hover)` |
+| `--dui-color-primary-hover` | `light-dark(oklch(from var(--dui-color-primary) 26% calc(c + 0.002) h), oklch(from var(--dui-color-primary) 90% calc(c + 0.004) h))` | `var(--dui-color-accent-hover)` |
 | `--dui-color-primary-contrast` | `light-dark(var(--dui-color-white), var(--dui-color-neutral-dark-1))` | `var(--dui-color-accent-contrast)` |
 | `--dui-color-shadow` | `light-dark(var(--dui-color-neutral-shadow), var(--dui-color-neutral-dark-shadow))` | `light-dark(oklch(32% 0.06 272deg / 14%), oklch(12% 0.04 272deg / 50%))` |
 
@@ -967,9 +969,9 @@ Generated from the theme files and `css/tokens/semantic.css`.
 | `--dui-color-border-control-hover` | `light-dark(var(--dui-color-neutral-9), var(--dui-color-neutral-dark-9))` | `light-dark(oklch(52% 0.018 70deg), oklch(66% 0.016 70deg))` |
 | `--dui-color-border-button` | `light-dark(var(--dui-color-neutral-6), var(--dui-color-neutral-dark-6))` | `light-dark(oklch(72% 0.016 70deg), oklch(48% 0.016 70deg))` |
 | `--dui-color-shadow` | `light-dark(var(--dui-color-neutral-shadow), var(--dui-color-neutral-dark-shadow))` | `light-dark(oklch(32% 0.03 50deg / 11%), oklch(12% 0.02 50deg / 48%))` |
-| `--dui-color-accent` | `light-dark(var(--dui-color-indigo-9), var(--dui-color-indigo-dark-9))` | `oklch(55% 0.15 40deg)` |
+| `--dui-color-accent` | `light-dark(var(--dui-color-neutral-12), var(--dui-color-neutral-dark-12))` | `oklch(55% 0.15 40deg)` |
 | `--dui-color-primary` | `light-dark(var(--dui-color-neutral-12), var(--dui-color-neutral-dark-12))` | `var(--dui-color-accent)` |
-| `--dui-color-primary-hover` | `light-dark(oklch(from var(--dui-color-primary) 32% calc(c + 0.002) h), oklch(from var(--dui-color-primary) 86% calc(c + 0.004) h))` | `var(--dui-color-accent-hover)` |
+| `--dui-color-primary-hover` | `light-dark(oklch(from var(--dui-color-primary) 26% calc(c + 0.002) h), oklch(from var(--dui-color-primary) 90% calc(c + 0.004) h))` | `var(--dui-color-accent-hover)` |
 | `--dui-color-primary-contrast` | `light-dark(var(--dui-color-white), var(--dui-color-neutral-dark-1))` | `var(--dui-color-accent-contrast)` |
 | `--dui-radius-scale` | `var(--dui-factor-1)` | `1.5` |
 | `--dui-density-scale` | `var(--dui-factor-1)` | `1.25` |
@@ -981,7 +983,7 @@ Generated from the theme files and `css/tokens/semantic.css`.
 
 | Token | Default | Compact |
 | --- | --- | --- |
-| `--dui-color-accent` | `light-dark(var(--dui-color-indigo-9), var(--dui-color-indigo-dark-9))` | `oklch(53% 0.15 250deg)` |
+| `--dui-color-accent` | `light-dark(var(--dui-color-neutral-12), var(--dui-color-neutral-dark-12))` | `oklch(53% 0.15 250deg)` |
 | `--dui-radius-scale` | `var(--dui-factor-1)` | `0.25` |
 | `--dui-density-scale` | `var(--dui-factor-1)` | `0` |
 | `--dui-elevation-strength` | `var(--dui-mix-100)` | `35%` |
@@ -1886,54 +1888,54 @@ Primitives are NOT public API: they may be renamed, added or removed in any rele
 
 Colors are OKLCH, in the sRGB gamut (CSS Color 4). On a Display P3 screen (@media (color-gamut: p3), at the end of this file) the accent solids (indigo 9 and 10) and the status solids (step 9) take more chroma: the sRGB chroma times how much further P3 reaches at that lightness and hue, so they are as saturated relative to P3 as they are to sRGB. Lightness and hue stay, so contrast stays; text steps (11 and 12) and neutrals do not change. [W3C ok lab](https://www.w3.org/TR/css-color-4/#ok-lab) [MDN `oklch`](https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/Values/color_value/oklch) [MDN `color-gamut`](https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/At-rules/@media/color-gamut) [W3C gamut mapping](https://www.w3.org/TR/css-color-4/#gamut-mapping)
 
-Neutral and indigo each have 12 steps in light and in dark. The step number is the role, the same idea as Radix's scales (for comparison: 1 page, 2 raised, 3 sunken or element, 4 hover, 5 active or selected, 6 subtle border, 7 border, 8 control border, 9 solid, 10 solid hover, 11 muted or accent text, 12 text. Red, green, amber and blue have steps 3, 9 and 11 only. Purple, teal and yellow keep the code-highlight and mark hues. Our choice: the primary action uses neutral 12 (near-black or near-white), and indigo is the accent for links, focus and selection. ([radix-ui.com understanding the scale](https://www.radix-ui.com/colors/docs/palette-composition/understanding-the-scale))
+Neutral and indigo each have 12 steps in light and in dark. The step number is the role, the same idea as Radix's scales (for comparison: 1 page, 2 raised, 3 sunken or element, 4 hover, 5 active or selected, 6 subtle border, 7 border, 8 control border, 9 solid, 10 solid hover, 11 muted or accent text, 12 text. Red, green, amber and blue have steps 3, 9 and 11 only. Purple, teal and yellow keep the code-highlight and mark hues. Our choice: the default is monochrome, like shadcn/ui's neutral theme: the primary action and the accent both use neutral 12 (near-black or near-white). Indigo stays as a primitive for themes such as calm. [radix-ui.com understanding the scale](https://www.radix-ui.com/colors/docs/palette-composition/understanding-the-scale) [ui.shadcn.com theming](https://ui.shadcn.com/docs/theming)
 
 [Custom properties](https://developer.mozilla.org/en-US/docs/Web/CSS/--*).
 
-177 tokens in [`css/tokens/primitives.css`](https://github.com/odonckers/domestic-ui/blob/main/css/tokens/primitives.css). **Light** and **Dark** resolve every `var()` and take one side of [`light-dark()`](https://developer.mozilla.org/en-US/docs/Web/CSS/color_value/light-dark). Previews are decorative.
+178 tokens in [`css/tokens/primitives.css`](https://github.com/odonckers/domestic-ui/blob/main/css/tokens/primitives.css). **Light** and **Dark** resolve every `var()` and take one side of [`light-dark()`](https://developer.mozilla.org/en-US/docs/Web/CSS/color_value/light-dark). Previews are decorative.
 
-### Neutral, light. Hue 265
-
-| Token | Light | Dark | Description |
-| --- | --- | --- | --- |
-| `--dui-color-neutral-1` | `oklch(99.3% 0.002 265deg)` | `oklch(99.3% 0.002 265deg)` | Step 1, page |
-| `--dui-color-neutral-2` | `oklch(98.2% 0.003 265deg)` | `oklch(98.2% 0.003 265deg)` | Step 2, raised |
-| `--dui-color-neutral-3` | `oklch(96.2% 0.005 265deg)` | `oklch(96.2% 0.005 265deg)` | Step 3, sunken or element |
-| `--dui-color-neutral-4` | `oklch(94% 0.006 265deg)` | `oklch(94% 0.006 265deg)` | Step 4, hover |
-| `--dui-color-neutral-5` | `oklch(91% 0.008 265deg)` | `oklch(91% 0.008 265deg)` | Step 5, active or selected |
-| `--dui-color-neutral-6` | `oklch(84% 0.01 265deg)` | `oklch(84% 0.01 265deg)` | Step 6, subtle border |
-| `--dui-color-neutral-7` | `oklch(72% 0.013 265deg)` | `oklch(72% 0.013 265deg)` | Step 7, border |
-| `--dui-color-neutral-8` | `oklch(58.5% 0.016 265deg)` | `oklch(58.5% 0.016 265deg)` | Step 8, control border, 3:1 on the page |
-| `--dui-color-neutral-9` | `oklch(52% 0.016 265deg)` | `oklch(52% 0.016 265deg)` | Step 9, solid |
-| `--dui-color-neutral-10` | `oklch(50% 0.016 265deg)` | `oklch(50% 0.016 265deg)` | Step 10, solid hover |
-| `--dui-color-neutral-11` | `oklch(47.5% 0.016 265deg)` | `oklch(47.5% 0.016 265deg)` | Step 11, muted text |
-| `--dui-color-neutral-12` | `oklch(21.5% 0.012 265deg)` | `oklch(21.5% 0.012 265deg)` | Step 12, text, and the light primary fill |
-| `--dui-color-neutral-12-a11` | `oklch(21.5% 0.012 265deg / 11%)` | `oklch(21.5% 0.012 265deg / 11%)` | Hairline: the text color at 11% alpha |
-| `--dui-color-neutral-punctuation` | `oklch(37% 0.016 265deg)` | `oklch(37% 0.016 265deg)` | Code punctuation, darker than muted text |
-| `--dui-color-neutral-shadow` | `oklch(25% 0.015 265deg / 12%)` | `oklch(25% 0.015 265deg / 12%)` | Shadow tinted with the neutral hue |
-
-### Neutral, dark. Hue 265. Lightness rises with the step
+### Neutral, light. Achromatic (chroma 0), as shadcn/ui's neutral base
 
 | Token | Light | Dark | Description |
 | --- | --- | --- | --- |
-| `--dui-color-neutral-dark-1` | `oklch(16.5% 0.006 265deg)` | `oklch(16.5% 0.006 265deg)` | Step 1, page |
-| `--dui-color-neutral-dark-2` | `oklch(19% 0.007 265deg)` | `oklch(19% 0.007 265deg)` | Step 2, raised |
-| `--dui-color-neutral-dark-3` | `oklch(22% 0.009 265deg)` | `oklch(22% 0.009 265deg)` | Step 3, sunken or element |
-| `--dui-color-neutral-dark-4` | `oklch(26% 0.011 265deg)` | `oklch(26% 0.011 265deg)` | Step 4, hover |
-| `--dui-color-neutral-dark-5` | `oklch(31% 0.012 265deg)` | `oklch(31% 0.012 265deg)` | Step 5, active or selected |
-| `--dui-color-neutral-dark-6` | `oklch(38% 0.014 265deg)` | `oklch(38% 0.014 265deg)` | Step 6, subtle border |
-| `--dui-color-neutral-dark-7` | `oklch(48% 0.015 265deg)` | `oklch(48% 0.015 265deg)` | Step 7, border |
-| `--dui-color-neutral-dark-8` | `oklch(58% 0.016 265deg)` | `oklch(58% 0.016 265deg)` | Step 8, control border, 3:1 on the page |
-| `--dui-color-neutral-dark-9` | `oklch(66% 0.014 265deg)` | `oklch(66% 0.014 265deg)` | Step 9, solid |
-| `--dui-color-neutral-dark-10` | `oklch(71% 0.013 265deg)` | `oklch(71% 0.013 265deg)` | Step 10, solid hover |
-| `--dui-color-neutral-dark-11` | `oklch(76% 0.012 265deg)` | `oklch(76% 0.012 265deg)` | Step 11, muted text |
-| `--dui-color-neutral-dark-12` | `oklch(95% 0.004 265deg)` | `oklch(95% 0.004 265deg)` | Step 12, text, and the dark primary fill |
-| `--dui-color-neutral-dark-12-a10` | `oklch(95% 0.004 265deg / 10%)` | `oklch(95% 0.004 265deg / 10%)` | Hairline: the text color at 10% alpha |
-| `--dui-color-neutral-dark-punctuation` | `oklch(83.5% 0.01 265deg)` | `oklch(83.5% 0.01 265deg)` | Code punctuation, lighter than muted text |
-| `--dui-color-neutral-dark-shadow` | `oklch(14% 0.015 265deg / 46%)` | `oklch(14% 0.015 265deg / 46%)` | Shadow tinted with the neutral hue |
-| `--dui-color-neutral-dark-12-a6` | `oklch(95% 0.004 265deg / 6%)` | `oklch(95% 0.004 265deg / 6%)` | Top highlight on raised dark surfaces: the text color at 6% alpha |
+| `--dui-color-neutral-1` | `oklch(100% 0 0deg)` | `oklch(100% 0 0deg)` | Step 1, page: white |
+| `--dui-color-neutral-2` | `oklch(98.5% 0 0deg)` | `oklch(98.5% 0 0deg)` | Step 2, raised |
+| `--dui-color-neutral-3` | `oklch(97% 0 0deg)` | `oklch(97% 0 0deg)` | Step 3, sunken or element |
+| `--dui-color-neutral-4` | `oklch(96% 0 0deg)` | `oklch(96% 0 0deg)` | Step 4, hover |
+| `--dui-color-neutral-5` | `oklch(93.5% 0 0deg)` | `oklch(93.5% 0 0deg)` | Step 5, active or selected |
+| `--dui-color-neutral-6` | `oklch(92.2% 0 0deg)` | `oklch(92.2% 0 0deg)` | Step 6, subtle border |
+| `--dui-color-neutral-7` | `oklch(87% 0 0deg)` | `oklch(87% 0 0deg)` | Step 7, border |
+| `--dui-color-neutral-8` | `oklch(60% 0 0deg)` | `oklch(60% 0 0deg)` | Step 8, control border, 3:1 on steps 1 to 3 |
+| `--dui-color-neutral-9` | `oklch(55.6% 0 0deg)` | `oklch(55.6% 0 0deg)` | Step 9, solid |
+| `--dui-color-neutral-10` | `oklch(50% 0 0deg)` | `oklch(50% 0 0deg)` | Step 10, solid hover |
+| `--dui-color-neutral-11` | `oklch(50.5% 0 0deg)` | `oklch(50.5% 0 0deg)` | Step 11, muted text, 4.5:1 on steps 1 to 5 and on status tints |
+| `--dui-color-neutral-12` | `oklch(14.5% 0 0deg)` | `oklch(14.5% 0 0deg)` | Step 12, text, and the light primary fill |
+| `--dui-color-neutral-12-a11` | `oklch(14.5% 0 0deg / 11%)` | `oklch(14.5% 0 0deg / 11%)` | Hairline: the text color at 11% alpha |
+| `--dui-color-neutral-punctuation` | `oklch(37% 0 0deg)` | `oklch(37% 0 0deg)` | Code punctuation, darker than muted text |
+| `--dui-color-neutral-shadow` | `oklch(0% 0 0deg / 10%)` | `oklch(0% 0 0deg / 10%)` | Shadow: black at 10% |
 
-### Indigo, the accent, light. Hue 272
+### Neutral, dark. Achromatic. Lightness rises with the step
+
+| Token | Light | Dark | Description |
+| --- | --- | --- | --- |
+| `--dui-color-neutral-dark-1` | `oklch(14.5% 0 0deg)` | `oklch(14.5% 0 0deg)` | Step 1, page |
+| `--dui-color-neutral-dark-2` | `oklch(20.5% 0 0deg)` | `oklch(20.5% 0 0deg)` | Step 2, raised |
+| `--dui-color-neutral-dark-3` | `oklch(22% 0 0deg)` | `oklch(22% 0 0deg)` | Step 3, sunken or element |
+| `--dui-color-neutral-dark-4` | `oklch(26.9% 0 0deg)` | `oklch(26.9% 0 0deg)` | Step 4, hover |
+| `--dui-color-neutral-dark-5` | `oklch(31% 0 0deg)` | `oklch(31% 0 0deg)` | Step 5, active or selected |
+| `--dui-color-neutral-dark-6` | `oklch(37.1% 0 0deg)` | `oklch(37.1% 0 0deg)` | Step 6, subtle border |
+| `--dui-color-neutral-dark-7` | `oklch(44% 0 0deg)` | `oklch(44% 0 0deg)` | Step 7, border |
+| `--dui-color-neutral-dark-8` | `oklch(58% 0 0deg)` | `oklch(58% 0 0deg)` | Step 8, control border, 3:1 on steps 1 to 3 and every elevation surface |
+| `--dui-color-neutral-dark-9` | `oklch(65% 0 0deg)` | `oklch(65% 0 0deg)` | Step 9, solid |
+| `--dui-color-neutral-dark-10` | `oklch(70% 0 0deg)` | `oklch(70% 0 0deg)` | Step 10, solid hover |
+| `--dui-color-neutral-dark-11` | `oklch(70.8% 0 0deg)` | `oklch(70.8% 0 0deg)` | Step 11, muted text |
+| `--dui-color-neutral-dark-12` | `oklch(98.5% 0 0deg)` | `oklch(98.5% 0 0deg)` | Step 12, text, and the dark primary fill |
+| `--dui-color-neutral-dark-12-a10` | `oklch(98.5% 0 0deg / 10%)` | `oklch(98.5% 0 0deg / 10%)` | Hairline: the text color at 10% alpha |
+| `--dui-color-neutral-dark-punctuation` | `oklch(83.5% 0 0deg)` | `oklch(83.5% 0 0deg)` | Code punctuation, lighter than muted text |
+| `--dui-color-neutral-dark-shadow` | `oklch(0% 0 0deg / 46%)` | `oklch(0% 0 0deg / 46%)` | Shadow: black at 46% |
+| `--dui-color-neutral-dark-12-a6` | `oklch(98.5% 0 0deg / 6%)` | `oklch(98.5% 0 0deg / 6%)` | Top highlight on raised dark surfaces: the text color at 6% alpha |
+
+### Indigo, light. Hue 272. Used by the calm theme
 
 | Token | Light | Dark | Description |
 | --- | --- | --- | --- |
@@ -1950,7 +1952,7 @@ Neutral and indigo each have 12 steps in light and in dark. The step number is t
 | `--dui-color-indigo-11` | `oklch(47% 0.19 272deg)` | `oklch(47% 0.19 272deg)` | Step 11, accent text |
 | `--dui-color-indigo-12` | `oklch(36% 0.13 272deg)` | `oklch(36% 0.13 272deg)` | Step 12, text |
 
-### Indigo, the accent, dark. Hue 272. Step 9 matches the light solid
+### Indigo, dark. Hue 272. Step 9 matches the light solid
 
 | Token | Light | Dark | Description |
 | --- | --- | --- | --- |
@@ -2133,6 +2135,7 @@ Rem, so it follows the user's font size setting.
 | `--dui-border-1` | `1px` | `1px` | No description yet. |
 | `--dui-border-2` | `2px` | `2px` | No description yet. |
 | `--dui-border-3` | `3px` | `3px` | No description yet. |
+| `--dui-border-0` | `0` | `0` | No width: a focus ring that hugs the edge |
 | `--dui-border-4` | `0.25rem` | `0.25rem` | No description yet. |
 
 ### Underline metrics, relative to the font
@@ -2210,50 +2213,50 @@ A theme is an override of these tokens on `:root` or on a scoped element. No reb
 
 Colors use [`light-dark()`](https://developer.mozilla.org/en-US/docs/Web/CSS/color_value/light-dark), which picks a value from the used color-scheme of the element where the token is read.
 
-170 tokens in [`css/tokens/semantic.css`](https://github.com/odonckers/domestic-ui/blob/main/css/tokens/semantic.css). **Light** and **Dark** resolve every `var()` and take one side of [`light-dark()`](https://developer.mozilla.org/en-US/docs/Web/CSS/color_value/light-dark). Previews are decorative. † marks a description taken from the semantic token table in [Theming](https://odonckers.github.io/domestic-ui/principles/theming.md).
+171 tokens in [`css/tokens/semantic.css`](https://github.com/odonckers/domestic-ui/blob/main/css/tokens/semantic.css). **Light** and **Dark** resolve every `var()` and take one side of [`light-dark()`](https://developer.mozilla.org/en-US/docs/Web/CSS/color_value/light-dark). Previews are decorative. † marks a description taken from the semantic token table in [Theming](https://odonckers.github.io/domestic-ui/principles/theming.md).
 
 ### Surfaces and text
 
 | Token | Light | Dark | Description |
 | --- | --- | --- | --- |
-| `--dui-color-surface` | `oklch(99.3% 0.002 265deg)` | `oklch(16.5% 0.006 265deg)` | Page background |
-| `--dui-color-surface-raised` | `oklch(98.2% 0.003 265deg)` | `oklch(19% 0.007 265deg)` | Slightly lifted areas: neutral buttons, zebra rows, cards |
-| `--dui-color-surface-sunken` | `oklch(96.2% 0.005 265deg)` | `oklch(22% 0.009 265deg)` | Recessed areas: code, button hover |
-| `--dui-color-surface-hover` | `oklch(94% 0.006 265deg)` | `oklch(26% 0.011 265deg)` | Hover fill of quiet buttons and rows (neutral step 4) |
-| `--dui-color-surface-active` | `oklch(91% 0.008 265deg)` | `oklch(31% 0.012 265deg)` | Pressed fill of quiet buttons (neutral step 5) |
-| `--dui-color-surface-frame` | `oklch(98.2% 0.003 265deg)` | `oklch(19% 0.007 265deg)` | Background of an app shell's frame: the app bar and sidebars sit on it, around the main content panel |
-| `--dui-color-text` | `oklch(21.5% 0.012 265deg)` | `oklch(95% 0.004 265deg)` | Body text |
+| `--dui-color-surface` | `oklch(100% 0 0deg)` | `oklch(14.5% 0 0deg)` | Page background |
+| `--dui-color-surface-raised` | `oklch(98.5% 0 0deg)` | `oklch(20.5% 0 0deg)` | Slightly lifted areas: neutral buttons, zebra rows, cards |
+| `--dui-color-surface-sunken` | `oklch(97% 0 0deg)` | `oklch(22% 0 0deg)` | Recessed areas: code, button hover |
+| `--dui-color-surface-hover` | `oklch(96% 0 0deg)` | `oklch(26.9% 0 0deg)` | Hover fill of quiet buttons and rows (neutral step 4) |
+| `--dui-color-surface-active` | `oklch(93.5% 0 0deg)` | `oklch(31% 0 0deg)` | Pressed fill of quiet buttons (neutral step 5) |
+| `--dui-color-surface-frame` | `oklch(98.5% 0 0deg)` | `oklch(20.5% 0 0deg)` | Background of an app shell's frame: the app bar and sidebars sit on it, around the main content panel |
+| `--dui-color-text` | `oklch(14.5% 0 0deg)` | `oklch(98.5% 0 0deg)` | Body text |
 
 ### Borders
 
 | Token | Light | Dark | Description |
 | --- | --- | --- | --- |
-| `--dui-color-border-control` | `oklch(58.5% 0.016 265deg)` | `oklch(58% 0.016 265deg)` | Boundaries of fields, selects, checkboxes, radios and switches, 3:1 |
-| `--dui-color-border-control-hover` | `oklch(52% 0.016 265deg)` | `oklch(66% 0.014 265deg)` | Field border on hover, one step stronger |
-| `--dui-color-border-button` | `oklch(84% 0.01 265deg)` | `oklch(38% 0.014 265deg)` | Secondary button border: the subtle border step, softer than a field, because its visible label identifies it |
+| `--dui-color-border-control` | `oklch(60% 0 0deg)` | `oklch(58% 0 0deg)` | Boundaries of fields, selects, checkboxes, radios and switches, 3:1 |
+| `--dui-color-border-control-hover` | `oklch(55.6% 0 0deg)` | `oklch(65% 0 0deg)` | Field border on hover, one step stronger |
+| `--dui-color-border-button` | `oklch(92.2% 0 0deg)` | `oklch(37.1% 0 0deg)` | Secondary button border: the subtle border step, softer than a field, because its visible label identifies it |
 
 ### Primary
 
 | Token | Light | Dark | Description |
 | --- | --- | --- | --- |
-| `--dui-color-primary` | `oklch(21.5% 0.012 265deg)` | `oklch(95% 0.004 265deg)` | Primary fill |
-| `--dui-color-primary-contrast` | `oklch(100% 0 0deg)` | `oklch(16.5% 0.006 265deg)` | Text on the primary fill |
+| `--dui-color-primary` | `oklch(14.5% 0 0deg)` | `oklch(98.5% 0 0deg)` | Primary fill |
+| `--dui-color-primary-contrast` | `oklch(100% 0 0deg)` | `oklch(14.5% 0 0deg)` | Text on the primary fill |
 
 ### Accent and status
 
 | Token | Light | Dark | Description |
 | --- | --- | --- | --- |
-| `--dui-color-accent` | `oklch(53% 0.215 272deg)` | `oklch(53% 0.215 272deg)` | Accent solid for focus rings, selection and checks |
-| `--dui-color-accent-contrast` | `oklch(100% 0 0deg)` | `oklch(100% 0 0deg)` | Text on the accent fill, white in both schemes |
+| `--dui-color-accent` | `oklch(14.5% 0 0deg)` | `oklch(98.5% 0 0deg)` | Accent solid for selection, checks, switches and focus: neutral 12 by default, so the look is monochrome. Themes set a hue here |
+| `--dui-color-accent-indigo` | `oklch(53% 0.215 272deg)` | `oklch(53% 0.215 272deg)` | An indigo accent solid, more vivid on a Display P3 screen. The calm theme points --dui-color-accent at it |
 | `--dui-color-link-visited` | `oklch(46.2% 0.195 299deg)` | `oklch(80.1% 0.127 306deg)` | Visited links |
 | `--dui-color-danger` | `oklch(48% 0.16 27deg)` | `oklch(80% 0.114 27deg)` | Errors and invalid borders |
 | `--dui-color-success` | `oklch(47% 0.128 150deg)` | `oklch(80% 0.12 150deg)` | Success messages |
 | `--dui-color-warning` | `oklch(47% 0.098 75deg)` | `oklch(80% 0.12 75deg)` | Warning badges and messages |
 | `--dui-color-info` | `oklch(48% 0.12 245deg)` | `oklch(80% 0.108 245deg)` | Informational alerts, separate from the accent |
 | `--dui-color-mark` | `oklch(95.3% 0.093 99deg)` | `oklch(83.4% 0.141 97deg)` | mark and ::selection background |
-| `--dui-color-mark-text` | `oklch(21.5% 0.012 265deg)` | `oklch(21.5% 0.012 265deg)` | Text on mark, the light text color in both schemes |
+| `--dui-color-mark-text` | `oklch(14.5% 0 0deg)` | `oklch(14.5% 0 0deg)` | Text on mark, the light text color in both schemes |
 | `--dui-color-backdrop` | `oklch(0% 0 0deg / 40%)` | `oklch(0% 0 0deg / 60%)` | dialog::backdrop |
-| `--dui-color-shadow` | `oklch(25% 0.015 265deg / 12%)` | `oklch(14% 0.015 265deg / 46%)` | Shadow color, tinted with the neutral hue |
+| `--dui-color-shadow` | `oklch(0% 0 0deg / 10%)` | `oklch(0% 0 0deg / 46%)` | Shadow color, tinted with the neutral hue |
 
 ### Code highlighting (css/base/typography.css, explainers/code-highlighting.md). Each meets 4.5:1 on --dui-color-surface-sunken, the <pre> background (WCAG 1.4.3)
 
@@ -2261,12 +2264,12 @@ Colors use [`light-dark()`](https://developer.mozilla.org/en-US/docs/Web/CSS/col
 | --- | --- | --- | --- |
 | `--dui-color-code-keyword` | `oklch(46.2% 0.195 299deg)` | `oklch(80.1% 0.127 306deg)` | JS keywords and CSS at-rules: const, return, @layer |
 | `--dui-color-code-string` | `oklch(47% 0.128 150deg)` | `oklch(80% 0.12 150deg)` | Quoted strings in JS and CSS, and HTML attribute values |
-| `--dui-color-code-comment` | `oklch(47.5% 0.016 265deg)` | `oklch(76% 0.012 265deg)` | Comments in HTML, CSS and JS |
+| `--dui-color-code-comment` | `oklch(50.5% 0 0deg)` | `oklch(70.8% 0 0deg)` | Comments in HTML, CSS and JS |
 | `--dui-color-code-tag` | `oklch(48% 0.12 245deg)` | `oklch(80% 0.108 245deg)` | HTML tag names and CSS selectors |
 | `--dui-color-code-attribute` | `oklch(47% 0.098 75deg)` | `oklch(80% 0.12 75deg)` | HTML attribute names |
 | `--dui-color-code-property` | `oklch(49.1% 0.081 203deg)` | `oklch(77.3% 0.099 203deg)` | CSS properties and custom properties, JS object properties |
 | `--dui-color-code-number` | `oklch(48% 0.16 27deg)` | `oklch(80% 0.114 27deg)` | Numbers with their units: 0.5rem, 100%, 42 |
-| `--dui-color-code-punctuation` | `oklch(37% 0.016 265deg)` | `oklch(83.5% 0.01 265deg)` | Brackets, braces, angle brackets, colons, semicolons, commas |
+| `--dui-color-code-punctuation` | `oklch(37% 0 0deg)` | `oklch(83.5% 0 0deg)` | Brackets, braces, angle brackets, colons, semicolons, commas |
 
 ### Type
 
@@ -2351,8 +2354,8 @@ WCAG 2.4.7, 2.4.11, 2.4.13.
 
 | Token | Light | Dark | Description |
 | --- | --- | --- | --- |
-| `--dui-focus-width` | `2px` | `2px` | Focus outline width † |
-| `--dui-focus-offset` | `2px` | `2px` | Focus outline offset † |
+| `--dui-focus-width` | `3px` | `3px` | Focus ring width: 3px, as shadcn/ui's ring |
+| `--dui-focus-offset` | `0` | `0` | Focus ring offset: 0, so the ring hugs the edge. Our choice: the ring is opaque at 3:1 rather than a translucent halo, so it meets WCAG 1.4.11 |
 
 ### Motion knobs
 
@@ -2411,15 +2414,16 @@ Defined in terms of other semantic tokens.
 
 | Token | Light | Dark | Description |
 | --- | --- | --- | --- |
-| `--dui-color-text-muted` | `color-mix(in oklab, oklch(21.5% 0.012 265deg) clamp(0%, (1 - 1) * 100%, 100%), oklch(47.5% 0.016 265deg))` | `color-mix(in oklab, oklch(95% 0.004 265deg) clamp(0%, (1 - 1) * 100%, 100%), oklch(76% 0.012 265deg))` | Secondary text, still 4.5:1. Above contrast 1 it moves toward --dui-color-text (halfway at 1.5); below 1 it stays |
-| `--dui-color-border` | `oklch(from oklch(21.5% 0.012 265deg / 11%) l c h / calc(alpha * 1))` | `oklch(from oklch(95% 0.004 265deg / 10%) l c h / calc(alpha * 1))` | Decorative hairline. Its alpha scales with --dui-contrast |
+| `--dui-color-text-muted` | `color-mix(in oklab, oklch(14.5% 0 0deg) clamp(0%, (1 - 1) * 100%, 100%), oklch(50.5% 0 0deg))` | `color-mix(in oklab, oklch(98.5% 0 0deg) clamp(0%, (1 - 1) * 100%, 100%), oklch(70.8% 0 0deg))` | Secondary text, still 4.5:1. Above contrast 1 it moves toward --dui-color-text (halfway at 1.5); below 1 it stays |
+| `--dui-color-border` | `oklch(from oklch(14.5% 0 0deg / 11%) l c h / calc(alpha * 1))` | `oklch(from oklch(98.5% 0 0deg / 10%) l c h / calc(alpha * 1))` | Decorative hairline. Its alpha scales with --dui-contrast |
 | `--dui-tint-amount` | `calc(8% * 1)` | `calc(8% * 1)` | How much of a status or accent color tints a surface: 8% times --dui-contrast |
 | `--dui-border-tint-amount` | `calc(35% * 1)` | `calc(35% * 1)` | How much of a status color a tinted border uses: 35% times --dui-contrast |
-| `--dui-color-accent-text` | `oklch(from oklch(53% 0.215 272deg) 47% calc(c * 0.19 / 0.215) h)` | `oklch(from oklch(53% 0.215 272deg) 78% calc(c * 0.11 / 0.215) h)` | Accent as text. Relative color of the accent, same hue, 4.5:1. https://www.w3.org/TR/css-color-5/#relative-colors |
-| `--dui-color-link` | `oklch(from oklch(53% 0.215 272deg) 47% calc(c * 0.19 / 0.215) h)` | `oklch(from oklch(53% 0.215 272deg) 78% calc(c * 0.11 / 0.215) h)` | Links |
-| `--dui-color-focus` | `oklch(53% 0.215 272deg)` | `oklch(from oklch(53% 0.215 272deg) 78% calc(c * 0.11 / 0.215) h)` | Focus ring: the accent solid in light, the accent text in dark, so it stays 3:1 |
-| `--dui-color-accent-hover` | `oklch(from oklch(53% 0.215 272deg) calc(l - 0.02) c h)` | `oklch(from oklch(53% 0.215 272deg) calc(l - 0.02) c h)` | Accent solid hover. Our choice: 0.02 darker in OKLCH lightness, so white text stays 4.5:1 |
-| `--dui-color-primary-hover` | `oklch(from oklch(21.5% 0.012 265deg) 32% calc(c + 0.002) h)` | `oklch(from oklch(95% 0.004 265deg) 86% calc(c + 0.004) h)` | Primary fill hover, same hue as the primary |
+| `--dui-color-accent-text` | `oklch(from oklch(14.5% 0 0deg) calc(0.47 - max(0, 0.02 - c) * 16.25) calc(c * 0.19 / 0.215) h)` | `oklch(from oklch(98.5% 0 0deg) calc(0.78 + max(0, 0.02 - c) * 10.25) calc(c * 0.11 / 0.215) h)` | Accent as text. Relative color of the accent, same hue, 4.5:1. Our choice: an achromatic accent (chroma 0, fading in up to 0.02) gives the text color, 14.5% and 98.5%, so links read as text with an underline, as in shadcn/ui. https://www.w3.org/TR/css-color-5/#relative-colors |
+| `--dui-color-link` | `oklch(from oklch(14.5% 0 0deg) calc(0.47 - max(0, 0.02 - c) * 16.25) calc(c * 0.19 / 0.215) h)` | `oklch(from oklch(98.5% 0 0deg) calc(0.78 + max(0, 0.02 - c) * 10.25) calc(c * 0.11 / 0.215) h)` | Links: the text color with the default neutral accent, told apart by the underline (WCAG 1.4.1) |
+| `--dui-color-focus` | `oklch(from oklch(14.5% 0 0deg) calc(l + max(0, 0.02 - c) * 20.25) c h)` | `oklch(from oklch(from oklch(98.5% 0 0deg) calc(0.78 + max(0, 0.02 - c) * 10.25) calc(c * 0.11 / 0.215) h) calc(l - max(0, 0.02 - c) * 21.25) c h)` | Focus ring, 3:1 (WCAG 1.4.11). A hued accent: the accent solid in light, the accent text in dark. The neutral accent: a mid gray, 55% lightness in light and 56% in dark |
+| `--dui-color-accent-contrast` | `oklch(100% 0 0deg)` | `oklch(from oklch(98.5% 0 0deg) calc(1 - max(0, 0.02 - c) * 42.5) 0 0deg)` | Text on the accent fill: white, except on the neutral dark accent, where it is the dark page color |
+| `--dui-color-accent-hover` | `oklch(from oklch(14.5% 0 0deg) calc(l - 0.02) c h)` | `oklch(from oklch(98.5% 0 0deg) calc(l - 0.02) c h)` | Accent solid hover. Our choice: 0.02 darker in OKLCH lightness, so white text stays 4.5:1 |
+| `--dui-color-primary-hover` | `oklch(from oklch(14.5% 0 0deg) 26% calc(c + 0.002) h)` | `oklch(from oklch(98.5% 0 0deg) 90% calc(c + 0.004) h)` | Primary fill hover, same hue as the primary |
 | `--dui-font-heading` | `system-ui, -apple-system, "Segoe UI Variable Text", "Segoe UI", roboto, "Noto Sans", "Helvetica Neue", arial, sans-serif` | `system-ui, -apple-system, "Segoe UI Variable Text", "Segoe UI", roboto, "Noto Sans", "Helvetica Neue", arial, sans-serif` | Heading font stack † |
 | `--dui-font-size-ui` | `0.875rem` | `0.875rem` | Interface text: buttons, fields, selects, nav, menu and listbox items, tabs, badges, tooltips, table cells. 14px at the default font size |
 | `--dui-font-size-field` | `0.875rem` | `0.875rem` | Text in fields, selects and text areas: the UI size, at least 16px under a coarse pointer (section 2a) With `@media (pointer: coarse)`: `max(var(--dui-font-size-ui), var(--dui-step-0))`, resolves to `max(0.875rem, 1rem)`. |
@@ -2433,18 +2437,18 @@ A little of the tone mixed into the surface.
 
 | Token | Light | Dark | Description |
 | --- | --- | --- | --- |
-| `--dui-color-accent-surface` | `color-mix(in oklab, oklch(53% 0.215 272deg) calc(8% * 1), oklch(99.3% 0.002 265deg))` | `color-mix(in oklab, oklch(53% 0.215 272deg) calc(8% * 1), oklch(16.5% 0.006 265deg))` | Accent badge background † |
-| `--dui-color-success-surface` | `color-mix(in oklab, oklch(47% 0.128 150deg) calc(8% * 1), oklch(99.3% 0.002 265deg))` | `color-mix(in oklab, oklch(80% 0.12 150deg) calc(8% * 1), oklch(16.5% 0.006 265deg))` | Success badge background † |
-| `--dui-color-warning-surface` | `color-mix(in oklab, oklch(47% 0.098 75deg) calc(8% * 1), oklch(99.3% 0.002 265deg))` | `color-mix(in oklab, oklch(80% 0.12 75deg) calc(8% * 1), oklch(16.5% 0.006 265deg))` | Warning badge background † |
-| `--dui-color-danger-surface` | `color-mix(in oklab, oklch(48% 0.16 27deg) calc(8% * 1), oklch(99.3% 0.002 265deg))` | `color-mix(in oklab, oklch(80% 0.114 27deg) calc(8% * 1), oklch(16.5% 0.006 265deg))` | Danger badge and alert background † |
-| `--dui-color-info-surface` | `color-mix(in oklab, oklch(48% 0.12 245deg) calc(8% * 1), oklch(99.3% 0.002 265deg))` | `color-mix(in oklab, oklch(80% 0.108 245deg) calc(8% * 1), oklch(16.5% 0.006 265deg))` | Info alert background † |
+| `--dui-color-accent-surface` | `color-mix(in oklab, oklch(14.5% 0 0deg) calc(8% * 1), oklch(100% 0 0deg))` | `color-mix(in oklab, oklch(98.5% 0 0deg) calc(8% * 1), oklch(14.5% 0 0deg))` | Accent badge background † |
+| `--dui-color-success-surface` | `color-mix(in oklab, oklch(47% 0.128 150deg) calc(8% * 1), oklch(100% 0 0deg))` | `color-mix(in oklab, oklch(80% 0.12 150deg) calc(8% * 1), oklch(14.5% 0 0deg))` | Success badge background † |
+| `--dui-color-warning-surface` | `color-mix(in oklab, oklch(47% 0.098 75deg) calc(8% * 1), oklch(100% 0 0deg))` | `color-mix(in oklab, oklch(80% 0.12 75deg) calc(8% * 1), oklch(14.5% 0 0deg))` | Warning badge background † |
+| `--dui-color-danger-surface` | `color-mix(in oklab, oklch(48% 0.16 27deg) calc(8% * 1), oklch(100% 0 0deg))` | `color-mix(in oklab, oklch(80% 0.114 27deg) calc(8% * 1), oklch(14.5% 0 0deg))` | Danger badge and alert background † |
+| `--dui-color-info-surface` | `color-mix(in oklab, oklch(48% 0.12 245deg) calc(8% * 1), oklch(100% 0 0deg))` | `color-mix(in oklab, oklch(80% 0.108 245deg) calc(8% * 1), oklch(14.5% 0 0deg))` | Info alert background † |
 
 ### Inverse pair for small overlays on top of content (tooltips): text and surface swapped
 
 | Token | Light | Dark | Description |
 | --- | --- | --- | --- |
-| `--dui-color-surface-inverse` | `oklch(21.5% 0.012 265deg)` | `oklch(95% 0.004 265deg)` | Tooltip background † |
-| `--dui-color-text-inverse` | `oklch(99.3% 0.002 265deg)` | `oklch(16.5% 0.006 265deg)` | Tooltip text † |
+| `--dui-color-surface-inverse` | `oklch(14.5% 0 0deg)` | `oklch(98.5% 0 0deg)` | Tooltip background † |
+| `--dui-color-text-inverse` | `oklch(100% 0 0deg)` | `oklch(14.5% 0 0deg)` | Tooltip text † |
 
 ### Motion
 
@@ -2465,20 +2469,20 @@ A shadow and a surface per level. Every level from 1 up is a 1px ring in the hai
 
 | Token | Light | Dark | Description |
 | --- | --- | --- | --- |
-| `--dui-elevation-shadow-color` | `color-mix(in srgb, oklch(25% 0.015 265deg / 12%) 100%, transparent)` | `color-mix(in srgb, oklch(14% 0.015 265deg / 46%) 100%, transparent)` | Shadow color after strength; retune --dui-color-shadow and --dui-elevation-strength |
-| `--dui-elevation-ring` | `0 0 0 1px oklch(from oklch(21.5% 0.012 265deg / 11%) l c h / calc(alpha * 1))` | `0 0 0 1px oklch(from oklch(95% 0.004 265deg / 10%) l c h / calc(alpha * 1))` | The 1px hairline ring included in every elevated role |
-| `--dui-elevation-highlight` | `inset 0 1px 0 0 transparent` | `inset 0 1px 0 0 oklch(95% 0.004 265deg / 6%)` | Dark scheme only: a 1px top inset highlight on levels 2 to 4 |
+| `--dui-elevation-shadow-color` | `color-mix(in srgb, oklch(0% 0 0deg / 10%) 100%, transparent)` | `color-mix(in srgb, oklch(0% 0 0deg / 46%) 100%, transparent)` | Shadow color after strength; retune --dui-color-shadow and --dui-elevation-strength |
+| `--dui-elevation-ring` | `0 0 0 1px oklch(from oklch(14.5% 0 0deg / 11%) l c h / calc(alpha * 1))` | `0 0 0 1px oklch(from oklch(98.5% 0 0deg / 10%) l c h / calc(alpha * 1))` | The 1px hairline ring included in every elevated role |
+| `--dui-elevation-highlight` | `inset 0 1px 0 0 transparent` | `inset 0 1px 0 0 oklch(98.5% 0 0deg / 6%)` | Dark scheme only: a 1px top inset highlight on levels 2 to 4 |
 | `--dui-elevation-0` | `none` | `none` | Level 0, flat: no shadow |
-| `--dui-elevation-control` | `0 1px 2px -1px color-mix(in srgb, oklch(25% 0.015 265deg / 12%) 100%, transparent)` | `0 1px 2px -1px color-mix(in srgb, oklch(14% 0.015 265deg / 46%) 100%, transparent)` | A 1px shadow under secondary buttons, without the ring: they have a border |
-| `--dui-elevation-1` | `0 0 0 1px oklch(from oklch(21.5% 0.012 265deg / 11%) l c h / calc(alpha * 1)), 0 1px 2px -1px color-mix(in srgb, oklch(25% 0.015 265deg / 12%) 100%, transparent)` | `0 0 0 1px oklch(from oklch(95% 0.004 265deg / 10%) l c h / calc(alpha * 1)), 0 1px 2px -1px color-mix(in srgb, oklch(14% 0.015 265deg / 46%) 100%, transparent)` | Level 1: the ring and a 1px shadow |
-| `--dui-elevation-2` | `inset 0 1px 0 0 transparent, 0 0 0 1px oklch(from oklch(21.5% 0.012 265deg / 11%) l c h / calc(alpha * 1)), 0 2px 4px -2px color-mix(in srgb, oklch(25% 0.015 265deg / 12%) 100%, transparent), 0 4px 12px -4px color-mix(in srgb, oklch(25% 0.015 265deg / 12%) 100%, transparent)` | `inset 0 1px 0 0 oklch(95% 0.004 265deg / 6%), 0 0 0 1px oklch(from oklch(95% 0.004 265deg / 10%) l c h / calc(alpha * 1)), 0 2px 4px -2px color-mix(in srgb, oklch(14% 0.015 265deg / 46%) 100%, transparent), 0 4px 12px -4px color-mix(in srgb, oklch(14% 0.015 265deg / 46%) 100%, transparent)` | Level 2: ring, two layers, dark highlight |
-| `--dui-elevation-3` | `inset 0 1px 0 0 transparent, 0 0 0 1px oklch(from oklch(21.5% 0.012 265deg / 11%) l c h / calc(alpha * 1)), 0 4px 8px -4px color-mix(in srgb, oklch(25% 0.015 265deg / 12%) 100%, transparent), 0 12px 24px -8px color-mix(in srgb, oklch(25% 0.015 265deg / 12%) 100%, transparent)` | `inset 0 1px 0 0 oklch(95% 0.004 265deg / 6%), 0 0 0 1px oklch(from oklch(95% 0.004 265deg / 10%) l c h / calc(alpha * 1)), 0 4px 8px -4px color-mix(in srgb, oklch(14% 0.015 265deg / 46%) 100%, transparent), 0 12px 24px -8px color-mix(in srgb, oklch(14% 0.015 265deg / 46%) 100%, transparent)` | Level 3: ring, two layers, dark highlight |
-| `--dui-elevation-4` | `inset 0 1px 0 0 transparent, 0 0 0 1px oklch(from oklch(21.5% 0.012 265deg / 11%) l c h / calc(alpha * 1)), 0 8px 16px -8px color-mix(in srgb, oklch(25% 0.015 265deg / 12%) 100%, transparent), 0 24px 48px -12px color-mix(in srgb, oklch(25% 0.015 265deg / 12%) 100%, transparent)` | `inset 0 1px 0 0 oklch(95% 0.004 265deg / 6%), 0 0 0 1px oklch(from oklch(95% 0.004 265deg / 10%) l c h / calc(alpha * 1)), 0 8px 16px -8px color-mix(in srgb, oklch(14% 0.015 265deg / 46%) 100%, transparent), 0 24px 48px -12px color-mix(in srgb, oklch(14% 0.015 265deg / 46%) 100%, transparent)` | Level 4: ring, two layers, dark highlight |
-| `--dui-elevation-0-surface` | `oklch(99.3% 0.002 265deg)` | `oklch(16.5% 0.006 265deg)` | Level 0 surface: the page |
-| `--dui-elevation-1-surface` | `oklch(99.3% 0.002 265deg)` | `color-mix(in oklab, oklch(95% 0.004 265deg) 3%, oklch(16.5% 0.006 265deg))` | Level 1 surface: one step lighter in dark |
-| `--dui-elevation-2-surface` | `oklch(99.3% 0.002 265deg)` | `color-mix(in oklab, oklch(95% 0.004 265deg) calc(3% * 2), oklch(16.5% 0.006 265deg))` | Level 2 surface: two steps lighter in dark |
-| `--dui-elevation-3-surface` | `oklch(99.3% 0.002 265deg)` | `color-mix(in oklab, oklch(95% 0.004 265deg) calc(3% * 3), oklch(16.5% 0.006 265deg))` | Level 3 surface: three steps lighter in dark |
-| `--dui-elevation-4-surface` | `oklch(99.3% 0.002 265deg)` | `color-mix(in oklab, oklch(95% 0.004 265deg) calc(3% * 4), oklch(16.5% 0.006 265deg))` | Level 4 surface: four steps lighter in dark |
+| `--dui-elevation-control` | `0 1px 2px -1px color-mix(in srgb, oklch(0% 0 0deg / 10%) 100%, transparent)` | `0 1px 2px -1px color-mix(in srgb, oklch(0% 0 0deg / 46%) 100%, transparent)` | A 1px shadow under secondary buttons, without the ring: they have a border |
+| `--dui-elevation-1` | `0 0 0 1px oklch(from oklch(14.5% 0 0deg / 11%) l c h / calc(alpha * 1)), 0 1px 2px -1px color-mix(in srgb, oklch(0% 0 0deg / 10%) 100%, transparent)` | `0 0 0 1px oklch(from oklch(98.5% 0 0deg / 10%) l c h / calc(alpha * 1)), 0 1px 2px -1px color-mix(in srgb, oklch(0% 0 0deg / 46%) 100%, transparent)` | Level 1: the ring and a 1px shadow |
+| `--dui-elevation-2` | `inset 0 1px 0 0 transparent, 0 0 0 1px oklch(from oklch(14.5% 0 0deg / 11%) l c h / calc(alpha * 1)), 0 2px 4px -2px color-mix(in srgb, oklch(0% 0 0deg / 10%) 100%, transparent), 0 4px 12px -4px color-mix(in srgb, oklch(0% 0 0deg / 10%) 100%, transparent)` | `inset 0 1px 0 0 oklch(98.5% 0 0deg / 6%), 0 0 0 1px oklch(from oklch(98.5% 0 0deg / 10%) l c h / calc(alpha * 1)), 0 2px 4px -2px color-mix(in srgb, oklch(0% 0 0deg / 46%) 100%, transparent), 0 4px 12px -4px color-mix(in srgb, oklch(0% 0 0deg / 46%) 100%, transparent)` | Level 2: ring, two layers, dark highlight |
+| `--dui-elevation-3` | `inset 0 1px 0 0 transparent, 0 0 0 1px oklch(from oklch(14.5% 0 0deg / 11%) l c h / calc(alpha * 1)), 0 4px 8px -4px color-mix(in srgb, oklch(0% 0 0deg / 10%) 100%, transparent), 0 12px 24px -8px color-mix(in srgb, oklch(0% 0 0deg / 10%) 100%, transparent)` | `inset 0 1px 0 0 oklch(98.5% 0 0deg / 6%), 0 0 0 1px oklch(from oklch(98.5% 0 0deg / 10%) l c h / calc(alpha * 1)), 0 4px 8px -4px color-mix(in srgb, oklch(0% 0 0deg / 46%) 100%, transparent), 0 12px 24px -8px color-mix(in srgb, oklch(0% 0 0deg / 46%) 100%, transparent)` | Level 3: ring, two layers, dark highlight |
+| `--dui-elevation-4` | `inset 0 1px 0 0 transparent, 0 0 0 1px oklch(from oklch(14.5% 0 0deg / 11%) l c h / calc(alpha * 1)), 0 8px 16px -8px color-mix(in srgb, oklch(0% 0 0deg / 10%) 100%, transparent), 0 24px 48px -12px color-mix(in srgb, oklch(0% 0 0deg / 10%) 100%, transparent)` | `inset 0 1px 0 0 oklch(98.5% 0 0deg / 6%), 0 0 0 1px oklch(from oklch(98.5% 0 0deg / 10%) l c h / calc(alpha * 1)), 0 8px 16px -8px color-mix(in srgb, oklch(0% 0 0deg / 46%) 100%, transparent), 0 24px 48px -12px color-mix(in srgb, oklch(0% 0 0deg / 46%) 100%, transparent)` | Level 4: ring, two layers, dark highlight |
+| `--dui-elevation-0-surface` | `oklch(100% 0 0deg)` | `oklch(14.5% 0 0deg)` | Level 0 surface: the page |
+| `--dui-elevation-1-surface` | `oklch(100% 0 0deg)` | `color-mix(in oklab, oklch(98.5% 0 0deg) 3%, oklch(14.5% 0 0deg))` | Level 1 surface: one step lighter in dark |
+| `--dui-elevation-2-surface` | `oklch(100% 0 0deg)` | `color-mix(in oklab, oklch(98.5% 0 0deg) calc(3% * 2), oklch(14.5% 0 0deg))` | Level 2 surface: two steps lighter in dark |
+| `--dui-elevation-3-surface` | `oklch(100% 0 0deg)` | `color-mix(in oklab, oklch(98.5% 0 0deg) calc(3% * 3), oklch(14.5% 0 0deg))` | Level 3 surface: three steps lighter in dark |
+| `--dui-elevation-4-surface` | `oklch(100% 0 0deg)` | `color-mix(in oklab, oklch(98.5% 0 0deg) calc(3% * 4), oklch(14.5% 0 0deg))` | Level 4 surface: four steps lighter in dark |
 
 ### Elevation by role
 
@@ -2487,17 +2491,17 @@ Components use these, never the numbers.
 | Token | Light | Dark | Description |
 | --- | --- | --- | --- |
 | `--dui-elevation-flat` | `none` | `none` | Shadow of content on the page |
-| `--dui-elevation-flat-surface` | `oklch(99.3% 0.002 265deg)` | `oklch(16.5% 0.006 265deg)` | Surface of content on the page |
-| `--dui-elevation-raised` | `0 0 0 1px oklch(from oklch(21.5% 0.012 265deg / 11%) l c h / calc(alpha * 1)), 0 1px 2px -1px color-mix(in srgb, oklch(25% 0.015 265deg / 12%) 100%, transparent)` | `0 0 0 1px oklch(from oklch(95% 0.004 265deg / 10%) l c h / calc(alpha * 1)), 0 1px 2px -1px color-mix(in srgb, oklch(14% 0.015 265deg / 46%) 100%, transparent)` | Shadow of cards |
-| `--dui-elevation-raised-surface` | `oklch(99.3% 0.002 265deg)` | `color-mix(in oklab, oklch(95% 0.004 265deg) 3%, oklch(16.5% 0.006 265deg))` | Surface of cards |
-| `--dui-elevation-panel` | `0 0 0 1px oklch(from oklch(21.5% 0.012 265deg / 11%) l c h / calc(alpha * 1)), 0 1px 2px -1px color-mix(in srgb, oklch(25% 0.015 265deg / 12%) 100%, transparent)` | `0 0 0 1px oklch(from oklch(95% 0.004 265deg / 10%) l c h / calc(alpha * 1)), 0 1px 2px -1px color-mix(in srgb, oklch(14% 0.015 265deg / 46%) 100%, transparent)` | Shadow of floating panels: an app shell's main content panel on the frame. The ring and a 1px shadow |
-| `--dui-elevation-panel-surface` | `oklch(99.3% 0.002 265deg)` | `oklch(16.5% 0.006 265deg)` | Surface of floating panels: the page surface, one step off the frame |
-| `--dui-elevation-overlay` | `inset 0 1px 0 0 transparent, 0 0 0 1px oklch(from oklch(21.5% 0.012 265deg / 11%) l c h / calc(alpha * 1)), 0 2px 4px -2px color-mix(in srgb, oklch(25% 0.015 265deg / 12%) 100%, transparent), 0 4px 12px -4px color-mix(in srgb, oklch(25% 0.015 265deg / 12%) 100%, transparent)` | `inset 0 1px 0 0 oklch(95% 0.004 265deg / 6%), 0 0 0 1px oklch(from oklch(95% 0.004 265deg / 10%) l c h / calc(alpha * 1)), 0 2px 4px -2px color-mix(in srgb, oklch(14% 0.015 265deg / 46%) 100%, transparent), 0 4px 12px -4px color-mix(in srgb, oklch(14% 0.015 265deg / 46%) 100%, transparent)` | Shadow of toasts and other non-modal layers over the page |
-| `--dui-elevation-overlay-surface` | `oklch(99.3% 0.002 265deg)` | `color-mix(in oklab, oklch(95% 0.004 265deg) calc(3% * 2), oklch(16.5% 0.006 265deg))` | Surface of non-modal layers over the page |
-| `--dui-elevation-popover` | `inset 0 1px 0 0 transparent, 0 0 0 1px oklch(from oklch(21.5% 0.012 265deg / 11%) l c h / calc(alpha * 1)), 0 4px 8px -4px color-mix(in srgb, oklch(25% 0.015 265deg / 12%) 100%, transparent), 0 12px 24px -8px color-mix(in srgb, oklch(25% 0.015 265deg / 12%) 100%, transparent)` | `inset 0 1px 0 0 oklch(95% 0.004 265deg / 6%), 0 0 0 1px oklch(from oklch(95% 0.004 265deg / 10%) l c h / calc(alpha * 1)), 0 4px 8px -4px color-mix(in srgb, oklch(14% 0.015 265deg / 46%) 100%, transparent), 0 12px 24px -8px color-mix(in srgb, oklch(14% 0.015 265deg / 46%) 100%, transparent)` | Shadow of popovers, menus, tooltips and nav dropdowns |
-| `--dui-elevation-popover-surface` | `oklch(99.3% 0.002 265deg)` | `color-mix(in oklab, oklch(95% 0.004 265deg) calc(3% * 3), oklch(16.5% 0.006 265deg))` | Surface of popovers, menus and nav dropdowns |
-| `--dui-elevation-dialog` | `inset 0 1px 0 0 transparent, 0 0 0 1px oklch(from oklch(21.5% 0.012 265deg / 11%) l c h / calc(alpha * 1)), 0 8px 16px -8px color-mix(in srgb, oklch(25% 0.015 265deg / 12%) 100%, transparent), 0 24px 48px -12px color-mix(in srgb, oklch(25% 0.015 265deg / 12%) 100%, transparent)` | `inset 0 1px 0 0 oklch(95% 0.004 265deg / 6%), 0 0 0 1px oklch(from oklch(95% 0.004 265deg / 10%) l c h / calc(alpha * 1)), 0 8px 16px -8px color-mix(in srgb, oklch(14% 0.015 265deg / 46%) 100%, transparent), 0 24px 48px -12px color-mix(in srgb, oklch(14% 0.015 265deg / 46%) 100%, transparent)` | Shadow of dialogs and drawers |
-| `--dui-elevation-dialog-surface` | `oklch(99.3% 0.002 265deg)` | `color-mix(in oklab, oklch(95% 0.004 265deg) calc(3% * 4), oklch(16.5% 0.006 265deg))` | Surface of dialogs and drawers |
+| `--dui-elevation-flat-surface` | `oklch(100% 0 0deg)` | `oklch(14.5% 0 0deg)` | Surface of content on the page |
+| `--dui-elevation-raised` | `0 0 0 1px oklch(from oklch(14.5% 0 0deg / 11%) l c h / calc(alpha * 1)), 0 1px 2px -1px color-mix(in srgb, oklch(0% 0 0deg / 10%) 100%, transparent)` | `0 0 0 1px oklch(from oklch(98.5% 0 0deg / 10%) l c h / calc(alpha * 1)), 0 1px 2px -1px color-mix(in srgb, oklch(0% 0 0deg / 46%) 100%, transparent)` | Shadow of cards |
+| `--dui-elevation-raised-surface` | `oklch(100% 0 0deg)` | `color-mix(in oklab, oklch(98.5% 0 0deg) 3%, oklch(14.5% 0 0deg))` | Surface of cards |
+| `--dui-elevation-panel` | `0 0 0 1px oklch(from oklch(14.5% 0 0deg / 11%) l c h / calc(alpha * 1)), 0 1px 2px -1px color-mix(in srgb, oklch(0% 0 0deg / 10%) 100%, transparent)` | `0 0 0 1px oklch(from oklch(98.5% 0 0deg / 10%) l c h / calc(alpha * 1)), 0 1px 2px -1px color-mix(in srgb, oklch(0% 0 0deg / 46%) 100%, transparent)` | Shadow of floating panels: an app shell's main content panel on the frame. The ring and a 1px shadow |
+| `--dui-elevation-panel-surface` | `oklch(100% 0 0deg)` | `oklch(14.5% 0 0deg)` | Surface of floating panels: the page surface, one step off the frame |
+| `--dui-elevation-overlay` | `inset 0 1px 0 0 transparent, 0 0 0 1px oklch(from oklch(14.5% 0 0deg / 11%) l c h / calc(alpha * 1)), 0 2px 4px -2px color-mix(in srgb, oklch(0% 0 0deg / 10%) 100%, transparent), 0 4px 12px -4px color-mix(in srgb, oklch(0% 0 0deg / 10%) 100%, transparent)` | `inset 0 1px 0 0 oklch(98.5% 0 0deg / 6%), 0 0 0 1px oklch(from oklch(98.5% 0 0deg / 10%) l c h / calc(alpha * 1)), 0 2px 4px -2px color-mix(in srgb, oklch(0% 0 0deg / 46%) 100%, transparent), 0 4px 12px -4px color-mix(in srgb, oklch(0% 0 0deg / 46%) 100%, transparent)` | Shadow of toasts and other non-modal layers over the page |
+| `--dui-elevation-overlay-surface` | `oklch(100% 0 0deg)` | `color-mix(in oklab, oklch(98.5% 0 0deg) calc(3% * 2), oklch(14.5% 0 0deg))` | Surface of non-modal layers over the page |
+| `--dui-elevation-popover` | `inset 0 1px 0 0 transparent, 0 0 0 1px oklch(from oklch(14.5% 0 0deg / 11%) l c h / calc(alpha * 1)), 0 4px 8px -4px color-mix(in srgb, oklch(0% 0 0deg / 10%) 100%, transparent), 0 12px 24px -8px color-mix(in srgb, oklch(0% 0 0deg / 10%) 100%, transparent)` | `inset 0 1px 0 0 oklch(98.5% 0 0deg / 6%), 0 0 0 1px oklch(from oklch(98.5% 0 0deg / 10%) l c h / calc(alpha * 1)), 0 4px 8px -4px color-mix(in srgb, oklch(0% 0 0deg / 46%) 100%, transparent), 0 12px 24px -8px color-mix(in srgb, oklch(0% 0 0deg / 46%) 100%, transparent)` | Shadow of popovers, menus, tooltips and nav dropdowns |
+| `--dui-elevation-popover-surface` | `oklch(100% 0 0deg)` | `color-mix(in oklab, oklch(98.5% 0 0deg) calc(3% * 3), oklch(14.5% 0 0deg))` | Surface of popovers, menus and nav dropdowns |
+| `--dui-elevation-dialog` | `inset 0 1px 0 0 transparent, 0 0 0 1px oklch(from oklch(14.5% 0 0deg / 11%) l c h / calc(alpha * 1)), 0 8px 16px -8px color-mix(in srgb, oklch(0% 0 0deg / 10%) 100%, transparent), 0 24px 48px -12px color-mix(in srgb, oklch(0% 0 0deg / 10%) 100%, transparent)` | `inset 0 1px 0 0 oklch(98.5% 0 0deg / 6%), 0 0 0 1px oklch(from oklch(98.5% 0 0deg / 10%) l c h / calc(alpha * 1)), 0 8px 16px -8px color-mix(in srgb, oklch(0% 0 0deg / 46%) 100%, transparent), 0 24px 48px -12px color-mix(in srgb, oklch(0% 0 0deg / 46%) 100%, transparent)` | Shadow of dialogs and drawers |
+| `--dui-elevation-dialog-surface` | `oklch(100% 0 0deg)` | `color-mix(in oklab, oklch(98.5% 0 0deg) calc(3% * 4), oklch(14.5% 0 0deg))` | Surface of dialogs and drawers |
 
 ### Density
 
@@ -2521,7 +2525,7 @@ See CHANGELOG.md.
 
 | Token | Light | Dark | Description |
 | --- | --- | --- | --- |
-| `--dui-shadow-raised` | `0 0 0 1px oklch(from oklch(21.5% 0.012 265deg / 11%) l c h / calc(alpha * 1)), 0 1px 2px -1px color-mix(in srgb, oklch(25% 0.015 265deg / 12%) 100%, transparent)` | `0 0 0 1px oklch(from oklch(95% 0.004 265deg / 10%) l c h / calc(alpha * 1)), 0 1px 2px -1px color-mix(in srgb, oklch(14% 0.015 265deg / 46%) 100%, transparent)` | Deprecated: use --dui-elevation-raised (level 1) |
+| `--dui-shadow-raised` | `0 0 0 1px oklch(from oklch(14.5% 0 0deg / 11%) l c h / calc(alpha * 1)), 0 1px 2px -1px color-mix(in srgb, oklch(0% 0 0deg / 10%) 100%, transparent)` | `0 0 0 1px oklch(from oklch(98.5% 0 0deg / 10%) l c h / calc(alpha * 1)), 0 1px 2px -1px color-mix(in srgb, oklch(0% 0 0deg / 46%) 100%, transparent)` | Deprecated: use --dui-elevation-raised (level 1) |
 | `--dui-duration-fast` | `calc(120ms * 1 * 1)` | `calc(120ms * 1 * 1)` | Deprecated: use --dui-motion-duration-fast |
 | `--dui-duration-normal` | `calc(200ms * 1 * 1)` | `calc(200ms * 1 * 1)` | Deprecated: use --dui-motion-duration-normal |
 | `--dui-easing-standard` | `cubic-bezier(0.2, 0, 0, 1)` | `cubic-bezier(0.2, 0, 0, 1)` | Deprecated: use --dui-motion-easing-standard |
@@ -3480,7 +3484,7 @@ Default is 36px and large 40px tall, both 44px or more under a coarse pointer. s
 
 #### Focus
 
-Every variant keeps the base `:focus-visible` outline. Filled (primary) buttons add an inner ring in their text color, so the indicator contrasts with the fill as well as with the surface (WCAG 1.4.11, 2.4.13).
+Every variant keeps the base `:focus-visible` ring, which hugs the edge. Filled (primary) buttons add a 1px inner line in their text color, so the indicator contrasts with the fill as well as with the surface, whatever the theme (WCAG 1.4.11, 2.4.13).
 
 #### Motion
 

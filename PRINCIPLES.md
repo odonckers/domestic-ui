@@ -51,7 +51,7 @@ Every example must pass, and every token pair is tested against, these criteria:
 | Links | Links keep their underline; color is never the only cue | [1.4.1 Use of Color](https://www.w3.org/WAI/WCAG22/Understanding/use-of-color.html) |
 | Focus visible | Every focusable element shows a `:focus-visible` outline | [2.4.7 Focus Visible](https://www.w3.org/WAI/WCAG22/Understanding/focus-visible.html) |
 | Focus not obscured | `scroll-padding` keeps focused elements clear of sticky edges | [2.4.11 Focus Not Obscured (Minimum)](https://www.w3.org/WAI/WCAG22/Understanding/focus-not-obscured-minimum.html) |
-| Focus appearance (AAA, optional) | The default 2px solid outline with a 2px offset aims to meet it | [2.4.13 Focus Appearance](https://www.w3.org/WAI/WCAG22/Understanding/focus-appearance.html) |
+| Focus appearance (AAA, optional) | The default 3px solid ring at 3:1, hugging the edge, aims to meet it | [2.4.13 Focus Appearance](https://www.w3.org/WAI/WCAG22/Understanding/focus-appearance.html) |
 | Target size | Controls are at least 36px tall and rows 32px (32px and 28px with `data-density="compact"`, see [Density](explainers/density.md); 44px under a coarse pointer), above the 24px minimum | [2.5.8 Target Size (Minimum)](https://www.w3.org/WAI/WCAG22/Understanding/target-size-minimum.html) |
 | Reduced motion | Under `prefers-reduced-motion: reduce` movement stops and fades stay; `data-motion="none"` turns transitions off (see [Motion](PRINCIPLES.md#6-motion)) | [MDN `prefers-reduced-motion`](https://developer.mozilla.org/en-US/docs/Web/CSS/@media/prefers-reduced-motion), [2.3.3 Animation from Interactions](https://www.w3.org/WAI/WCAG22/Understanding/animation-from-interactions.html) |
 | Color scheme | `color-scheme: light dark` plus [`light-dark()`](https://developer.mozilla.org/en-US/docs/Web/CSS/color_value/light-dark) in every semantic color | [MDN `color-scheme`](https://developer.mozilla.org/en-US/docs/Web/CSS/color-scheme) |
@@ -99,7 +99,7 @@ with the `--dui-` prefix.
 | Tier | File | Named by | Example | Public? |
 | --- | --- | --- | --- | --- |
 | Primitive | `css/tokens/primitives.css` | What it is | `--dui-color-indigo-9: oklch(53% 0.215 272);` `--dui-space-5: 1rem;` | No. Internal, may change in any release. |
-| Semantic | `css/tokens/semantic.css` | What it is for | `--dui-color-accent: light-dark(var(--dui-color-indigo-9), var(--dui-color-indigo-dark-9));` | **Yes.** The stable theming API. |
+| Semantic | `css/tokens/semantic.css` | What it is for | `--dui-color-accent: light-dark(var(--dui-color-neutral-12), var(--dui-color-neutral-dark-12));` | **Yes.** The stable theming API. |
 
 **Base, layout, utility and component CSS reference only semantic tokens.** They never use
 primitives and never hard-code colors or sizes (`0`, `1px` hairlines, percentages, `fr`,
@@ -132,11 +132,11 @@ On a Display P3 screen ([`@media (color-gamut: p3)`](https://developer.mozilla.o
 
 Red, green, amber and blue have steps 3, 9 and 11. [Radix Colors](https://www.radix-ui.com/colors/docs/palette-composition/understanding-the-scale) numbers a scale the same way; [Tailwind v4](https://tailwindcss.com/docs/colors) and [Geist](https://vercel.com/geist/colors) also ship OKLCH ramps. Those are other systems, for comparison.
 
-**Our choice:** the default is monochrome. `--dui-color-primary` is neutral step 12 (near-black on a light page, near-white on a dark page). `--dui-color-primary-contrast` is the text on that fill (white, or the dark page color). `--dui-color-primary-hover` is a [relative color](https://www.w3.org/TR/css-color-5/#relative-colors) of the primary ([MDN](https://developer.mozilla.org/en-US/docs/Web/CSS/Guides/Colors/Using_relative_colors)), so it keeps the primary's hue. Primary buttons and `type="submit"` read these three. The accent is indigo, for links, focus rings and selection. A theme that painted primary buttons with `--dui-color-accent` sets `--dui-color-primary` (and `--dui-color-primary-contrast` when the fill needs different text).
+**Our choice:** the default is monochrome. `--dui-color-primary` is neutral step 12 (near-black on a light page, near-white on a dark page). `--dui-color-primary-contrast` is the text on that fill (white, or the dark page color). `--dui-color-primary-hover` is a [relative color](https://www.w3.org/TR/css-color-5/#relative-colors) of the primary ([MDN](https://developer.mozilla.org/en-US/docs/Web/CSS/Guides/Colors/Using_relative_colors)), so it keeps the primary's hue. Primary buttons and `type="submit"` read these three. The accent is neutral step 12 too, so links read as underlined text and checks, switches and selection are near-black (near-white in dark), as in [shadcn/ui's neutral theme](https://ui.shadcn.com/docs/theming). `--dui-color-accent-indigo` keeps an indigo solid for themes such as calm. A theme that painted primary buttons with `--dui-color-accent` sets `--dui-color-primary` (and `--dui-color-primary-contrast` when the fill needs different text).
 
-`--dui-color-accent-text` is a relative color of `--dui-color-accent`: the same hue, with lightness and chroma set for [1.4.3 Contrast (Minimum)](https://www.w3.org/WAI/WCAG22/Understanding/contrast-minimum.html). `--dui-color-link` points at it. `--dui-color-focus` is the accent solid in light and the accent text in dark, so the ring meets [1.4.11 Non-text Contrast](https://www.w3.org/WAI/WCAG22/Understanding/non-text-contrast.html) on a dark page. `--dui-color-accent-hover` and `--dui-color-accent-surface` are derived from the accent too, so a theme that sets only `--dui-color-accent` still gets a matching link, hover and tint. `--dui-color-accent-contrast` is white in both schemes.
+`--dui-color-accent-text` is a relative color of `--dui-color-accent`: the same hue, with lightness and chroma set for [1.4.3 Contrast (Minimum)](https://www.w3.org/WAI/WCAG22/Understanding/contrast-minimum.html). `--dui-color-link` points at it. `--dui-color-focus` is the accent solid in light and the accent text in dark, so the ring meets [1.4.11 Non-text Contrast](https://www.w3.org/WAI/WCAG22/Understanding/non-text-contrast.html) on a dark page. **Our choice:** an achromatic accent (chroma 0, fading in up to 0.02) instead gives the text color for `--dui-color-accent-text` and a mid gray at 3:1 for the focus ring, so the neutral default looks like shadcn/ui's while a hued accent behaves as before. The ring is 3px and hugs the edge, like shadcn/ui's, but opaque rather than a translucent halo, so it keeps 3:1. `--dui-color-accent-hover` and `--dui-color-accent-surface` are derived from the accent too, so a theme that sets only `--dui-color-accent` still gets a matching link, hover and tint. `--dui-color-accent-contrast` is white, except on the neutral dark accent, where it is the dark page color.
 
-`--dui-color-border` is the text color at about 11% alpha, a hairline in the neutral hue. `--dui-color-border-control` stays an opaque step at 3:1 for fields, selects, checkboxes, radios and switches, whose boundary is what shows where to click or type. **Our choice:** the secondary button's border, `--dui-color-border-button`, is a softer step, because its visible text label identifies it and [1.4.11](https://www.w3.org/WAI/WCAG22/Understanding/non-text-contrast.html) asks for 3:1 only for the visual information needed to identify a component. `--dui-color-shadow` is tinted with the neutral hue.
+`--dui-color-border` is the text color at about 11% alpha, a neutral hairline. `--dui-color-border-control` stays an opaque step at 3:1 for fields, selects, checkboxes, radios and switches, whose boundary is what shows where to click or type. **Our choice:** the secondary button's border, `--dui-color-border-button`, is a softer step, because its visible text label identifies it and [1.4.11](https://www.w3.org/WAI/WCAG22/Understanding/non-text-contrast.html) asks for 3:1 only for the visual information needed to identify a component. `--dui-color-shadow` is black at low alpha.
 
 Light and dark values use [`light-dark()`](https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/Values/color_value/light-dark) ([CSS Color 5](https://www.w3.org/TR/css-color-5/)). `tests/contrast.js` checks the pairs below, and the status and code colors, against these thresholds. It takes a theme scope, so another theme can reuse it.
 
@@ -204,7 +204,7 @@ checks it), with light and dark values, so scopes nest, and forced colors keep t
 
 | Theme | `data-theme` | Tokens it changes |
 | --- | --- | --- |
-| Calm | `calm` | `--dui-color-primary`, `-primary-hover` and `-primary-contrast` follow the indigo accent (white text); `--dui-color-shadow` tinted with the accent hue. Radius and density stay the default. |
+| Calm | `calm` | `--dui-color-accent` is `--dui-color-accent-indigo`, and `--dui-color-primary`, `-primary-hover` and `-primary-contrast` follow it (white text), so links and focus are indigo too; `--dui-color-shadow` tinted with the accent hue. Radius and density stay the default. |
 | Soft | `soft` | Warm neutrals (hue 70, chroma 0.02 at most) for every surface, text and border token; `--dui-color-accent` terracotta `oklch(55% 0.15 40)` as the primary with white text; `--dui-radius-scale` 1.5 (12 / 18px); `--dui-density-scale` 1.25 (roomier padding); `--dui-elevation-strength` 80% and a warm `--dui-color-shadow`. |
 | Compact | `compact` | `--dui-color-accent` blue `oklch(53% 0.15 250)`; `--dui-radius-scale` 0.25 (2 / 3px); `--dui-density-scale` 0 (32px controls, 44px under a coarse pointer); `--dui-elevation-strength` 35%, so hairlines carry the edges. |
 
@@ -236,21 +236,22 @@ may change. Fluid `--dui-step-*` values are `clamp()` expressions; see `primitiv
 
 | Token | Purpose | Default (primitive, light / dark) |
 | --- | --- | --- |
-| `--dui-color-surface` | Page and control background (neutral step 1) | light: `neutral-1` (`oklch(99.3% 0.002 265)`)<br>dark: `neutral-dark-1` (`oklch(16.5% 0.006 265)`) |
-| `--dui-color-surface-raised` | Slightly lifted areas: neutral buttons, zebra rows, cards (step 2) | light: `neutral-2` (`oklch(98.2% 0.003 265)`)<br>dark: `neutral-dark-2` (`oklch(19% 0.007 265)`) |
-| `--dui-color-surface-sunken` | Recessed areas: code, button hover (step 3) | light: `neutral-3` (`oklch(96.2% 0.005 265)`)<br>dark: `neutral-dark-3` (`oklch(22% 0.009 265)`) |
-| `--dui-color-surface-hover` | Hover fill of quiet buttons, nav, menu and listbox rows (step 4) | light: `neutral-4` (`oklch(94% 0.006 265)`)<br>dark: `neutral-dark-4` (`oklch(26% 0.011 265)`) |
-| `--dui-color-surface-active` | Pressed fill of quiet buttons (step 5) | light: `neutral-5` (`oklch(91% 0.008 265)`)<br>dark: `neutral-dark-5` (`oklch(31% 0.012 265)`) |
+| `--dui-color-surface` | Page and control background (neutral step 1) | light: `neutral-1` (`oklch(100% 0 0)`)<br>dark: `neutral-dark-1` (`oklch(14.5% 0 0)`) |
+| `--dui-color-surface-raised` | Slightly lifted areas: neutral buttons, zebra rows, cards (step 2) | light: `neutral-2` (`oklch(98.5% 0 0)`)<br>dark: `neutral-dark-2` (`oklch(20.5% 0 0)`) |
+| `--dui-color-surface-sunken` | Recessed areas: code, button hover (step 3) | light: `neutral-3` (`oklch(97% 0 0)`)<br>dark: `neutral-dark-3` (`oklch(22% 0 0)`) |
+| `--dui-color-surface-hover` | Hover fill of quiet buttons, nav, menu and listbox rows (step 4) | light: `neutral-4` (`oklch(96% 0 0)`)<br>dark: `neutral-dark-4` (`oklch(26.9% 0 0)`) |
+| `--dui-color-surface-active` | Pressed fill of quiet buttons (step 5) | light: `neutral-5` (`oklch(93.5% 0 0)`)<br>dark: `neutral-dark-5` (`oklch(31% 0 0)`) |
 | `--dui-color-surface-frame` | Background of an app shell's frame: the app bar and sidebars sit on it, around the main content panel | `--dui-color-surface-raised` |
-| `--dui-color-text` | Body text (step 12) | light: `neutral-12` (`oklch(21.5% 0.012 265)`)<br>dark: `neutral-dark-12` (`oklch(95% 0.004 265)`) |
-| `--dui-color-text-muted` | Secondary text, captions, list markers (step 11, still 4.5:1). Above `--dui-contrast` 1 it moves toward `--dui-color-text` | light: `neutral-11` (`oklch(47.5% 0.016 265)`)<br>dark: `neutral-dark-11` (`oklch(76% 0.012 265)`) |
-| `--dui-color-border` | Decorative hairline: the text color at about 11% alpha, times `--dui-contrast` | light: `neutral-12` at 11% (`oklch(21.5% 0.012 265 / 11%)`)<br>dark: `neutral-dark-12` at 10% (`oklch(95% 0.004 265 / 10%)`) |
-| `--dui-color-border-control` | Boundaries of fields, selects, checkboxes, radios and switches (step 8, 3:1) | light: `neutral-8` (`oklch(58.5% 0.016 265)`)<br>dark: `neutral-dark-8` (`oklch(58% 0.016 265)`) |
-| `--dui-color-border-control-hover` | Field border on hover (step 9) | light: `neutral-9` (`oklch(52% 0.016 265)`)<br>dark: `neutral-dark-9` (`oklch(66% 0.014 265)`) |
-| `--dui-color-border-button` | Secondary button border (step 6): softer, because the visible label identifies the button | light: `neutral-6` (`oklch(84% 0.01 265)`)<br>dark: `neutral-dark-6` (`oklch(38% 0.014 265)`) |
-| `--dui-color-primary` | Primary action fill (neutral step 12) | light: `neutral-12` (`oklch(21.5% 0.012 265)`)<br>dark: `neutral-dark-12` (`oklch(95% 0.004 265)`) |
-| `--dui-color-primary-contrast` | Text on the primary fill | light: `white` (`oklch(100% 0 0)`)<br>dark: `neutral-dark-1` (`oklch(16.5% 0.006 265)`) |
-| `--dui-color-accent` | Accent solid for focus rings, selection and checks (indigo step 9) | light: `indigo-9` (`oklch(53% 0.215 272)`)<br>dark: `indigo-dark-9` (`oklch(53% 0.215 272)`) |
+| `--dui-color-text` | Body text (step 12) | light: `neutral-12` (`oklch(14.5% 0 0)`)<br>dark: `neutral-dark-12` (`oklch(98.5% 0 0)`) |
+| `--dui-color-text-muted` | Secondary text, captions, list markers (step 11, still 4.5:1). Above `--dui-contrast` 1 it moves toward `--dui-color-text` | light: `neutral-11` (`oklch(50.5% 0 0)`)<br>dark: `neutral-dark-11` (`oklch(70.8% 0 0)`) |
+| `--dui-color-border` | Decorative hairline: the text color at about 11% alpha, times `--dui-contrast` | light: `neutral-12` at 11% (`oklch(14.5% 0 0 / 11%)`)<br>dark: `neutral-dark-12` at 10% (`oklch(98.5% 0 0 / 10%)`) |
+| `--dui-color-border-control` | Boundaries of fields, selects, checkboxes, radios and switches (step 8, 3:1) | light: `neutral-8` (`oklch(60% 0 0)`)<br>dark: `neutral-dark-8` (`oklch(58% 0 0)`) |
+| `--dui-color-border-control-hover` | Field border on hover (step 9) | light: `neutral-9` (`oklch(55.6% 0 0)`)<br>dark: `neutral-dark-9` (`oklch(65% 0 0)`) |
+| `--dui-color-border-button` | Secondary button border (step 6): softer, because the visible label identifies the button | light: `neutral-6` (`oklch(92.2% 0 0)`)<br>dark: `neutral-dark-6` (`oklch(37.1% 0 0)`) |
+| `--dui-color-primary` | Primary action fill (neutral step 12) | light: `neutral-12` (`oklch(14.5% 0 0)`)<br>dark: `neutral-dark-12` (`oklch(98.5% 0 0)`) |
+| `--dui-color-primary-contrast` | Text on the primary fill | light: `white` (`oklch(100% 0 0)`)<br>dark: `neutral-dark-1` (`oklch(14.5% 0 0)`) |
+| `--dui-color-accent` | Accent solid for selection, checks, switches and focus (neutral step 12, so the default is monochrome) | light: `neutral-12` (`oklch(14.5% 0 0)`)<br>dark: `neutral-dark-12` (`oklch(98.5% 0 0)`) |
+| `--dui-color-accent-indigo` | An indigo accent solid, more vivid on a Display P3 screen; the calm theme's accent | light: `indigo-9` (`oklch(53% 0.215 272)`)<br>dark: `indigo-dark-9` (`oklch(53% 0.215 272)`) |
 | `--dui-color-accent-contrast` | Text on the accent fill, white in both schemes | `white` (`oklch(100% 0 0)`) |
 | `--dui-color-link-visited` | Visited links | light: `purple-11` (`oklch(46.2% 0.195 299)`)<br>dark: `purple-dark-11` (`oklch(80.1% 0.127 306)`) |
 | `--dui-color-danger` | Errors, :user-invalid borders (red step 11) | light: `red-11` (`oklch(48% 0.16 27)`)<br>dark: `red-dark-11` (`oklch(80% 0.114 27)`) |
@@ -258,17 +259,17 @@ may change. Fluid `--dui-step-*` values are `clamp()` expressions; see `primitiv
 | `--dui-color-warning` | Warning badges and messages (amber step 11) | light: `amber-11` (`oklch(47% 0.098 75)`)<br>dark: `amber-dark-11` (`oklch(80% 0.12 75)`) |
 | `--dui-color-info` | Informational alerts and toasts (blue step 11, separate from the accent, so a brand color never reads as a status) | light: `blue-11` (`oklch(48% 0.12 245)`)<br>dark: `blue-dark-11` (`oklch(80% 0.108 245)`) |
 | `--dui-color-mark` | mark and ::selection background | light: `yellow-3` (`oklch(95.3% 0.093 99)`)<br>dark: `yellow-dark-9` (`oklch(83.4% 0.141 97)`) |
-| `--dui-color-mark-text` | Text on mark | `neutral-12` (`oklch(21.5% 0.012 265)`) |
+| `--dui-color-mark-text` | Text on mark | `neutral-12` (`oklch(14.5% 0 0)`) |
 | `--dui-color-backdrop` | dialog::backdrop | light: `black-a40` (`oklch(0% 0 0 / 40%)`)<br>dark: `black-a60` (`oklch(0% 0 0 / 60%)`) |
-| `--dui-color-shadow` | Shadow color, tinted with the neutral hue | light: `neutral-shadow` (`oklch(25% 0.015 265 / 12%)`)<br>dark: `neutral-dark-shadow` (`oklch(14% 0.015 265 / 46%)`) |
+| `--dui-color-shadow` | Shadow color: black at low alpha | light: `neutral-shadow` (`oklch(0% 0 0 / 10%)`)<br>dark: `neutral-dark-shadow` (`oklch(0% 0 0 / 46%)`) |
 | `--dui-color-code-keyword` | JS keywords and CSS at-rules in highlighted code (4.5:1 on surface-sunken) | light: `purple-11` (`oklch(46.2% 0.195 299)`)<br>dark: `purple-dark-11` (`oklch(80.1% 0.127 306)`) |
 | `--dui-color-code-string` | Strings and HTML attribute values in highlighted code (4.5:1 on surface-sunken) | light: `green-11` (`oklch(47% 0.128 150)`)<br>dark: `green-dark-11` (`oklch(80% 0.12 150)`) |
-| `--dui-color-code-comment` | Comments in highlighted code (4.5:1 on surface-sunken) | light: `neutral-11` (`oklch(47.5% 0.016 265)`)<br>dark: `neutral-dark-11` (`oklch(76% 0.012 265)`) |
+| `--dui-color-code-comment` | Comments in highlighted code (4.5:1 on surface-sunken) | light: `neutral-11` (`oklch(50.5% 0 0)`)<br>dark: `neutral-dark-11` (`oklch(70.8% 0 0)`) |
 | `--dui-color-code-tag` | HTML tag names and CSS selectors in highlighted code (4.5:1 on surface-sunken) | light: `blue-11` (`oklch(48% 0.12 245)`)<br>dark: `blue-dark-11` (`oklch(80% 0.108 245)`) |
 | `--dui-color-code-attribute` | HTML attribute names in highlighted code (4.5:1 on surface-sunken) | light: `amber-11` (`oklch(47% 0.098 75)`)<br>dark: `amber-dark-11` (`oklch(80% 0.12 75)`) |
 | `--dui-color-code-property` | CSS and JS properties in highlighted code (4.5:1 on surface-sunken) | light: `teal-11` (`oklch(49.1% 0.081 203)`)<br>dark: `teal-dark-11` (`oklch(77.3% 0.099 203)`) |
 | `--dui-color-code-number` | Numbers and units in highlighted code (4.5:1 on surface-sunken) | light: `red-11` (`oklch(48% 0.16 27)`)<br>dark: `red-dark-11` (`oklch(80% 0.114 27)`) |
-| `--dui-color-code-punctuation` | Brackets, braces and separators in highlighted code (4.5:1 on surface-sunken) | light: `neutral-punctuation` (`oklch(37% 0.016 265)`)<br>dark: `neutral-dark-punctuation` (`oklch(83.5% 0.01 265)`) |
+| `--dui-color-code-punctuation` | Brackets, braces and separators in highlighted code (4.5:1 on surface-sunken) | light: `neutral-punctuation` (`oklch(37% 0 0)`)<br>dark: `neutral-dark-punctuation` (`oklch(83.5% 0 0)`) |
 | `--dui-font-body` | Body font stack | `--dui-font-stack-system-ui` (`system-ui`, `-apple-system`, `"Segoe UI Variable Text"`, `"Segoe UI"`, Roboto, `"Noto Sans"`, `"Helvetica Neue"`, Arial, `sans-serif`) |
 | `--dui-font-mono` | Code font stack | `--dui-font-stack-monospace` (`ui-monospace`, …, `monospace`) |
 | `--dui-font-weight-body` | Body weight | `font-weight-400` (400) |
@@ -330,8 +331,8 @@ may change. Fluid `--dui-step-*` values are `clamp()` expressions; see `primitiv
 | `--dui-underline-offset` | Link underline offset | `underline-offset-015em` (0.15em) |
 | `--dui-underline-thickness` | Link underline | `underline-1` (0.0625em) |
 | `--dui-underline-thickness-hover` | Link underline on hover | `underline-2` (0.125em) |
-| `--dui-focus-width` | Focus outline width | `border-2` (2px) |
-| `--dui-focus-offset` | Focus outline offset | `border-2` (2px) |
+| `--dui-focus-width` | Focus ring width | `border-3` (3px) |
+| `--dui-focus-offset` | Focus ring offset: the ring hugs the edge | `border-0` (0) |
 | `--dui-motion-scale` | Multiplies every motion duration | `factor-1` (1) |
 | `--dui-motion-movement` | Lets things slide, lift and zoom (1) or not (0); `0` with reduced motion | `factor-1` (1) |
 | `--dui-motion-enabled` | `0` with `data-motion="none"`: every duration is `0s`, whatever scale is set inside | `factor-1` (1) |
@@ -350,7 +351,7 @@ may change. Fluid `--dui-step-*` values are `clamp()` expressions; see `primitiv
 | `--dui-color-link` | Links | `--dui-color-accent-text` |
 | `--dui-color-focus` | Focus ring (3:1 against surfaces) | light: `--dui-color-accent`<br>dark: `--dui-color-accent-text` |
 | `--dui-color-accent-hover` | Accent solid hover | `oklch(from --dui-color-accent)` with lightness 0.02 lower |
-| `--dui-color-primary-hover` | Primary fill hover | light: `oklch(32% 0.014 265)`<br>dark: `oklch(86% 0.008 265)`, hue from `--dui-color-primary` |
+| `--dui-color-primary-hover` | Primary fill hover | light: `oklch(26% 0.002 0)`<br>dark: `oklch(90% 0.004 0)`, hue from `--dui-color-primary` |
 | `--dui-font-heading` | Heading font stack | `--dui-font-body` |
 | `--dui-color-accent-surface` | Accent badge background | `color-mix()` of `--dui-tint-amount` `--dui-color-accent` into `--dui-color-surface` |
 | `--dui-color-success-surface` | Success badge background | same, with `--dui-color-success` |
