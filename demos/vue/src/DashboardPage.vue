@@ -1,0 +1,90 @@
+<script setup>
+import Layout from './Layout.vue'
+
+const summary = [
+  { id: 'due-today', title: 'Due today', count: 2 },
+  { id: 'overdue', title: 'Overdue', count: 1 },
+  { id: 'done-this-week', title: 'Done this week', count: 12, note: 'Since Monday' },
+  { id: 'members', title: 'Household members', count: 4 },
+]
+
+const chores = [
+  { chore: 'Take out recycling', room: 'Garden', assignee: 'Jordan', date: '2026-11-19', due: 'Yesterday', status: 'Overdue', tone: 'danger' },
+  { chore: 'Empty the dishwasher', room: 'Kitchen', assignee: 'Sam', date: '2026-11-20', due: 'Today', status: 'Done', tone: 'success' },
+  { chore: 'Water the plants', room: 'Living room', assignee: 'Alex', date: '2026-11-20', due: 'Today', status: 'Due today', tone: 'warning' },
+  { chore: 'Clean the bathroom', room: 'Bathroom', assignee: 'Riley', date: '2026-11-22', due: 'Sunday 22 November', status: 'Scheduled', tone: 'neutral' },
+  { chore: 'Vacuum the stairs', room: 'Living room', assignee: 'Sam', date: '2026-11-24', due: 'Tuesday 24 November', status: 'Scheduled', tone: 'neutral' },
+]
+</script>
+
+<template>
+  <Layout current="dashboard">
+    <h1>Chores dashboard</h1>
+    <p data-text="lead">What needs doing around the house this week, and who is on it.</p>
+
+    <div data-dashboard="">
+      <section v-for="card in summary" :key="card.id" :aria-labelledby="`${card.id}-title`">
+        <h2 :id="`${card.id}-title`">{{ card.title }}</h2>
+        <p>{{ card.count }}</p>
+        <p v-if="card.note" data-text="small muted">{{ card.note }}</p>
+      </section>
+      <section data-dashboard="full" aria-labelledby="upcoming-title">
+        <h2 id="upcoming-title">Upcoming chores</h2>
+
+        <details>
+          <summary>Filter</summary>
+          <form class="stack" method="get">
+            <div data-field="">
+              <label for="filter-room">Room</label>
+              <select id="filter-room" name="room">
+                <option value="all" selected>All rooms</option>
+                <option value="kitchen">Kitchen</option>
+                <option value="bathroom">Bathroom</option>
+                <option value="living-room">Living room</option>
+                <option value="garden">Garden</option>
+              </select>
+            </div>
+            <fieldset>
+              <legend>Show</legend>
+              <label><input type="checkbox" name="mine" /> Only chores assigned to me</label>
+              <label><input type="checkbox" name="completed" /> Completed chores</label>
+            </fieldset>
+            <div class="cluster">
+              <button type="submit" data-button="small">Apply filter</button>
+            </div>
+          </form>
+        </details>
+
+        <section data-scroll="inline" aria-labelledby="chores-caption" tabindex="0">
+          <table data-table="">
+            <caption id="chores-caption">Chores this week</caption>
+            <thead>
+              <tr>
+                <th scope="col">Chore</th>
+                <th scope="col">Room</th>
+                <th scope="col">Assigned to</th>
+                <th scope="col">Due</th>
+                <th scope="col">Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="row in chores" :key="row.chore">
+                <th scope="row">{{ row.chore }}</th>
+                <td>{{ row.room }}</td>
+                <td>{{ row.assignee }}</td>
+                <td><time :datetime="row.date">{{ row.due }}</time></td>
+                <td><span :data-badge="row.tone">{{ row.status }}</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+
+        <div class="cluster">
+          <button type="button" data-button="primary">Add chore</button>
+          <button type="button" data-button="secondary">Swap a chore</button>
+          <button type="button" data-button="quiet">Print this week</button>
+        </div>
+      </section>
+    </div>
+  </Layout>
+</template>

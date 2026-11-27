@@ -21,7 +21,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        app: [vanilla, react, angular, astro]
+        app: [vanilla, react, angular, astro, vue, svelte]
     env:
       NG_CLI_ANALYTICS: "false"
       ASTRO_TELEMETRY_DISABLED: "1"
