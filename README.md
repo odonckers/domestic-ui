@@ -80,7 +80,7 @@ Docs pages also link how other design systems handle the same thing, for compari
 
 ## Patterns
 
-Each follows a native element or WAI-ARIA APG pattern where one exists ([Patterns](https://odonckers.github.io/domestic-ui/patterns/index.html)). Guides: [From a simple site to an ERP app](https://odonckers.github.io/domestic-ui/guides/simple-site-to-erp-app.html).
+Each follows a native element or WAI-ARIA APG pattern where one exists ([Patterns](https://odonckers.github.io/domestic-ui/patterns/index.html)). Guides: [Use it with any framework](https://odonckers.github.io/domestic-ui/guides/any-framework.html), [From a simple site to an ERP app](https://odonckers.github.io/domestic-ui/guides/simple-site-to-erp-app.html).
 
 | Pattern | Milestone | Status |
 | --- | --- | --- |
@@ -112,7 +112,9 @@ Each follows a native element or WAI-ARIA APG pattern where one exists ([Pattern
 - **Angular** ([`demos/angular/`](https://github.com/odonckers/domestic-ui/tree/main/demos/angular)): The dashboard, account settings and orders views in Angular 22: standalone components, three routes (`''`, `'settings'` and `'orders'`) with Angular Router, a `title` per route, and `routerLinkActive` with `ariaCurrentWhenActive="page"` for the current link.
 - **Astro** ([`demos/astro/`](https://github.com/odonckers/domestic-ui/tree/main/demos/astro)): The dashboard, account settings and orders views as three static Astro pages (`src/pages/index.astro`, `src/pages/settings.astro` and `src/pages/orders.astro`) sharing `src/layouts/Base.astro`.
 - **React** ([`demos/react/`](https://github.com/odonckers/domestic-ui/tree/main/demos/react)): The dashboard, account settings and orders views in React 19 with Vite, as a three-page [multi-page app](https://vite.dev/guide/build#multi-page-app) (`index.html`, `settings.html` and `orders.html`).
+- **Svelte** ([`demos/svelte/`](https://github.com/odonckers/domestic-ui/tree/main/demos/svelte)): The dashboard, account settings and orders views in Svelte 5 with Vite, as a three-page [multi-page app](https://vite.dev/guide/build#multi-page-app) (`index.html`, `settings.html` and `orders.html`).
 - **Plain HTML** ([`demos/vanilla/`](https://github.com/odonckers/domestic-ui/tree/main/demos/vanilla)): The dashboard, account settings and orders views as three static HTML files, with no build step.
+- **Vue** ([`demos/vue/`](https://github.com/odonckers/domestic-ui/tree/main/demos/vue)): The dashboard, account settings and orders views in Vue 3 with Vite, as a three-page [multi-page app](https://vite.dev/guide/build#multi-page-app) (`index.html`, `settings.html` and `orders.html`) of single-file components.
 
 Views: Dashboard, Account settings and Orders; [source per view and app](https://odonckers.github.io/domestic-ui/demos.html#views).
 

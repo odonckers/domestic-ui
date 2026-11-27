@@ -47,7 +47,7 @@ reads the name in backticks in a row's first cell and needs the last cell to be 
 | --- | --- | --- | --- | --- | --- | --- | --- |
 | [`react`](https://github.com/facebook/react) 19.3 | `demos/react` | In the browser (demo only) | MIT | Meta (React team) | None | 0 vulnerabilities | 2026-11-27 |
 | [`react-dom`](https://github.com/facebook/react) 19.3 | `demos/react` | In the browser (demo only) | MIT | Meta (React team) | None | 0 vulnerabilities | 2026-11-27 |
-| [`vite`](https://github.com/vitejs/vite) 8 | `demos/react` | Build time and local dev server only | MIT | Vite team (vitejs org) | None (optional macOS-only `fsevents` in its tree) | 0 vulnerabilities | 2026-11-27 |
+| [`vite`](https://github.com/vitejs/vite) 8 | `demos/react`, `demos/vue`, `demos/svelte` | Build time and local dev server only | MIT | Vite team (vitejs org) | None (optional macOS-only `fsevents` in its tree) | 0 vulnerabilities | 2026-11-27 |
 | [`@vitejs/plugin-react`](https://github.com/vitejs/vite-plugin-react) 6.3 | `demos/react` | Build time only | MIT | Vite team (vitejs org) | None | 0 vulnerabilities | 2026-11-27 |
 | [`oxlint`](https://github.com/oxc-project/oxc) 1.94 | `demos/react` | Lint only | MIT | oxc project | None (native binary through platform optional dependencies) | 0 vulnerabilities | 2026-11-27 |
 | [`typescript`](https://github.com/microsoft/TypeScript) 7.0 / 6.0 | `demos/react`, `demos/angular` | Build time only | Apache-2.0 | Microsoft | None | 0 vulnerabilities | 2026-11-27 |
@@ -59,6 +59,10 @@ reads the name in backticks in a row's first cell and needs the last cell to be 
 | [`jsdom`](https://github.com/jsdom/jsdom) 31.0 | `demos/angular` | Tests only | MIT | jsdom org | None | 0 vulnerabilities | 2026-11-27 |
 | [`prettier`](https://github.com/prettier/prettier) 3.10 | `demos/angular` | Formatting only | MIT | Prettier org | None | 0 vulnerabilities | 2026-11-27 |
 | [`astro`](https://github.com/withastro/astro) 7.4 | `demos/astro` | Build time (static output) | MIT | Astro core team (withastro org) | None (optional macOS-only `fsevents` in its tree) | 0 vulnerabilities | 2026-11-27 |
+| [`vue`](https://github.com/vuejs/core) 3.5 | `demos/vue` | In the browser (demo only) | MIT | Vue core team (vuejs org) | None | 0 vulnerabilities | 2026-11-27 |
+| [`@vitejs/plugin-vue`](https://github.com/vitejs/vite-plugin-vue) 6.0 | `demos/vue` | Build time only | MIT | Vite team (vitejs org) | None | 0 vulnerabilities | 2026-11-27 |
+| [`svelte`](https://github.com/sveltejs/svelte) 5.59 | `demos/svelte` | Build time (compiler) and in the browser (small runtime, demo only) | MIT | Svelte core team (sveltejs org) | None | 0 vulnerabilities | 2026-11-27 |
+| [`@sveltejs/vite-plugin-svelte`](https://github.com/sveltejs/vite-plugin-svelte) 7.3 | `demos/svelte` | Build time only | MIT | Svelte core team (sveltejs org) | None | 0 vulnerabilities | 2026-11-27 |
 
 ### CI
 
@@ -75,8 +79,8 @@ reads the name in backticks in a row's first cell and needs the last cell to be 
 ### Notes from the 2026-11-27 review
 
 - `npm audit` reported 0 vulnerabilities in the root (142 packages), `demos/a11y` (18), `demos/react` (97),
-  `demos/angular` (424) and `demos/astro` (311) lockfiles.
-- The only install scripts are in the demo trees: the optional, macOS-only `fsevents` (React, Angular, Astro) and the
+  `demos/angular` (424), `demos/astro` (311), `demos/vue` (36) and `demos/svelte` (39) lockfiles.
+- The only install scripts are in the demo trees: the optional, macOS-only `fsevents` (React, Angular, Astro, Vue, Svelte) and the
   Angular build stack's native binaries (`esbuild`, `@parcel/watcher`, `lmdb`, `msgpackr-extract`). They run only when
   someone builds that demo.
 - None of the demo packages reaches a user of domestic-ui: they live in each demo's own `package.json`, and nothing

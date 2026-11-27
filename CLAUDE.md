@@ -11,7 +11,7 @@ Read [PRINCIPLES.md](PRINCIPLES.md) before changing behavior. [CONTRIBUTING.md](
 - `examples/`: named snippet blocks. They are the single source for docs examples and test fixtures.
 - `explainers/`: Open UI/W3C-style explainers for our own patterns (RFC 2119 wording).
 - `site/`: zero-dependency docs build (`site/build.mjs`) that writes `_site/` plus `README.md`, `llms.txt` and `llms-full.txt`.
-- `demos/`: `vanilla` (no build), `react` (Vite), `angular` and `astro`, each with its own `package.json`. `demos/a11y` is the shared axe and html-validate checker.
+- `demos/`: `vanilla` (no build), `react`, `vue` and `svelte` (Vite), `angular` and `astro`, each with its own `package.json`. `demos/a11y` is the shared axe and html-validate checker.
 - `tests/`: Playwright specs (Chromium, Firefox, WebKit) with axe.
 - Node >= 24.8 (`engines` in `package.json`). The repo root installs dev tooling only.
 
@@ -25,7 +25,7 @@ Read [PRINCIPLES.md](PRINCIPLES.md) before changing behavior. [CONTRIBUTING.md](
 - Preview: `node site/build.mjs && node scripts/serve.mjs`, then open http://127.0.0.1:4173/_site/index.html
 - Generated files: `node site/build.mjs` writes `README.md`, `llms.txt` and `llms-full.txt`; `node site/build.mjs --check` fails if they are stale (CI runs it).
 - Alignment pass for layout, nav, toolbar, menu, tabs, dialog or table changes: read `.claude/skills/gridlines/DOMESTIC-UI.md`, then `npm run gridlines -- examples/app-shell.html`.
-- Demos: `cd demos/<react|angular|astro> && npm ci && npm run build`. Checks: `cd demos/a11y && npm ci && DEMO_APP=<vanilla|react|angular|astro> npm test` (see `demos/a11y/README.md` for prerequisites).
+- Demos: `cd demos/<react|angular|astro|vue|svelte> && npm ci && npm run build`. Checks: `cd demos/a11y && npm ci && DEMO_APP=<vanilla|react|angular|astro|vue|svelte> npm test` (see `demos/a11y/README.md` for prerequisites).
 - Commit lint: `echo "fix(nav): keep the marker on aria-current" | npx commitlint`
 - Changelog: `npm run changelog` and `npm run changelog:check` run at release time only (see Releasing in CONTRIBUTING.md). Between releases `changelog:check` reports the file out of date by design, and CI does not run it.
 
