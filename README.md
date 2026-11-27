@@ -33,6 +33,7 @@ Components: one `data-<component>` attribute of space-separated words matched wi
 11. [Explainers](https://odonckers.github.io/domestic-ui/principles/explainers.html)
 12. [Tooling](https://odonckers.github.io/domestic-ui/principles/tooling.html)
 13. [Edges and alignment](https://odonckers.github.io/domestic-ui/principles/edges-and-alignment.html)
+14. [Design principles](https://odonckers.github.io/domestic-ui/principles/design-principles.html)
 
 ## Components
 
