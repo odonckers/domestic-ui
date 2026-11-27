@@ -22,6 +22,12 @@
  * <select>, because the value is free text and the upgrade reuses the same
  * input and the same options.
  *
+ * Successor: None for free-text autocomplete. Pick-one lists can use a native <select>
+ * styled with appearance: base-select (customizable select).
+ * https://developer.mozilla.org/en-US/docs/Learn_web_development/Extensions/Forms/Customizable_select
+ * Retire when: Kept for free text; pick-one uses move to <select> once base-select is
+ *   Baseline newly available.
+ *
  * API
  *   <dui-combobox>                    wraps a <label>, an <input list="id">
  *                                     and its <datalist id="id">

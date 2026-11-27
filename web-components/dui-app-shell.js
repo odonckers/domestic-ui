@@ -33,6 +33,10 @@
  * primary sidebar and 64rem for the auxiliary one (a container query
  * cannot read a custom property, so both files write the numbers).
  *
+ * Successor: Container queries already own the layout. Nothing in the platform moves one
+ * node into a modal dialog and back, so no successor is proposed.
+ * Retire when: Kept.
+ *
  * API
  *   <dui-app-shell data-app-shell>   the shell itself (see app-shell.css)
  *   <button aria-controls="id" aria-expanded hidden>   a toggle for the

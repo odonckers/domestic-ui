@@ -23,6 +23,11 @@ Every pull request, from inside or outside the project, gets the same review and
 
 The default theme should look complete and consistent out of the box. Consumers re-theme the system by overriding those tokens.
 
+## Dependencies
+
+The published CSS and web components have no runtime dependencies. A new development dependency comes with a
+security review and a row in [`docs/DEPENDENCIES.md`](docs/DEPENDENCIES.md), in the same pull request.
+
 ## Checks
 
 `npm test` must pass. That run includes html-validate, axe, and stylelint. On Linux it also compares the screenshot baselines.
@@ -87,6 +92,34 @@ request re-runs CI. Merge commits such as "Merge branch 'main' into …" are ign
 [`cliff.toml`](cliff.toml)) at release time. Never edit it by hand, and do not add changelog entries in pull
 requests: the commit message is the entry. `npm run changelog:check` fails if the file is out of date. The section
 written by hand before Conventional Commits is kept as it is.
+
+### Versioning
+
+Versions follow [Semantic Versioning 2.0.0](https://semver.org/spec/v2.0.0.html). These are the public API, and
+changing or removing any of them is a breaking change:
+
+- semantic tokens and knobs in `css/tokens/semantic.css` (primitives in `css/tokens/primitives.css` are internal and
+  may change in any release);
+- each component's `data-<component>` attribute and its words (`data-button="secondary small"`);
+- the scope attributes `data-theme`, `data-color-scheme`, `data-density`, `data-motion` and `data-contrast`, and their
+  values;
+- the markup contract of each component: which native elements, attributes and ARIA states it expects;
+- custom element names, their attributes, properties, methods and events (`dui-*`);
+- every file path under `css/` and `web-components/`;
+- the names of the snippets in `examples/`.
+
+Breaking also covers raising the supported browsers so that one of them loses the core look, and retiring a web
+component. A breaking change is marked with `!` or a `BREAKING CHANGE:` footer and merges only with the
+maintainer's approval.
+
+- **Before 1.0:** a breaking change bumps the minor version (0.x.0); everything else bumps the patch.
+- **Deprecation:** a deprecated token, attribute word or element keeps working for at least one minor release, is
+  marked **Deprecated** in its documentation with its replacement, and is removed in a later minor release.
+- **Visual changes** to the default theme are not breaking, but release notes call them out and the screenshot tests
+  cover them.
+- **1.0** comes when the semantic tokens, the attribute vocabulary and the web component APIs have gone one full minor
+  release with no breaking change, every component has a docs page in MDN structure, and the four framework demos pass
+  the shared accessibility checks. [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) has the reasoning.
 
 ### Releasing
 
