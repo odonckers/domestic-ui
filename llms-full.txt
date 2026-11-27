@@ -361,8 +361,9 @@ may change. Fluid `--dui-step-*` values are `clamp()` expressions; see `primitiv
 | `--dui-step-3` | h3, page titles | `font-size-fluid-3` (`clamp()`, 1.5rem to 1.875rem) |
 | `--dui-step-4` | h2 | `font-size-fluid-4` (`clamp()`, 1.75rem to 2.375rem) |
 | `--dui-step-5` | h1, docs and marketing heroes | `font-size-fluid-5` (`clamp()`, 2rem to 3rem) |
-| `--dui-font-size-ui` | Interface text: buttons, fields, selects, nav, menu and listbox items, tabs, badges, tooltips, table cells | `--dui-step--1` (14px) |
+| `--dui-font-size-ui` | Interface text: buttons, fields, selects, nav, menu and listbox items, tabs, tooltips, table cells | `--dui-step--1` (14px) |
 | `--dui-font-size-field` | Text in fields, selects and text areas: the UI size, at least 16px under a coarse pointer | `--dui-font-size-ui`; `max(--dui-font-size-ui, --dui-step-0)` under `pointer: coarse` |
+| `--dui-font-size-badge` | Badge text, as shadcn/ui sets its badge | `font-size-0-75` (0.75rem, 12px) |
 | `--dui-font-size-page-title` | The `h1` of a page header or an app shell | `--dui-step-3` (1.875rem at most) |
 | `--dui-font-size-code` | code, kbd, samp, pre (relative) | `font-size-relative-90` (0.9em) |
 | `--dui-line-height-body` | Body text | `leading-150` (1.5) |
@@ -1812,7 +1813,7 @@ Neutral and indigo each have 12 steps in light and in dark. The step number is t
 
 [Custom properties](https://developer.mozilla.org/en-US/docs/Web/CSS/--*).
 
-181 tokens in [`css/tokens/primitives.css`](https://github.com/odonckers/domestic-ui/blob/main/css/tokens/primitives.css). **Light** and **Dark** resolve every `var()` and take one side of [`light-dark()`](https://developer.mozilla.org/en-US/docs/Web/CSS/color_value/light-dark). Previews are decorative.
+182 tokens in [`css/tokens/primitives.css`](https://github.com/odonckers/domestic-ui/blob/main/css/tokens/primitives.css). **Light** and **Dark** resolve every `var()` and take one side of [`light-dark()`](https://developer.mozilla.org/en-US/docs/Web/CSS/color_value/light-dark). Previews are decorative.
 
 ### Neutral, light. Achromatic (chroma 0), as shadcn/ui's neutral base
 
@@ -1976,6 +1977,7 @@ System fonts only, no downloads. The system-ui stack names the platform UI faces
 
 | Token | Light | Dark | Description |
 | --- | --- | --- | --- |
+| `--dui-font-size-0-75` | `0.75rem` | `0.75rem` | 12px: badges |
 | `--dui-font-size-0-875` | `0.875rem` | `0.875rem` | 14px: interface text |
 | `--dui-font-size-1` | `1rem` | `1rem` | 16px: body text |
 | `--dui-font-size-1-125` | `1.125rem` | `1.125rem` | 18px |
@@ -2136,7 +2138,7 @@ A theme is an override of these tokens on `:root` or on a scoped element. No reb
 
 Colors use [`light-dark()`](https://developer.mozilla.org/en-US/docs/Web/CSS/color_value/light-dark), which picks a value from the used color-scheme of the element where the token is read.
 
-177 tokens in [`css/tokens/semantic.css`](https://github.com/odonckers/domestic-ui/blob/main/css/tokens/semantic.css). **Light** and **Dark** resolve every `var()` and take one side of [`light-dark()`](https://developer.mozilla.org/en-US/docs/Web/CSS/color_value/light-dark). Previews are decorative. † marks a description taken from the semantic token table in [Theming](https://odonckers.github.io/domestic-ui/principles/theming.md).
+178 tokens in [`css/tokens/semantic.css`](https://github.com/odonckers/domestic-ui/blob/main/css/tokens/semantic.css). **Light** and **Dark** resolve every `var()` and take one side of [`light-dark()`](https://developer.mozilla.org/en-US/docs/Web/CSS/color_value/light-dark). Previews are decorative. † marks a description taken from the semantic token table in [Theming](https://odonckers.github.io/domestic-ui/principles/theming.md).
 
 ### Surfaces and text
 
@@ -2352,8 +2354,9 @@ Defined in terms of other semantic tokens.
 | `--dui-color-accent-hover` | `oklch(from oklch(14.5% 0 0deg) calc(l - 0.02) c h)` | `oklch(from oklch(98.5% 0 0deg) calc(l - 0.02) c h)` | Accent solid hover. Our choice: 0.02 darker in OKLCH lightness, so white text stays 4.5:1 |
 | `--dui-color-primary-hover` | `oklch(from oklch(14.5% 0 0deg) 26% calc(c + 0.002) h)` | `oklch(from oklch(98.5% 0 0deg) 90% calc(c + 0.004) h)` | Primary fill hover, same hue as the primary |
 | `--dui-font-heading` | `system-ui, -apple-system, "Segoe UI Variable Text", "Segoe UI", roboto, "Noto Sans", "Helvetica Neue", arial, sans-serif` | `system-ui, -apple-system, "Segoe UI Variable Text", "Segoe UI", roboto, "Noto Sans", "Helvetica Neue", arial, sans-serif` | Heading font stack † |
-| `--dui-font-size-ui` | `0.875rem` | `0.875rem` | Interface text: buttons, fields, selects, nav, menu and listbox items, tabs, badges, tooltips, table cells. 14px at the default font size |
+| `--dui-font-size-ui` | `0.875rem` | `0.875rem` | Interface text: buttons, fields, selects, nav, menu and listbox items, tabs, tooltips, table cells. 14px at the default font size |
 | `--dui-font-size-field` | `0.875rem` | `0.875rem` | Text in fields, selects and text areas: the UI size, at least 16px under a coarse pointer (section 2a) With `@media (pointer: coarse)`: `max(var(--dui-font-size-ui), var(--dui-step-0))`, resolves to `max(0.875rem, 1rem)`. |
+| `--dui-font-size-badge` | `0.75rem` | `0.75rem` | Badge text: 12px, as shadcn/ui sets its badge (text-xs) |
 | `--dui-font-size-page-title` | `clamp(1.5rem, 1.375rem + 0.625vw, 1.875rem)` | `clamp(1.5rem, 1.375rem + 0.625vw, 1.875rem)` | The h1 of a page header or an app shell: 30px at most |
 | `--dui-radius-control` | `calc(0.5rem * 1)` | `calc(0.5rem * 1)` | Controls, buttons, inline code: 8px times the radius scale |
 | `--dui-radius-surface` | `calc(0.75rem * 1)` | `calc(0.75rem * 1)` | Panels, cards, pre, dialogs, details, media: 12px times the radius scale |
@@ -3794,7 +3797,9 @@ _Diagram: Badges label the status of each row in a table's Status column, such a
 
 ```html
 <p class="cluster">
+  <span data-badge="primary">Pro</span>
   <span data-badge>Draft</span>
+  <span data-badge="outline">Beta</span>
   <span data-badge="accent">New</span>
   <span data-badge="success">Paid</span>
   <span data-badge="warning">Due soon</span>
@@ -3825,7 +3830,7 @@ _Diagram: Badges label the status of each row in a table's Status column, such a
 
 | Attribute or value | Effect |
 | --- | --- |
-| `data-badge="neutral \| accent \| success \| warning \| danger"` | (empty means neutral) |
+| `data-badge="neutral \| primary \| outline \| accent \| success \| warning \| danger"` | (empty means neutral). primary is solid, outline is a bordered chip, and the tones are tinted, after shadcn/ui's badge variants (<https://ui.shadcn.com/docs/components/badge>). |
 
 - Static text. To make a badge clickable, put a real `<button>` or `<a href>` around it.
 - An empty value is neutral.
@@ -3840,6 +3845,7 @@ _Diagram: Badges label the status of each row in a table's Status column, such a
 - [WCAG 1.4.3](https://www.w3.org/WAI/WCAG22/Understanding/contrast-minimum.html)
 - [WCAG 1.4.1](https://www.w3.org/WAI/WCAG22/Understanding/use-of-color.html)
 - [Using ARIA rule 1](https://www.w3.org/TR/using-aria/#rule1)
+- [ui.shadcn.com badge](https://ui.shadcn.com/docs/components/badge)
 
 ### See also
 
@@ -4379,17 +4385,22 @@ _Diagram: Cards sit in a grid in the content area, each a raised box with a head
 ```html
 <div class="grid" style="--grid-min: 16rem">
   <article data-card>
-    <h3>Starter plan</h3>
-    <p>For one person trying things out.</p>
-    <p data-text="small muted">Free forever.</p>
+    <header>
+      <h3>Starter plan</h3>
+      <p>For one person trying things out.</p>
+    </header>
+    <p>Free forever, with every component and theme.</p>
     <footer>
       <a href="#grid-title" data-button="primary small">Choose Starter</a>
     </footer>
   </article>
   <article data-card="link">
     <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 320 160'%3E%3Crect width='320' height='160' fill='%233451d1'/%3E%3Ccircle cx='250' cy='40' r='60' fill='%238ea2ff'/%3E%3Crect x='24' y='96' width='140' height='40' rx='8' fill='%23f6f7f9'/%3E%3C/svg%3E" alt="" width="320" height="160">
-    <h3><a href="#grid-title">Theming guide</a></h3>
-    <p>Override semantic tokens to make a theme, with no build step.</p>
+    <header>
+      <h3><a href="#grid-title">Theming guide</a></h3>
+      <p>Override semantic tokens to make a theme.</p>
+    </header>
+    <p>No build step: set a few custom properties and every component follows.</p>
     <footer>
       <span data-badge="accent">Guide</span>
       <a href="#grid-title" data-button="secondary small">View tokens</a>
@@ -4412,6 +4423,8 @@ _Diagram: Cards sit in a grid in the content area, each a raised box with a head
 
 Children: an optional first `<img>` (or `<picture>`, `<video>`) as media, a heading, body content, and an optional `<footer>` for actions.
 
+Wrap the heading and a one-line description in a `<header>` to set them close together, with the description muted, as shadcn/ui's card header does (<https://ui.shadcn.com/docs/components/card>).
+
 #### Elevation
 
 `--dui-elevation-raised` and `--dui-elevation-raised-surface` (level 1), whose 1px ring draws the edge. The border is transparent; forced colors mode, which drops box-shadow, paints it in canvastext.
@@ -4432,6 +4445,7 @@ Children: an optional first `<img>` (or `<picture>`, `<video>`) as media, a head
 ### Specifications
 
 - [HTML `<article>` element](https://html.spec.whatwg.org/multipage/sections.html#the-article-element)
+- [ui.shadcn.com card](https://ui.shadcn.com/docs/components/card)
 - [WCAG Link purpose in context](https://www.w3.org/WAI/WCAG22/Understanding/link-purpose-in-context.html)
 - [WCAG Focus visible](https://www.w3.org/WAI/WCAG22/Understanding/focus-visible.html)
 - [W3C images](https://www.w3.org/WAI/tutorials/images/)
@@ -7858,6 +7872,8 @@ which HTML does not allow.
   the first link inside its heading.
 - Optional media is the first child: `<img>`, `<picture>` or `<video>`. Media SHOULD have
   `alt=""` when it only decorates.
+- The heading MAY sit in a `<header>` child together with a one-line description. The header
+  sets the two close together and mutes the description, as shadcn/ui's card header does.
 - Actions go in a `<footer>` child. In a link card, every interactive element other than the
   heading link MUST be inside that `<footer>`.
 
@@ -7915,6 +7931,8 @@ heading or by link reaches each card once. The media is skipped when `alt=""`.
 
 - Heydon Pickering, [Inclusive Components: Cards](https://inclusive-components.design/cards/),
   which describes both the pseudo-element overlay and the "redundant click event".
+- [shadcn/ui Card](https://ui.shadcn.com/docs/components/card), whose header, title, description
+  and footer slots map to `<header>`, the heading, a `<p>` and `<footer>` here.
 - [WHATWG `article` element](https://html.spec.whatwg.org/multipage/sections.html#the-article-element).
 - [WCAG 2.2 Understanding 2.4.4 Link Purpose (In Context)](https://www.w3.org/WAI/WCAG22/Understanding/link-purpose-in-context.html)
   and [2.4.7 Focus Visible](https://www.w3.org/WAI/WCAG22/Understanding/focus-visible.html).
