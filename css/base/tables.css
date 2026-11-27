@@ -4,16 +4,24 @@
  * Tables with a caption and th[scope]: https://www.w3.org/WAI/tutorials/tables/
  */
 
+/*
+ * Our choice: tables are set like shadcn/ui's
+ * (https://ui.shadcn.com/docs/components/table): 14px text, hairline row
+ * separators, a muted caption below the table, and the row under the
+ * pointer on the raised surface instead of zebra stripes. Hover is extra
+ * help, never the only cue.
+ */
 table {
   inline-size: 100%;
+  font-size: var(--dui-font-size-ui);
   font-variant-numeric: tabular-nums;
 }
 
 caption {
-  caption-side: top;
+  caption-side: bottom;
+  padding-block-start: var(--dui-space-m);
+  color: var(--dui-color-text-muted);
   text-align: start;
-  font-weight: var(--dui-font-weight-strong);
-  padding-block-end: var(--dui-space-xs);
 }
 
 /*
@@ -26,21 +34,25 @@ td {
   padding: var(--dui-space-cell);
   border-block-end: var(--dui-border-width) solid var(--dui-color-border);
   text-align: start;
-  vertical-align: top;
+  vertical-align: middle;
 }
 
-thead th {
-  border-block-end-color: var(--dui-color-border-control);
-  font-weight: var(--dui-font-weight-strong);
-  vertical-align: bottom;
+thead th,
+tbody th {
+  font-weight: var(--dui-font-weight-ui);
 }
 
-tbody tr:nth-child(even) {
+/* A row whose only cell spans the table is a message, not a record. */
+tbody > tr:not(:has(> td[colspan]:only-child)):hover {
   background-color: var(--dui-color-surface-raised);
+}
+
+tfoot {
+  background-color: var(--dui-color-surface-raised);
+  font-weight: var(--dui-font-weight-ui);
 }
 
 tfoot td,
 tfoot th {
   border-block-end: 0;
-  font-weight: var(--dui-font-weight-strong);
 }

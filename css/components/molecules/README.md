@@ -71,8 +71,9 @@ Each is a choice between valid options, not a standard.
   positioning is missing, rather than the browser's default center, so they never cover the
   middle of the content.
 - **Our choice:** inactive nav rows use the muted text color (still 4.5:1) and get full-strength text on
-  hover and when current; the current row and the selected tab also get an accent tint behind the label
-  and keep their accent bar, so the state never relies on color alone. Nav, menu and listbox rows and
+  hover and when current; the current row also gets an accent tint behind the label and keeps its
+  accent bar, and the selected tab becomes a raised segment with a 3:1 border, so the state never
+  relies on color alone. Nav, menu and listbox rows and
   tabs use the 14px interface size.
 - **Our choice:** automatic tab activation (selection follows focus), as the
   [APG recommends](https://www.w3.org/WAI/ARIA/apg/patterns/tabs/#deciding-when-to-make-selection-automatically-follow-focus)
@@ -95,8 +96,8 @@ Each is a choice between valid options, not a standard.
   about links in running text); hover brings it back. Breadcrumb links keep it, because they read as text.
 - **Our choice:** "current" is never color alone: the nav item gets an accent bar, a tint and
   bold text (in a sidebar too: the nav molecule is the app shell's sidebar navigation, extended with
-  decorative icons rather than forked into an organism, so there is one navigation API); the current page in pagination is filled and bold; the selected tab gets a bar and
-  full-strength text.
+  decorative icons rather than forked into an organism, so there is one navigation API); the current page in pagination is filled and bold; the selected tab gets a raised,
+  bordered segment and full-strength text.
 - **Our choice:** the current page in pagination stays a link with `aria-current="page"`, and a
   disabled Previous or Next is an `<a>` with no `href`, which HTML defines as a placeholder: not
   focusable and not a link. See [pagination.md](../../../explainers/pagination.md).

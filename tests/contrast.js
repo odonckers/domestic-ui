@@ -74,15 +74,15 @@ export const PAIRS = [
   // Atoms: field (css/components/atoms/field.css). Hint is muted text and error is
   // danger on the surface; the invalid border is danger on the surface (all above).
 
-  // Molecules: alerts (css/components/molecules/alerts.css). A neutral raised surface: body
-  // text and links on it (above); the prefix word and the icon disc in the tone color on it;
-  // the icon glyph is the surface on the tone (same ratio as tone on surface).
+  // Molecules: alerts (css/components/molecules/alerts.css). Body text, links and focus on
+  // each tinted surface (below); the prefix word and the icon disc in the tone color on the
+  // tint; the icon glyph is the surface on the tone (same ratio as tone on surface).
   ["--dui-color-info", "--dui-color-surface", 4.5],
   ["--dui-color-info", "--dui-color-surface-raised", 4.5],
   ["--dui-color-success", "--dui-color-surface-raised", 4.5],
   ["--dui-color-warning", "--dui-color-surface-raised", 4.5],
   ["--dui-color-danger", "--dui-color-surface-raised", 4.5],
-  // Tinted tone surfaces (badges in css/components/atoms/badge.css): text, links and focus.
+  // Tinted tone surfaces (alerts and badges): text, links and focus.
   ["--dui-color-info", "--dui-color-info-surface", 4.5],
   ["--dui-color-text", "--dui-color-info-surface", 4.5],
   ["--dui-color-text", "--dui-color-success-surface", 4.5],
@@ -98,7 +98,8 @@ export const PAIRS = [
   ["--dui-color-focus", "--dui-color-success-surface", 3],
 
   // Molecules: tabs and nav (tabs.css, nav.css). Unselected tabs are muted text on the
-  // surface and on the hover fill (above). The selected tab bar is accent on the surface (above).
+  // sunken track (above). The selected segment's border is border-control on the track.
+  ["--dui-color-border-control", "--dui-color-surface-sunken", 3],
   // The current nav item is text on the hover fill; inactive rows are muted text on it when hovered.
   ["--dui-color-text", "--dui-color-surface-hover", 4.5],
   ["--dui-color-text-muted", "--dui-color-surface-hover", 4.5],

@@ -136,16 +136,6 @@ table[data-table] {
   font-size: var(--dui-font-size-ui);
 }
 
-/*
- * Our choice: a data table has hairline row separators and no zebra
- * stripes; the row under the pointer gets the raised surface instead, so
- * the eye can follow a row without every other row being tinted. Hover is
- * extra help, never the only cue.
- */
-table[data-table] > tbody > tr:nth-child(even) {
-  background-color: transparent;
-}
-
 /* An opaque header surface, so rows never show through a sticky header. */
 table[data-table] > thead > tr > :is(th, td) {
   block-size: var(--dui-size-control);

@@ -237,7 +237,7 @@ may change. Fluid `--dui-step-*` values are `clamp()` expressions; see `primitiv
 | Token | Purpose | Default (primitive, light / dark) |
 | --- | --- | --- |
 | `--dui-color-surface` | Page and control background (neutral step 1) | light: `neutral-1` (`oklch(100% 0 0)`)<br>dark: `neutral-dark-1` (`oklch(14.5% 0 0)`) |
-| `--dui-color-surface-raised` | Slightly lifted areas: neutral buttons, zebra rows, cards (step 2) | light: `neutral-2` (`oklch(98.5% 0 0)`)<br>dark: `neutral-dark-2` (`oklch(20.5% 0 0)`) |
+| `--dui-color-surface-raised` | Slightly lifted areas: neutral buttons, table row hover, cards (step 2) | light: `neutral-2` (`oklch(98.5% 0 0)`)<br>dark: `neutral-dark-2` (`oklch(20.5% 0 0)`) |
 | `--dui-color-surface-sunken` | Recessed areas: code, button hover (step 3) | light: `neutral-3` (`oklch(97% 0 0)`)<br>dark: `neutral-dark-3` (`oklch(22% 0 0)`) |
 | `--dui-color-surface-hover` | Hover fill of quiet buttons, nav, menu and listbox rows (step 4) | light: `neutral-4` (`oklch(96% 0 0)`)<br>dark: `neutral-dark-4` (`oklch(26.9% 0 0)`) |
 | `--dui-color-surface-active` | Pressed fill of quiet buttons (step 5) | light: `neutral-5` (`oklch(93.5% 0 0)`)<br>dark: `neutral-dark-5` (`oklch(31% 0 0)`) |
@@ -328,7 +328,7 @@ may change. Fluid `--dui-step-*` values are `clamp()` expressions; see `primitiv
 | `--dui-space-panel-inset` | Gap between a floating panel and the viewport or frame edge | `--dui-space-xs` (0.5rem) |
 | `--dui-border-width` | Hairline width | `border-1` (1px) |
 | `--dui-border-width-emphasis` | blockquote rule, alert start rule, invalid field | `border-4` (0.25rem) |
-| `--dui-border-width-indicator` | Selected tab (3:1 against the surface); the current nav item's bar in forced colors only | `border-3` (3px) |
+| `--dui-border-width-indicator` | The selected tab's and the current nav item's bar in forced colors only | `border-3` (3px) |
 | `--dui-underline-offset` | Link underline offset | `underline-offset-015em` (0.15em) |
 | `--dui-underline-thickness` | Link underline | `underline-1` (0.0625em) |
 | `--dui-underline-thickness-hover` | Link underline on hover | `underline-2` (0.125em) |
