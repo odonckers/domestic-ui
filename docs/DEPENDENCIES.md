@@ -32,6 +32,18 @@ declares an install script (`hasInstallScript`).
 | `git-cliff` | 2.14.2 | MIT or Apache-2.0 | Generating `CHANGELOG.md` at release time | 1 |
 | `web-features` | 3.48.0 | Apache-2.0 | Baseline status for `npm run platform:status` | 0 |
 
+### Demo apps
+
+Each app in `demos/` has its own `package.json`; nothing here is installed at the repository root.
+
+| Package | Used by | Runs | License | Publisher | Install scripts | Audit | Reviewed |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| [`vite`](https://github.com/vitejs/vite) 8 | `demos/vue`, `demos/svelte` | Build time and local dev server only | MIT | Vite team (vitejs org) | None (optional macOS-only `fsevents` in its tree) | 0 vulnerabilities | 2026-11-27 |
+| [`vue`](https://github.com/vuejs/core) 3.5 | `demos/vue` | In the browser (demo only) | MIT | Vue core team (vuejs org) | None | 0 vulnerabilities | 2026-11-27 |
+| [`@vitejs/plugin-vue`](https://github.com/vitejs/vite-plugin-vue) 6.0 | `demos/vue` | Build time only | MIT | Vite team (vitejs org) | None | 0 vulnerabilities | 2026-11-27 |
+| [`svelte`](https://github.com/sveltejs/svelte) 5.59 | `demos/svelte` | Build time (compiler) and in the browser (small runtime, demo only) | MIT | Svelte core team (sveltejs org) | None | 0 vulnerabilities | 2026-11-27 |
+| [`@sveltejs/vite-plugin-svelte`](https://github.com/sveltejs/vite-plugin-svelte) 7.3 | `demos/svelte` | Build time only | MIT | Svelte core team (sveltejs org) | None | 0 vulnerabilities | 2026-11-27 |
+
 ## Reviews
 
 ### web-features
@@ -53,6 +65,21 @@ declares an install script (`hasInstallScript`).
   never in CI checks or the docs build.
 - **Decision:** accepted as a pinned dev dependency. Bump it deliberately, then rerun the script and update
   ARCHITECTURE.md section 6 in the same PR.
+
+### Vue and Svelte demo apps
+
+- **What:** the frameworks and Vite plugins behind `demos/vue` and `demos/svelte`, which render the same markup as
+  `demos/vanilla` and keep only state (see the guide "Use it with any framework").
+- **Publishers:** the Vue core team (`vue`) and the Vite team (`@vitejs/plugin-vue`, `vite`); the Svelte core team
+  (`svelte`, `@sveltejs/vite-plugin-svelte`). All MIT.
+- **What they pull in:** 36 installed packages for Vue and 39 for Svelte, under MIT, ISC, BSD, Apache-2.0 or
+  MPL-2.0 (`lightningcss`, through Vite). The only install script in either lockfile is the optional, macOS-only
+  `fsevents`.
+- **Advisories:** none (`npm audit`, 2026-11-27).
+- **What they can touch:** the build runs locally and in the Demos CI job; the checker serves the static `dist/`
+  output with `demos/a11y/serve.mjs`. Nothing under `css/` or `web-components/` imports them, and no user of
+  domestic-ui installs them.
+- **Decision:** accepted for the demo apps only.
 
 ### Existing tools
 
