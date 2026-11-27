@@ -328,7 +328,7 @@ may change. Fluid `--dui-step-*` values are `clamp()` expressions; see `primitiv
 | `--dui-space-panel-inset` | Gap between a floating panel and the viewport or frame edge | `--dui-space-xs` (0.5rem) |
 | `--dui-border-width` | Hairline width | `border-1` (1px) |
 | `--dui-border-width-emphasis` | blockquote rule, alert start rule, invalid field | `border-4` (0.25rem) |
-| `--dui-border-width-indicator` | Selected tab (3:1 against the surface); the current nav item's bar in forced colors only | `border-3` (3px) |
+| `--dui-border-width-indicator` | The selected tab's and the current nav item's bar in forced colors only | `border-3` (3px) |
 | `--dui-underline-offset` | Link underline offset | `underline-offset-015em` (0.15em) |
 | `--dui-underline-thickness` | Link underline | `underline-1` (0.0625em) |
 | `--dui-underline-thickness-hover` | Link underline on hover | `underline-2` (0.125em) |

@@ -12,9 +12,9 @@
  * APG: https://www.w3.org/WAI/ARIA/apg/patterns/tabs/
  * https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Reference/Roles/tab_role
  *
- * Accessibility: the selected tab has a 3:1 accent bar, an accent tint
- * and full-strength text, unselected tabs have muted text and no bar, so selection does not
- * rely on color alone (WCAG 1.4.1, 1.4.11). Only the selected tab is in the
+ * Accessibility: the selected tab is a raised segment with a 3:1 border
+ * and full-strength text; unselected tabs have muted text and no border,
+ * so selection does not rely on color alone (WCAG 1.4.1, 1.4.11). Only the selected tab is in the
  * tab order; arrow keys move between tabs. Panels with no focusable content
  * get tabindex="0" so keyboard users can reach and scroll them. Each panel
  * is named by its tab; once upgraded, the panel's first heading is visually
@@ -63,13 +63,22 @@
  *   https://www.w3.org/WAI/WCAG22/Understanding/non-text-contrast.html
  */
 
+/*
+ * Our choice: a segmented control on a sunken track, as shadcn/ui draws its
+ * tabs (https://ui.shadcn.com/docs/components/tabs). The selected tab is a
+ * raised segment whose border reaches 3:1 against the track (WCAG 1.4.11),
+ * where shadcn/ui relies on a shadow alone.
+ */
 [role="tablist"] {
   display: flex;
   flex-wrap: wrap;
-  gap: var(--dui-space-3xs);
+  gap: 0;
+  inline-size: fit-content;
+  max-inline-size: 100%;
   margin: 0;
-  padding: 0;
-  border-block-end: var(--dui-border-width) solid var(--dui-color-border);
+  padding: var(--dui-space-3xs);
+  background-color: var(--dui-color-surface-sunken);
+  border-radius: calc(var(--dui-radius-control) + var(--dui-space-3xs));
 }
 
 /* The fallback list's ul and li have role="none" once upgraded: tabs become flex items. */
@@ -79,34 +88,35 @@
 
 [role="tab"] {
   display: inline-flex;
+  flex: 1 1 auto;
   align-items: center;
   justify-content: center;
-  min-block-size: var(--dui-size-control);
-  margin: 0 0 calc(var(--dui-border-width) * -1);
-  padding: var(--dui-space-control-block) var(--dui-space-button-inline);
+  min-block-size: calc(var(--dui-size-control) - var(--dui-space-3xs) * 2);
+  margin: 0;
+  padding: var(--dui-space-gap-tight) var(--dui-space-control-inline);
   background-color: transparent;
   color: var(--dui-color-text-muted);
-  border: 0;
-  border-block-end: var(--dui-border-width-indicator) solid transparent;
-  border-radius: var(--dui-radius-control) var(--dui-radius-control) 0 0;
+  border: var(--dui-border-width) solid transparent;
+  border-radius: var(--dui-radius-control);
   box-shadow: none;
   font-size: var(--dui-font-size-ui);
-  font-weight: var(--dui-font-weight-strong);
+  font-weight: var(--dui-font-weight-ui);
   line-height: var(--dui-line-height-heading);
+  white-space: nowrap;
   text-decoration-line: none;
   cursor: pointer;
 }
 
 [role="tab"]:hover {
-  background-color: var(--dui-color-surface-hover);
   color: var(--dui-color-text);
 }
 
-/* Selected: full-strength text, the accent bar, and an accent tint behind the label. */
+/* Selected: a raised segment with full-strength text. */
 [role="tab"][aria-selected="true"] {
-  background-color: var(--dui-color-accent-surface);
+  background-color: var(--dui-color-surface);
   color: var(--dui-color-text);
-  border-block-end-color: var(--dui-color-accent);
+  border-color: var(--dui-color-border-control);
+  box-shadow: var(--dui-elevation-control);
 }
 
 [role="tabpanel"] {
@@ -137,17 +147,18 @@ dui-tabs {
 
 @media (forced-colors: active) {
   /*
-   * Forced colors replace transparent borders too, so an unselected tab's
-   * bar would look selected. It becomes the tab list's own hairline
-   * instead; the padding keeps the tab's height.
+   * Forced colors drop the track and the raised fill, so the bar comes
+   * back: unselected tabs show a canvastext hairline at the bottom, and
+   * the selected tab a thick highlight bar; the padding keeps its height.
    */
   [role="tab"]:not([aria-selected="true"]) {
-    padding-block-end: calc(var(--dui-space-control-block) + var(--dui-border-width-indicator) - var(--dui-border-width));
-    border-block-end-width: var(--dui-border-width);
+    border-color: canvas;
     border-block-end-color: canvastext;
   }
 
   [role="tab"][aria-selected="true"] {
-    border-block-end-color: highlight;
+    padding-block-end: calc(var(--dui-space-gap-tight) + var(--dui-border-width) - var(--dui-border-width-indicator));
+    border-color: canvastext;
+    border-block-end: var(--dui-border-width-indicator) solid highlight;
   }
 }

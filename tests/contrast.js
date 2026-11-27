@@ -98,7 +98,8 @@ export const PAIRS = [
   ["--dui-color-focus", "--dui-color-success-surface", 3],
 
   // Molecules: tabs and nav (tabs.css, nav.css). Unselected tabs are muted text on the
-  // surface and on the hover fill (above). The selected tab bar is accent on the surface (above).
+  // sunken track (above). The selected segment's border is border-control on the track.
+  ["--dui-color-border-control", "--dui-color-surface-sunken", 3],
   // The current nav item is text on the hover fill; inactive rows are muted text on it when hovered.
   ["--dui-color-text", "--dui-color-surface-hover", 4.5],
   ["--dui-color-text-muted", "--dui-color-surface-hover", 4.5],

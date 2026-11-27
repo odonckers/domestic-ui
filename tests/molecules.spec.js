@@ -1017,7 +1017,7 @@ test("tabs markup before the upgrade has no axe violations", async ({ page }) =>
 });
 
 /*
- * Rendered indicator contrast (WCAG 1.4.11): the selected tab bar, the current
+ * Rendered indicator contrast (WCAG 1.4.11): the selected tab border, the current
  * nav bar and the current pagination box against what surrounds them, and the
  * focus ring on new surfaces, in light and dark.
  */
@@ -1067,7 +1067,7 @@ for (const colorScheme of schemes) {
       return page.evaluate(([source, p]) => (0, eval)(`(${source})`)(p), [contrastOf.toString(), pair]);
     };
 
-    // Tabs, in both theming panels: the bar against the surface it sits on.
+    // Tabs, in both theming panels: the selected segment border against the track.
     await page.goto("examples/theming.html");
     for (const tab of await page.getByRole("tab", { selected: true }).all()) {
       expect(await measure(tab, (el, surface) => [getComputedStyle(el).borderBlockEndColor, surface(el)])).toBeGreaterThanOrEqual(3);
@@ -1113,7 +1113,7 @@ test("molecules in the forest panel re-theme from the token overrides alone", as
         return {
           breadcrumbCurrent: style("[data-breadcrumb] a[aria-current]", "color"),
           alert: style("[data-alert~='warning']", "backgroundColor"),
-          tabBar: style("[role='tab'][aria-selected='true']", "borderBlockEndColor"),
+          selectedTab: style("[role='tab'][aria-selected='true']", "backgroundColor"),
           card: style("[data-card]", "backgroundColor"),
           cardLink: style("[data-card] h3 a", "color"),
           cardRadius: style("[data-card]", "borderTopLeftRadius"),
