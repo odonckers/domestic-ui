@@ -25,6 +25,7 @@ Link `css/domestic.css` (copy `css/` from the v0.1.0 release, https://github.com
 - [Explainers (Principles)](https://odonckers.github.io/domestic-ui/principles/explainers.md): A pattern with no native element and no APG pattern is written up like a platform proposal in explainers/: problem, use cases, goals and non-goals, markup and API, keyboard, accessibility mappings, alternatives, prior art and open questions, with normative text in RFC 2119 keywords.
 - [Tooling](https://odonckers.github.io/domestic-ui/principles/tooling.md): npm test runs, in order, and fails if any step fails.
 - [Edges and alignment](https://odonckers.github.io/domestic-ui/principles/edges-and-alignment.md): Our choice: every container has a few named vertical lines, written in tokens, and every item sits on one of them or has a written reason, because edges picked by eye drift by a few pixels per panel and nobody can say which was meant.
+- [Design principles](https://odonckers.github.io/domestic-ui/principles/design-principles.md): Sections 1 to 13 cover engineering choices.
 
 ## Tokens
 
