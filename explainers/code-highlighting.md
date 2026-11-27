@@ -94,6 +94,13 @@ None. Highlights do not change focus, selection or the text.
 - [Prism](https://prismjs.com/) and [highlight.js](https://highlightjs.org/) token names, which
   the names above loosely follow.
 
+## Mapping to a future standard
+
+The pattern is already built on a standard, the [CSS Custom Highlight
+API](https://developer.mozilla.org/en-US/docs/Web/API/CSS_Custom_Highlight_API). What is ours is the set of
+`dui-code-*` highlight names and their tokens. If a shared vocabulary of syntax highlight names emerges, the names
+would be renamed to match it; no markup changes, because highlights never touch the DOM.
+
 ## Open questions
 
 - Should JS template literals and regular expressions get names of their own?
