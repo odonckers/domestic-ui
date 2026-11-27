@@ -17,7 +17,7 @@
 :root {
   /* Surfaces and text */
   --dui-color-surface: light-dark(var(--dui-color-neutral-1), var(--dui-color-neutral-dark-1)); /* Page background */
-  --dui-color-surface-raised: light-dark(var(--dui-color-neutral-2), var(--dui-color-neutral-dark-2)); /* Slightly lifted areas: neutral buttons, zebra rows, cards */
+  --dui-color-surface-raised: light-dark(var(--dui-color-neutral-2), var(--dui-color-neutral-dark-2)); /* Slightly lifted areas: neutral buttons, table row hover, cards */
   --dui-color-surface-sunken: light-dark(var(--dui-color-neutral-3), var(--dui-color-neutral-dark-3)); /* Recessed areas: code, button hover */
   --dui-color-surface-hover: light-dark(var(--dui-color-neutral-4), var(--dui-color-neutral-dark-4)); /* Hover fill of quiet buttons and rows (neutral step 4) */
   --dui-color-surface-active: light-dark(var(--dui-color-neutral-5), var(--dui-color-neutral-dark-5)); /* Pressed fill of quiet buttons (neutral step 5) */

@@ -237,7 +237,7 @@ may change. Fluid `--dui-step-*` values are `clamp()` expressions; see `primitiv
 | Token | Purpose | Default (primitive, light / dark) |
 | --- | --- | --- |
 | `--dui-color-surface` | Page and control background (neutral step 1) | light: `neutral-1` (`oklch(100% 0 0)`)<br>dark: `neutral-dark-1` (`oklch(14.5% 0 0)`) |
-| `--dui-color-surface-raised` | Slightly lifted areas: neutral buttons, zebra rows, cards (step 2) | light: `neutral-2` (`oklch(98.5% 0 0)`)<br>dark: `neutral-dark-2` (`oklch(20.5% 0 0)`) |
+| `--dui-color-surface-raised` | Slightly lifted areas: neutral buttons, table row hover, cards (step 2) | light: `neutral-2` (`oklch(98.5% 0 0)`)<br>dark: `neutral-dark-2` (`oklch(20.5% 0 0)`) |
 | `--dui-color-surface-sunken` | Recessed areas: code, button hover (step 3) | light: `neutral-3` (`oklch(97% 0 0)`)<br>dark: `neutral-dark-3` (`oklch(22% 0 0)`) |
 | `--dui-color-surface-hover` | Hover fill of quiet buttons, nav, menu and listbox rows (step 4) | light: `neutral-4` (`oklch(96% 0 0)`)<br>dark: `neutral-dark-4` (`oklch(26.9% 0 0)`) |
 | `--dui-color-surface-active` | Pressed fill of quiet buttons (step 5) | light: `neutral-5` (`oklch(93.5% 0 0)`)<br>dark: `neutral-dark-5` (`oklch(31% 0 0)`) |

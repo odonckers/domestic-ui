@@ -315,7 +315,7 @@ may change. Fluid `--dui-step-*` values are `clamp()` expressions; see `primitiv
 | Token | Purpose | Default (primitive, light / dark) |
 | --- | --- | --- |
 | `--dui-color-surface` | Page and control background (neutral step 1) | light: `neutral-1` (`oklch(100% 0 0)`)<br>dark: `neutral-dark-1` (`oklch(14.5% 0 0)`) |
-| `--dui-color-surface-raised` | Slightly lifted areas: neutral buttons, zebra rows, cards (step 2) | light: `neutral-2` (`oklch(98.5% 0 0)`)<br>dark: `neutral-dark-2` (`oklch(20.5% 0 0)`) |
+| `--dui-color-surface-raised` | Slightly lifted areas: neutral buttons, table row hover, cards (step 2) | light: `neutral-2` (`oklch(98.5% 0 0)`)<br>dark: `neutral-dark-2` (`oklch(20.5% 0 0)`) |
 | `--dui-color-surface-sunken` | Recessed areas: code, button hover (step 3) | light: `neutral-3` (`oklch(97% 0 0)`)<br>dark: `neutral-dark-3` (`oklch(22% 0 0)`) |
 | `--dui-color-surface-hover` | Hover fill of quiet buttons, nav, menu and listbox rows (step 4) | light: `neutral-4` (`oklch(96% 0 0)`)<br>dark: `neutral-dark-4` (`oklch(26.9% 0 0)`) |
 | `--dui-color-surface-active` | Pressed fill of quiet buttons (step 5) | light: `neutral-5` (`oklch(93.5% 0 0)`)<br>dark: `neutral-dark-5` (`oklch(31% 0 0)`) |
@@ -2145,7 +2145,7 @@ Colors use [`light-dark()`](https://developer.mozilla.org/en-US/docs/Web/CSS/col
 | Token | Light | Dark | Description |
 | --- | --- | --- | --- |
 | `--dui-color-surface` | `oklch(100% 0 0deg)` | `oklch(14.5% 0 0deg)` | Page background |
-| `--dui-color-surface-raised` | `oklch(98.5% 0 0deg)` | `oklch(20.5% 0 0deg)` | Slightly lifted areas: neutral buttons, zebra rows, cards |
+| `--dui-color-surface-raised` | `oklch(98.5% 0 0deg)` | `oklch(20.5% 0 0deg)` | Slightly lifted areas: neutral buttons, table row hover, cards |
 | `--dui-color-surface-sunken` | `oklch(97% 0 0deg)` | `oklch(22% 0 0deg)` | Recessed areas: code, button hover |
 | `--dui-color-surface-hover` | `oklch(96% 0 0deg)` | `oklch(26.9% 0 0deg)` | Hover fill of quiet buttons and rows (neutral step 4) |
 | `--dui-color-surface-active` | `oklch(93.5% 0 0deg)` | `oklch(31% 0 0deg)` | Pressed fill of quiet buttons (neutral step 5) |
@@ -2667,6 +2667,7 @@ None: write semantic HTML.
 - [WHATWG embedded content](https://html.spec.whatwg.org/multipage/embedded-content.html)
 - [WHATWG tables](https://html.spec.whatwg.org/multipage/tables.html)
 - [W3C tables](https://www.w3.org/WAI/tutorials/tables/)
+- [ui.shadcn.com table](https://ui.shadcn.com/docs/components/table)
 - [WHATWG text level semantics](https://html.spec.whatwg.org/multipage/text-level-semantics.html)
 - [WCAG Use of color](https://www.w3.org/WAI/WCAG22/Understanding/use-of-color.html)
 - [MDN `overflow-wrap`](https://developer.mozilla.org/en-US/docs/Web/CSS/overflow-wrap)
