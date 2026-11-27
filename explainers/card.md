@@ -45,6 +45,8 @@ which HTML does not allow.
   the first link inside its heading.
 - Optional media is the first child: `<img>`, `<picture>` or `<video>`. Media SHOULD have
   `alt=""` when it only decorates.
+- The heading MAY sit in a `<header>` child together with a one-line description. The header
+  sets the two close together and mutes the description, as shadcn/ui's card header does.
 - Actions go in a `<footer>` child. In a link card, every interactive element other than the
   heading link MUST be inside that `<footer>`.
 
@@ -102,6 +104,8 @@ heading or by link reaches each card once. The media is skipped when `alt=""`.
 
 - Heydon Pickering, [Inclusive Components: Cards](https://inclusive-components.design/cards/),
   which describes both the pseudo-element overlay and the "redundant click event".
+- [shadcn/ui Card](https://ui.shadcn.com/docs/components/card), whose header, title, description
+  and footer slots map to `<header>`, the heading, a `<p>` and `<footer>` here.
 - [WHATWG `article` element](https://html.spec.whatwg.org/multipage/sections.html#the-article-element).
 - [WCAG 2.2 Understanding 2.4.4 Link Purpose (In Context)](https://www.w3.org/WAI/WCAG22/Understanding/link-purpose-in-context.html)
   and [2.4.7 Focus Visible](https://www.w3.org/WAI/WCAG22/Understanding/focus-visible.html).
