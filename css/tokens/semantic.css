@@ -106,6 +106,7 @@
   --dui-size-menu-min: var(--dui-size-12);
   --dui-size-drawer: var(--dui-size-24);
   --dui-size-page: var(--dui-size-72); /* Max inline size of a page's content column: header, main and footer */
+  --dui-size-narrow: var(--dui-size-24); /* Max inline size of a narrow page's one card: sign-in, sign-up, error pages */
   --dui-size-icon: var(--dui-size-1-25); /* Decorative icons beside a label, on their own */
   --dui-size-icon-inline: var(--dui-size-1); /* Icons inside buttons, menu items and toolbars, beside 14 to 16px text */
   --dui-size-icon-nav: var(--dui-size-icon-inline); /* Decorative icons at the start of nav links and group summaries: 16px beside 14px sidebar text, as shadcn/ui */
@@ -142,6 +143,7 @@
   --dui-motion-easing-spring: var(--dui-easing-decelerate); /* Easing for popover, menu and drawer entrances: a linear() spring where supported (below), the enter easing elsewhere */
 
   /* Floating panels: the app shell's main content panel, inset from the frame edge */
+  --dui-space-page-inline: var(--dui-space-l); /* Inline gutter of a plain document page's column, so content never touches the window edge */
   --dui-space-panel-inset: var(--dui-space-xs); /* Gap between a floating panel and the viewport or frame edge */
 
   /* Elevation knobs */
