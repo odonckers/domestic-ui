@@ -18,6 +18,7 @@
   color: var(--dui-color-text);
   border: var(--dui-border-width) solid var(--dui-color-border-control);
   border-radius: var(--dui-radius-control);
+  box-shadow: var(--dui-elevation-control);
   font-size: var(--dui-font-size-field);
 }
 
@@ -45,22 +46,94 @@ textarea {
   border-color: var(--dui-color-danger);
 }
 
-/*
- * Checkboxes, radios and range keep native rendering, tinted with
- * accent-color. https://developer.mozilla.org/en-US/docs/Web/CSS/accent-color
- */
-input[type="checkbox"],
-input[type="radio"],
+/* Range and progress keep native rendering, tinted with accent-color. https://developer.mozilla.org/en-US/docs/Web/CSS/accent-color */
 input[type="range"],
 progress {
   accent-color: var(--dui-color-accent);
 }
 
-input[type="checkbox"],
-input[type="radio"] {
+/*
+ * Checkboxes and radios: a 16px box drawn with appearance: none, so they
+ * match the fields beside them. The native element keeps its role, state,
+ * keyboard and form behavior; only the paint changes.
+ * https://developer.mozilla.org/en-US/docs/Web/CSS/appearance
+ * Unchecked: the control border (3:1, WCAG 1.4.11) on the surface.
+ * Checked: the accent fill with a check drawn in the accent contrast color
+ * (a radio gets a dot), so the state shows by shape as well as color
+ * (WCAG 1.4.1). Indeterminate checkboxes get a bar.
+ * Our choice: the look follows shadcn/ui's checkbox and radio group, for comparison
+ * (https://ui.shadcn.com/docs/components/checkbox).
+ */
+:where(input:is([type="checkbox"], [type="radio"]):not([role="switch"])) {
+  appearance: none;
+  display: inline-grid;
+  place-content: center;
   inline-size: var(--dui-size-check);
   block-size: var(--dui-size-check);
   flex-shrink: 0;
+  margin: 0;
+  background-color: var(--dui-color-surface);
+  border: var(--dui-border-width) solid var(--dui-color-border-control);
+  box-shadow: var(--dui-elevation-control);
+  color: var(--dui-color-accent-contrast);
+  cursor: pointer;
+}
+
+:where(input[type="checkbox"]:not([role="switch"])) {
+  border-radius: var(--dui-radius-check);
+}
+
+:where(input[type="radio"]) {
+  border-radius: var(--dui-radius-pill);
+}
+
+:where(input:is([type="checkbox"], [type="radio"]):not([role="switch"]):hover:not(:disabled)) {
+  border-color: var(--dui-color-border-control-hover);
+}
+
+:where(input[type="checkbox"]:not([role="switch"]):is(:checked, :indeterminate)) {
+  background-color: var(--dui-color-accent);
+  border-color: var(--dui-color-accent);
+}
+
+/* The check: two borders of a box turned 45 degrees. Decorative; the input carries the state. */
+:where(input[type="checkbox"]:not([role="switch"]))::before {
+  content: "";
+  inline-size: calc(var(--dui-size-check) * 0.3);
+  block-size: calc(var(--dui-size-check) * 0.55);
+  margin-block-start: calc(var(--dui-size-check) * -0.12);
+  border: solid currentcolor;
+  border-width: 0 var(--dui-border-width-check) var(--dui-border-width-check) 0;
+  rotate: var(--dui-angle-chevron);
+  visibility: hidden;
+}
+
+:where(input[type="checkbox"]:not([role="switch"]):checked)::before {
+  visibility: visible;
+}
+
+/* Indeterminate: a short bar, wins over checked as the browser shows it. */
+:where(input[type="checkbox"]:not([role="switch"]):indeterminate)::before {
+  inline-size: calc(var(--dui-size-check) * 0.5);
+  block-size: 0;
+  margin: 0;
+  border-width: var(--dui-border-width-check) 0 0;
+  rotate: none;
+  visibility: visible;
+}
+
+/* The dot: half the box, in the accent. The ring keeps the control border. */
+:where(input[type="radio"])::before {
+  content: "";
+  inline-size: calc(var(--dui-size-check) / 2);
+  block-size: calc(var(--dui-size-check) / 2);
+  border-radius: var(--dui-radius-pill);
+  background-color: var(--dui-color-accent);
+  visibility: hidden;
+}
+
+:where(input[type="radio"]:checked)::before {
+  visibility: visible;
 }
 
 input[type="range"] {
@@ -76,22 +149,27 @@ input[type="color"] {
   border-radius: var(--dui-radius-control);
 }
 
-/* Labels sit above their control; labels that wrap a check sit beside it. */
+/*
+ * Labels sit above their control; labels that wrap a check sit beside it.
+ * Our choice: labels use the UI text size and weight (14px, 500), as
+ * shadcn/ui's label, for comparison (https://ui.shadcn.com/docs/components/label).
+ */
 label {
   display: block;
+  font-size: var(--dui-font-size-ui);
   font-weight: var(--dui-font-weight-ui);
+  line-height: var(--dui-line-height-heading);
 }
 
 label + :where(input, select, textarea) {
-  margin-block-start: var(--dui-space-2xs);
+  margin-block-start: var(--dui-space-xs);
 }
 
 label:has(> input[type="checkbox"], > input[type="radio"]) {
   display: flex;
   align-items: center;
-  gap: var(--dui-space-gap);
+  gap: var(--dui-space-xs);
   min-block-size: var(--dui-size-control);
-  font-weight: var(--dui-font-weight-body);
   inline-size: fit-content;
 }
 
@@ -178,6 +256,26 @@ input[type="file"] {
 
 /* Forced colors: keep control boundaries visible with system colors. */
 @media (forced-colors: active) {
+  :where(input:is([type="checkbox"], [type="radio"]):not([role="switch"])) {
+    forced-color-adjust: none;
+    background-color: canvas;
+    border-color: canvastext;
+    color: highlighttext;
+  }
+
+  :where(input[type="checkbox"]:not([role="switch"]):is(:checked, :indeterminate)) {
+    background-color: highlight;
+    border-color: highlight;
+  }
+
+  :where(input[type="radio"])::before {
+    background-color: highlight;
+  }
+
+  :where(input:is([type="checkbox"], [type="radio"]):disabled) {
+    border-color: graytext;
+  }
+
   button,
   input,
   select,

@@ -231,6 +231,7 @@
   /* Radii */
   --dui-radius-0: 0;
   --dui-radius-1: 0.125rem;
+  --dui-radius-1-5: 0.25rem; /* 4px: checkboxes */
   --dui-radius-2: 0.5rem; /* 8px: controls */
   --dui-radius-3: 0.75rem; /* 12px: surfaces */
   --dui-radius-round: 999rem;
@@ -302,6 +303,7 @@
   --dui-opacity-60: 0.6;
   --dui-mix-3: 3%;
   --dui-mix-8: 8%;
+  --dui-mix-20: 20%;
   --dui-mix-35: 35%;
   --dui-mix-100: 100%;
 }

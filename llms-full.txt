@@ -1812,7 +1812,7 @@ Neutral and indigo each have 12 steps in light and in dark. The step number is t
 
 [Custom properties](https://developer.mozilla.org/en-US/docs/Web/CSS/--*).
 
-178 tokens in [`css/tokens/primitives.css`](https://github.com/odonckers/domestic-ui/blob/main/css/tokens/primitives.css). **Light** and **Dark** resolve every `var()` and take one side of [`light-dark()`](https://developer.mozilla.org/en-US/docs/Web/CSS/color_value/light-dark). Previews are decorative.
+180 tokens in [`css/tokens/primitives.css`](https://github.com/odonckers/domestic-ui/blob/main/css/tokens/primitives.css). **Light** and **Dark** resolve every `var()` and take one side of [`light-dark()`](https://developer.mozilla.org/en-US/docs/Web/CSS/color_value/light-dark). Previews are decorative.
 
 ### Neutral, light. Achromatic (chroma 0), as shadcn/ui's neutral base
 
@@ -2038,6 +2038,7 @@ Rem, so it follows the user's font size setting.
 | --- | --- | --- | --- |
 | `--dui-radius-0` | `0` | `0` | No description yet. |
 | `--dui-radius-1` | `0.125rem` | `0.125rem` | No description yet. |
+| `--dui-radius-1-5` | `0.25rem` | `0.25rem` | 4px: checkboxes |
 | `--dui-radius-2` | `0.5rem` | `0.5rem` | 8px: controls |
 | `--dui-radius-3` | `0.75rem` | `0.75rem` | 12px: surfaces |
 | `--dui-radius-round` | `999rem` | `999rem` | No description yet. |
@@ -2120,6 +2121,7 @@ X offset, y offset, blur, spread. The color is added by the semantic elevation t
 | `--dui-opacity-60` | `0.6` | `0.6` | No description yet. |
 | `--dui-mix-3` | `3%` | `3%` | No description yet. |
 | `--dui-mix-8` | `8%` | `8%` | No description yet. |
+| `--dui-mix-20` | `20%` | `20%` | No description yet. |
 | `--dui-mix-35` | `35%` | `35%` | No description yet. |
 | `--dui-mix-100` | `100%` | `100%` | No description yet. |
 
@@ -2133,7 +2135,7 @@ A theme is an override of these tokens on `:root` or on a scoped element. No reb
 
 Colors use [`light-dark()`](https://developer.mozilla.org/en-US/docs/Web/CSS/color_value/light-dark), which picks a value from the used color-scheme of the element where the token is read.
 
-171 tokens in [`css/tokens/semantic.css`](https://github.com/odonckers/domestic-ui/blob/main/css/tokens/semantic.css). **Light** and **Dark** resolve every `var()` and take one side of [`light-dark()`](https://developer.mozilla.org/en-US/docs/Web/CSS/color_value/light-dark). Previews are decorative. † marks a description taken from the semantic token table in [Theming](https://odonckers.github.io/domestic-ui/principles/theming.md).
+174 tokens in [`css/tokens/semantic.css`](https://github.com/odonckers/domestic-ui/blob/main/css/tokens/semantic.css). **Light** and **Dark** resolve every `var()` and take one side of [`light-dark()`](https://developer.mozilla.org/en-US/docs/Web/CSS/color_value/light-dark). Previews are decorative. † marks a description taken from the semantic token table in [Theming](https://odonckers.github.io/domestic-ui/principles/theming.md).
 
 ### Surfaces and text
 
@@ -2240,7 +2242,7 @@ Colors use [`light-dark()`](https://developer.mozilla.org/en-US/docs/Web/CSS/col
 | `--dui-size-target-large` | `2.5rem` | `2.5rem` | Large buttons: 40px, 52px under a coarse pointer With `@media (pointer: coarse)`: `var(--dui-size-3-25)`, resolves to `3.25rem`. |
 | `--dui-size-target-row` | `2rem` | `2rem` | Comfortable row height of nav, menu, listbox and list items: 32px, 44px under a coarse pointer With `@media (pointer: coarse)`: `var(--dui-size-2-75)`, resolves to `2.75rem`. |
 | `--dui-size-target-row-compact` | `1.75rem` | `1.75rem` | Compact row height: 28px, 44px under a coarse pointer With `@media (pointer: coarse)`: `var(--dui-size-2-75)`, resolves to `2.75rem`. |
-| `--dui-size-check` | `1.25rem` | `1.25rem` | Checkbox and radio size † |
+| `--dui-size-check` | `1rem` | `1rem` | Checkbox and radio box, and the switch thumb: 16px, as shadcn/ui. The label around it is the full-size target (WCAG 2.5.8) |
 | `--dui-size-column-min` | `16rem` | `16rem` | Default .grid min column width † |
 | `--dui-size-menu-min` | `12rem` | `12rem` | Min width of menus and nav dropdowns † |
 | `--dui-size-drawer` | `24rem` | `24rem` | Drawer width (all of the viewport when narrower) † |
@@ -2263,6 +2265,7 @@ Colors use [`light-dark()`](https://developer.mozilla.org/en-US/docs/Web/CSS/col
 | `--dui-border-width-emphasis` | `0.25rem` | `0.25rem` | blockquote rule, alert start rule, invalid field † |
 | `--dui-border-width-indicator` | `3px` | `3px` | Selected tab (3:1 against the surface); the current nav item's bar in forced colors only † |
 | `--dui-angle-chevron` | `45deg` | `45deg` | Turn of the CSS-drawn sidebar group chevron: -1x points to the inline end, 1x points down (open), 3x points left in right-to-left text |
+| `--dui-border-width-check` | `2px` | `2px` | Stroke of the CSS-drawn check and indeterminate bar in a checkbox, close to a 14px icon's 2 stroke |
 | `--dui-border-width-chevron` | `calc(1px * 1.5)` | `calc(1px * 1.5)` | Stroke of the CSS-drawn chevron on a sidebar nav group, close to a 16px icon's 1.75 stroke |
 | `--dui-underline-offset` | `0.15em` | `0.15em` | Link underline offset † |
 | `--dui-underline-thickness` | `0.0625em` | `0.0625em` | Link underline † |
@@ -2350,6 +2353,7 @@ Defined in terms of other semantic tokens.
 | `--dui-font-size-page-title` | `clamp(1.5rem, 1.375rem + 0.625vw, 1.875rem)` | `clamp(1.5rem, 1.375rem + 0.625vw, 1.875rem)` | The h1 of a page header or an app shell: 30px at most |
 | `--dui-radius-control` | `calc(0.5rem * 1)` | `calc(0.5rem * 1)` | Controls, buttons, inline code: 8px times the radius scale |
 | `--dui-radius-surface` | `calc(0.75rem * 1)` | `calc(0.75rem * 1)` | Panels, cards, pre, dialogs, details, media: 12px times the radius scale |
+| `--dui-radius-check` | `calc(0.25rem * 1)` | `calc(0.25rem * 1)` | Checkbox corners: 4px times the radius scale |
 
 ### Tinted surfaces for status badges
 
@@ -2361,6 +2365,7 @@ A little of the tone mixed into the surface.
 | `--dui-color-success-surface` | `color-mix(in oklab, oklch(47% 0.128 150deg) calc(8% * 1), oklch(100% 0 0deg))` | `color-mix(in oklab, oklch(80% 0.12 150deg) calc(8% * 1), oklch(14.5% 0 0deg))` | Success badge background † |
 | `--dui-color-warning-surface` | `color-mix(in oklab, oklch(47% 0.098 75deg) calc(8% * 1), oklch(100% 0 0deg))` | `color-mix(in oklab, oklch(80% 0.12 75deg) calc(8% * 1), oklch(14.5% 0 0deg))` | Warning badge background † |
 | `--dui-color-danger-surface` | `color-mix(in oklab, oklch(48% 0.16 27deg) calc(8% * 1), oklch(100% 0 0deg))` | `color-mix(in oklab, oklch(80% 0.114 27deg) calc(8% * 1), oklch(14.5% 0 0deg))` | Danger badge and alert background † |
+| `--dui-color-danger-halo` | `color-mix(in oklab, oklch(48% 0.16 27deg) calc(20% * 1), transparent)` | `color-mix(in oklab, oklch(80% 0.114 27deg) calc(20% * 1), transparent)` | Halo around an invalid field: the danger color at 20%, times --dui-contrast |
 | `--dui-color-info-surface` | `color-mix(in oklab, oklch(48% 0.12 245deg) calc(8% * 1), oklch(100% 0 0deg))` | `color-mix(in oklab, oklch(80% 0.108 245deg) calc(8% * 1), oklch(14.5% 0 0deg))` | Info alert background † |
 
 ### Inverse pair for small overlays on top of content (tooltips): text and surface swapped
@@ -2644,6 +2649,9 @@ None: write semantic HTML.
 - [W3C labels](https://www.w3.org/WAI/tutorials/forms/labels/)
 - [MDN `:user-invalid`](https://developer.mozilla.org/en-US/docs/Web/CSS/:user-invalid)
 - [MDN `accent-color`](https://developer.mozilla.org/en-US/docs/Web/CSS/accent-color)
+- [MDN `appearance`](https://developer.mozilla.org/en-US/docs/Web/CSS/appearance)
+- [ui.shadcn.com checkbox](https://ui.shadcn.com/docs/components/checkbox)
+- [ui.shadcn.com label](https://ui.shadcn.com/docs/components/label)
 - [MDN `forced-colors`](https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/At-rules/@media/forced-colors)
 - [WHATWG interactive elements](https://html.spec.whatwg.org/multipage/interactive-elements.html)
 - [MDN `dialog`](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/dialog)
@@ -3137,7 +3145,7 @@ From [`css/components/atoms/README.md`](https://github.com/odonckers/domestic-ui
 - **Our choice:** default buttons and fields are 36px tall and large ones 40px, and a coarse (touch) pointer restores 44px, between Primer and Radix (32px) and Material (40px), for comparison.
 - **Our choice:** small buttons are 32px tall: below the 36px default, above the [24px minimum](https://www.w3.org/WAI/WCAG22/Understanding/target-size-minimum.html).
 - **Our choice:** `aria-disabled="true"` looks exactly like `disabled`. Prefer native `disabled`; use `aria-disabled` when users should be able to reach the control and read why it is unavailable.
-- **Our choice:** the field's error text starts with the word "Error:" in the markup, rather than a CSS icon, so every user and every screen reader gets it with no extra API. Invalid controls also get a thick start border, a shape change as well as a color change.
+- **Our choice:** the field's error text starts with the word "Error:" in the markup, rather than a CSS icon, so every user and every screen reader gets it with no extra API. Invalid controls also get a 3px halo around them, a shape change as well as a color change.
 - **Our choice:** errors are tied to controls with `aria-describedby`, not `aria-errormessage`, because `aria-describedby` has broader screen reader support today (see the support notes on [MDN `aria-errormessage`](https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Reference/Attributes/aria-errormessage)).
 - **Our choice:** the switch is the native checkbox with `role="switch"`, drawn with `appearance: none` and one pseudo-element. The thumb moves and changes color, and forced-colors mode gets explicit system colors.
 - **Our choice:** badge tones are 8% of the tone mixed into the surface, with the tone as text. The tinted surfaces are derived tokens (`--dui-color-*-surface`), so a theme that changes the surface or a tone re-tints badges with no extra overrides.
@@ -3643,6 +3651,7 @@ The track color fades over `--dui-motion-duration-fast`; the thumb slides for th
 - [APG Switch](https://www.w3.org/WAI/ARIA/apg/patterns/switch/)
 - [ARIA in HTML](https://www.w3.org/TR/html-aria/#el-input-checkbox)
 - [MDN `switch` role](https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Reference/Roles/switch_role)
+- [ui.shadcn.com switch](https://ui.shadcn.com/docs/components/switch)
 - [MDN `forced-colors`](https://developer.mozilla.org/en-US/docs/Web/CSS/@media/forced-colors)
 - [WCAG Use of color](https://www.w3.org/WAI/WCAG22/Understanding/use-of-color.html)
 - [WCAG Non text contrast](https://www.w3.org/WAI/WCAG22/Understanding/non-text-contrast.html)
@@ -3747,6 +3756,7 @@ _Diagram: A field is one form entry in the content area: the label, the control,
 - [MDN `aria-describedby`](https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Reference/Attributes/aria-describedby)
 - [MDN `aria-invalid`](https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Reference/Attributes/aria-invalid)
 - [MDN `:user-invalid`](https://developer.mozilla.org/en-US/docs/Web/CSS/:user-invalid)
+- [ui.shadcn.com input](https://ui.shadcn.com/docs/components/input)
 - [WCAG Use of color](https://www.w3.org/WAI/WCAG22/Understanding/use-of-color.html)
 
 ### See also

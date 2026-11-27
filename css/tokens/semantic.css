@@ -99,7 +99,7 @@
   --dui-size-target-large: var(--dui-size-2-5); /* Large buttons: 40px, 52px under a coarse pointer */
   --dui-size-target-row: var(--dui-size-2); /* Comfortable row height of nav, menu, listbox and list items: 32px, 44px under a coarse pointer */
   --dui-size-target-row-compact: var(--dui-size-1-75); /* Compact row height: 28px, 44px under a coarse pointer */
-  --dui-size-check: var(--dui-size-1-25);
+  --dui-size-check: var(--dui-size-1); /* Checkbox and radio box, and the switch thumb: 16px, as shadcn/ui. The label around it is the full-size target (WCAG 2.5.8) */
   --dui-size-column-min: var(--dui-size-16);
   --dui-size-menu-min: var(--dui-size-12);
   --dui-size-drawer: var(--dui-size-24);
@@ -119,6 +119,7 @@
   --dui-border-width-emphasis: var(--dui-border-4);
   --dui-border-width-indicator: var(--dui-border-3);
   --dui-angle-chevron: var(--dui-angle-45); /* Turn of the CSS-drawn sidebar group chevron: -1x points to the inline end, 1x points down (open), 3x points left in right-to-left text */
+  --dui-border-width-check: var(--dui-border-2); /* Stroke of the CSS-drawn check and indeterminate bar in a checkbox, close to a 14px icon's 2 stroke */
   --dui-border-width-chevron: calc(var(--dui-border-1) * 1.5); /* Stroke of the CSS-drawn chevron on a sidebar nav group, close to a 16px icon's 1.75 stroke */
   --dui-underline-offset: var(--dui-underline-offset-015em);
   --dui-underline-thickness: var(--dui-underline-1);
@@ -194,12 +195,14 @@
   --dui-font-size-page-title: var(--dui-step-3); /* The h1 of a page header or an app shell: 30px at most */
   --dui-radius-control: calc(var(--dui-radius-2) * var(--dui-radius-scale)); /* Controls, buttons, inline code: 8px times the radius scale */
   --dui-radius-surface: calc(var(--dui-radius-3) * var(--dui-radius-scale)); /* Panels, cards, pre, dialogs, details, media: 12px times the radius scale */
+  --dui-radius-check: calc(var(--dui-radius-1-5) * var(--dui-radius-scale)); /* Checkbox corners: 4px times the radius scale */
 
   /* Tinted surfaces for status badges: a little of the tone mixed into the surface. */
   --dui-color-accent-surface: color-mix(in oklab, var(--dui-color-accent) var(--dui-tint-amount), var(--dui-color-surface));
   --dui-color-success-surface: color-mix(in oklab, var(--dui-color-success) var(--dui-tint-amount), var(--dui-color-surface));
   --dui-color-warning-surface: color-mix(in oklab, var(--dui-color-warning) var(--dui-tint-amount), var(--dui-color-surface));
   --dui-color-danger-surface: color-mix(in oklab, var(--dui-color-danger) var(--dui-tint-amount), var(--dui-color-surface));
+  --dui-color-danger-halo: color-mix(in oklab, var(--dui-color-danger) calc(var(--dui-mix-20) * var(--dui-contrast)), transparent); /* Halo around an invalid field: the danger color at 20%, times --dui-contrast */
   --dui-color-info-surface: color-mix(in oklab, var(--dui-color-info) var(--dui-tint-amount), var(--dui-color-surface));
 
   /* Inverse pair for small overlays on top of content (tooltips): text and surface swapped. */
