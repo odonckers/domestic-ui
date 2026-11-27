@@ -7,8 +7,8 @@ on:
     types: [opened, synchronize, reopened, edited]
   push:
     branches: [main]
-  # Ready for a merge queue, should main ever use one (not available on this
-  # personal-account repository today).
+  # Unused today (merge queues aren't available on personal-account repos);
+  # kept so CI is ready if main ever uses one.
   # https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/configuring-pull-request-merges/managing-a-merge-queue#triggering-merge-group-checks-with-github-actions
   merge_group:
 
