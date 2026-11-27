@@ -72,8 +72,11 @@ jobs:
       # Every test still runs once: Playwright splits all projects (Chromium,
       # Firefox, WebKit) and specs across the shards.
       # https://playwright.dev/docs/test-sharding
+      # Our choice: 4 shards of 4 workers (a hosted runner has 4 CPUs) rather
+      # than 8 shards of 2. Same parallelism, half the runners, so runs from
+      # other pull requests wait less for a free runner.
       matrix:
-        shard: [1, 2, 3, 4, 5, 6, 7, 8]
+        shard: [1, 2, 3, 4]
     steps:
       - uses: actions/checkout@v7
       - uses: actions/setup-node@v7
@@ -81,7 +84,7 @@ jobs:
           node-version: lts/*
           cache: npm
       - run: npm ci
-      - run: npx playwright test --shard=${{ matrix.shard }}/${{ strategy.job-total }}
+      - run: npx playwright test --workers=4 --shard=${{ matrix.shard }}/${{ strategy.job-total }}
       - name: Upload Playwright report
         if: failure()
         uses: actions/upload-artifact@v7
