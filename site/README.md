@@ -439,6 +439,7 @@ keyboard:
 | `our-choice` | One line, only when there is no standard. The build fails if a pattern has neither. |
 | `specs` | Further `Label: URL` links, shown under Specifications after the standards. |
 | `sources` | Other file names that fill this pattern in (`dialog.md` lists `dialog` and `drawer`). The slug is always one. |
+| `see-also` | Markdown lines added to See also after the level index, such as `[Search dialog](site:patterns/search-dialog.html)`. |
 | `keyboard` | `Key: action` lines, used only when neither the example nor the CSS has a `Keyboard` block. Separate alternative keys with ` / `. |
 
 A pattern **fills in on its own** when any of its names matches a file:
