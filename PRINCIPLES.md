@@ -978,6 +978,7 @@ From [Laws of UX](https://lawsofux.com/):
 - **Compose before you create.** Most of what a design system calls a component is native elements put together
   well. Before adding a component class or a web component, try a canonical example: a snippet in `examples/` that
   combines existing elements (a card of a heading, text and actions; a settings form of fieldsets) and looks finished
-  as written. Add a new component only when composition can't express it.
+  as written. Add a new component only when composition can't express it; the
+  [decision ladder](docs/ARCHITECTURE.md#3-the-decision-ladder) says what comes next.
 - **Familiarity over novelty.** Use the pattern people already know, the native element or the
   [APG pattern](https://www.w3.org/WAI/ARIA/apg/patterns/), before inventing one.
