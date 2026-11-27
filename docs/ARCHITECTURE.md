@@ -132,33 +132,34 @@ We build on the newest standards, but nobody's page may break because of them. T
 
 ## 6. Standards we build on
 
-How each recent standard is used. "Status" is a summary as of November 2026; MDN's Baseline badge on
-the linked page is the source of truth.
+How each recent standard is used. "Status" comes from `npm run platform:status`
+(`scripts/platform-status.mjs`), which reads the pinned [web-features](https://github.com/web-platform-dx/web-features)
+data; rerun it and update this column when that dependency is bumped. Last updated from web-features 3.48.0.
 
 | Standard | Status | How domestic-ui uses it | Without it |
 | --- | --- | --- | --- |
 | [`<dialog>`](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/dialog) and `showModal()` | Widely available | Dialogs and the drawer variant; focus, <kbd>Esc</kbd> and inertness come from the browser | n/a |
-| [`popover`](https://developer.mozilla.org/en-US/docs/Web/HTML/Global_attributes/popover) | Baseline | Menus, popovers, the tooltip's `popover="hint"`, nav dropdowns, in the top layer | n/a |
-| [Invoker commands](https://developer.mozilla.org/en-US/docs/Web/API/Invoker_Commands_API) (`commandfor`, `command`) | Newly shipped in all engines | Open and close dialogs and popovers with no script | The buttons do nothing; a page that must support an older engine adds a one-line `showModal()` or `togglePopover()` handler |
-| [`closedby`](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/dialog#closedby) | Limited | Light dismiss for dialogs | <kbd>Esc</kbd> and the close button still work |
-| [`<details name>`](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/details#name) | Baseline | Exclusive accordions | n/a |
-| [`:has()`](https://developer.mozilla.org/en-US/docs/Web/CSS/:has) | Baseline | Parent state: a field with an invalid input, a row with a checked box, a shell with an open sidebar | n/a |
+| [`popover`](https://developer.mozilla.org/en-US/docs/Web/HTML/Global_attributes/popover) | Newly available (2025) | Menus, popovers, the tooltip's `popover="hint"`, nav dropdowns, in the top layer | n/a |
+| [Invoker commands](https://developer.mozilla.org/en-US/docs/Web/API/Invoker_Commands_API) (`commandfor`, `command`) | Newly available (2025) | Open and close dialogs and popovers with no script | The buttons do nothing; a page that must support an older engine adds a one-line `showModal()` or `togglePopover()` handler |
+| [`closedby`](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/dialog#closedby) | Limited (Chromium, Firefox) | Light dismiss for dialogs | <kbd>Esc</kbd> and the close button still work |
+| [`<details name>`](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/details#name) | Newly available (2024) | Exclusive accordions | n/a |
+| [`:has()`](https://developer.mozilla.org/en-US/docs/Web/CSS/:has) | Widely available | Parent state: a field with an invalid input, a row with a checked box, a shell with an open sidebar | n/a |
 | [Container queries](https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_containment/Container_queries) | Widely available | Layouts respond to their container, not the viewport (split view, list-detail, app shell) | n/a |
-| [`light-dark()`](https://developer.mozilla.org/en-US/docs/Web/CSS/color_value/light-dark) and [`color-scheme`](https://developer.mozilla.org/en-US/docs/Web/CSS/color-scheme) | Baseline | Every semantic color has a light and a dark value | n/a |
-| [OKLCH](https://developer.mozilla.org/en-US/docs/Web/CSS/color_value/oklch), [relative colors](https://www.w3.org/TR/css-color-5/#relative-colors), [`color-mix()`](https://developer.mozilla.org/en-US/docs/Web/CSS/color_value/color-mix) | Baseline | Color ramps, derived hover and tint tokens, the contrast knob | n/a |
-| [`@property`](https://developer.mozilla.org/en-US/docs/Web/CSS/@property) | Baseline | Non-inheriting layout custom properties | n/a |
-| [`@starting-style`](https://developer.mozilla.org/en-US/docs/Web/CSS/@starting-style) and `transition-behavior: allow-discrete` | Newly available | Top-layer enter and exit transitions | Elements open and close with no transition |
-| [CSS anchor positioning](https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_anchor_positioning) | Newly shipped in all engines | Popovers placed beside their invoker with `position-area` and `position-try-fallbacks` | Inside `@supports`; popovers sit centered at the bottom of the viewport instead |
-| [CSS Custom Highlight API](https://developer.mozilla.org/en-US/docs/Web/API/CSS_Custom_Highlight_API) | Newly available | Code highlighting with `::highlight()` and token colors | Plain code |
-| [View transitions](https://developer.mozilla.org/en-US/docs/Web/API/View_Transition_API) | Same-document newly available; cross-document limited | Optional page cross-fades driven by motion tokens | Instant navigation |
-| [Customizable `<select>`](https://developer.mozilla.org/en-US/docs/Learn_web_development/Extensions/Forms/Customizable_select) (`appearance: base-select`) | Limited (Chromium) | Planned: a fully styled select with icons in options | The native select, tinted and sized by tokens |
+| [`light-dark()`](https://developer.mozilla.org/en-US/docs/Web/CSS/color_value/light-dark) and [`color-scheme`](https://developer.mozilla.org/en-US/docs/Web/CSS/color-scheme) | Widely available | Every semantic color has a light and a dark value | n/a |
+| [OKLCH](https://developer.mozilla.org/en-US/docs/Web/CSS/color_value/oklch), [relative colors](https://www.w3.org/TR/css-color-5/#relative-colors), [`color-mix()`](https://developer.mozilla.org/en-US/docs/Web/CSS/color_value/color-mix) | Widely available; relative colors newly available | Color ramps, derived hover and tint tokens, the contrast knob | n/a |
+| [`@property`](https://developer.mozilla.org/en-US/docs/Web/CSS/@property) | Newly available (2024) | Non-inheriting layout custom properties | n/a |
+| [`@starting-style`](https://developer.mozilla.org/en-US/docs/Web/CSS/@starting-style) and `transition-behavior: allow-discrete` | Newly available (2024) | Top-layer enter and exit transitions | Elements open and close with no transition |
+| [CSS anchor positioning](https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_anchor_positioning) | Limited (Chromium, WebKit) | Popovers placed beside their invoker with `position-area` and `position-try-fallbacks` | Inside `@supports`; popovers sit centered at the bottom of the viewport instead |
+| [CSS Custom Highlight API](https://developer.mozilla.org/en-US/docs/Web/API/CSS_Custom_Highlight_API) | Newly available (2026) | Code highlighting with `::highlight()` and token colors | Plain code |
+| [View transitions](https://developer.mozilla.org/en-US/docs/Web/API/View_Transition_API) | Same-document newly available (2025); cross-document limited (Chromium, WebKit) | Optional page cross-fades driven by motion tokens | Instant navigation |
+| [Customizable `<select>`](https://developer.mozilla.org/en-US/docs/Learn_web_development/Extensions/Forms/Customizable_select) (`appearance: base-select`) | Limited (Chromium, WebKit) | Planned: a fully styled select with icons in options | The native select, tinted and sized by tokens |
 | [Interest invokers](https://open-ui.org/components/interest-invokers.explainer/) (`interestfor`) | Limited (Chromium) | Planned replacement for `<dui-tooltip>` and hover cards | `<dui-tooltip>` bridges it |
-| [`@scope`](https://developer.mozilla.org/en-US/docs/Web/CSS/@scope) | Newly shipped in all engines | Under evaluation for theme and density scopes (proximity) | Attribute selectors as today |
-| [Custom element states](https://developer.mozilla.org/en-US/docs/Web/API/CustomStateSet) (`:state()`) | Baseline | Planned: web components expose internal state to CSS without inventing attributes | n/a |
-| [`field-sizing: content`](https://developer.mozilla.org/en-US/docs/Web/CSS/field-sizing) | Limited | Auto-growing text areas | A fixed-height, resizable text area |
-| [`focusgroup`](https://open-ui.org/components/focusgroup.explainer/) | Proposal (Open UI) | Watched: would replace the roving tabindex in `<dui-toolbar>`, `<dui-tabs>` and `<dui-menu>` | The web components |
+| [`@scope`](https://developer.mozilla.org/en-US/docs/Web/CSS/@scope) | Newly available (2026) | Under evaluation for theme and density scopes (proximity) | Attribute selectors as today |
+| [Custom element states](https://developer.mozilla.org/en-US/docs/Web/API/CustomStateSet) (`:state()`) | Widely available | Planned: web components expose internal state to CSS without inventing attributes | n/a |
+| [`field-sizing: content`](https://developer.mozilla.org/en-US/docs/Web/CSS/field-sizing) | Newly available (2026) | Auto-growing text areas | A fixed-height, resizable text area |
+| [`focusgroup`](https://open-ui.org/components/focusgroup.explainer/) | Limited (Chromium) | Watched: would replace the roving tabindex in `<dui-toolbar>`, `<dui-tabs>` and `<dui-menu>` | The web components |
 
-A tracking issue keeps this table current, and each "planned" row has its own issue on the roadmap.
+Each "planned" row has its own issue on the roadmap.
 
 ## 7. Web components
 
