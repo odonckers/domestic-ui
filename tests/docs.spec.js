@@ -1176,26 +1176,27 @@ test.describe("docs frame", () => {
     expect(box && box.width >= 24 && box.height >= 24).toBe(true);
   });
 
-  test("the app bar sticks, the Docs sidebar floats below it, and a focused heading link is never under it", async ({ page }) => {
+  test("main scrolls inside its panel: the app bar and the Docs sidebar never move, and a target lands in view", async ({ page }) => {
     await page.goto("_site/tokens/semantic.html");
-    await page.evaluate(() => window.scrollTo(0, 2000));
-    await expect.poll(() => page.evaluate(() => window.scrollY)).toBeGreaterThan(0);
+    const main = page.locator("dui-app-shell > main");
+    const [headerBefore, navBefore] = await Promise.all([page.locator("dui-app-shell > header").boundingBox(), page.locator("#docs-nav").boundingBox()]);
+    await main.evaluate((el) => el.scrollBy(0, 2000));
+    await expect.poll(() => main.evaluate((el) => el.scrollTop)).toBeGreaterThan(0);
+    expect(await page.evaluate(() => window.scrollY)).toBe(0);
     const header = await page.locator("dui-app-shell > header").boundingBox();
     const nav = await page.locator("#docs-nav").boundingBox();
-    expect(header && Math.abs(header.y) < 1).toBe(true);
+    expect(header && headerBefore && Math.abs(header.y - headerBefore.y) < 1).toBe(true);
+    expect(nav && navBefore && Math.abs(nav.y - navBefore.y) < 1).toBe(true);
     expect(header && nav && nav.y >= header.y + header.height - 0.5).toBe(true);
-    // A target near the middle of the page lands below the app bar (scroll-padding).
+    // A target near the middle of the page scrolls main, not the page, and lands inside the panel below the app bar.
     const id = await page.locator("main h2[id]").nth(2).getAttribute("id");
     await page.goto(`_site/tokens/semantic.html#${id}`);
-    // The scroll to the target may be smooth, and Firefox first restores the previous position (2000, past the
-    // target) and can hold a frame mid-way, so a "settled" check can pass too early. The page scrolls back up to the
-    // target, so the heading only moves down the viewport: once it is below the app bar, its final position is too.
     await expect
       .poll(async () => {
         const h2 = await page.locator(`[id="${id}"]`).boundingBox();
-        const bar = await page.locator("dui-app-shell > header").boundingBox();
-        return Boolean(h2 && bar && h2.y >= bar.y + bar.height - 0.5);
-      }, { message: "target below the app bar", intervals: [100] })
+        const panel = await main.boundingBox();
+        return Boolean(h2 && panel && h2.y >= panel.y - 0.5 && h2.y + h2.height <= panel.y + panel.height);
+      }, { message: "target inside the panel", intervals: [100] })
       .toBe(true);
   });
 

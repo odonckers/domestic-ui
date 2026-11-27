@@ -10,6 +10,8 @@ import { examples, schemes, withoutMotion, WCAG_TAGS, summarize } from "./helper
  *   auxiliary sidebar, every navigation named and the names distinct
  *   (APG Landmark Regions: https://www.w3.org/WAI/ARIA/apg/practices/landmark-regions/),
  *   placed by grid areas: header above, navigation at the inline start of main, aux at the end.
+ * - Scrolling: beside a sidebar main scrolls inside its panel and the page does not;
+ *   data-app-shell="page" scrolls the page under a sticky app bar, with main on the frame.
  * - Wide: a toggle collapses and restores its sidebar (aria-expanded, hidden, main wider).
  * - Narrow: a toggle opens its sidebar in a modal drawer <dialog>; Esc closes it and focus
  *   returns to the toggle. The sidebar exists once in the DOM in every mode.
@@ -23,6 +25,7 @@ import { examples, schemes, withoutMotion, WCAG_TAGS, summarize } from "./helper
 
 const ERP = "examples/app-shell.html";
 const CONTAINED = "examples/layouts/app-shell.html";
+const PAGE = "examples/layouts/app-shell-page.html";
 const WIDE = { width: 1440, height: 900 };
 const MID = { width: 900, height: 900 };
 const NARROW = { width: 375, height: 812 };
@@ -188,16 +191,47 @@ test.describe("floating panels", () => {
     expect(main.bg).toBe(main.panelBg);
   });
 
-  test("sticky panels stay in view while main scrolls", async ({ page }) => {
+  test("main scrolls inside its panel: the page, the app bar and the sidebars stay put", async ({ page }) => {
     await page.setViewportSize({ width: 1440, height: 600 });
     await page.goto(ERP);
-    await page.evaluate(() => window.scrollBy(0, 400));
-    await expect.poll(() => page.evaluate(() => window.scrollY)).toBeGreaterThan(0);
-    for (const selector of ["#app-nav", "#app-aux"]) {
-      const b = await box(page.locator(selector));
-      expect(b.y, selector).toBeGreaterThanOrEqual(0);
-      expect(b.y, selector).toBeLessThan(40);
-    }
+    const parts = ["dui-app-shell > header", "#app-nav", "#app-aux", "dui-app-shell > footer"];
+    const before = await Promise.all(parts.map((s) => box(page.locator(s))));
+    const main = page.locator("dui-app-shell > main");
+    expect(await page.evaluate(() => document.documentElement.scrollHeight <= innerHeight)).toBe(true);
+    await main.evaluate((el) => el.scrollBy(0, 400));
+    await expect.poll(() => main.evaluate((el) => el.scrollTop)).toBeGreaterThan(0);
+    expect(await page.evaluate(() => window.scrollY)).toBe(0);
+    const after = await Promise.all(parts.map((s) => box(page.locator(s))));
+    after.forEach((b, i) => expect(Math.abs(b.y - before[i].y), parts[i]).toBeLessThan(1));
+    // The panel ends inside the viewport.
+    const panel = await box(main);
+    expect(panel.y + panel.height).toBeLessThanOrEqual(600);
+  });
+
+  test('data-app-shell="page": main sits on the frame, its cards are panels, and the content scrolls under a sticky app bar', async ({ page }) => {
+    await page.setViewportSize({ width: 1280, height: 720 });
+    await page.goto(PAGE);
+    const shell = page.locator("dui-app-shell");
+    const main = shell.locator("> main");
+    const style = await main.evaluate((el) => {
+      const cs = getComputedStyle(el);
+      const card = /** @type {Element} */ (el.querySelector(":scope > [data-card]"));
+      return { shadow: cs.boxShadow, bg: cs.backgroundColor, overflow: cs.overflowY, cardShadow: getComputedStyle(card).boxShadow };
+    });
+    expect(style.shadow).toBe("none");
+    expect(style.bg).toBe("rgba(0, 0, 0, 0)");
+    expect(style.overflow).toBe("visible");
+    expect(style.cardShadow).not.toBe("none");
+    const header = shell.locator("> header");
+    const [shellBox, headerBefore] = await Promise.all([box(shell), box(header)]);
+    await shell.evaluate((el) => el.scrollBy(0, 200));
+    await expect.poll(() => shell.evaluate((el) => el.scrollTop)).toBeGreaterThan(0);
+    const [headerAfter, nav, heading] = await Promise.all([box(header), box(page.locator("#report-nav")), box(main.locator("hgroup"))]);
+    expect(Math.abs(headerAfter.y - headerBefore.y)).toBeLessThan(1);
+    expect(Math.abs(headerAfter.y - shellBox.y)).toBeLessThan(2);
+    expect(nav.y).toBeGreaterThanOrEqual(headerAfter.y + headerAfter.height - 0.5);
+    // The heading on the frame has slid under the app bar.
+    expect(heading.y).toBeLessThan(headerAfter.y + headerAfter.height);
   });
 
   test("Tab moves through the landmarks in source order: banner, navigation, main, aside, footer", async ({ page }) => {
