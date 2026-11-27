@@ -108,6 +108,11 @@ without losing their place in the table.
 - Atlassian [Page layout](https://atlassian.design/components/page-layout) (right sidebar) and Primer
   [PageLayout](https://primer.style/components/page-layout) (pane).
 
+## Mapping to a future standard
+
+None known. The sidebar is an `<aside>` landmark placed after `<main>`, so the semantics are already native; only the
+placement and the narrow-screen drawer are ours, and they follow the [app shell](app-shell.md#mapping-to-a-future-standard).
+
 ## Open questions
 
 - Should the aside remember its own collapsed state separately from the primary sidebar? The

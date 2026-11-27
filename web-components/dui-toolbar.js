@@ -11,6 +11,10 @@
  * group of ordinary controls and each one is a Tab stop. Light DOM, no
  * dependencies, no build.
  *
+ * Successor: focusgroup, which gives a group roving focus declaratively.
+ * https://open-ui.org/components/focusgroup.explainer/
+ * Retire when: focusgroup is Baseline newly available.
+ *
  * API
  *   <dui-toolbar role="toolbar" aria-label="…">   (role is added if missing)
  *   aria-orientation="vertical"   Up and Down move instead of Left and Right

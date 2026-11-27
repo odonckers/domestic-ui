@@ -42,6 +42,23 @@ any added later:
 | `<dui-app-shell>` | [`dui-app-shell.js`](dui-app-shell.js) | A button cannot hide another element and keep `aria-expanded` in step, and a sidebar that is part of the page when wide must become a modal drawer only when the shell is narrow. Toggles `hidden` on a sidebar beside main, moves the one copy of a sidebar into a `<dialog data-dialog="drawer">` (`showModal()`) while it is open on a narrow shell, and switches mode on the shell's own width ([`ResizeObserver`](https://developer.mozilla.org/en-US/docs/Web/API/ResizeObserver)); toggles are `hidden` until it upgrades. See [app-shell.md](../explainers/app-shell.md). | [app-shell.css](../css/layout/app-shell.css) (layout) | [app-shell.html](../examples/app-shell.html) |
 | `<dui-table>` | [`dui-table.js`](dui-table.js) | A table cannot reorder its rows, and a checkbox cannot check its siblings, count them or be indeterminate from markup. Adds sortable column buttons with `aria-sort` ([APG Sortable Table](https://www.w3.org/WAI/ARIA/apg/patterns/table/examples/sortable-table/)), a "select all" checkbox, the selection count and bulk-action enabling to a native `<table>`; without it the table is a plain table with ordinary checkboxes. | [data-table.css](../css/components/organisms/data-table.css) | [data-table.html](../examples/organisms/data-table.html) |
 
+## Successors
+
+Each element is a bridge until the platform can do its job. Its header comment names the feature that would
+replace it and the condition that retires it; retiring one is a breaking change
+([Versioning](../CONTRIBUTING.md#versioning), [architecture](../docs/ARCHITECTURE.md#7-web-components)).
+
+| Element | Platform successor | Retire when |
+| --- | --- | --- |
+| `<dui-tooltip>` | [`interestfor`](https://open-ui.org/components/interest-invokers.explainer/) | `interestfor` is Baseline newly available |
+| `<dui-toolbar>` | [`focusgroup`](https://open-ui.org/components/focusgroup.explainer/) | `focusgroup` is Baseline newly available |
+| `<dui-tabs>` | `focusgroup` for the arrow keys; no tabs element is proposed | The keys move to `focusgroup`; the element stays for selection |
+| `<dui-menu>` | The Open UI [menu elements](https://open-ui.org/components/menu.explainer/) proposal | A native menu element is Baseline newly available |
+| `<dui-combobox>` | None for free text; [customizable select](https://developer.mozilla.org/en-US/docs/Learn_web_development/Extensions/Forms/Customizable_select) for pick-one lists | Kept; pick-one uses move to `<select>` |
+| `<dui-app-shell>` | Container queries cover the layout; nothing moves one node into a modal | Kept |
+| `<dui-table>` | None proposed | Kept |
+| `<dui-toaster>` | None active | Kept |
+
 ## Events
 
 | Element | Event | When |

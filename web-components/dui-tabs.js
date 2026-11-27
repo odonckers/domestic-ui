@@ -12,6 +12,11 @@
  * as a table of contents. When this module loads, the element adds the
  * ARIA roles and keyboard behavior. Light DOM, no dependencies, no build.
  *
+ * Successor: focusgroup could take over the arrow keys; no tabs element is proposed.
+ * https://open-ui.org/components/focusgroup.explainer/
+ * Retire when: The keys move to focusgroup once it is Baseline newly available; the
+ *   element stays for selection.
+ *
  * API
  *   <dui-tabs>                  the wrapper
  *   activation="manual"         arrows move focus only; Enter or Space selects

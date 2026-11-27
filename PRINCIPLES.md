@@ -33,7 +33,7 @@ Humans and coding agents should be able to write a whole view from this document
   class or attribute, tuned with custom properties, never with modifier classes.
   The API is written in a comment at the top of its CSS file.
 - **Paths are API.** `css/domestic.css` and every file under `css/` keep their paths.
-  Renaming or moving a file is a breaking change.
+  Renaming or moving a file is a breaking change (see [Versioning](CONTRIBUTING.md#versioning)).
 - **No hidden JS behavior.** CSS never depends on script. Any script an example uses is
   inline, short, and commented, or one of the documented [web components](web-components/README.md).
 - **Our choice:** class and attribute APIs over custom elements, because they work with
@@ -231,7 +231,7 @@ headings, controls), but not inherited text color, background or derived tokens.
 
 ### Semantic tokens (public API)
 
-Renaming or removing a semantic token is a **breaking change**. Primitives are internal and
+Renaming or removing a semantic token is a **breaking change** (see [Versioning](CONTRIBUTING.md#versioning)). Primitives are internal and
 may change. Fluid `--dui-step-*` values are `clamp()` expressions; see `primitives.css`.
 
 | Token | Purpose | Default (primitive, light / dark) |
