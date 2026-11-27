@@ -1088,7 +1088,7 @@ test("discovery picks up a new component with no site changes", async ({ browser
     // demo.css is not in the README index table: it still gets a page, after the table's rows.
     const atomPaths = result.pages.filter((p) => p.path.startsWith("components/atoms/")).map((p) => p.path);
     expect(atomPaths[atomPaths.length - 1]).toBe("components/atoms/demo.html");
-    expect(page).toMatch(/<details open>\s*<summary>Atoms<\/summary>[\s\S]*aria-current="page">Demo<\/a>/);
+    expect(page).toMatch(/<details open>\s*<summary><svg data-icon [^>]*aria-hidden="true" focusable="false">[\s\S]*?<\/svg>Atoms<\/summary>[\s\S]*aria-current="page">Demo<\/a>/);
     const molecules = out("molecules/index.md");
     expect(molecules, "an available pattern has no status note").toContain("[Tabs](https://odonckers.github.io/domestic-ui/patterns/tabs.md): Sections of content shown one at a time, chosen from a list of tabs.\n");
     expect(molecules).toContain("Coming in M3.");
@@ -1131,7 +1131,7 @@ test("discovery picks up a new component with no site changes", async ({ browser
     // The layout lands under Layouts, from css/layouts/ with its example in examples/layouts/.
     const layoutPage = out("layouts/demo-layout.html");
     expect(layoutPage).toContain('src="../live/layouts/demo-layout--plain.html"');
-    expect(layoutPage).toMatch(/<details open>\s*<summary>Layout<\/summary>[\s\S]*aria-current="page">Demo layout<\/a>/);
+    expect(layoutPage).toMatch(/<details open>\s*<summary><svg data-icon [^>]*aria-hidden="true" focusable="false">[\s\S]*?<\/svg>Layout<\/summary>[\s\S]*aria-current="page">Demo layout<\/a>/);
     expect(out("layouts/index.md")).toContain("- [Demo layout](https://odonckers.github.io/domestic-ui/layouts/demo-layout.md): A demo layout used by the docs discovery test.");
 
     const readme = read(join(fixture, "README.md"));
