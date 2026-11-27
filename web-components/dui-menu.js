@@ -13,6 +13,10 @@
  * told "menu" without the keyboard behavior a menu promises.
  * Light DOM, no dependencies, no build.
  *
+ * Successor: The Open UI menu elements proposal.
+ * https://open-ui.org/components/menu.explainer/
+ * Retire when: A native menu element is Baseline newly available.
+ *
  * API
  *   <dui-menu>                       wraps the button and the popover
  *   <button popovertarget="id">      the menu button (first one inside)

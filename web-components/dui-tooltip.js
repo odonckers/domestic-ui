@@ -21,6 +21,10 @@
  * still its accessible description through aria-describedby. That is why a
  * tooltip must never be the only label. Light DOM, no dependencies, no build.
  *
+ * Successor: interestfor (interest invokers), which opens a popover on hover and focus.
+ * https://open-ui.org/components/interest-invokers.explainer/
+ * Retire when: interestfor is Baseline newly available.
+ *
  * API
  *   <dui-tooltip>                     wraps one trigger and one tooltip
  *   trigger                           the element whose aria-describedby
