@@ -4,7 +4,17 @@ Thanks for helping. This project is a design system built on native HTML, CSS to
 
 ## Issues and pull requests
 
-Use the issue forms for bugs and feature requests. Pull requests should use the template.
+All work is tracked as [GitHub issues](https://github.com/odonckers/domestic-ui/issues), grouped into [milestones](https://github.com/odonckers/domestic-ui/milestones) in roadmap order and shown on the [project board](https://github.com/users/odonckers/projects/6). Use the issue forms for bugs and feature requests. Pull requests should use the template.
+
+To pick up an issue:
+
+1. Comment on it first, so two people don't do the same work. `good first issue` and `help wanted` are good places to start.
+2. Check that any issue listed under "Blocked by" is closed.
+3. Open a pull request whose body says `Fixes #<number>`, so the issue [closes when the PR merges](https://docs.github.com/en/issues/tracking-your-work-with-issues/using-issues/linking-a-pull-request-to-an-issue).
+
+Work you notice along the way becomes a new issue rather than growing the current pull request.
+
+Labels you will see: `bug`, `enhancement`, `docs`, `a11y`, `tokens`, `demos`, `good first issue` and `help wanted` ([about labels](https://docs.github.com/en/issues/using-labels-and-milestones-to-track-work/managing-labels)).
 
 Branch names follow `fix/short-description`, `feat/short-description`, `docs/short-description`, or `a11y/short-description`.
 
