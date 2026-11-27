@@ -25,16 +25,14 @@ The default theme should look complete and consistent out of the box. Consumers 
 
 ## Dependencies
 
-The published CSS and web components have no runtime dependencies. A new development dependency comes with a
-security review and a row in [`docs/DEPENDENCIES.md`](docs/DEPENDENCIES.md), in the same pull request.
+The published CSS and web components have no runtime dependencies. Every external dependency (npm packages in the
+root and in each demo app, GitHub Actions and container images) comes with a security review and a row in
+[`docs/DEPENDENCIES.md`](docs/DEPENDENCIES.md), in the same pull request. `npm run lint:deps` (part of `npm test`
+and CI) fails when one is missing or when a row names something no longer used.
 
 ## Checks
 
 `npm test` must pass. That run includes html-validate, axe, and stylelint. On Linux it also compares the screenshot baselines.
-
-## Dependencies
-
-Every external dependency needs a security review in [SECURITY.md](SECURITY.md#dependency-reviews), in the PR that adds it: npm packages in the root and in each demo app, GitHub Actions, and container images. `npm run lint:deps` (part of `npm test` and CI) fails when one is missing or when a review names something no longer used. That section says what a review covers.
 
 ## Screenshot baselines
 

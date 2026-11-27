@@ -2,8 +2,8 @@
 /*
  * Dependency review check (`npm run lint:deps`).
  *
- * Every external dependency needs a security review in the "Dependency
- * reviews" section of SECURITY.md before it lands. This script collects the
+ * Every external dependency needs a security review in the inventory in
+ * docs/DEPENDENCIES.md before it lands. This script collects the
  * direct dependencies the repository declares and fails when one has no
  * review, or when a review no longer matches anything we use.
  *
@@ -25,7 +25,7 @@ import { join, relative } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const root = fileURLToPath(new URL("..", import.meta.url));
-const reviewFile = join(root, "SECURITY.md");
+const reviewFile = join(root, "docs", "DEPENDENCIES.md");
 const rel = (p) => relative(root, p);
 
 /** @type {Map<string, Set<string>>} dependency name -> files that declare it */
@@ -63,7 +63,7 @@ for (const name of readdirSync(workflows)) {
   }
 }
 
-// Reviews: table rows in SECURITY.md whose first cell names a package in backticks.
+// Reviews: table rows in docs/DEPENDENCIES.md whose first cell names a package in backticks.
 const reviews = new Map();
 if (existsSync(reviewFile)) {
   for (const line of readFileSync(reviewFile, "utf8").split("\n")) {
@@ -94,7 +94,7 @@ for (const review of reviews.keys()) {
 if (errors.length) {
   console.error("Dependency review check failed:\n");
   for (const error of [...new Set(errors)]) console.error(`  - ${error}`);
-  console.error(`\nAdd a row to "Dependency reviews" in ${rel(reviewFile)}.`);
+  console.error(`\nAdd a row to the inventory in ${rel(reviewFile)}.`);
   process.exit(1);
 }
 console.log(`Dependency review check passed: ${used.size} direct dependencies, all reviewed.`);

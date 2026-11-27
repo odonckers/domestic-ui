@@ -36,7 +36,7 @@ Read [PRINCIPLES.md](PRINCIPLES.md) before changing behavior. [CONTRIBUTING.md](
 
 ## Rules for code
 
-- Every external dependency (npm in the root or a demo, GitHub Action, container image) needs a row in the "Dependency reviews" table in `SECURITY.md` in the same PR; `npm run lint:deps` enforces it.
+- Every external dependency (npm in the root or a demo, GitHub Action, container image) needs a row in the inventory in `docs/DEPENDENCIES.md` in the same PR; `npm run lint:deps` enforces it.
 - Native element first; ARIA only where native can't. [WCAG 2.2](https://www.w3.org/TR/WCAG22/) AA. No page overflows at 320px.
 - Components never hard-code values; theme only through semantic `--dui-*` tokens. Give every new token a description comment.
 - Link MDN, WHATWG, W3C, WCAG or the APG for every borrowed fact. Never claim originality. A choice of ours is labeled "Our choice" with one line on why.
