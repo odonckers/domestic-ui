@@ -4,7 +4,17 @@ Thanks for helping. This project is a design system built on native HTML, CSS to
 
 ## Issues and pull requests
 
-Use the issue forms for bugs and feature requests. Pull requests should use the template.
+All work is tracked as [GitHub issues](https://github.com/odonckers/domestic-ui/issues), grouped into [milestones](https://github.com/odonckers/domestic-ui/milestones) in roadmap order and shown on the [project board](https://github.com/users/odonckers/projects/6). Use the issue forms for bugs and feature requests. Pull requests should use the template.
+
+To pick up an issue:
+
+1. Comment on it first, so two people don't do the same work. `good first issue` and `help wanted` are good places to start.
+2. Check that any issue listed under "Blocked by" is closed.
+3. Open a pull request whose body says `Fixes #<number>`, so the issue [closes when the PR merges](https://docs.github.com/en/issues/tracking-your-work-with-issues/using-issues/linking-a-pull-request-to-an-issue).
+
+Work you notice along the way becomes a new issue rather than growing the current pull request.
+
+Labels you will see: `bug`, `enhancement`, `docs`, `a11y`, `tokens`, `demos`, `good first issue` and `help wanted` ([about labels](https://docs.github.com/en/issues/using-labels-and-milestones-to-track-work/managing-labels)).
 
 Branch names follow `fix/short-description`, `feat/short-description`, `docs/short-description`, or `a11y/short-description`.
 
@@ -12,11 +22,14 @@ Branch names follow `fix/short-description`, `feat/short-description`, `docs/sho
 
 Every pull request, from inside or outside the project, gets the same review and must pass CI before it merges. GitHub holds CI on a first-time contributor's pull request until a maintainer approves the workflow run.
 
+A pull request squash-merges once it is approved and CI is green. The ruleset requires the branch to be up to date with `main`, so merge `main` into it when it is behind or has a conflict, and otherwise leave it alone.
+
 `.github/CODEOWNERS` lists @odonckers on every file. That file is informational today: team bots push with the same GitHub account as Owen, so GitHub cannot tell his review apart from a bot's.
 
 ## Standards
 
 - Prefer a native HTML element before adding a component or custom behavior.
+- Check visual and interaction changes against the [design principles](PRINCIPLES.md#14-design-principles), and say in the pull request which ones apply.
 - Cite the relevant [MDN](https://developer.mozilla.org/), [WHATWG](https://whatwg.org/), [W3C](https://www.w3.org/), [WCAG 2.2](https://www.w3.org/TR/WCAG22/), or [APG](https://www.w3.org/WAI/ARIA/apg/) documentation in the issue or pull request.
 - If we choose a behavior the specs leave open, label it as our choice, not as a standard.
 - Theme only through semantic `--dui-*` CSS custom properties. Do not hard-code colors, spacing, typography, or other design values in components.
@@ -79,7 +92,7 @@ docs: link the apg tabs pattern
 ```
 
 We squash-merge, so the pull request title becomes the commit on `main`: the title must follow the same rule.
-CI's `commits` job lints the title and every commit in the pull request with commitlint
+CI's `lint` job lints the title and every commit in the pull request with commitlint
 ([`commitlint.config.mjs`](commitlint.config.mjs)), and the required `ci` check fails if it does. Retitling a pull
 request re-runs CI. Merge commits such as "Merge branch 'main' into …" are ignored. To check a message locally:
 `echo "fix(nav): keep the marker on aria-current" | npx commitlint`.

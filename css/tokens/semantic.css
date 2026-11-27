@@ -106,8 +106,9 @@
   --dui-size-menu-min: var(--dui-size-12);
   --dui-size-drawer: var(--dui-size-24);
   --dui-size-page: var(--dui-size-72); /* Max inline size of a page's content column: header, main and footer */
-  --dui-size-icon: var(--dui-size-1-25); /* Decorative icons beside a label: nav links and group summaries */
+  --dui-size-icon: var(--dui-size-1-25); /* Decorative icons beside a label, on their own */
   --dui-size-icon-inline: var(--dui-size-1); /* Icons inside buttons, menu items and toolbars, beside 14 to 16px text */
+  --dui-size-icon-nav: var(--dui-size-icon-inline); /* Decorative icons at the start of nav links and group summaries: 16px beside 14px sidebar text, as shadcn/ui */
   --dui-size-chevron: calc(var(--dui-space-2xs) + var(--dui-space-3xs)); /* Arm length of the CSS-drawn chevron on a sidebar nav group: 6px */
   --dui-icon-stroke-width: var(--dui-stroke-1-75); /* Stroke width of [data-icon] SVGs, set with the CSS stroke-width property */
   --dui-size-sidebar: var(--dui-size-16); /* Inline size of an app shell's primary sidebar when it sits beside main */

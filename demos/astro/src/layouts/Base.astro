@@ -50,13 +50,13 @@ const links = [
 		<dui-app-shell data-app-shell>
 			<header>
 				<button type="button" aria-controls="app-nav" aria-expanded="true" hidden>
-					<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"></path></svg>
+					<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true" focusable="false"><path d="M4 6h16M4 12h16M4 18h16"></path></svg>
 					Menu
 				</button>
 				<a href="/" data-link="quiet"><strong>Homebase</strong></a>
 				{hasAux && (
 					<button type="button" aria-controls="app-aux" aria-expanded="true" hidden>
-						<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2"></rect><path d="M15 4v16"></path></svg>
+						<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true" focusable="false"><rect x="3" y="4" width="18" height="16" rx="2"></rect><path d="M15 4v16"></path></svg>
 						Details
 					</button>
 				)}
@@ -76,7 +76,7 @@ const links = [
 					{links.map(({ view, href, label, icon }) => (
 						<li>
 							<a href={href} aria-current={view === current ? "page" : undefined}>
-								<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" set:html={icon} />
+								<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false" set:html={icon} />
 								{label}
 							</a>
 						</li>

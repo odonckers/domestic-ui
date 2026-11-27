@@ -250,14 +250,15 @@ and a changelog generated from them.
 **1.0 criteria.** We call it 1.0 when the semantic token list, the component attribute vocabulary and
 the web component APIs have gone one full minor release with no breaking change, every component has
 a docs page in MDN structure, the planned rows in section 6 have each shipped or been declined, and
-the four framework demos pass the shared accessibility checks.
+every framework demo passes the shared accessibility checks.
 
 ## 11. Frameworks and agents
 
-- **Frameworks render; the DOM is the contract.** React, Angular, Astro and others render the same
+- **Frameworks render; the DOM is the contract.** React, Angular, Astro, Vue, Svelte and others render the same
   markup a static page would and keep their own state. They set attributes and properties on native
   elements and `dui-*` elements and listen for events. No wrapper library is planned; `demos/` shows
-  each framework using the markup directly.
+  each framework using the markup directly, and the guide
+  [Use it with any framework](../site/content/guides/any-framework.md) writes the pattern down.
 - **Server rendering is the default case.** Everything renders and reads correctly before any script
   runs; web components only enhance.
 - **Agents read the same sources people do.** The docs build writes `llms.txt` and `llms-full.txt`

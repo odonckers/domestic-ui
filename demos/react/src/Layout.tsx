@@ -13,6 +13,7 @@ const iconProps = {
   strokeLinecap: 'round',
   strokeLinejoin: 'round',
   'aria-hidden': true,
+  focusable: 'false',
 } as const
 
 const links: { view: View; href: string; label: string; icon: ReactNode }[] = [
@@ -45,13 +46,13 @@ export default function Layout({ current, aux, children }: { current: View; aux?
       <dui-app-shell data-app-shell="">
         <header>
           <button type="button" aria-controls="app-nav" aria-expanded="true" hidden>
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"></path></svg>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" aria-hidden="true" focusable="false"><path d="M4 6h16M4 12h16M4 18h16"></path></svg>
             Menu
           </button>
           <a href="/" data-link="quiet"><strong>Homebase</strong></a>
           {aux && (
             <button type="button" aria-controls="app-aux" aria-expanded="true" hidden>
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2"></rect><path d="M15 4v16"></path></svg>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" aria-hidden="true" focusable="false"><rect x="3" y="4" width="18" height="16" rx="2"></rect><path d="M15 4v16"></path></svg>
               Details
             </button>
           )}

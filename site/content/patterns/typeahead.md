@@ -10,6 +10,8 @@ sources:
   - combobox
 specs:
   - MDN `<datalist>`: https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/datalist
+see-also:
+  - [Search dialog](site:patterns/search-dialog.html): a typeahead in a modal dialog, to search a whole site
 keyboard:
   - Down Arrow / Up Arrow: opens the suggestions and moves to the next or previous one.
   - Enter: accepts the highlighted suggestion and closes the list.

@@ -50,7 +50,8 @@ on one docs page. Every HTML page gets a Markdown twin next to it (`tokens/seman
 compare bytes.
 
 `_site/search-index.json` has one record per page (`title`, `url`, `level` = its sidebar entry,
-`summary`, and its `h2`/`h3` `headings`) for a later in-page search. There is no search UI yet.
+`summary`, and `headings`): each `h2`/`h3` of the page's `<article>` as `{ "text", "id" }`, so
+`url#id` opens that section. Headings outside the article, such as "On this page", are left out.
 
 ## Page structure
 
@@ -97,9 +98,15 @@ id="main">`, an optional `<aside>` "On this page" and `<footer>`, in that source
 
 - **App bar:** the site name, the top sections (`TOP` in `site/lib/nav.mjs`) as a
   `data-nav="horizontal"` list (`aria-current="page"` on a section's own page, `"true"` on the pages
-  under it), an empty hidden slot for the M4 search, a GitHub link, and the Menu toggle
-  (`aria-controls="docs-nav"`, `hidden` until `<dui-app-shell>` shows it). Below `64rem` of shell
-  width the section links are left out: the sidebar links every page.
+  under it), the Search button (`command="show-modal"` for the search dialog, `hidden` until
+  `site/assets/site.js` shows it; icon only below `30rem` of shell width), the theme menu, a GitHub
+  link, and the Menu toggle (`aria-controls="docs-nav"`, `hidden` until `<dui-app-shell>` shows it).
+  Below `64rem` of shell width the section links are left out: the sidebar links every page.
+- **Search dialog:** after the shell, a modal `<dialog data-dialog closedby="any">` named by its
+  "Search" heading, holding a `<dui-combobox>` labelled "Search the docs" over an empty `<datalist>`.
+  On first open `site.js` fetches `search-index.json` (the URL is in `data-search-index`, relative to
+  the page) and adds one option per page, then one per heading ("Page › Heading"), each hinted with
+  its sidebar entry. Accepting an option goes to the page or `page#id`.
 - **Sidebar:** the Docs entries. Its top-level entries are fixed in `NAV` in `site/lib/nav.mjs`, in
   this order; each links its index page ("Atoms overview") and lists the
 pages of its sections below it, in the order `buildPages()` returns them.
@@ -262,11 +269,11 @@ a path does not exist or a page is not built. The file is read only when `demos/
 
 To link a demo view from a page, add the page to the view's `pages` after reading the view's source:
 list only the patterns the markup really uses. The page's See also then gets one line, "Demos:
-Orders view (Plain HTML, React, Angular, Astro)", each app linking its source; a page several views
+Orders view (Plain HTML, React, Angular, Astro, Vue, Svelte)", each app linking its source; a page several views
 use gets them on the same line, separated by semicolons. The plain HTML demo (`LIVE_DEMO` in
 `site/lib/pages.mjs`) needs no build, so `site/build.mjs` copies it to `_site/demos/vanilla/` and the
-Views list on `demos.html` gives each view an **Open live** link. The React, Angular and Astro apps
-need a build and are not published.
+Views list on `demos.html` gives each view an **Open live** link. The framework apps need a build
+and are not published.
 
 ## Component API convention
 
@@ -432,6 +439,7 @@ keyboard:
 | `our-choice` | One line, only when there is no standard. The build fails if a pattern has neither. |
 | `specs` | Further `Label: URL` links, shown under Specifications after the standards. |
 | `sources` | Other file names that fill this pattern in (`dialog.md` lists `dialog` and `drawer`). The slug is always one. |
+| `see-also` | Markdown lines added to See also after the level index, such as `[Search dialog](site:patterns/search-dialog.html)`. |
 | `keyboard` | `Key: action` lines, used only when neither the example nor the CSS has a `Keyboard` block. Separate alternative keys with ` / `. |
 
 A pattern **fills in on its own** when any of its names matches a file:

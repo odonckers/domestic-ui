@@ -27,12 +27,13 @@ Writing a page? Read [Writing pages with no CSS](https://odonckers.github.io/dom
 - [Explainers (Principles)](https://odonckers.github.io/domestic-ui/principles/explainers.md): A pattern with no native element and no APG pattern is written up like a platform proposal in explainers/: problem, use cases, goals and non-goals, markup and API, keyboard, accessibility mappings, alternatives, prior art and open questions, with normative text in RFC 2119 keywords.
 - [Tooling](https://odonckers.github.io/domestic-ui/principles/tooling.md): npm test runs, in order, and fails if any step fails.
 - [Edges and alignment](https://odonckers.github.io/domestic-ui/principles/edges-and-alignment.md): Our choice: every container has a few named vertical lines, written in tokens, and every item sits on one of them or has a written reason, because edges picked by eye drift by a few pixels per panel and nobody can say which was meant.
+- [Design principles](https://odonckers.github.io/domestic-ui/principles/design-principles.md): Sections 1 to 13 cover engineering choices.
 
 ## Tokens
 
-- [Tokens](https://odonckers.github.io/domestic-ui/tokens/index.md): The two tiers of domestic-ui design tokens: 360 custom properties with their light and dark values.
+- [Tokens](https://odonckers.github.io/domestic-ui/tokens/index.md): The two tiers of domestic-ui design tokens: 361 custom properties with their light and dark values.
 - [Primitive tokens](https://odonckers.github.io/domestic-ui/tokens/primitives.md): All 182 primitive tokens in css/tokens/primitives.css (internal), with resolved light and dark values.
-- [Semantic tokens](https://odonckers.github.io/domestic-ui/tokens/semantic.md): All 178 semantic tokens in css/tokens/semantic.css (public theming API), with resolved light and dark values.
+- [Semantic tokens](https://odonckers.github.io/domestic-ui/tokens/semantic.md): All 179 semantic tokens in css/tokens/semantic.css (public theming API), with resolved light and dark values.
 - [Compact density](https://odonckers.github.io/domestic-ui/patterns/density.md): Available. A compact density token that tightens spacing for data-heavy screens. **Our choice:** No standard exists: `data-density="compact"` on any ancestor re-derives the density tokens; text size never changes and targets stay at least 24 by 24 CSS pixels.
 
 ## Base
@@ -76,6 +77,7 @@ Writing a page? Read [Writing pages with no CSS](https://odonckers.github.io/dom
 - [Pagination](https://odonckers.github.io/domestic-ui/patterns/pagination.md): Available. Links to the pages of a long list of results. **Our choice:** No standard exists: a labelled `<nav>` with a list of links and `aria-current="page"`, as for breadcrumbs.
 - [Popover](https://odonckers.github.io/domestic-ui/patterns/popover.md): Available. Content shown on top of the page from a button, with the `popover` attribute. Follows [HTML `popover` attribute](https://html.spec.whatwg.org/multipage/popover.html#the-popover-attribute), [MDN Popover API](https://developer.mozilla.org/en-US/docs/Web/API/Popover_API).
 - [Search](https://odonckers.github.io/domestic-ui/patterns/search.md): Available. A search form in a `<search>` landmark with an `<input type="search">`. Follows [HTML `<search>` element](https://html.spec.whatwg.org/multipage/grouping-content.html#the-search-element), [MDN `<input type="search">`](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/input/search).
+- [Search dialog](https://odonckers.github.io/domestic-ui/patterns/search-dialog.md): Available. A command palette: a modal `<dialog>` holding a combobox of pages and sections, opened from a Search button or with Cmd-K or Ctrl-K. Follows [APG Dialog (Modal) pattern](https://www.w3.org/WAI/ARIA/apg/patterns/dialog-modal/), [APG Combobox pattern](https://www.w3.org/WAI/ARIA/apg/patterns/combobox/).
 - [Tabs](https://odonckers.github.io/domestic-ui/patterns/tabs.md): Available. Sections of content shown one at a time, chosen from a list of tabs. Follows [APG Tabs pattern](https://www.w3.org/WAI/ARIA/apg/patterns/tabs/).
 - [Toolbar](https://odonckers.github.io/domestic-ui/patterns/toolbar.md): Available. A row of related controls that is one stop in the tab order. Follows [APG Toolbar pattern](https://www.w3.org/WAI/ARIA/apg/patterns/toolbar/).
 - [Typeahead](https://odonckers.github.io/domestic-ui/patterns/typeahead.md): Available. A text field that suggests values as you type: `<datalist>` first, an APG combobox where it falls short. Follows [HTML `<datalist>` element](https://html.spec.whatwg.org/multipage/form-elements.html#the-datalist-element), [APG Combobox pattern](https://www.w3.org/WAI/ARIA/apg/patterns/combobox/).
@@ -101,6 +103,7 @@ Writing a page? Read [Writing pages with no CSS](https://odonckers.github.io/dom
 ## Guides
 
 - [Guides](https://odonckers.github.io/domestic-ui/guides/index.md): Step-by-step guides for building with domestic-ui.
+- [Use it with any framework](https://odonckers.github.io/domestic-ui/guides/any-framework.md): The markup is the contract and the framework only holds state. The same three views, built six ways, show how.
 - [From a simple site to an ERP app](https://odonckers.github.io/domestic-ui/guides/simple-site-to-erp-app.md): Five steps from a plain content page to a dense business application, with what is available today.
 - [Writing pages with no CSS](https://odonckers.github.io/domestic-ui/guides/writing-pages.md): The contract for people and coding agents: write semantic HTML in the documented vocabulary, add a web component only where HTML has no element, and the page is styled, themed and accessible with no CSS of its own.
 
@@ -115,6 +118,7 @@ Writing a page? Read [Writing pages with no CSS](https://odonckers.github.io/dom
 - [Density explainer](https://odonckers.github.io/domestic-ui/explainers/density.md): The key words MUST, MUST NOT, SHOULD, SHOULD NOT and MAY are to be interpreted as described in RFC 2119 and RFC 8174 when, and only when, they appear in all capitals.
 - [Drawer explainer](https://odonckers.github.io/domestic-ui/explainers/drawer.md): The key words MUST, MUST NOT, SHOULD, SHOULD NOT and MAY are to be interpreted as described in RFC 2119 and RFC 8174 when, and only when, they appear in all capitals.
 - [Pagination explainer](https://odonckers.github.io/domestic-ui/explainers/pagination.md): The key words MUST, MUST NOT, SHOULD, SHOULD NOT and MAY are to be interpreted as described in RFC 2119 and RFC 8174 when, and only when, they appear in all capitals.
+- [Search dialog (command palette) explainer](https://odonckers.github.io/domestic-ui/explainers/search-dialog.md): The key words MUST, MUST NOT, SHOULD, SHOULD NOT and MAY are to be interpreted as described in RFC 2119 and RFC 8174 when, and only when, they appear in all capitals.
 - [Split view explainer](https://odonckers.github.io/domestic-ui/explainers/split-view.md): The key words MUST, MUST NOT, SHOULD, SHOULD NOT and MAY are to be interpreted as described in RFC 2119 and RFC 8174 when, and only when, they appear in all capitals.
 - [Toast explainer](https://odonckers.github.io/domestic-ui/explainers/toast.md): The key words MUST, MUST NOT, SHOULD, SHOULD NOT and MAY are to be interpreted as described in RFC 2119 and RFC 8174 when, and only when, they appear in all capitals.
 
@@ -125,7 +129,9 @@ Writing a page? Read [Writing pages with no CSS](https://odonckers.github.io/dom
 - [Angular](https://github.com/odonckers/domestic-ui/tree/main/demos/angular): The dashboard, account settings and orders views in Angular 22: standalone components, three routes (`''`, `'settings'` and `'orders'`) with Angular Router, a `title` per route, and `routerLinkActive` with `ariaCurrentWhenActive="page"` for the current link.
 - [Astro](https://github.com/odonckers/domestic-ui/tree/main/demos/astro): The dashboard, account settings and orders views as three static Astro pages (`src/pages/index.astro`, `src/pages/settings.astro` and `src/pages/orders.astro`) sharing `src/layouts/Base.astro`.
 - [React](https://github.com/odonckers/domestic-ui/tree/main/demos/react): The dashboard, account settings and orders views in React 19 with Vite, as a three-page [multi-page app](https://vite.dev/guide/build#multi-page-app) (`index.html`, `settings.html` and `orders.html`).
+- [Svelte](https://github.com/odonckers/domestic-ui/tree/main/demos/svelte): The dashboard, account settings and orders views in Svelte 5 with Vite, as a three-page [multi-page app](https://vite.dev/guide/build#multi-page-app) (`index.html`, `settings.html` and `orders.html`).
 - [Plain HTML](https://github.com/odonckers/domestic-ui/tree/main/demos/vanilla): The dashboard, account settings and orders views as three static HTML files, with no build step.
+- [Vue](https://github.com/odonckers/domestic-ui/tree/main/demos/vue): The dashboard, account settings and orders views in Vue 3 with Vite, as a three-page [multi-page app](https://vite.dev/guide/build#multi-page-app) (`index.html`, `settings.html` and `orders.html`) of single-file components.
 - [Views](https://odonckers.github.io/domestic-ui/demos.md): Dashboard, Account settings and Orders, with each app's source file.
 
 ## Contributing

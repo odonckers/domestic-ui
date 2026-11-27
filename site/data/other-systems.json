@@ -324,6 +324,20 @@
         "title": "Search Input"
       }
     },
+    "patterns/search-dialog": {
+      "apple": {
+        "url": "https://developer.apple.com/design/human-interface-guidelines/searching",
+        "title": "Searching"
+      },
+      "material": {
+        "url": "https://m3.material.io/components/search/overview",
+        "title": "Search"
+      },
+      "geist": {
+        "url": "https://vercel.com/geist/command-menu",
+        "title": "Command Menu"
+      }
+    },
     "patterns/card": {
       "apple": null,
       "material": {

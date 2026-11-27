@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Search dialog · domestic-ui</title>
+    <meta name="description" content="A command palette: a modal dialog holding a combobox of pages and sections, opened from a Search button or with Cmd-K or Ctrl-K.">
+    <link rel="stylesheet" href="../../css/domestic.css">
+    <style>
+      /* Page-only layout, written with semantic tokens like any consumer would. */
+      body > :is(header, main, footer) {
+        max-inline-size: var(--dui-size-page);
+        margin-inline: auto;
+        padding-inline: var(--dui-space-l);
+      }
+
+      body > header {
+        padding-block: var(--dui-space-m);
+        border-block-end: var(--dui-border-width) solid var(--dui-color-border);
+      }
+
+      body > main {
+        padding-block: var(--dui-space-2xl);
+      }
+
+      body > footer {
+        padding-block: var(--dui-space-l);
+        border-block-start: var(--dui-border-width) solid var(--dui-color-border);
+        color: var(--dui-color-text-muted);
+      }
+
+      /* Wrap long lines of example markup instead of scrolling them. */
+      pre {
+        white-space: pre-wrap;
+        overflow-wrap: anywhere;
+      }
+
+      .demo {
+        padding: var(--dui-space-l);
+        border: var(--dui-border-width) solid var(--dui-color-border);
+        border-radius: var(--dui-radius-surface);
+      }
+
+      /* The palette's list sits in the flow of the dialog, so the dialog never clips it. */
+      #site-search dui-combobox > [role="listbox"] {
+        position: static;
+        box-shadow: none;
+        border-color: var(--dui-color-border);
+      }
+    </style>
+  </head>
+  <body>
+    <a class="visually-hidden" href="#main">Skip to main content</a>
+
+    <header class="cluster" style="--cluster-justify: space-between">
+      <p><strong>domestic-ui</strong></p>
+      <nav aria-label="Examples">
+        <ul class="cluster">
+          <li><a href="../base.html">Base elements</a></li>
+          <li><a href="../theming.html">Theming</a></li>
+          <li><a href="../motion.html">Motion</a></li>
+          <li><a href="../elevation.html">Elevation</a></li>
+          <li><a href="../patterns/density.html">Density</a></li>
+          <li><a href="../atoms/index.html">Atoms</a></li>
+          <li><a href="index.html">Molecules</a></li>
+          <li><a href="../organisms/index.html">Organisms</a></li>
+          <li><a href="../layouts/index.html">Layouts</a></li>
+          <li><a href="../app-shell.html">App shell</a></li>
+        </ul>
+      </nav>
+    </header>
+
+    <main id="main">
+      <h1>Search dialog</h1>
+      <!--
+        Keyboard
+          Cmd-K / Ctrl-K: opens the dialog with focus in the field, except from a text field outside it
+          Typing: filters the results
+          Down Arrow / Up Arrow: moves to the next or previous result
+          Enter: goes to the active result and closes the dialog
+          Escape: closes the list, then clears the field, then closes the dialog; focus returns to where it was
+          Tab: moves between the field and the close button
+      -->
+      <p data-text="lead">A command palette: a modal <code>&lt;dialog&gt;</code> holding a combobox of pages and sections, opened from a Search button or with <kbd>Cmd</kbd>+<kbd>K</kbd> or <kbd>Ctrl</kbd>+<kbd>K</kbd>.</p>
+      <p>API: none of its own. <code>data-dialog</code> on <code>&lt;dialog&gt;</code> (<a href="../../css/components/molecules/dialog.css"><code>dialog.css</code></a>) and <code>&lt;dui-combobox&gt;</code> (<a href="../../css/components/molecules/combobox.css"><code>combobox.css</code></a>), plus a few lines of page script.</p>
+      <p>
+        It composes the <a href="https://www.w3.org/WAI/ARIA/apg/patterns/dialog-modal/">APG Dialog (Modal)</a> and
+        <a href="https://www.w3.org/WAI/ARIA/apg/patterns/combobox/">APG Combobox</a> patterns. The browser makes the page inert,
+        moves focus to the field (<code>autofocus</code>) and returns it on close. The button is hidden until the script that fills the
+        results runs. See <a href="../../explainers/search-dialog.md">the search dialog explainer</a>.
+      </p>
+
+      <section aria-labelledby="palette-title">
+        <h2 id="palette-title">Search a site</h2>
+        <p>This demo lists a few pages and shows where a result would go instead of leaving the page.</p>
+        <div class="demo">
+          <!-- dui:snippet name="Search dialog" page="patterns/search-dialog" -->
+          <button type="button" commandfor="site-search" command="show-modal" aria-haspopup="dialog" aria-keyshortcuts="Control+K Meta+K" hidden>Search</button>
+          <dialog id="site-search" data-dialog closedby="any" aria-labelledby="site-search-title">
+            <header>
+              <h2 id="site-search-title">Search</h2>
+              <button type="button" commandfor="site-search" command="close" data-button="quiet">Close</button>
+            </header>
+            <dui-combobox>
+              <label for="site-search-input">Search the docs</label>
+              <input type="text" id="site-search-input" list="site-search-options" autocomplete="off" spellcheck="false" autofocus>
+              <datalist id="site-search-options">
+                <option value="Button" label="Atoms"></option>
+                <option value="Field" label="Atoms"></option>
+                <option value="Dialog and drawer" label="Organisms"></option>
+                <option value="Tabs" label="Molecules"></option>
+                <option value="Button › Attributes" label="Atoms"></option>
+                <option value="Dialog and drawer › Modal dialog" label="Organisms"></option>
+                <option value="Dialog and drawer › Drawer (end)" label="Organisms"></option>
+                <option value="Tabs › Keyboard" label="Molecules"></option>
+              </datalist>
+            </dui-combobox>
+          </dialog>
+          <p role="status" id="site-search-result"></p>
+          <!-- /dui:snippet -->
+        </div>
+      </section>
+
+      <section aria-labelledby="specs-title">
+        <h2 id="specs-title">Specs and guidance</h2>
+        <ul>
+          <li><a href="https://www.w3.org/WAI/ARIA/apg/patterns/dialog-modal/">APG: Dialog (Modal) pattern</a></li>
+          <li><a href="https://www.w3.org/WAI/ARIA/apg/patterns/combobox/">APG: Combobox pattern</a></li>
+          <li><a href="https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/dialog">MDN: the dialog element</a></li>
+          <li><a href="https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Reference/Attributes/aria-keyshortcuts">MDN: aria-keyshortcuts</a></li>
+          <li><a href="https://www.w3.org/WAI/WCAG22/Understanding/character-key-shortcuts.html">WCAG 2.2: 2.1.4 Character Key Shortcuts</a></li>
+        </ul>
+      </section>
+    </main>
+
+    <footer>
+      <p><small>domestic-ui packages existing standards and well-known patterns. MIT licensed.</small></p>
+    </footer>
+    <script type="module" src="../../web-components/dui-combobox.js"></script>
+    <script>
+      // The page script of the pattern: show the opener, add Cmd-K / Ctrl-K, act on an accepted result.
+      const opener = document.querySelector('[commandfor="site-search"][command="show-modal"]');
+      const dialog = document.getElementById("site-search");
+      const input = document.getElementById("site-search-input");
+      const result = document.getElementById("site-search-result");
+      if (opener && dialog && input) {
+        opener.addEventListener("click", () => {
+          // Invoker commands not supported: open the dialog from here.
+          if (!("command" in HTMLButtonElement.prototype) && !dialog.open) dialog.showModal();
+        });
+        const typing = (el) => el instanceof HTMLElement && (el.isContentEditable || el.matches("textarea, select, input:not([type=button], [type=checkbox], [type=radio], [type=submit], [type=reset])"));
+        document.addEventListener("keydown", (event) => {
+          if (event.key.toLowerCase() !== "k" || !(event.metaKey || event.ctrlKey) || event.altKey || event.shiftKey) return;
+          if (dialog.open) {
+            event.preventDefault();
+            input.focus();
+          } else if (!typing(event.target)) {
+            event.preventDefault();
+            dialog.showModal();
+          }
+        });
+        // The combobox fires change when a result is accepted (the native change on blur is trusted; skip it).
+        input.addEventListener("change", (event) => {
+          if (event.isTrusted) return;
+          dialog.close();
+          // Demo only: a real page would go to the result here.
+          if (result) result.textContent = `Would open: ${input.value}.`;
+          input.value = "";
+        });
+        opener.hidden = false;
+      }
+    </script>
+  </body>
+</html>
