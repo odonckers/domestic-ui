@@ -71,7 +71,7 @@
           Enter: follows the focused link
       -->
       <p data-text="lead">A self-contained summary that links to more, with a whole-card link that keeps the heading as its name.</p>
-      <p>API: <code>data-card</code> and <code>data-card="link"</code> on <code>&lt;article&gt;</code>. Source: <a href="../../css/components/molecules/card.css"><code>css/components/molecules/card.css</code></a>.</p>
+      <p>API: <code>data-card</code> and <code>data-card="link"</code> on <code>&lt;article&gt;</code>, with an optional <code>&lt;header&gt;</code> for the title and a muted description. Source: <a href="../../css/components/molecules/card.css"><code>css/components/molecules/card.css</code></a>.</p>
       <p>
         There is no card element or APG pattern; the contract is in <a href="../../explainers/card.md">the card explainer</a>.
         In a clickable card the heading's link covers the card with a pseudo-element, so its accessible name is just the heading,
@@ -84,17 +84,22 @@
           <!-- dui:snippet name="Cards in a grid" -->
           <div class="grid" style="--grid-min: 16rem">
             <article data-card>
-              <h3>Starter plan</h3>
-              <p>For one person trying things out.</p>
-              <p data-text="small muted">Free forever.</p>
+              <header>
+                <h3>Starter plan</h3>
+                <p>For one person trying things out.</p>
+              </header>
+              <p>Free forever, with every component and theme.</p>
               <footer>
                 <a href="#grid-title" data-button="primary small">Choose Starter</a>
               </footer>
             </article>
             <article data-card="link">
               <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 320 160'%3E%3Crect width='320' height='160' fill='%233451d1'/%3E%3Ccircle cx='250' cy='40' r='60' fill='%238ea2ff'/%3E%3Crect x='24' y='96' width='140' height='40' rx='8' fill='%23f6f7f9'/%3E%3C/svg%3E" alt="" width="320" height="160">
-              <h3><a href="#grid-title">Theming guide</a></h3>
-              <p>Override semantic tokens to make a theme, with no build step.</p>
+              <header>
+                <h3><a href="#grid-title">Theming guide</a></h3>
+                <p>Override semantic tokens to make a theme.</p>
+              </header>
+              <p>No build step: set a few custom properties and every component follows.</p>
               <footer>
                 <span data-badge="accent">Guide</span>
                 <a href="#grid-title" data-button="secondary small">View tokens</a>

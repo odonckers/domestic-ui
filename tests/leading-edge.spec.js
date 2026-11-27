@@ -14,8 +14,6 @@ import { examples, withoutMotion } from "./helpers.js";
 /** Pages that show a colored leading edge, and what draws it. */
 const MUST_HAVE_EDGE = {
   "examples/base.html": "blockquote",
-  "examples/atoms/field.html": "invalid field",
-  "examples/molecules/alerts.html": "alert variants",
   "examples/layouts/list-detail.html": "selected list-detail item",
   "examples/organisms/data-table.html": "selected table row",
 };

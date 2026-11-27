@@ -26,6 +26,8 @@
  * the list, and WCAG failure F73 is about links inside running text
  * (https://www.w3.org/WAI/WCAG22/Techniques/failures/F73). Hover fills the
  * row. Items are at least --dui-size-row tall (32px, 28px compact, 44px on touch; WCAG 2.5.8).
+ * A link with data-button keeps the button's look inside a nav, so a call
+ * to action such as Sign up can sit at the end of a header's nav.
  * Horizontal groups open as dropdowns; give their <details> a shared name so
  * opening one closes the others. Native <details> does not close on Esc or
  * when focus leaves, which the APG example does with script; Enter or Space
@@ -109,7 +111,7 @@
 }
 
 /* Links and group summaries share one row style. */
-[data-nav] :is(a, summary) {
+[data-nav] :is(a:not(:where([data-button])), summary) {
   align-content: center;
   min-block-size: var(--dui-size-row);
   padding: var(--dui-space-control-block) var(--dui-space-control-inline);
@@ -124,7 +126,7 @@
  * The leading border stays transparent: forced colors paint it as the
  * current link's bar (below).
  */
-[data-nav] a {
+[data-nav] a:not(:where([data-button])) {
   display: flex;
   align-items: center;
   gap: var(--dui-space-gap);
@@ -137,7 +139,7 @@
  * full-strength text on hover and when current, so the current page and
  * the content stand out from the navigation around them.
  */
-[data-nav] :is(a, summary):hover {
+[data-nav] :is(a:not(:where([data-button])), summary):hover {
   background-color: var(--dui-color-surface-hover);
   color: var(--dui-color-text);
 }
@@ -148,19 +150,19 @@
  * selection; bolder text keeps it from relying on the fill alone.
  * https://linear.app/blog/behind-the-latest-design-refresh
  */
-[data-nav] a[aria-current="page"] {
+[data-nav] a:not(:where([data-button]))[aria-current="page"] {
   background-color: var(--dui-color-surface-hover);
   color: var(--dui-color-text);
   font-weight: var(--dui-font-weight-strong);
 }
 
 /* Links in a dropdown: concentric with its corners (--dui-radius-nested). */
-[data-nav~="horizontal"] details > :is(ul, ol) a:any-link {
+[data-nav~="horizontal"] details > :is(ul, ol) a:not(:where([data-button])):any-link {
   border-radius: var(--dui-radius-nested);
 }
 
 /* Decorative icons: as tall as a line of text, never shrunk by a long label. */
-[data-nav] :is(a, summary) > svg {
+[data-nav] :is(a:not(:where([data-button])), summary) > svg {
   flex: none;
   inline-size: var(--dui-size-icon);
   block-size: var(--dui-size-icon);
@@ -197,7 +199,7 @@
  * aria-expanded (https://www.w3.org/TR/html-aam-1.0/#el-summary).
  * https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/summary#changing_the_summarys_icon
  */
-[data-nav]:not([data-nav~="horizontal"]) :is(a, summary) {
+[data-nav]:not([data-nav~="horizontal"]) :is(a:not(:where([data-button])), summary) {
   padding-block: var(--dui-space-2xs);
 }
 
@@ -270,7 +272,7 @@
   position: relative;
 }
 
-[data-nav~="horizontal"] > :is(ul, ol) > li > a:any-link {
+[data-nav~="horizontal"] > :is(ul, ol) > li > a:not(:where([data-button])):any-link {
   border-inline-start: 0;
   border-block-end: var(--dui-border-width-indicator) solid transparent;
 }
@@ -282,7 +284,7 @@
  * value mean "not current"; ARIA treats any other value as true.
  * https://w3c.github.io/aria/#aria-current
  */
-[data-nav~="horizontal"] > :is(ul, ol) > li > a[aria-current]:not([aria-current="false"], [aria-current=""]) {
+[data-nav~="horizontal"] > :is(ul, ol) > li > a:not(:where([data-button]))[aria-current]:not([aria-current="false"], [aria-current=""]) {
   background-color: var(--dui-color-surface-hover);
   color: var(--dui-color-text);
   font-weight: var(--dui-font-weight-strong);
@@ -309,16 +311,16 @@
    * so the empty indicator bars take the background color and only the
    * current link shows one.
    */
-  [data-nav] a,
-  [data-nav~="horizontal"] > :is(ul, ol) > li > a:any-link,
+  [data-nav] a:not(:where([data-button])),
+  [data-nav~="horizontal"] > :is(ul, ol) > li > a:not(:where([data-button])):any-link,
   [data-nav~="horizontal"] > :is(ul, ol) > li > details > summary,
   [data-nav] details[open] > summary,
   [data-nav]:not([data-nav~="horizontal"]) details > summary {
     border-color: canvas;
   }
 
-  [data-nav] a[aria-current="page"],
-  [data-nav~="horizontal"] > :is(ul, ol) > li > a[aria-current]:not([aria-current="false"], [aria-current=""]) {
+  [data-nav] a:not(:where([data-button]))[aria-current="page"],
+  [data-nav~="horizontal"] > :is(ul, ol) > li > a:not(:where([data-button]))[aria-current]:not([aria-current="false"], [aria-current=""]) {
     border-color: highlight;
   }
 

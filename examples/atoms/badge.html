@@ -63,7 +63,7 @@
     <main id="main">
       <h1>Badge</h1>
       <p data-text="lead">A short inline status label. Static text, not interactive.</p>
-      <p>API: <code>data-badge="neutral | accent | success | warning | danger"</code>. Source: <a href="../../css/components/atoms/badge.css"><code>css/components/atoms/badge.css</code></a>.</p>
+      <p>API: <code>data-badge="neutral | primary | outline | accent | success | warning | danger"</code>. Source: <a href="../../css/components/atoms/badge.css"><code>css/components/atoms/badge.css</code></a>.</p>
       <p>
         The words carry the meaning; the tone only supports it
         (<a href="https://www.w3.org/WAI/WCAG22/Understanding/use-of-color.html">WCAG 1.4.1 Use of Color</a>).
@@ -76,7 +76,9 @@
         <div class="demo">
           <!-- dui:snippet name="Tones" -->
           <p class="cluster">
+            <span data-badge="primary">Pro</span>
             <span data-badge>Draft</span>
+            <span data-badge="outline">Beta</span>
             <span data-badge="accent">New</span>
             <span data-badge="success">Paid</span>
             <span data-badge="warning">Due soon</span>
