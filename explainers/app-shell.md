@@ -197,6 +197,16 @@ inside it; after Esc, focus is back on "Menu, button, collapsed".
 - [Open UI](https://open-ui.org/) has no app shell or sidebar proposal; this explainer is written so the
   parts could map onto native landmarks unchanged.
 
+## Mapping to a future standard
+
+None known. The contract is "landmarks in named grid areas, with sidebars that collapse beside main and become a
+modal drawer when the shell is narrow". The layout half is already standard CSS ([grid template
+areas](https://developer.mozilla.org/en-US/docs/Web/CSS/grid-template-areas) and [container
+queries](https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_containment/Container_queries)). If HTML gained a way to
+present an element modally in place (rather than moving it into a `<dialog>`), `<dui-app-shell>` would keep only
+the toggle state, and that could move to [invoker commands](https://developer.mozilla.org/en-US/docs/Web/API/Invoker_Commands_API)
+once a command can toggle `hidden`.
+
 ## Open questions
 
 - **Resizable sidebars.** A draggable edge would follow the

@@ -24,6 +24,9 @@
  * show with JavaScript off; this element adds their Dismiss buttons when it
  * loads. Light DOM, no dependencies, no build.
  *
+ * Successor: None active.
+ * Retire when: Kept.
+ *
  * API
  *   <dui-toaster data-alert="toasts" role="status"></dui-toaster>
  *     (role="status" is added if missing)
