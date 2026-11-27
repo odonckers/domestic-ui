@@ -37,7 +37,7 @@ test.describe("markup check", () => {
     expect(vocab.attributes.get("data-badge")?.bare).toBe(true); // "(empty means neutral)"
     expect(vocab.attributes.get("data-theme")?.words).toEqual(new Set(["calm", "compact", "soft"]));
     expect([...vocab.classes.keys()].sort()).toEqual(["cluster", "grid", "stack", "visually-hidden"]);
-    expect(vocab.knobs.has("--stack-gap")).toBe(true);
+    expect(vocab.properties.has("--stack-gap")).toBe(true);
     expect(vocab.elements.has("dui-table")).toBe(true);
   });
 

@@ -21,7 +21,7 @@ import { comments, headerComment, parseHeader } from "./css-comments.mjs";
  * @typedef {object} Vocabulary
  * @property {Map<string, AttributeApi>} attributes  data-* attributes
  * @property {Map<string, string>} classes           class name → file
- * @property {Map<string, string>} knobs             documented custom properties (--stack-gap, --dui-size-sidebar) → file
+ * @property {Map<string, string>} properties        documented layout custom properties (--stack-gap, --dui-size-sidebar) → file
  * @property {Set<string>} tokens                    semantic --dui-* tokens (public theming API)
  * @property {Map<string, string>} elements          custom element name → file under web-components/
  * @property {Map<string, Set<string>>} selectorWords data-* words used in CSS selectors, for the drift check
@@ -65,7 +65,7 @@ function readApi(vocab, text, file) {
   }
   for (const m of text.matchAll(/\bclass="([^"]+)"/g)) for (const c of wordsOf(m[1])) vocab.classes.set(c, file);
   // A line that opens with custom properties: "--a", or "--a, --b", then two spaces and its description.
-  for (const m of text.matchAll(/^\s*(--[a-z][a-z0-9-]*(?:,\s*--[a-z][a-z0-9-]*)*)/gm)) for (const k of m[1].split(/,\s*/)) vocab.knobs.set(k, file);
+  for (const m of text.matchAll(/^\s*(--[a-z][a-z0-9-]*(?:,\s*--[a-z][a-z0-9-]*)*)/gm)) for (const k of m[1].split(/,\s*/)) vocab.properties.set(k, file);
 }
 
 /** Every *.css file under a folder, relative to it, sorted. @param {string} dir */
@@ -82,7 +82,7 @@ const cssFiles = (dir) =>
  */
 export function loadVocabulary(root) {
   /** @type {Vocabulary} */
-  const vocab = { attributes: new Map(), classes: new Map(), knobs: new Map(), tokens: new Set(), elements: new Map(), selectorWords: new Map() };
+  const vocab = { attributes: new Map(), classes: new Map(), properties: new Map(), tokens: new Set(), elements: new Map(), selectorWords: new Map() };
   const cssDir = join(root, "css");
   for (const file of cssFiles(cssDir)) {
     const css = readFileSync(join(cssDir, file), "utf8");
@@ -128,7 +128,7 @@ export function undocumentedWords(vocab) {
 
 /**
  * The vocabulary as compact Markdown: one line per attribute with its
- * words, then classes, custom elements and knobs.
+ * words, then classes, custom elements and custom properties.
  * @param {Vocabulary} vocab
  * @param {(cssFile: string) => string | null} [pageOf] docs page (site: link) of a file under css/, to link each attribute
  */
@@ -152,6 +152,6 @@ export function vocabularyMd(vocab, pageOf = () => null) {
     "",
     `Custom elements (load \`web-components/<name>.js\` as a module): ${list(vocab.elements.keys())}.`,
     "",
-    `Knobs, the only custom properties a \`style\` attribute should set besides semantic \`--dui-*\` tokens: ${list(vocab.knobs.keys())}.`,
+    `Knobs, the only custom properties a \`style\` attribute should set besides semantic \`--dui-*\` tokens: ${list(vocab.properties.keys())}.`,
   ].join("\n");
 }

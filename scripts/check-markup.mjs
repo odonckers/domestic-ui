@@ -13,7 +13,7 @@
  * needs no CSS of its own.
  *   - no <style> element, and stylesheets only from css/ (domestic.css,
  *     a theme, the optional font);
- *   - a style attribute only sets documented knobs (--stack-gap, …) or
+ *   - a style attribute only sets documented custom properties (--stack-gap, …) or
  *     semantic --dui-* tokens;
  *   - every class, data-* attribute and word is documented;
  *   - every dui-* element exists and its module is loaded.
@@ -105,7 +105,7 @@ export function checkPage(vocab, file, strict) {
 
   for (const { name, attrs, line } of all) {
     const at = where(line);
-    if (strict && name === "style") problems.push(`${at} <style> element: a page needs no CSS of its own; use the documented attributes, layout classes and knobs`);
+    if (strict && name === "style") problems.push(`${at} <style> element: a page needs no CSS of its own; use the documented attributes, layout classes and custom properties`);
     if (strict && name === "link" && /\bstylesheet\b/i.test(attrs.get("rel") ?? "")) {
       const href = (attrs.get("href") ?? "").split(/[?#]/)[0];
       if (!STYLESHEETS.some((re) => re.test(href))) problems.push(`${at} stylesheet "${href}" is not css/domestic.css, a theme or css/fonts/inter.css`);
@@ -121,7 +121,7 @@ export function checkPage(vocab, file, strict) {
       if (strict && attr === "style") {
         for (const decl of value.split(";").map((d) => d.trim()).filter(Boolean)) {
           const prop = decl.split(":")[0].trim();
-          if (!vocab.knobs.has(prop) && !vocab.tokens.has(prop)) problems.push(`${at} style="${decl}": only documented knobs and semantic --dui-* tokens may be set inline`);
+          if (!vocab.properties.has(prop) && !vocab.tokens.has(prop)) problems.push(`${at} style="${decl}": only documented custom properties and semantic --dui-* tokens may be set inline`);
         }
       }
       if (attr === "class") {

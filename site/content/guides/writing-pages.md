@@ -8,15 +8,15 @@ A page built this way links one stylesheet and writes no CSS. Everything it look
 ## The rules
 
 1. Link `css/domestic.css` once, in `<head>`. Optionally link a theme from `css/themes/` after it and set `data-theme` on `<html>`.
-2. Write no `<style>` element and no `style` attribute, except to set a documented knob (`--stack-gap`, `--grid-min`, `--cluster-justify`, …) or a semantic `--dui-*` token.
+2. Write no `<style>` element and no `style` attribute, except to set a layout primitive's documented custom property (`--stack-gap`, `--grid-min`, `--cluster-justify`, …) or a semantic `--dui-*` token.
 3. Use the native element that already has the meaning: `<button>`, `<a href>`, `<dialog>`, `<details>`, `<label>`, `<fieldset>`, `<table>`, `<search>`, `<time>`. The [first rule of ARIA](https://www.w3.org/TR/using-aria/#rule1) applies: no `role` where an element exists.
 4. Use only the attributes, words and classes in the [vocabulary](#the-vocabulary) below. A word that is not listed does nothing, so it is a mistake, not a style.
 5. Give each page the landmarks in the [skeleton](#an-application-page): a skip link, one `<header>`, a labelled `<nav>`, one `<main id>` and a `<footer>`, and exactly one `<h1>` ([WCAG 2.4.1](https://www.w3.org/WAI/WCAG22/Understanding/bypass-blocks.html), [1.3.1](https://www.w3.org/WAI/WCAG22/Understanding/info-and-relationships.html)).
 6. Label every control with a `<label for>` or a wrapping `<label>`, and name every landmark and region you have more than one of with `aria-label` or `aria-labelledby` ([WCAG 4.1.2](https://www.w3.org/WAI/WCAG22/Understanding/name-role-value.html)).
 7. Load `web-components/<name>.js` as a module for each `dui-*` element on the page. Without it the markup still works as plain HTML ([progressive enhancement](https://developer.mozilla.org/en-US/docs/Glossary/Progressive_Enhancement)).
-8. Check the page from a clone of this repository: `node scripts/check-markup.mjs page.html` fails on a `<style>`, an undocumented attribute, word or class, an inline style that is not a knob, and a `dui-*` element whose module is not loaded. Then check it with [axe](https://github.com/dequelabs/axe-core) and at 320px wide ([WCAG 1.4.10](https://www.w3.org/WAI/WCAG22/Understanding/reflow.html)).
+8. Check the page from a clone of this repository: `node scripts/check-markup.mjs page.html` fails on a `<style>`, an undocumented attribute, word or class, an inline style that sets anything else, and a `dui-*` element whose module is not loaded. Then check it with [axe](https://github.com/dequelabs/axe-core) and at 320px wide ([WCAG 1.4.10](https://www.w3.org/WAI/WCAG22/Understanding/reflow.html)).
 
-When a page needs something the vocabulary cannot say, that is a gap in domestic-ui: [open an issue](https://github.com/odonckers/domestic-ui/issues/new) instead of adding CSS to the page.
+Compose before you invent: most interface "components" are arrangements of elements that already look finished together, such as a sign-in card (a `data-card` holding a form), a stat row (a `data-dashboard` of headed sections) or a confirm dialog (a `data-dialog` with a `<footer>` of buttons). This is rung 3 of the [decision ladder](https://github.com/odonckers/domestic-ui/blob/main/docs/ARCHITECTURE.md#3-the-decision-ladder). When a page needs something no composition can say, that is a gap in domestic-ui: [open an issue](https://github.com/odonckers/domestic-ui/issues/new) instead of adding CSS to the page. The vocabulary is part of the [public API](https://github.com/odonckers/domestic-ui/blob/main/docs/ARCHITECTURE.md#4-public-api-and-naming).
 
 ## An application page
 
@@ -26,7 +26,7 @@ The frame of every app screen: the [app shell](site:patterns/app-shell.html) wit
 
 ## The vocabulary
 
-Every attribute, word, class, custom element and knob a page may use, read from the API comments in `css/` (the same list the checker uses). Each attribute links to its docs page. Native attributes (`aria-current`, `aria-sort`, `open`, `popover`, `closedby`) are not listed because they are HTML.
+Every attribute, word, class, custom element and custom property a page may use, read from the API comments in `css/` (the same list the checker uses). Each attribute links to its docs page. Native attributes (`aria-current`, `aria-sort`, `open`, `popover`, `closedby`) are not listed because they are HTML.
 
 {{vocabulary}}
 
