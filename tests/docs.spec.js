@@ -1329,6 +1329,42 @@ test.describe("docs search", () => {
     });
   }
 
+  test("Ctrl-K and Meta-K open search with focus in the field; Esc returns focus to what had it", async ({ page, browserName }) => {
+    await page.goto("_site/patterns/dialog.html");
+    const button = page.locator("[data-docs-search] button");
+    await expect(button).toHaveAttribute("aria-keyshortcuts", "Control+K Meta+K");
+    await expect(button.locator("kbd")).toBeVisible();
+    const input = page.getByRole("combobox", { name: "Search the docs" });
+    const dialog = page.getByRole("dialog", { name: "Search" });
+    const link = page.locator("main a").first();
+    for (const key of browserName === "webkit" ? ["Meta+k"] : ["Control+k", "Meta+k"]) {
+      await link.focus();
+      await page.keyboard.press(key);
+      await expect(dialog).toBeVisible();
+      await expect(input).toBeFocused();
+      // Pressed again while open: focus stays in the field.
+      await page.keyboard.press(key);
+      await expect(input).toBeFocused();
+      await page.keyboard.press("Escape");
+      await expect(dialog).toBeHidden();
+      await expect(link).toBeFocused();
+    }
+  });
+
+  test("the shortcut does nothing in a text field outside the dialog", async ({ page }) => {
+    await page.goto("_site/tokens/semantic.html");
+    const filter = page.getByLabel("Filter tokens");
+    await filter.focus();
+    const prevented = await page.evaluate(() => {
+      const event = new KeyboardEvent("keydown", { key: "k", ctrlKey: true, bubbles: true, cancelable: true });
+      document.activeElement?.dispatchEvent(event);
+      return event.defaultPrevented;
+    });
+    expect(prevented).toBe(false);
+    await expect(page.getByRole("dialog", { name: "Search" })).toBeHidden();
+    await expect(filter).toBeFocused();
+  });
+
   test("a failed index load says so in the dialog", async ({ page }) => {
     await page.route("**/search-index.json", (route) => route.fulfill({ status: 500, body: "" }));
     await page.goto("_site/index.html");

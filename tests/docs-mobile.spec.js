@@ -147,6 +147,7 @@ test("the search dialog does not scroll sideways at 320 and 375 CSS pixels", asy
   for (const viewport of VIEWPORTS) {
     await page.setViewportSize(viewport);
     await page.goto("_site/index.html");
+    await expect(page.locator(".docs-search-kbd"), `no shortcut hint at ${viewport.width}px`).toBeHidden();
     await page.locator("[data-docs-search] button").click();
     const input = page.getByRole("combobox", { name: "Search the docs" });
     await expect(input).toBeFocused();

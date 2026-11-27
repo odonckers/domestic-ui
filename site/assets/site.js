@@ -18,6 +18,7 @@
  *   is shown; it opens a modal <dialog> (command="show-modal") holding a
  *   <dui-combobox>. On first open the page fetches search-index.json and
  *   makes one option per page and per heading; accepting one goes there.
+ *   Cmd-K (macOS) or Ctrl-K opens it from anywhere but a text field.
  *   See explainers/search-dialog.md.
  * One network request, to this site's own search-index.json, on first search.
  */
@@ -238,6 +239,32 @@ if (searchSlot instanceof HTMLElement && searchDialog instanceof HTMLDialogEleme
     load();
     // Invoker commands not supported: open the dialog from here.
     if (!("command" in HTMLButtonElement.prototype) && !searchDialog.open) searchDialog.showModal();
+  });
+  /*
+   * Cmd-K / Ctrl-K opens search from anywhere on the page (aria-keyshortcuts
+   * on the button). Our choice: a modifier shortcut and no single-key one
+   * such as "/", so it never fires while typing (WCAG 2.1.4). It is left to
+   * the browser in a text field outside the dialog; inside the open dialog
+   * it keeps focus in the field. The dialog returns focus to whatever had
+   * it before, as showModal() does.
+   */
+  const mac = /Mac|iPhone|iPad/.test(navigator.platform);
+  const hint = searchSlot.querySelector(".docs-search-kbd");
+  if (hint && mac) hint.textContent = "⌘K";
+  /** @param {EventTarget | null} target */
+  const isTextField = (target) =>
+    target instanceof HTMLElement && (target.isContentEditable || target instanceof HTMLTextAreaElement || target instanceof HTMLSelectElement || (target instanceof HTMLInputElement && !["button", "checkbox", "radio", "submit", "reset", "range", "color", "file", "image"].includes(target.type)));
+  document.addEventListener("keydown", (event) => {
+    if (event.key.toLowerCase() !== "k" || !(event.metaKey || event.ctrlKey) || event.altKey || event.shiftKey) return;
+    if (searchDialog.open) {
+      event.preventDefault();
+      searchInput.focus();
+      return;
+    }
+    if (isTextField(event.target)) return;
+    event.preventDefault();
+    searchDialog.showModal();
+    load();
   });
   searchSlot.hidden = false;
 }

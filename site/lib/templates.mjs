@@ -78,10 +78,11 @@ ${THEMES.map((t) => `    <link rel="stylesheet" href="${link(`css/themes/${t.id}
         ${renderSections(page, link)}
         <!-- Site search: hidden until site.js runs, so with JavaScript off nothing broken shows. -->
         <div class="docs-search" data-docs-search hidden>
-          <button type="button" data-button="secondary" commandfor="docs-search-dialog" command="show-modal" aria-haspopup="dialog">
+          <button type="button" data-button="secondary" commandfor="docs-search-dialog" command="show-modal" aria-haspopup="dialog" aria-keyshortcuts="Control+K Meta+K">
             <!-- Lucide: search -->
             <svg data-icon viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="11" cy="11" r="8"></circle><path d="m21 21-4.3-4.3"></path></svg>
             <span class="docs-search-label">Search</span>
+            <kbd class="docs-search-kbd" aria-hidden="true">Ctrl K</kbd>
           </button>
         </div>
         <div class="docs-theme" data-docs-theme hidden>
