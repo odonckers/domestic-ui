@@ -2,7 +2,7 @@
 
 > domestic-ui is a CSS design system built on native HTML, custom properties and cascade layers. Link one stylesheet and semantic HTML is styled in light and dark, with WCAG 2.2 AA as the baseline. Theme it by overriding semantic tokens. It packages existing web standards and patterns; nothing here is original.
 
-Link `css/domestic.css` (copy `css/` from the v0.1.0 release, https://github.com/odonckers/domestic-ui/releases/tag/v0.1.0); semantic HTML needs no classes. Components: one `data-<component>` attribute of space-separated words matched with `~=` (`data-button="primary small"`), no classes; state via native attributes and ARIA. Layout primitives and utilities: `data-action-bar`, `.cluster`, `.grid`, `data-scroll`, `.stack`, `.visually-hidden`. Theme only with semantic `--dui-*` tokens; primitives are internal.
+Link `css/domestic.css` (copy `css/` from the v0.1.0 release, https://github.com/odonckers/domestic-ui/releases/tag/v0.1.0); semantic HTML needs no classes. Components: one `data-<component>` attribute of space-separated words matched with `~=` (`data-button="primary small"`), no classes; state via native attributes and ARIA. Layout primitives and utilities: `data-action-bar`, `.cluster`, `.grid`, `data-card`, `data-scroll`, `.stack`, `.visually-hidden`. Theme only with semantic `--dui-*` tokens; primitives are internal.
 
 Writing a page? Read [Writing pages with no CSS](https://odonckers.github.io/domestic-ui/guides/writing-pages.md) first: the rules, a whole page to start from and every documented attribute, word, class and element. A page written to it needs no CSS of its own; `node scripts/check-markup.mjs page.html` checks that.
 
@@ -18,7 +18,7 @@ A page built this way links one stylesheet and writes no CSS. Everything it look
 2. Write no `<style>` element and no `style` attribute, except to set a layout primitive's documented custom property (`--stack-gap`, `--grid-min`, `--cluster-justify`, …) or a semantic `--dui-*` token.
 3. Use the native element that already has the meaning: `<button>`, `<a href>`, `<dialog>`, `<details>`, `<label>`, `<fieldset>`, `<table>`, `<search>`, `<time>`. The [first rule of ARIA](https://www.w3.org/TR/using-aria/#rule1) applies: no `role` where an element exists.
 4. Use only the attributes, words and classes in the [vocabulary](#the-vocabulary) below. A word that is not listed does nothing, so it is a mistake, not a style.
-5. Give each page the landmarks in the [skeleton](#an-application-page): a skip link, one `<header>`, a labelled `<nav>`, one `<main id>` and a `<footer>`, and exactly one `<h1>` ([WCAG 2.4.1](https://www.w3.org/WAI/WCAG22/Understanding/bypass-blocks.html), [1.3.1](https://www.w3.org/WAI/WCAG22/Understanding/info-and-relationships.html)).
+5. Give each page the landmarks in the skeletons below: a skip link, one `<header>`, a labelled `<nav>`, one `<main id>` and a `<footer>`, and exactly one `<h1>` ([WCAG 2.4.1](https://www.w3.org/WAI/WCAG22/Understanding/bypass-blocks.html), [1.3.1](https://www.w3.org/WAI/WCAG22/Understanding/info-and-relationships.html)).
 6. Label every control with a `<label for>` or a wrapping `<label>`, and name every landmark and region you have more than one of with `aria-label` or `aria-labelledby` ([WCAG 4.1.2](https://www.w3.org/WAI/WCAG22/Understanding/name-role-value.html)).
 7. Load `web-components/<name>.js` as a module for each `dui-*` element on the page. Without it the markup still works as plain HTML ([progressive enhancement](https://developer.mozilla.org/en-US/docs/Glossary/Progressive_Enhancement)).
 8. Check the page from a clone of this repository: `node scripts/check-markup.mjs page.html` fails on a `<style>`, an undocumented attribute, word or class, an inline style that sets anything else, and a `dui-*` element whose module is not loaded. Then check it with [axe](https://github.com/dequelabs/axe-core) and at 320px wide ([WCAG 1.4.10](https://www.w3.org/WAI/WCAG22/Understanding/reflow.html)).
@@ -167,6 +167,125 @@ The frame of every app screen: the [app shell](https://odonckers.github.io/domes
 </html>
 ```
 
+### A content page
+
+A page that is not an app: a site header with the brand and a `<nav>`, the content in `<main>`, small print in `<footer>`. The [plain document page layout](https://odonckers.github.io/domestic-ui/layouts/page.md) gives these landmarks one centered column, so nothing touches the window edge.
+
+[`examples/pages/content-page.html`](https://github.com/odonckers/domestic-ui/blob/main/examples/pages/content-page.html):
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Shipping guide · Northwind</title>
+    <meta name="description" content="The skeleton of a content page: site header, an article and a footer, laid out from its landmarks with no CSS of its own.">
+    <link rel="stylesheet" href="../../css/domestic.css">
+  </head>
+  <body>
+    <!-- dui:snippet name="Document page" page="layouts/page" -->
+    <a class="visually-hidden" href="#main">Skip to main content</a>
+
+    <header>
+      <a href="#home" data-link="quiet"><strong>Northwind</strong></a>
+      <nav aria-label="Main" data-nav="horizontal">
+        <ul>
+          <li><a href="#features">Features</a></li>
+          <li><a href="#pricing">Pricing</a></li>
+          <li><a href="#guides" aria-current="page">Guides</a></li>
+          <li><a href="#sign-in">Sign in</a></li>
+        </ul>
+      </nav>
+    </header>
+
+    <main id="main">
+      <article>
+        <h1>Shipping your first order</h1>
+        <p data-text="lead">From a new order to a parcel on its way, in four steps.</p>
+
+        <h2>Pick and pack</h2>
+        <p>Open the order, check each line against the shelf, and scan the items into the parcel. Northwind warns you when a count does not match.</p>
+
+        <h2>Choose a carrier</h2>
+        <p>Rates from your connected carriers appear side by side. The cheapest one that meets the promised date is selected for you.</p>
+        <div class="grid">
+          <article data-card>
+            <h3>Standard</h3>
+            <p>Three to five working days. Tracking included.</p>
+          </article>
+          <article data-card>
+            <h3>Express</h3>
+            <p>Next working day when packed before 3 PM.</p>
+          </article>
+          <article data-card>
+            <h3>Collect</h3>
+            <p>The customer picks the parcel up from your warehouse.</p>
+          </article>
+        </div>
+
+        <h2>Print and ship</h2>
+        <p>Print the label and packing slip together, then mark the order as shipped. The customer gets the tracking link by email.</p>
+        <p class="cluster">
+          <a href="#new-order" data-button="primary">Create an order</a>
+          <a href="#guides" data-button="secondary">All guides</a>
+        </p>
+      </article>
+    </main>
+
+    <footer>
+      <p data-text="small">Northwind is an example company. MIT licensed.</p>
+    </footer>
+    <!-- /dui:snippet -->
+  </body>
+</html>
+```
+
+### A sign-in page
+
+A `<main>` whose only child is one [card](https://odonckers.github.io/domestic-ui/patterns/card.md) is a narrow page, centered on both axes when there is no site header: sign-in, sign-up and error pages.
+
+[`examples/pages/sign-in.html`](https://github.com/odonckers/domestic-ui/blob/main/examples/pages/sign-in.html):
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Sign in · Northwind</title>
+    <meta name="description" content="A sign-in page: one card centered on the page, laid out from its landmarks with no CSS of its own.">
+    <link rel="stylesheet" href="../../css/domestic.css">
+  </head>
+  <body>
+    <!-- dui:snippet name="Sign-in page" page="layouts/page" -->
+    <main id="main">
+      <article data-card aria-labelledby="sign-in-title">
+        <h1 id="sign-in-title">Sign in to Northwind</h1>
+        <p data-text="muted">Welcome back. Enter your details to continue.</p>
+        <form class="stack" method="post" action="#sign-in">
+          <div data-field>
+            <label for="sign-in-email">Email</label>
+            <input type="email" id="sign-in-email" name="email" autocomplete="email" required>
+          </div>
+          <div data-field>
+            <label for="sign-in-password">Password</label>
+            <input type="password" id="sign-in-password" name="password" autocomplete="current-password" required>
+          </div>
+          <label><input type="checkbox" name="remember"> Remember me on this device</label>
+          <button type="submit" data-button="primary">Sign in</button>
+        </form>
+        <footer>
+          <p data-text="small"><a href="#reset">Forgot your password?</a></p>
+          <p data-text="small">New to Northwind? <a href="#sign-up">Create an account</a></p>
+        </footer>
+      </article>
+    </main>
+    <!-- /dui:snippet -->
+  </body>
+</html>
+```
+
 ### The vocabulary
 
 Every attribute, word, class, custom element and custom property a page may use, read from the API comments in `css/` (the same list the checker uses). Each attribute links to its docs page. Native attributes (`aria-current`, `aria-sort`, `open`, `popover`, `closedby`) are not listed because they are HTML.
@@ -261,7 +380,7 @@ Each component exposes one `data-<component>` attribute. Its value is space-sepa
 
 **Our choice:** One attribute is one API to learn, it reads as a sentence (`data-button="primary small"`), and it cannot pile up like modifier classes.
 
-Layout primitives and utilities: `data-action-bar`, `.cluster`, `.grid`, `data-scroll`, `.stack`, `.visually-hidden`. Base elements need no API.
+Layout primitives and utilities: `data-action-bar`, `.cluster`, `.grid`, `data-card`, `data-scroll`, `.stack`, `.visually-hidden`. Base elements need no API.
 
 ### How these docs are organized
 
@@ -2442,7 +2561,7 @@ A theme is an override of these tokens on `:root` or on a scoped element. No reb
 
 Colors use [`light-dark()`](https://developer.mozilla.org/en-US/docs/Web/CSS/color_value/light-dark), which picks a value from the used color-scheme of the element where the token is read.
 
-179 tokens in [`css/tokens/semantic.css`](https://github.com/odonckers/domestic-ui/blob/main/css/tokens/semantic.css). **Light** and **Dark** resolve every `var()` and take one side of [`light-dark()`](https://developer.mozilla.org/en-US/docs/Web/CSS/color_value/light-dark). Previews are decorative. † marks a description taken from the semantic token table in [Theming](https://odonckers.github.io/domestic-ui/principles/theming.md).
+181 tokens in [`css/tokens/semantic.css`](https://github.com/odonckers/domestic-ui/blob/main/css/tokens/semantic.css). **Light** and **Dark** resolve every `var()` and take one side of [`light-dark()`](https://developer.mozilla.org/en-US/docs/Web/CSS/color_value/light-dark). Previews are decorative. † marks a description taken from the semantic token table in [Theming](https://odonckers.github.io/domestic-ui/principles/theming.md).
 
 ### Surfaces and text
 
@@ -2556,6 +2675,7 @@ Colors use [`light-dark()`](https://developer.mozilla.org/en-US/docs/Web/CSS/col
 | `--dui-size-menu-min` | `12rem` | `12rem` | Min width of menus and nav dropdowns † |
 | `--dui-size-drawer` | `24rem` | `24rem` | Drawer width (all of the viewport when narrower) † |
 | `--dui-size-page` | `72rem` | `72rem` | Max inline size of a page's content column: header, main and footer |
+| `--dui-size-narrow` | `24rem` | `24rem` | Max inline size of a narrow page's one card: sign-in, sign-up, error pages |
 | `--dui-size-icon` | `1.25rem` | `1.25rem` | Decorative icons beside a label, on their own |
 | `--dui-size-icon-inline` | `1rem` | `1rem` | Icons inside buttons, menu items and toolbars, beside 14 to 16px text |
 | `--dui-size-icon-nav` | `1rem` | `1rem` | Decorative icons at the start of nav links and group summaries: 16px beside 14px sidebar text, as shadcn/ui |
@@ -2610,6 +2730,7 @@ The app shell's main content panel, inset from the frame edge.
 
 | Token | Light | Dark | Description |
 | --- | --- | --- | --- |
+| `--dui-space-page-inline` | `1.5rem` | `1.5rem` | Inline gutter of a plain document page's column, so content never touches the window edge |
 | `--dui-space-panel-inset` | `0.5rem` | `0.5rem` | Gap between a floating panel and the viewport or frame edge |
 
 ### Elevation knobs
@@ -3305,6 +3426,133 @@ For comparison only; these are not the standard this system follows.
 - Apple Human Interface Guidelines: No equivalent
 - Material Design 3: No equivalent
 - Vercel Geist: No equivalent
+
+## Page
+
+Page: https://odonckers.github.io/domestic-ui/layouts/page.html
+
+A page that is not an app shell is laid out from its landmarks alone: the \<header>, \<nav>, \<main> and \<footer> that are children of \<body> share one centered column, --dui-size-page wide at most, with an inline gutter so nothing touches the window edge.
+
+_Diagram: A page with no app shell: its header, main and footer share one centered column with a gutter on each side, the header holding the brand and the site navigation._
+
+### Live example
+
+#### Document page
+
+```html
+<a class="visually-hidden" href="#main">Skip to main content</a>
+
+<header>
+  <a href="#home" data-link="quiet"><strong>Northwind</strong></a>
+  <nav aria-label="Main" data-nav="horizontal">
+    <ul>
+      <li><a href="#features">Features</a></li>
+      <li><a href="#pricing">Pricing</a></li>
+      <li><a href="#guides" aria-current="page">Guides</a></li>
+      <li><a href="#sign-in">Sign in</a></li>
+    </ul>
+  </nav>
+</header>
+
+<main id="main">
+  <article>
+    <h1>Shipping your first order</h1>
+    <p data-text="lead">From a new order to a parcel on its way, in four steps.</p>
+
+    <h2>Pick and pack</h2>
+    <p>Open the order, check each line against the shelf, and scan the items into the parcel. Northwind warns you when a count does not match.</p>
+
+    <h2>Choose a carrier</h2>
+    <p>Rates from your connected carriers appear side by side. The cheapest one that meets the promised date is selected for you.</p>
+    <div class="grid">
+      <article data-card>
+        <h3>Standard</h3>
+        <p>Three to five working days. Tracking included.</p>
+      </article>
+      <article data-card>
+        <h3>Express</h3>
+        <p>Next working day when packed before 3 PM.</p>
+      </article>
+      <article data-card>
+        <h3>Collect</h3>
+        <p>The customer picks the parcel up from your warehouse.</p>
+      </article>
+    </div>
+
+    <h2>Print and ship</h2>
+    <p>Print the label and packing slip together, then mark the order as shipped. The customer gets the tracking link by email.</p>
+    <p class="cluster">
+      <a href="#new-order" data-button="primary">Create an order</a>
+      <a href="#guides" data-button="secondary">All guides</a>
+    </p>
+  </article>
+</main>
+
+<footer>
+  <p data-text="small">Northwind is an example company. MIT licensed.</p>
+</footer>
+```
+
+#### Sign-in page
+
+```html
+<main id="main">
+  <article data-card aria-labelledby="sign-in-title">
+    <h1 id="sign-in-title">Sign in to Northwind</h1>
+    <p data-text="muted">Welcome back. Enter your details to continue.</p>
+    <form class="stack" method="post" action="#sign-in">
+      <div data-field>
+        <label for="sign-in-email">Email</label>
+        <input type="email" id="sign-in-email" name="email" autocomplete="email" required>
+      </div>
+      <div data-field>
+        <label for="sign-in-password">Password</label>
+        <input type="password" id="sign-in-password" name="password" autocomplete="current-password" required>
+      </div>
+      <label><input type="checkbox" name="remember"> Remember me on this device</label>
+      <button type="submit" data-button="primary">Sign in</button>
+    </form>
+    <footer>
+      <p data-text="small"><a href="#reset">Forgot your password?</a></p>
+      <p data-text="small">New to Northwind? <a href="#sign-up">Create an account</a></p>
+    </footer>
+  </article>
+</main>
+```
+
+### API
+
+| Attribute or value | Effect |
+| --- | --- |
+| `<body> > <header>` | the site header; with a `<nav>` child, the brand and the nav share a row and wrap when narrow |
+| `<body> > <main>` | the content column |
+| `<body> > <footer>` | small print, separated by a hairline |
+
+Header and footer hairlines span the text column, not the gutters.
+
+| Attribute or value | Effect |
+| --- | --- |
+| `<body> > <main> with one data-card as its only child` | a narrow, centered page (sign-in, sign-up, error); vertically centered too when the page has no header |
+
+It never applies inside an app shell, whose landmarks are children of the shell, and author CSS still wins (layered, zero specificity).
+
+### Accessibility
+
+- No attribute or class: write the landmarks and the page is laid out (APG landmark regions).
+- Our choice: the layout follows the landmarks a page needs anyway, not a wrapper element, so a page written as a plain document (WCAG 1.3.1, 2.4.1) is also a finished one.
+
+### Specifications
+
+- [APG landmark regions](https://www.w3.org/WAI/ARIA/apg/practices/landmark-regions/)
+- [WHATWG sections](https://html.spec.whatwg.org/multipage/sections.html)
+- [WCAG Reflow](https://www.w3.org/WAI/WCAG22/Understanding/reflow.html)
+
+### See also
+
+- [Layouts](https://odonckers.github.io/domestic-ui/layouts/index.md)
+- [Component API convention](https://odonckers.github.io/domestic-ui/index.md#component-api)
+- [Accessibility baseline](https://odonckers.github.io/domestic-ui/principles/accessibility-baseline-wcag-22-aa.md)
+- Source: [`css/layout/page.css`](https://github.com/odonckers/domestic-ui/blob/main/css/layout/page.css), [`examples/pages/content-page.html`](https://github.com/odonckers/domestic-ui/blob/main/examples/pages/content-page.html), [`examples/pages/sign-in.html`](https://github.com/odonckers/domestic-ui/blob/main/examples/pages/sign-in.html)
 
 ## Scroll
 

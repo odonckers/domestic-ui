@@ -2,7 +2,7 @@
 
 > domestic-ui is a CSS design system built on native HTML, custom properties and cascade layers. Link one stylesheet and semantic HTML is styled in light and dark, with WCAG 2.2 AA as the baseline. Theme it by overriding semantic tokens. It packages existing web standards and patterns; nothing here is original.
 
-Link `css/domestic.css` (copy `css/` from the v0.1.0 release, https://github.com/odonckers/domestic-ui/releases/tag/v0.1.0); semantic HTML needs no classes. Components: one `data-<component>` attribute of space-separated words matched with `~=` (`data-button="primary small"`), no classes; state via native attributes and ARIA. Layout primitives and utilities: `data-action-bar`, `.cluster`, `.grid`, `data-scroll`, `.stack`, `.visually-hidden`. Theme only with semantic `--dui-*` tokens; primitives are internal.
+Link `css/domestic.css` (copy `css/` from the v0.1.0 release, https://github.com/odonckers/domestic-ui/releases/tag/v0.1.0); semantic HTML needs no classes. Components: one `data-<component>` attribute of space-separated words matched with `~=` (`data-button="primary small"`), no classes; state via native attributes and ARIA. Layout primitives and utilities: `data-action-bar`, `.cluster`, `.grid`, `data-card`, `data-scroll`, `.stack`, `.visually-hidden`. Theme only with semantic `--dui-*` tokens; primitives are internal.
 
 Writing a page? Read [Writing pages with no CSS](https://odonckers.github.io/domestic-ui/guides/writing-pages.md) first: the rules, a whole page to start from and every documented attribute, word, class and element. A page written to it needs no CSS of its own; `node scripts/check-markup.mjs page.html` checks that.
 
@@ -31,9 +31,9 @@ Writing a page? Read [Writing pages with no CSS](https://odonckers.github.io/dom
 
 ## Tokens
 
-- [Tokens](https://odonckers.github.io/domestic-ui/tokens/index.md): The two tiers of domestic-ui design tokens: 361 custom properties with their light and dark values.
+- [Tokens](https://odonckers.github.io/domestic-ui/tokens/index.md): The two tiers of domestic-ui design tokens: 363 custom properties with their light and dark values.
 - [Primitive tokens](https://odonckers.github.io/domestic-ui/tokens/primitives.md): All 182 primitive tokens in css/tokens/primitives.css (internal), with resolved light and dark values.
-- [Semantic tokens](https://odonckers.github.io/domestic-ui/tokens/semantic.md): All 179 semantic tokens in css/tokens/semantic.css (public theming API), with resolved light and dark values.
+- [Semantic tokens](https://odonckers.github.io/domestic-ui/tokens/semantic.md): All 181 semantic tokens in css/tokens/semantic.css (public theming API), with resolved light and dark values.
 - [Compact density](https://odonckers.github.io/domestic-ui/patterns/density.md): Available. A compact density token that tightens spacing for data-heavy screens. **Our choice:** No standard exists: `data-density="compact"` on any ancestor re-derives the density tokens; text size never changes and targets stay at least 24 by 24 CSS pixels.
 
 ## Base
@@ -47,6 +47,7 @@ Writing a page? Read [Writing pages with no CSS](https://odonckers.github.io/dom
 - [Action bar](https://odonckers.github.io/domestic-ui/layouts/action-bar.md): A long form whose Save and Cancel buttons stay in a sticky bar at the bottom of the window, with scroll margins so the bar never hides the focused field (WCAG 2.4.11).
 - [Cluster](https://odonckers.github.io/domestic-ui/layouts/cluster.md): An inline group that wraps onto new lines (buttons, tags, nav links).
 - [Grid](https://odonckers.github.io/domestic-ui/layouts/grid.md): A responsive grid: as many columns as fit, each at least --grid-min wide, never wider than the container.
+- [Page](https://odonckers.github.io/domestic-ui/layouts/page.md): A page that is not an app shell is laid out from its landmarks alone: the <header>, <nav>, <main> and <footer> that are children of <body> share one centered column, --dui-size-page wide at most, with an inline gutter so nothing touches the window edge.
 - [Scroll](https://odonckers.github.io/domestic-ui/layouts/scroll.md): A scroll container for content wider than the screen, such as a data table, so it scrolls on its own instead of widening the page.
 - [Stack](https://odonckers.github.io/domestic-ui/layouts/stack.md): Vertical flow with a consistent gap between children.
 - [App shell](https://odonckers.github.io/domestic-ui/patterns/app-shell.md): Available. The frame of an application: header, primary sidebar, main content and an optional auxiliary sidebar. **Our choice:** No standard defines an app shell: the landmarks `<header>`, `<nav>`, `<main>` and `<aside>`, placed with CSS grid.

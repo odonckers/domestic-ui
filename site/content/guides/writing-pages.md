@@ -11,7 +11,7 @@ A page built this way links one stylesheet and writes no CSS. Everything it look
 2. Write no `<style>` element and no `style` attribute, except to set a layout primitive's documented custom property (`--stack-gap`, `--grid-min`, `--cluster-justify`, …) or a semantic `--dui-*` token.
 3. Use the native element that already has the meaning: `<button>`, `<a href>`, `<dialog>`, `<details>`, `<label>`, `<fieldset>`, `<table>`, `<search>`, `<time>`. The [first rule of ARIA](https://www.w3.org/TR/using-aria/#rule1) applies: no `role` where an element exists.
 4. Use only the attributes, words and classes in the [vocabulary](#the-vocabulary) below. A word that is not listed does nothing, so it is a mistake, not a style.
-5. Give each page the landmarks in the [skeleton](#an-application-page): a skip link, one `<header>`, a labelled `<nav>`, one `<main id>` and a `<footer>`, and exactly one `<h1>` ([WCAG 2.4.1](https://www.w3.org/WAI/WCAG22/Understanding/bypass-blocks.html), [1.3.1](https://www.w3.org/WAI/WCAG22/Understanding/info-and-relationships.html)).
+5. Give each page the landmarks in the skeletons below: a skip link, one `<header>`, a labelled `<nav>`, one `<main id>` and a `<footer>`, and exactly one `<h1>` ([WCAG 2.4.1](https://www.w3.org/WAI/WCAG22/Understanding/bypass-blocks.html), [1.3.1](https://www.w3.org/WAI/WCAG22/Understanding/info-and-relationships.html)).
 6. Label every control with a `<label for>` or a wrapping `<label>`, and name every landmark and region you have more than one of with `aria-label` or `aria-labelledby` ([WCAG 4.1.2](https://www.w3.org/WAI/WCAG22/Understanding/name-role-value.html)).
 7. Load `web-components/<name>.js` as a module for each `dui-*` element on the page. Without it the markup still works as plain HTML ([progressive enhancement](https://developer.mozilla.org/en-US/docs/Glossary/Progressive_Enhancement)).
 8. Check the page from a clone of this repository: `node scripts/check-markup.mjs page.html` fails on a `<style>`, an undocumented attribute, word or class, an inline style that sets anything else, and a `dui-*` element whose module is not loaded. Then check it with [axe](https://github.com/dequelabs/axe-core) and at 320px wide ([WCAG 1.4.10](https://www.w3.org/WAI/WCAG22/Understanding/reflow.html)).
@@ -23,6 +23,18 @@ Compose before you invent: most interface "components" are arrangements of eleme
 The frame of every app screen: the [app shell](site:patterns/app-shell.html) with its sidebar, then a [page header](site:components/organisms/page-header.html) and the content. Swap the [dashboard](site:patterns/dashboard.html) for a [data table](site:patterns/data-table.html), [large form](site:patterns/large-forms.html) or [list-detail](site:patterns/list-detail.html). The [plain HTML demo](https://github.com/odonckers/domestic-ui/tree/main/demos/vanilla) has full dashboard, settings and orders screens written the same way.
 
 {{page: examples/pages/app-page.html}}
+
+## A content page
+
+A page that is not an app: a site header with the brand and a `<nav>`, the content in `<main>`, small print in `<footer>`. The [plain document page layout](site:layouts/page.html) gives these landmarks one centered column, so nothing touches the window edge.
+
+{{page: examples/pages/content-page.html}}
+
+## A sign-in page
+
+A `<main>` whose only child is one [card](site:patterns/card.html) is a narrow page, centered on both axes when there is no site header: sign-in, sign-up and error pages.
+
+{{page: examples/pages/sign-in.html}}
 
 ## The vocabulary
 

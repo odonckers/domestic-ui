@@ -255,3 +255,61 @@ test.describe("action bar", () => {
     }
   });
 });
+
+/*
+ * The plain document page (css/layout/page.css): landmarks that are children
+ * of <body> share one centered column; a main holding one card is a narrow,
+ * centered page. html-validate, axe and the 320px overflow checks cover both
+ * pages already.
+ */
+test.describe("plain document page", () => {
+  const CONTENT = "examples/pages/content-page.html";
+  const SIGN_IN = "examples/pages/sign-in.html";
+
+  test("header, main and footer share one centered column with a gutter", async ({ page }) => {
+    for (const viewport of [WIDE, NARROW]) {
+      await page.setViewportSize(viewport);
+      await page.goto(CONTENT);
+      const [header, main, footer] = await Promise.all(["body > header", "body > main", "body > footer"].map((s) => box(page.locator(s))));
+      // Centered: the same space on both sides.
+      expect(Math.abs(main.x - (viewport.width - main.x - main.width))).toBeLessThan(1);
+      // The text never touches the window edge; the header and footer hairlines span the text column, not the gutters.
+      const h1 = await box(page.locator("h1"));
+      expect(h1.x).toBeGreaterThanOrEqual(16);
+      const gutter = h1.x - main.x;
+      for (const edge of [header, footer]) {
+        expect(Math.abs(edge.x - h1.x)).toBeLessThan(1);
+        expect(Math.abs(edge.width - (main.width - 2 * gutter))).toBeLessThan(1);
+      }
+    }
+  });
+
+  test("the brand and the site navigation share a row when wide", async ({ page }) => {
+    await page.setViewportSize(WIDE);
+    await page.goto(CONTENT);
+    const brand = await box(page.locator("body > header > a"));
+    const nav = await box(page.locator("body > header > nav"));
+    expect(nav.x).toBeGreaterThan(brand.x + brand.width);
+    expect(Math.abs(brand.y + brand.height / 2 - (nav.y + nav.height / 2))).toBeLessThan(4);
+  });
+
+  test("a main with one card is narrow and centered on both axes", async ({ page }) => {
+    for (const viewport of [WIDE, NARROW]) {
+      await page.setViewportSize(viewport);
+      await page.goto(SIGN_IN);
+      const card = await box(page.locator("main > [data-card]"));
+      expect(card.width).toBeLessThanOrEqual(24 * 16 + 1);
+      expect(Math.abs(card.x - (viewport.width - card.x - card.width))).toBeLessThan(1);
+      if (viewport === WIDE) expect(Math.abs(card.y - (viewport.height - card.y - card.height))).toBeLessThan(2);
+    }
+  });
+
+  test("an app shell page is left alone", async ({ page }) => {
+    await page.setViewportSize(WIDE);
+    await page.goto("examples/pages/app-page.html");
+    // The shell's landmarks are its children, not the body's: main sits beside the sidebar, not in a centered column.
+    const nav = await box(page.locator("dui-app-shell > nav"));
+    const main = await box(page.locator("dui-app-shell > main"));
+    expect(main.x).toBeGreaterThanOrEqual(nav.x + nav.width);
+  });
+});

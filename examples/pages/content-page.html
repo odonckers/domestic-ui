@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Shipping guide · Northwind</title>
+    <meta name="description" content="The skeleton of a content page: site header, an article and a footer, laid out from its landmarks with no CSS of its own.">
+    <link rel="stylesheet" href="../../css/domestic.css">
+  </head>
+  <body>
+    <!-- dui:snippet name="Document page" page="layouts/page" -->
+    <a class="visually-hidden" href="#main">Skip to main content</a>
+
+    <header>
+      <a href="#home" data-link="quiet"><strong>Northwind</strong></a>
+      <nav aria-label="Main" data-nav="horizontal">
+        <ul>
+          <li><a href="#features">Features</a></li>
+          <li><a href="#pricing">Pricing</a></li>
+          <li><a href="#guides" aria-current="page">Guides</a></li>
+          <li><a href="#sign-in">Sign in</a></li>
+        </ul>
+      </nav>
+    </header>
+
+    <main id="main">
+      <article>
+        <h1>Shipping your first order</h1>
+        <p data-text="lead">From a new order to a parcel on its way, in four steps.</p>
+
+        <h2>Pick and pack</h2>
+        <p>Open the order, check each line against the shelf, and scan the items into the parcel. Northwind warns you when a count does not match.</p>
+
+        <h2>Choose a carrier</h2>
+        <p>Rates from your connected carriers appear side by side. The cheapest one that meets the promised date is selected for you.</p>
+        <div class="grid">
+          <article data-card>
+            <h3>Standard</h3>
+            <p>Three to five working days. Tracking included.</p>
+          </article>
+          <article data-card>
+            <h3>Express</h3>
+            <p>Next working day when packed before 3 PM.</p>
+          </article>
+          <article data-card>
+            <h3>Collect</h3>
+            <p>The customer picks the parcel up from your warehouse.</p>
+          </article>
+        </div>
+
+        <h2>Print and ship</h2>
+        <p>Print the label and packing slip together, then mark the order as shipped. The customer gets the tracking link by email.</p>
+        <p class="cluster">
+          <a href="#new-order" data-button="primary">Create an order</a>
+          <a href="#guides" data-button="secondary">All guides</a>
+        </p>
+      </article>
+    </main>
+
+    <footer>
+      <p data-text="small">Northwind is an example company. MIT licensed.</p>
+    </footer>
+    <!-- /dui:snippet -->
+  </body>
+</html>
