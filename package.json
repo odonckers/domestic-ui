@@ -19,10 +19,11 @@
     "lint:css": "stylelint \"css/**/*.css\"",
     "lint:tokens": "node scripts/check-tokens.mjs",
     "lint:deps": "node scripts/check-dependencies.mjs",
+    "lint:markup": "node scripts/check-markup.mjs",
     "test:a11y": "playwright test",
     "test:visual": "playwright test tests/visual.spec.js --project=chromium",
     "test:visual:update": "playwright test tests/visual.spec.js --project=chromium --update-snapshots",
-    "test": "npm run lint:html && npm run lint:css && npm run lint:tokens && npm run lint:deps && npm run test:a11y",
+    "test": "npm run lint:html && npm run lint:css && npm run lint:tokens && npm run lint:deps && npm run lint:markup && npm run test:a11y",
     "changelog": "node scripts/changelog.mjs",
     "changelog:check": "node scripts/changelog.mjs --check",
     "platform:status": "node scripts/platform-status.mjs"

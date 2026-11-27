@@ -2,8 +2,8 @@ name: CI
 
 on:
   pull_request:
-    # `edited` re-runs CI when a pull request is retitled, so the `commits`
-    # check sees the title that becomes the squash commit on main.
+    # `edited` re-runs CI when a pull request is retitled, so commitlint in
+    # the `lint` job sees the title that becomes the squash commit on main.
     types: [opened, synchronize, reopened, edited]
   push:
     branches: [main]
@@ -17,21 +17,27 @@ concurrency:
   group: ci-${{ github.ref }}
   cancel-in-progress: ${{ github.event.action != 'edited' }}
 
-# Playwright's image ships Chromium, Firefox, WebKit and their system
-# dependencies, which saves the ~11 minute apt install of
-# `npx playwright install --with-deps`; no job downloads browsers. Keep the
-# tag equal to the @playwright/test version in package.json; bump them
-# together. https://playwright.dev/docs/ci#via-containers
+# The Playwright shards run in Playwright's image, which ships Chromium,
+# Firefox, WebKit and their system dependencies; that saves the ~11 minute apt
+# install of `npx playwright install --with-deps`, so no job downloads
+# browsers. Keep the tag equal to the @playwright/test version in
+# package.json; bump them together. https://playwright.dev/docs/ci#via-containers
 
 jobs:
+  # Lint, the generated-files check and, on pull requests, Conventional Commits
+  # (commitlint.config.mjs, CONTRIBUTING.md): the pull request title, which
+  # becomes the squash commit on main, and every commit in the pull request.
+  # Merge commits are ignored. No browser is needed, so no container: that saves
+  # the image start-up, and one job instead of two frees a runner for the shards.
   lint:
     name: lint
     runs-on: ubuntu-latest
-    container:
-      image: mcr.microsoft.com/playwright:v1.65.1-noble
-      options: --user 1001
     steps:
       - uses: actions/checkout@v7
+        with:
+          # commitlint reads every commit between the base and the head. The
+          # string '0' is truthy; a bare 0 would fall through to 1.
+          fetch-depth: ${{ github.event_name == 'pull_request' && '0' || '1' }}
       - uses: actions/setup-node@v7
         with:
           node-version: lts/*
@@ -40,9 +46,21 @@ jobs:
       - run: npm run lint:html
       - run: npm run lint:css
       - run: npm run lint:tokens
+      - run: npm run lint:markup
       - run: npm run lint:deps
       - name: Generated README.md and llms files are up to date
         run: node site/build.mjs --check
+      - name: Pull request title
+        if: github.event_name == 'pull_request'
+        env:
+          PR_TITLE: ${{ github.event.pull_request.title }}
+        run: printf '%s\n' "$PR_TITLE" | npx commitlint --verbose
+      - name: Commits in the pull request
+        if: github.event_name == 'pull_request'
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+        run: npx commitlint --verbose --from "$BASE_SHA" --to "$HEAD_SHA"
 
   playwright:
     name: playwright (${{ matrix.shard }}/${{ strategy.job-total }})
@@ -73,50 +91,19 @@ jobs:
           path: playwright-report/
           retention-days: 7
 
-  # Conventional Commits 1.0 (commitlint.config.mjs, CONTRIBUTING.md): the pull
-  # request title, which becomes the squash commit on main, and every commit in
-  # the pull request. Merge commits are ignored.
-  commits:
-    name: commits
-    if: github.event_name == 'pull_request'
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v7
-        with:
-          ref: ${{ github.event.pull_request.head.sha }}
-          fetch-depth: 0
-      - uses: actions/setup-node@v7
-        with:
-          node-version: lts/*
-          cache: npm
-      - run: npm ci
-      - name: Pull request title
-        env:
-          PR_TITLE: ${{ github.event.pull_request.title }}
-        run: printf '%s\n' "$PR_TITLE" | npx commitlint --verbose
-      - name: Commits in the pull request
-        env:
-          BASE_SHA: ${{ github.event.pull_request.base.sha }}
-          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
-        run: npx commitlint --verbose --from "$BASE_SHA" --to "$HEAD_SHA"
-
   # The "Protect main" ruleset requires a check named exactly `ci`. This job
-  # reports it, and passes only when lint, every Playwright shard and, on pull
-  # requests, commits passed. On pushes to main, commits is skipped by design.
+  # reports it, and passes only when lint and every Playwright shard passed.
   ci:
     name: ci
     if: always()
-    needs: [lint, playwright, commits]
+    needs: [lint, playwright]
     runs-on: ubuntu-latest
     steps:
       - name: All CI jobs passed
         env:
-          EVENT: ${{ github.event_name }}
           LINT: ${{ needs.lint.result }}
           PLAYWRIGHT: ${{ needs.playwright.result }}
-          COMMITS: ${{ needs.commits.result }}
         run: |
-          echo "event: $EVENT; lint: $LINT; playwright: $PLAYWRIGHT; commits: $COMMITS"
+          echo "lint: $LINT; playwright: $PLAYWRIGHT"
           [ "$LINT" = success ] || exit 1
           [ "$PLAYWRIGHT" = success ] || exit 1
-          [ "$COMMITS" = success ] || { [ "$EVENT" = push ] && [ "$COMMITS" = skipped ]; } || exit 1

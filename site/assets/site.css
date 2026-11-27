@@ -12,47 +12,6 @@
  */
 :root {
   --dui-font-body: inter, system-ui, sans-serif;
-
-  /* The app bar's block size on one row: a control, its block padding and the bottom hairline. */
-  --docs-header-size: calc(var(--dui-size-control) + var(--dui-space-xs) * 2 + var(--dui-border-width));
-}
-
-/*
- * A sticky app bar where the sidebar sits beside main (app-shell.css's
- * 48rem breakpoint). Translucent with backdrop-filter; solid under
- * prefers-reduced-transparency and in forced colors. The floating panels
- * stick below it, and scroll-padding keeps focused and targeted elements
- * clear of it (WCAG 2.4.11).
- * https://developer.mozilla.org/en-US/docs/Web/CSS/backdrop-filter
- * https://developer.mozilla.org/en-US/docs/Web/CSS/@media/prefers-reduced-transparency
- * https://www.w3.org/WAI/WCAG22/Understanding/focus-not-obscured-minimum.html
- */
-@container dui-app-shell (inline-size >= 48rem) {
-  .docs-shell > header {
-    position: sticky;
-    inset-block-start: 0;
-    z-index: 2;
-    background-color: color-mix(in oklab, var(--dui-color-surface-frame) 80%, transparent);
-    backdrop-filter: blur(var(--dui-space-s)) saturate(1.5);
-  }
-
-  .docs-shell > :is(nav, aside) {
-    inset-block-start: calc(var(--docs-header-size) + var(--dui-space-panel-inset));
-    max-block-size: calc(var(--dui-size-pane) - var(--docs-header-size) - var(--dui-space-panel-inset) * 2);
-  }
-}
-
-@media (min-width: 48rem) {
-  :root {
-    scroll-padding-block-start: calc(var(--docs-header-size) + var(--dui-space-s));
-  }
-}
-
-@media (prefers-reduced-transparency: reduce), (forced-colors: active) {
-  .docs-shell > header {
-    background-color: var(--dui-color-surface-frame);
-    backdrop-filter: none;
-  }
 }
 
 /*
@@ -195,6 +154,94 @@
   margin-inline-start: 0;
 }
 
+/*
+ * Search (shown by site.js): the button opens the search dialog. It starts
+ * the end group of the app bar, so the theme menu after it drops its auto
+ * margin. Narrow app bars show the icon alone; the text stays as its
+ * accessible name (same clipping as css/utilities/visually-hidden.css).
+ */
+.docs-search {
+  margin-inline-start: auto;
+}
+
+.docs-search:not([hidden]) ~ .docs-theme {
+  margin-inline-start: 0;
+}
+
+.docs-search > button {
+  color: var(--dui-color-text-muted);
+}
+
+/* The shortcut hint: wide app bars only, so narrow ones keep one row (WCAG 1.4.10). */
+.docs-search-kbd {
+  margin-inline-start: var(--dui-space-xs);
+  font-size: var(--dui-step--1);
+}
+
+@container dui-app-shell (inline-size < 64rem) {
+  .docs-search-kbd {
+    display: none;
+  }
+}
+
+@container dui-app-shell (inline-size < 30rem) {
+  /* The icon-only square of data-button="icon" (button.css). */
+  .docs-search > button {
+    padding: 0;
+  }
+
+  .docs-search-label {
+    position: absolute;
+    inline-size: 1px;
+    block-size: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+}
+
+/*
+ * The search dialog: a command palette. Near the top of the viewport, so
+ * the list has room to grow under the field, and the list is in the flow of
+ * the dialog (not the absolutely positioned popup of combobox.css), so the
+ * dialog's own scrolling never clips it.
+ */
+.docs-search-dialog {
+  margin-block-start: min(12vh, var(--dui-space-3xl));
+}
+
+/* The title row: dialog.css's header layout, on a <div> (see site/lib/templates.mjs). */
+.docs-search-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--dui-space-m);
+}
+
+.docs-search-head > * {
+  margin-block: 0;
+}
+
+.docs-search-head > h2 {
+  font-size: var(--dui-step-2);
+}
+
+.docs-search-dialog dui-combobox > [role="listbox"] {
+  position: static;
+  max-block-size: min(50vh, calc(var(--dui-size-row) * 10));
+  box-shadow: none;
+  border-color: var(--dui-color-border);
+}
+
+.docs-search-message {
+  color: var(--dui-color-text-muted);
+  font-size: var(--dui-font-size-ui);
+}
+
+.docs-search-message:empty {
+  display: none;
+}
+
 /* Themes page: the preview's radio group, one row. */
 .docs-theme-picker {
   display: flex;
@@ -272,25 +319,26 @@
   }
 }
 
-/* Previous and next, in the footer before its small print: at the two ends of the row. */
-.docs-shell > footer > [data-pagination] {
+/*
+ * The page footer ends main (app-shell.css scrolls main inside its panel,
+ * so a footer outside it would stay on screen): previous and next, then
+ * the small print. Previous and next sit at the two ends of the row.
+ */
+.docs-footer {
+  max-inline-size: var(--dui-measure);
+  margin-block-start: var(--dui-space-2xl);
+  padding-block-start: var(--dui-space-m);
+  border-block-start: var(--dui-border-width) solid var(--dui-color-border);
+  color: var(--dui-color-text-muted);
+}
+
+.docs-footer > [data-pagination] {
   max-inline-size: var(--dui-measure);
   margin-block-end: var(--dui-space-l);
 }
 
-.docs-shell > footer > [data-pagination] > ul {
+.docs-footer > [data-pagination] > ul {
   justify-content: space-between;
-}
-
-/*
- * Beside a sidebar (app-shell.css's 48rem breakpoint) main pads by
- * --dui-space-l and the footer by --dui-space-m: line the links up with
- * the page's start edge.
- */
-@container dui-app-shell (inline-size >= 48rem) {
-  .docs-shell > footer > [data-pagination] {
-    margin-inline-start: calc(var(--dui-space-l) - var(--dui-space-m));
-  }
 }
 
 /*

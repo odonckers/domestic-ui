@@ -6,7 +6,8 @@
  * - The frame is the app shell (css/layout/app-shell.css,
  *   web-components/dui-app-shell.js): landmarks in source order, app bar
  *   <header>, the Docs <nav> sidebar, <main>, an optional "On this page"
- *   <aside>, <footer>. Narrow screens get the sidebar as a modal drawer from
+ *   <aside>. The page footer (previous and next, small print) ends <main>,
+ *   which scrolls inside its panel beside the sidebar. Narrow screens get the sidebar as a modal drawer from
  *   the Menu button; without JavaScript it stacks above main.
  * - The skip link comes before the shell and is the first focusable
  *   element (2.4.1 Bypass Blocks). It reuses the .visually-hidden utility,
@@ -58,6 +59,7 @@ ${THEMES.map((t) => `    <link rel="stylesheet" href="${link(`css/themes/${t.id}
     <link rel="alternate" type="text/markdown" href="${link(page.path.replace(/\.html$/, ".md"))}">
     <script type="module" src="${link("web-components/dui-app-shell.js")}"></script>
     <script type="module" src="${link("web-components/dui-tooltip.js")}"></script>
+    <script type="module" src="${link("web-components/dui-combobox.js")}"></script>
     <script src="${link("site.js")}" defer></script>
     <script src="${link("highlight.js")}" defer></script>
   </head>
@@ -75,8 +77,15 @@ ${THEMES.map((t) => `    <link rel="stylesheet" href="${link(`css/themes/${t.id}
         </dui-tooltip>
         <a class="docs-name" href="${link("index.html")}">domestic-ui</a>
         ${renderSections(page, link)}
-        <!-- Slot for the site search (M4): search-index.json. Empty and hidden until then. -->
-        <div class="docs-search" data-docs-search hidden></div>
+        <!-- Site search: hidden until site.js runs, so with JavaScript off nothing broken shows. -->
+        <div class="docs-search" data-docs-search hidden>
+          <button type="button" data-button="secondary" commandfor="docs-search-dialog" command="show-modal" aria-haspopup="dialog" aria-keyshortcuts="Control+K Meta+K">
+            <!-- Lucide: search -->
+            <svg data-icon viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="11" cy="11" r="8"></circle><path d="m21 21-4.3-4.3"></path></svg>
+            <span class="docs-search-label">Search</span>
+            <kbd class="docs-search-kbd" aria-hidden="true">Ctrl K</kbd>
+          </button>
+        </div>
         <div class="docs-theme" data-docs-theme hidden>
           <label for="docs-theme-select">Theme</label>
           <select id="docs-theme-select">
@@ -100,15 +109,44 @@ ${/role="region"/.test(body) ? `${REGIONS_NOTE}\n` : ""}${renderBreadcrumb(page,
 <h1>${escapeHtml(page.heading)}</h1>
 ${body}
         </article>
-      </main>${toc}
-      <footer>
+        <footer class="docs-footer">
 ${renderPrevNext(page, tree, link)}
-        <p><small>domestic-ui is <a href="${BLOB_URL}LICENSE">MIT licensed</a>. <a href="${REPO_URL}">Source on GitHub</a>. <a href="${escapeHtml(page.source.href)}">${escapeHtml(page.source.label)}</a>. <a href="${link("llms.txt")}">llms.txt</a></small></p>
-      </footer>
+          <p><small>domestic-ui is <a href="${BLOB_URL}LICENSE">MIT licensed</a>. <a href="${REPO_URL}">Source on GitHub</a>. <a href="${escapeHtml(page.source.href)}">${escapeHtml(page.source.label)}</a>. <a href="${link("llms.txt")}">llms.txt</a></small></p>
+        </footer>
+      </main>${toc}
     </dui-app-shell>
+${searchDialogHtml(link)}
   </body>
 </html>
 `;
+}
+
+/**
+ * The search dialog (APG Dialog (Modal) holding an APG Combobox), opened by
+ * the app bar's Search button. site.js fills the empty datalist from
+ * search-index.json on first open; see explainers/search-dialog.md. The
+ * title row is a <div>, not dialog.css's <header>: outside a sectioning
+ * element a <header> is a second banner landmark on the page.
+ * @param {(target: string) => string} link
+ */
+function searchDialogHtml(link) {
+  return `    <dialog id="docs-search-dialog" class="docs-search-dialog" data-dialog closedby="any" aria-labelledby="docs-search-title" data-search-index="${escapeHtml(link("search-index.json"))}">
+      <div class="docs-search-head">
+        <h2 id="docs-search-title">Search</h2>
+        <button type="button" data-button="quiet icon" commandfor="docs-search-dialog" command="close">
+          <!-- Lucide: x -->
+          <svg data-icon viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M18 6 6 18"></path><path d="m6 6 12 12"></path></svg>
+          <span class="visually-hidden">Close</span>
+        </button>
+      </div>
+      <dui-combobox>
+        <label for="docs-search-input">Search the docs</label>
+        <input type="text" id="docs-search-input" list="docs-search-options" autocomplete="off" spellcheck="false" enterkeyhint="go" autofocus>
+        <datalist id="docs-search-options"></datalist>
+      </dui-combobox>
+      <p class="docs-search-message" data-search-empty hidden></p>
+      <p class="docs-search-message" data-search-load role="status"></p>
+    </dialog>`;
 }
 
 /**

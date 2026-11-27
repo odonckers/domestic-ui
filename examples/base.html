@@ -6,36 +6,6 @@
     <title>Base elements · domestic-ui</title>
     <meta name="description" content="Every native element styled by the domestic-ui base layer, plus the stack, cluster and grid layout primitives.">
     <link rel="stylesheet" href="../css/domestic.css">
-    <style>
-      /* Page-only layout, written with semantic tokens like any consumer would. */
-      body > :is(header, main, footer) {
-        max-inline-size: var(--dui-size-page);
-        margin-inline: auto;
-        padding-inline: var(--dui-space-l);
-      }
-
-      body > header {
-        padding-block: var(--dui-space-m);
-        border-block-end: var(--dui-border-width) solid var(--dui-color-border);
-      }
-
-      body > main {
-        padding-block: var(--dui-space-2xl);
-      }
-
-      body > footer {
-        padding-block: var(--dui-space-l);
-        border-block-start: var(--dui-border-width) solid var(--dui-color-border);
-        color: var(--dui-color-text-muted);
-      }
-
-      .card {
-        padding: var(--dui-space-m);
-        border: var(--dui-border-width) solid var(--dui-color-border);
-        border-radius: var(--dui-radius-surface);
-        background-color: var(--dui-color-surface-raised);
-      }
-    </style>
   </head>
   <body>
     <a class="visually-hidden" href="#main">Skip to main content</a>
@@ -355,7 +325,7 @@
 
         <h3><code>.stack</code></h3>
         <!-- dui:snippet name="Stack" page="layouts/stack" -->
-        <div class="stack card" style="--stack-gap: var(--dui-space-xs)">
+        <div class="stack" style="--stack-gap: var(--dui-space-xs)">
           <p>Stack item one</p>
           <p>Stack item two, with <code>--stack-gap: var(--dui-space-xs)</code></p>
           <p>Stack item three</p>
@@ -364,7 +334,7 @@
 
         <h3><code>.cluster</code></h3>
         <!-- dui:snippet name="Cluster" page="layouts/cluster" -->
-        <ul class="cluster card">
+        <ul class="cluster">
           <li><code>reset</code></li>
           <li><code>tokens</code></li>
           <li><code>base</code></li>
@@ -377,15 +347,15 @@
         <h3><code>.grid</code></h3>
         <!-- dui:snippet name="Grid" page="layouts/grid" -->
         <div class="grid" style="--grid-min: 12rem">
-          <article class="card">
+          <article data-card>
             <h4>Atoms</h4>
             <p>Native elements styled by the base layer, plus a few attributes.</p>
           </article>
-          <article class="card">
+          <article data-card>
             <h4>Molecules</h4>
             <p>Small groups of atoms, such as tabs, dialogs and cards.</p>
           </article>
-          <article class="card">
+          <article data-card>
             <h4>Organisms</h4>
             <p>Larger sections built from molecules. Coming later.</p>
           </article>

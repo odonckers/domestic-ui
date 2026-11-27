@@ -21,6 +21,7 @@
 @import url("base/tables.css") layer(base);
 @import url("base/forms.css") layer(base);
 @import url("base/interactive.css") layer(base);
+@import url("layout/page.css") layer(layout);
 @import url("layout/stack.css") layer(layout);
 @import url("layout/cluster.css") layer(layout);
 @import url("layout/grid.css") layer(layout);

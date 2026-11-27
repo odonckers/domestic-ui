@@ -4,12 +4,12 @@
  * serve it, and the URL of each view. Paths are relative to demos/a11y.
  *
  * Ports: PORT (if set) is the base port, so parallel checkouts do not share
- * servers: vanilla = PORT, react = PORT+1, angular = PORT+2, astro = PORT+3.
- * Without PORT the defaults are 4301-4304.
+ * servers: vanilla = PORT, react = PORT+1, angular = PORT+2, astro = PORT+3,
+ * vue = PORT+4, svelte = PORT+5. Without PORT the defaults are 4301-4306.
  */
 const basePort = process.env.PORT ? Number(process.env.PORT) : 4301;
-if (!Number.isInteger(basePort) || basePort < 1 || basePort > 65532) {
-  throw new Error(`PORT must be an integer from 1 to 65532, got "${process.env.PORT}".`);
+if (!Number.isInteger(basePort) || basePort < 1 || basePort > 65530) {
+  throw new Error(`PORT must be an integer from 1 to 65530, got "${process.env.PORT}".`);
 }
 
 export const apps = {
@@ -52,6 +52,26 @@ export const apps = {
       { path: "/", view: "dashboard", title: "Dashboard · Homebase" },
       { path: "/settings/", view: "settings", title: "Account settings · Homebase" },
       { path: "/orders/", view: "orders", title: "Orders · Homebase" },
+    ],
+  },
+  vue: {
+    root: "../vue/dist",
+    port: basePort + 4,
+    spa: false,
+    views: [
+      { path: "/", view: "dashboard", title: "Dashboard · Homebase" },
+      { path: "/settings.html", view: "settings", title: "Account settings · Homebase" },
+      { path: "/orders.html", view: "orders", title: "Orders · Homebase" },
+    ],
+  },
+  svelte: {
+    root: "../svelte/dist",
+    port: basePort + 5,
+    spa: false,
+    views: [
+      { path: "/", view: "dashboard", title: "Dashboard · Homebase" },
+      { path: "/settings.html", view: "settings", title: "Account settings · Homebase" },
+      { path: "/orders.html", view: "orders", title: "Orders · Homebase" },
     ],
   },
 };

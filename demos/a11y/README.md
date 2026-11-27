@@ -32,9 +32,9 @@ lists the elements that stick out), and axe runs again at both sizes in light an
 ## Ports
 
 Each app gets its own server. By default they listen on 4301 (vanilla), 4302 (react),
-4303 (angular) and 4304 (astro), and an already running server on those ports is reused
-outside CI. Set `PORT` to move all four, for example to run two checkouts side by side:
-`PORT=4373 npm test` uses 4373, 4374, 4375 and 4376 (vanilla, react, angular, astro).
+4303 (angular), 4304 (astro), 4305 (vue) and 4306 (svelte), and an already running server on
+those ports is reused outside CI. Set `PORT` to move all six, for example to run two checkouts
+side by side: `PORT=4373 npm test` uses 4373 to 4378 (vanilla, react, angular, astro, vue, svelte).
 
 ## Prerequisites
 
@@ -48,9 +48,9 @@ cd demos/a11y
 npm ci
 npx playwright install chromium
 
-npm test                  # all four apps (build react, angular and astro first)
-DEMO_APP=react npm test   # one app: vanilla, react, angular or astro
-PORT=4373 npm test        # servers on 4373-4376 instead of 4301-4304
+npm test                  # all six apps (build every app but vanilla first)
+DEMO_APP=react npm test   # one app: vanilla, react, angular, astro, vue or svelte
+PORT=4373 npm test        # servers on 4373-4378 instead of 4301-4306
 
 npm run lint:html         # html-validate on vanilla and the built astro pages
 npm run lint:html:vanilla # or one of them

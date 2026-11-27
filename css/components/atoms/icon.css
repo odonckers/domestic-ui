@@ -34,9 +34,9 @@
  *     Search
  *   </button>
  *
- * Size: --dui-size-icon (1.25rem) on its own and in nav links;
- * --dui-size-icon-inline (1rem) inside buttons, menu items, options and
- * toolbars, so the icon matches the text beside it. Inside a button or
+ * Size: --dui-size-icon (1.25rem) on its own; --dui-size-icon-nav (1rem)
+ * in nav links and summaries (nav.css); --dui-size-icon-inline (1rem)
+ * inside buttons, menu items, options and toolbars, so the icon matches the text beside it. Inside a button or
  * link the flex gap spaces it from the label; in running text it sits on
  * the middle of the line.
  *

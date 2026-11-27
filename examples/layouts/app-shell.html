@@ -68,6 +68,9 @@
         sidebar (a labelled <code>&lt;nav&gt;</code>), <code>&lt;main&gt;</code> and an optional <code>&lt;aside&gt;</code>; toggle buttons with
         <code>aria-controls</code> and <code>aria-expanded</code>, <code>hidden</code> until the script shows them.
         <code>data-app-shell="contained"</code> keeps the shell inside a box <code>--dui-size-pane</code> tall.
+        Beside a sidebar, <code>&lt;main&gt;</code> is a panel that scrolls inside itself, so the app bar and sidebars never move;
+        <code>data-app-shell="page"</code> puts main on the frame instead, with <code>data-card</code> panels in it, and scrolls the page
+        under a sticky app bar.
         Source: <a href="../../css/layout/app-shell.css"><code>css/layout/app-shell.css</code></a> and
         <a href="../../web-components/dui-app-shell.js"><code>web-components/dui-app-shell.js</code></a>.
       </p>
@@ -109,7 +112,7 @@
             </li>
           </ul>
         </nav>
-        <main id="main" class="stack">
+        <main id="main" class="stack" tabindex="-1">
           <header data-page-header>
             <h2>Accounts</h2>
             <p>Customers with an open balance.</p>

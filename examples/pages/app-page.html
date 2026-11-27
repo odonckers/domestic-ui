@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Overview · Northwind</title>
+    <meta name="description" content="The skeleton of an application page: app shell, sidebar navigation, page header and content, with no CSS of its own.">
+    <link rel="stylesheet" href="../../css/domestic.css">
+  </head>
+  <body>
+    <a class="visually-hidden" href="#main">Skip to main content</a>
+
+    <dui-app-shell data-app-shell>
+      <header>
+        <button type="button" aria-controls="app-nav" aria-expanded="true" hidden>
+          <svg data-icon viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true" focusable="false"><path d="M4 6h16M4 12h16M4 18h16"></path></svg>
+          Menu
+        </button>
+        <a href="app-page.html" data-link="quiet"><strong>Northwind</strong></a>
+        <dui-menu>
+          <button type="button" popovertarget="user-menu">Maria Santos</button>
+          <div id="user-menu" popover data-popover>
+            <a href="#profile">Profile</a>
+            <a href="#preferences">Preferences</a>
+            <hr>
+            <button type="button">Sign out</button>
+          </div>
+        </dui-menu>
+      </header>
+
+      <nav id="app-nav" aria-label="Main" data-nav>
+        <ul>
+          <li><a href="app-page.html" aria-current="page">Overview</a></li>
+          <li><a href="#orders">Orders</a></li>
+          <li><a href="#customers">Customers</a></li>
+          <li>
+            <details>
+              <summary>Settings</summary>
+              <ul>
+                <li><a href="#settings-general">General</a></li>
+                <li><a href="#settings-billing">Billing</a></li>
+              </ul>
+            </details>
+          </li>
+        </ul>
+      </nav>
+
+      <main id="main" class="stack">
+        <header data-page-header>
+          <h1>Overview</h1>
+          <p>How the warehouse is doing this week.</p>
+          <div class="cluster">
+            <a href="#new-order" data-button="primary">New order</a>
+            <button type="button" data-button="secondary">Export</button>
+          </div>
+        </header>
+
+        <div data-dashboard>
+          <section aria-labelledby="open-orders-title">
+            <h2 id="open-orders-title">Open orders</h2>
+            <p>18</p>
+            <p data-text="small muted">4 more than last week</p>
+          </section>
+          <section aria-labelledby="shipped-title">
+            <h2 id="shipped-title">Shipped this week</h2>
+            <p>126</p>
+            <p data-text="small muted">Since Monday</p>
+          </section>
+          <section aria-labelledby="late-title">
+            <h2 id="late-title">Late</h2>
+            <p>2</p>
+            <p><span data-badge="danger">Needs attention</span></p>
+          </section>
+          <section data-dashboard="full" aria-labelledby="recent-title">
+            <h2 id="recent-title">Recent orders</h2>
+            <section data-scroll="inline" aria-labelledby="recent-caption" tabindex="0">
+              <table data-table>
+                <caption id="recent-caption">The five newest orders</caption>
+                <thead>
+                  <tr>
+                    <th scope="col">Order</th>
+                    <th scope="col">Customer</th>
+                    <th scope="col">Status</th>
+                    <th scope="col" data-table="number">Total</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <th scope="row"><a href="#nw-2051">NW-2051</a></th>
+                    <td>Maple Street Bakery</td>
+                    <td><span data-badge="warning">Open</span></td>
+                    <td data-table="number">$216.00</td>
+                  </tr>
+                  <tr>
+                    <th scope="row"><a href="#nw-2050">NW-2050</a></th>
+                    <td>Harbor Lane Café</td>
+                    <td><span data-badge="accent">Packed</span></td>
+                    <td data-table="number">$126.00</td>
+                  </tr>
+                  <tr>
+                    <th scope="row"><a href="#nw-2049">NW-2049</a></th>
+                    <td>Riverside Dental</td>
+                    <td><span data-badge="success">Delivered</span></td>
+                    <td data-table="number">$185.00</td>
+                  </tr>
+                  <tr>
+                    <th scope="row"><a href="#nw-2048">NW-2048</a></th>
+                    <td>Summit Climbing Gym</td>
+                    <td><span data-badge>Shipped</span></td>
+                    <td data-table="number">$255.00</td>
+                  </tr>
+                  <tr>
+                    <th scope="row"><a href="#nw-2047">NW-2047</a></th>
+                    <td>Pine &amp; Co. Interiors</td>
+                    <td><span data-badge="danger">Late</span></td>
+                    <td data-table="number">$345.00</td>
+                  </tr>
+                </tbody>
+              </table>
+            </section>
+          </section>
+        </div>
+      </main>
+
+      <footer>
+        <p data-text="small muted">Northwind is an example app. MIT licensed.</p>
+      </footer>
+    </dui-app-shell>
+
+    <script type="module" src="../../web-components/dui-app-shell.js"></script>
+    <script type="module" src="../../web-components/dui-menu.js"></script>
+  </body>
+</html>

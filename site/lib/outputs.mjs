@@ -107,8 +107,17 @@ function llmsHeader(model) {
 
 > ${summary}
 
-Link \`css/domestic.css\` (${model.version ? `copy \`css/\` from the v${model.version} release, ${releaseUrl(model.version)}` : `copy \`css/\` from ${REPO_URL}`}); semantic HTML needs no classes. ${conventionShortMd(model)} Theme only with semantic \`--dui-*\` tokens; primitives are internal.`;
+Link \`css/domestic.css\` (${model.version ? `copy \`css/\` from the v${model.version} release, ${releaseUrl(model.version)}` : `copy \`css/\` from ${REPO_URL}`}); semantic HTML needs no classes. ${conventionShortMd(model)} Theme only with semantic \`--dui-*\` tokens; primitives are internal.${
+    model.guides.some((g) => g.sitePath === AUTHORING_GUIDE)
+      ? `
+
+Writing a page? Read [Writing pages with no CSS](${SITE_URL}${AUTHORING_GUIDE.replace(/\.html$/, ".md")}) first: the rules, a whole page to start from and every documented attribute, word, class and element. A page written to it needs no CSS of its own; \`node scripts/check-markup.mjs page.html\` checks that.`
+      : ""
+  }`;
 }
+
+/** The guide agents read first: llms.txt points to it and llms-full.txt opens with it. */
+const AUTHORING_GUIDE = "guides/writing-pages.html";
 
 /**
  * @param {Model} model
@@ -154,7 +163,9 @@ ${sections.join("\n\n")}
  * @param {Set<string>} twins
  */
 export function generateLlmsFull(model, pages, twins) {
-  const body = pages.filter((p) => p.inFull !== false).map((p) => {
+  const included = pages.filter((p) => p.inFull !== false);
+  const ordered = [...included.filter((p) => p.path === AUTHORING_GUIDE), ...included.filter((p) => p.path !== AUTHORING_GUIDE)];
+  const body = ordered.map((p) => {
     const md = renderMarkdown(p, twins, { full: true }).trimEnd();
     const [first, ...rest] = shiftHeadings(md, 1).split("\n");
     return [first, "", `Page: ${SITE_URL}${p.path}`, ...rest].join("\n");
@@ -163,8 +174,10 @@ export function generateLlmsFull(model, pages, twins) {
 }
 
 /**
- * A search index for a later in-page search: one record per page with its
- * sidebar entry ("level"), summary and h2/h3 headings. No search UI yet.
+ * The search index read by the docs search dialog (site.js): one record per
+ * page with its sidebar entry ("level"), summary, and the h2/h3 headings of
+ * its article as { text, id }, so a result can open `url#id`. Headings
+ * outside the article (the "On this page" sidebar) are left out.
  * @param {Page[]} pages
  * @param {Record<string, string>} html rendered HTML by page path
  */
@@ -174,7 +187,13 @@ export function searchIndex(pages, html) {
     url: p.path,
     level: navEntryOf(p)?.title ?? "",
     summary: p.description,
-    headings: [...(html[p.path] ?? "").matchAll(/<h[23] id="[^"]*">([\s\S]*?)<\/h[23]>/g)].map((m) => unescapeHtml(m[1].replace(/<[^>]*>/g, "")).trim()),
+    headings: [...articleOf(html[p.path] ?? "").matchAll(/<h[23] id="([^"]*)">([\s\S]*?)<\/h[23]>/g)].map((m) => ({
+      text: unescapeHtml(m[2].replace(/<[^>]*>/g, "")).trim(),
+      id: unescapeHtml(m[1]),
+    })),
   }));
   return `[\n${records.map((r) => JSON.stringify(r)).join(",\n")}\n]\n`;
 }
+
+/** The page's <article> element, or "" when it has none. @param {string} page */
+const articleOf = (page) => page.match(/<article\b[\s\S]*<\/article>/)?.[0] ?? "";

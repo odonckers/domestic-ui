@@ -2,7 +2,349 @@
 
 > domestic-ui is a CSS design system built on native HTML, custom properties and cascade layers. Link one stylesheet and semantic HTML is styled in light and dark, with WCAG 2.2 AA as the baseline. Theme it by overriding semantic tokens. It packages existing web standards and patterns; nothing here is original.
 
-Link `css/domestic.css` (copy `css/` from the v0.1.0 release, https://github.com/odonckers/domestic-ui/releases/tag/v0.1.0); semantic HTML needs no classes. Components: one `data-<component>` attribute of space-separated words matched with `~=` (`data-button="primary small"`), no classes; state via native attributes and ARIA. Layout primitives and utilities: `data-action-bar`, `.cluster`, `.grid`, `data-scroll`, `.stack`, `.visually-hidden`. Theme only with semantic `--dui-*` tokens; primitives are internal.
+Link `css/domestic.css` (copy `css/` from the v0.1.0 release, https://github.com/odonckers/domestic-ui/releases/tag/v0.1.0); semantic HTML needs no classes. Components: one `data-<component>` attribute of space-separated words matched with `~=` (`data-button="primary small"`), no classes; state via native attributes and ARIA. Layout primitives and utilities: `data-action-bar`, `.cluster`, `.grid`, `data-card`, `data-scroll`, `.stack`, `.visually-hidden`. Theme only with semantic `--dui-*` tokens; primitives are internal.
+
+Writing a page? Read [Writing pages with no CSS](https://odonckers.github.io/domestic-ui/guides/writing-pages.md) first: the rules, a whole page to start from and every documented attribute, word, class and element. A page written to it needs no CSS of its own; `node scripts/check-markup.mjs page.html` checks that.
+
+## Writing pages with no CSS
+
+Page: https://odonckers.github.io/domestic-ui/guides/writing-pages.html
+
+A page built this way links one stylesheet and writes no CSS. Everything it looks like comes from the elements it uses, a few documented attributes, and the [tokens](https://odonckers.github.io/domestic-ui/tokens/index.md) a theme sets. **Our choice:** a closed vocabulary rather than utility classes, so a page says what each part is, not how it should look, and a checker can tell when a page leaves the system.
+
+### The rules
+
+1. Link `css/domestic.css` once, in `<head>`. Optionally link a theme from `css/themes/` after it and set `data-theme` on `<html>`.
+2. Write no `<style>` element and no `style` attribute, except to set a layout primitive's documented custom property (`--stack-gap`, `--grid-min`, `--cluster-justify`, …) or a semantic `--dui-*` token.
+3. Use the native element that already has the meaning: `<button>`, `<a href>`, `<dialog>`, `<details>`, `<label>`, `<fieldset>`, `<table>`, `<search>`, `<time>`. The [first rule of ARIA](https://www.w3.org/TR/using-aria/#rule1) applies: no `role` where an element exists.
+4. Use only the attributes, words and classes in the [vocabulary](#the-vocabulary) below. A word that is not listed does nothing, so it is a mistake, not a style.
+5. Give each page the landmarks in the skeletons below: a skip link, one `<header>`, a labelled `<nav>`, one `<main id>` and a `<footer>`, and exactly one `<h1>` ([WCAG 2.4.1](https://www.w3.org/WAI/WCAG22/Understanding/bypass-blocks.html), [1.3.1](https://www.w3.org/WAI/WCAG22/Understanding/info-and-relationships.html)).
+6. Label every control with a `<label for>` or a wrapping `<label>`, and name every landmark and region you have more than one of with `aria-label` or `aria-labelledby` ([WCAG 4.1.2](https://www.w3.org/WAI/WCAG22/Understanding/name-role-value.html)).
+7. Load `web-components/<name>.js` as a module for each `dui-*` element on the page. Without it the markup still works as plain HTML ([progressive enhancement](https://developer.mozilla.org/en-US/docs/Glossary/Progressive_Enhancement)).
+8. Check the page from a clone of this repository: `node scripts/check-markup.mjs page.html` fails on a `<style>`, an undocumented attribute, word or class, an inline style that sets anything else, and a `dui-*` element whose module is not loaded. Then check it with [axe](https://github.com/dequelabs/axe-core) and at 320px wide ([WCAG 1.4.10](https://www.w3.org/WAI/WCAG22/Understanding/reflow.html)).
+
+Compose before you invent: most interface "components" are arrangements of elements that already look finished together, such as a sign-in card (a `data-card` holding a form), a stat row (a `data-dashboard` of headed sections) or a confirm dialog (a `data-dialog` with a `<footer>` of buttons). This is rung 3 of the [decision ladder](https://github.com/odonckers/domestic-ui/blob/main/docs/ARCHITECTURE.md#3-the-decision-ladder). When a page needs something no composition can say, that is a gap in domestic-ui: [open an issue](https://github.com/odonckers/domestic-ui/issues/new) instead of adding CSS to the page. The vocabulary is part of the [public API](https://github.com/odonckers/domestic-ui/blob/main/docs/ARCHITECTURE.md#4-public-api-and-naming).
+
+### An application page
+
+The frame of every app screen: the [app shell](https://odonckers.github.io/domestic-ui/patterns/app-shell.md) with its sidebar, then a [page header](https://odonckers.github.io/domestic-ui/components/organisms/page-header.md) and the content. Swap the [dashboard](https://odonckers.github.io/domestic-ui/patterns/dashboard.md) for a [data table](https://odonckers.github.io/domestic-ui/patterns/data-table.md), [large form](https://odonckers.github.io/domestic-ui/patterns/large-forms.md) or [list-detail](https://odonckers.github.io/domestic-ui/patterns/list-detail.md). The [plain HTML demo](https://github.com/odonckers/domestic-ui/tree/main/demos/vanilla) has full dashboard, settings and orders screens written the same way.
+
+[`examples/pages/app-page.html`](https://github.com/odonckers/domestic-ui/blob/main/examples/pages/app-page.html):
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Overview · Northwind</title>
+    <meta name="description" content="The skeleton of an application page: app shell, sidebar navigation, page header and content, with no CSS of its own.">
+    <link rel="stylesheet" href="../../css/domestic.css">
+  </head>
+  <body>
+    <a class="visually-hidden" href="#main">Skip to main content</a>
+
+    <dui-app-shell data-app-shell>
+      <header>
+        <button type="button" aria-controls="app-nav" aria-expanded="true" hidden>
+          <svg data-icon viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true" focusable="false"><path d="M4 6h16M4 12h16M4 18h16"></path></svg>
+          Menu
+        </button>
+        <a href="app-page.html" data-link="quiet"><strong>Northwind</strong></a>
+        <dui-menu>
+          <button type="button" popovertarget="user-menu">Maria Santos</button>
+          <div id="user-menu" popover data-popover>
+            <a href="#profile">Profile</a>
+            <a href="#preferences">Preferences</a>
+            <hr>
+            <button type="button">Sign out</button>
+          </div>
+        </dui-menu>
+      </header>
+
+      <nav id="app-nav" aria-label="Main" data-nav>
+        <ul>
+          <li><a href="app-page.html" aria-current="page">Overview</a></li>
+          <li><a href="#orders">Orders</a></li>
+          <li><a href="#customers">Customers</a></li>
+          <li>
+            <details>
+              <summary>Settings</summary>
+              <ul>
+                <li><a href="#settings-general">General</a></li>
+                <li><a href="#settings-billing">Billing</a></li>
+              </ul>
+            </details>
+          </li>
+        </ul>
+      </nav>
+
+      <main id="main" class="stack">
+        <header data-page-header>
+          <h1>Overview</h1>
+          <p>How the warehouse is doing this week.</p>
+          <div class="cluster">
+            <a href="#new-order" data-button="primary">New order</a>
+            <button type="button" data-button="secondary">Export</button>
+          </div>
+        </header>
+
+        <div data-dashboard>
+          <section aria-labelledby="open-orders-title">
+            <h2 id="open-orders-title">Open orders</h2>
+            <p>18</p>
+            <p data-text="small muted">4 more than last week</p>
+          </section>
+          <section aria-labelledby="shipped-title">
+            <h2 id="shipped-title">Shipped this week</h2>
+            <p>126</p>
+            <p data-text="small muted">Since Monday</p>
+          </section>
+          <section aria-labelledby="late-title">
+            <h2 id="late-title">Late</h2>
+            <p>2</p>
+            <p><span data-badge="danger">Needs attention</span></p>
+          </section>
+          <section data-dashboard="full" aria-labelledby="recent-title">
+            <h2 id="recent-title">Recent orders</h2>
+            <section data-scroll="inline" aria-labelledby="recent-caption" tabindex="0">
+              <table data-table>
+                <caption id="recent-caption">The five newest orders</caption>
+                <thead>
+                  <tr>
+                    <th scope="col">Order</th>
+                    <th scope="col">Customer</th>
+                    <th scope="col">Status</th>
+                    <th scope="col" data-table="number">Total</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <th scope="row"><a href="#nw-2051">NW-2051</a></th>
+                    <td>Maple Street Bakery</td>
+                    <td><span data-badge="warning">Open</span></td>
+                    <td data-table="number">$216.00</td>
+                  </tr>
+                  <tr>
+                    <th scope="row"><a href="#nw-2050">NW-2050</a></th>
+                    <td>Harbor Lane Café</td>
+                    <td><span data-badge="accent">Packed</span></td>
+                    <td data-table="number">$126.00</td>
+                  </tr>
+                  <tr>
+                    <th scope="row"><a href="#nw-2049">NW-2049</a></th>
+                    <td>Riverside Dental</td>
+                    <td><span data-badge="success">Delivered</span></td>
+                    <td data-table="number">$185.00</td>
+                  </tr>
+                  <tr>
+                    <th scope="row"><a href="#nw-2048">NW-2048</a></th>
+                    <td>Summit Climbing Gym</td>
+                    <td><span data-badge>Shipped</span></td>
+                    <td data-table="number">$255.00</td>
+                  </tr>
+                  <tr>
+                    <th scope="row"><a href="#nw-2047">NW-2047</a></th>
+                    <td>Pine &amp; Co. Interiors</td>
+                    <td><span data-badge="danger">Late</span></td>
+                    <td data-table="number">$345.00</td>
+                  </tr>
+                </tbody>
+              </table>
+            </section>
+          </section>
+        </div>
+      </main>
+
+      <footer>
+        <p data-text="small muted">Northwind is an example app. MIT licensed.</p>
+      </footer>
+    </dui-app-shell>
+
+    <script type="module" src="../../web-components/dui-app-shell.js"></script>
+    <script type="module" src="../../web-components/dui-menu.js"></script>
+  </body>
+</html>
+```
+
+### A content page
+
+A page that is not an app: a site header with the brand and a `<nav>`, the content in `<main>`, small print in `<footer>`. The [plain document page layout](https://odonckers.github.io/domestic-ui/layouts/page.md) gives these landmarks one centered column, so nothing touches the window edge.
+
+[`examples/pages/content-page.html`](https://github.com/odonckers/domestic-ui/blob/main/examples/pages/content-page.html):
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Shipping guide · Northwind</title>
+    <meta name="description" content="The skeleton of a content page: site header, an article and a footer, laid out from its landmarks with no CSS of its own.">
+    <link rel="stylesheet" href="../../css/domestic.css">
+  </head>
+  <body>
+    <!-- dui:snippet name="Document page" page="layouts/page" -->
+    <a class="visually-hidden" href="#main">Skip to main content</a>
+
+    <header>
+      <a href="#home" data-link="quiet"><strong>Northwind</strong></a>
+      <nav aria-label="Main" data-nav="horizontal">
+        <ul>
+          <li><a href="#features">Features</a></li>
+          <li><a href="#pricing">Pricing</a></li>
+          <li><a href="#guides" aria-current="page">Guides</a></li>
+          <li><a href="#sign-in">Sign in</a></li>
+        </ul>
+      </nav>
+    </header>
+
+    <main id="main">
+      <article>
+        <h1>Shipping your first order</h1>
+        <p data-text="lead">From a new order to a parcel on its way, in four steps.</p>
+
+        <h2>Pick and pack</h2>
+        <p>Open the order, check each line against the shelf, and scan the items into the parcel. Northwind warns you when a count does not match.</p>
+
+        <h2>Choose a carrier</h2>
+        <p>Rates from your connected carriers appear side by side. The cheapest one that meets the promised date is selected for you.</p>
+        <div class="grid">
+          <article data-card>
+            <h3>Standard</h3>
+            <p>Three to five working days. Tracking included.</p>
+          </article>
+          <article data-card>
+            <h3>Express</h3>
+            <p>Next working day when packed before 3 PM.</p>
+          </article>
+          <article data-card>
+            <h3>Collect</h3>
+            <p>The customer picks the parcel up from your warehouse.</p>
+          </article>
+        </div>
+
+        <h2>Print and ship</h2>
+        <p>Print the label and packing slip together, then mark the order as shipped. The customer gets the tracking link by email.</p>
+        <p class="cluster">
+          <a href="#new-order" data-button="primary">Create an order</a>
+          <a href="#guides" data-button="secondary">All guides</a>
+        </p>
+      </article>
+    </main>
+
+    <footer>
+      <p data-text="small">Northwind is an example company. MIT licensed.</p>
+    </footer>
+    <!-- /dui:snippet -->
+  </body>
+</html>
+```
+
+### A sign-in page
+
+A `<main>` whose only child is one [card](https://odonckers.github.io/domestic-ui/patterns/card.md) is a narrow page, centered on both axes when there is no site header: sign-in, sign-up and error pages.
+
+[`examples/pages/sign-in.html`](https://github.com/odonckers/domestic-ui/blob/main/examples/pages/sign-in.html):
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Sign in · Northwind</title>
+    <meta name="description" content="A sign-in page: one card centered on the page, laid out from its landmarks with no CSS of its own.">
+    <link rel="stylesheet" href="../../css/domestic.css">
+  </head>
+  <body>
+    <!-- dui:snippet name="Sign-in page" page="layouts/page" -->
+    <main id="main">
+      <article data-card aria-labelledby="sign-in-title">
+        <h1 id="sign-in-title">Sign in to Northwind</h1>
+        <p data-text="muted">Welcome back. Enter your details to continue.</p>
+        <form class="stack" method="post" action="#sign-in">
+          <div data-field>
+            <label for="sign-in-email">Email</label>
+            <input type="email" id="sign-in-email" name="email" autocomplete="email" required>
+          </div>
+          <div data-field>
+            <label for="sign-in-password">Password</label>
+            <input type="password" id="sign-in-password" name="password" autocomplete="current-password" required>
+          </div>
+          <label><input type="checkbox" name="remember"> Remember me on this device</label>
+          <button type="submit" data-button="primary">Sign in</button>
+        </form>
+        <footer>
+          <p data-text="small"><a href="#reset">Forgot your password?</a></p>
+          <p data-text="small">New to Northwind? <a href="#sign-up">Create an account</a></p>
+        </footer>
+      </article>
+    </main>
+    <!-- /dui:snippet -->
+  </body>
+</html>
+```
+
+### The vocabulary
+
+Every attribute, word, class, custom element and custom property a page may use, read from the API comments in `css/` (the same list the checker uses). Each attribute links to its docs page. Native attributes (`aria-current`, `aria-sort`, `open`, `popover`, `closedby`) are not listed because they are HTML.
+
+Attributes (words combine, space-separated, where it makes sense: `data-button="primary small"`):
+
+- `data-action-bar`: bare ([docs](https://odonckers.github.io/domestic-ui/layouts/action-bar.md))
+- `data-alert`: `danger`, `dismiss`, `info`, `success`, `toasts`, `warning` ([docs](https://odonckers.github.io/domestic-ui/patterns/alerts.md))
+- `data-app-shell`: bare, or `contained`, `page` ([docs](https://odonckers.github.io/domestic-ui/patterns/app-shell.md))
+- `data-badge`: bare, or `accent`, `danger`, `neutral`, `outline`, `primary`, `success`, `warning` ([docs](https://odonckers.github.io/domestic-ui/components/atoms/badge.md))
+- `data-breadcrumb`: bare ([docs](https://odonckers.github.io/domestic-ui/patterns/breadcrumb.md))
+- `data-button`: bare, or `danger`, `icon`, `large`, `primary`, `quiet`, `secondary`, `small` ([docs](https://odonckers.github.io/domestic-ui/components/atoms/button.md))
+- `data-card`: bare, or `link` ([docs](https://odonckers.github.io/domestic-ui/patterns/card.md))
+- `data-color-scheme`: `dark`, `light` ([docs](https://odonckers.github.io/domestic-ui/principles/theming.md))
+- `data-contrast`: bare, or `more` ([docs](https://odonckers.github.io/domestic-ui/principles/theming.md))
+- `data-dashboard`: bare, or `full`, `wide` ([docs](https://odonckers.github.io/domestic-ui/patterns/dashboard.md))
+- `data-density`: `comfortable`, `compact` ([docs](https://odonckers.github.io/domestic-ui/principles/theming.md))
+- `data-dialog`: bare, or `drawer`, `end`, `start` ([docs](https://odonckers.github.io/domestic-ui/patterns/dialog.md))
+- `data-disclosure`: `accordion`, `plain` ([docs](https://odonckers.github.io/domestic-ui/patterns/disclosure.md))
+- `data-field`: bare, or `error`, `hint` ([docs](https://odonckers.github.io/domestic-ui/components/atoms/field.md))
+- `data-filter-bar`: bare ([docs](https://odonckers.github.io/domestic-ui/patterns/filter-bar.md))
+- `data-form-sections`: bare ([docs](https://odonckers.github.io/domestic-ui/patterns/large-forms.md))
+- `data-icon`: bare, or `mirror` ([docs](https://odonckers.github.io/domestic-ui/components/atoms/icon.md))
+- `data-link`: `nav`, `quiet` ([docs](https://odonckers.github.io/domestic-ui/components/atoms/link.md))
+- `data-list-detail`: bare ([docs](https://odonckers.github.io/domestic-ui/patterns/list-detail.md))
+- `data-motion`: bare, or `none`, `reduced` ([docs](https://odonckers.github.io/domestic-ui/principles/theming.md))
+- `data-nav`: bare, or `horizontal`, `vertical` ([docs](https://odonckers.github.io/domestic-ui/patterns/nav.md))
+- `data-page-header`: bare ([docs](https://odonckers.github.io/domestic-ui/components/organisms/page-header.md))
+- `data-pagination`: bare ([docs](https://odonckers.github.io/domestic-ui/patterns/pagination.md))
+- `data-popover`: bare, or `block-start`, `inline-end`, `inline-start` ([docs](https://odonckers.github.io/domestic-ui/patterns/popover.md))
+- `data-scroll`: `block`, `inline` ([docs](https://odonckers.github.io/domestic-ui/layouts/scroll.md))
+- `data-split`: bare, or `1:1`, `1:2`, `2:1` ([docs](https://odonckers.github.io/domestic-ui/patterns/split.md))
+- `data-table`: bare, or `number`, `sortable`, `sticky` ([docs](https://odonckers.github.io/domestic-ui/patterns/data-table.md))
+- `data-text`: `lead`, `muted`, `small` ([docs](https://odonckers.github.io/domestic-ui/components/atoms/text.md))
+- `data-theme`: `calm`, `compact`, `soft` ([docs](https://odonckers.github.io/domestic-ui/principles/themes.md))
+
+Classes: `cluster`, `grid`, `stack`, `visually-hidden`.
+
+Custom elements (load `web-components/<name>.js` as a module): `dui-app-shell`, `dui-combobox`, `dui-menu`, `dui-table`, `dui-tabs`, `dui-toaster`, `dui-toolbar`, `dui-tooltip`.
+
+Knobs, the only custom properties a `style` attribute should set besides semantic `--dui-*` tokens: `--cluster-align`, `--cluster-gap`, `--cluster-justify`, `--dui-contrast`, `--dui-size-pane`, `--dui-size-sidebar`, `--dui-size-sidebar-aux`, `--grid-gap`, `--grid-min`, `--stack-gap`.
+
+### Which pattern for which job
+
+| You need | Use |
+| --- | --- |
+| The frame of an app: bar, sidebar, content | [App shell](https://odonckers.github.io/domestic-ui/patterns/app-shell.md) |
+| A title, description and actions at the top of a screen | [Page header](https://odonckers.github.io/domestic-ui/components/organisms/page-header.md) |
+| Summary numbers and panels that reflow | [Dashboard](https://odonckers.github.io/domestic-ui/patterns/dashboard.md) |
+| A grid of teasers, each with one link | [Card](https://odonckers.github.io/domestic-ui/patterns/card.md) in a [`.grid`](https://odonckers.github.io/domestic-ui/layouts/grid.md) |
+| Rows of records, sorting, selection | [Data table](https://odonckers.github.io/domestic-ui/patterns/data-table.md) with `<dui-table>` |
+| Narrowing a list or table | [Filter bar](https://odonckers.github.io/domestic-ui/patterns/filter-bar.md) |
+| A long form in groups, with Save at the bottom | [Large forms](https://odonckers.github.io/domestic-ui/patterns/large-forms.md) and the [action bar](https://odonckers.github.io/domestic-ui/layouts/action-bar.md) |
+| Settings, or a list beside the selected item | [List-detail](https://odonckers.github.io/domestic-ui/patterns/list-detail.md) |
+| Views of one thing, one at a time | [Tabs](https://odonckers.github.io/domestic-ui/patterns/tabs.md), only when the views are peers; otherwise links |
+| A confirmation or a short task on top of the page | [Dialog](https://odonckers.github.io/domestic-ui/patterns/dialog.md) |
+| Actions behind one button | [Menu button](https://odonckers.github.io/domestic-ui/patterns/menu-button.md) |
+| A status message | [Alerts](https://odonckers.github.io/domestic-ui/patterns/alerts.md): inline, live or a toast |
+| Show more or less | [Disclosure](https://odonckers.github.io/domestic-ui/patterns/disclosure.md) |
 
 ## domestic-ui
 
@@ -38,7 +380,7 @@ Each component exposes one `data-<component>` attribute. Its value is space-sepa
 
 **Our choice:** One attribute is one API to learn, it reads as a sentence (`data-button="primary small"`), and it cannot pile up like modifier classes.
 
-Layout primitives and utilities: `data-action-bar`, `.cluster`, `.grid`, `data-scroll`, `.stack`, `.visually-hidden`. Base elements need no API.
+Layout primitives and utilities: `data-action-bar`, `.cluster`, `.grid`, `data-card`, `data-scroll`, `.stack`, `.visually-hidden`. Base elements need no API.
 
 ### How these docs are organized
 
@@ -75,6 +417,7 @@ options, the pick is labeled **Our choice:** with one line saying why.
 11. [Explainers](https://odonckers.github.io/domestic-ui/principles/explainers.md)
 12. [Tooling](https://odonckers.github.io/domestic-ui/principles/tooling.md)
 13. [Edges and alignment](https://odonckers.github.io/domestic-ui/principles/edges-and-alignment.md)
+14. [Design principles](https://odonckers.github.io/domestic-ui/principles/design-principles.md)
 
 ## Native element first
 
@@ -1727,6 +2070,7 @@ Page: https://odonckers.github.io/domestic-ui/principles/tooling.html
 | `lint:html` | [html-validate](https://html-validate.org/) | `examples/**/*.html` against `html-validate:recommended` |
 | `lint:css` | [Stylelint](https://stylelint.io/) | `css/**/*.css` against `stylelint-config-standard` |
 | `lint:tokens` | `scripts/check-tokens.mjs` | Semantic-only tokens and no literal colors or sizes outside `css/tokens/` |
+| `lint:markup` | `scripts/check-markup.mjs` | Pages use only the vocabulary the CSS API comments document: `examples/pages/` and `demos/vanilla/` have no `<style>`, no inline style but documented custom properties and semantic tokens, and no undocumented class, attribute or word; every example uses documented words and loads the module of each `dui-*` element; every word a CSS selector matches is documented |
 | `test:a11y` | [Playwright](https://playwright.dev/) + [axe-core](https://github.com/dequelabs/axe-core) | Every `examples/**/*.html` (atoms and molecules included) in light and dark, in Chromium, Firefox and WebKit, with tags `wcag2a`, `wcag2aa`, `wcag21a`, `wcag21aa`, `wcag22aa`, including open dialogs and drawers, open popovers and menus, shown tooltips and toasts, every tab selected and every details expanded; no horizontal page overflow and no axe violations at 320×640 and 375×812; no external requests; token contrast pairs (atoms and molecules included) in the default and forest themes; rendered focus-ring and indicator contrast; atom and molecule states through accessibility APIs; molecule keyboard behavior against the APG; no-JavaScript fallbacks; fallbacks for engine-specific features; scoped theming of atoms and molecules; layouts and organisms side by side when wide and stacked when narrow, the sticky action bar never covering the focused field, data table sorting, selection, sticky header and loading state (with and without JavaScript), and 24px targets in compact density; the app shell's landmarks and grid areas, collapse when wide, modal drawers with focus return when narrow, one copy of each sidebar, no-JavaScript fallbacks and axe with the drawers open |
 
 Preview locally with `npm run serve` (a zero-dependency static server) and open
@@ -1798,6 +2142,85 @@ The lines, measured from each container's inline-start edge (the trailing line m
 
 These were read from the CSS in an alignment pass on 21 November 2026 (Owen Donckers, with Claude), taking the line
 most rows already used. [`CONTRIBUTING.md`](https://odonckers.github.io/domestic-ui/contributing.md#alignment-passes) explains how to run a pass.
+
+## Design principles
+
+Page: https://odonckers.github.io/domestic-ui/principles/design-principles.html
+
+Sections 1 to 13 cover engineering choices. This one names the design principles behind the look and the behavior,
+and where each is applied. The principles are borrowed and linked; only the "how we apply it" lines are ours.
+
+### Composition
+
+- **Hierarchy and scale.** One page title, then a small, fixed type scale, so size alone tells you what matters.
+  Applied by the heading and UI text tokens (`--dui-font-size-page-title`, `--dui-font-size-ui`) in
+  [Semantic tokens](https://odonckers.github.io/domestic-ui/principles/theming.md#semantic-tokens-public-api).
+- **Contrast.** Text, controls and focus rings meet the WCAG contrast minimums in light, dark and forced colors;
+  the primary fill is the strongest mark on a page. See [§ 3](https://odonckers.github.io/domestic-ui/principles/accessibility-baseline-wcag-22-aa.md)
+  and [Color](https://odonckers.github.io/domestic-ui/principles/theming.md#color).
+- **Proximity and negative space.** Related things sit closer than unrelated ones, using the `--dui-space-*` scale
+  and the [layout primitives](https://odonckers.github.io/domestic-ui/principles/layout-primitives.md) (stack, cluster, grid), never one-off margins.
+- **Alignment.** Every item sits on one of a container's named lines. See
+  [§ 13 Edges and alignment](https://odonckers.github.io/domestic-ui/principles/edges-and-alignment.md).
+- **Repetition and consistency.** One element, one look, everywhere: a `<button>` is styled once in
+  [button](https://odonckers.github.io/domestic-ui/components/atoms/button.md) and reused, and the same control keeps the same name across pages
+  ([WCAG 3.2.4](https://www.w3.org/WAI/WCAG22/Understanding/consistent-identification.html)).
+- **Balance.** Surfaces are quiet and neutral so content and the one primary action carry the weight; elevation
+  separates layers rather than decorating them. See [§ 7 Elevation](https://odonckers.github.io/domestic-ui/principles/elevation.md).
+
+### Dieter Rams' principles for good design
+
+Named from [Vitsœ's page on Dieter Rams' ten principles](https://www.vitsoe.com/us/about/good-design). How
+domestic-ui applies nine of them:
+
+- **Useful:** every component exists because a real view needs it; nothing ships as a showcase.
+- **Aesthetic:** the default theme looks finished with zero CSS written by the consumer ([§ 5](https://odonckers.github.io/domestic-ui/principles/theming.md)).
+- **Understandable:** the markup is the API; a native element looks and behaves like itself
+  ([§ 1](https://odonckers.github.io/domestic-ui/principles/native-element-first.md)).
+- **Unobtrusive:** neutral surfaces and a monochrome default leave room for the product's own content.
+- **Honest:** a control never looks like something it is not; links stay underlined, buttons look pressable
+  ([§ 8](https://odonckers.github.io/domestic-ui/principles/opinions-we-hold.md)).
+- **Long-lasting:** we build on web standards, so the system ages with the platform rather than a framework.
+- **Thorough down to the last detail:** focus, forced colors, reduced motion, right-to-left and 320px widths are
+  part of every component, not follow-ups ([§ 3](https://odonckers.github.io/domestic-ui/principles/accessibility-baseline-wcag-22-aa.md)).
+- **Environmentally friendly.** **Our choice:** read as lightweight pages: system fonts by default, zero-build CSS and no
+  runtime dependencies, so a page costs few bytes and no extra requests.
+- **As little design as possible:** a few semantic tokens and no per-component knobs.
+
+We leave out **Innovative**: domestic-ui packages the platform and claims no originality.
+
+### Laws of UX
+
+From [Laws of UX](https://lawsofux.com/):
+
+- [Jakob's Law](https://lawsofux.com/jakobs-law/): people expect a site to work like the ones they already know.
+  Native elements keep the platform's own behavior ([§ 1](https://odonckers.github.io/domestic-ui/principles/native-element-first.md)).
+- [Hick's Law](https://lawsofux.com/hicks-law/): more choices take longer to decide. One primary action per view;
+  everything else is secondary or quiet ([button](https://odonckers.github.io/domestic-ui/components/atoms/button.md)).
+- [Fitts's Law](https://lawsofux.com/fittss-law/): bigger, closer targets are faster to hit. Controls are 36px,
+  44px under a coarse pointer, above [WCAG 2.5.8](https://www.w3.org/WAI/WCAG22/Understanding/target-size-minimum.html)'s
+  24px minimum (`--dui-size-target`).
+- [Miller's Law](https://lawsofux.com/millers-law/): people hold only a few items in mind at once. Long forms are
+  grouped into fieldsets and sections ([large forms](https://odonckers.github.io/domestic-ui/patterns/large-forms.md)), and navigation into
+  groups ([nav](https://odonckers.github.io/domestic-ui/patterns/nav.md)).
+- [Aesthetic-Usability Effect](https://lawsofux.com/aesthetic-usability-effect/): people find good-looking interfaces
+  easier to use. We polish the default look, but never at the cost of an accessibility requirement
+  ([§ 3](https://odonckers.github.io/domestic-ui/principles/accessibility-baseline-wcag-22-aa.md)).
+
+### Rules of thumb
+
+- **Reduce cognitive load.** Show one task at a time; progressive disclosure with `<details>` and dialogs keeps
+  secondary options out of the way ([disclosure](https://odonckers.github.io/domestic-ui/patterns/disclosure.md)).
+- **One primary action per view.** `type="submit"` gets the primary fill; a second primary on the same view is a smell.
+- **Intentional spacing.** Every gap comes from `--dui-space-*`; a value off the scale means the layout is wrong
+  ([§ 13](https://odonckers.github.io/domestic-ui/principles/edges-and-alignment.md)).
+- **Compose before you create.** Most of what a design system calls a component is native elements put together
+  well. Before adding a component class or a web component, try a canonical example: a snippet in `examples/` that
+  combines existing elements (a card of a heading, text and actions; a settings form of fieldsets) and looks finished
+  as written. Add a new component only when composition can't express it; the
+  [decision ladder](https://github.com/odonckers/domestic-ui/blob/main/docs/ARCHITECTURE.md#3-the-decision-ladder) says what comes next.
+- **Familiarity over novelty.** Use the pattern people already know, the native element or the
+  [APG pattern](https://www.w3.org/WAI/ARIA/apg/patterns/), before inventing one.
 
 ## Primitive tokens
 
@@ -2138,7 +2561,7 @@ A theme is an override of these tokens on `:root` or on a scoped element. No reb
 
 Colors use [`light-dark()`](https://developer.mozilla.org/en-US/docs/Web/CSS/color_value/light-dark), which picks a value from the used color-scheme of the element where the token is read.
 
-178 tokens in [`css/tokens/semantic.css`](https://github.com/odonckers/domestic-ui/blob/main/css/tokens/semantic.css). **Light** and **Dark** resolve every `var()` and take one side of [`light-dark()`](https://developer.mozilla.org/en-US/docs/Web/CSS/color_value/light-dark). Previews are decorative. † marks a description taken from the semantic token table in [Theming](https://odonckers.github.io/domestic-ui/principles/theming.md).
+181 tokens in [`css/tokens/semantic.css`](https://github.com/odonckers/domestic-ui/blob/main/css/tokens/semantic.css). **Light** and **Dark** resolve every `var()` and take one side of [`light-dark()`](https://developer.mozilla.org/en-US/docs/Web/CSS/color_value/light-dark). Previews are decorative. † marks a description taken from the semantic token table in [Theming](https://odonckers.github.io/domestic-ui/principles/theming.md).
 
 ### Surfaces and text
 
@@ -2252,8 +2675,10 @@ Colors use [`light-dark()`](https://developer.mozilla.org/en-US/docs/Web/CSS/col
 | `--dui-size-menu-min` | `12rem` | `12rem` | Min width of menus and nav dropdowns † |
 | `--dui-size-drawer` | `24rem` | `24rem` | Drawer width (all of the viewport when narrower) † |
 | `--dui-size-page` | `72rem` | `72rem` | Max inline size of a page's content column: header, main and footer |
-| `--dui-size-icon` | `1.25rem` | `1.25rem` | Decorative icons beside a label: nav links and group summaries |
+| `--dui-size-narrow` | `24rem` | `24rem` | Max inline size of a narrow page's one card: sign-in, sign-up, error pages |
+| `--dui-size-icon` | `1.25rem` | `1.25rem` | Decorative icons beside a label, on their own |
 | `--dui-size-icon-inline` | `1rem` | `1rem` | Icons inside buttons, menu items and toolbars, beside 14 to 16px text |
+| `--dui-size-icon-nav` | `1rem` | `1rem` | Decorative icons at the start of nav links and group summaries: 16px beside 14px sidebar text, as shadcn/ui |
 | `--dui-size-chevron` | `calc(0.25rem + 0.125rem)` | `calc(0.25rem + 0.125rem)` | Arm length of the CSS-drawn chevron on a sidebar nav group: 6px |
 | `--dui-icon-stroke-width` | `1.75` | `1.75` | Stroke width of [data-icon] SVGs, set with the CSS stroke-width property |
 | `--dui-size-sidebar` | `16rem` | `16rem` | Inline size of an app shell's primary sidebar when it sits beside main |
@@ -2305,6 +2730,7 @@ The app shell's main content panel, inset from the frame edge.
 
 | Token | Light | Dark | Description |
 | --- | --- | --- | --- |
+| `--dui-space-page-inline` | `1.5rem` | `1.5rem` | Inline gutter of a plain document page's column, so content never touches the window edge |
 | `--dui-space-panel-inset` | `0.5rem` | `0.5rem` | Gap between a floating panel and the viewport or frame edge |
 
 ### Elevation knobs
@@ -2899,7 +3325,7 @@ _Diagram: A cluster is a row of buttons, tags or nav links under a heading that 
 #### Cluster
 
 ```html
-<ul class="cluster card">
+<ul class="cluster">
   <li><code>reset</code></li>
   <li><code>tokens</code></li>
   <li><code>base</code></li>
@@ -2955,15 +3381,15 @@ _Diagram: A grid lays out cards or panels in the content area in as many equal c
 
 ```html
 <div class="grid" style="--grid-min: 12rem">
-  <article class="card">
+  <article data-card>
     <h4>Atoms</h4>
     <p>Native elements styled by the base layer, plus a few attributes.</p>
   </article>
-  <article class="card">
+  <article data-card>
     <h4>Molecules</h4>
     <p>Small groups of atoms, such as tabs, dialogs and cards.</p>
   </article>
-  <article class="card">
+  <article data-card>
     <h4>Organisms</h4>
     <p>Larger sections built from molecules. Coming later.</p>
   </article>
@@ -3001,6 +3427,133 @@ For comparison only; these are not the standard this system follows.
 - Apple Human Interface Guidelines: No equivalent
 - Material Design 3: No equivalent
 - Vercel Geist: No equivalent
+
+## Page
+
+Page: https://odonckers.github.io/domestic-ui/layouts/page.html
+
+A page that is not an app shell is laid out from its landmarks alone: the \<header>, \<nav>, \<main> and \<footer> that are children of \<body> share one centered column, --dui-size-page wide at most, with an inline gutter so nothing touches the window edge.
+
+_Diagram: A page with no app shell: its header, main and footer share one centered column with a gutter on each side, the header holding the brand and the site navigation._
+
+### Live example
+
+#### Document page
+
+```html
+<a class="visually-hidden" href="#main">Skip to main content</a>
+
+<header>
+  <a href="#home" data-link="quiet"><strong>Northwind</strong></a>
+  <nav aria-label="Main" data-nav="horizontal">
+    <ul>
+      <li><a href="#features">Features</a></li>
+      <li><a href="#pricing">Pricing</a></li>
+      <li><a href="#guides" aria-current="page">Guides</a></li>
+      <li><a href="#sign-in">Sign in</a></li>
+    </ul>
+  </nav>
+</header>
+
+<main id="main">
+  <article>
+    <h1>Shipping your first order</h1>
+    <p data-text="lead">From a new order to a parcel on its way, in four steps.</p>
+
+    <h2>Pick and pack</h2>
+    <p>Open the order, check each line against the shelf, and scan the items into the parcel. Northwind warns you when a count does not match.</p>
+
+    <h2>Choose a carrier</h2>
+    <p>Rates from your connected carriers appear side by side. The cheapest one that meets the promised date is selected for you.</p>
+    <div class="grid">
+      <article data-card>
+        <h3>Standard</h3>
+        <p>Three to five working days. Tracking included.</p>
+      </article>
+      <article data-card>
+        <h3>Express</h3>
+        <p>Next working day when packed before 3 PM.</p>
+      </article>
+      <article data-card>
+        <h3>Collect</h3>
+        <p>The customer picks the parcel up from your warehouse.</p>
+      </article>
+    </div>
+
+    <h2>Print and ship</h2>
+    <p>Print the label and packing slip together, then mark the order as shipped. The customer gets the tracking link by email.</p>
+    <p class="cluster">
+      <a href="#new-order" data-button="primary">Create an order</a>
+      <a href="#guides" data-button="secondary">All guides</a>
+    </p>
+  </article>
+</main>
+
+<footer>
+  <p data-text="small">Northwind is an example company. MIT licensed.</p>
+</footer>
+```
+
+#### Sign-in page
+
+```html
+<main id="main">
+  <article data-card aria-labelledby="sign-in-title">
+    <h1 id="sign-in-title">Sign in to Northwind</h1>
+    <p data-text="muted">Welcome back. Enter your details to continue.</p>
+    <form class="stack" method="post" action="#sign-in">
+      <div data-field>
+        <label for="sign-in-email">Email</label>
+        <input type="email" id="sign-in-email" name="email" autocomplete="email" required>
+      </div>
+      <div data-field>
+        <label for="sign-in-password">Password</label>
+        <input type="password" id="sign-in-password" name="password" autocomplete="current-password" required>
+      </div>
+      <label><input type="checkbox" name="remember"> Remember me on this device</label>
+      <button type="submit" data-button="primary">Sign in</button>
+    </form>
+    <footer>
+      <p data-text="small"><a href="#reset">Forgot your password?</a></p>
+      <p data-text="small">New to Northwind? <a href="#sign-up">Create an account</a></p>
+    </footer>
+  </article>
+</main>
+```
+
+### API
+
+| Attribute or value | Effect |
+| --- | --- |
+| `<body> > <header>` | the site header; with a `<nav>` child, the brand and the nav share a row and wrap when narrow |
+| `<body> > <main>` | the content column |
+| `<body> > <footer>` | small print, separated by a hairline |
+
+Header and footer hairlines span the text column, not the gutters.
+
+| Attribute or value | Effect |
+| --- | --- |
+| `<body> > <main> with one data-card as its only child` | a narrow, centered page (sign-in, sign-up, error); vertically centered too when the page has no header |
+
+It never applies inside an app shell, whose landmarks are children of the shell, and author CSS still wins (layered, zero specificity).
+
+### Accessibility
+
+- No attribute or class: write the landmarks and the page is laid out (APG landmark regions).
+- Our choice: the layout follows the landmarks a page needs anyway, not a wrapper element, so a page written as a plain document (WCAG 1.3.1, 2.4.1) is also a finished one.
+
+### Specifications
+
+- [APG landmark regions](https://www.w3.org/WAI/ARIA/apg/practices/landmark-regions/)
+- [WHATWG sections](https://html.spec.whatwg.org/multipage/sections.html)
+- [WCAG Reflow](https://www.w3.org/WAI/WCAG22/Understanding/reflow.html)
+
+### See also
+
+- [Layouts](https://odonckers.github.io/domestic-ui/layouts/index.md)
+- [Component API convention](https://odonckers.github.io/domestic-ui/index.md#component-api)
+- [Accessibility baseline](https://odonckers.github.io/domestic-ui/principles/accessibility-baseline-wcag-22-aa.md)
+- Source: [`css/layout/page.css`](https://github.com/odonckers/domestic-ui/blob/main/css/layout/page.css), [`examples/pages/content-page.html`](https://github.com/odonckers/domestic-ui/blob/main/examples/pages/content-page.html), [`examples/pages/sign-in.html`](https://github.com/odonckers/domestic-ui/blob/main/examples/pages/sign-in.html)
 
 ## Scroll
 
@@ -3096,7 +3649,7 @@ _Diagram: A stack is the vertical flow of a page or form in the content area: he
 #### Stack
 
 ```html
-<div class="stack card" style="--stack-gap: var(--dui-space-xs)">
+<div class="stack" style="--stack-gap: var(--dui-space-xs)">
   <p>Stack item one</p>
   <p>Stack item two, with <code>--stack-gap: var(--dui-space-xs)</code></p>
   <p>Stack item three</p>
@@ -3970,7 +4523,7 @@ Copy the SVG from lucide.dev, replace its class attribute with data-icon, and ad
 
 #### Size
 
-`--dui-size-icon` (1.25rem) on its own and in nav links; `--dui-size-icon-inline` (1rem) inside buttons, menu items, options and toolbars, so the icon matches the text beside it. Inside a button or link the flex gap spaces it from the label; in running text it sits on the middle of the line.
+`--dui-size-icon` (1.25rem) on its own; `--dui-size-icon-nav` (1rem) in nav links and summaries (`nav.css`); `--dui-size-icon-inline` (1rem) inside buttons, menu items, options and toolbars, so the icon matches the text beside it. Inside a button or link the flex gap spaces it from the label; in running text it sits on the middle of the line.
 
 #### Stroke
 
@@ -4181,7 +4734,7 @@ Our choice: the layout is chosen from the children's elements (a \<nav> breadcru
 - [Component API convention](https://odonckers.github.io/domestic-ui/index.md#component-api)
 - [Accessibility baseline](https://odonckers.github.io/domestic-ui/principles/accessibility-baseline-wcag-22-aa.md)
 - Source: [`css/components/organisms/page-header.css`](https://github.com/odonckers/domestic-ui/blob/main/css/components/organisms/page-header.css), [`examples/organisms/page-header.html`](https://github.com/odonckers/domestic-ui/blob/main/examples/organisms/page-header.html)
-- Demos: Orders view ([Plain HTML](https://github.com/odonckers/domestic-ui/blob/main/demos/vanilla/orders.html), [React](https://github.com/odonckers/domestic-ui/blob/main/demos/react/src/OrdersPage.tsx), [Angular](https://github.com/odonckers/domestic-ui/tree/main/demos/angular/src/app/orders), [Astro](https://github.com/odonckers/domestic-ui/blob/main/demos/astro/src/pages/orders.astro))
+- Demos: Orders view ([Plain HTML](https://github.com/odonckers/domestic-ui/blob/main/demos/vanilla/orders.html), [React](https://github.com/odonckers/domestic-ui/blob/main/demos/react/src/OrdersPage.tsx), [Angular](https://github.com/odonckers/domestic-ui/tree/main/demos/angular/src/app/orders), [Astro](https://github.com/odonckers/domestic-ui/blob/main/demos/astro/src/pages/orders.astro), [Vue](https://github.com/odonckers/domestic-ui/blob/main/demos/vue/src/OrdersPage.vue), [Svelte](https://github.com/odonckers/domestic-ui/blob/main/demos/svelte/src/OrdersPage.svelte))
 
 ### How other systems do it
 
@@ -4358,7 +4911,7 @@ See the keyboard section of the [APG Breadcrumb pattern](https://www.w3.org/WAI/
 
 - [Molecules](https://odonckers.github.io/domestic-ui/molecules/index.md)
 - Source: [`css/components/molecules/breadcrumb.css`](https://github.com/odonckers/domestic-ui/blob/main/css/components/molecules/breadcrumb.css), [`examples/molecules/breadcrumb.html`](https://github.com/odonckers/domestic-ui/blob/main/examples/molecules/breadcrumb.html)
-- Demos: Orders view ([Plain HTML](https://github.com/odonckers/domestic-ui/blob/main/demos/vanilla/orders.html), [React](https://github.com/odonckers/domestic-ui/blob/main/demos/react/src/OrdersPage.tsx), [Angular](https://github.com/odonckers/domestic-ui/tree/main/demos/angular/src/app/orders), [Astro](https://github.com/odonckers/domestic-ui/blob/main/demos/astro/src/pages/orders.astro))
+- Demos: Orders view ([Plain HTML](https://github.com/odonckers/domestic-ui/blob/main/demos/vanilla/orders.html), [React](https://github.com/odonckers/domestic-ui/blob/main/demos/react/src/OrdersPage.tsx), [Angular](https://github.com/odonckers/domestic-ui/tree/main/demos/angular/src/app/orders), [Astro](https://github.com/odonckers/domestic-ui/blob/main/demos/astro/src/pages/orders.astro), [Vue](https://github.com/odonckers/domestic-ui/blob/main/demos/vue/src/OrdersPage.vue), [Svelte](https://github.com/odonckers/domestic-ui/blob/main/demos/svelte/src/OrdersPage.svelte))
 
 ### How other systems do it
 
@@ -4703,7 +5256,7 @@ _Diagram: Disclosures are summary rows in the content area, such as an accordion
 
 - [Molecules](https://odonckers.github.io/domestic-ui/molecules/index.md)
 - Source: [`css/components/molecules/disclosure.css`](https://github.com/odonckers/domestic-ui/blob/main/css/components/molecules/disclosure.css), [`examples/molecules/disclosure.html`](https://github.com/odonckers/domestic-ui/blob/main/examples/molecules/disclosure.html)
-- Demos: Dashboard view ([Plain HTML](https://github.com/odonckers/domestic-ui/blob/main/demos/vanilla/index.html), [React](https://github.com/odonckers/domestic-ui/blob/main/demos/react/src/DashboardPage.tsx), [Angular](https://github.com/odonckers/domestic-ui/tree/main/demos/angular/src/app/dashboard), [Astro](https://github.com/odonckers/domestic-ui/blob/main/demos/astro/src/pages/index.astro))
+- Demos: Dashboard view ([Plain HTML](https://github.com/odonckers/domestic-ui/blob/main/demos/vanilla/index.html), [React](https://github.com/odonckers/domestic-ui/blob/main/demos/react/src/DashboardPage.tsx), [Angular](https://github.com/odonckers/domestic-ui/tree/main/demos/angular/src/app/dashboard), [Astro](https://github.com/odonckers/domestic-ui/blob/main/demos/astro/src/pages/index.astro), [Vue](https://github.com/odonckers/domestic-ui/blob/main/demos/vue/src/DashboardPage.vue), [Svelte](https://github.com/odonckers/domestic-ui/blob/main/demos/svelte/src/DashboardPage.svelte))
 
 ### How other systems do it
 
@@ -4795,7 +5348,7 @@ Added by the component: `aria-haspopup`, `aria-expanded`, `role="menu"`, `role="
 
 - [Molecules](https://odonckers.github.io/domestic-ui/molecules/index.md)
 - Source: [`css/components/molecules/menu-button.css`](https://github.com/odonckers/domestic-ui/blob/main/css/components/molecules/menu-button.css), [`examples/molecules/menu-button.html`](https://github.com/odonckers/domestic-ui/blob/main/examples/molecules/menu-button.html)
-- Demos: Dashboard view ([Plain HTML](https://github.com/odonckers/domestic-ui/blob/main/demos/vanilla/index.html), [React](https://github.com/odonckers/domestic-ui/blob/main/demos/react/src/DashboardPage.tsx), [Angular](https://github.com/odonckers/domestic-ui/tree/main/demos/angular/src/app/dashboard), [Astro](https://github.com/odonckers/domestic-ui/blob/main/demos/astro/src/pages/index.astro)); Account settings view ([Plain HTML](https://github.com/odonckers/domestic-ui/blob/main/demos/vanilla/settings.html), [React](https://github.com/odonckers/domestic-ui/blob/main/demos/react/src/SettingsPage.tsx), [Angular](https://github.com/odonckers/domestic-ui/tree/main/demos/angular/src/app/settings), [Astro](https://github.com/odonckers/domestic-ui/blob/main/demos/astro/src/pages/settings.astro)); Orders view ([Plain HTML](https://github.com/odonckers/domestic-ui/blob/main/demos/vanilla/orders.html), [React](https://github.com/odonckers/domestic-ui/blob/main/demos/react/src/OrdersPage.tsx), [Angular](https://github.com/odonckers/domestic-ui/tree/main/demos/angular/src/app/orders), [Astro](https://github.com/odonckers/domestic-ui/blob/main/demos/astro/src/pages/orders.astro))
+- Demos: Dashboard view ([Plain HTML](https://github.com/odonckers/domestic-ui/blob/main/demos/vanilla/index.html), [React](https://github.com/odonckers/domestic-ui/blob/main/demos/react/src/DashboardPage.tsx), [Angular](https://github.com/odonckers/domestic-ui/tree/main/demos/angular/src/app/dashboard), [Astro](https://github.com/odonckers/domestic-ui/blob/main/demos/astro/src/pages/index.astro), [Vue](https://github.com/odonckers/domestic-ui/blob/main/demos/vue/src/DashboardPage.vue), [Svelte](https://github.com/odonckers/domestic-ui/blob/main/demos/svelte/src/DashboardPage.svelte)); Account settings view ([Plain HTML](https://github.com/odonckers/domestic-ui/blob/main/demos/vanilla/settings.html), [React](https://github.com/odonckers/domestic-ui/blob/main/demos/react/src/SettingsPage.tsx), [Angular](https://github.com/odonckers/domestic-ui/tree/main/demos/angular/src/app/settings), [Astro](https://github.com/odonckers/domestic-ui/blob/main/demos/astro/src/pages/settings.astro), [Vue](https://github.com/odonckers/domestic-ui/blob/main/demos/vue/src/SettingsPage.vue), [Svelte](https://github.com/odonckers/domestic-ui/blob/main/demos/svelte/src/SettingsPage.svelte)); Orders view ([Plain HTML](https://github.com/odonckers/domestic-ui/blob/main/demos/vanilla/orders.html), [React](https://github.com/odonckers/domestic-ui/blob/main/demos/react/src/OrdersPage.tsx), [Angular](https://github.com/odonckers/domestic-ui/tree/main/demos/angular/src/app/orders), [Astro](https://github.com/odonckers/domestic-ui/blob/main/demos/astro/src/pages/orders.astro), [Vue](https://github.com/odonckers/domestic-ui/blob/main/demos/vue/src/OrdersPage.vue), [Svelte](https://github.com/odonckers/domestic-ui/blob/main/demos/svelte/src/OrdersPage.svelte))
 
 ### How other systems do it
 
@@ -4999,7 +5552,7 @@ Panels use `--dui-elevation-popover` and `--dui-elevation-popover-surface`; tool
 
 - [Molecules](https://odonckers.github.io/domestic-ui/molecules/index.md)
 - Source: [`css/components/molecules/popover.css`](https://github.com/odonckers/domestic-ui/blob/main/css/components/molecules/popover.css), [`examples/molecules/popover.html`](https://github.com/odonckers/domestic-ui/blob/main/examples/molecules/popover.html)
-- Demos: Dashboard view ([Plain HTML](https://github.com/odonckers/domestic-ui/blob/main/demos/vanilla/index.html), [React](https://github.com/odonckers/domestic-ui/blob/main/demos/react/src/DashboardPage.tsx), [Angular](https://github.com/odonckers/domestic-ui/tree/main/demos/angular/src/app/dashboard), [Astro](https://github.com/odonckers/domestic-ui/blob/main/demos/astro/src/pages/index.astro)); Account settings view ([Plain HTML](https://github.com/odonckers/domestic-ui/blob/main/demos/vanilla/settings.html), [React](https://github.com/odonckers/domestic-ui/blob/main/demos/react/src/SettingsPage.tsx), [Angular](https://github.com/odonckers/domestic-ui/tree/main/demos/angular/src/app/settings), [Astro](https://github.com/odonckers/domestic-ui/blob/main/demos/astro/src/pages/settings.astro)); Orders view ([Plain HTML](https://github.com/odonckers/domestic-ui/blob/main/demos/vanilla/orders.html), [React](https://github.com/odonckers/domestic-ui/blob/main/demos/react/src/OrdersPage.tsx), [Angular](https://github.com/odonckers/domestic-ui/tree/main/demos/angular/src/app/orders), [Astro](https://github.com/odonckers/domestic-ui/blob/main/demos/astro/src/pages/orders.astro))
+- Demos: Dashboard view ([Plain HTML](https://github.com/odonckers/domestic-ui/blob/main/demos/vanilla/index.html), [React](https://github.com/odonckers/domestic-ui/blob/main/demos/react/src/DashboardPage.tsx), [Angular](https://github.com/odonckers/domestic-ui/tree/main/demos/angular/src/app/dashboard), [Astro](https://github.com/odonckers/domestic-ui/blob/main/demos/astro/src/pages/index.astro), [Vue](https://github.com/odonckers/domestic-ui/blob/main/demos/vue/src/DashboardPage.vue), [Svelte](https://github.com/odonckers/domestic-ui/blob/main/demos/svelte/src/DashboardPage.svelte)); Account settings view ([Plain HTML](https://github.com/odonckers/domestic-ui/blob/main/demos/vanilla/settings.html), [React](https://github.com/odonckers/domestic-ui/blob/main/demos/react/src/SettingsPage.tsx), [Angular](https://github.com/odonckers/domestic-ui/tree/main/demos/angular/src/app/settings), [Astro](https://github.com/odonckers/domestic-ui/blob/main/demos/astro/src/pages/settings.astro), [Vue](https://github.com/odonckers/domestic-ui/blob/main/demos/vue/src/SettingsPage.vue), [Svelte](https://github.com/odonckers/domestic-ui/blob/main/demos/svelte/src/SettingsPage.svelte)); Orders view ([Plain HTML](https://github.com/odonckers/domestic-ui/blob/main/demos/vanilla/orders.html), [React](https://github.com/odonckers/domestic-ui/blob/main/demos/react/src/OrdersPage.tsx), [Angular](https://github.com/odonckers/domestic-ui/tree/main/demos/angular/src/app/orders), [Astro](https://github.com/odonckers/domestic-ui/blob/main/demos/astro/src/pages/orders.astro), [Vue](https://github.com/odonckers/domestic-ui/blob/main/demos/vue/src/OrdersPage.vue), [Svelte](https://github.com/odonckers/domestic-ui/blob/main/demos/svelte/src/OrdersPage.svelte))
 
 ### How other systems do it
 
@@ -5073,6 +5626,7 @@ _Diagram: Site search sits in the app bar as a search input with a Search button
 ### See also
 
 - [Molecules](https://odonckers.github.io/domestic-ui/molecules/index.md)
+- [Search dialog](https://odonckers.github.io/domestic-ui/patterns/search-dialog.md): jump to a page or section from anywhere, with Cmd-K or Ctrl-K
 - Source: [`css/components/molecules/search.css`](https://github.com/odonckers/domestic-ui/blob/main/css/components/molecules/search.css), [`examples/molecules/search.html`](https://github.com/odonckers/domestic-ui/blob/main/examples/molecules/search.html)
 
 ### How other systems do it
@@ -5082,6 +5636,86 @@ For comparison only; these are not the standard this system follows.
 - [Apple Human Interface Guidelines: Search fields](https://developer.apple.com/design/human-interface-guidelines/search-fields)
 - [Material Design 3: Search](https://m3.material.io/components/search/overview)
 - [Vercel Geist: Search Input](https://vercel.com/geist/search-input)
+
+## Search dialog
+
+Page: https://odonckers.github.io/domestic-ui/patterns/search-dialog.html
+
+A command palette: a modal `<dialog>` holding a combobox of pages and sections, opened from a Search button or with Cmd-K or Ctrl-K.
+
+_Diagram: A search dialog opens from the Search button in the app bar, over the dimmed page, with a field and its list of results._
+
+### Live example
+
+#### Search dialog
+
+```html
+<button type="button" commandfor="site-search" command="show-modal" aria-haspopup="dialog" aria-keyshortcuts="Control+K Meta+K" hidden>Search</button>
+<dialog id="site-search" data-dialog closedby="any" aria-labelledby="site-search-title">
+  <header>
+    <h2 id="site-search-title">Search</h2>
+    <button type="button" commandfor="site-search" command="close" data-button="quiet">Close</button>
+  </header>
+  <dui-combobox>
+    <label for="site-search-input">Search the docs</label>
+    <input type="text" id="site-search-input" list="site-search-options" autocomplete="off" spellcheck="false" autofocus>
+    <datalist id="site-search-options">
+      <option value="Button" label="Atoms"></option>
+      <option value="Field" label="Atoms"></option>
+      <option value="Dialog and drawer" label="Organisms"></option>
+      <option value="Tabs" label="Molecules"></option>
+      <option value="Button › Attributes" label="Atoms"></option>
+      <option value="Dialog and drawer › Modal dialog" label="Organisms"></option>
+      <option value="Dialog and drawer › Drawer (end)" label="Organisms"></option>
+      <option value="Tabs › Keyboard" label="Molecules"></option>
+    </datalist>
+  </dui-combobox>
+</dialog>
+<p role="status" id="site-search-result"></p>
+```
+
+### Attributes
+
+#### Keyboard
+
+| Key | Action |
+| --- | --- |
+| <kbd>Cmd-K</kbd> / <kbd>Ctrl-K</kbd> | opens the dialog with focus in the field, except from a text field outside it |
+| <kbd>Typing</kbd> | filters the results |
+| <kbd>Down Arrow</kbd> / <kbd>Up Arrow</kbd> | moves to the next or previous result |
+| <kbd>Enter</kbd> | goes to the active result and closes the dialog |
+| <kbd>Escape</kbd> | closes the list, then clears the field, then closes the dialog; focus returns to where it was |
+| <kbd>Tab</kbd> | moves between the field and the close button |
+
+### Accessibility
+
+- The browser does the modal work: `showModal()` or `command="show-modal"` makes the page inert, moves focus to the field (`autofocus`) and returns it to the opener or wherever it was on close ([APG Dialog (Modal)](https://www.w3.org/WAI/ARIA/apg/patterns/dialog-modal/)).
+- The dialog is named by its heading; the field has a visible label ([WCAG 3.3.2](https://www.w3.org/WAI/WCAG22/Understanding/labels-or-instructions.html)).
+- Results are combobox options: focus stays in the field, arrow keys move the active result, and the count is announced after typing pauses ([WCAG 4.1.3](https://www.w3.org/WAI/WCAG22/Understanding/status-messages.html)).
+- The shortcut needs a modifier, so it never fires while typing ([WCAG 2.1.4](https://www.w3.org/WAI/WCAG22/Understanding/character-key-shortcuts.html)); `aria-keyshortcuts` on the opener exposes it.
+- A result on the same page moves focus to its heading ([WCAG 2.4.3](https://www.w3.org/WAI/WCAG22/Understanding/focus-order.html)).
+- The opener stays hidden until the script that fills the results runs, so nothing broken shows without JavaScript.
+- Why it is built this way, and the choices that are ours: the [search dialog explainer](https://odonckers.github.io/domestic-ui/explainers/search-dialog.md).
+
+### Specifications
+
+- [APG Dialog (Modal) pattern](https://www.w3.org/WAI/ARIA/apg/patterns/dialog-modal/)
+- [APG Combobox pattern](https://www.w3.org/WAI/ARIA/apg/patterns/combobox/)
+- [MDN `<dialog>`](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/dialog)
+- [MDN `aria-keyshortcuts`](https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Reference/Attributes/aria-keyshortcuts)
+
+### See also
+
+- [Molecules](https://odonckers.github.io/domestic-ui/molecules/index.md)
+- Source: [`examples/molecules/search-dialog.html`](https://github.com/odonckers/domestic-ui/blob/main/examples/molecules/search-dialog.html)
+
+### How other systems do it
+
+For comparison only; these are not the standard this system follows.
+
+- [Apple Human Interface Guidelines: Searching](https://developer.apple.com/design/human-interface-guidelines/searching)
+- [Material Design 3: Search](https://m3.material.io/components/search/overview)
+- [Vercel Geist: Command Menu](https://vercel.com/geist/command-menu)
 
 ## Site navigation
 
@@ -5195,7 +5829,7 @@ Horizontal dropdowns use `--dui-elevation-popover` and its surface, like a popov
 
 - [Organisms](https://odonckers.github.io/domestic-ui/organisms/index.md)
 - Source: [`css/components/molecules/nav.css`](https://github.com/odonckers/domestic-ui/blob/main/css/components/molecules/nav.css), [`examples/molecules/nav.html`](https://github.com/odonckers/domestic-ui/blob/main/examples/molecules/nav.html)
-- Demos: Dashboard view ([Plain HTML](https://github.com/odonckers/domestic-ui/blob/main/demos/vanilla/index.html), [React](https://github.com/odonckers/domestic-ui/blob/main/demos/react/src/DashboardPage.tsx), [Angular](https://github.com/odonckers/domestic-ui/tree/main/demos/angular/src/app/dashboard), [Astro](https://github.com/odonckers/domestic-ui/blob/main/demos/astro/src/pages/index.astro)); Account settings view ([Plain HTML](https://github.com/odonckers/domestic-ui/blob/main/demos/vanilla/settings.html), [React](https://github.com/odonckers/domestic-ui/blob/main/demos/react/src/SettingsPage.tsx), [Angular](https://github.com/odonckers/domestic-ui/tree/main/demos/angular/src/app/settings), [Astro](https://github.com/odonckers/domestic-ui/blob/main/demos/astro/src/pages/settings.astro)); Orders view ([Plain HTML](https://github.com/odonckers/domestic-ui/blob/main/demos/vanilla/orders.html), [React](https://github.com/odonckers/domestic-ui/blob/main/demos/react/src/OrdersPage.tsx), [Angular](https://github.com/odonckers/domestic-ui/tree/main/demos/angular/src/app/orders), [Astro](https://github.com/odonckers/domestic-ui/blob/main/demos/astro/src/pages/orders.astro))
+- Demos: Dashboard view ([Plain HTML](https://github.com/odonckers/domestic-ui/blob/main/demos/vanilla/index.html), [React](https://github.com/odonckers/domestic-ui/blob/main/demos/react/src/DashboardPage.tsx), [Angular](https://github.com/odonckers/domestic-ui/tree/main/demos/angular/src/app/dashboard), [Astro](https://github.com/odonckers/domestic-ui/blob/main/demos/astro/src/pages/index.astro), [Vue](https://github.com/odonckers/domestic-ui/blob/main/demos/vue/src/DashboardPage.vue), [Svelte](https://github.com/odonckers/domestic-ui/blob/main/demos/svelte/src/DashboardPage.svelte)); Account settings view ([Plain HTML](https://github.com/odonckers/domestic-ui/blob/main/demos/vanilla/settings.html), [React](https://github.com/odonckers/domestic-ui/blob/main/demos/react/src/SettingsPage.tsx), [Angular](https://github.com/odonckers/domestic-ui/tree/main/demos/angular/src/app/settings), [Astro](https://github.com/odonckers/domestic-ui/blob/main/demos/astro/src/pages/settings.astro), [Vue](https://github.com/odonckers/domestic-ui/blob/main/demos/vue/src/SettingsPage.vue), [Svelte](https://github.com/odonckers/domestic-ui/blob/main/demos/svelte/src/SettingsPage.svelte)); Orders view ([Plain HTML](https://github.com/odonckers/domestic-ui/blob/main/demos/vanilla/orders.html), [React](https://github.com/odonckers/domestic-ui/blob/main/demos/react/src/OrdersPage.tsx), [Angular](https://github.com/odonckers/domestic-ui/tree/main/demos/angular/src/app/orders), [Astro](https://github.com/odonckers/domestic-ui/blob/main/demos/astro/src/pages/orders.astro), [Vue](https://github.com/odonckers/domestic-ui/blob/main/demos/vue/src/OrdersPage.vue), [Svelte](https://github.com/odonckers/domestic-ui/blob/main/demos/svelte/src/OrdersPage.svelte))
 
 ### How other systems do it
 
@@ -5409,7 +6043,7 @@ _Diagram: A toolbar is a row of related buttons at the top of the area it acts o
 
 - [Molecules](https://odonckers.github.io/domestic-ui/molecules/index.md)
 - Source: [`css/components/molecules/toolbar.css`](https://github.com/odonckers/domestic-ui/blob/main/css/components/molecules/toolbar.css), [`examples/molecules/toolbar.html`](https://github.com/odonckers/domestic-ui/blob/main/examples/molecules/toolbar.html)
-- Demos: Orders view ([Plain HTML](https://github.com/odonckers/domestic-ui/blob/main/demos/vanilla/orders.html), [React](https://github.com/odonckers/domestic-ui/blob/main/demos/react/src/OrdersPage.tsx), [Angular](https://github.com/odonckers/domestic-ui/tree/main/demos/angular/src/app/orders), [Astro](https://github.com/odonckers/domestic-ui/blob/main/demos/astro/src/pages/orders.astro))
+- Demos: Orders view ([Plain HTML](https://github.com/odonckers/domestic-ui/blob/main/demos/vanilla/orders.html), [React](https://github.com/odonckers/domestic-ui/blob/main/demos/react/src/OrdersPage.tsx), [Angular](https://github.com/odonckers/domestic-ui/tree/main/demos/angular/src/app/orders), [Astro](https://github.com/odonckers/domestic-ui/blob/main/demos/astro/src/pages/orders.astro), [Vue](https://github.com/odonckers/domestic-ui/blob/main/demos/vue/src/OrdersPage.vue), [Svelte](https://github.com/odonckers/domestic-ui/blob/main/demos/svelte/src/OrdersPage.svelte))
 
 ### How other systems do it
 
@@ -5530,8 +6164,9 @@ _Diagram: A typeahead is a text field in a form whose list of suggestions opens 
 ### See also
 
 - [Molecules](https://odonckers.github.io/domestic-ui/molecules/index.md)
+- [Search dialog](https://odonckers.github.io/domestic-ui/patterns/search-dialog.md): a typeahead in a modal dialog, to search a whole site
 - Source: [`css/components/molecules/combobox.css`](https://github.com/odonckers/domestic-ui/blob/main/css/components/molecules/combobox.css), [`examples/molecules/combobox.html`](https://github.com/odonckers/domestic-ui/blob/main/examples/molecules/combobox.html)
-- Demos: Orders view ([Plain HTML](https://github.com/odonckers/domestic-ui/blob/main/demos/vanilla/orders.html), [React](https://github.com/odonckers/domestic-ui/blob/main/demos/react/src/OrdersPage.tsx), [Angular](https://github.com/odonckers/domestic-ui/tree/main/demos/angular/src/app/orders), [Astro](https://github.com/odonckers/domestic-ui/blob/main/demos/astro/src/pages/orders.astro))
+- Demos: Orders view ([Plain HTML](https://github.com/odonckers/domestic-ui/blob/main/demos/vanilla/orders.html), [React](https://github.com/odonckers/domestic-ui/blob/main/demos/react/src/OrdersPage.tsx), [Angular](https://github.com/odonckers/domestic-ui/tree/main/demos/angular/src/app/orders), [Astro](https://github.com/odonckers/domestic-ui/blob/main/demos/astro/src/pages/orders.astro), [Vue](https://github.com/odonckers/domestic-ui/blob/main/demos/vue/src/OrdersPage.vue), [Svelte](https://github.com/odonckers/domestic-ui/blob/main/demos/svelte/src/OrdersPage.svelte))
 
 ### How other systems do it
 
@@ -5689,6 +6324,49 @@ _Diagram: The app shell is the whole frame of an app: the app bar across the top
 </aside>
 ```
 
+#### App shell with content on the frame
+
+```html
+<dui-app-shell data-app-shell="contained page" style="--dui-size-pane: 36rem">
+  <header aria-label="Northwind reports">
+    <button type="button" aria-controls="report-nav" aria-expanded="true" hidden>Menu</button>
+    <a href="?view=home" data-link="quiet"><strong>Northwind</strong></a>
+  </header>
+  <nav id="report-nav" aria-label="Reports" data-nav="vertical">
+    <ul>
+      <li><a href="?report=q2">Q2 report</a></li>
+      <li><a href="?report=q3" aria-current="page">Q3 report</a></li>
+    </ul>
+  </nav>
+  <main id="main" class="stack" tabindex="-1">
+    <hgroup>
+      <h2>Q3 report</h2>
+      <p>All regions, July to September.</p>
+    </hgroup>
+    <section data-card aria-labelledby="report-summary-title">
+      <h3 id="report-summary-title">Summary</h3>
+      <p>Revenue grew in every region. Europe led with the Bletchley Instruments renewal; the Americas recovered after a slow July.</p>
+      <p>Open balances fell to €18,400, the lowest this year, after the March invoices were paid.</p>
+    </section>
+    <section data-card aria-labelledby="report-regions-title">
+      <h3 id="report-regions-title">Regions</h3>
+      <dl>
+        <dt>Europe</dt>
+        <dd>€214,000, up 12%</dd>
+        <dt>Americas</dt>
+        <dd>€158,000, up 4%</dd>
+        <dt>Asia Pacific</dt>
+        <dd>€97,000, up 9%</dd>
+      </dl>
+    </section>
+    <section data-card aria-labelledby="report-next-title">
+      <h3 id="report-next-title">Next quarter</h3>
+      <p>Two renewals are due in October. The forecast assumes both renew at the current rate.</p>
+    </section>
+  </main>
+</dui-app-shell>
+```
+
 #### Contained app shell
 
 ```html
@@ -5721,7 +6399,7 @@ _Diagram: The app shell is the whole frame of an app: the app bar across the top
       </li>
     </ul>
   </nav>
-  <main id="main" class="stack">
+  <main id="main" class="stack" tabindex="-1">
     <header data-page-header>
       <h2>Accounts</h2>
       <p>Customers with an open balance.</p>
@@ -5763,6 +6441,7 @@ _Diagram: The app shell is the whole frame of an app: the app bar across the top
 | --- | --- | --- |
 | `data-app-shell` | a wrapper (or `<dui-app-shell>`), after the skip link |  |
 | `data-app-shell="contained"` |  | the shell is `--dui-size-pane` tall and scrolls inside its own box (a shell inside a page section) |
+| `data-app-shell="page"` |  | the page scrolls under a sticky app bar instead of main scrolling inside its panel: main sits on the frame and each `data-card` directly in it is a panel. Combines with contained ("contained page") |
 
 Children, in source order:
 
@@ -5770,12 +6449,16 @@ Children, in source order:
 | --- | --- |
 | `<header>` | the app bar: app name, toggles, search, user menu |
 | `<nav aria-label> or <aside aria-label>` | the primary sidebar (before `<main>`) |
-| `<main id>` | the content |
+| `<main id tabindex="-1">` | the content: the panel that scrolls, or with "page" the frame holding text and `data-card` panels |
 | `<aside aria-label>` | optional auxiliary sidebar (after `<main>`) |
 | `<footer>` | optional |
 | `<button type="button" aria-controls="sidebar-id" aria-expanded="true" hidden>` | a sidebar's toggle; `<dui-app-shell>` shows it. `aria-expanded="false"` in the markup starts the sidebar collapsed when it sits beside main. Icon only (`data-button="quiet icon"`, Lucide panel-left or panel-right, visually hidden name) inside a `<dui-tooltip>` with the same words |
 | `--dui-size-sidebar, --dui-size-sidebar-aux` | sidebar widths beside main |
 | `--dui-size-pane` | max block size of a sidebar beside main; the block size of a contained shell |
+
+#### Scrolling
+
+When the primary sidebar sits beside main, the shell is `--dui-size-pane` tall and main, the content panel, is the scroll container: the app bar, the sidebars and the footer stay where they are and only the panel's content moves. Give `<main>` `tabindex="-1"` so the skip link moves focus into it; the arrow keys and Page Up and Page Down then scroll it (WCAG 2.1.1). `data-app-shell="page"` opts out: main is no panel but sits on the frame with the app bar, the document scrolls, the app bar sticks to the top and main's content slides under it, and each `data-card` directly in main takes the panel's look, so a page can mix headings and text on the frame with one or more panels. Stacked, the document scrolls in both modes. Our choice: the panel stays put by default because an app's chrome should not move while you read its content (Linear and Vercel scroll the panel, not the page); content on the frame is the author's explicit choice. Stacked shells keep page scrolling because a nested scroller on a phone stops the browser's own toolbars from collapsing. The shell's own height follows a media query (a container query cannot style its own container); a shell narrower than the window falls back to scrolling inside its own box.
 
 #### Motion
 
@@ -5798,7 +6481,7 @@ The primary sidebar sits beside main from 48rem of the shell's own inline size, 
 - Without JavaScript both are always visible: stacked above and below main when narrow, beside it when wide.
 - Toggle buttons are native buttons with aria-controls and aria-expanded (APG Disclosure); they carry the hidden attribute in the markup and the script shows them, so there is never a button that does nothing.
 - A collapsed sidebar has the hidden attribute, so it is gone for assistive technology and the Tab order as well.
-- Sidebars that sit beside main stick to the top of the scroll area and scroll on their own, at most --dui-size-pane tall; their columns run to the end of the shell and the footer sits between them, so they never cover it.
+- Sidebars that sit beside main scroll on their own; their columns run to the end of the shell and the footer sits between them, so they never cover it.
 - They are not focus traps and hold focusable links, so the keyboard reaches everything in them (WCAG 2.1.1).
 - Nothing scrolls sideways at 320px (WCAG 1.4.10): the app bar wraps, the search taking its own row.
 
@@ -5808,6 +6491,8 @@ The primary sidebar sits beside main from 48rem of the shell's own inline size, 
 - [HTML `<main>` element](https://html.spec.whatwg.org/multipage/grouping-content.html#the-main-element)
 - [HTML `<aside>` element](https://html.spec.whatwg.org/multipage/sections.html#the-aside-element)
 - [WCAG 1.4.10 Reflow](https://www.w3.org/WAI/WCAG22/Understanding/reflow.html)
+- [MDN `overflow`](https://developer.mozilla.org/en-US/docs/Web/CSS/overflow)
+- [MDN sticky positioning](https://developer.mozilla.org/en-US/docs/Web/CSS/position#sticky_positioning)
 - [linear.app how we redesigned the linear ui](https://linear.app/blog/how-we-redesigned-the-linear-ui)
 - [MDN `grid-template-areas`](https://developer.mozilla.org/en-US/docs/Web/CSS/grid-template-areas)
 - [MDN Container queries](https://developer.mozilla.org/en-US/docs/Web/CSS/Guides/Containment/Container_queries)
@@ -5818,7 +6503,7 @@ The primary sidebar sits beside main from 48rem of the shell's own inline size, 
 
 - [Layouts](https://odonckers.github.io/domestic-ui/layouts/index.md)
 - Source: [`css/layout/app-shell.css`](https://github.com/odonckers/domestic-ui/blob/main/css/layout/app-shell.css), [`examples/layouts/app-shell.html`](https://github.com/odonckers/domestic-ui/blob/main/examples/layouts/app-shell.html)
-- Demos: Dashboard view ([Plain HTML](https://github.com/odonckers/domestic-ui/blob/main/demos/vanilla/index.html), [React](https://github.com/odonckers/domestic-ui/blob/main/demos/react/src/DashboardPage.tsx), [Angular](https://github.com/odonckers/domestic-ui/tree/main/demos/angular/src/app/dashboard), [Astro](https://github.com/odonckers/domestic-ui/blob/main/demos/astro/src/pages/index.astro)); Account settings view ([Plain HTML](https://github.com/odonckers/domestic-ui/blob/main/demos/vanilla/settings.html), [React](https://github.com/odonckers/domestic-ui/blob/main/demos/react/src/SettingsPage.tsx), [Angular](https://github.com/odonckers/domestic-ui/tree/main/demos/angular/src/app/settings), [Astro](https://github.com/odonckers/domestic-ui/blob/main/demos/astro/src/pages/settings.astro)); Orders view, with the auxiliary sidebar ([Plain HTML](https://github.com/odonckers/domestic-ui/blob/main/demos/vanilla/orders.html), [React](https://github.com/odonckers/domestic-ui/blob/main/demos/react/src/OrdersPage.tsx), [Angular](https://github.com/odonckers/domestic-ui/tree/main/demos/angular/src/app/orders), [Astro](https://github.com/odonckers/domestic-ui/blob/main/demos/astro/src/pages/orders.astro))
+- Demos: Dashboard view ([Plain HTML](https://github.com/odonckers/domestic-ui/blob/main/demos/vanilla/index.html), [React](https://github.com/odonckers/domestic-ui/blob/main/demos/react/src/DashboardPage.tsx), [Angular](https://github.com/odonckers/domestic-ui/tree/main/demos/angular/src/app/dashboard), [Astro](https://github.com/odonckers/domestic-ui/blob/main/demos/astro/src/pages/index.astro), [Vue](https://github.com/odonckers/domestic-ui/blob/main/demos/vue/src/DashboardPage.vue), [Svelte](https://github.com/odonckers/domestic-ui/blob/main/demos/svelte/src/DashboardPage.svelte)); Account settings view ([Plain HTML](https://github.com/odonckers/domestic-ui/blob/main/demos/vanilla/settings.html), [React](https://github.com/odonckers/domestic-ui/blob/main/demos/react/src/SettingsPage.tsx), [Angular](https://github.com/odonckers/domestic-ui/tree/main/demos/angular/src/app/settings), [Astro](https://github.com/odonckers/domestic-ui/blob/main/demos/astro/src/pages/settings.astro), [Vue](https://github.com/odonckers/domestic-ui/blob/main/demos/vue/src/SettingsPage.vue), [Svelte](https://github.com/odonckers/domestic-ui/blob/main/demos/svelte/src/SettingsPage.svelte)); Orders view, with the auxiliary sidebar ([Plain HTML](https://github.com/odonckers/domestic-ui/blob/main/demos/vanilla/orders.html), [React](https://github.com/odonckers/domestic-ui/blob/main/demos/react/src/OrdersPage.tsx), [Angular](https://github.com/odonckers/domestic-ui/tree/main/demos/angular/src/app/orders), [Astro](https://github.com/odonckers/domestic-ui/blob/main/demos/astro/src/pages/orders.astro), [Vue](https://github.com/odonckers/domestic-ui/blob/main/demos/vue/src/OrdersPage.vue), [Svelte](https://github.com/odonckers/domestic-ui/blob/main/demos/svelte/src/OrdersPage.svelte))
 
 ### How other systems do it
 
@@ -5974,7 +6659,7 @@ _Diagram: Compact density tightens a data-heavy area such as a table, so it show
 
 - [Tokens](https://odonckers.github.io/domestic-ui/tokens/index.md)
 - Source: [`examples/patterns/density.html`](https://github.com/odonckers/domestic-ui/blob/main/examples/patterns/density.html)
-- Demos: Orders view ([Plain HTML](https://github.com/odonckers/domestic-ui/blob/main/demos/vanilla/orders.html), [React](https://github.com/odonckers/domestic-ui/blob/main/demos/react/src/OrdersPage.tsx), [Angular](https://github.com/odonckers/domestic-ui/tree/main/demos/angular/src/app/orders), [Astro](https://github.com/odonckers/domestic-ui/blob/main/demos/astro/src/pages/orders.astro))
+- Demos: Orders view ([Plain HTML](https://github.com/odonckers/domestic-ui/blob/main/demos/vanilla/orders.html), [React](https://github.com/odonckers/domestic-ui/blob/main/demos/react/src/OrdersPage.tsx), [Angular](https://github.com/odonckers/domestic-ui/tree/main/demos/angular/src/app/orders), [Astro](https://github.com/odonckers/domestic-ui/blob/main/demos/astro/src/pages/orders.astro), [Vue](https://github.com/odonckers/domestic-ui/blob/main/demos/vue/src/OrdersPage.vue), [Svelte](https://github.com/odonckers/domestic-ui/blob/main/demos/svelte/src/OrdersPage.svelte))
 
 ### How other systems do it
 
@@ -6092,7 +6777,7 @@ A wide tile spans two columns from 33.5rem of the wrapper's own inline size (two
 
 - [Layouts](https://odonckers.github.io/domestic-ui/layouts/index.md)
 - Source: [`css/layout/dashboard.css`](https://github.com/odonckers/domestic-ui/blob/main/css/layout/dashboard.css), [`examples/layouts/dashboard.html`](https://github.com/odonckers/domestic-ui/blob/main/examples/layouts/dashboard.html)
-- Demos: Dashboard view ([Plain HTML](https://github.com/odonckers/domestic-ui/blob/main/demos/vanilla/index.html), [React](https://github.com/odonckers/domestic-ui/blob/main/demos/react/src/DashboardPage.tsx), [Angular](https://github.com/odonckers/domestic-ui/tree/main/demos/angular/src/app/dashboard), [Astro](https://github.com/odonckers/domestic-ui/blob/main/demos/astro/src/pages/index.astro))
+- Demos: Dashboard view ([Plain HTML](https://github.com/odonckers/domestic-ui/blob/main/demos/vanilla/index.html), [React](https://github.com/odonckers/domestic-ui/blob/main/demos/react/src/DashboardPage.tsx), [Angular](https://github.com/odonckers/domestic-ui/tree/main/demos/angular/src/app/dashboard), [Astro](https://github.com/odonckers/domestic-ui/blob/main/demos/astro/src/pages/index.astro), [Vue](https://github.com/odonckers/domestic-ui/blob/main/demos/vue/src/DashboardPage.vue), [Svelte](https://github.com/odonckers/domestic-ui/blob/main/demos/svelte/src/DashboardPage.svelte))
 
 ### How other systems do it
 
@@ -6627,7 +7312,7 @@ One row with a single `<td colspan>` holding a message and an optional action.
 
 - [Organisms](https://odonckers.github.io/domestic-ui/organisms/index.md)
 - Source: [`css/components/organisms/data-table.css`](https://github.com/odonckers/domestic-ui/blob/main/css/components/organisms/data-table.css), [`examples/organisms/data-table.html`](https://github.com/odonckers/domestic-ui/blob/main/examples/organisms/data-table.html)
-- Demos: Dashboard view ([Plain HTML](https://github.com/odonckers/domestic-ui/blob/main/demos/vanilla/index.html), [React](https://github.com/odonckers/domestic-ui/blob/main/demos/react/src/DashboardPage.tsx), [Angular](https://github.com/odonckers/domestic-ui/tree/main/demos/angular/src/app/dashboard), [Astro](https://github.com/odonckers/domestic-ui/blob/main/demos/astro/src/pages/index.astro)); Orders view ([Plain HTML](https://github.com/odonckers/domestic-ui/blob/main/demos/vanilla/orders.html), [React](https://github.com/odonckers/domestic-ui/blob/main/demos/react/src/OrdersPage.tsx), [Angular](https://github.com/odonckers/domestic-ui/tree/main/demos/angular/src/app/orders), [Astro](https://github.com/odonckers/domestic-ui/blob/main/demos/astro/src/pages/orders.astro))
+- Demos: Dashboard view ([Plain HTML](https://github.com/odonckers/domestic-ui/blob/main/demos/vanilla/index.html), [React](https://github.com/odonckers/domestic-ui/blob/main/demos/react/src/DashboardPage.tsx), [Angular](https://github.com/odonckers/domestic-ui/tree/main/demos/angular/src/app/dashboard), [Astro](https://github.com/odonckers/domestic-ui/blob/main/demos/astro/src/pages/index.astro), [Vue](https://github.com/odonckers/domestic-ui/blob/main/demos/vue/src/DashboardPage.vue), [Svelte](https://github.com/odonckers/domestic-ui/blob/main/demos/svelte/src/DashboardPage.svelte)); Orders view ([Plain HTML](https://github.com/odonckers/domestic-ui/blob/main/demos/vanilla/orders.html), [React](https://github.com/odonckers/domestic-ui/blob/main/demos/react/src/OrdersPage.tsx), [Angular](https://github.com/odonckers/domestic-ui/tree/main/demos/angular/src/app/orders), [Astro](https://github.com/odonckers/domestic-ui/blob/main/demos/astro/src/pages/orders.astro), [Vue](https://github.com/odonckers/domestic-ui/blob/main/demos/vue/src/OrdersPage.vue), [Svelte](https://github.com/odonckers/domestic-ui/blob/main/demos/svelte/src/OrdersPage.svelte))
 
 ### How other systems do it
 
@@ -6772,7 +7457,7 @@ Children: a `<form>` of fields (each a `data-field`, or a `<dui-combobox>`) whos
 
 - [Organisms](https://odonckers.github.io/domestic-ui/organisms/index.md)
 - Source: [`css/components/organisms/filter-bar.css`](https://github.com/odonckers/domestic-ui/blob/main/css/components/organisms/filter-bar.css), [`examples/organisms/filter-bar.html`](https://github.com/odonckers/domestic-ui/blob/main/examples/organisms/filter-bar.html)
-- Demos: Orders view ([Plain HTML](https://github.com/odonckers/domestic-ui/blob/main/demos/vanilla/orders.html), [React](https://github.com/odonckers/domestic-ui/blob/main/demos/react/src/OrdersPage.tsx), [Angular](https://github.com/odonckers/domestic-ui/tree/main/demos/angular/src/app/orders), [Astro](https://github.com/odonckers/domestic-ui/blob/main/demos/astro/src/pages/orders.astro))
+- Demos: Orders view ([Plain HTML](https://github.com/odonckers/domestic-ui/blob/main/demos/vanilla/orders.html), [React](https://github.com/odonckers/domestic-ui/blob/main/demos/react/src/OrdersPage.tsx), [Angular](https://github.com/odonckers/domestic-ui/tree/main/demos/angular/src/app/orders), [Astro](https://github.com/odonckers/domestic-ui/blob/main/demos/astro/src/pages/orders.astro), [Vue](https://github.com/odonckers/domestic-ui/blob/main/demos/vue/src/OrdersPage.vue), [Svelte](https://github.com/odonckers/domestic-ui/blob/main/demos/svelte/src/OrdersPage.svelte))
 
 ### How other systems do it
 
@@ -6933,7 +7618,7 @@ Native keyboard behavior; see [HTML `<form>` element](https://html.spec.whatwg.o
 
 - [Organisms](https://odonckers.github.io/domestic-ui/organisms/index.md)
 - Source: [`css/components/organisms/large-forms.css`](https://github.com/odonckers/domestic-ui/blob/main/css/components/organisms/large-forms.css), [`examples/organisms/large-forms.html`](https://github.com/odonckers/domestic-ui/blob/main/examples/organisms/large-forms.html)
-- Demos: Account settings view ([Plain HTML](https://github.com/odonckers/domestic-ui/blob/main/demos/vanilla/settings.html), [React](https://github.com/odonckers/domestic-ui/blob/main/demos/react/src/SettingsPage.tsx), [Angular](https://github.com/odonckers/domestic-ui/tree/main/demos/angular/src/app/settings), [Astro](https://github.com/odonckers/domestic-ui/blob/main/demos/astro/src/pages/settings.astro))
+- Demos: Account settings view ([Plain HTML](https://github.com/odonckers/domestic-ui/blob/main/demos/vanilla/settings.html), [React](https://github.com/odonckers/domestic-ui/blob/main/demos/react/src/SettingsPage.tsx), [Angular](https://github.com/odonckers/domestic-ui/tree/main/demos/angular/src/app/settings), [Astro](https://github.com/odonckers/domestic-ui/blob/main/demos/astro/src/pages/settings.astro), [Vue](https://github.com/odonckers/domestic-ui/blob/main/demos/vue/src/SettingsPage.vue), [Svelte](https://github.com/odonckers/domestic-ui/blob/main/demos/svelte/src/SettingsPage.svelte))
 
 ### How other systems do it
 
@@ -7155,7 +7840,7 @@ _Diagram: List-detail splits the content area into a list of items and, beside i
 
 - [Layouts](https://odonckers.github.io/domestic-ui/layouts/index.md)
 - Source: [`css/layout/list-detail.css`](https://github.com/odonckers/domestic-ui/blob/main/css/layout/list-detail.css), [`examples/layouts/list-detail.html`](https://github.com/odonckers/domestic-ui/blob/main/examples/layouts/list-detail.html)
-- Demos: Orders view ([Plain HTML](https://github.com/odonckers/domestic-ui/blob/main/demos/vanilla/orders.html), [React](https://github.com/odonckers/domestic-ui/blob/main/demos/react/src/OrdersPage.tsx), [Angular](https://github.com/odonckers/domestic-ui/tree/main/demos/angular/src/app/orders), [Astro](https://github.com/odonckers/domestic-ui/blob/main/demos/astro/src/pages/orders.astro))
+- Demos: Orders view ([Plain HTML](https://github.com/odonckers/domestic-ui/blob/main/demos/vanilla/orders.html), [React](https://github.com/odonckers/domestic-ui/blob/main/demos/react/src/OrdersPage.tsx), [Angular](https://github.com/odonckers/domestic-ui/tree/main/demos/angular/src/app/orders), [Astro](https://github.com/odonckers/domestic-ui/blob/main/demos/astro/src/pages/orders.astro), [Vue](https://github.com/odonckers/domestic-ui/blob/main/demos/vue/src/OrdersPage.vue), [Svelte](https://github.com/odonckers/domestic-ui/blob/main/demos/svelte/src/OrdersPage.svelte))
 
 ### How other systems do it
 
@@ -7444,7 +8129,7 @@ Every explainer has these sections, in this order:
 
 1. **Problem**: what authors cannot do well today.
 2. **Use cases**: concrete situations.
-3. **Goals** and 4. **Non-goals**.
+3. **Goals** and 4. **Non-goals**. Goals name the [design principles](https://odonckers.github.io/domestic-ui/principles/design-principles.md) the pattern serves.
 5. **Proposed markup and API**: the attribute, element or methods we ship, with an example.
 6. **Keyboard interaction**.
 7. **Accessibility mappings**: roles, states, and what assistive technology users should hear.
@@ -7471,6 +8156,7 @@ so a pattern could map onto a future native element or attribute.
 | [App shell](https://odonckers.github.io/domestic-ui/explainers/app-shell.md) | `data-app-shell`: app bar, primary sidebar, main and an auxiliary sidebar as native landmarks in named grid areas; one copy of each sidebar, collapsible beside main and a modal drawer when the shell is narrow; why not a dialog, popover, `<details>`, checkbox hack or duplicated navigation | [`app-shell.css`](https://odonckers.github.io/domestic-ui/patterns/app-shell.md) | [App shell](https://odonckers.github.io/domestic-ui/patterns/app-shell.md) | [`dui-app-shell.js`](https://github.com/odonckers/domestic-ui/blob/main/web-components/dui-app-shell.js) |
 | [Auxiliary sidebar](https://odonckers.github.io/domestic-ui/explainers/aux-sidebar.md) | The `<aside>` after `<main>` in an app shell: context for the selection, beside main from 64rem, a drawer at the end below; stable name, polite status on change | [`app-shell.css`](https://odonckers.github.io/domestic-ui/patterns/app-shell.md) | [App shell](https://odonckers.github.io/domestic-ui/patterns/app-shell.md) | [`dui-app-shell.js`](https://github.com/odonckers/domestic-ui/blob/main/web-components/dui-app-shell.js) |
 | [Split view](https://odonckers.github.io/domestic-ui/explainers/split-view.md) | Two regions side by side at a fixed ratio (`data-split`) or a list of links beside a detail pane (`data-list-detail`), switched by a container query; why there is no draggable divider | [`split.css`](https://odonckers.github.io/domestic-ui/patterns/split.md), [`list-detail.css`](https://odonckers.github.io/domestic-ui/patterns/list-detail.md) | [Split](https://odonckers.github.io/domestic-ui/patterns/split.md) | None |
+| [Search dialog](https://odonckers.github.io/domestic-ui/explainers/search-dialog.md) | A command palette: a modal `<dialog>` holding a `<dui-combobox>` of pages and sections, opened from a Search button or with Cmd-K / Ctrl-K; when results load, how they map to options, and the shortcut | [`dialog.css`](https://odonckers.github.io/domestic-ui/patterns/dialog.md), [`combobox.css`](https://odonckers.github.io/domestic-ui/patterns/typeahead.md) | [Search dialog](https://odonckers.github.io/domestic-ui/patterns/search-dialog.md) | [`dui-combobox.js`](https://github.com/odonckers/domestic-ui/blob/main/web-components/dui-combobox.js) plus page script |
 | [Code highlighting](https://odonckers.github.io/domestic-ui/explainers/code-highlighting.md) | `::highlight(dui-code-*)` names a page registers with the CSS Custom Highlight API, each colored by a `--dui-color-code-*` token at 4.5:1 on the code background | [`typography.css`](https://odonckers.github.io/domestic-ui/components/base.md) | [Base elements](https://odonckers.github.io/domestic-ui/components/base.md) | None (the page registers ranges) |
 
 ## App shell
@@ -8629,6 +9315,165 @@ none of the `data-pagination` styling hooks.
 - For very long ranges, should there be a "go to page" form instead of more numbers?
 - Search engines no longer use `rel="prev"`/`rel="next"` for indexing; is it still worth
   recommending for other user agents?
+
+## Search dialog (command palette)
+
+Page: https://odonckers.github.io/domestic-ui/explainers/search-dialog.html
+
+Status: used by the domestic-ui docs site; markup and page script over shipped parts, no new component.
+CSS: [`css/components/molecules/dialog.css`](https://odonckers.github.io/domestic-ui/patterns/dialog.md),
+[`css/components/molecules/combobox.css`](https://odonckers.github.io/domestic-ui/patterns/typeahead.md) ·
+Script: [`web-components/dui-combobox.js`](https://github.com/odonckers/domestic-ui/blob/main/web-components/dui-combobox.js) plus a few lines of page script ·
+Example: [`examples/molecules/search-dialog.html`](https://odonckers.github.io/domestic-ui/patterns/search-dialog.md)
+
+The key words MUST, MUST NOT, SHOULD, SHOULD NOT and MAY are to be interpreted as described in
+[RFC 2119](https://www.rfc-editor.org/rfc/rfc2119) and [RFC 8174](https://www.rfc-editor.org/rfc/rfc8174)
+when, and only when, they appear in all capitals.
+
+A search dialog has no native element and no APG pattern of its own. It composes two APG patterns,
+[Dialog (Modal)](https://www.w3.org/WAI/ARIA/apg/patterns/dialog-modal/) and the
+[Combobox](https://www.w3.org/WAI/ARIA/apg/patterns/combobox/) list autocomplete variant, on native
+[`<dialog>`](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/dialog) and
+[`<input list>`](https://html.spec.whatwg.org/multipage/form-elements.html#the-datalist-element).
+This file records the choices between them: when to load results, how results map to options, and
+the keyboard shortcut.
+
+### Problem
+
+A site or app with dozens of pages needs a way to jump to one by typing part of its name. Authors
+reach for a "command palette" library, and many get the parts wrong: focus is not moved into the
+field or not returned on close, the list is a set of links the arrow keys do not reach, the result
+count changes silently, or a single-letter shortcut fires while the user is typing elsewhere.
+
+### Use cases
+
+- Jumping to a docs page, or to a section of one, from anywhere on the site.
+- Finding a record, a setting or an action in an app by name.
+- Keyboard users opening search without tabbing through the app bar.
+
+### Goals
+
+- The browser does the modal work: `showModal()` (or `command="show-modal"`) makes the page inert,
+  moves focus in and returns it on close; no focus-trap script.
+- The field is the APG list autocomplete combobox: focus stays in it, results are options, the count
+  is announced.
+- Nothing broken shows without JavaScript.
+- No request outside the page's own origin; the index loads only when someone searches.
+- Works at 320px wide.
+
+### Non-goals
+
+- A search engine: ranking, stemming, fuzzy matching or full-text body search.
+- Actions with arguments, nested command menus or recent searches.
+- A new web component: the pattern is markup plus a little page script.
+
+### Proposed markup and API
+
+- The opener MUST be a `<button>` with `commandfor` naming the dialog and `command="show-modal"`
+  ([invoker commands](https://developer.mozilla.org/en-US/docs/Web/API/Invoker_Commands_API)), with
+  `aria-haspopup="dialog"`. Its visible text MUST be its name ("Search"). Page script SHOULD call
+  `showModal()` on click where invoker commands are not supported.
+- **Our choice:** the opener is `hidden` in the markup and shown by the script that fills the
+  results, because without that script the dialog would open on an empty list.
+- The dialog MUST be a `<dialog data-dialog closedby="any">` named by its heading with
+  `aria-labelledby`. `closedby="any"` adds a click outside to Esc and the close button.
+- It MUST hold one `<dui-combobox>` with a visible `<label>`, an `<input list>` with `autofocus`
+  (so focus lands in the field, not the close button) and its `<datalist>`.
+- Results are the datalist's options: `value` is the text shown and matched, `label` a hint (the
+  section). **Our choice:** a page is "Title" and a section is "Title › Heading", so a section
+  result says where it is, and every page comes before any section, so a page whose title matches
+  is first. There is no other ranking; the combobox's case-insensitive "contains" filter decides.
+- **Our choice:** results load on first open (`toggle` on the dialog, or the opener's click), from
+  one same-origin JSON file, not on page load, so pages that are only read pay nothing. If loading
+  fails the dialog MUST say so in a `role="status"` message and SHOULD try again on the next open.
+- Accepting an option (the combobox's `change`) MUST close the dialog, then go to its target. A
+  target on the same page MUST move focus to that section's heading
+  ([WCAG 2.4.3](https://www.w3.org/WAI/WCAG22/Understanding/focus-order.html)).
+- When nothing matches, the dialog SHOULD show "No results for “…”" as plain text; the combobox's
+  status region already announces "No results".
+- The list SHOULD sit in the flow of the dialog, not as the combobox's absolutely positioned popup,
+  so the dialog's own scrolling never clips it.
+
+```html
+<button type="button" commandfor="site-search" command="show-modal" aria-haspopup="dialog"
+        aria-keyshortcuts="Control+K Meta+K" hidden>Search</button>
+<dialog id="site-search" data-dialog closedby="any" aria-labelledby="site-search-title">
+  <header>
+    <h2 id="site-search-title">Search</h2>
+    <button type="button" commandfor="site-search" command="close" data-button="quiet">Close</button>
+  </header>
+  <dui-combobox>
+    <label for="site-search-input">Search the docs</label>
+    <input type="text" id="site-search-input" list="site-search-options" autocomplete="off" autofocus>
+    <datalist id="site-search-options"></datalist>
+  </dui-combobox>
+</dialog>
+```
+
+Outside a sectioning element a `<header>` is a page banner, so a dialog placed at the end of
+`<body>` (as on the docs site) uses a `<div>` for its title row.
+
+### Keyboard interaction
+
+- Cmd-K (macOS) or Ctrl-K: opens the dialog with focus in the field, from anywhere except a text
+  field, text area, select or contenteditable outside the dialog; pressed while it is open, keeps
+  focus in the field. **Our choice:** a modifier shortcut only and no single key such as `/`, so it
+  never fires while typing ([WCAG 2.1.4](https://www.w3.org/WAI/WCAG22/Understanding/character-key-shortcuts.html)).
+  The browser's default for the keys is prevented only when the dialog opens or holds focus.
+- Typing, Down Arrow, Up Arrow, Enter: as the combobox (filters, moves the active result, goes to it).
+- Esc: closes the list, then clears the field, then closes the dialog; focus returns to whatever had
+  it before.
+- Tab: moves between the field and the close button; the rest of the page is inert.
+
+### Accessibility mappings
+
+| Element | Role | Name / state |
+| --- | --- | --- |
+| Opener `<button>` | `button` | Its text; `aria-haspopup="dialog"`, `aria-keyshortcuts="Control+K Meta+K"` |
+| `<dialog>` | `dialog` (modal) | Its heading (`aria-labelledby`) |
+| `<input>` | `combobox` | Its `<label>`; as the [combobox explainer](https://odonckers.github.io/domestic-ui/explainers/combobox.md) |
+| `<li>` | `option` | "Page › Heading" plus the section hint |
+| Load message | `status` | Polite ([WCAG 4.1.3](https://www.w3.org/WAI/WCAG22/Understanding/status-messages.html)) |
+
+A screen reader user hears "Search, dialog", then "Search the docs, combobox, editable", then after
+typing "dialog": "15 results", and on Down Arrow "Dialog and drawer, Organisms".
+
+The visible shortcut hint is a `<kbd>` with `aria-hidden="true"`: `aria-keyshortcuts` already
+exposes it, and the hint would otherwise join the button's name.
+
+### Alternatives considered
+
+- **A third-party search service or a prebuilt index library** (Algolia, Pagefind). Rejected for the
+  docs site: requests to another origin or a new dependency, and a page list does not need full-text
+  ranking. A larger site can swap the data source and keep this markup.
+- **A list of links instead of a combobox.** Rejected: arrow keys would not move through results and
+  the count would not be announced unless rebuilt by hand; the combobox already does both.
+- **A non-modal popover under the field.** Rejected: the palette covers the page and the page should
+  be inert while it is open, which is what a modal `<dialog>` gives.
+- **A `/` shortcut.** Rejected; see Keyboard interaction.
+- **Loading the index on page load.** Rejected; see Our choice above.
+
+### Prior art
+
+- [APG Dialog (Modal) pattern](https://www.w3.org/WAI/ARIA/apg/patterns/dialog-modal/) and
+  [APG Combobox pattern](https://www.w3.org/WAI/ARIA/apg/patterns/combobox/).
+- [MDN `aria-keyshortcuts`](https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Reference/Attributes/aria-keyshortcuts).
+- [GOV.UK accessible-autocomplete](https://github.com/alphagov/accessible-autocomplete).
+- Docs sites such as [MDN](https://developer.mozilla.org/) and [shadcn/ui](https://ui.shadcn.com/)
+  open search from the app bar or with Cmd-K / Ctrl-K, for comparison.
+
+### Mapping to a future standard
+
+None known for the palette itself. It is built from native parts: `<dialog>`, invoker commands and
+`<input list>`. If a stylable native combobox or datalist ships (see the
+[combobox explainer](https://odonckers.github.io/domestic-ui/explainers/combobox.md#mapping-to-a-future-standard)), the `<dui-combobox>` wrapper and its
+script go away and the dialog markup stays as it is.
+
+### Open questions
+
+- Should results be grouped by section, with each group as an `role="group"` in the listbox?
+- Should matching text be marked with `<mark>` in each result?
+- Should recent searches be remembered, and where (they would need per-viewer storage)?
 
 ## Split view
 

@@ -16,7 +16,7 @@ Plain CSS, no build step. The current release is **0.1.0** ([release notes](http
 
 Imports are relative, so it works from any path. Paths under `css/` are public API ([Agent-friendly by design](https://odonckers.github.io/domestic-ui/principles/agent-friendly-by-design.html)), versioned with [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-Components: one `data-<component>` attribute of space-separated words matched with `~=` (`data-button="primary small"`), no classes; state via native attributes and ARIA. Layout primitives and utilities: `data-action-bar`, `.cluster`, `.grid`, `data-scroll`, `.stack`, `.visually-hidden`. Theme by overriding semantic `--dui-*` tokens ([Tokens](https://odonckers.github.io/domestic-ui/tokens/index.html)); primitive tokens are internal.
+Components: one `data-<component>` attribute of space-separated words matched with `~=` (`data-button="primary small"`), no classes; state via native attributes and ARIA. Layout primitives and utilities: `data-action-bar`, `.cluster`, `.grid`, `data-card`, `data-scroll`, `.stack`, `.visually-hidden`. Theme by overriding semantic `--dui-*` tokens ([Tokens](https://odonckers.github.io/domestic-ui/tokens/index.html)); primitive tokens are internal.
 
 ## Principles
 
@@ -33,6 +33,7 @@ Components: one `data-<component>` attribute of space-separated words matched wi
 11. [Explainers](https://odonckers.github.io/domestic-ui/principles/explainers.html)
 12. [Tooling](https://odonckers.github.io/domestic-ui/principles/tooling.html)
 13. [Edges and alignment](https://odonckers.github.io/domestic-ui/principles/edges-and-alignment.html)
+14. [Design principles](https://odonckers.github.io/domestic-ui/principles/design-principles.html)
 
 ## Components
 
@@ -43,9 +44,10 @@ Components: one `data-<component>` attribute of space-separated words matched wi
 | Layout | Action bar | `data-action-bar`, `<form>; holds that form's buttons` | [Action bar](https://odonckers.github.io/domestic-ui/layouts/action-bar.html) |
 | Layout | Cluster | `class="cluster"`, `--cluster-gap`, `--cluster-justify`, `--cluster-align` | [Cluster](https://odonckers.github.io/domestic-ui/layouts/cluster.html) |
 | Layout | Grid | `class="grid"`, `--grid-min`, `--grid-gap` | [Grid](https://odonckers.github.io/domestic-ui/layouts/grid.html) |
+| Layout | Page | `<body> > <header>`, `the nav share a row and wrap when narrow`, `<body> > <main>`, `<body> > <footer>`, `Header and footer hairlines span the text column, not the gutters.`, `<body> > <main> with one data-card as its only child`, `a narrow, centered page (sign-in, sign-up, error);`, `vertically centered too when the page has no header` | [Page](https://odonckers.github.io/domestic-ui/layouts/page.html) |
 | Layout | Scroll | `data-scroll="inline"`, `data-scroll="block inline"`, `--dui-size-pane (the viewport) tall, so a`, `sticky table header stays in view`, `(css/components/organisms/data-table.css)` | [Scroll](https://odonckers.github.io/domestic-ui/layouts/scroll.html) |
 | Layout | Stack | `class="stack"`, `--stack-gap` | [Stack](https://odonckers.github.io/domestic-ui/layouts/stack.html) |
-| Layout | App shell | `data-app-shell`, `data-app-shell="contained"`, `its own box (a shell inside a page section)`, `Children, in source order:`, `<header>`, `<nav aria-label> or <aside aria-label>`, `<main id>`, `<aside aria-label>`, `<footer>`, `<button type="button" aria-controls="sidebar-id" aria-expanded="true" hidden>`, `a sidebar's toggle; <dui-app-shell> shows it.`, `aria-expanded="false" in the markup starts the`, `sidebar collapsed when it sits beside main.`, `Icon only (data-button="quiet icon", Lucide`, `panel-left or panel-right, visually hidden`, `name) inside a <dui-tooltip> with the same words`, `--dui-size-sidebar, --dui-size-sidebar-aux`, `--dui-size-pane`, `block size of a contained shell` | [App shell](https://odonckers.github.io/domestic-ui/patterns/app-shell.html) |
+| Layout | App shell | `data-app-shell`, `data-app-shell="contained"`, `its own box (a shell inside a page section)`, `data-app-shell="page"`, `main scrolling inside its panel: main sits on the`, `frame and each data-card directly in it is a panel.`, `Combines with contained ("contained page")`, `Children, in source order:`, `<header>`, `<nav aria-label> or <aside aria-label>`, `<main id tabindex="-1">`, `the frame holding text and data-card panels`, `<aside aria-label>`, `<footer>`, `<button type="button" aria-controls="sidebar-id" aria-expanded="true" hidden>`, `a sidebar's toggle; <dui-app-shell> shows it.`, `aria-expanded="false" in the markup starts the`, `sidebar collapsed when it sits beside main.`, `Icon only (data-button="quiet icon", Lucide`, `panel-left or panel-right, visually hidden`, `name) inside a <dui-tooltip> with the same words`, `--dui-size-sidebar, --dui-size-sidebar-aux`, `--dui-size-pane`, `block size of a contained shell` | [App shell](https://odonckers.github.io/domestic-ui/patterns/app-shell.html) |
 | Layout | Dashboard | `data-dashboard`, `data-dashboard="wide"`, `data-dashboard="full"`, `Tiles: <section aria-labelledby> (or <article>, <li>) with a heading first.` | [Dashboard](https://odonckers.github.io/domestic-ui/patterns/dashboard.html) |
 | Layout | List-detail | `data-list-detail`, `<nav aria-label> or <div>`, `<section> or <article> with aria-labelledby`, `aria-current="page"`, `aria-current="true"` | [List-detail](https://odonckers.github.io/domestic-ui/patterns/list-detail.html) |
 | Layout | Split | `data-split="[1:1 \| 1:2 \| 2:1]"`, `empty means 1:1 (equal halves)` | [Split](https://odonckers.github.io/domestic-ui/patterns/split.html) |
@@ -65,6 +67,7 @@ Components: one `data-<component>` attribute of space-separated words matched wi
 | Molecules | Pagination | `data-pagination`, `aria-current="page"`, `<a> without href`, `<li aria-hidden="true">…</li>` | [Pagination](https://odonckers.github.io/domestic-ui/patterns/pagination.html) |
 | Molecules | Popover | `data-popover`, `below the invoker, aligned to its start edge`, `data-popover="block-start \| inline-start \| inline-end"`, `place it above or beside the invoker instead`, `role="tooltip"`, `placed above the trigger`, `popover="auto \| manual \| hint"` | [Popover](https://odonckers.github.io/domestic-ui/patterns/popover.html) |
 | Molecules | Search | `<search> > <form> with an <input type="search">`, `the label and any hint span the full width, the input and the submit`, `button share the row below.` | [Search](https://odonckers.github.io/domestic-ui/patterns/search.html) |
+| Molecules | Search dialog | see the pattern page | [Search dialog](https://odonckers.github.io/domestic-ui/patterns/search-dialog.html) |
 | Molecules | Tabs | `<dui-tabs>`, `activation="manual"`, `aria-current="true"`, `role="tablist" \| "tab" \| "tabpanel"` | [Tabs](https://odonckers.github.io/domestic-ui/patterns/tabs.html) |
 | Molecules | Toolbar | `role="toolbar" aria-label="…"`, `aria-orientation="vertical"`, `aria-pressed="true \| false"`, `<hr>` | [Toolbar](https://odonckers.github.io/domestic-ui/patterns/toolbar.html) |
 | Molecules | Typeahead | `<dui-combobox>`, `<option value="…" label="…">`, `dui-combobox-filter`, `element.setOptions([...])` | [Typeahead](https://odonckers.github.io/domestic-ui/patterns/typeahead.html) |
@@ -80,7 +83,7 @@ Docs pages also link how other design systems handle the same thing, for compari
 
 ## Patterns
 
-Each follows a native element or WAI-ARIA APG pattern where one exists ([Patterns](https://odonckers.github.io/domestic-ui/patterns/index.html)). Guides: [From a simple site to an ERP app](https://odonckers.github.io/domestic-ui/guides/simple-site-to-erp-app.html).
+Each follows a native element or WAI-ARIA APG pattern where one exists ([Patterns](https://odonckers.github.io/domestic-ui/patterns/index.html)). Guides: [Use it with any framework](https://odonckers.github.io/domestic-ui/guides/any-framework.html), [From a simple site to an ERP app](https://odonckers.github.io/domestic-ui/guides/simple-site-to-erp-app.html), [Writing pages with no CSS](https://odonckers.github.io/domestic-ui/guides/writing-pages.html).
 
 | Pattern | Milestone | Status |
 | --- | --- | --- |
@@ -93,6 +96,7 @@ Each follows a native element or WAI-ARIA APG pattern where one exists ([Pattern
 | [Pagination](https://odonckers.github.io/domestic-ui/patterns/pagination.html) | M3 | Available |
 | [Popover](https://odonckers.github.io/domestic-ui/patterns/popover.html) | M3 | Available |
 | [Search](https://odonckers.github.io/domestic-ui/patterns/search.html) | M3 | Available |
+| [Search dialog](https://odonckers.github.io/domestic-ui/patterns/search-dialog.html) | M3 | Available |
 | [Site navigation](https://odonckers.github.io/domestic-ui/patterns/nav.html) | M3 | Available |
 | [Tabs](https://odonckers.github.io/domestic-ui/patterns/tabs.html) | M3 | Available |
 | [Toolbar](https://odonckers.github.io/domestic-ui/patterns/toolbar.html) | M3 | Available |
@@ -112,7 +116,9 @@ Each follows a native element or WAI-ARIA APG pattern where one exists ([Pattern
 - **Angular** ([`demos/angular/`](https://github.com/odonckers/domestic-ui/tree/main/demos/angular)): The dashboard, account settings and orders views in Angular 22: standalone components, three routes (`''`, `'settings'` and `'orders'`) with Angular Router, a `title` per route, and `routerLinkActive` with `ariaCurrentWhenActive="page"` for the current link.
 - **Astro** ([`demos/astro/`](https://github.com/odonckers/domestic-ui/tree/main/demos/astro)): The dashboard, account settings and orders views as three static Astro pages (`src/pages/index.astro`, `src/pages/settings.astro` and `src/pages/orders.astro`) sharing `src/layouts/Base.astro`.
 - **React** ([`demos/react/`](https://github.com/odonckers/domestic-ui/tree/main/demos/react)): The dashboard, account settings and orders views in React 19 with Vite, as a three-page [multi-page app](https://vite.dev/guide/build#multi-page-app) (`index.html`, `settings.html` and `orders.html`).
+- **Svelte** ([`demos/svelte/`](https://github.com/odonckers/domestic-ui/tree/main/demos/svelte)): The dashboard, account settings and orders views in Svelte 5 with Vite, as a three-page [multi-page app](https://vite.dev/guide/build#multi-page-app) (`index.html`, `settings.html` and `orders.html`).
 - **Plain HTML** ([`demos/vanilla/`](https://github.com/odonckers/domestic-ui/tree/main/demos/vanilla)): The dashboard, account settings and orders views as three static HTML files, with no build step.
+- **Vue** ([`demos/vue/`](https://github.com/odonckers/domestic-ui/tree/main/demos/vue)): The dashboard, account settings and orders views in Vue 3 with Vite, as a three-page [multi-page app](https://vite.dev/guide/build#multi-page-app) (`index.html`, `settings.html` and `orders.html`) of single-file components.
 
 Views: Dashboard, Account settings and Orders; [source per view and app](https://odonckers.github.io/domestic-ui/demos.html#views).
 

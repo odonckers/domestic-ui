@@ -838,6 +838,7 @@ a future native element or attribute.
 | `lint:html` | [html-validate](https://html-validate.org/) | `examples/**/*.html` against `html-validate:recommended` |
 | `lint:css` | [Stylelint](https://stylelint.io/) | `css/**/*.css` against `stylelint-config-standard` |
 | `lint:tokens` | `scripts/check-tokens.mjs` | Semantic-only tokens and no literal colors or sizes outside `css/tokens/` |
+| `lint:markup` | `scripts/check-markup.mjs` | Pages use only the vocabulary the CSS API comments document: `examples/pages/` and `demos/vanilla/` have no `<style>`, no inline style but documented custom properties and semantic tokens, and no undocumented class, attribute or word; every example uses documented words and loads the module of each `dui-*` element; every word a CSS selector matches is documented |
 | `test:a11y` | [Playwright](https://playwright.dev/) + [axe-core](https://github.com/dequelabs/axe-core) | Every `examples/**/*.html` (atoms and molecules included) in light and dark, in Chromium, Firefox and WebKit, with tags `wcag2a`, `wcag2aa`, `wcag21a`, `wcag21aa`, `wcag22aa`, including open dialogs and drawers, open popovers and menus, shown tooltips and toasts, every tab selected and every details expanded; no horizontal page overflow and no axe violations at 320×640 and 375×812; no external requests; token contrast pairs (atoms and molecules included) in the default and forest themes; rendered focus-ring and indicator contrast; atom and molecule states through accessibility APIs; molecule keyboard behavior against the APG; no-JavaScript fallbacks; fallbacks for engine-specific features; scoped theming of atoms and molecules; layouts and organisms side by side when wide and stacked when narrow, the sticky action bar never covering the focused field, data table sorting, selection, sticky header and loading state (with and without JavaScript), and 24px targets in compact density; the app shell's landmarks and grid areas, collapse when wide, modal drawers with focus return when narrow, one copy of each sidebar, no-JavaScript fallbacks and axe with the drawers open |
 
 Preview locally with `npm run serve` (a zero-dependency static server) and open
@@ -907,3 +908,80 @@ The lines, measured from each container's inline-start edge (the trailing line m
 
 These were read from the CSS in an alignment pass on 21 November 2026 (Owen Donckers, with Claude), taking the line
 most rows already used. [`CONTRIBUTING.md`](CONTRIBUTING.md#alignment-passes) explains how to run a pass.
+
+## 14. Design principles
+
+Sections 1 to 13 cover engineering choices. This one names the design principles behind the look and the behavior,
+and where each is applied. The principles are borrowed and linked; only the "how we apply it" lines are ours.
+
+### Composition
+
+- **Hierarchy and scale.** One page title, then a small, fixed type scale, so size alone tells you what matters.
+  Applied by the heading and UI text tokens (`--dui-font-size-page-title`, `--dui-font-size-ui`) in
+  [Semantic tokens](PRINCIPLES.md#semantic-tokens-public-api).
+- **Contrast.** Text, controls and focus rings meet the WCAG contrast minimums in light, dark and forced colors;
+  the primary fill is the strongest mark on a page. See [§ 3](PRINCIPLES.md#3-accessibility-baseline-wcag-22-aa)
+  and [Color](PRINCIPLES.md#color).
+- **Proximity and negative space.** Related things sit closer than unrelated ones, using the `--dui-space-*` scale
+  and the [layout primitives](PRINCIPLES.md#9-layout-primitives) (stack, cluster, grid), never one-off margins.
+- **Alignment.** Every item sits on one of a container's named lines. See
+  [§ 13 Edges and alignment](PRINCIPLES.md#13-edges-and-alignment).
+- **Repetition and consistency.** One element, one look, everywhere: a `<button>` is styled once in
+  [button](css/components/atoms/button.css) and reused, and the same control keeps the same name across pages
+  ([WCAG 3.2.4](https://www.w3.org/WAI/WCAG22/Understanding/consistent-identification.html)).
+- **Balance.** Surfaces are quiet and neutral so content and the one primary action carry the weight; elevation
+  separates layers rather than decorating them. See [§ 7 Elevation](PRINCIPLES.md#7-elevation).
+
+### Dieter Rams' principles for good design
+
+Named from [Vitsœ's page on Dieter Rams' ten principles](https://www.vitsoe.com/us/about/good-design). How
+domestic-ui applies nine of them:
+
+- **Useful:** every component exists because a real view needs it; nothing ships as a showcase.
+- **Aesthetic:** the default theme looks finished with zero CSS written by the consumer ([§ 5](PRINCIPLES.md#5-theming)).
+- **Understandable:** the markup is the API; a native element looks and behaves like itself
+  ([§ 1](PRINCIPLES.md#1-native-element-first)).
+- **Unobtrusive:** neutral surfaces and a monochrome default leave room for the product's own content.
+- **Honest:** a control never looks like something it is not; links stay underlined, buttons look pressable
+  ([§ 8](PRINCIPLES.md#8-opinions-we-hold)).
+- **Long-lasting:** we build on web standards, so the system ages with the platform rather than a framework.
+- **Thorough down to the last detail:** focus, forced colors, reduced motion, right-to-left and 320px widths are
+  part of every component, not follow-ups ([§ 3](PRINCIPLES.md#3-accessibility-baseline-wcag-22-aa)).
+- **Environmentally friendly.** **Our choice:** read as lightweight pages: system fonts by default, zero-build CSS and no
+  runtime dependencies, so a page costs few bytes and no extra requests.
+- **As little design as possible:** a few semantic tokens and no per-component knobs.
+
+We leave out **Innovative**: domestic-ui packages the platform and claims no originality.
+
+### Laws of UX
+
+From [Laws of UX](https://lawsofux.com/):
+
+- [Jakob's Law](https://lawsofux.com/jakobs-law/): people expect a site to work like the ones they already know.
+  Native elements keep the platform's own behavior ([§ 1](PRINCIPLES.md#1-native-element-first)).
+- [Hick's Law](https://lawsofux.com/hicks-law/): more choices take longer to decide. One primary action per view;
+  everything else is secondary or quiet ([button](css/components/atoms/button.css)).
+- [Fitts's Law](https://lawsofux.com/fittss-law/): bigger, closer targets are faster to hit. Controls are 36px,
+  44px under a coarse pointer, above [WCAG 2.5.8](https://www.w3.org/WAI/WCAG22/Understanding/target-size-minimum.html)'s
+  24px minimum (`--dui-size-target`).
+- [Miller's Law](https://lawsofux.com/millers-law/): people hold only a few items in mind at once. Long forms are
+  grouped into fieldsets and sections ([large forms](css/components/organisms/large-forms.css)), and navigation into
+  groups ([nav](css/components/molecules/nav.css)).
+- [Aesthetic-Usability Effect](https://lawsofux.com/aesthetic-usability-effect/): people find good-looking interfaces
+  easier to use. We polish the default look, but never at the cost of an accessibility requirement
+  ([§ 3](PRINCIPLES.md#3-accessibility-baseline-wcag-22-aa)).
+
+### Rules of thumb
+
+- **Reduce cognitive load.** Show one task at a time; progressive disclosure with `<details>` and dialogs keeps
+  secondary options out of the way ([disclosure](css/components/molecules/disclosure.css)).
+- **One primary action per view.** `type="submit"` gets the primary fill; a second primary on the same view is a smell.
+- **Intentional spacing.** Every gap comes from `--dui-space-*`; a value off the scale means the layout is wrong
+  ([§ 13](PRINCIPLES.md#13-edges-and-alignment)).
+- **Compose before you create.** Most of what a design system calls a component is native elements put together
+  well. Before adding a component class or a web component, try a canonical example: a snippet in `examples/` that
+  combines existing elements (a card of a heading, text and actions; a settings form of fieldsets) and looks finished
+  as written. Add a new component only when composition can't express it; the
+  [decision ladder](docs/ARCHITECTURE.md#3-the-decision-ladder) says what comes next.
+- **Familiarity over novelty.** Use the pattern people already know, the native element or the
+  [APG pattern](https://www.w3.org/WAI/ARIA/apg/patterns/), before inventing one.
