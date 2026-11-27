@@ -40,6 +40,7 @@ jobs:
       - run: npm run lint:html
       - run: npm run lint:css
       - run: npm run lint:tokens
+      - run: npm run lint:markup
       - name: Generated README.md and llms files are up to date
         run: node site/build.mjs --check
 
