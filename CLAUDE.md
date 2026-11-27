@@ -52,8 +52,8 @@ Read [PRINCIPLES.md](PRINCIPLES.md) before changing behavior. [CONTRIBUTING.md](
 
 ## Branches, checks and merging
 
-- Never push to `main`. The "Protect main" ruleset requires the `owen-gate` and `ci` checks and up-to-date branches; force-pushes and deleting `main` are blocked.
+- Never push to `main`. The "Protect main" ruleset requires the `ci` check (and, until it is removed from the ruleset, the retired `owen-gate` check, which always passes) and up-to-date branches; force-pushes and deleting `main` are blocked.
 - Keep a branch current by merging `main` into it (`git merge origin/main`). Never rebase or force-push a pushed branch.
 - Squash merge only. The maintainer merges, unless they ask you to in the session; never enable auto-merge.
-- Outside issues and PRs get `needs-owen-approval`; only the maintainer applies `owen-approved`.
+- Outside PRs get the same review and CI as ours; there is no approval label. First-time contributors' CI runs need a maintainer to approve the workflow run.
 - No npm publish, no release tag and no repository-setting change unless the maintainer asks for it in the session.

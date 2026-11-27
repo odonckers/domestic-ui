@@ -8,13 +8,9 @@ Use the issue forms for bugs and feature requests. Pull requests should use the 
 
 Branch names follow `fix/short-description`, `feat/short-description`, `docs/short-description`, or `a11y/short-description`.
 
-### Approval flow
+### Reviews
 
-Issues and pull requests from outside this repository's owners, members, or collaborators get the `needs-owen-approval` label automatically.
-
-The maintainer approves an item by adding the `owen-approved` label. Only Owen applies that label. Team bots never apply `owen-approved` and never merge outside pull requests. Bots may merge their own pull requests.
-
-An outside pull request cannot merge until the `owen-gate` check passes, which requires the `owen-approved` label.
+Every pull request, from inside or outside the project, gets the same review and must pass CI before it merges. GitHub holds CI on a first-time contributor's pull request until a maintainer approves the workflow run.
 
 `.github/CODEOWNERS` lists @odonckers on every file. That file is informational today: team bots push with the same GitHub account as Owen, so GitHub cannot tell his review apart from a bot's.
 
