@@ -53,6 +53,10 @@ export const PAIRS = [
   // each fill it touches. Primary adds an inner ring in its text color.
   ["--dui-color-primary-contrast", "--dui-color-primary", 3], // primary inner ring on fill
   ["--dui-color-primary-contrast", "--dui-color-primary-hover", 3], // primary inner ring, hover
+  // Danger buttons: white text on the danger fill and its hover. The fill needs no 3:1
+  // against the page: the visible label identifies the button (PRINCIPLES.md, Non-text contrast).
+  ["--dui-color-danger-contrast", "--dui-color-danger-solid", 4.5],
+  ["--dui-color-danger-contrast", "--dui-color-danger-solid-hover", 4.5],
 
   // Atoms: switch (css/components/atoms/switch.css). Track border and off thumb
   // are --dui-color-border-control on the surface (above).
@@ -70,11 +74,15 @@ export const PAIRS = [
   // Atoms: field (css/components/atoms/field.css). Hint is muted text and error is
   // danger on the surface; the invalid border is danger on the surface (all above).
 
-  // Molecules: alerts (css/components/molecules/alerts.css). Body text and links on each
-  // tinted surface; the prefix word in the tone color (danger, success, warning above);
-  // the inline-start rule and the icon disc are the tone against the surface and the tint;
+  // Molecules: alerts (css/components/molecules/alerts.css). A neutral raised surface: body
+  // text and links on it (above); the prefix word and the icon disc in the tone color on it;
   // the icon glyph is the surface on the tone (same ratio as tone on surface).
   ["--dui-color-info", "--dui-color-surface", 4.5],
+  ["--dui-color-info", "--dui-color-surface-raised", 4.5],
+  ["--dui-color-success", "--dui-color-surface-raised", 4.5],
+  ["--dui-color-warning", "--dui-color-surface-raised", 4.5],
+  ["--dui-color-danger", "--dui-color-surface-raised", 4.5],
+  // Tinted tone surfaces (badges in css/components/atoms/badge.css): text, links and focus.
   ["--dui-color-info", "--dui-color-info-surface", 4.5],
   ["--dui-color-text", "--dui-color-info-surface", 4.5],
   ["--dui-color-text", "--dui-color-success-surface", 4.5],

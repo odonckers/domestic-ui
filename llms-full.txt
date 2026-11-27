@@ -361,8 +361,9 @@ may change. Fluid `--dui-step-*` values are `clamp()` expressions; see `primitiv
 | `--dui-step-3` | h3, page titles | `font-size-fluid-3` (`clamp()`, 1.5rem to 1.875rem) |
 | `--dui-step-4` | h2 | `font-size-fluid-4` (`clamp()`, 1.75rem to 2.375rem) |
 | `--dui-step-5` | h1, docs and marketing heroes | `font-size-fluid-5` (`clamp()`, 2rem to 3rem) |
-| `--dui-font-size-ui` | Interface text: buttons, fields, selects, nav, menu and listbox items, tabs, badges, tooltips, table cells | `--dui-step--1` (14px) |
+| `--dui-font-size-ui` | Interface text: buttons, fields, selects, nav, menu and listbox items, tabs, tooltips, table cells | `--dui-step--1` (14px) |
 | `--dui-font-size-field` | Text in fields, selects and text areas: the UI size, at least 16px under a coarse pointer | `--dui-font-size-ui`; `max(--dui-font-size-ui, --dui-step-0)` under `pointer: coarse` |
+| `--dui-font-size-badge` | Badge text, as shadcn/ui sets its badge | `font-size-0-75` (0.75rem, 12px) |
 | `--dui-font-size-page-title` | The `h1` of a page header or an app shell | `--dui-step-3` (1.875rem at most) |
 | `--dui-font-size-code` | code, kbd, samp, pre (relative) | `font-size-relative-90` (0.9em) |
 | `--dui-line-height-body` | Body text | `leading-150` (1.5) |
@@ -1812,7 +1813,7 @@ Neutral and indigo each have 12 steps in light and in dark. The step number is t
 
 [Custom properties](https://developer.mozilla.org/en-US/docs/Web/CSS/--*).
 
-178 tokens in [`css/tokens/primitives.css`](https://github.com/odonckers/domestic-ui/blob/main/css/tokens/primitives.css). **Light** and **Dark** resolve every `var()` and take one side of [`light-dark()`](https://developer.mozilla.org/en-US/docs/Web/CSS/color_value/light-dark). Previews are decorative.
+182 tokens in [`css/tokens/primitives.css`](https://github.com/odonckers/domestic-ui/blob/main/css/tokens/primitives.css). **Light** and **Dark** resolve every `var()` and take one side of [`light-dark()`](https://developer.mozilla.org/en-US/docs/Web/CSS/color_value/light-dark). Previews are decorative.
 
 ### Neutral, light. Achromatic (chroma 0), as shadcn/ui's neutral base
 
@@ -1895,6 +1896,7 @@ Neutral and indigo each have 12 steps in light and in dark. The step number is t
 | --- | --- | --- | --- |
 | `--dui-color-red-3` | `oklch(95.5% 0.018 27deg)` | `oklch(95.5% 0.018 27deg)` | Step 3, element tint |
 | `--dui-color-red-9` | `oklch(55% 0.19 27deg)` | `oklch(55% 0.19 27deg)` | Step 9, solid With `@media (color-gamut: p3)`: `oklch(55% 0.214 27deg)`. |
+| `--dui-color-red-10` | `oklch(50% 0.19 27deg)` | `oklch(50% 0.19 27deg)` | Step 10, danger fill behind white text (4.5:1), both schemes |
 | `--dui-color-red-11` | `oklch(48% 0.16 27deg)` | `oklch(48% 0.16 27deg)` | Step 11, danger text |
 | `--dui-color-red-dark-3` | `oklch(28% 0.05 27deg)` | `oklch(28% 0.05 27deg)` | Step 3, element tint |
 | `--dui-color-red-dark-9` | `oklch(65% 0.17 27deg)` | `oklch(65% 0.17 27deg)` | Step 9, solid With `@media (color-gamut: p3)`: `oklch(65% 0.215 27deg)`. |
@@ -1975,6 +1977,7 @@ System fonts only, no downloads. The system-ui stack names the platform UI faces
 
 | Token | Light | Dark | Description |
 | --- | --- | --- | --- |
+| `--dui-font-size-0-75` | `0.75rem` | `0.75rem` | 12px: badges |
 | `--dui-font-size-0-875` | `0.875rem` | `0.875rem` | 14px: interface text |
 | `--dui-font-size-1` | `1rem` | `1rem` | 16px: body text |
 | `--dui-font-size-1-125` | `1.125rem` | `1.125rem` | 18px |
@@ -2038,6 +2041,7 @@ Rem, so it follows the user's font size setting.
 | --- | --- | --- | --- |
 | `--dui-radius-0` | `0` | `0` | No description yet. |
 | `--dui-radius-1` | `0.125rem` | `0.125rem` | No description yet. |
+| `--dui-radius-1-5` | `0.25rem` | `0.25rem` | 4px: checkboxes |
 | `--dui-radius-2` | `0.5rem` | `0.5rem` | 8px: controls |
 | `--dui-radius-3` | `0.75rem` | `0.75rem` | 12px: surfaces |
 | `--dui-radius-round` | `999rem` | `999rem` | No description yet. |
@@ -2120,6 +2124,7 @@ X offset, y offset, blur, spread. The color is added by the semantic elevation t
 | `--dui-opacity-60` | `0.6` | `0.6` | No description yet. |
 | `--dui-mix-3` | `3%` | `3%` | No description yet. |
 | `--dui-mix-8` | `8%` | `8%` | No description yet. |
+| `--dui-mix-20` | `20%` | `20%` | No description yet. |
 | `--dui-mix-35` | `35%` | `35%` | No description yet. |
 | `--dui-mix-100` | `100%` | `100%` | No description yet. |
 
@@ -2133,7 +2138,7 @@ A theme is an override of these tokens on `:root` or on a scoped element. No reb
 
 Colors use [`light-dark()`](https://developer.mozilla.org/en-US/docs/Web/CSS/color_value/light-dark), which picks a value from the used color-scheme of the element where the token is read.
 
-171 tokens in [`css/tokens/semantic.css`](https://github.com/odonckers/domestic-ui/blob/main/css/tokens/semantic.css). **Light** and **Dark** resolve every `var()` and take one side of [`light-dark()`](https://developer.mozilla.org/en-US/docs/Web/CSS/color_value/light-dark). Previews are decorative. † marks a description taken from the semantic token table in [Theming](https://odonckers.github.io/domestic-ui/principles/theming.md).
+178 tokens in [`css/tokens/semantic.css`](https://github.com/odonckers/domestic-ui/blob/main/css/tokens/semantic.css). **Light** and **Dark** resolve every `var()` and take one side of [`light-dark()`](https://developer.mozilla.org/en-US/docs/Web/CSS/color_value/light-dark). Previews are decorative. † marks a description taken from the semantic token table in [Theming](https://odonckers.github.io/domestic-ui/principles/theming.md).
 
 ### Surfaces and text
 
@@ -2170,6 +2175,8 @@ Colors use [`light-dark()`](https://developer.mozilla.org/en-US/docs/Web/CSS/col
 | `--dui-color-accent-indigo` | `oklch(53% 0.215 272deg)` | `oklch(53% 0.215 272deg)` | An indigo accent solid, more vivid on a Display P3 screen. The calm theme points --dui-color-accent at it |
 | `--dui-color-link-visited` | `oklch(46.2% 0.195 299deg)` | `oklch(80.1% 0.127 306deg)` | Visited links |
 | `--dui-color-danger` | `oklch(48% 0.16 27deg)` | `oklch(80% 0.114 27deg)` | Errors and invalid borders |
+| `--dui-color-danger-solid` | `oklch(50% 0.19 27deg)` | `oklch(50% 0.19 27deg)` | Fill of danger buttons, the same red in both schemes, 3:1 against the light page |
+| `--dui-color-danger-contrast` | `oklch(100% 0 0deg)` | `oklch(100% 0 0deg)` | Text on the danger fill, 4.5:1 |
 | `--dui-color-success` | `oklch(47% 0.128 150deg)` | `oklch(80% 0.12 150deg)` | Success messages |
 | `--dui-color-warning` | `oklch(47% 0.098 75deg)` | `oklch(80% 0.12 75deg)` | Warning badges and messages |
 | `--dui-color-info` | `oklch(48% 0.12 245deg)` | `oklch(80% 0.108 245deg)` | Informational alerts, separate from the accent |
@@ -2240,7 +2247,7 @@ Colors use [`light-dark()`](https://developer.mozilla.org/en-US/docs/Web/CSS/col
 | `--dui-size-target-large` | `2.5rem` | `2.5rem` | Large buttons: 40px, 52px under a coarse pointer With `@media (pointer: coarse)`: `var(--dui-size-3-25)`, resolves to `3.25rem`. |
 | `--dui-size-target-row` | `2rem` | `2rem` | Comfortable row height of nav, menu, listbox and list items: 32px, 44px under a coarse pointer With `@media (pointer: coarse)`: `var(--dui-size-2-75)`, resolves to `2.75rem`. |
 | `--dui-size-target-row-compact` | `1.75rem` | `1.75rem` | Compact row height: 28px, 44px under a coarse pointer With `@media (pointer: coarse)`: `var(--dui-size-2-75)`, resolves to `2.75rem`. |
-| `--dui-size-check` | `1.25rem` | `1.25rem` | Checkbox and radio size † |
+| `--dui-size-check` | `1rem` | `1rem` | Checkbox and radio box, and the switch thumb: 16px, as shadcn/ui. The label around it is the full-size target (WCAG 2.5.8) |
 | `--dui-size-column-min` | `16rem` | `16rem` | Default .grid min column width † |
 | `--dui-size-menu-min` | `12rem` | `12rem` | Min width of menus and nav dropdowns † |
 | `--dui-size-drawer` | `24rem` | `24rem` | Drawer width (all of the viewport when narrower) † |
@@ -2263,6 +2270,7 @@ Colors use [`light-dark()`](https://developer.mozilla.org/en-US/docs/Web/CSS/col
 | `--dui-border-width-emphasis` | `0.25rem` | `0.25rem` | blockquote rule, alert start rule, invalid field † |
 | `--dui-border-width-indicator` | `3px` | `3px` | Selected tab (3:1 against the surface); the current nav item's bar in forced colors only † |
 | `--dui-angle-chevron` | `45deg` | `45deg` | Turn of the CSS-drawn sidebar group chevron: -1x points to the inline end, 1x points down (open), 3x points left in right-to-left text |
+| `--dui-border-width-check` | `2px` | `2px` | Stroke of the CSS-drawn check and indeterminate bar in a checkbox, close to a 14px icon's 2 stroke |
 | `--dui-border-width-chevron` | `calc(1px * 1.5)` | `calc(1px * 1.5)` | Stroke of the CSS-drawn chevron on a sidebar nav group, close to a 16px icon's 1.75 stroke |
 | `--dui-underline-offset` | `0.15em` | `0.15em` | Link underline offset † |
 | `--dui-underline-thickness` | `0.0625em` | `0.0625em` | Link underline † |
@@ -2342,14 +2350,17 @@ Defined in terms of other semantic tokens.
 | `--dui-color-link` | `oklch(from oklch(14.5% 0 0deg) calc(0.47 - max(0, 0.02 - c) * 16.25) calc(c * 0.19 / 0.215) h)` | `oklch(from oklch(98.5% 0 0deg) calc(0.78 + max(0, 0.02 - c) * 10.25) calc(c * 0.11 / 0.215) h)` | Links: the text color with the default neutral accent, told apart by the underline (WCAG 1.4.1) |
 | `--dui-color-focus` | `oklch(from oklch(14.5% 0 0deg) calc(l + max(0, 0.02 - c) * 20.25) c h)` | `oklch(from oklch(from oklch(98.5% 0 0deg) calc(0.78 + max(0, 0.02 - c) * 10.25) calc(c * 0.11 / 0.215) h) calc(l - max(0, 0.02 - c) * 21.25) c h)` | Focus ring, 3:1 (WCAG 1.4.11). A hued accent: the accent solid in light, the accent text in dark. The neutral accent: a mid gray, 55% lightness in light and 56% in dark |
 | `--dui-color-accent-contrast` | `oklch(100% 0 0deg)` | `oklch(from oklch(98.5% 0 0deg) calc(1 - max(0, 0.02 - c) * 42.5) 0 0deg)` | Text on the accent fill: white, except on the neutral dark accent, where it is the dark page color |
+| `--dui-color-danger-solid-hover` | `oklch(from oklch(50% 0.19 27deg) calc(l - 0.04) c h)` | `oklch(from oklch(50% 0.19 27deg) calc(l - 0.04) c h)` | Danger fill hover: 0.04 darker in OKLCH lightness, so white text gains contrast |
 | `--dui-color-accent-hover` | `oklch(from oklch(14.5% 0 0deg) calc(l - 0.02) c h)` | `oklch(from oklch(98.5% 0 0deg) calc(l - 0.02) c h)` | Accent solid hover. Our choice: 0.02 darker in OKLCH lightness, so white text stays 4.5:1 |
 | `--dui-color-primary-hover` | `oklch(from oklch(14.5% 0 0deg) 26% calc(c + 0.002) h)` | `oklch(from oklch(98.5% 0 0deg) 90% calc(c + 0.004) h)` | Primary fill hover, same hue as the primary |
 | `--dui-font-heading` | `system-ui, -apple-system, "Segoe UI Variable Text", "Segoe UI", roboto, "Noto Sans", "Helvetica Neue", arial, sans-serif` | `system-ui, -apple-system, "Segoe UI Variable Text", "Segoe UI", roboto, "Noto Sans", "Helvetica Neue", arial, sans-serif` | Heading font stack † |
-| `--dui-font-size-ui` | `0.875rem` | `0.875rem` | Interface text: buttons, fields, selects, nav, menu and listbox items, tabs, badges, tooltips, table cells. 14px at the default font size |
+| `--dui-font-size-ui` | `0.875rem` | `0.875rem` | Interface text: buttons, fields, selects, nav, menu and listbox items, tabs, tooltips, table cells. 14px at the default font size |
 | `--dui-font-size-field` | `0.875rem` | `0.875rem` | Text in fields, selects and text areas: the UI size, at least 16px under a coarse pointer (section 2a) With `@media (pointer: coarse)`: `max(var(--dui-font-size-ui), var(--dui-step-0))`, resolves to `max(0.875rem, 1rem)`. |
+| `--dui-font-size-badge` | `0.75rem` | `0.75rem` | Badge text: 12px, as shadcn/ui sets its badge (text-xs) |
 | `--dui-font-size-page-title` | `clamp(1.5rem, 1.375rem + 0.625vw, 1.875rem)` | `clamp(1.5rem, 1.375rem + 0.625vw, 1.875rem)` | The h1 of a page header or an app shell: 30px at most |
 | `--dui-radius-control` | `calc(0.5rem * 1)` | `calc(0.5rem * 1)` | Controls, buttons, inline code: 8px times the radius scale |
 | `--dui-radius-surface` | `calc(0.75rem * 1)` | `calc(0.75rem * 1)` | Panels, cards, pre, dialogs, details, media: 12px times the radius scale |
+| `--dui-radius-check` | `calc(0.25rem * 1)` | `calc(0.25rem * 1)` | Checkbox corners: 4px times the radius scale |
 
 ### Tinted surfaces for status badges
 
@@ -2361,6 +2372,7 @@ A little of the tone mixed into the surface.
 | `--dui-color-success-surface` | `color-mix(in oklab, oklch(47% 0.128 150deg) calc(8% * 1), oklch(100% 0 0deg))` | `color-mix(in oklab, oklch(80% 0.12 150deg) calc(8% * 1), oklch(14.5% 0 0deg))` | Success badge background † |
 | `--dui-color-warning-surface` | `color-mix(in oklab, oklch(47% 0.098 75deg) calc(8% * 1), oklch(100% 0 0deg))` | `color-mix(in oklab, oklch(80% 0.12 75deg) calc(8% * 1), oklch(14.5% 0 0deg))` | Warning badge background † |
 | `--dui-color-danger-surface` | `color-mix(in oklab, oklch(48% 0.16 27deg) calc(8% * 1), oklch(100% 0 0deg))` | `color-mix(in oklab, oklch(80% 0.114 27deg) calc(8% * 1), oklch(14.5% 0 0deg))` | Danger badge and alert background † |
+| `--dui-color-danger-halo` | `color-mix(in oklab, oklch(48% 0.16 27deg) calc(20% * 1), transparent)` | `color-mix(in oklab, oklch(80% 0.114 27deg) calc(20% * 1), transparent)` | Halo around an invalid field: the danger color at 20%, times --dui-contrast |
 | `--dui-color-info-surface` | `color-mix(in oklab, oklch(48% 0.12 245deg) calc(8% * 1), oklch(100% 0 0deg))` | `color-mix(in oklab, oklch(80% 0.108 245deg) calc(8% * 1), oklch(14.5% 0 0deg))` | Info alert background † |
 
 ### Inverse pair for small overlays on top of content (tooltips): text and surface swapped
@@ -2644,6 +2656,9 @@ None: write semantic HTML.
 - [W3C labels](https://www.w3.org/WAI/tutorials/forms/labels/)
 - [MDN `:user-invalid`](https://developer.mozilla.org/en-US/docs/Web/CSS/:user-invalid)
 - [MDN `accent-color`](https://developer.mozilla.org/en-US/docs/Web/CSS/accent-color)
+- [MDN `appearance`](https://developer.mozilla.org/en-US/docs/Web/CSS/appearance)
+- [ui.shadcn.com checkbox](https://ui.shadcn.com/docs/components/checkbox)
+- [ui.shadcn.com label](https://ui.shadcn.com/docs/components/label)
 - [MDN `forced-colors`](https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/At-rules/@media/forced-colors)
 - [WHATWG interactive elements](https://html.spec.whatwg.org/multipage/interactive-elements.html)
 - [MDN `dialog`](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/dialog)
@@ -3137,7 +3152,7 @@ From [`css/components/atoms/README.md`](https://github.com/odonckers/domestic-ui
 - **Our choice:** default buttons and fields are 36px tall and large ones 40px, and a coarse (touch) pointer restores 44px, between Primer and Radix (32px) and Material (40px), for comparison.
 - **Our choice:** small buttons are 32px tall: below the 36px default, above the [24px minimum](https://www.w3.org/WAI/WCAG22/Understanding/target-size-minimum.html).
 - **Our choice:** `aria-disabled="true"` looks exactly like `disabled`. Prefer native `disabled`; use `aria-disabled` when users should be able to reach the control and read why it is unavailable.
-- **Our choice:** the field's error text starts with the word "Error:" in the markup, rather than a CSS icon, so every user and every screen reader gets it with no extra API. Invalid controls also get a thick start border, a shape change as well as a color change.
+- **Our choice:** the field's error text starts with the word "Error:" in the markup, rather than a CSS icon, so every user and every screen reader gets it with no extra API. Invalid controls also get a 3px halo around them, a shape change as well as a color change.
 - **Our choice:** errors are tied to controls with `aria-describedby`, not `aria-errormessage`, because `aria-describedby` has broader screen reader support today (see the support notes on [MDN `aria-errormessage`](https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Reference/Attributes/aria-errormessage)).
 - **Our choice:** the switch is the native checkbox with `role="switch"`, drawn with `appearance: none` and one pseudo-element. The thumb moves and changes color, and forced-colors mode gets explicit system colors.
 - **Our choice:** badge tones are 8% of the tone mixed into the surface, with the tone as text. The tinted surfaces are derived tokens (`--dui-color-*-surface`), so a theme that changes the surface or a tone re-tints badges with no extra overrides.
@@ -3320,6 +3335,7 @@ _Diagram: Buttons sit at the end of a form in the content area: the primary subm
   <button type="button" data-button="primary">Primary</button>
   <button type="button" data-button="secondary">Secondary</button>
   <button type="button" data-button="quiet">Quiet</button>
+  <button type="button" data-button="danger">Delete</button>
 </div>
 ```
 
@@ -3386,7 +3402,7 @@ _Diagram: Buttons sit at the end of a form in the content area: the primary subm
 
 | Attribute or value | Where | Effect |
 | --- | --- | --- |
-| `data-button="[primary \| secondary \| quiet] [small \| large] [icon]"` | `<button>`, `<input type="submit \| button \| reset">` or `<a href>` | at most one variant word, one size word and icon |
+| `data-button="[primary \| secondary \| quiet \| danger] [small \| large] [icon]"` | `<button>`, `<input type="submit \| button \| reset">` or `<a href>` | at most one variant word, one size word and icon |
 
 - On `<a href>`, it looks like a button and keeps link semantics.
 
@@ -3643,6 +3659,7 @@ The track color fades over `--dui-motion-duration-fast`; the thumb slides for th
 - [APG Switch](https://www.w3.org/WAI/ARIA/apg/patterns/switch/)
 - [ARIA in HTML](https://www.w3.org/TR/html-aria/#el-input-checkbox)
 - [MDN `switch` role](https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Reference/Roles/switch_role)
+- [ui.shadcn.com switch](https://ui.shadcn.com/docs/components/switch)
 - [MDN `forced-colors`](https://developer.mozilla.org/en-US/docs/Web/CSS/@media/forced-colors)
 - [WCAG Use of color](https://www.w3.org/WAI/WCAG22/Understanding/use-of-color.html)
 - [WCAG Non text contrast](https://www.w3.org/WAI/WCAG22/Understanding/non-text-contrast.html)
@@ -3747,6 +3764,7 @@ _Diagram: A field is one form entry in the content area: the label, the control,
 - [MDN `aria-describedby`](https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Reference/Attributes/aria-describedby)
 - [MDN `aria-invalid`](https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Reference/Attributes/aria-invalid)
 - [MDN `:user-invalid`](https://developer.mozilla.org/en-US/docs/Web/CSS/:user-invalid)
+- [ui.shadcn.com input](https://ui.shadcn.com/docs/components/input)
 - [WCAG Use of color](https://www.w3.org/WAI/WCAG22/Understanding/use-of-color.html)
 
 ### See also
@@ -3778,7 +3796,9 @@ _Diagram: Badges label the status of each row in a table's Status column, such a
 
 ```html
 <p class="cluster">
+  <span data-badge="primary">Pro</span>
   <span data-badge>Draft</span>
+  <span data-badge="outline">Beta</span>
   <span data-badge="accent">New</span>
   <span data-badge="success">Paid</span>
   <span data-badge="warning">Due soon</span>
@@ -3809,7 +3829,7 @@ _Diagram: Badges label the status of each row in a table's Status column, such a
 
 | Attribute or value | Effect |
 | --- | --- |
-| `data-badge="neutral \| accent \| success \| warning \| danger"` | (empty means neutral) |
+| `data-badge="neutral \| primary \| outline \| accent \| success \| warning \| danger"` | (empty means neutral). primary is solid, outline is a bordered chip, and the tones are tinted, after shadcn/ui's badge variants (<https://ui.shadcn.com/docs/components/badge>). |
 
 - Static text. To make a badge clickable, put a real `<button>` or `<a href>` around it.
 - An empty value is neutral.
@@ -3824,6 +3844,7 @@ _Diagram: Badges label the status of each row in a table's Status column, such a
 - [WCAG 1.4.3](https://www.w3.org/WAI/WCAG22/Understanding/contrast-minimum.html)
 - [WCAG 1.4.1](https://www.w3.org/WAI/WCAG22/Understanding/use-of-color.html)
 - [Using ARIA rule 1](https://www.w3.org/TR/using-aria/#rule1)
+- [ui.shadcn.com badge](https://ui.shadcn.com/docs/components/badge)
 
 ### See also
 
@@ -4159,7 +4180,7 @@ Our choice: the layout is chosen from the children's elements (a \<nav> breadcru
 - [Component API convention](https://odonckers.github.io/domestic-ui/index.md#component-api)
 - [Accessibility baseline](https://odonckers.github.io/domestic-ui/principles/accessibility-baseline-wcag-22-aa.md)
 - Source: [`css/components/organisms/page-header.css`](https://github.com/odonckers/domestic-ui/blob/main/css/components/organisms/page-header.css), [`examples/organisms/page-header.html`](https://github.com/odonckers/domestic-ui/blob/main/examples/organisms/page-header.html)
-- Demos: Orders view ([Plain HTML](https://github.com/odonckers/domestic-ui/blob/main/demos/vanilla/orders.html), [React](https://github.com/odonckers/domestic-ui/blob/main/demos/react/src/OrdersPage.tsx), [Angular](https://github.com/odonckers/domestic-ui/tree/main/demos/angular/src/app/orders), [Astro](https://github.com/odonckers/domestic-ui/blob/main/demos/astro/src/pages/orders.astro))
+- Demos: Orders view ([Plain HTML](https://github.com/odonckers/domestic-ui/blob/main/demos/vanilla/orders.html), [React](https://github.com/odonckers/domestic-ui/blob/main/demos/react/src/OrdersPage.tsx), [Angular](https://github.com/odonckers/domestic-ui/tree/main/demos/angular/src/app/orders), [Astro](https://github.com/odonckers/domestic-ui/blob/main/demos/astro/src/pages/orders.astro), [Vue](https://github.com/odonckers/domestic-ui/blob/main/demos/vue/src/OrdersPage.vue), [Svelte](https://github.com/odonckers/domestic-ui/blob/main/demos/svelte/src/OrdersPage.svelte))
 
 ### How other systems do it
 
@@ -4336,7 +4357,7 @@ See the keyboard section of the [APG Breadcrumb pattern](https://www.w3.org/WAI/
 
 - [Molecules](https://odonckers.github.io/domestic-ui/molecules/index.md)
 - Source: [`css/components/molecules/breadcrumb.css`](https://github.com/odonckers/domestic-ui/blob/main/css/components/molecules/breadcrumb.css), [`examples/molecules/breadcrumb.html`](https://github.com/odonckers/domestic-ui/blob/main/examples/molecules/breadcrumb.html)
-- Demos: Orders view ([Plain HTML](https://github.com/odonckers/domestic-ui/blob/main/demos/vanilla/orders.html), [React](https://github.com/odonckers/domestic-ui/blob/main/demos/react/src/OrdersPage.tsx), [Angular](https://github.com/odonckers/domestic-ui/tree/main/demos/angular/src/app/orders), [Astro](https://github.com/odonckers/domestic-ui/blob/main/demos/astro/src/pages/orders.astro))
+- Demos: Orders view ([Plain HTML](https://github.com/odonckers/domestic-ui/blob/main/demos/vanilla/orders.html), [React](https://github.com/odonckers/domestic-ui/blob/main/demos/react/src/OrdersPage.tsx), [Angular](https://github.com/odonckers/domestic-ui/tree/main/demos/angular/src/app/orders), [Astro](https://github.com/odonckers/domestic-ui/blob/main/demos/astro/src/pages/orders.astro), [Vue](https://github.com/odonckers/domestic-ui/blob/main/demos/vue/src/OrdersPage.vue), [Svelte](https://github.com/odonckers/domestic-ui/blob/main/demos/svelte/src/OrdersPage.svelte))
 
 ### How other systems do it
 
@@ -4363,17 +4384,22 @@ _Diagram: Cards sit in a grid in the content area, each a raised box with a head
 ```html
 <div class="grid" style="--grid-min: 16rem">
   <article data-card>
-    <h3>Starter plan</h3>
-    <p>For one person trying things out.</p>
-    <p data-text="small muted">Free forever.</p>
+    <header>
+      <h3>Starter plan</h3>
+      <p>For one person trying things out.</p>
+    </header>
+    <p>Free forever, with every component and theme.</p>
     <footer>
       <a href="#grid-title" data-button="primary small">Choose Starter</a>
     </footer>
   </article>
   <article data-card="link">
     <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 320 160'%3E%3Crect width='320' height='160' fill='%233451d1'/%3E%3Ccircle cx='250' cy='40' r='60' fill='%238ea2ff'/%3E%3Crect x='24' y='96' width='140' height='40' rx='8' fill='%23f6f7f9'/%3E%3C/svg%3E" alt="" width="320" height="160">
-    <h3><a href="#grid-title">Theming guide</a></h3>
-    <p>Override semantic tokens to make a theme, with no build step.</p>
+    <header>
+      <h3><a href="#grid-title">Theming guide</a></h3>
+      <p>Override semantic tokens to make a theme.</p>
+    </header>
+    <p>No build step: set a few custom properties and every component follows.</p>
     <footer>
       <span data-badge="accent">Guide</span>
       <a href="#grid-title" data-button="secondary small">View tokens</a>
@@ -4396,6 +4422,8 @@ _Diagram: Cards sit in a grid in the content area, each a raised box with a head
 
 Children: an optional first `<img>` (or `<picture>`, `<video>`) as media, a heading, body content, and an optional `<footer>` for actions.
 
+Wrap the heading and a one-line description in a `<header>` to set them close together, with the description muted, as shadcn/ui's card header does (<https://ui.shadcn.com/docs/components/card>).
+
 #### Elevation
 
 `--dui-elevation-raised` and `--dui-elevation-raised-surface` (level 1), whose 1px ring draws the edge. The border is transparent; forced colors mode, which drops box-shadow, paints it in canvastext.
@@ -4416,6 +4444,7 @@ Children: an optional first `<img>` (or `<picture>`, `<video>`) as media, a head
 ### Specifications
 
 - [HTML `<article>` element](https://html.spec.whatwg.org/multipage/sections.html#the-article-element)
+- [ui.shadcn.com card](https://ui.shadcn.com/docs/components/card)
 - [WCAG Link purpose in context](https://www.w3.org/WAI/WCAG22/Understanding/link-purpose-in-context.html)
 - [WCAG Focus visible](https://www.w3.org/WAI/WCAG22/Understanding/focus-visible.html)
 - [W3C images](https://www.w3.org/WAI/tutorials/images/)
@@ -4455,7 +4484,7 @@ _Diagram: A modal dialog sits centred over the dimmed page; a drawer takes the s
   <form method="dialog">
     <footer>
       <button type="submit" value="cancel" data-button="secondary" autofocus>Cancel</button>
-      <button type="submit" value="delete">Delete project</button>
+      <button type="submit" value="delete" data-button="danger">Delete project</button>
     </footer>
   </form>
 </dialog>
@@ -4673,7 +4702,7 @@ _Diagram: Disclosures are summary rows in the content area, such as an accordion
 
 - [Molecules](https://odonckers.github.io/domestic-ui/molecules/index.md)
 - Source: [`css/components/molecules/disclosure.css`](https://github.com/odonckers/domestic-ui/blob/main/css/components/molecules/disclosure.css), [`examples/molecules/disclosure.html`](https://github.com/odonckers/domestic-ui/blob/main/examples/molecules/disclosure.html)
-- Demos: Dashboard view ([Plain HTML](https://github.com/odonckers/domestic-ui/blob/main/demos/vanilla/index.html), [React](https://github.com/odonckers/domestic-ui/blob/main/demos/react/src/DashboardPage.tsx), [Angular](https://github.com/odonckers/domestic-ui/tree/main/demos/angular/src/app/dashboard), [Astro](https://github.com/odonckers/domestic-ui/blob/main/demos/astro/src/pages/index.astro))
+- Demos: Dashboard view ([Plain HTML](https://github.com/odonckers/domestic-ui/blob/main/demos/vanilla/index.html), [React](https://github.com/odonckers/domestic-ui/blob/main/demos/react/src/DashboardPage.tsx), [Angular](https://github.com/odonckers/domestic-ui/tree/main/demos/angular/src/app/dashboard), [Astro](https://github.com/odonckers/domestic-ui/blob/main/demos/astro/src/pages/index.astro), [Vue](https://github.com/odonckers/domestic-ui/blob/main/demos/vue/src/DashboardPage.vue), [Svelte](https://github.com/odonckers/domestic-ui/blob/main/demos/svelte/src/DashboardPage.svelte))
 
 ### How other systems do it
 
@@ -4765,7 +4794,7 @@ Added by the component: `aria-haspopup`, `aria-expanded`, `role="menu"`, `role="
 
 - [Molecules](https://odonckers.github.io/domestic-ui/molecules/index.md)
 - Source: [`css/components/molecules/menu-button.css`](https://github.com/odonckers/domestic-ui/blob/main/css/components/molecules/menu-button.css), [`examples/molecules/menu-button.html`](https://github.com/odonckers/domestic-ui/blob/main/examples/molecules/menu-button.html)
-- Demos: Dashboard view ([Plain HTML](https://github.com/odonckers/domestic-ui/blob/main/demos/vanilla/index.html), [React](https://github.com/odonckers/domestic-ui/blob/main/demos/react/src/DashboardPage.tsx), [Angular](https://github.com/odonckers/domestic-ui/tree/main/demos/angular/src/app/dashboard), [Astro](https://github.com/odonckers/domestic-ui/blob/main/demos/astro/src/pages/index.astro)); Account settings view ([Plain HTML](https://github.com/odonckers/domestic-ui/blob/main/demos/vanilla/settings.html), [React](https://github.com/odonckers/domestic-ui/blob/main/demos/react/src/SettingsPage.tsx), [Angular](https://github.com/odonckers/domestic-ui/tree/main/demos/angular/src/app/settings), [Astro](https://github.com/odonckers/domestic-ui/blob/main/demos/astro/src/pages/settings.astro)); Orders view ([Plain HTML](https://github.com/odonckers/domestic-ui/blob/main/demos/vanilla/orders.html), [React](https://github.com/odonckers/domestic-ui/blob/main/demos/react/src/OrdersPage.tsx), [Angular](https://github.com/odonckers/domestic-ui/tree/main/demos/angular/src/app/orders), [Astro](https://github.com/odonckers/domestic-ui/blob/main/demos/astro/src/pages/orders.astro))
+- Demos: Dashboard view ([Plain HTML](https://github.com/odonckers/domestic-ui/blob/main/demos/vanilla/index.html), [React](https://github.com/odonckers/domestic-ui/blob/main/demos/react/src/DashboardPage.tsx), [Angular](https://github.com/odonckers/domestic-ui/tree/main/demos/angular/src/app/dashboard), [Astro](https://github.com/odonckers/domestic-ui/blob/main/demos/astro/src/pages/index.astro), [Vue](https://github.com/odonckers/domestic-ui/blob/main/demos/vue/src/DashboardPage.vue), [Svelte](https://github.com/odonckers/domestic-ui/blob/main/demos/svelte/src/DashboardPage.svelte)); Account settings view ([Plain HTML](https://github.com/odonckers/domestic-ui/blob/main/demos/vanilla/settings.html), [React](https://github.com/odonckers/domestic-ui/blob/main/demos/react/src/SettingsPage.tsx), [Angular](https://github.com/odonckers/domestic-ui/tree/main/demos/angular/src/app/settings), [Astro](https://github.com/odonckers/domestic-ui/blob/main/demos/astro/src/pages/settings.astro), [Vue](https://github.com/odonckers/domestic-ui/blob/main/demos/vue/src/SettingsPage.vue), [Svelte](https://github.com/odonckers/domestic-ui/blob/main/demos/svelte/src/SettingsPage.svelte)); Orders view ([Plain HTML](https://github.com/odonckers/domestic-ui/blob/main/demos/vanilla/orders.html), [React](https://github.com/odonckers/domestic-ui/blob/main/demos/react/src/OrdersPage.tsx), [Angular](https://github.com/odonckers/domestic-ui/tree/main/demos/angular/src/app/orders), [Astro](https://github.com/odonckers/domestic-ui/blob/main/demos/astro/src/pages/orders.astro), [Vue](https://github.com/odonckers/domestic-ui/blob/main/demos/vue/src/OrdersPage.vue), [Svelte](https://github.com/odonckers/domestic-ui/blob/main/demos/svelte/src/OrdersPage.svelte))
 
 ### How other systems do it
 
@@ -4969,7 +4998,7 @@ Panels use `--dui-elevation-popover` and `--dui-elevation-popover-surface`; tool
 
 - [Molecules](https://odonckers.github.io/domestic-ui/molecules/index.md)
 - Source: [`css/components/molecules/popover.css`](https://github.com/odonckers/domestic-ui/blob/main/css/components/molecules/popover.css), [`examples/molecules/popover.html`](https://github.com/odonckers/domestic-ui/blob/main/examples/molecules/popover.html)
-- Demos: Dashboard view ([Plain HTML](https://github.com/odonckers/domestic-ui/blob/main/demos/vanilla/index.html), [React](https://github.com/odonckers/domestic-ui/blob/main/demos/react/src/DashboardPage.tsx), [Angular](https://github.com/odonckers/domestic-ui/tree/main/demos/angular/src/app/dashboard), [Astro](https://github.com/odonckers/domestic-ui/blob/main/demos/astro/src/pages/index.astro)); Account settings view ([Plain HTML](https://github.com/odonckers/domestic-ui/blob/main/demos/vanilla/settings.html), [React](https://github.com/odonckers/domestic-ui/blob/main/demos/react/src/SettingsPage.tsx), [Angular](https://github.com/odonckers/domestic-ui/tree/main/demos/angular/src/app/settings), [Astro](https://github.com/odonckers/domestic-ui/blob/main/demos/astro/src/pages/settings.astro)); Orders view ([Plain HTML](https://github.com/odonckers/domestic-ui/blob/main/demos/vanilla/orders.html), [React](https://github.com/odonckers/domestic-ui/blob/main/demos/react/src/OrdersPage.tsx), [Angular](https://github.com/odonckers/domestic-ui/tree/main/demos/angular/src/app/orders), [Astro](https://github.com/odonckers/domestic-ui/blob/main/demos/astro/src/pages/orders.astro))
+- Demos: Dashboard view ([Plain HTML](https://github.com/odonckers/domestic-ui/blob/main/demos/vanilla/index.html), [React](https://github.com/odonckers/domestic-ui/blob/main/demos/react/src/DashboardPage.tsx), [Angular](https://github.com/odonckers/domestic-ui/tree/main/demos/angular/src/app/dashboard), [Astro](https://github.com/odonckers/domestic-ui/blob/main/demos/astro/src/pages/index.astro), [Vue](https://github.com/odonckers/domestic-ui/blob/main/demos/vue/src/DashboardPage.vue), [Svelte](https://github.com/odonckers/domestic-ui/blob/main/demos/svelte/src/DashboardPage.svelte)); Account settings view ([Plain HTML](https://github.com/odonckers/domestic-ui/blob/main/demos/vanilla/settings.html), [React](https://github.com/odonckers/domestic-ui/blob/main/demos/react/src/SettingsPage.tsx), [Angular](https://github.com/odonckers/domestic-ui/tree/main/demos/angular/src/app/settings), [Astro](https://github.com/odonckers/domestic-ui/blob/main/demos/astro/src/pages/settings.astro), [Vue](https://github.com/odonckers/domestic-ui/blob/main/demos/vue/src/SettingsPage.vue), [Svelte](https://github.com/odonckers/domestic-ui/blob/main/demos/svelte/src/SettingsPage.svelte)); Orders view ([Plain HTML](https://github.com/odonckers/domestic-ui/blob/main/demos/vanilla/orders.html), [React](https://github.com/odonckers/domestic-ui/blob/main/demos/react/src/OrdersPage.tsx), [Angular](https://github.com/odonckers/domestic-ui/tree/main/demos/angular/src/app/orders), [Astro](https://github.com/odonckers/domestic-ui/blob/main/demos/astro/src/pages/orders.astro), [Vue](https://github.com/odonckers/domestic-ui/blob/main/demos/vue/src/OrdersPage.vue), [Svelte](https://github.com/odonckers/domestic-ui/blob/main/demos/svelte/src/OrdersPage.svelte))
 
 ### How other systems do it
 
@@ -5116,6 +5145,7 @@ _Diagram: Site navigation is the list of main links in the sidebar, with the cur
       </details>
     </li>
     <li><a href="#horizontal-title">Contact</a></li>
+    <li><a href="#horizontal-title" data-button="primary small">Sign up</a></li>
   </ul>
 </nav>
 ```
@@ -5164,7 +5194,7 @@ Horizontal dropdowns use `--dui-elevation-popover` and its surface, like a popov
 
 - [Organisms](https://odonckers.github.io/domestic-ui/organisms/index.md)
 - Source: [`css/components/molecules/nav.css`](https://github.com/odonckers/domestic-ui/blob/main/css/components/molecules/nav.css), [`examples/molecules/nav.html`](https://github.com/odonckers/domestic-ui/blob/main/examples/molecules/nav.html)
-- Demos: Dashboard view ([Plain HTML](https://github.com/odonckers/domestic-ui/blob/main/demos/vanilla/index.html), [React](https://github.com/odonckers/domestic-ui/blob/main/demos/react/src/DashboardPage.tsx), [Angular](https://github.com/odonckers/domestic-ui/tree/main/demos/angular/src/app/dashboard), [Astro](https://github.com/odonckers/domestic-ui/blob/main/demos/astro/src/pages/index.astro)); Account settings view ([Plain HTML](https://github.com/odonckers/domestic-ui/blob/main/demos/vanilla/settings.html), [React](https://github.com/odonckers/domestic-ui/blob/main/demos/react/src/SettingsPage.tsx), [Angular](https://github.com/odonckers/domestic-ui/tree/main/demos/angular/src/app/settings), [Astro](https://github.com/odonckers/domestic-ui/blob/main/demos/astro/src/pages/settings.astro)); Orders view ([Plain HTML](https://github.com/odonckers/domestic-ui/blob/main/demos/vanilla/orders.html), [React](https://github.com/odonckers/domestic-ui/blob/main/demos/react/src/OrdersPage.tsx), [Angular](https://github.com/odonckers/domestic-ui/tree/main/demos/angular/src/app/orders), [Astro](https://github.com/odonckers/domestic-ui/blob/main/demos/astro/src/pages/orders.astro))
+- Demos: Dashboard view ([Plain HTML](https://github.com/odonckers/domestic-ui/blob/main/demos/vanilla/index.html), [React](https://github.com/odonckers/domestic-ui/blob/main/demos/react/src/DashboardPage.tsx), [Angular](https://github.com/odonckers/domestic-ui/tree/main/demos/angular/src/app/dashboard), [Astro](https://github.com/odonckers/domestic-ui/blob/main/demos/astro/src/pages/index.astro), [Vue](https://github.com/odonckers/domestic-ui/blob/main/demos/vue/src/DashboardPage.vue), [Svelte](https://github.com/odonckers/domestic-ui/blob/main/demos/svelte/src/DashboardPage.svelte)); Account settings view ([Plain HTML](https://github.com/odonckers/domestic-ui/blob/main/demos/vanilla/settings.html), [React](https://github.com/odonckers/domestic-ui/blob/main/demos/react/src/SettingsPage.tsx), [Angular](https://github.com/odonckers/domestic-ui/tree/main/demos/angular/src/app/settings), [Astro](https://github.com/odonckers/domestic-ui/blob/main/demos/astro/src/pages/settings.astro), [Vue](https://github.com/odonckers/domestic-ui/blob/main/demos/vue/src/SettingsPage.vue), [Svelte](https://github.com/odonckers/domestic-ui/blob/main/demos/svelte/src/SettingsPage.svelte)); Orders view ([Plain HTML](https://github.com/odonckers/domestic-ui/blob/main/demos/vanilla/orders.html), [React](https://github.com/odonckers/domestic-ui/blob/main/demos/react/src/OrdersPage.tsx), [Angular](https://github.com/odonckers/domestic-ui/tree/main/demos/angular/src/app/orders), [Astro](https://github.com/odonckers/domestic-ui/blob/main/demos/astro/src/pages/orders.astro), [Vue](https://github.com/odonckers/domestic-ui/blob/main/demos/vue/src/OrdersPage.vue), [Svelte](https://github.com/odonckers/domestic-ui/blob/main/demos/svelte/src/OrdersPage.svelte))
 
 ### How other systems do it
 
@@ -5378,7 +5408,7 @@ _Diagram: A toolbar is a row of related buttons at the top of the area it acts o
 
 - [Molecules](https://odonckers.github.io/domestic-ui/molecules/index.md)
 - Source: [`css/components/molecules/toolbar.css`](https://github.com/odonckers/domestic-ui/blob/main/css/components/molecules/toolbar.css), [`examples/molecules/toolbar.html`](https://github.com/odonckers/domestic-ui/blob/main/examples/molecules/toolbar.html)
-- Demos: Orders view ([Plain HTML](https://github.com/odonckers/domestic-ui/blob/main/demos/vanilla/orders.html), [React](https://github.com/odonckers/domestic-ui/blob/main/demos/react/src/OrdersPage.tsx), [Angular](https://github.com/odonckers/domestic-ui/tree/main/demos/angular/src/app/orders), [Astro](https://github.com/odonckers/domestic-ui/blob/main/demos/astro/src/pages/orders.astro))
+- Demos: Orders view ([Plain HTML](https://github.com/odonckers/domestic-ui/blob/main/demos/vanilla/orders.html), [React](https://github.com/odonckers/domestic-ui/blob/main/demos/react/src/OrdersPage.tsx), [Angular](https://github.com/odonckers/domestic-ui/tree/main/demos/angular/src/app/orders), [Astro](https://github.com/odonckers/domestic-ui/blob/main/demos/astro/src/pages/orders.astro), [Vue](https://github.com/odonckers/domestic-ui/blob/main/demos/vue/src/OrdersPage.vue), [Svelte](https://github.com/odonckers/domestic-ui/blob/main/demos/svelte/src/OrdersPage.svelte))
 
 ### How other systems do it
 
@@ -5500,7 +5530,7 @@ _Diagram: A typeahead is a text field in a form whose list of suggestions opens 
 
 - [Molecules](https://odonckers.github.io/domestic-ui/molecules/index.md)
 - Source: [`css/components/molecules/combobox.css`](https://github.com/odonckers/domestic-ui/blob/main/css/components/molecules/combobox.css), [`examples/molecules/combobox.html`](https://github.com/odonckers/domestic-ui/blob/main/examples/molecules/combobox.html)
-- Demos: Orders view ([Plain HTML](https://github.com/odonckers/domestic-ui/blob/main/demos/vanilla/orders.html), [React](https://github.com/odonckers/domestic-ui/blob/main/demos/react/src/OrdersPage.tsx), [Angular](https://github.com/odonckers/domestic-ui/tree/main/demos/angular/src/app/orders), [Astro](https://github.com/odonckers/domestic-ui/blob/main/demos/astro/src/pages/orders.astro))
+- Demos: Orders view ([Plain HTML](https://github.com/odonckers/domestic-ui/blob/main/demos/vanilla/orders.html), [React](https://github.com/odonckers/domestic-ui/blob/main/demos/react/src/OrdersPage.tsx), [Angular](https://github.com/odonckers/domestic-ui/tree/main/demos/angular/src/app/orders), [Astro](https://github.com/odonckers/domestic-ui/blob/main/demos/astro/src/pages/orders.astro), [Vue](https://github.com/odonckers/domestic-ui/blob/main/demos/vue/src/OrdersPage.vue), [Svelte](https://github.com/odonckers/domestic-ui/blob/main/demos/svelte/src/OrdersPage.svelte))
 
 ### How other systems do it
 
@@ -5837,7 +5867,7 @@ The primary sidebar sits beside main from 48rem of the shell's own inline size, 
 
 - [Layouts](https://odonckers.github.io/domestic-ui/layouts/index.md)
 - Source: [`css/layout/app-shell.css`](https://github.com/odonckers/domestic-ui/blob/main/css/layout/app-shell.css), [`examples/layouts/app-shell.html`](https://github.com/odonckers/domestic-ui/blob/main/examples/layouts/app-shell.html)
-- Demos: Dashboard view ([Plain HTML](https://github.com/odonckers/domestic-ui/blob/main/demos/vanilla/index.html), [React](https://github.com/odonckers/domestic-ui/blob/main/demos/react/src/DashboardPage.tsx), [Angular](https://github.com/odonckers/domestic-ui/tree/main/demos/angular/src/app/dashboard), [Astro](https://github.com/odonckers/domestic-ui/blob/main/demos/astro/src/pages/index.astro)); Account settings view ([Plain HTML](https://github.com/odonckers/domestic-ui/blob/main/demos/vanilla/settings.html), [React](https://github.com/odonckers/domestic-ui/blob/main/demos/react/src/SettingsPage.tsx), [Angular](https://github.com/odonckers/domestic-ui/tree/main/demos/angular/src/app/settings), [Astro](https://github.com/odonckers/domestic-ui/blob/main/demos/astro/src/pages/settings.astro)); Orders view, with the auxiliary sidebar ([Plain HTML](https://github.com/odonckers/domestic-ui/blob/main/demos/vanilla/orders.html), [React](https://github.com/odonckers/domestic-ui/blob/main/demos/react/src/OrdersPage.tsx), [Angular](https://github.com/odonckers/domestic-ui/tree/main/demos/angular/src/app/orders), [Astro](https://github.com/odonckers/domestic-ui/blob/main/demos/astro/src/pages/orders.astro))
+- Demos: Dashboard view ([Plain HTML](https://github.com/odonckers/domestic-ui/blob/main/demos/vanilla/index.html), [React](https://github.com/odonckers/domestic-ui/blob/main/demos/react/src/DashboardPage.tsx), [Angular](https://github.com/odonckers/domestic-ui/tree/main/demos/angular/src/app/dashboard), [Astro](https://github.com/odonckers/domestic-ui/blob/main/demos/astro/src/pages/index.astro), [Vue](https://github.com/odonckers/domestic-ui/blob/main/demos/vue/src/DashboardPage.vue), [Svelte](https://github.com/odonckers/domestic-ui/blob/main/demos/svelte/src/DashboardPage.svelte)); Account settings view ([Plain HTML](https://github.com/odonckers/domestic-ui/blob/main/demos/vanilla/settings.html), [React](https://github.com/odonckers/domestic-ui/blob/main/demos/react/src/SettingsPage.tsx), [Angular](https://github.com/odonckers/domestic-ui/tree/main/demos/angular/src/app/settings), [Astro](https://github.com/odonckers/domestic-ui/blob/main/demos/astro/src/pages/settings.astro), [Vue](https://github.com/odonckers/domestic-ui/blob/main/demos/vue/src/SettingsPage.vue), [Svelte](https://github.com/odonckers/domestic-ui/blob/main/demos/svelte/src/SettingsPage.svelte)); Orders view, with the auxiliary sidebar ([Plain HTML](https://github.com/odonckers/domestic-ui/blob/main/demos/vanilla/orders.html), [React](https://github.com/odonckers/domestic-ui/blob/main/demos/react/src/OrdersPage.tsx), [Angular](https://github.com/odonckers/domestic-ui/tree/main/demos/angular/src/app/orders), [Astro](https://github.com/odonckers/domestic-ui/blob/main/demos/astro/src/pages/orders.astro), [Vue](https://github.com/odonckers/domestic-ui/blob/main/demos/vue/src/OrdersPage.vue), [Svelte](https://github.com/odonckers/domestic-ui/blob/main/demos/svelte/src/OrdersPage.svelte))
 
 ### How other systems do it
 
@@ -5993,7 +6023,7 @@ _Diagram: Compact density tightens a data-heavy area such as a table, so it show
 
 - [Tokens](https://odonckers.github.io/domestic-ui/tokens/index.md)
 - Source: [`examples/patterns/density.html`](https://github.com/odonckers/domestic-ui/blob/main/examples/patterns/density.html)
-- Demos: Orders view ([Plain HTML](https://github.com/odonckers/domestic-ui/blob/main/demos/vanilla/orders.html), [React](https://github.com/odonckers/domestic-ui/blob/main/demos/react/src/OrdersPage.tsx), [Angular](https://github.com/odonckers/domestic-ui/tree/main/demos/angular/src/app/orders), [Astro](https://github.com/odonckers/domestic-ui/blob/main/demos/astro/src/pages/orders.astro))
+- Demos: Orders view ([Plain HTML](https://github.com/odonckers/domestic-ui/blob/main/demos/vanilla/orders.html), [React](https://github.com/odonckers/domestic-ui/blob/main/demos/react/src/OrdersPage.tsx), [Angular](https://github.com/odonckers/domestic-ui/tree/main/demos/angular/src/app/orders), [Astro](https://github.com/odonckers/domestic-ui/blob/main/demos/astro/src/pages/orders.astro), [Vue](https://github.com/odonckers/domestic-ui/blob/main/demos/vue/src/OrdersPage.vue), [Svelte](https://github.com/odonckers/domestic-ui/blob/main/demos/svelte/src/OrdersPage.svelte))
 
 ### How other systems do it
 
@@ -6111,7 +6141,7 @@ A wide tile spans two columns from 33.5rem of the wrapper's own inline size (two
 
 - [Layouts](https://odonckers.github.io/domestic-ui/layouts/index.md)
 - Source: [`css/layout/dashboard.css`](https://github.com/odonckers/domestic-ui/blob/main/css/layout/dashboard.css), [`examples/layouts/dashboard.html`](https://github.com/odonckers/domestic-ui/blob/main/examples/layouts/dashboard.html)
-- Demos: Dashboard view ([Plain HTML](https://github.com/odonckers/domestic-ui/blob/main/demos/vanilla/index.html), [React](https://github.com/odonckers/domestic-ui/blob/main/demos/react/src/DashboardPage.tsx), [Angular](https://github.com/odonckers/domestic-ui/tree/main/demos/angular/src/app/dashboard), [Astro](https://github.com/odonckers/domestic-ui/blob/main/demos/astro/src/pages/index.astro))
+- Demos: Dashboard view ([Plain HTML](https://github.com/odonckers/domestic-ui/blob/main/demos/vanilla/index.html), [React](https://github.com/odonckers/domestic-ui/blob/main/demos/react/src/DashboardPage.tsx), [Angular](https://github.com/odonckers/domestic-ui/tree/main/demos/angular/src/app/dashboard), [Astro](https://github.com/odonckers/domestic-ui/blob/main/demos/astro/src/pages/index.astro), [Vue](https://github.com/odonckers/domestic-ui/blob/main/demos/vue/src/DashboardPage.vue), [Svelte](https://github.com/odonckers/domestic-ui/blob/main/demos/svelte/src/DashboardPage.svelte))
 
 ### How other systems do it
 
@@ -6646,7 +6676,7 @@ One row with a single `<td colspan>` holding a message and an optional action.
 
 - [Organisms](https://odonckers.github.io/domestic-ui/organisms/index.md)
 - Source: [`css/components/organisms/data-table.css`](https://github.com/odonckers/domestic-ui/blob/main/css/components/organisms/data-table.css), [`examples/organisms/data-table.html`](https://github.com/odonckers/domestic-ui/blob/main/examples/organisms/data-table.html)
-- Demos: Dashboard view ([Plain HTML](https://github.com/odonckers/domestic-ui/blob/main/demos/vanilla/index.html), [React](https://github.com/odonckers/domestic-ui/blob/main/demos/react/src/DashboardPage.tsx), [Angular](https://github.com/odonckers/domestic-ui/tree/main/demos/angular/src/app/dashboard), [Astro](https://github.com/odonckers/domestic-ui/blob/main/demos/astro/src/pages/index.astro)); Orders view ([Plain HTML](https://github.com/odonckers/domestic-ui/blob/main/demos/vanilla/orders.html), [React](https://github.com/odonckers/domestic-ui/blob/main/demos/react/src/OrdersPage.tsx), [Angular](https://github.com/odonckers/domestic-ui/tree/main/demos/angular/src/app/orders), [Astro](https://github.com/odonckers/domestic-ui/blob/main/demos/astro/src/pages/orders.astro))
+- Demos: Dashboard view ([Plain HTML](https://github.com/odonckers/domestic-ui/blob/main/demos/vanilla/index.html), [React](https://github.com/odonckers/domestic-ui/blob/main/demos/react/src/DashboardPage.tsx), [Angular](https://github.com/odonckers/domestic-ui/tree/main/demos/angular/src/app/dashboard), [Astro](https://github.com/odonckers/domestic-ui/blob/main/demos/astro/src/pages/index.astro), [Vue](https://github.com/odonckers/domestic-ui/blob/main/demos/vue/src/DashboardPage.vue), [Svelte](https://github.com/odonckers/domestic-ui/blob/main/demos/svelte/src/DashboardPage.svelte)); Orders view ([Plain HTML](https://github.com/odonckers/domestic-ui/blob/main/demos/vanilla/orders.html), [React](https://github.com/odonckers/domestic-ui/blob/main/demos/react/src/OrdersPage.tsx), [Angular](https://github.com/odonckers/domestic-ui/tree/main/demos/angular/src/app/orders), [Astro](https://github.com/odonckers/domestic-ui/blob/main/demos/astro/src/pages/orders.astro), [Vue](https://github.com/odonckers/domestic-ui/blob/main/demos/vue/src/OrdersPage.vue), [Svelte](https://github.com/odonckers/domestic-ui/blob/main/demos/svelte/src/OrdersPage.svelte))
 
 ### How other systems do it
 
@@ -6791,7 +6821,7 @@ Children: a `<form>` of fields (each a `data-field`, or a `<dui-combobox>`) whos
 
 - [Organisms](https://odonckers.github.io/domestic-ui/organisms/index.md)
 - Source: [`css/components/organisms/filter-bar.css`](https://github.com/odonckers/domestic-ui/blob/main/css/components/organisms/filter-bar.css), [`examples/organisms/filter-bar.html`](https://github.com/odonckers/domestic-ui/blob/main/examples/organisms/filter-bar.html)
-- Demos: Orders view ([Plain HTML](https://github.com/odonckers/domestic-ui/blob/main/demos/vanilla/orders.html), [React](https://github.com/odonckers/domestic-ui/blob/main/demos/react/src/OrdersPage.tsx), [Angular](https://github.com/odonckers/domestic-ui/tree/main/demos/angular/src/app/orders), [Astro](https://github.com/odonckers/domestic-ui/blob/main/demos/astro/src/pages/orders.astro))
+- Demos: Orders view ([Plain HTML](https://github.com/odonckers/domestic-ui/blob/main/demos/vanilla/orders.html), [React](https://github.com/odonckers/domestic-ui/blob/main/demos/react/src/OrdersPage.tsx), [Angular](https://github.com/odonckers/domestic-ui/tree/main/demos/angular/src/app/orders), [Astro](https://github.com/odonckers/domestic-ui/blob/main/demos/astro/src/pages/orders.astro), [Vue](https://github.com/odonckers/domestic-ui/blob/main/demos/vue/src/OrdersPage.vue), [Svelte](https://github.com/odonckers/domestic-ui/blob/main/demos/svelte/src/OrdersPage.svelte))
 
 ### How other systems do it
 
@@ -6952,7 +6982,7 @@ Native keyboard behavior; see [HTML `<form>` element](https://html.spec.whatwg.o
 
 - [Organisms](https://odonckers.github.io/domestic-ui/organisms/index.md)
 - Source: [`css/components/organisms/large-forms.css`](https://github.com/odonckers/domestic-ui/blob/main/css/components/organisms/large-forms.css), [`examples/organisms/large-forms.html`](https://github.com/odonckers/domestic-ui/blob/main/examples/organisms/large-forms.html)
-- Demos: Account settings view ([Plain HTML](https://github.com/odonckers/domestic-ui/blob/main/demos/vanilla/settings.html), [React](https://github.com/odonckers/domestic-ui/blob/main/demos/react/src/SettingsPage.tsx), [Angular](https://github.com/odonckers/domestic-ui/tree/main/demos/angular/src/app/settings), [Astro](https://github.com/odonckers/domestic-ui/blob/main/demos/astro/src/pages/settings.astro))
+- Demos: Account settings view ([Plain HTML](https://github.com/odonckers/domestic-ui/blob/main/demos/vanilla/settings.html), [React](https://github.com/odonckers/domestic-ui/blob/main/demos/react/src/SettingsPage.tsx), [Angular](https://github.com/odonckers/domestic-ui/tree/main/demos/angular/src/app/settings), [Astro](https://github.com/odonckers/domestic-ui/blob/main/demos/astro/src/pages/settings.astro), [Vue](https://github.com/odonckers/domestic-ui/blob/main/demos/vue/src/SettingsPage.vue), [Svelte](https://github.com/odonckers/domestic-ui/blob/main/demos/svelte/src/SettingsPage.svelte))
 
 ### How other systems do it
 
@@ -7174,7 +7204,7 @@ _Diagram: List-detail splits the content area into a list of items and, beside i
 
 - [Layouts](https://odonckers.github.io/domestic-ui/layouts/index.md)
 - Source: [`css/layout/list-detail.css`](https://github.com/odonckers/domestic-ui/blob/main/css/layout/list-detail.css), [`examples/layouts/list-detail.html`](https://github.com/odonckers/domestic-ui/blob/main/examples/layouts/list-detail.html)
-- Demos: Orders view ([Plain HTML](https://github.com/odonckers/domestic-ui/blob/main/demos/vanilla/orders.html), [React](https://github.com/odonckers/domestic-ui/blob/main/demos/react/src/OrdersPage.tsx), [Angular](https://github.com/odonckers/domestic-ui/tree/main/demos/angular/src/app/orders), [Astro](https://github.com/odonckers/domestic-ui/blob/main/demos/astro/src/pages/orders.astro))
+- Demos: Orders view ([Plain HTML](https://github.com/odonckers/domestic-ui/blob/main/demos/vanilla/orders.html), [React](https://github.com/odonckers/domestic-ui/blob/main/demos/react/src/OrdersPage.tsx), [Angular](https://github.com/odonckers/domestic-ui/tree/main/demos/angular/src/app/orders), [Astro](https://github.com/odonckers/domestic-ui/blob/main/demos/astro/src/pages/orders.astro), [Vue](https://github.com/odonckers/domestic-ui/blob/main/demos/vue/src/OrdersPage.vue), [Svelte](https://github.com/odonckers/domestic-ui/blob/main/demos/svelte/src/OrdersPage.svelte))
 
 ### How other systems do it
 
@@ -7891,6 +7921,8 @@ which HTML does not allow.
   the first link inside its heading.
 - Optional media is the first child: `<img>`, `<picture>` or `<video>`. Media SHOULD have
   `alt=""` when it only decorates.
+- The heading MAY sit in a `<header>` child together with a one-line description. The header
+  sets the two close together and mutes the description, as shadcn/ui's card header does.
 - Actions go in a `<footer>` child. In a link card, every interactive element other than the
   heading link MUST be inside that `<footer>`.
 
@@ -7948,6 +7980,8 @@ heading or by link reaches each card once. The media is skipped when `alt=""`.
 
 - Heydon Pickering, [Inclusive Components: Cards](https://inclusive-components.design/cards/),
   which describes both the pseudo-element overlay and the "redundant click event".
+- [shadcn/ui Card](https://ui.shadcn.com/docs/components/card), whose header, title, description
+  and footer slots map to `<header>`, the heading, a `<p>` and `<footer>` here.
 - [WHATWG `article` element](https://html.spec.whatwg.org/multipage/sections.html#the-article-element).
 - [WCAG 2.2 Understanding 2.4.4 Link Purpose (In Context)](https://www.w3.org/WAI/WCAG22/Understanding/link-purpose-in-context.html)
   and [2.4.7 Focus Visible](https://www.w3.org/WAI/WCAG22/Understanding/focus-visible.html).

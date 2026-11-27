@@ -406,6 +406,28 @@ test.describe("nav list", () => {
     await page.goto("examples/molecules/nav.html");
   });
 
+  test("a data-button link inside a horizontal or vertical nav keeps the button's look", async ({ page }) => {
+    const styles = await page.evaluate(() => {
+      const pick = (el) => {
+        const cs = getComputedStyle(el);
+        return { color: cs.color, background: cs.backgroundColor, padding: cs.paddingInlineStart, decoration: cs.textDecorationLine };
+      };
+      const make = () => Object.assign(document.createElement("a"), { href: "#", textContent: "Sign up" });
+      const outside = make();
+      outside.setAttribute("data-button", "primary small");
+      document.querySelector("main").append(outside);
+      const vertical = make();
+      vertical.setAttribute("data-button", "primary small");
+      const li = document.createElement("li");
+      li.append(vertical);
+      document.querySelector('nav[aria-label="Sidebar example"] ul').append(li);
+      const horizontal = document.querySelector('nav[aria-label="Top bar example"] a[data-button]');
+      return { outside: pick(outside), vertical: pick(vertical), horizontal: pick(horizontal) };
+    });
+    expect(styles.horizontal).toEqual(styles.outside);
+    expect(styles.vertical).toEqual(styles.outside);
+  });
+
   test("aria-current marks the current page; Enter and Space toggle groups", async ({ page }) => {
     const sidebar = page.getByRole("navigation", { name: "Sidebar example" });
     await expect(sidebar.getByRole("link", { name: "Active" })).toHaveAttribute("aria-current", "page");
@@ -828,7 +850,7 @@ test.describe("card", () => {
     await card.scrollIntoViewIfNeeded();
     await expect(card.getByRole("link", { name: "Theming guide" })).toHaveAccessibleName("Theming guide");
     // A click on the card body, away from the heading, hits the link's overlay.
-    const body = await card.locator("p").boundingBox();
+    const body = await card.locator(":scope > p").boundingBox();
     const hit = await page.evaluate(({ x, y }) => document.elementFromPoint(x, y)?.closest("a")?.textContent, {
       x: (body?.x ?? 0) + 10,
       y: (body?.y ?? 0) + 5,
@@ -1133,7 +1155,7 @@ test("in forced colors only the current nav link and the selected tab show an in
   const bars = await sidebar.locator("a").evaluateAll((links) => links.map((a) => ({ current: a.getAttribute("aria-current") === "page", color: getComputedStyle(a).borderInlineStartColor })));
   for (const bar of bars) expect(bar.color).toBe(bar.current ? highlight : canvas);
   const top = page.getByRole("navigation", { name: "Top bar example" });
-  const tops = await top.locator(":scope > ul > li > a").evaluateAll((links) => links.map((a) => ({ current: !!a.getAttribute("aria-current"), color: getComputedStyle(a).borderBottomColor })));
+  const tops = await top.locator(":scope > ul > li > a:not([data-button])").evaluateAll((links) => links.map((a) => ({ current: !!a.getAttribute("aria-current"), color: getComputedStyle(a).borderBottomColor })));
   for (const bar of tops) expect(bar.color).toBe(bar.current ? highlight : canvas);
 
   await page.goto("examples/molecules/tabs.html");

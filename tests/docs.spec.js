@@ -824,6 +824,8 @@ test.describe("docs pages in the browser", () => {
   });
 
   test("the Docs sidebar marks the current page once and opens only its group; the app bar and breadcrumb agree", async ({ page }) => {
+    // One navigation per docs page: the budget grows with the site, as for the diagram and redirect walks.
+    test.setTimeout(30_000 + site.pages.length * 500);
     for (const p of site.pages) {
       await page.goto(`_site/${p.path}`);
       const nav = page.locator('nav[aria-label="Docs"]');
@@ -858,6 +860,8 @@ test.describe("docs pages in the browser", () => {
   });
 
   test("the Docs sidebar lists every entry in order and reaches every page; previous and next follow it", async ({ page }) => {
+    // One navigation per docs page: the budget grows with the site, as for the diagram and redirect walks.
+    test.setTimeout(30_000 + site.pages.length * 500);
     // About 75 navigations: reduced motion turns the page cross-fade off, so the walk is not 75 transitions long.
     await page.emulateMedia({ reducedMotion: "reduce" });
     await page.goto("_site/index.html");
