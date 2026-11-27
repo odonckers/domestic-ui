@@ -29,7 +29,7 @@ Every explainer has these sections, in this order:
 
 1. **Problem**: what authors cannot do well today.
 2. **Use cases**: concrete situations.
-3. **Goals** and 4. **Non-goals**.
+3. **Goals** and 4. **Non-goals**. Goals name the [design principles](../PRINCIPLES.md#14-design-principles) the pattern serves.
 5. **Proposed markup and API**: the attribute, element or methods we ship, with an example.
 6. **Keyboard interaction**.
 7. **Accessibility mappings**: roles, states, and what assistive technology users should hear.

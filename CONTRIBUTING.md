@@ -27,6 +27,7 @@ Every pull request, from inside or outside the project, gets the same review and
 ## Standards
 
 - Prefer a native HTML element before adding a component or custom behavior.
+- Check visual and interaction changes against the [design principles](PRINCIPLES.md#14-design-principles), and say in the pull request which ones apply.
 - Cite the relevant [MDN](https://developer.mozilla.org/), [WHATWG](https://whatwg.org/), [W3C](https://www.w3.org/), [WCAG 2.2](https://www.w3.org/TR/WCAG22/), or [APG](https://www.w3.org/WAI/ARIA/apg/) documentation in the issue or pull request.
 - If we choose a behavior the specs leave open, label it as our choice, not as a standard.
 - Theme only through semantic `--dui-*` CSS custom properties. Do not hard-code colors, spacing, typography, or other design values in components.
