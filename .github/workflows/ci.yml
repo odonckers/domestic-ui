@@ -35,8 +35,9 @@ jobs:
     steps:
       - uses: actions/checkout@v7
         with:
-          # commitlint reads every commit between the base and the head.
-          fetch-depth: ${{ github.event_name == 'pull_request' && 0 || 1 }}
+          # commitlint reads every commit between the base and the head. The
+          # string '0' is truthy; a bare 0 would fall through to 1.
+          fetch-depth: ${{ github.event_name == 'pull_request' && '0' || '1' }}
       - uses: actions/setup-node@v7
         with:
           node-version: lts/*
