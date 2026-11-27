@@ -39,7 +39,11 @@
  * that holds the current page carries open in the markup, so the current
  * link shows with JavaScript off. Links and summaries MAY start with a
  * decorative icon (<svg aria-hidden="true" focusable="false">), sized
- * --dui-size-icon; the link text stays the accessible name. Rows follow
+ * --dui-size-icon-nav; the link text stays the accessible name.
+ * Our choice: icons are 16px beside 14px sidebar text, as shadcn/ui and
+ * Linear draw sidebars, so they hint at a section without outweighing its
+ * label. Use them sparingly: one per top-level entry, where they help tell
+ * sections apart, not on every link. Rows follow
  * --dui-space-control-* and --dui-size-control, so they are 32px tall in
  * data-density="compact" (over the 24px of WCAG 2.5.8).
  *
@@ -164,8 +168,8 @@
 /* Decorative icons: as tall as a line of text, never shrunk by a long label. */
 [data-nav] :is(a:not(:where([data-button])), summary) > svg {
   flex: none;
-  inline-size: var(--dui-size-icon);
-  block-size: var(--dui-size-icon);
+  inline-size: var(--dui-size-icon-nav);
+  block-size: var(--dui-size-icon-nav);
   vertical-align: middle;
 }
 
@@ -243,7 +247,7 @@
 
 /* Under a summary with an icon, the group's links start on the summary's label line. */
 [data-nav]:not([data-nav~="horizontal"]) details:has(> summary > svg) > :is(ul, ol) {
-  padding-inline-start: calc(var(--dui-size-icon) + var(--dui-space-gap));
+  padding-inline-start: calc(var(--dui-size-icon-nav) + var(--dui-space-gap));
 }
 
 [data-nav] details[open] > summary {
