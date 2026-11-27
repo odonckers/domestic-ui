@@ -14,7 +14,13 @@
  *   localStorage; an inline script in <head> restores it before first paint.
  *   Changing it moves no focus (WCAG 3.2.2).
  * - The Themes page's radio group applies a theme to the preview frame only.
- * No network requests.
+ * - Search: the app bar's Search button is hidden without JavaScript. Here it
+ *   is shown; it opens a modal <dialog> (command="show-modal") holding a
+ *   <dui-combobox>. On first open the page fetches search-index.json and
+ *   makes one option per page and per heading; accepting one goes there.
+ *   Cmd-K (macOS) or Ctrl-K opens it from anywhere but a text field.
+ *   See explainers/search-dialog.md.
+ * One network request, to this site's own search-index.json, on first search.
  */
 
 const THEME_KEY = "dui-docs-theme";
@@ -143,4 +149,122 @@ if (filter instanceof HTMLElement && input instanceof HTMLInputElement && status
 
   input.addEventListener("input", apply);
   filter.hidden = false;
+}
+
+/*
+ * Search dialog. The index is fetched once, on first open, from the URL the
+ * template wrote relative to this page, so it works at /_site/ locally and
+ * at /domestic-ui/ on GitHub Pages. Each page gives an option named by its
+ * title and each heading one named "Page › Heading"; the hint is the
+ * page's sidebar entry. Our choice: one flat list filtered by the
+ * combobox's "contains" match, with every page before any heading and each
+ * group in sidebar order, so a page whose title matches comes first; no
+ * other ranking.
+ */
+const searchSlot = document.querySelector("[data-docs-search]");
+const searchDialog = document.getElementById("docs-search-dialog");
+const searchCombobox = searchDialog?.querySelector("dui-combobox");
+const searchInput = document.getElementById("docs-search-input");
+if (searchSlot instanceof HTMLElement && searchDialog instanceof HTMLDialogElement && searchCombobox && searchInput instanceof HTMLInputElement) {
+  const opener = searchSlot.querySelector("button");
+  const empty = searchDialog.querySelector("[data-search-empty]");
+  const loadStatus = searchDialog.querySelector("[data-search-load]");
+  /** @type {Map<string, URL>} option value -> destination */
+  const targets = new Map();
+  /** @type {Promise<void> | null} */
+  let loading = null;
+
+  const load = () => {
+    loading ??= (async () => {
+      const indexUrl = new URL(searchDialog.dataset.searchIndex ?? "search-index.json", location.href);
+      try {
+        const response = await fetch(indexUrl);
+        if (!response.ok) throw new Error(String(response.status));
+        /** @type {{ title: string, url: string, level: string, headings: { text: string, id: string }[] }[]} */
+        const records = await response.json();
+        /** @type {{ value: string, label: string }[]} */
+        const options = [];
+        const add = (/** @type {string} */ value, /** @type {string} */ label, /** @type {URL} */ url) => {
+          if (targets.has(value)) return; // first wins: a repeated heading name keeps its first section
+          targets.set(value, url);
+          options.push({ value, label });
+        };
+        for (const r of records) add(r.title, r.level, new URL(r.url, indexUrl));
+        for (const r of records) {
+          for (const h of r.headings) add(`${r.title} › ${h.text}`, r.level, new URL(`#${encodeURIComponent(h.id)}`, new URL(r.url, indexUrl)));
+        }
+        await customElements.whenDefined("dui-combobox");
+        /** @type {any} */ (searchCombobox).setOptions(options);
+        if (loadStatus) loadStatus.textContent = "";
+      } catch {
+        loading = null; // try again on the next open
+        if (loadStatus) loadStatus.textContent = "Search is not available right now. Use the Docs sidebar instead.";
+      }
+    })();
+    return loading;
+  };
+
+  // The empty state: shown, not announced (the combobox's status region already says "No results").
+  const showEmpty = () => {
+    if (!(empty instanceof HTMLElement)) return;
+    const query = searchInput.value.trim();
+    const none = Boolean(query) && targets.size > 0 && searchCombobox.querySelectorAll('[role="option"]').length === 0;
+    empty.hidden = !none;
+    empty.textContent = none ? `No results for “${query}”` : "";
+  };
+  searchInput.addEventListener("input", () => queueMicrotask(showEmpty));
+
+  // Accepting an option (Enter or a click) fires change with its value.
+  searchInput.addEventListener("change", (event) => {
+    if (event.isTrusted) return; // the native change on blur after typing, not an accepted option
+    const target = targets.get(searchInput.value);
+    if (!target) return;
+    searchDialog.close();
+    const samePage = target.pathname === location.pathname;
+    location.assign(target);
+    // A heading on this page: the URL only changes its fragment, so move focus there too (WCAG 2.4.3).
+    if (samePage && target.hash) {
+      const heading = document.getElementById(decodeURIComponent(target.hash.slice(1)));
+      if (heading) {
+        heading.setAttribute("tabindex", "-1");
+        heading.focus();
+      }
+    }
+  });
+
+  searchDialog.addEventListener("toggle", (event) => {
+    if (/** @type {ToggleEvent} */ (event).newState === "open") load();
+  });
+  opener?.addEventListener("click", () => {
+    load();
+    // Invoker commands not supported: open the dialog from here.
+    if (!("command" in HTMLButtonElement.prototype) && !searchDialog.open) searchDialog.showModal();
+  });
+  /*
+   * Cmd-K / Ctrl-K opens search from anywhere on the page (aria-keyshortcuts
+   * on the button). Our choice: a modifier shortcut and no single-key one
+   * such as "/", so it never fires while typing (WCAG 2.1.4). It is left to
+   * the browser in a text field outside the dialog; inside the open dialog
+   * it keeps focus in the field. The dialog returns focus to whatever had
+   * it before, as showModal() does.
+   */
+  const mac = /Mac|iPhone|iPad/.test(navigator.platform);
+  const hint = searchSlot.querySelector(".docs-search-kbd");
+  if (hint && mac) hint.textContent = "⌘K";
+  /** @param {EventTarget | null} target */
+  const isTextField = (target) =>
+    target instanceof HTMLElement && (target.isContentEditable || target instanceof HTMLTextAreaElement || target instanceof HTMLSelectElement || (target instanceof HTMLInputElement && !["button", "checkbox", "radio", "submit", "reset", "range", "color", "file", "image"].includes(target.type)));
+  document.addEventListener("keydown", (event) => {
+    if (event.key.toLowerCase() !== "k" || !(event.metaKey || event.ctrlKey) || event.altKey || event.shiftKey) return;
+    if (searchDialog.open) {
+      event.preventDefault();
+      searchInput.focus();
+      return;
+    }
+    if (isTextField(event.target)) return;
+    event.preventDefault();
+    searchDialog.showModal();
+    load();
+  });
+  searchSlot.hidden = false;
 }

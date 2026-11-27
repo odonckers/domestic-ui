@@ -6,6 +6,8 @@ level: molecule
 standard:
   - HTML `<search>` element: https://html.spec.whatwg.org/multipage/grouping-content.html#the-search-element
   - MDN `<input type="search">`: https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/input/search
+see-also:
+  - [Search dialog](site:patterns/search-dialog.html): jump to a page or section from anywhere, with Cmd-K or Ctrl-K
 specs:
   - MDN `<search>`: https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/search
 ---
