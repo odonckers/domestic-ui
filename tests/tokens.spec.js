@@ -276,7 +276,7 @@ test.describe("Display P3 accent and status solids", () => {
     "--dui-color-red-9": "oklch(0.55 0.214 27)",
     "--dui-color-green-dark-9": "oklch(0.68 0.195 150)",
   };
-  /** The accent as computed, and the listed primitives resolved through a probe. */
+  /** The indigo accent token as computed, and the listed primitives resolved through a probe. */
   const read = (names) => {
     const probe = document.createElement("div");
     document.body.append(probe);
@@ -286,7 +286,7 @@ test.describe("Display P3 accent and status solids", () => {
         return [n, getComputedStyle(probe).color];
       }),
     );
-    probe.style.color = "var(--dui-color-accent)";
+    probe.style.color = "var(--dui-color-accent-indigo)";
     out.accent = getComputedStyle(probe).color;
     out.p3 = String(matchMedia("(color-gamut: p3)").matches);
     probe.remove();

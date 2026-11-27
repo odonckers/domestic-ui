@@ -15,7 +15,7 @@
  * tall, above the 24px minimum of WCAG 2.5.8.
  *
  * API
- *   data-button="[primary | secondary | quiet] [small | large] [icon]"  on <button>, <input type="submit | button | reset"> or <a href>: at most one variant word, one size word and icon
+ *   data-button="[primary | secondary | quiet | danger] [small | large] [icon]"  on <button>, <input type="submit | button | reset"> or <a href>: at most one variant word, one size word and icon
  *
  * data-button is a space-separated list. No variant word keeps the native
  * default: type="submit" is primary, other buttons and links are secondary.
@@ -24,6 +24,7 @@
  *   <button type="submit">Save</button>                         (primary by default)
  *   <button type="submit" data-button="secondary">Save draft</button>
  *   <button type="button" data-button="quiet small">Undo</button>
+ *   <button type="button" data-button="danger">Delete account</button>
  *   <a href="/signup" data-button="primary large">Create account</a>
  *
  * Icon only: data-button="icon" makes the button a square of the control
@@ -60,9 +61,10 @@
  * large keep their size at every density.
  * https://www.w3.org/WAI/WCAG22/Understanding/target-size-minimum.html
  *
- * Focus: every variant keeps the base :focus-visible outline. Filled (primary)
- * buttons add an inner ring in their text color, so the indicator contrasts
- * with the fill as well as with the surface (WCAG 1.4.11, 2.4.13).
+ * Focus: every variant keeps the base :focus-visible ring, which hugs the
+ * edge. Filled (primary) buttons add a 1px inner line in their text color,
+ * so the indicator contrasts with the fill as well as with the surface,
+ * whatever the theme (WCAG 1.4.11, 2.4.13).
  * https://www.w3.org/WAI/WCAG22/Understanding/focus-appearance.html
  *
  * Motion: background and border colors fade over --dui-motion-duration-
@@ -133,7 +135,7 @@
 
 :where(a)[data-button]:hover:not(:disabled, [aria-disabled="true"]),
 [data-button~="secondary"]:hover:not(:disabled, [aria-disabled="true"]) {
-  background-color: var(--dui-color-surface-raised);
+  background-color: var(--dui-color-surface-sunken);
 }
 
 /* Primary: the primary fill, same as the base type="submit" default. */
@@ -143,10 +145,23 @@
   border-color: var(--dui-color-primary);
 }
 
-/* Inner ring on filled buttons: the text color contrasts with the fill by design. */
+/*
+ * Danger: the danger fill with white text, for destructive actions such as
+ * Delete. Name the action in the label; color is not the only cue (WCAG 1.4.1).
+ * Our choice: like shadcn/ui's destructive button, for comparison
+ * (https://ui.shadcn.com/docs/components/button).
+ */
+[data-button~="danger"] {
+  background-color: var(--dui-color-danger-solid);
+  color: var(--dui-color-danger-contrast);
+  border-color: var(--dui-color-danger-solid);
+}
+
+/* Inner ring on filled buttons: a 1px line in the text color, which contrasts with the fill by design, so the indicator holds in any theme. */
 [data-button~="primary"]:focus-visible,
+[data-button~="danger"]:focus-visible,
 :is(button, input)[type="submit"]:not([data-button~="secondary"], [data-button~="quiet"]):focus-visible {
-  box-shadow: inset 0 0 0 var(--dui-focus-width) currentcolor;
+  box-shadow: inset 0 0 0 var(--dui-border-width) currentcolor;
 }
 
 [data-button~="primary"]:hover:not(:disabled, [aria-disabled="true"]) {
@@ -154,10 +169,15 @@
   border-color: var(--dui-color-primary-hover);
 }
 
+[data-button~="danger"]:hover:not(:disabled, [aria-disabled="true"]) {
+  background-color: var(--dui-color-danger-solid-hover);
+  border-color: var(--dui-color-danger-solid-hover);
+}
+
 /* Quiet: no fill or border until hovered. For low-emphasis actions next to others. */
 [data-button~="quiet"] {
   background-color: transparent;
-  color: var(--dui-color-text-muted);
+  color: var(--dui-color-text);
   border-color: transparent;
   box-shadow: none;
 }
@@ -182,7 +202,6 @@
   min-block-size: var(--dui-size-target-large);
   min-inline-size: var(--dui-size-target-large);
   padding: var(--dui-space-s) var(--dui-space-l);
-  font-size: var(--dui-step-1);
 }
 
 /* Icon only: a square of the size's min block size; the icon sits centered. */
@@ -208,7 +227,7 @@
   }
 
   /* Same system button colors as type="submit" in css/base/forms.css. */
-  :is(button, input, a)[data-button~="primary"] {
+  :is(button, input, a):is([data-button~="primary"], [data-button~="danger"]) {
     background-color: buttonface;
     color: buttontext;
     border-color: buttonborder;

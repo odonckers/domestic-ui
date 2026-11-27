@@ -34,10 +34,12 @@
   --dui-color-primary-contrast: light-dark(var(--dui-color-white), var(--dui-color-neutral-dark-1)); /* Text on the primary fill */
 
   /* Accent and status */
-  --dui-color-accent: light-dark(var(--dui-color-indigo-9), var(--dui-color-indigo-dark-9)); /* Accent solid for focus rings, selection and checks */
-  --dui-color-accent-contrast: var(--dui-color-white); /* Text on the accent fill, white in both schemes */
+  --dui-color-accent: light-dark(var(--dui-color-neutral-12), var(--dui-color-neutral-dark-12)); /* Accent solid for selection, checks, switches and focus: neutral 12 by default, so the look is monochrome. Themes set a hue here */
+  --dui-color-accent-indigo: light-dark(var(--dui-color-indigo-9), var(--dui-color-indigo-dark-9)); /* An indigo accent solid, more vivid on a Display P3 screen. The calm theme points --dui-color-accent at it */
   --dui-color-link-visited: light-dark(var(--dui-color-purple-11), var(--dui-color-purple-dark-11)); /* Visited links */
   --dui-color-danger: light-dark(var(--dui-color-red-11), var(--dui-color-red-dark-11)); /* Errors and invalid borders */
+  --dui-color-danger-solid: var(--dui-color-red-10); /* Fill of danger buttons, the same red in both schemes, 3:1 against the light page */
+  --dui-color-danger-contrast: var(--dui-color-white); /* Text on the danger fill, 4.5:1 */
   --dui-color-success: light-dark(var(--dui-color-green-11), var(--dui-color-green-dark-11)); /* Success messages */
   --dui-color-warning: light-dark(var(--dui-color-amber-11), var(--dui-color-amber-dark-11)); /* Warning badges and messages */
   --dui-color-info: light-dark(var(--dui-color-blue-11), var(--dui-color-blue-dark-11)); /* Informational alerts, separate from the accent */
@@ -99,7 +101,7 @@
   --dui-size-target-large: var(--dui-size-2-5); /* Large buttons: 40px, 52px under a coarse pointer */
   --dui-size-target-row: var(--dui-size-2); /* Comfortable row height of nav, menu, listbox and list items: 32px, 44px under a coarse pointer */
   --dui-size-target-row-compact: var(--dui-size-1-75); /* Compact row height: 28px, 44px under a coarse pointer */
-  --dui-size-check: var(--dui-size-1-25);
+  --dui-size-check: var(--dui-size-1); /* Checkbox and radio box, and the switch thumb: 16px, as shadcn/ui. The label around it is the full-size target (WCAG 2.5.8) */
   --dui-size-column-min: var(--dui-size-16);
   --dui-size-menu-min: var(--dui-size-12);
   --dui-size-drawer: var(--dui-size-24);
@@ -119,14 +121,15 @@
   --dui-border-width-emphasis: var(--dui-border-4);
   --dui-border-width-indicator: var(--dui-border-3);
   --dui-angle-chevron: var(--dui-angle-45); /* Turn of the CSS-drawn sidebar group chevron: -1x points to the inline end, 1x points down (open), 3x points left in right-to-left text */
+  --dui-border-width-check: var(--dui-border-2); /* Stroke of the CSS-drawn check and indeterminate bar in a checkbox, close to a 14px icon's 2 stroke */
   --dui-border-width-chevron: calc(var(--dui-border-1) * 1.5); /* Stroke of the CSS-drawn chevron on a sidebar nav group, close to a 16px icon's 1.75 stroke */
   --dui-underline-offset: var(--dui-underline-offset-015em);
   --dui-underline-thickness: var(--dui-underline-1);
   --dui-underline-thickness-hover: var(--dui-underline-2);
 
   /* Focus indicator (WCAG 2.4.7, 2.4.11, 2.4.13) */
-  --dui-focus-width: var(--dui-border-2);
-  --dui-focus-offset: var(--dui-border-2);
+  --dui-focus-width: var(--dui-border-3); /* Focus ring width: 3px, as shadcn/ui's ring */
+  --dui-focus-offset: var(--dui-border-0); /* Focus ring offset: 0, so the ring hugs the edge. Our choice: the ring is opaque at 3:1 rather than a translucent halo, so it meets WCAG 1.4.11 */
 
   /* Motion knobs: durations and distances (section 2) are derived from these. */
   --dui-motion-scale: var(--dui-factor-1); /* Multiplies every motion duration: 2 is twice as slow, 0 turns motion off */
@@ -182,23 +185,27 @@
   --dui-color-border: light-dark(oklch(from var(--dui-color-neutral-12-a11) l c h / calc(alpha * var(--dui-contrast))), oklch(from var(--dui-color-neutral-dark-12-a10) l c h / calc(alpha * var(--dui-contrast)))); /* Decorative hairline. Its alpha scales with --dui-contrast */
   --dui-tint-amount: calc(var(--dui-mix-8) * var(--dui-contrast)); /* How much of a status or accent color tints a surface: 8% times --dui-contrast */
   --dui-border-tint-amount: calc(var(--dui-mix-35) * var(--dui-contrast)); /* How much of a status color a tinted border uses: 35% times --dui-contrast */
-  --dui-color-accent-text: light-dark(oklch(from var(--dui-color-accent) 47% calc(c * 0.19 / 0.215) h), oklch(from var(--dui-color-accent) 78% calc(c * 0.11 / 0.215) h)); /* Accent as text. Relative color of the accent, same hue, 4.5:1. https://www.w3.org/TR/css-color-5/#relative-colors */
-  --dui-color-link: var(--dui-color-accent-text); /* Links */
-  --dui-color-focus: light-dark(var(--dui-color-accent), var(--dui-color-accent-text)); /* Focus ring: the accent solid in light, the accent text in dark, so it stays 3:1 */
+  --dui-color-accent-text: light-dark(oklch(from var(--dui-color-accent) calc(0.47 - max(0, 0.02 - c) * 16.25) calc(c * 0.19 / 0.215) h), oklch(from var(--dui-color-accent) calc(0.78 + max(0, 0.02 - c) * 10.25) calc(c * 0.11 / 0.215) h)); /* Accent as text. Relative color of the accent, same hue, 4.5:1. Our choice: an achromatic accent (chroma 0, fading in up to 0.02) gives the text color, 14.5% and 98.5%, so links read as text with an underline, as in shadcn/ui. https://www.w3.org/TR/css-color-5/#relative-colors */
+  --dui-color-link: var(--dui-color-accent-text); /* Links: the text color with the default neutral accent, told apart by the underline (WCAG 1.4.1) */
+  --dui-color-focus: light-dark(oklch(from var(--dui-color-accent) calc(l + max(0, 0.02 - c) * 20.25) c h), oklch(from var(--dui-color-accent-text) calc(l - max(0, 0.02 - c) * 21.25) c h)); /* Focus ring, 3:1 (WCAG 1.4.11). A hued accent: the accent solid in light, the accent text in dark. The neutral accent: a mid gray, 55% lightness in light and 56% in dark */
+  --dui-color-accent-contrast: light-dark(var(--dui-color-white), oklch(from var(--dui-color-accent) calc(1 - max(0, 0.02 - c) * 42.5) 0 0deg)); /* Text on the accent fill: white, except on the neutral dark accent, where it is the dark page color */
+  --dui-color-danger-solid-hover: oklch(from var(--dui-color-danger-solid) calc(l - 0.04) c h); /* Danger fill hover: 0.04 darker in OKLCH lightness, so white text gains contrast */
   --dui-color-accent-hover: oklch(from var(--dui-color-accent) calc(l - 0.02) c h); /* Accent solid hover. Our choice: 0.02 darker in OKLCH lightness, so white text stays 4.5:1 */
-  --dui-color-primary-hover: light-dark(oklch(from var(--dui-color-primary) 32% calc(c + 0.002) h), oklch(from var(--dui-color-primary) 86% calc(c + 0.004) h)); /* Primary fill hover, same hue as the primary */
+  --dui-color-primary-hover: light-dark(oklch(from var(--dui-color-primary) 26% calc(c + 0.002) h), oklch(from var(--dui-color-primary) 90% calc(c + 0.004) h)); /* Primary fill hover, same hue as the primary */
   --dui-font-heading: var(--dui-font-body);
   --dui-font-size-ui: var(--dui-step--1); /* Interface text: buttons, fields, selects, nav, menu and listbox items, tabs, badges, tooltips, table cells. 14px at the default font size */
   --dui-font-size-field: var(--dui-font-size-ui); /* Text in fields, selects and text areas: the UI size, at least 16px under a coarse pointer (section 2a) */
   --dui-font-size-page-title: var(--dui-step-3); /* The h1 of a page header or an app shell: 30px at most */
   --dui-radius-control: calc(var(--dui-radius-2) * var(--dui-radius-scale)); /* Controls, buttons, inline code: 8px times the radius scale */
   --dui-radius-surface: calc(var(--dui-radius-3) * var(--dui-radius-scale)); /* Panels, cards, pre, dialogs, details, media: 12px times the radius scale */
+  --dui-radius-check: calc(var(--dui-radius-1-5) * var(--dui-radius-scale)); /* Checkbox corners: 4px times the radius scale */
 
   /* Tinted surfaces for status badges: a little of the tone mixed into the surface. */
   --dui-color-accent-surface: color-mix(in oklab, var(--dui-color-accent) var(--dui-tint-amount), var(--dui-color-surface));
   --dui-color-success-surface: color-mix(in oklab, var(--dui-color-success) var(--dui-tint-amount), var(--dui-color-surface));
   --dui-color-warning-surface: color-mix(in oklab, var(--dui-color-warning) var(--dui-tint-amount), var(--dui-color-surface));
   --dui-color-danger-surface: color-mix(in oklab, var(--dui-color-danger) var(--dui-tint-amount), var(--dui-color-surface));
+  --dui-color-danger-halo: color-mix(in oklab, var(--dui-color-danger) calc(var(--dui-mix-20) * var(--dui-contrast)), transparent); /* Halo around an invalid field: the danger color at 20%, times --dui-contrast */
   --dui-color-info-surface: color-mix(in oklab, var(--dui-color-info) var(--dui-tint-amount), var(--dui-color-surface));
 
   /* Inverse pair for small overlays on top of content (tooltips): text and surface swapped. */
