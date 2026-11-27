@@ -183,6 +183,7 @@
    * For comparison: Carbon's productive and expressive type sets
    * (https://carbondesignsystem.com/elements/typography/overview/).
    */
+  --dui-font-size-0-75: 0.75rem; /* 12px: badges */
   --dui-font-size-0-875: 0.875rem; /* 14px: interface text */
   --dui-font-size-1: 1rem; /* 16px: body text */
   --dui-font-size-1-125: 1.125rem; /* 18px */

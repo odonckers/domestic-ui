@@ -886,7 +886,7 @@ test.describe("card", () => {
     await card.scrollIntoViewIfNeeded();
     await expect(card.getByRole("link", { name: "Theming guide" })).toHaveAccessibleName("Theming guide");
     // A click on the card body, away from the heading, hits the link's overlay.
-    const body = await card.locator("p").boundingBox();
+    const body = await card.locator(":scope > p").boundingBox();
     const hit = await page.evaluate(({ x, y }) => document.elementFromPoint(x, y)?.closest("a")?.textContent, {
       x: (body?.x ?? 0) + 10,
       y: (body?.y ?? 0) + 5,
