@@ -29,8 +29,12 @@
  * data-density="compact"; see css/base/forms.css).
  *
  * State does not rely on color alone (WCAG 1.4.1): the thumb moves to the
- * end and changes from outline color to the contrast color, and the track
- * fills. Track border and thumb are 3:1 against the surface (WCAG 1.4.11).
+ * end. Off, the track is the control border color (3:1 against the surface)
+ * and the thumb is the surface color in light and the text color in dark
+ * (3:1 against the track); on, the track
+ * takes the accent and the thumb its contrast color (WCAG 1.4.11).
+ * Our choice: a 32 by 18px track with a 16px thumb, as shadcn/ui's switch,
+ * for comparison (https://ui.shadcn.com/docs/components/switch).
  * Forced colors: system colors are set explicitly so both states stay visible.
  * https://developer.mozilla.org/en-US/docs/Web/CSS/@media/forced-colors
  *
@@ -51,50 +55,49 @@ input[type="checkbox"][role="switch"] {
   appearance: none;
   display: inline-flex;
   align-items: center;
-  inline-size: calc(var(--dui-size-check) * 2);
-  block-size: var(--dui-size-check);
-  padding: var(--dui-space-3xs);
-  background-color: var(--dui-color-surface);
-  border: var(--dui-border-width) solid var(--dui-color-border-control);
+  inline-size: var(--dui-size-target-small);
+  block-size: calc(var(--dui-size-check) + var(--dui-border-width) * 2);
+  flex-shrink: 0;
+  margin: 0;
+  padding: 0;
+  background-color: var(--dui-color-border-control);
+  border: var(--dui-border-width) solid transparent;
   border-radius: var(--dui-radius-pill);
+  box-shadow: var(--dui-elevation-control);
   cursor: pointer;
-  transition:
-    background-color var(--dui-motion-duration-fast) var(--dui-motion-easing-standard),
-    border-color var(--dui-motion-duration-fast) var(--dui-motion-easing-standard);
+  transition: background-color var(--dui-motion-duration-fast) var(--dui-motion-easing-standard);
 }
 
-/* The thumb. Decorative: the checkbox itself carries name and state. */
+/* The thumb, the surface color on the track. Decorative: the checkbox itself carries name and state. */
 input[type="checkbox"][role="switch"]::before {
   content: "";
-  inline-size: calc(var(--dui-size-check) - var(--dui-space-3xs) * 2 - var(--dui-border-width) * 2);
+  inline-size: var(--dui-size-check);
   aspect-ratio: 1;
   border-radius: var(--dui-radius-pill);
-  background-color: var(--dui-color-border-control);
+  background-color: light-dark(var(--dui-color-surface), var(--dui-color-text));
   transition: translate calc(var(--dui-motion-duration-fast) * var(--dui-motion-movement)) var(--dui-motion-easing-standard);
 }
 
 input[type="checkbox"][role="switch"]:checked {
   background-color: var(--dui-color-accent);
-  border-color: var(--dui-color-accent);
 }
 
 input[type="checkbox"][role="switch"]:hover:not(:disabled) {
-  border-color: var(--dui-color-text-muted);
+  background-color: var(--dui-color-border-control-hover);
 }
 
 input[type="checkbox"][role="switch"]:checked:hover:not(:disabled) {
   background-color: var(--dui-color-accent-hover);
-  border-color: var(--dui-color-accent-hover);
 }
 
-/* The thumb travels one check size: track (2 × check) minus thumb, padding and border. */
+/* The thumb travels the track's inline size less its block size. */
 input[type="checkbox"][role="switch"]:checked::before {
   background-color: var(--dui-color-accent-contrast);
-  translate: var(--dui-size-check) 0;
+  translate: calc(var(--dui-size-target-small) - var(--dui-size-check) - var(--dui-border-width) * 2) 0;
 }
 
 input[type="checkbox"][role="switch"]:checked:dir(rtl)::before {
-  translate: calc(var(--dui-size-check) * -1) 0;
+  translate: calc((var(--dui-size-target-small) - var(--dui-size-check) - var(--dui-border-width) * 2) * -1) 0;
 }
 
 @media (forced-colors: active) {
