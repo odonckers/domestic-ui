@@ -8,13 +8,9 @@ Use the issue forms for bugs and feature requests. Pull requests should use the 
 
 Branch names follow `fix/short-description`, `feat/short-description`, `docs/short-description`, or `a11y/short-description`.
 
-### Approval flow
+### Reviews
 
-Issues and pull requests from outside this repository's owners, members, or collaborators get the `needs-owen-approval` label automatically.
-
-The maintainer approves an item by adding the `owen-approved` label. Only Owen applies that label. Team bots never apply `owen-approved` and never merge outside pull requests. Bots may merge their own pull requests.
-
-An outside pull request cannot merge until the `owen-gate` check passes, which requires the `owen-approved` label.
+Every pull request, from inside or outside the project, gets the same review and must pass CI before it merges. GitHub holds CI on a first-time contributor's pull request until a maintainer approves the workflow run.
 
 `.github/CODEOWNERS` lists @odonckers on every file. That file is informational today: team bots push with the same GitHub account as Owen, so GitHub cannot tell his review apart from a bot's.
 
@@ -29,8 +25,10 @@ The default theme should look complete and consistent out of the box. Consumers 
 
 ## Dependencies
 
-The published CSS and web components have no runtime dependencies. A new development dependency comes with a
-security review and a row in [`docs/DEPENDENCIES.md`](docs/DEPENDENCIES.md), in the same pull request.
+The published CSS and web components have no runtime dependencies. Every external dependency (npm packages in the
+root and in each demo app, GitHub Actions and container images) comes with a security review and a row in
+[`docs/DEPENDENCIES.md`](docs/DEPENDENCIES.md), in the same pull request. `npm run lint:deps` (part of `npm test`
+and CI) fails when one is missing or when a row names something no longer used.
 
 ## Checks
 
