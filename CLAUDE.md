@@ -54,8 +54,8 @@ Read [PRINCIPLES.md](PRINCIPLES.md) before changing behavior. [CONTRIBUTING.md](
 
 ## Branches, checks and merging
 
-- Never push to `main`. The "Protect main" ruleset requires the `ci` check (and, until it is removed from the ruleset, the retired `owen-gate` check, which always passes) and merges through the merge queue; force-pushes and deleting `main` are blocked. Both workflows also run on `merge_group`.
-- Don't merge `main` into a branch just to make it current: the queue tests each PR against the latest `main`. Merge `main` in (`git merge origin/main`) only to resolve a conflict. Never rebase or force-push a pushed branch.
-- Squash merge only, through the merge queue. The maintainer merges unless they ask you to in the session; then add a green PR to the queue with `gh pr merge --squash` (or enable auto-merge, which queues it once checks pass). Never bypass the queue. Breaking changes always need the maintainer's go-ahead.
+- Never push to `main`. The "Protect main" ruleset requires the `ci` check (and, until it is removed from the ruleset, the retired `owen-gate` check, which always passes) ; force-pushes and deleting `main` are blocked. Branches do not have to be up to date to merge.
+- Merge `main` into a branch (`git merge origin/main`) only to resolve a conflict, not just to make it current. Never rebase or force-push a pushed branch.
+- Squash merge only, once CI is green. The maintainer merges unless they ask you to in the session; never enable auto-merge. Breaking changes always need the maintainer's go-ahead.
 - Outside PRs get the same review and CI as ours; there is no approval label. First-time contributors' CI runs need a maintainer to approve the workflow run.
 - No npm publish, no release tag and no repository-setting change unless the maintainer asks for it in the session.
