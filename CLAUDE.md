@@ -18,7 +18,7 @@ Read [PRINCIPLES.md](PRINCIPLES.md) before changing behavior. [CONTRIBUTING.md](
 ## Commands
 
 - Install: `npm ci`, then `npx playwright install --with-deps` once for the Chromium, Firefox and WebKit builds the pinned Playwright expects.
-- Everything: `npm test` (html-validate, Stylelint, token check, Playwright + axe).
+- Everything: `npm test` (html-validate, Stylelint, token check, dependency review check, Playwright + axe).
 - Use a free port if anything else may be serving: `PORT=4600 npm test` (default 4173; parallel checkouts otherwise reuse each other's server).
 - One spec: `PORT=4600 npx playwright test tests/atoms.spec.js --project=chromium`
 - Preview: `node site/build.mjs && node scripts/serve.mjs`, then open http://127.0.0.1:4173/_site/index.html
@@ -36,6 +36,7 @@ Read [PRINCIPLES.md](PRINCIPLES.md) before changing behavior. [CONTRIBUTING.md](
 
 ## Rules for code
 
+- Every external dependency (npm in the root or a demo, GitHub Action, container image) needs a row in the inventory in `docs/DEPENDENCIES.md` in the same PR; `npm run lint:deps` enforces it.
 - Native element first; ARIA only where native can't. [WCAG 2.2](https://www.w3.org/TR/WCAG22/) AA. No page overflows at 320px.
 - Components never hard-code values; theme only through semantic `--dui-*` tokens. Give every new token a description comment.
 - Link MDN, WHATWG, W3C, WCAG or the APG for every borrowed fact. Never claim originality. A choice of ours is labeled "Our choice" with one line on why.
@@ -52,8 +53,8 @@ Read [PRINCIPLES.md](PRINCIPLES.md) before changing behavior. [CONTRIBUTING.md](
 
 ## Branches, checks and merging
 
-- Never push to `main`. The "Protect main" ruleset requires the `owen-gate` and `ci` checks and up-to-date branches; force-pushes and deleting `main` are blocked.
+- Never push to `main`. The "Protect main" ruleset requires the `ci` check (and, until it is removed from the ruleset, the retired `owen-gate` check, which always passes) and up-to-date branches; force-pushes and deleting `main` are blocked.
 - Keep a branch current by merging `main` into it (`git merge origin/main`). Never rebase or force-push a pushed branch.
 - Squash merge only. The maintainer merges, unless they ask you to in the session; never enable auto-merge.
-- Outside issues and PRs get `needs-owen-approval`; only the maintainer applies `owen-approved`.
+- Outside PRs get the same review and CI as ours; there is no approval label. First-time contributors' CI runs need a maintainer to approve the workflow run.
 - No npm publish, no release tag and no repository-setting change unless the maintainer asks for it in the session.
