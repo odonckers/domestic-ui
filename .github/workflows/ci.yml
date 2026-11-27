@@ -7,6 +7,9 @@ on:
     types: [opened, synchronize, reopened, edited]
   push:
     branches: [main]
+  # The merge queue runs CI on the queued merge before it lands on main.
+  # https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/configuring-pull-request-merges/managing-a-merge-queue#triggering-merge-group-checks-with-github-actions
+  merge_group:
 
 permissions:
   contents: read
@@ -102,7 +105,8 @@ jobs:
 
   # The "Protect main" ruleset requires a check named exactly `ci`. This job
   # reports it, and passes only when lint, every Playwright shard and, on pull
-  # requests, commits passed. On pushes to main, commits is skipped by design.
+  # requests, commits passed. On pushes to main and in the merge queue, commits
+  # is skipped by design: the pull request run already checked them.
   ci:
     name: ci
     if: always()
@@ -119,4 +123,4 @@ jobs:
           echo "event: $EVENT; lint: $LINT; playwright: $PLAYWRIGHT; commits: $COMMITS"
           [ "$LINT" = success ] || exit 1
           [ "$PLAYWRIGHT" = success ] || exit 1
-          [ "$COMMITS" = success ] || { [ "$EVENT" = push ] && [ "$COMMITS" = skipped ]; } || exit 1
+          [ "$COMMITS" = success ] || { [ "$EVENT" != pull_request ] && [ "$COMMITS" = skipped ]; } || exit 1

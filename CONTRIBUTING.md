@@ -22,6 +22,8 @@ Branch names follow `fix/short-description`, `feat/short-description`, `docs/sho
 
 Every pull request, from inside or outside the project, gets the same review and must pass CI before it merges. GitHub holds CI on a first-time contributor's pull request until a maintainer approves the workflow run.
 
+`main` merges through GitHub's [merge queue](https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/configuring-pull-request-merges/managing-a-merge-queue). Once a pull request is approved and green, add it to the queue (the "Merge when ready" button, or `gh pr merge --squash`). The queue squash-merges each pull request after CI passes on it combined with the latest `main` and everything ahead of it, so a branch no longer has to be kept up to date by hand. Merge `main` into a branch only to resolve a conflict.
+
 `.github/CODEOWNERS` lists @odonckers on every file. That file is informational today: team bots push with the same GitHub account as Owen, so GitHub cannot tell his review apart from a bot's.
 
 ## Standards
