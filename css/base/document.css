@@ -80,8 +80,14 @@ body {
  * Visible focus on everything focusable (WCAG 2.4.7, 2.4.13).
  * https://developer.mozilla.org/en-US/docs/Web/CSS/:focus-visible
  * Never remove an outline without a replacement.
+ * Our choice: date and time fields also ring on :focus. WebKit does not match
+ * :focus-visible while one of their parts (day, month, hour) has focus, and
+ * these fields always take typing, which the HTML focus-visible heuristics
+ * treat as a reason to show focus anyway.
+ * https://drafts.csswg.org/selectors/#the-focus-visible-pseudo
  */
-:focus-visible {
+:focus-visible,
+:is(input[type="date"], input[type="time"], input[type="datetime-local"], input[type="month"], input[type="week"]):focus {
   outline: var(--dui-focus-width) solid var(--dui-color-focus);
   outline-offset: var(--dui-focus-offset);
 }
@@ -121,7 +127,8 @@ body {
  * https://developer.mozilla.org/en-US/docs/Web/CSS/@media/forced-colors
  */
 @media (forced-colors: active) {
-  :focus-visible {
+  :focus-visible,
+  :is(input[type="date"], input[type="time"], input[type="datetime-local"], input[type="month"], input[type="week"]):focus {
     outline-color: highlight;
   }
 }

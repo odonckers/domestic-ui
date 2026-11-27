@@ -21,6 +21,7 @@ Read [PRINCIPLES.md](PRINCIPLES.md) before changing behavior. [CONTRIBUTING.md](
 - Everything: `npm test` (html-validate, Stylelint, token check, dependency review check, Playwright + axe).
 - Use a free port if anything else may be serving: `PORT=4600 npm test` (default 4173; parallel checkouts otherwise reuse each other's server).
 - One spec: `PORT=4600 npx playwright test tests/atoms.spec.js --project=chromium`
+- Screenshot baselines (any OS, Docker): `npm run test:visual:docker`, or `npm run test:visual:docker:update` after a visual change; look at every changed image before committing.
 - Preview: `node site/build.mjs && node scripts/serve.mjs`, then open http://127.0.0.1:4173/_site/index.html
 - Generated files: `node site/build.mjs` writes `README.md`, `llms.txt` and `llms-full.txt`; `node site/build.mjs --check` fails if they are stale (CI runs it).
 - Alignment pass for layout, nav, toolbar, menu, tabs, dialog or table changes: read `.claude/skills/gridlines/DOMESTIC-UI.md`, then `npm run gridlines -- examples/app-shell.html`.

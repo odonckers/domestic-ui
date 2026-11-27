@@ -2650,6 +2650,7 @@ None: write semantic HTML.
 - [MDN `color-scheme`](https://developer.mozilla.org/en-US/docs/Web/CSS/color-scheme)
 - [A List Apart axiomatic css and lobotomized owls](https://alistapart.com/article/axiomatic-css-and-lobotomized-owls/)
 - [MDN `:focus-visible`](https://developer.mozilla.org/en-US/docs/Web/CSS/:focus-visible)
+- [W3C the focus visible pseudo](https://drafts.csswg.org/selectors/#the-focus-visible-pseudo)
 - [MDN View Transition API](https://developer.mozilla.org/en-US/docs/Web/API/View_Transition_API)
 - [MDN `forced-colors`](https://developer.mozilla.org/en-US/docs/Web/CSS/@media/forced-colors)
 - [WHATWG forms](https://html.spec.whatwg.org/multipage/forms.html)

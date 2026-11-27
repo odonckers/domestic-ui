@@ -74,7 +74,7 @@ reads the name in backticks in a row's first cell and needs the last cell to be 
 | [`actions/configure-pages`](https://github.com/actions/configure-pages) v6 | `pages.yml` | GitHub-hosted runner | MIT | GitHub | n/a | Pinned to major tag | 2026-11-27 |
 | [`actions/upload-pages-artifact`](https://github.com/actions/upload-pages-artifact) v5 | `pages.yml` | GitHub-hosted runner | MIT | GitHub | n/a | Pinned to major tag | 2026-11-27 |
 | [`actions/deploy-pages`](https://github.com/actions/deploy-pages) v5 | `pages.yml` | GitHub-hosted runner | MIT | GitHub | n/a | Pinned to major tag | 2026-11-27 |
-| [`mcr.microsoft.com/playwright`](https://mcr.microsoft.com/en-us/artifact/mar/playwright/) v1.65.1-noble | `ci.yml` `lint` and `playwright` jobs | CI container, as a non-root user | Apache-2.0 (Ubuntu packages under their own) | Microsoft | n/a | Tag kept equal to `@playwright/test` | 2026-11-27 |
+| [`mcr.microsoft.com/playwright`](https://mcr.microsoft.com/en-us/artifact/mar/playwright/) v1.65.1-noble | `ci.yml` `lint` and `playwright` jobs; `scripts/visual-docker.mjs` (`npm run test:visual:docker`) | CI container, as a non-root user; local screenshot runs as the caller's user | Apache-2.0 (Ubuntu packages under their own) | Microsoft | n/a | Tag kept equal to `@playwright/test` | 2026-11-27 |
 
 ### Notes from the 2026-11-27 review
 
