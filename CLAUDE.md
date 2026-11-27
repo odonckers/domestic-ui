@@ -47,7 +47,7 @@ Read [PRINCIPLES.md](PRINCIPLES.md) before changing behavior. [CONTRIBUTING.md](
 ## Commits, PRs and the changelog
 
 - Every commit follows [Conventional Commits 1.0.0](https://www.conventionalcommits.org/en/v1.0.0/): `type(scope): description`, lowercase in type, scope and description. Types: feat, fix, docs, style, refactor, perf, test, build, ci, chore, revert. Header at most 100 characters. Breaking changes use `!` or a `BREAKING CHANGE:` footer.
-- We squash-merge, so the PR title becomes the commit on `main` and must follow the same format. CI's `commits` job lints the title and every commit; retitling re-runs CI.
+- We squash-merge, so the PR title becomes the commit on `main` and must follow the same format. CI's `lint` job lints the title and every commit; retitling re-runs CI.
 - `CHANGELOG.md` is generated from the commits on `main` (git-cliff, `cliff.toml`, `npm run changelog`). Never edit it by hand and never add changelog entries in a PR: the commit message is the entry.
 - Branch names: `feat/…`, `fix/…`, `docs/…`, `a11y/…`, `ci/…`, `build/…`, `chore/…`.
 
