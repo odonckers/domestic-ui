@@ -282,17 +282,21 @@ test.describe("docs build", () => {
     // Any snippet line long enough to be markup rather than a word or a closing tag.
     const lines = [...new Set(site.model.snippets.flatMap((s) => s.code.split("\n").map((l) => l.trim())))].filter((l) => l.length >= 30 && /<[a-z]/.test(l));
     expect(lines.length).toBeGreaterThan(0);
+    // Collect every repeat and assert once: an expect() per page and line cost minutes.
+    const repeats = [];
     // Explainers are proposals rendered as written (explainers/*.md), quoting the markup they propose.
     for (const page of site.pages.filter((p) => p.section !== "explainers")) {
       const html = read(join(SITE_DIR, page.path));
       const main = html.slice(html.indexOf("<main"), html.indexOf("</main>")).replace(/<(pre|iframe)\b[\s\S]*?<\/\1>/g, "");
       const prose = unescapeHtml(main.replace(/<[^>]*>/g, ""));
-      const md = read(join(SITE_DIR, page.path.replace(/\.html$/, ".md"))).replace(/^(`{3,})\w*\n[\s\S]*?\n\1$/gm, "");
+      const mdPath = page.path.replace(/\.html$/, ".md");
+      const md = read(join(SITE_DIR, mdPath)).replace(/^(`{3,})\w*\n[\s\S]*?\n\1$/gm, "");
       for (const line of lines) {
-        expect(prose.includes(line), `${page.path} repeats ${line}`).toBe(false);
-        expect(md.includes(line), `${page.path.replace(/\.html$/, ".md")} repeats ${line}`).toBe(false);
+        if (prose.includes(line)) repeats.push(`${page.path} repeats ${line}`);
+        if (md.includes(line)) repeats.push(`${mdPath} repeats ${line}`);
       }
     }
+    expect(repeats).toEqual([]);
   });
 
   test("every old example URL is a static redirect to the page that now holds it", async () => {
