@@ -1,8 +1,8 @@
 /*
  * Theme: calm (opt-in, not imported by css/domestic.css)
  *
- * The indigo accent as the primary fill, with white text; links and focus
- * as in the default; 8 / 12px corners; comfortable density; shadows tinted
+ * An indigo accent (--dui-color-accent-indigo) as the primary fill, with
+ * white text, and for links and focus; 8 / 12px corners; comfortable density; shadows tinted
  * with the accent hue.
  *
  * Apply with data-theme="calm" on :root or on any element, after linking
@@ -24,6 +24,7 @@
 
 @layer tokens {
   [data-theme="calm"] {
+    --dui-color-accent: var(--dui-color-accent-indigo);
     --dui-color-primary: var(--dui-color-accent);
     --dui-color-primary-hover: var(--dui-color-accent-hover);
     --dui-color-primary-contrast: var(--dui-color-accent-contrast);
