@@ -266,3 +266,14 @@ the four framework demos pass the shared accessibility checks.
 | `site/` | The zero-dependency docs build, which also writes `README.md` and `llms*.txt` |
 | `demos/` | Vanilla, React, Angular and Astro apps, plus the shared accessibility checker |
 | `tests/` | Playwright specs in Chromium, Firefox and WebKit, with axe, contrast and screenshot checks |
+
+## 13. Roadmap
+
+The architecture turns into three phases of issues. Order within a phase is free; each issue is a
+self-contained spec.
+
+| Phase | Goal | Issues |
+| --- | --- | --- |
+| 1. Foundation contract | Make the rules above checkable and the public API explicit | #95 versioning and deprecation policy, #96 Baseline status from web-features, #97 web component successors, #98 explainers' path to the platform |
+| 2. Adopt emerging standards | Let the platform do more of the work, behind `@supports` | #99 customizable select, #100 `interestfor` for tooltips, #101 custom element states, #102 auto-growing text areas, #103 `@scope` evaluation |
+| 3. Coverage and interop | Fill native gaps and meet tools where they are | #104 progress and meter, #105 tree view, #106 shadcn/ui theme bridge, #107 custom elements manifest |
