@@ -163,8 +163,10 @@ export function generateLlmsFull(model, pages, twins) {
 }
 
 /**
- * A search index for a later in-page search: one record per page with its
- * sidebar entry ("level"), summary and h2/h3 headings. No search UI yet.
+ * The search index read by the docs search dialog (site.js): one record per
+ * page with its sidebar entry ("level"), summary, and the h2/h3 headings of
+ * its article as { text, id }, so a result can open `url#id`. Headings
+ * outside the article (the "On this page" sidebar) are left out.
  * @param {Page[]} pages
  * @param {Record<string, string>} html rendered HTML by page path
  */
@@ -174,7 +176,13 @@ export function searchIndex(pages, html) {
     url: p.path,
     level: navEntryOf(p)?.title ?? "",
     summary: p.description,
-    headings: [...(html[p.path] ?? "").matchAll(/<h[23] id="[^"]*">([\s\S]*?)<\/h[23]>/g)].map((m) => unescapeHtml(m[1].replace(/<[^>]*>/g, "")).trim()),
+    headings: [...articleOf(html[p.path] ?? "").matchAll(/<h[23] id="([^"]*)">([\s\S]*?)<\/h[23]>/g)].map((m) => ({
+      text: unescapeHtml(m[2].replace(/<[^>]*>/g, "")).trim(),
+      id: unescapeHtml(m[1]),
+    })),
   }));
   return `[\n${records.map((r) => JSON.stringify(r)).join(",\n")}\n]\n`;
 }
+
+/** The page's <article> element, or "" when it has none. @param {string} page */
+const articleOf = (page) => page.match(/<article\b[\s\S]*<\/article>/)?.[0] ?? "";

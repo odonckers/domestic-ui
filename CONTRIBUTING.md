@@ -92,7 +92,7 @@ docs: link the apg tabs pattern
 ```
 
 We squash-merge, so the pull request title becomes the commit on `main`: the title must follow the same rule.
-CI's `commits` job lints the title and every commit in the pull request with commitlint
+CI's `lint` job lints the title and every commit in the pull request with commitlint
 ([`commitlint.config.mjs`](commitlint.config.mjs)), and the required `ci` check fails if it does. Retitling a pull
 request re-runs CI. Merge commits such as "Merge branch 'main' into …" are ignored. To check a message locally:
 `echo "fix(nav): keep the marker on aria-current" | npx commitlint`.

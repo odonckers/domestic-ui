@@ -12,7 +12,7 @@ import { DIAGRAM_DIR, checkDiagrams, diagramProblems, loadDiagrams } from "../si
 import { navLabel } from "../site/lib/nav.mjs";
 import { escapeHtml, unescapeHtml } from "../site/lib/util.mjs";
 import { SITE_DIR, WCAG_TAGS, builtPages, livePages, redirectPages, summarize } from "./docs-helpers.js";
-import { blockExternalRequests, examples, schemes } from "./helpers.js";
+import { blockExternalRequests, examples, schemes, withoutMotion } from "./helpers.js";
 
 /*
  * Docs site checks. tests/docs-helpers.js builds _site/ once; see there.
@@ -156,6 +156,32 @@ test.describe("docs build", () => {
     expect([...loadDiagrams(ROOT).keys()].sort()).toEqual(diagramPages.map((p) => p.diagram).sort());
   });
 
+  test("search-index.json: one record per page; every heading is an article heading with an id that resolves", () => {
+    const index = JSON.parse(read(join(SITE_DIR, "search-index.json")));
+    expect(index.map((/** @type {any} */ r) => r.url)).toEqual(site.pages.map((p) => p.path));
+    for (const record of index) {
+      const page = site.pages.find((p) => p.path === record.url);
+      expect(record.title, record.url).toBe(page?.title);
+      expect(record.summary, record.url).toBe(page?.description);
+      expect(Object.keys(record), record.url).toEqual(["title", "url", "level", "summary", "headings"]);
+      const html = read(join(SITE_DIR, record.url));
+      const article = html.slice(html.indexOf("<article"), html.indexOf("</article>"));
+      for (const h of record.headings) {
+        expect(Object.keys(h), record.url).toEqual(["text", "id"]);
+        expect(h.text, `${record.url}: the "On this page" heading is not content`).not.toBe("On this page");
+        expect(article, `${record.url}#${h.id} resolves inside the article`).toContain(` id="${escapeHtml(h.id)}"`);
+      }
+    }
+    // Deterministic: a second build writes the same bytes.
+    const again = mkdtempSync(join(tmpdir(), "dui-search-"));
+    try {
+      build({ outDir: again, writeRoot: false });
+      expect(read(join(again, "search-index.json"))).toBe(read(join(SITE_DIR, "search-index.json")));
+    } finally {
+      rmSync(again, { recursive: true, force: true });
+    }
+  });
+
   test("every relative href and src resolves inside _site/", () => {
     const broken = [];
     for (const page of site.pages) {
@@ -256,17 +282,21 @@ test.describe("docs build", () => {
     // Any snippet line long enough to be markup rather than a word or a closing tag.
     const lines = [...new Set(site.model.snippets.flatMap((s) => s.code.split("\n").map((l) => l.trim())))].filter((l) => l.length >= 30 && /<[a-z]/.test(l));
     expect(lines.length).toBeGreaterThan(0);
+    // Collect every repeat and assert once: an expect() per page and line cost minutes.
+    const repeats = [];
     // Explainers are proposals rendered as written (explainers/*.md), quoting the markup they propose.
     for (const page of site.pages.filter((p) => p.section !== "explainers")) {
       const html = read(join(SITE_DIR, page.path));
       const main = html.slice(html.indexOf("<main"), html.indexOf("</main>")).replace(/<(pre|iframe)\b[\s\S]*?<\/\1>/g, "");
       const prose = unescapeHtml(main.replace(/<[^>]*>/g, ""));
-      const md = read(join(SITE_DIR, page.path.replace(/\.html$/, ".md"))).replace(/^(`{3,})\w*\n[\s\S]*?\n\1$/gm, "");
+      const mdPath = page.path.replace(/\.html$/, ".md");
+      const md = read(join(SITE_DIR, mdPath)).replace(/^(`{3,})\w*\n[\s\S]*?\n\1$/gm, "");
       for (const line of lines) {
-        expect(prose.includes(line), `${page.path} repeats ${line}`).toBe(false);
-        expect(md.includes(line), `${page.path.replace(/\.html$/, ".md")} repeats ${line}`).toBe(false);
+        if (prose.includes(line)) repeats.push(`${page.path} repeats ${line}`);
+        if (md.includes(line)) repeats.push(`${mdPath} repeats ${line}`);
       }
     }
+    expect(repeats).toEqual([]);
   });
 
   test("every old example URL is a static redirect to the page that now holds it", async () => {
@@ -824,6 +854,8 @@ test.describe("docs pages in the browser", () => {
   });
 
   test("the Docs sidebar marks the current page once and opens only its group; the app bar and breadcrumb agree", async ({ page }) => {
+    // One navigation per docs page: the budget grows with the site, as for the diagram and redirect walks.
+    test.setTimeout(30_000 + site.pages.length * 500);
     for (const p of site.pages) {
       await page.goto(`_site/${p.path}`);
       const nav = page.locator('nav[aria-label="Docs"]');
@@ -858,6 +890,8 @@ test.describe("docs pages in the browser", () => {
   });
 
   test("the Docs sidebar lists every entry in order and reaches every page; previous and next follow it", async ({ page }) => {
+    // One navigation per docs page: the budget grows with the site, as for the diagram and redirect walks.
+    test.setTimeout(30_000 + site.pages.length * 500);
     // About 75 navigations: reduced motion turns the page cross-fade off, so the walk is not 75 transitions long.
     await page.emulateMedia({ reducedMotion: "reduce" });
     await page.goto("_site/index.html");
@@ -1088,7 +1122,7 @@ test("discovery picks up a new component with no site changes", async ({ browser
     // demo.css is not in the README index table: it still gets a page, after the table's rows.
     const atomPaths = result.pages.filter((p) => p.path.startsWith("components/atoms/")).map((p) => p.path);
     expect(atomPaths[atomPaths.length - 1]).toBe("components/atoms/demo.html");
-    expect(page).toMatch(/<details open>\s*<summary>Atoms<\/summary>[\s\S]*aria-current="page">Demo<\/a>/);
+    expect(page).toMatch(/<details open>\s*<summary><svg data-icon [^>]*aria-hidden="true" focusable="false">[\s\S]*?<\/svg>Atoms<\/summary>[\s\S]*aria-current="page">Demo<\/a>/);
     const molecules = out("molecules/index.md");
     expect(molecules, "an available pattern has no status note").toContain("[Tabs](https://odonckers.github.io/domestic-ui/patterns/tabs.md): Sections of content shown one at a time, chosen from a list of tabs.\n");
     expect(molecules).toContain("Coming in M3.");
@@ -1131,7 +1165,7 @@ test("discovery picks up a new component with no site changes", async ({ browser
     // The layout lands under Layouts, from css/layouts/ with its example in examples/layouts/.
     const layoutPage = out("layouts/demo-layout.html");
     expect(layoutPage).toContain('src="../live/layouts/demo-layout--plain.html"');
-    expect(layoutPage).toMatch(/<details open>\s*<summary>Layout<\/summary>[\s\S]*aria-current="page">Demo layout<\/a>/);
+    expect(layoutPage).toMatch(/<details open>\s*<summary><svg data-icon [^>]*aria-hidden="true" focusable="false">[\s\S]*?<\/svg>Layout<\/summary>[\s\S]*aria-current="page">Demo layout<\/a>/);
     expect(out("layouts/index.md")).toContain("- [Demo layout](https://odonckers.github.io/domestic-ui/layouts/demo-layout.md): A demo layout used by the docs discovery test.");
 
     const readme = read(join(fixture, "README.md"));
@@ -1224,6 +1258,159 @@ test.describe("docs frame", () => {
       const supported = await page.evaluate(() => matchMedia("(prefers-reduced-transparency: reduce)").matches);
       test.skip(!supported, "this engine has no prefers-reduced-transparency emulation");
       expect(await page.locator("dui-app-shell > header").evaluate((el) => getComputedStyle(el).backdropFilter)).toBe("none");
+    });
+  });
+});
+
+test.describe("docs search", () => {
+  test.use({ viewport: { width: 1280, height: 800 } });
+
+  /** Open the dialog from the app bar's Search button. @param {import("@playwright/test").Page} page */
+  const openSearch = async (page) => {
+    await page.locator("[data-docs-search] button").click();
+    const dialog = page.getByRole("dialog", { name: "Search" });
+    await expect(dialog).toBeVisible();
+    const input = dialog.getByRole("combobox", { name: "Search the docs" });
+    await expect(input).toBeFocused();
+    // Options exist once the index has loaded.
+    await expect.poll(() => page.locator("#docs-search-options option").count()).toBeGreaterThan(100);
+    return { dialog, input };
+  };
+
+  test("the Search button opens a named modal dialog; typing lists pages and headings, Enter on a heading lands on its id", async ({ page, baseURL }) => {
+    const external = await blockExternalRequests(page, /** @type {string} */ (baseURL));
+    await page.goto("_site/index.html");
+    const button = page.locator("[data-docs-search] button");
+    await expect(button).toBeVisible();
+    await expect(button).toHaveAccessibleName("Search");
+    const { dialog, input } = await openSearch(page);
+    expect(await dialog.evaluate((d) => d.matches(":modal"))).toBe(true);
+
+    await input.pressSequentially("dialog");
+    const options = dialog.getByRole("option");
+    await expect(options.first()).toHaveText(/^Dialog and drawer\b/);
+    await expect(dialog.getByRole("option", { name: /^Dialog and drawer › Modal dialog/ })).toBeVisible();
+    const count = await options.count();
+    await expect(dialog.getByRole("status").filter({ hasText: /results?$/ })).toHaveText(`${count} results`);
+
+    // Down Arrow moves through the options with aria-activedescendant, Up Arrow back; focus stays in the input.
+    await input.press("ArrowDown");
+    await expect(input).toHaveAttribute("aria-activedescendant", /-0$/);
+    await input.press("ArrowDown");
+    await input.press("ArrowUp");
+    await expect(input).toHaveAttribute("aria-activedescendant", /-0$/);
+    await expect(input).toBeFocused();
+
+    await input.fill("");
+    await input.pressSequentially("dialog and drawer › modal dialog");
+    await expect(options).toHaveCount(1);
+    await input.press("ArrowDown");
+    await input.press("Enter");
+    await page.waitForURL("**/_site/patterns/dialog.html#modal-dialog");
+    await expect(page.locator("#modal-dialog")).toBeVisible();
+    expect(external).toEqual([]);
+  });
+
+  test("no match shows the empty state; Esc closes the dialog and focus returns to the Search button", async ({ page }) => {
+    await page.goto("_site/index.html");
+    const { dialog, input } = await openSearch(page);
+    await input.pressSequentially("zzzz");
+    await expect(dialog.getByRole("option")).toHaveCount(0);
+    await expect(dialog.locator("[data-search-empty]")).toHaveText("No results for “zzzz”");
+    await expect(dialog.getByRole("status").filter({ hasText: "No results" })).toHaveText("No results");
+    // The first Esc clears the text (the combobox), the next closes the dialog.
+    await input.press("Escape");
+    await expect(input).toHaveValue("");
+    await input.press("Escape");
+    await expect(dialog).toBeHidden();
+    await expect(page.locator("[data-docs-search] button")).toBeFocused();
+  });
+
+  for (const path of ["explainers/drawer.html", "principles/motion.html"]) {
+    test(`works from a nested page (${path})`, async ({ page }) => {
+      await page.goto(`_site/${path}`);
+      const { input } = await openSearch(page);
+      await input.pressSequentially("Getting started");
+      await input.press("ArrowDown");
+      await input.press("Enter");
+      await page.waitForURL("**/_site/index.html");
+    });
+  }
+
+  test("Ctrl-K and Meta-K open search with focus in the field; Esc returns focus to what had it", async ({ page, browserName }) => {
+    await page.goto("_site/patterns/dialog.html");
+    const button = page.locator("[data-docs-search] button");
+    await expect(button).toHaveAttribute("aria-keyshortcuts", "Control+K Meta+K");
+    await expect(button.locator("kbd")).toBeVisible();
+    const input = page.getByRole("combobox", { name: "Search the docs" });
+    const dialog = page.getByRole("dialog", { name: "Search" });
+    const link = page.locator("main a").first();
+    for (const key of browserName === "webkit" ? ["Meta+k"] : ["Control+k", "Meta+k"]) {
+      await link.focus();
+      await page.keyboard.press(key);
+      await expect(dialog).toBeVisible();
+      await expect(input).toBeFocused();
+      // Pressed again while open: focus stays in the field.
+      await page.keyboard.press(key);
+      await expect(input).toBeFocused();
+      await page.keyboard.press("Escape");
+      await expect(dialog).toBeHidden();
+      await expect(link).toBeFocused();
+    }
+  });
+
+  test("the shortcut does nothing in a text field outside the dialog", async ({ page }) => {
+    await page.goto("_site/tokens/semantic.html");
+    const filter = page.getByLabel("Filter tokens");
+    await filter.focus();
+    const prevented = await page.evaluate(() => {
+      const event = new KeyboardEvent("keydown", { key: "k", ctrlKey: true, bubbles: true, cancelable: true });
+      document.activeElement?.dispatchEvent(event);
+      return event.defaultPrevented;
+    });
+    expect(prevented).toBe(false);
+    await expect(page.getByRole("dialog", { name: "Search" })).toBeHidden();
+    await expect(filter).toBeFocused();
+  });
+
+  test("a failed index load says so in the dialog", async ({ page }) => {
+    await page.route("**/search-index.json", (route) => route.fulfill({ status: 500, body: "" }));
+    await page.goto("_site/index.html");
+    await page.locator("[data-docs-search] button").click();
+    await expect(page.locator("[data-search-load]")).toHaveText(/not available/);
+  });
+
+  test("without JavaScript the Search button stays hidden", async ({ browser }) => {
+    const context = await browser.newContext({ javaScriptEnabled: false });
+    const page = await context.newPage();
+    await page.goto("_site/index.html");
+    await expect(page.locator("[data-docs-search]")).toBeHidden();
+    await context.close();
+  });
+
+  for (const scheme of /** @type {const} */ (["light", "dark"])) {
+    test(`axe is clean with the dialog open (${scheme})`, async ({ page }) => {
+      await withoutMotion(page); // axe reads final colors, not a fade
+      await page.emulateMedia({ colorScheme: scheme });
+      await page.goto("_site/index.html");
+      const { input } = await openSearch(page);
+      await input.pressSequentially("tab");
+      await input.press("ArrowDown");
+      const { violations } = await new AxeBuilder({ page }).withTags(WCAG_TAGS).include("#docs-search-dialog").analyze();
+      expect(violations, summarize(violations)).toEqual([]);
+    });
+  }
+
+  test.describe("forced colors", () => {
+    test.use({ forcedColors: "active" });
+
+    test("axe is clean with the dialog open", async ({ page }) => {
+      await withoutMotion(page);
+      await page.goto("_site/index.html");
+      const { input } = await openSearch(page);
+      await input.pressSequentially("tab");
+      const { violations } = await new AxeBuilder({ page }).withTags(WCAG_TAGS).include("#docs-search-dialog").analyze();
+      expect(violations, summarize(violations)).toEqual([]);
     });
   });
 });

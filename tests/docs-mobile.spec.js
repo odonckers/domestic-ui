@@ -126,7 +126,7 @@ test("at 1280px the Docs sidebar sits beside main, only the current group is ope
   expect(await page.evaluate(() => scrollY)).toBe(0);
 });
 
-// Owen's rule: an accent edge on the leading side is straight (nav.css, alerts and anything site.css draws).
+// Owen's rule: an accent edge on the leading side is straight (nav.css, blockquotes and anything site.css draws).
 test("coloured leading edges are straight: no start-side radius on a thick start border, no exceptions", async ({ page }) => {
   for (const path of ["index.html", "components/atoms/button.html", "patterns/alerts.html", "tokens/semantic.html"]) {
     await page.goto(`_site/${path}`);
@@ -140,5 +140,23 @@ test("coloured leading edges are straight: no start-side radius on a thick start
       }),
     );
     expect(curved, path).toEqual([]);
+  }
+});
+
+test("the search dialog does not scroll sideways at 320 and 375 CSS pixels", async ({ page }) => {
+  for (const viewport of VIEWPORTS) {
+    await page.setViewportSize(viewport);
+    await page.goto("_site/index.html");
+    await expect(page.locator(".docs-search-kbd"), `no shortcut hint at ${viewport.width}px`).toBeHidden();
+    await page.locator("[data-docs-search] button").click();
+    const input = page.getByRole("combobox", { name: "Search the docs" });
+    await expect(input).toBeFocused();
+    await expect.poll(() => page.locator("#docs-search-options option").count()).toBeGreaterThan(100);
+    await input.pressSequentially("a");
+    await expect(page.locator("#docs-search-dialog [role=option]").first()).toBeVisible();
+    const result = await page.evaluate(overflow);
+    expect(result, `at ${viewport.width}px: ${result}`).toBeNull();
+    const box = await page.locator("#docs-search-dialog").boundingBox();
+    expect(box && box.x >= 0 && box.x + box.width <= viewport.width, `dialog inside the viewport at ${viewport.width}px`).toBe(true);
   }
 });

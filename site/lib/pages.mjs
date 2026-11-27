@@ -1010,7 +1010,7 @@ function demoViewsBlocks(model) {
     const path = v.paths?.vanilla;
     return path?.startsWith(`${LIVE_DEMO}/`) && existsSync(join(model.root, path)) ? `[Open live](site:${path}). ` : "";
   };
-  const note = `The plain HTML views run live on this site (each **Open live** link). The React, Angular and Astro apps need a build; run them locally as [\`demos/README.md\`](${BLOB_URL}demos/README.md) explains.`;
+  const note = `The plain HTML views run live on this site (each **Open live** link). The framework apps need a build; run them locally as [\`demos/README.md\`](${BLOB_URL}demos/README.md) explains.`;
   const items = data.views.map((v) => `- **${v.title}**: ${v.description} ${live(v)}Source: ${demoAppLinksMd(model.root, data, v)}.`);
   return [md(`## Views\n\n${note}\n\n${items.join("\n")}`)];
 }
@@ -1186,6 +1186,7 @@ function patternPage(model, p) {
 
   const seeAlso = [
     level ? `[${level.title}](site:${level.level}/index.html)` : `[Patterns](site:patterns/index.html)`,
+    ...p.seeAlso,
     ...(p.available ? [`Source: ${[...p.cssPaths, ...p.examplePaths].map((s) => `[\`${s}\`](${BLOB_URL}${s})`).join(", ")}`] : []),
     ...demosLine(model, p.sitePath),
   ];

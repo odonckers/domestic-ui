@@ -30,9 +30,9 @@
  * Tone is never color alone (WCAG 1.4.1): the message starts with a word
  * ("Warning:") written in the markup, so every user and screen reader gets
  * it, and a decorative icon (CSS generated content with empty alternative
- * text) adds a shape. Body text is --dui-color-text on the tinted surface,
- * and the tone color is used for the prefix and the inline-start rule
- * (4.5:1 and 3:1, tested).
+ * text) adds a shape. The alert is a neutral raised surface with a 1px
+ * border; body text is --dui-color-text, and the tone color is used for
+ * the prefix word and the icon disc (4.5:1 on the surface, tested).
  *
  * Toasts: data-alert="toasts" on a fixed region, plus the <dui-toaster>
  * web component (web-components/dui-toaster.js) for a show() method and
@@ -135,26 +135,24 @@
   background-color: var(--dui-color-surface-raised);
   color: var(--dui-color-text);
   border: var(--dui-border-width) solid var(--dui-color-border);
-  border-inline-start-width: var(--dui-border-width-emphasis);
-
-  /*
-   * Our choice: the leading corners are square so the accent edge stays straight
-   * (see blockquote in css/base/typography.css).
-   */
   border-radius: var(--dui-radius-surface);
-  border-start-start-radius: 0;
-  border-end-start-radius: 0;
+  font-size: var(--dui-step--1);
 }
 
+/*
+ * Our choice: a neutral card with a tone-colored icon and prefix word, as
+ * shadcn/ui draws its alert (https://ui.shadcn.com/docs/components/alert),
+ * rather than a tinted fill. The glyph tells the tones apart without color.
+ */
 :is([data-alert~="info"], [data-alert~="success"], [data-alert~="warning"], [data-alert~="danger"]) > * + * {
-  margin-block-start: var(--dui-space-xs);
+  margin-block-start: var(--dui-space-3xs);
 }
 
 /* Decorative icon: a filled circle with a glyph, silent for screen readers. */
 :is([data-alert~="info"], [data-alert~="success"], [data-alert~="warning"], [data-alert~="danger"])::before {
   position: absolute;
   inset-inline-start: var(--dui-space-m);
-  inset-block-start: calc(var(--dui-space-s) + (var(--dui-step-0) * var(--dui-line-height-body) - var(--dui-size-check)) / 2);
+  inset-block-start: calc(var(--dui-space-s) + (var(--dui-step--1) * var(--dui-line-height-body) - var(--dui-size-check)) / 2);
   display: grid;
   place-items: center;
   inline-size: var(--dui-size-check);
@@ -166,22 +164,10 @@
   line-height: 1;
 }
 
-[data-alert~="info"] {
-  background-color: var(--dui-color-info-surface);
-  border-color: color-mix(in oklab, var(--dui-color-info) var(--dui-border-tint-amount), transparent);
-  border-inline-start-color: var(--dui-color-info);
-}
-
 [data-alert~="info"]::before {
   content: "i";
   content: "i" / "";
   background-color: var(--dui-color-info);
-}
-
-[data-alert~="success"] {
-  background-color: var(--dui-color-success-surface);
-  border-color: color-mix(in oklab, var(--dui-color-success) var(--dui-border-tint-amount), transparent);
-  border-inline-start-color: var(--dui-color-success);
 }
 
 [data-alert~="success"]::before {
@@ -190,22 +176,10 @@
   background-color: var(--dui-color-success);
 }
 
-[data-alert~="warning"] {
-  background-color: var(--dui-color-warning-surface);
-  border-color: color-mix(in oklab, var(--dui-color-warning) var(--dui-border-tint-amount), transparent);
-  border-inline-start-color: var(--dui-color-warning);
-}
-
 [data-alert~="warning"]::before {
   content: "!";
   content: "!" / "";
   background-color: var(--dui-color-warning);
-}
-
-[data-alert~="danger"] {
-  background-color: var(--dui-color-danger-surface);
-  border-color: color-mix(in oklab, var(--dui-color-danger) var(--dui-border-tint-amount), transparent);
-  border-inline-start-color: var(--dui-color-danger);
 }
 
 [data-alert~="danger"]::before {

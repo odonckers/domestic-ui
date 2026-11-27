@@ -91,6 +91,42 @@ test.describe("disclosure and accordion", () => {
   });
 });
 
+test.describe("search dialog", () => {
+  test.beforeEach(async ({ page }) => {
+    await withoutMotion(page);
+    await page.goto("examples/molecules/search-dialog.html");
+  });
+
+  test("the Search button opens a named modal dialog with focus in the field; Enter on a result closes it", async ({ page }) => {
+    const opener = page.getByRole("button", { name: "Search", exact: true });
+    await expect(opener).toBeVisible();
+    await expect(opener).toHaveAttribute("aria-keyshortcuts", "Control+K Meta+K");
+    await opener.click();
+    const dialog = page.getByRole("dialog", { name: "Search" });
+    expect(await dialog.evaluate((el) => el.matches(":modal"))).toBe(true);
+    const input = dialog.getByRole("combobox", { name: "Search the docs" });
+    await expect(input).toBeFocused();
+    await input.pressSequentially("modal");
+    await expect(dialog.getByRole("option")).toHaveCount(1);
+    await input.press("ArrowDown");
+    await input.press("Enter");
+    await expect(dialog).toBeHidden();
+    await expect(page.locator("#site-search-result")).toHaveText("Would open: Dialog and drawer › Modal dialog.");
+  });
+
+  test("Ctrl-K or Meta-K opens it from the page, not from a text field; Esc returns focus", async ({ page, browserName }) => {
+    const dialog = page.getByRole("dialog", { name: "Search" });
+    const link = page.locator("main a").first();
+    await link.focus();
+    await page.keyboard.press(browserName === "webkit" ? "Meta+k" : "Control+k");
+    await expect(dialog).toBeVisible();
+    await expect(dialog.getByRole("combobox")).toBeFocused();
+    await page.keyboard.press("Escape");
+    await expect(dialog).toBeHidden();
+    await expect(link).toBeFocused();
+  });
+});
+
 test.describe("dialog and drawer", () => {
   test.beforeEach(async ({ page }) => {
     await withoutMotion(page);
@@ -850,7 +886,7 @@ test.describe("card", () => {
     await card.scrollIntoViewIfNeeded();
     await expect(card.getByRole("link", { name: "Theming guide" })).toHaveAccessibleName("Theming guide");
     // A click on the card body, away from the heading, hits the link's overlay.
-    const body = await card.locator("p").boundingBox();
+    const body = await card.locator(":scope > p").boundingBox();
     const hit = await page.evaluate(({ x, y }) => document.elementFromPoint(x, y)?.closest("a")?.textContent, {
       x: (body?.x ?? 0) + 10,
       y: (body?.y ?? 0) + 5,

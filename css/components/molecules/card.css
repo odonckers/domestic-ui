@@ -31,6 +31,9 @@
  *   data-card="link"   the whole card follows the link in its heading
  *   Children: an optional first <img> (or <picture>, <video>) as media,
  *   a heading, body content, and an optional <footer> for actions.
+ *   Wrap the heading and a one-line description in a <header> to set them
+ *   close together, with the description muted, as shadcn/ui's card
+ *   header does (https://ui.shadcn.com/docs/components/card).
  *
  * Example
  *   <article data-card="link">
@@ -58,7 +61,7 @@
   position: relative;
   display: flex;
   flex-direction: column;
-  gap: var(--dui-space-s);
+  gap: var(--dui-space-l);
   padding: var(--dui-space-l);
   background-color: var(--dui-elevation-raised-surface);
   color: var(--dui-color-text);
@@ -81,9 +84,30 @@
   object-fit: cover;
 }
 
-[data-card] > :is(h2, h3, h4, h5, h6) {
-  font-size: var(--dui-step-1);
+/*
+ * Our choice: card titles are body-size semibold text, as in shadcn/ui,
+ * so a grid of cards reads as a set of items rather than page sections.
+ */
+:is([data-card], [data-card] > header) > :is(h2, h3, h4, h5, h6) {
+  font-size: var(--dui-step-0);
+  font-weight: var(--dui-font-weight-heading);
+  line-height: var(--dui-line-height-heading);
   letter-spacing: normal;
+}
+
+/* Header: the title and its description, set close together. */
+[data-card] > header {
+  display: grid;
+  gap: var(--dui-space-2xs);
+}
+
+[data-card] > header > * {
+  margin: 0;
+}
+
+[data-card] > header > p {
+  color: var(--dui-color-text-muted);
+  font-size: var(--dui-step--1);
 }
 
 /* Actions sit at the bottom, so cards of different lengths line up in a grid. */
@@ -93,27 +117,31 @@
   align-items: center;
   gap: var(--dui-space-xs);
   margin-block-start: auto;
-  padding-block-start: var(--dui-space-xs);
+}
+
+/* The base flow rhythm would push every action after the first down. */
+[data-card] > footer > * {
+  margin: 0;
 }
 
 /* Clickable card: the heading link's hit area covers the card. */
-[data-card~="link"] > :is(h2, h3, h4, h5, h6) a::after {
+:is([data-card~="link"], [data-card~="link"] > header) > :is(h2, h3, h4, h5, h6) a::after {
   content: "";
   position: absolute;
   inset: 0;
   border-radius: var(--dui-radius-surface);
 }
 
-[data-card~="link"]:has(> :is(h2, h3, h4, h5, h6) a:hover) {
+[data-card~="link"]:has(> :is(h2, h3, h4, h5, h6) a:hover, > header > :is(h2, h3, h4, h5, h6) a:hover) {
   border-color: var(--dui-color-border-control);
 }
 
 /* Move the focus ring from the heading text to the whole card. */
-[data-card~="link"] > :is(h2, h3, h4, h5, h6) a:focus-visible {
+:is([data-card~="link"], [data-card~="link"] > header) > :is(h2, h3, h4, h5, h6) a:focus-visible {
   outline: 0;
 }
 
-[data-card~="link"] > :is(h2, h3, h4, h5, h6) a:focus-visible::after {
+:is([data-card~="link"], [data-card~="link"] > header) > :is(h2, h3, h4, h5, h6) a:focus-visible::after {
   outline: var(--dui-focus-width) solid var(--dui-color-focus);
   outline-offset: var(--dui-focus-offset);
 }
@@ -129,7 +157,7 @@
     border-color: canvastext;
   }
 
-  [data-card~="link"] > :is(h2, h3, h4, h5, h6) a:focus-visible::after {
+  :is([data-card~="link"], [data-card~="link"] > header) > :is(h2, h3, h4, h5, h6) a:focus-visible::after {
     outline-color: highlight;
   }
 }

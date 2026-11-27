@@ -283,8 +283,9 @@ may change. Fluid `--dui-step-*` values are `clamp()` expressions; see `primitiv
 | `--dui-step-3` | h3, page titles | `font-size-fluid-3` (`clamp()`, 1.5rem to 1.875rem) |
 | `--dui-step-4` | h2 | `font-size-fluid-4` (`clamp()`, 1.75rem to 2.375rem) |
 | `--dui-step-5` | h1, docs and marketing heroes | `font-size-fluid-5` (`clamp()`, 2rem to 3rem) |
-| `--dui-font-size-ui` | Interface text: buttons, fields, selects, nav, menu and listbox items, tabs, badges, tooltips, table cells | `--dui-step--1` (14px) |
+| `--dui-font-size-ui` | Interface text: buttons, fields, selects, nav, menu and listbox items, tabs, tooltips, table cells | `--dui-step--1` (14px) |
 | `--dui-font-size-field` | Text in fields, selects and text areas: the UI size, at least 16px under a coarse pointer | `--dui-font-size-ui`; `max(--dui-font-size-ui, --dui-step-0)` under `pointer: coarse` |
+| `--dui-font-size-badge` | Badge text, as shadcn/ui sets its badge | `font-size-0-75` (0.75rem, 12px) |
 | `--dui-font-size-page-title` | The `h1` of a page header or an app shell | `--dui-step-3` (1.875rem at most) |
 | `--dui-font-size-code` | code, kbd, samp, pre (relative) | `font-size-relative-90` (0.9em) |
 | `--dui-line-height-body` | Body text | `leading-150` (1.5) |
