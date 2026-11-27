@@ -2138,7 +2138,7 @@ A theme is an override of these tokens on `:root` or on a scoped element. No reb
 
 Colors use [`light-dark()`](https://developer.mozilla.org/en-US/docs/Web/CSS/color_value/light-dark), which picks a value from the used color-scheme of the element where the token is read.
 
-178 tokens in [`css/tokens/semantic.css`](https://github.com/odonckers/domestic-ui/blob/main/css/tokens/semantic.css). **Light** and **Dark** resolve every `var()` and take one side of [`light-dark()`](https://developer.mozilla.org/en-US/docs/Web/CSS/color_value/light-dark). Previews are decorative. † marks a description taken from the semantic token table in [Theming](https://odonckers.github.io/domestic-ui/principles/theming.md).
+179 tokens in [`css/tokens/semantic.css`](https://github.com/odonckers/domestic-ui/blob/main/css/tokens/semantic.css). **Light** and **Dark** resolve every `var()` and take one side of [`light-dark()`](https://developer.mozilla.org/en-US/docs/Web/CSS/color_value/light-dark). Previews are decorative. † marks a description taken from the semantic token table in [Theming](https://odonckers.github.io/domestic-ui/principles/theming.md).
 
 ### Surfaces and text
 
@@ -2252,8 +2252,9 @@ Colors use [`light-dark()`](https://developer.mozilla.org/en-US/docs/Web/CSS/col
 | `--dui-size-menu-min` | `12rem` | `12rem` | Min width of menus and nav dropdowns † |
 | `--dui-size-drawer` | `24rem` | `24rem` | Drawer width (all of the viewport when narrower) † |
 | `--dui-size-page` | `72rem` | `72rem` | Max inline size of a page's content column: header, main and footer |
-| `--dui-size-icon` | `1.25rem` | `1.25rem` | Decorative icons beside a label: nav links and group summaries |
+| `--dui-size-icon` | `1.25rem` | `1.25rem` | Decorative icons beside a label, on their own |
 | `--dui-size-icon-inline` | `1rem` | `1rem` | Icons inside buttons, menu items and toolbars, beside 14 to 16px text |
+| `--dui-size-icon-nav` | `1rem` | `1rem` | Decorative icons at the start of nav links and group summaries: 16px beside 14px sidebar text, as shadcn/ui |
 | `--dui-size-chevron` | `calc(0.25rem + 0.125rem)` | `calc(0.25rem + 0.125rem)` | Arm length of the CSS-drawn chevron on a sidebar nav group: 6px |
 | `--dui-icon-stroke-width` | `1.75` | `1.75` | Stroke width of [data-icon] SVGs, set with the CSS stroke-width property |
 | `--dui-size-sidebar` | `16rem` | `16rem` | Inline size of an app shell's primary sidebar when it sits beside main |
@@ -3969,7 +3970,7 @@ Copy the SVG from lucide.dev, replace its class attribute with data-icon, and ad
 
 #### Size
 
-`--dui-size-icon` (1.25rem) on its own and in nav links; `--dui-size-icon-inline` (1rem) inside buttons, menu items, options and toolbars, so the icon matches the text beside it. Inside a button or link the flex gap spaces it from the label; in running text it sits on the middle of the line.
+`--dui-size-icon` (1.25rem) on its own; `--dui-size-icon-nav` (1rem) in nav links and summaries (`nav.css`); `--dui-size-icon-inline` (1rem) inside buttons, menu items, options and toolbars, so the icon matches the text beside it. Inside a button or link the flex gap spaces it from the label; in running text it sits on the middle of the line.
 
 #### Stroke
 
