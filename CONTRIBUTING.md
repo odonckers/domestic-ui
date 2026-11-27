@@ -8,13 +8,9 @@ Use the issue forms for bugs and feature requests. Pull requests should use the 
 
 Branch names follow `fix/short-description`, `feat/short-description`, `docs/short-description`, or `a11y/short-description`.
 
-### Approval flow
+### Reviews
 
-Issues and pull requests from outside this repository's owners, members, or collaborators get the `needs-owen-approval` label automatically.
-
-The maintainer approves an item by adding the `owen-approved` label. Only Owen applies that label. Team bots never apply `owen-approved` and never merge outside pull requests. Bots may merge their own pull requests.
-
-An outside pull request cannot merge until the `owen-gate` check passes, which requires the `owen-approved` label.
+Every pull request, from inside or outside the project, gets the same review and must pass CI before it merges. GitHub holds CI on a first-time contributor's pull request until a maintainer approves the workflow run.
 
 `.github/CODEOWNERS` lists @odonckers on every file. That file is informational today: team bots push with the same GitHub account as Owen, so GitHub cannot tell his review apart from a bot's.
 
@@ -26,6 +22,13 @@ An outside pull request cannot merge until the `owen-gate` check passes, which r
 - Theme only through semantic `--dui-*` CSS custom properties. Do not hard-code colors, spacing, typography, or other design values in components.
 
 The default theme should look complete and consistent out of the box. Consumers re-theme the system by overriding those tokens.
+
+## Dependencies
+
+The published CSS and web components have no runtime dependencies. Every external dependency (npm packages in the
+root and in each demo app, GitHub Actions and container images) comes with a security review and a row in
+[`docs/DEPENDENCIES.md`](docs/DEPENDENCIES.md), in the same pull request. `npm run lint:deps` (part of `npm test`
+and CI) fails when one is missing or when a row names something no longer used.
 
 ## Checks
 
@@ -87,6 +90,34 @@ request re-runs CI. Merge commits such as "Merge branch 'main' into …" are ign
 [`cliff.toml`](cliff.toml)) at release time. Never edit it by hand, and do not add changelog entries in pull
 requests: the commit message is the entry. `npm run changelog:check` fails if the file is out of date. The section
 written by hand before Conventional Commits is kept as it is.
+
+### Versioning
+
+Versions follow [Semantic Versioning 2.0.0](https://semver.org/spec/v2.0.0.html). These are the public API, and
+changing or removing any of them is a breaking change:
+
+- semantic tokens and knobs in `css/tokens/semantic.css` (primitives in `css/tokens/primitives.css` are internal and
+  may change in any release);
+- each component's `data-<component>` attribute and its words (`data-button="secondary small"`);
+- the scope attributes `data-theme`, `data-color-scheme`, `data-density`, `data-motion` and `data-contrast`, and their
+  values;
+- the markup contract of each component: which native elements, attributes and ARIA states it expects;
+- custom element names, their attributes, properties, methods and events (`dui-*`);
+- every file path under `css/` and `web-components/`;
+- the names of the snippets in `examples/`.
+
+Breaking also covers raising the supported browsers so that one of them loses the core look, and retiring a web
+component. A breaking change is marked with `!` or a `BREAKING CHANGE:` footer and merges only with the
+maintainer's approval.
+
+- **Before 1.0:** a breaking change bumps the minor version (0.x.0); everything else bumps the patch.
+- **Deprecation:** a deprecated token, attribute word or element keeps working for at least one minor release, is
+  marked **Deprecated** in its documentation with its replacement, and is removed in a later minor release.
+- **Visual changes** to the default theme are not breaking, but release notes call them out and the screenshot tests
+  cover them.
+- **1.0** comes when the semantic tokens, the attribute vocabulary and the web component APIs have gone one full minor
+  release with no breaking change, every component has a docs page in MDN structure, and the four framework demos pass
+  the shared accessibility checks. [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) has the reasoning.
 
 ### Releasing
 

@@ -105,7 +105,7 @@ Humans and coding agents should be able to write a whole view from this document
   class or attribute, tuned with custom properties, never with modifier classes.
   The API is written in a comment at the top of its CSS file.
 - **Paths are API.** `css/domestic.css` and every file under `css/` keep their paths.
-  Renaming or moving a file is a breaking change.
+  Renaming or moving a file is a breaking change (see [Versioning](https://odonckers.github.io/domestic-ui/contributing.md#versioning)).
 - **No hidden JS behavior.** CSS never depends on script. Any script an example uses is
   inline, short, and commented, or one of the documented [web components](https://odonckers.github.io/domestic-ui/components/web-components.md).
 - **Our choice:** class and attribute APIs over custom elements, because they work with
@@ -309,7 +309,7 @@ headings, controls), but not inherited text color, background or derived tokens.
 
 ### Semantic tokens (public API)
 
-Renaming or removing a semantic token is a **breaking change**. Primitives are internal and
+Renaming or removing a semantic token is a **breaking change** (see [Versioning](https://odonckers.github.io/domestic-ui/contributing.md#versioning)). Primitives are internal and
 may change. Fluid `--dui-step-*` values are `clamp()` expressions; see `primitives.css`.
 
 | Token | Purpose | Default (primitive, light / dark) |
@@ -7349,6 +7349,23 @@ A table cannot reorder its rows, and a checkbox cannot check its siblings, count
 
 Styles: [data-table.css](https://odonckers.github.io/domestic-ui/patterns/data-table.md). Example: [Data table](https://odonckers.github.io/domestic-ui/patterns/data-table.md). Source: [`dui-table.js`](https://github.com/odonckers/domestic-ui/blob/main/web-components/dui-table.js).
 
+### Successors
+
+Each element is a bridge until the platform can do its job. Its header comment names the feature that would
+replace it and the condition that retires it; retiring one is a breaking change
+([Versioning](https://odonckers.github.io/domestic-ui/contributing.md#versioning), [architecture](https://github.com/odonckers/domestic-ui/blob/main/docs/ARCHITECTURE.md#7-web-components)).
+
+| Element | Platform successor | Retire when |
+| --- | --- | --- |
+| `<dui-tooltip>` | [`interestfor`](https://open-ui.org/components/interest-invokers.explainer/) | `interestfor` is Baseline newly available |
+| `<dui-toolbar>` | [`focusgroup`](https://open-ui.org/components/focusgroup.explainer/) | `focusgroup` is Baseline newly available |
+| `<dui-tabs>` | `focusgroup` for the arrow keys; no tabs element is proposed | The keys move to `focusgroup`; the element stays for selection |
+| `<dui-menu>` | The Open UI [menu elements](https://open-ui.org/components/menu.explainer/) proposal | A native menu element is Baseline newly available |
+| `<dui-combobox>` | None for free text; [customizable select](https://developer.mozilla.org/en-US/docs/Learn_web_development/Extensions/Forms/Customizable_select) for pick-one lists | Kept; pick-one uses move to `<select>` |
+| `<dui-app-shell>` | Container queries cover the layout; nothing moves one node into a modal | Kept |
+| `<dui-table>` | None proposed | Kept |
+| `<dui-toaster>` | None active | Kept |
+
 ### Events
 
 | Element | Event | When |
@@ -7402,7 +7419,10 @@ Every explainer has these sections, in this order:
 7. **Accessibility mappings**: roles, states, and what assistive technology users should hear.
 8. **Alternatives considered**, each with why it was rejected.
 9. **Prior art**, with links. We cite; we do not copy.
-10. **Open questions**.
+10. **Mapping to a future standard**: the nearest standards effort (an Open UI component, a WHATWG or CSSWG
+    issue) or "none known", how our markup would map onto it, and what a page would rename if it shipped.
+    Where an effort exists, our names follow it.
+11. **Open questions**.
 
 Names follow HTML and ARIA conventions (lowercase, no abbreviations, states in native attributes)
 so a pattern could map onto a future native element or attribute.
@@ -7623,6 +7643,16 @@ inside it; after Esc, focus is back on "Menu, button, collapsed".
 - [Open UI](https://open-ui.org/) has no app shell or sidebar proposal; this explainer is written so the
   parts could map onto native landmarks unchanged.
 
+### Mapping to a future standard
+
+None known. The contract is "landmarks in named grid areas, with sidebars that collapse beside main and become a
+modal drawer when the shell is narrow". The layout half is already standard CSS ([grid template
+areas](https://developer.mozilla.org/en-US/docs/Web/CSS/grid-template-areas) and [container
+queries](https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_containment/Container_queries)). If HTML gained a way to
+present an element modally in place (rather than moving it into a `<dialog>`), `<dui-app-shell>` would keep only
+the toggle state, and that could move to [invoker commands](https://developer.mozilla.org/en-US/docs/Web/API/Invoker_Commands_API)
+once a command can toggle `hidden`.
+
 ### Open questions
 
 - **Resizable sidebars.** A draggable edge would follow the
@@ -7749,6 +7779,11 @@ without losing their place in the table.
 - [WCAG 4.1.3 Status Messages](https://www.w3.org/WAI/WCAG22/Understanding/status-messages.html).
 - Atlassian [Page layout](https://atlassian.design/components/page-layout) (right sidebar) and Primer
   [PageLayout](https://primer.style/components/page-layout) (pane).
+
+### Mapping to a future standard
+
+None known. The sidebar is an `<aside>` landmark placed after `<main>`, so the semantics are already native; only the
+placement and the narrow-screen drawer are ours, and they follow the [app shell](https://odonckers.github.io/domestic-ui/explainers/app-shell.md#mapping-to-a-future-standard).
 
 ### Open questions
 
@@ -7978,6 +8013,13 @@ None. Highlights do not change focus, selection or the text.
   including its syntax highlighting example.
 - [Prism](https://prismjs.com/) and [highlight.js](https://highlightjs.org/) token names, which
   the names above loosely follow.
+
+### Mapping to a future standard
+
+The pattern is already built on a standard, the [CSS Custom Highlight
+API](https://developer.mozilla.org/en-US/docs/Web/API/CSS_Custom_Highlight_API). What is ours is the set of
+`dui-code-*` highlight names and their tokens. If a shared vocabulary of syntax highlight names emerges, the names
+would be renamed to match it; no markup changes, because highlights never touch the DOM.
 
 ### Open questions
 
@@ -8731,6 +8773,13 @@ selected item.
   content, stacked on narrow screens, with an optional resizable pane.
 - [Apple Human Interface Guidelines: Split views](https://developer.apple.com/design/human-interface-guidelines/split-views):
   list and detail columns that collapse to one on compact widths.
+
+### Mapping to a future standard
+
+None known for a fixed-ratio split or a list-detail pair; both are standard CSS layout switched by a [container
+query](https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_containment/Container_queries). A resizable divider would
+map onto the [APG Window Splitter](https://www.w3.org/WAI/ARIA/apg/patterns/windowsplitter/) pattern, or onto a native
+splitter if HTML ever gains one; that is why this explainer leaves the divider out today.
 
 ### Open questions
 

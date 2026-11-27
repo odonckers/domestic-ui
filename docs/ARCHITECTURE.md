@@ -66,12 +66,23 @@ a rung says why.
    ([first rule of ARIA use](https://www.w3.org/TR/using-aria/#rule1)). Style it in `base`.
 2. **A native attribute or CSS feature** on that element: `popover`, `commandfor` and `command`,
    `name` on `<details>`, `closedby`, `:has()`, container queries, anchor positioning.
-3. **An [APG pattern](https://www.w3.org/WAI/ARIA/apg/patterns/) that needs no script**: markup and
-   CSS only, ARIA only as [ARIA in HTML](https://www.w3.org/TR/html-aria/) allows.
-4. **A light-DOM web component** that upgrades markup from rungs 1 to 3 and adds only the missing
+3. **A canonical example**: a documented composition of native elements, atoms and layout primitives
+   that already looks finished together, with no new attribute or CSS (a settings form, a sign-in card,
+   a stat row, a toolbar of buttons). Base, layout and component CSS make the parts fit; the example in
+   `examples/` is the contract, and the docs show it as a pattern.
+4. **An [APG pattern](https://www.w3.org/WAI/ARIA/apg/patterns/) that needs no script**: markup and
+   CSS only, ARIA only as [ARIA in HTML](https://www.w3.org/TR/html-aria/) allows. A new
+   `data-<component>` attribute belongs here, and only when a composition cannot look right without it.
+5. **A light-DOM web component** that upgrades markup from rungs 1 to 4 and adds only the missing
    behavior, following the APG pattern exactly. Section 7 has the rules.
-5. **An explainer** in `explainers/`, required when a pattern has neither a native element nor an
+6. **An explainer** in `explainers/`, required when a pattern has neither a native element nor an
    APG pattern. It is written as a platform proposal (section 8).
+
+**Our choice:** a canonical example comes before a new component attribute, because many interface
+"components" are arrangements of elements that already exist. Shipping them as examples keeps the
+vocabulary small (less for people and agents to learn), and fixing how parts fit together improves every
+composition at once instead of one component. An example graduates to a `data-<component>` attribute only
+when the same arrangement needs styling that no part can carry on its own, and the PR says why.
 
 Rejected outright: wrapper `div`s or classes for base elements, Shadow DOM components, a second
 styling API, and anything that needs a build step to use.
@@ -90,7 +101,7 @@ These surfaces are the public API. Changing or removing any of them is a breakin
 | Custom elements | `dui-<name>`, one per file in `web-components/`, attributes in HTML naming (`activation="manual"`) | `<dui-tabs>`, `<dui-menu>` | The element's header comment and `web-components/README.md` |
 | Events | `dui-<element>-<verb>`, bubbling; cancelable when the default can be replaced | `dui-table-sort`, `dui-combobox-filter` | `web-components/README.md` |
 | File paths | Every file under `css/` and `web-components/` keeps its path | `css/domestic.css` | PRINCIPLES.md, section 2 |
-| Example snippets | Named blocks in `examples/` | `examples/molecules/dialog.html` | The docs site |
+| Example snippets and canonical examples | Named blocks in `examples/` | `examples/molecules/dialog.html` | The docs site |
 
 Primitive tokens (`css/tokens/primitives.css`) are internal and MAY change in any release.
 
@@ -121,33 +132,34 @@ We build on the newest standards, but nobody's page may break because of them. T
 
 ## 6. Standards we build on
 
-How each recent standard is used. "Status" is a summary as of November 2026; MDN's Baseline badge on
-the linked page is the source of truth.
+How each recent standard is used. "Status" comes from `npm run platform:status`
+(`scripts/platform-status.mjs`), which reads the pinned [web-features](https://github.com/web-platform-dx/web-features)
+data; rerun it and update this column when that dependency is bumped. Last updated from web-features 3.48.0.
 
 | Standard | Status | How domestic-ui uses it | Without it |
 | --- | --- | --- | --- |
 | [`<dialog>`](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/dialog) and `showModal()` | Widely available | Dialogs and the drawer variant; focus, <kbd>Esc</kbd> and inertness come from the browser | n/a |
-| [`popover`](https://developer.mozilla.org/en-US/docs/Web/HTML/Global_attributes/popover) | Baseline | Menus, popovers, the tooltip's `popover="hint"`, nav dropdowns, in the top layer | n/a |
-| [Invoker commands](https://developer.mozilla.org/en-US/docs/Web/API/Invoker_Commands_API) (`commandfor`, `command`) | Newly shipped in all engines | Open and close dialogs and popovers with no script | The buttons do nothing; a page that must support an older engine adds a one-line `showModal()` or `togglePopover()` handler |
-| [`closedby`](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/dialog#closedby) | Limited | Light dismiss for dialogs | <kbd>Esc</kbd> and the close button still work |
-| [`<details name>`](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/details#name) | Baseline | Exclusive accordions | n/a |
-| [`:has()`](https://developer.mozilla.org/en-US/docs/Web/CSS/:has) | Baseline | Parent state: a field with an invalid input, a row with a checked box, a shell with an open sidebar | n/a |
+| [`popover`](https://developer.mozilla.org/en-US/docs/Web/HTML/Global_attributes/popover) | Newly available (2025) | Menus, popovers, the tooltip's `popover="hint"`, nav dropdowns, in the top layer | n/a |
+| [Invoker commands](https://developer.mozilla.org/en-US/docs/Web/API/Invoker_Commands_API) (`commandfor`, `command`) | Newly available (2025) | Open and close dialogs and popovers with no script | The buttons do nothing; a page that must support an older engine adds a one-line `showModal()` or `togglePopover()` handler |
+| [`closedby`](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/dialog#closedby) | Limited (Chromium, Firefox) | Light dismiss for dialogs | <kbd>Esc</kbd> and the close button still work |
+| [`<details name>`](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/details#name) | Newly available (2024) | Exclusive accordions | n/a |
+| [`:has()`](https://developer.mozilla.org/en-US/docs/Web/CSS/:has) | Widely available | Parent state: a field with an invalid input, a row with a checked box, a shell with an open sidebar | n/a |
 | [Container queries](https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_containment/Container_queries) | Widely available | Layouts respond to their container, not the viewport (split view, list-detail, app shell) | n/a |
-| [`light-dark()`](https://developer.mozilla.org/en-US/docs/Web/CSS/color_value/light-dark) and [`color-scheme`](https://developer.mozilla.org/en-US/docs/Web/CSS/color-scheme) | Baseline | Every semantic color has a light and a dark value | n/a |
-| [OKLCH](https://developer.mozilla.org/en-US/docs/Web/CSS/color_value/oklch), [relative colors](https://www.w3.org/TR/css-color-5/#relative-colors), [`color-mix()`](https://developer.mozilla.org/en-US/docs/Web/CSS/color_value/color-mix) | Baseline | Color ramps, derived hover and tint tokens, the contrast knob | n/a |
-| [`@property`](https://developer.mozilla.org/en-US/docs/Web/CSS/@property) | Baseline | Non-inheriting layout custom properties | n/a |
-| [`@starting-style`](https://developer.mozilla.org/en-US/docs/Web/CSS/@starting-style) and `transition-behavior: allow-discrete` | Newly available | Top-layer enter and exit transitions | Elements open and close with no transition |
-| [CSS anchor positioning](https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_anchor_positioning) | Newly shipped in all engines | Popovers placed beside their invoker with `position-area` and `position-try-fallbacks` | Inside `@supports`; popovers sit centered at the bottom of the viewport instead |
-| [CSS Custom Highlight API](https://developer.mozilla.org/en-US/docs/Web/API/CSS_Custom_Highlight_API) | Newly available | Code highlighting with `::highlight()` and token colors | Plain code |
-| [View transitions](https://developer.mozilla.org/en-US/docs/Web/API/View_Transition_API) | Same-document newly available; cross-document limited | Optional page cross-fades driven by motion tokens | Instant navigation |
-| [Customizable `<select>`](https://developer.mozilla.org/en-US/docs/Learn_web_development/Extensions/Forms/Customizable_select) (`appearance: base-select`) | Limited (Chromium) | Planned: a fully styled select with icons in options | The native select, tinted and sized by tokens |
+| [`light-dark()`](https://developer.mozilla.org/en-US/docs/Web/CSS/color_value/light-dark) and [`color-scheme`](https://developer.mozilla.org/en-US/docs/Web/CSS/color-scheme) | Widely available | Every semantic color has a light and a dark value | n/a |
+| [OKLCH](https://developer.mozilla.org/en-US/docs/Web/CSS/color_value/oklch), [relative colors](https://www.w3.org/TR/css-color-5/#relative-colors), [`color-mix()`](https://developer.mozilla.org/en-US/docs/Web/CSS/color_value/color-mix) | Widely available; relative colors newly available | Color ramps, derived hover and tint tokens, the contrast knob | n/a |
+| [`@property`](https://developer.mozilla.org/en-US/docs/Web/CSS/@property) | Newly available (2024) | Non-inheriting layout custom properties | n/a |
+| [`@starting-style`](https://developer.mozilla.org/en-US/docs/Web/CSS/@starting-style) and `transition-behavior: allow-discrete` | Newly available (2024) | Top-layer enter and exit transitions | Elements open and close with no transition |
+| [CSS anchor positioning](https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_anchor_positioning) | Limited (Chromium, WebKit) | Popovers placed beside their invoker with `position-area` and `position-try-fallbacks` | Inside `@supports`; popovers sit centered at the bottom of the viewport instead |
+| [CSS Custom Highlight API](https://developer.mozilla.org/en-US/docs/Web/API/CSS_Custom_Highlight_API) | Newly available (2026) | Code highlighting with `::highlight()` and token colors | Plain code |
+| [View transitions](https://developer.mozilla.org/en-US/docs/Web/API/View_Transition_API) | Same-document newly available (2025); cross-document limited (Chromium, WebKit) | Optional page cross-fades driven by motion tokens | Instant navigation |
+| [Customizable `<select>`](https://developer.mozilla.org/en-US/docs/Learn_web_development/Extensions/Forms/Customizable_select) (`appearance: base-select`) | Limited (Chromium, WebKit) | Planned: a fully styled select with icons in options | The native select, tinted and sized by tokens |
 | [Interest invokers](https://open-ui.org/components/interest-invokers.explainer/) (`interestfor`) | Limited (Chromium) | Planned replacement for `<dui-tooltip>` and hover cards | `<dui-tooltip>` bridges it |
-| [`@scope`](https://developer.mozilla.org/en-US/docs/Web/CSS/@scope) | Newly shipped in all engines | Under evaluation for theme and density scopes (proximity) | Attribute selectors as today |
-| [Custom element states](https://developer.mozilla.org/en-US/docs/Web/API/CustomStateSet) (`:state()`) | Baseline | Planned: web components expose internal state to CSS without inventing attributes | n/a |
-| [`field-sizing: content`](https://developer.mozilla.org/en-US/docs/Web/CSS/field-sizing) | Limited | Auto-growing text areas | A fixed-height, resizable text area |
-| [`focusgroup`](https://open-ui.org/components/focusgroup.explainer/) | Proposal (Open UI) | Watched: would replace the roving tabindex in `<dui-toolbar>`, `<dui-tabs>` and `<dui-menu>` | The web components |
+| [`@scope`](https://developer.mozilla.org/en-US/docs/Web/CSS/@scope) | Newly available (2026) | Under evaluation for theme and density scopes (proximity) | Attribute selectors as today |
+| [Custom element states](https://developer.mozilla.org/en-US/docs/Web/API/CustomStateSet) (`:state()`) | Widely available | Planned: web components expose internal state to CSS without inventing attributes | n/a |
+| [`field-sizing: content`](https://developer.mozilla.org/en-US/docs/Web/CSS/field-sizing) | Newly available (2026) | Auto-growing text areas | A fixed-height, resizable text area |
+| [`focusgroup`](https://open-ui.org/components/focusgroup.explainer/) | Limited (Chromium) | Watched: would replace the roving tabindex in `<dui-toolbar>`, `<dui-tabs>` and `<dui-menu>` | The web components |
 
-A tracking issue keeps this table current, and each "planned" row has its own issue on the roadmap.
+Each "planned" row has its own issue on the roadmap.
 
 ## 7. Web components
 
@@ -186,9 +198,9 @@ Every explainer in `explainers/` is written as if it were headed to Open UI or t
 use cases, goals, non-goals, proposed markup, keyboard, accessibility mappings, alternatives, prior art
 and open questions ([W3C TAG explainer guidance](https://tag.w3.org/explainers/)).
 
-- Each explainer SHOULD end with a **Path to the platform** section: the nearest standards effort
-  (an Open UI component, a WHATWG issue, a CSSWG issue), how our markup maps onto it, and what we
-  would rename if it shipped.
+- Each explainer has a **Mapping to a future standard** section before its open questions: the nearest
+  standards effort (an Open UI component, a WHATWG issue, a CSSWG issue) or "none known", how our markup
+  maps onto it, and what a page would rename if it shipped.
 - Where an effort already exists, our names MUST follow it, so authors migrate by renaming.
 - We MAY take part in those efforts by linking our explainer and test results in their issues. Only
   the maintainer speaks for the project there.
@@ -222,7 +234,7 @@ first. Such a bridge sets semantic tokens only, like every theme.
 ## 10. Versioning and stability
 
 domestic-ui follows [Semantic Versioning 2.0.0](https://semver.org/spec/v2.0.0.html) for the surfaces in
-section 4, with commits in [Conventional Commits 1.0.0](https://www.conventionalcommits.org/en/v1.0.0/)
+section 4 ([CONTRIBUTING.md, Versioning](../CONTRIBUTING.md#versioning) is the working copy of these rules), with commits in [Conventional Commits 1.0.0](https://www.conventionalcommits.org/en/v1.0.0/)
 and a changelog generated from them.
 
 - **Breaking:** removing or renaming a public surface, changing a component's markup contract, raising
@@ -274,6 +286,6 @@ self-contained spec.
 
 | Phase | Goal | Issues |
 | --- | --- | --- |
-| 1. Foundation contract | Make the rules above checkable and the public API explicit | #95 versioning and deprecation policy, #96 Baseline status from web-features, #97 web component successors, #98 explainers' path to the platform |
+| 1. Foundation contract | Make the rules above checkable and the public API explicit | #95 versioning and deprecation policy, #96 Baseline status from web-features, #97 web component successors, #98 explainers' mapping to a future standard |
 | 2. Adopt emerging standards | Let the platform do more of the work, behind `@supports` | #99 customizable select, #100 `interestfor` for tooltips, #101 custom element states, #102 auto-growing text areas, #103 `@scope` evaluation |
 | 3. Coverage and interop | Fill native gaps and meet tools where they are | #104 progress and meter, #105 tree view, #106 shadcn/ui theme bridge, #107 custom elements manifest |
