@@ -74,11 +74,15 @@ export const PAIRS = [
   // Atoms: field (css/components/atoms/field.css). Hint is muted text and error is
   // danger on the surface; the invalid border is danger on the surface (all above).
 
-  // Molecules: alerts (css/components/molecules/alerts.css). Body text and links on each
-  // tinted surface; the prefix word in the tone color (danger, success, warning above);
-  // the inline-start rule and the icon disc are the tone against the surface and the tint;
+  // Molecules: alerts (css/components/molecules/alerts.css). A neutral raised surface: body
+  // text and links on it (above); the prefix word and the icon disc in the tone color on it;
   // the icon glyph is the surface on the tone (same ratio as tone on surface).
   ["--dui-color-info", "--dui-color-surface", 4.5],
+  ["--dui-color-info", "--dui-color-surface-raised", 4.5],
+  ["--dui-color-success", "--dui-color-surface-raised", 4.5],
+  ["--dui-color-warning", "--dui-color-surface-raised", 4.5],
+  ["--dui-color-danger", "--dui-color-surface-raised", 4.5],
+  // Tinted tone surfaces (badges in css/components/atoms/badge.css): text, links and focus.
   ["--dui-color-info", "--dui-color-info-surface", 4.5],
   ["--dui-color-text", "--dui-color-info-surface", 4.5],
   ["--dui-color-text", "--dui-color-success-surface", 4.5],
