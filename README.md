@@ -65,6 +65,7 @@ Components: one `data-<component>` attribute of space-separated words matched wi
 | Molecules | Pagination | `data-pagination`, `aria-current="page"`, `<a> without href`, `<li aria-hidden="true">…</li>` | [Pagination](https://odonckers.github.io/domestic-ui/patterns/pagination.html) |
 | Molecules | Popover | `data-popover`, `below the invoker, aligned to its start edge`, `data-popover="block-start \| inline-start \| inline-end"`, `place it above or beside the invoker instead`, `role="tooltip"`, `placed above the trigger`, `popover="auto \| manual \| hint"` | [Popover](https://odonckers.github.io/domestic-ui/patterns/popover.html) |
 | Molecules | Search | `<search> > <form> with an <input type="search">`, `the label and any hint span the full width, the input and the submit`, `button share the row below.` | [Search](https://odonckers.github.io/domestic-ui/patterns/search.html) |
+| Molecules | Search dialog | see the pattern page | [Search dialog](https://odonckers.github.io/domestic-ui/patterns/search-dialog.html) |
 | Molecules | Tabs | `<dui-tabs>`, `activation="manual"`, `aria-current="true"`, `role="tablist" \| "tab" \| "tabpanel"` | [Tabs](https://odonckers.github.io/domestic-ui/patterns/tabs.html) |
 | Molecules | Toolbar | `role="toolbar" aria-label="…"`, `aria-orientation="vertical"`, `aria-pressed="true \| false"`, `<hr>` | [Toolbar](https://odonckers.github.io/domestic-ui/patterns/toolbar.html) |
 | Molecules | Typeahead | `<dui-combobox>`, `<option value="…" label="…">`, `dui-combobox-filter`, `element.setOptions([...])` | [Typeahead](https://odonckers.github.io/domestic-ui/patterns/typeahead.html) |
@@ -93,6 +94,7 @@ Each follows a native element or WAI-ARIA APG pattern where one exists ([Pattern
 | [Pagination](https://odonckers.github.io/domestic-ui/patterns/pagination.html) | M3 | Available |
 | [Popover](https://odonckers.github.io/domestic-ui/patterns/popover.html) | M3 | Available |
 | [Search](https://odonckers.github.io/domestic-ui/patterns/search.html) | M3 | Available |
+| [Search dialog](https://odonckers.github.io/domestic-ui/patterns/search-dialog.html) | M3 | Available |
 | [Site navigation](https://odonckers.github.io/domestic-ui/patterns/nav.html) | M3 | Available |
 | [Tabs](https://odonckers.github.io/domestic-ui/patterns/tabs.html) | M3 | Available |
 | [Toolbar](https://odonckers.github.io/domestic-ui/patterns/toolbar.html) | M3 | Available |

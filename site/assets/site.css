@@ -195,6 +195,94 @@
   margin-inline-start: 0;
 }
 
+/*
+ * Search (shown by site.js): the button opens the search dialog. It starts
+ * the end group of the app bar, so the theme menu after it drops its auto
+ * margin. Narrow app bars show the icon alone; the text stays as its
+ * accessible name (same clipping as css/utilities/visually-hidden.css).
+ */
+.docs-search {
+  margin-inline-start: auto;
+}
+
+.docs-search:not([hidden]) ~ .docs-theme {
+  margin-inline-start: 0;
+}
+
+.docs-search > button {
+  color: var(--dui-color-text-muted);
+}
+
+/* The shortcut hint: wide app bars only, so narrow ones keep one row (WCAG 1.4.10). */
+.docs-search-kbd {
+  margin-inline-start: var(--dui-space-xs);
+  font-size: var(--dui-step--1);
+}
+
+@container dui-app-shell (inline-size < 64rem) {
+  .docs-search-kbd {
+    display: none;
+  }
+}
+
+@container dui-app-shell (inline-size < 30rem) {
+  /* The icon-only square of data-button="icon" (button.css). */
+  .docs-search > button {
+    padding: 0;
+  }
+
+  .docs-search-label {
+    position: absolute;
+    inline-size: 1px;
+    block-size: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+}
+
+/*
+ * The search dialog: a command palette. Near the top of the viewport, so
+ * the list has room to grow under the field, and the list is in the flow of
+ * the dialog (not the absolutely positioned popup of combobox.css), so the
+ * dialog's own scrolling never clips it.
+ */
+.docs-search-dialog {
+  margin-block-start: min(12vh, var(--dui-space-3xl));
+}
+
+/* The title row: dialog.css's header layout, on a <div> (see site/lib/templates.mjs). */
+.docs-search-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--dui-space-m);
+}
+
+.docs-search-head > * {
+  margin-block: 0;
+}
+
+.docs-search-head > h2 {
+  font-size: var(--dui-step-2);
+}
+
+.docs-search-dialog dui-combobox > [role="listbox"] {
+  position: static;
+  max-block-size: min(50vh, calc(var(--dui-size-row) * 10));
+  box-shadow: none;
+  border-color: var(--dui-color-border);
+}
+
+.docs-search-message {
+  color: var(--dui-color-text-muted);
+  font-size: var(--dui-font-size-ui);
+}
+
+.docs-search-message:empty {
+  display: none;
+}
+
 /* Themes page: the preview's radio group, one row. */
 .docs-theme-picker {
   display: flex;
