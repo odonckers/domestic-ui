@@ -10,6 +10,7 @@ import { parseTokenFile, resolveTokens, resolveValue } from "../site/lib/tokens.
 import { linksOf, validateOtherSystems } from "../site/lib/other-systems.mjs";
 import { DIAGRAM_DIR, checkDiagrams, diagramProblems, loadDiagrams } from "../site/lib/diagrams.mjs";
 import { navLabel } from "../site/lib/nav.mjs";
+import { markdownToHtml } from "../site/lib/markdown.mjs";
 import { escapeHtml, unescapeHtml } from "../site/lib/util.mjs";
 import { SITE_DIR, WCAG_TAGS, builtPages, livePages, redirectPages, summarize } from "./docs-helpers.js";
 import { blockExternalRequests, examples, schemes, withoutMotion } from "./helpers.js";
@@ -329,6 +330,35 @@ test.describe("docs build", () => {
     expect(read(join(SITE_DIR, "examples.md"))).toContain("](https://odonckers.github.io/domestic-ui/index.md)");
     // Nothing published links an old example URL any more.
     for (const name of GENERATED) expect(site.files[name], name).not.toMatch(/domestic-ui\/examples[./]/);
+  });
+});
+
+test.describe("markdown parser", () => {
+  test.beforeEach(({ browserName }) => test.skip(browserName !== "chromium", "browser-independent; run once"));
+
+  test("a pipe table inside a list item renders as a table in that item (Density explainer)", () => {
+    const html = markdownToHtml("## Tokens\n\n- The knob:\n\n  | Token | Value |\n  | --- | --- |\n  | `--a` | 1 |\n- Next", {});
+    expect(html).toContain('<li>The knob:\n<div data-scroll="inline" role="region" tabindex="0" aria-labelledby="tokens">\n<table aria-labelledby="tokens">');
+    expect(html).toContain('<tr><th scope="row"><code>--a</code></th><td>1</td></tr>');
+    expect(html).not.toContain("| --- |");
+    const density = read(join(SITE_DIR, "explainers/density.html"));
+    expect(density).not.toMatch(/\| --- \|/);
+    expect(density).toContain('<th scope="col">Token</th>');
+  });
+
+  test("a list right after a paragraph line is a list, not paragraph text (PRINCIPLES.md, Opinions we hold)", () => {
+    expect(markdownToHtml("Each of these:\n- one\n- two", {})).toBe("<p>Each of these:</p>\n<ul>\n<li>one</li>\n<li>two</li>\n</ul>");
+    expect(markdownToHtml("- item, the main ones:\n  - nested", {})).toBe("<ul>\n<li>item, the main ones:\n<ul>\n<li>nested</li>\n</ul>\n</li>\n</ul>");
+    expect(read(join(SITE_DIR, "principles/opinions-we-hold.html"))).not.toMatch(/^\s*- /m);
+  });
+
+  test("reference links resolve and their definitions render as nothing (Changelog)", () => {
+    const html = markdownToHtml("## [Unreleased]\n\nSee [the log][Log] and [log][] and [nope].\n\n[unreleased]: https://example.com/u\n[LOG]: https://example.com/l", {});
+    expect(html).toContain('<h2 id="unreleased"><a href="https://example.com/u">Unreleased</a></h2>');
+    expect(html).toContain('See <a href="https://example.com/l">the log</a> and <a href="https://example.com/l">log</a> and [nope].');
+    expect(html).not.toContain("example.com/u\n");
+    expect(html).not.toMatch(/\[unreleased\]:/i);
+    expect(read(join(SITE_DIR, "changelog.html"))).not.toMatch(/\[Unreleased\]:/);
   });
 });
 
