@@ -156,6 +156,32 @@ test.describe("docs build", () => {
     expect([...loadDiagrams(ROOT).keys()].sort()).toEqual(diagramPages.map((p) => p.diagram).sort());
   });
 
+  test("search-index.json: one record per page; every heading is an article heading with an id that resolves", () => {
+    const index = JSON.parse(read(join(SITE_DIR, "search-index.json")));
+    expect(index.map((/** @type {any} */ r) => r.url)).toEqual(site.pages.map((p) => p.path));
+    for (const record of index) {
+      const page = site.pages.find((p) => p.path === record.url);
+      expect(record.title, record.url).toBe(page?.title);
+      expect(record.summary, record.url).toBe(page?.description);
+      expect(Object.keys(record), record.url).toEqual(["title", "url", "level", "summary", "headings"]);
+      const html = read(join(SITE_DIR, record.url));
+      const article = html.slice(html.indexOf("<article"), html.indexOf("</article>"));
+      for (const h of record.headings) {
+        expect(Object.keys(h), record.url).toEqual(["text", "id"]);
+        expect(h.text, `${record.url}: the "On this page" heading is not content`).not.toBe("On this page");
+        expect(article, `${record.url}#${h.id} resolves inside the article`).toContain(` id="${escapeHtml(h.id)}"`);
+      }
+    }
+    // Deterministic: a second build writes the same bytes.
+    const again = mkdtempSync(join(tmpdir(), "dui-search-"));
+    try {
+      build({ outDir: again, writeRoot: false });
+      expect(read(join(again, "search-index.json"))).toBe(read(join(SITE_DIR, "search-index.json")));
+    } finally {
+      rmSync(again, { recursive: true, force: true });
+    }
+  });
+
   test("every relative href and src resolves inside _site/", () => {
     const broken = [];
     for (const page of site.pages) {

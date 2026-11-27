@@ -50,7 +50,8 @@ on one docs page. Every HTML page gets a Markdown twin next to it (`tokens/seman
 compare bytes.
 
 `_site/search-index.json` has one record per page (`title`, `url`, `level` = its sidebar entry,
-`summary`, and its `h2`/`h3` `headings`) for a later in-page search. There is no search UI yet.
+`summary`, and `headings`): each `h2`/`h3` of the page's `<article>` as `{ "text", "id" }`, so
+`url#id` opens that section. Headings outside the article, such as "On this page", are left out.
 
 ## Page structure
 
