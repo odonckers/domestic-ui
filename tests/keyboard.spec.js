@@ -33,7 +33,7 @@ async function snapshot(page) {
   return page.evaluate((props) => {
     const el = document.activeElement;
     if (!el || el === document.body || el === document.documentElement) return null;
-    // Hand Playwright's Tab presses a stable marker so a stop can be found again.
+    // Mark each stop so it can be found again after focus moves.
     if (!(el instanceof HTMLElement || el instanceof SVGElement)) return null;
     if (!el.dataset.kbStop) {
       // A radio group is one stop: Tab lands on one radio, Shift+Tab may land on another.
@@ -58,7 +58,6 @@ async function snapshot(page) {
     return {
       stop: el.dataset.kbStop,
       label,
-      focusVisible: el.matches(":focus-visible"),
       size: rect.width > 0 && rect.height > 0,
       onScreen: rect.bottom > 0 && rect.right > 0 && rect.top < innerHeight && rect.left < innerWidth,
       covered: hit !== null && hit !== el && !el.contains(hit) && !hit.contains(el) && !(el instanceof HTMLLabelElement),
