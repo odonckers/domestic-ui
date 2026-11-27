@@ -65,18 +65,23 @@ Components: one `data-<component>` attribute of space-separated words matched wi
 | Molecules | Disclosure | `data-disclosure="accordion"`, `joins them into one bordered block`, `data-disclosure="plain"`, `text inside prose`, `name="group"`, `open` | [Disclosure](https://odonckers.github.io/domestic-ui/patterns/disclosure.html) |
 | Molecules | Menu button | `<dui-menu>`, `popovertarget="menu-id"`, `popover data-popover`, `<button> or <a href> children`, `Added by the component: aria-haspopup, aria-expanded, role="menu",`, `role="menuitem", tabindex="-1".` | [Menu button](https://odonckers.github.io/domestic-ui/patterns/menu-button.html) |
 | Molecules | Pagination | `data-pagination`, `aria-current="page"`, `<a> without href`, `<li aria-hidden="true">…</li>` | [Pagination](https://odonckers.github.io/domestic-ui/patterns/pagination.html) |
-| Molecules | Popover | `data-popover`, `below the invoker, aligned to its start edge`, `data-popover="block-start \| inline-start \| inline-end"`, `place it above or beside the invoker instead`, `role="tooltip"`, `placed above the trigger`, `popover="auto \| manual \| hint"` | [Popover](https://odonckers.github.io/domestic-ui/patterns/popover.html) |
+| Molecules | Popover | `data-popover`, `below the invoker, aligned to its start edge`, `data-popover="block-start \| inline-start \| inline-end"`, `place it above or beside the invoker instead`, `role="tooltip"`, `placed above the trigger`, `popover="auto \| manual \| hint"`, `Children: with a <nav> of links, the panel takes the menu's inset, so a`, `<p> or heading, an <hr> and a <form> with a quiet button line up with`, `the links (an account popover).` | [Popover](https://odonckers.github.io/domestic-ui/patterns/popover.html) |
 | Molecules | Search | `<search> > <form> with an <input type="search">`, `the label and any hint span the full width, the input and the submit`, `button share the row below.` | [Search](https://odonckers.github.io/domestic-ui/patterns/search.html) |
 | Molecules | Search dialog | see the pattern page | [Search dialog](https://odonckers.github.io/domestic-ui/patterns/search-dialog.html) |
 | Molecules | Tabs | `<dui-tabs>`, `activation="manual"`, `aria-current="true"`, `role="tablist" \| "tab" \| "tabpanel"` | [Tabs](https://odonckers.github.io/domestic-ui/patterns/tabs.html) |
 | Molecules | Toolbar | `role="toolbar" aria-label="…"`, `aria-orientation="vertical"`, `aria-pressed="true \| false"`, `<hr>` | [Toolbar](https://odonckers.github.io/domestic-ui/patterns/toolbar.html) |
 | Molecules | Typeahead | `<dui-combobox>`, `<option value="…" label="…">`, `dui-combobox-filter`, `element.setOptions([...])` | [Typeahead](https://odonckers.github.io/domestic-ui/patterns/typeahead.html) |
+| Molecules | Account menu | see the pattern page | [Account menu](https://odonckers.github.io/domestic-ui/patterns/account-menu.html) |
+| Molecules | Empty state | see the pattern page | [Empty state](https://odonckers.github.io/domestic-ui/patterns/empty-state.html) |
+| Molecules | Notifications list | see the pattern page | [Notifications list](https://odonckers.github.io/domestic-ui/patterns/notifications-list.html) |
+| Molecules | People list | see the pattern page | [People list](https://odonckers.github.io/domestic-ui/patterns/people-list.html) |
 | Organisms | Page header | `data-page-header` on a `<header>` inside `<main>`: optional breadcrumb `<nav>`, heading, optional `<p>`, actions last | [Page header](https://odonckers.github.io/domestic-ui/components/organisms/page-header.html) |
 | Organisms | Dialog and drawer | `data-dialog`, `and the open transition`, `data-dialog="drawer [start \| end]"`, `edge (end is the default)`, `closedby="any \| closerequest \| none"`, `Children: an optional <header> (heading and close button) and <footer>`, `(actions, end-aligned); everything else is the body.` | [Dialog and drawer](https://odonckers.github.io/domestic-ui/patterns/dialog.html) |
 | Organisms | Site navigation | `data-nav="vertical \| horizontal"`, `aria-current="page"`, `aria-current="true"`, `<details> / <summary>`, `open to expand it on load, name for`, `one-at-a-time` | [Site navigation](https://odonckers.github.io/domestic-ui/patterns/nav.html) |
 | Organisms | Data table | `data-table`, `data-table="sticky"`, `data-table="number"`, `data-table="sortable"`, `aria-sort="ascending \| descending"`, `aria-busy="true"` | [Data table](https://odonckers.github.io/domestic-ui/patterns/data-table.html) |
 | Organisms | Filter bar | `data-filter-bar`, `Children: a <form> of fields (each a data-field, or a <dui-combobox>)`, `whose last child holds the buttons, then a role="status" element with`, `the result count.` | [Filter bar](https://odonckers.github.io/domestic-ui/patterns/filter-bar.html) |
 | Organisms | Large forms | `data-form-sections`, `<header>`, `one body element` | [Large forms](https://odonckers.github.io/domestic-ui/patterns/large-forms.html) |
+| Organisms | Stat row | see the pattern page | [Stat row](https://odonckers.github.io/domestic-ui/patterns/stat-row.html) |
 | Tokens | Compact density | see the pattern page | [Compact density](https://odonckers.github.io/domestic-ui/patterns/density.html) |
 
 Docs pages also link how other design systems handle the same thing, for comparison only.
@@ -101,14 +106,19 @@ Each follows a native element or WAI-ARIA APG pattern where one exists ([Pattern
 | [Tabs](https://odonckers.github.io/domestic-ui/patterns/tabs.html) | M3 | Available |
 | [Toolbar](https://odonckers.github.io/domestic-ui/patterns/toolbar.html) | M3 | Available |
 | [Typeahead](https://odonckers.github.io/domestic-ui/patterns/typeahead.html) | M3 | Available |
+| [Account menu](https://odonckers.github.io/domestic-ui/patterns/account-menu.html) | M3b | Available |
 | [App shell](https://odonckers.github.io/domestic-ui/patterns/app-shell.html) | M3b | Available |
 | [Compact density](https://odonckers.github.io/domestic-ui/patterns/density.html) | M3b | Available |
 | [Dashboard](https://odonckers.github.io/domestic-ui/patterns/dashboard.html) | M3b | Available |
 | [Data table](https://odonckers.github.io/domestic-ui/patterns/data-table.html) | M3b | Available |
+| [Empty state](https://odonckers.github.io/domestic-ui/patterns/empty-state.html) | M3b | Available |
 | [Filter bar](https://odonckers.github.io/domestic-ui/patterns/filter-bar.html) | M3b | Available |
 | [Large forms](https://odonckers.github.io/domestic-ui/patterns/large-forms.html) | M3b | Available |
 | [List-detail](https://odonckers.github.io/domestic-ui/patterns/list-detail.html) | M3b | Available |
+| [Notifications list](https://odonckers.github.io/domestic-ui/patterns/notifications-list.html) | M3b | Available |
+| [People list](https://odonckers.github.io/domestic-ui/patterns/people-list.html) | M3b | Available |
 | [Split](https://odonckers.github.io/domestic-ui/patterns/split.html) | M3b | Available |
+| [Stat row](https://odonckers.github.io/domestic-ui/patterns/stat-row.html) | M3b | Available |
 
 ## Demos
 

@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 180" role="img" aria-labelledby="diagram-empty-state-title" aria-describedby="diagram-empty-state-desc">
+  <title id="diagram-empty-state-title">Where an empty state is used</title>
+  <desc id="diagram-empty-state-desc">An empty state fills the content area where a list would be, with a heading, a sentence and the action that adds the first item.</desc>
+  <!-- Frame -->
+  <rect x="0.75" y="0.75" width="318.5" height="178.5" rx="6" fill="var(--dui-color-surface)" stroke="var(--dui-color-border)" stroke-width="1.5"/>
+  <!-- Regions -->
+  <g fill="none" stroke="currentColor" stroke-opacity=".35">
+    <path d="M1 24.5h318M76.5 24.5V179"/>
+  </g>
+  <!-- Text -->
+  <g fill="currentColor" fill-opacity=".3">
+    <rect x="10" y="9" width="34" height="6" rx="2"/>
+    <rect x="12" y="38" width="44" height="6" rx="2"/>
+    <rect x="12" y="52" width="36" height="6" rx="2"/>
+    <rect x="12" y="66" width="50" height="6" rx="2"/>
+    <rect x="12" y="80" width="40" height="6" rx="2"/>
+    <rect x="92" y="34" width="90" height="10" rx="2" fill-opacity=".6"/>
+  </g>
+  <!-- The an empty state -->
+  <g fill="var(--dui-color-accent-surface)" stroke="var(--dui-color-accent)" stroke-width="2">
+    <rect x="92" y="54" width="208" height="100" rx="4"/>
+  </g>
+  <!-- Its text -->
+  <g fill="var(--dui-color-accent)">
+    <rect x="104" y="68" width="70" height="6" rx="2"/>
+    <rect x="104" y="82" width="150" height="4" rx="2"/>
+    <rect x="104" y="92" width="120" height="4" rx="2"/>
+    <rect x="104" y="110" width="44" height="14" rx="3"/>
+    <rect x="154" y="110" width="44" height="14" rx="3" fill-opacity=".35"/>
+  </g>
+</svg>

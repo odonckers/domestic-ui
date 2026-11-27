@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>App compositions · domestic-ui</title>
+    <meta name="description" content="Common app pieces built only from native elements, existing data attributes and layout classes: a stat row, an empty state, a people list, a notifications list and an account menu.">
+    <link rel="stylesheet" href="../../css/domestic.css">
+  </head>
+  <body>
+    <a class="visually-hidden" href="#main">Skip to main content</a>
+
+    <header>
+      <p><strong>domestic-ui</strong></p>
+    </header>
+
+    <main id="main">
+      <h1>App compositions</h1>
+      <p data-text="lead">Pieces other systems ship as components, written as arrangements of elements domestic-ui already styles.</p>
+
+      <section aria-labelledby="stats-title">
+        <h2 id="stats-title">Stat row</h2>
+        <!-- dui:snippet name="Stat row" page="patterns/stat-row" -->
+        <section class="grid" aria-label="This month">
+          <article data-card>
+            <h3 data-text="small muted">Revenue</h3>
+            <p data-text="lead"><strong>€45,231</strong></p>
+            <p data-text="small muted">Up 20% on last month</p>
+          </article>
+          <article data-card>
+            <h3 data-text="small muted">New customers</h3>
+            <p data-text="lead"><strong>2,350</strong></p>
+            <p data-text="small muted">Up 180 on last month</p>
+          </article>
+          <article data-card>
+            <h3 data-text="small muted">Open orders</h3>
+            <p data-text="lead"><strong>128</strong></p>
+            <p data-text="small muted">12 due to ship today</p>
+          </article>
+          <article data-card>
+            <h3 data-text="small muted">Refunds</h3>
+            <p data-text="lead"><strong>€1,204</strong></p>
+            <p><span data-badge="warning">3 waiting</span></p>
+          </article>
+        </section>
+        <!-- /dui:snippet -->
+      </section>
+
+      <section aria-labelledby="empty-title">
+        <h2 id="empty-title">Empty state</h2>
+        <!-- dui:snippet name="Empty state" page="patterns/empty-state" -->
+        <section data-card aria-labelledby="no-invoices">
+          <h3 id="no-invoices">No invoices yet</h3>
+          <p data-text="muted">Invoices you create or import show up here, with their status and amount due.</p>
+          <p class="cluster">
+            <a href="#new-invoice" data-button="primary">Create an invoice</a>
+            <a href="#import" data-button="secondary">Import from CSV</a>
+          </p>
+        </section>
+        <!-- /dui:snippet -->
+      </section>
+
+      <section aria-labelledby="people-title">
+        <h2 id="people-title">People list</h2>
+        <!-- dui:snippet name="People list" page="patterns/people-list" -->
+        <section data-card aria-labelledby="team-title">
+          <h3 id="team-title">Team</h3>
+          <ul class="stack">
+            <li class="cluster" style="--cluster-justify: space-between">
+              <p>
+                <strong>Maria Santos</strong><br>
+                <span data-text="small muted">maria@northwind.example</span>
+              </p>
+              <span data-badge>Owner</span>
+            </li>
+            <li class="cluster" style="--cluster-justify: space-between">
+              <p>
+                <strong>Kenji Watanabe</strong><br>
+                <span data-text="small muted">kenji@northwind.example</span>
+              </p>
+              <span data-badge>Admin</span>
+            </li>
+            <li class="cluster" style="--cluster-justify: space-between">
+              <p>
+                <strong>Amara Okafor</strong><br>
+                <span data-text="small muted">amara@northwind.example</span>
+              </p>
+              <span data-badge="accent">Invited</span>
+            </li>
+          </ul>
+        </section>
+        <!-- /dui:snippet -->
+      </section>
+
+      <section aria-labelledby="notifications-title">
+        <h2 id="notifications-title">Notifications list</h2>
+        <!-- dui:snippet name="Notifications list" page="patterns/notifications-list" -->
+        <section data-card aria-labelledby="inbox-title">
+          <h3 id="inbox-title">Notifications</h3>
+          <ol class="stack">
+            <li>
+              <p>
+                <a href="#inv-0318">Analytical Engines Ltd. paid INV-2025-0318</a><br>
+                <span data-text="small muted"><time datetime="2026-11-27T09:12">Today, 9:12</time></span>
+              </p>
+            </li>
+            <li>
+              <p>
+                <a href="#inv-0316">INV-2025-0316 is 60 days overdue</a> <span data-badge="warning">Overdue</span><br>
+                <span data-text="small muted"><time datetime="2026-11-26T16:40">Yesterday, 16:40</time></span>
+              </p>
+            </li>
+            <li>
+              <p>
+                <a href="#team">Amara Okafor accepted your invitation</a><br>
+                <span data-text="small muted"><time datetime="2026-11-24T11:05">Monday, 11:05</time></span>
+              </p>
+            </li>
+          </ol>
+          <footer>
+            <a href="#all-notifications">See all notifications</a>
+          </footer>
+        </section>
+        <!-- /dui:snippet -->
+      </section>
+
+      <section aria-labelledby="account-title">
+        <h2 id="account-title">Account menu</h2>
+        <!-- dui:snippet name="Account menu" page="patterns/account-menu" -->
+        <button type="button" popovertarget="account" data-button="quiet">Maria Santos</button>
+        <div id="account" popover data-popover>
+          <p>
+            <strong>Maria Santos</strong><br>
+            <span data-text="small muted">maria@northwind.example</span>
+          </p>
+          <hr>
+          <nav aria-label="Account" data-nav>
+            <ul>
+              <li><a href="#profile">Profile</a></li>
+              <li><a href="#billing">Billing</a></li>
+              <li><a href="#settings">Settings</a></li>
+            </ul>
+          </nav>
+          <hr>
+          <form action="#sign-out" method="post">
+            <button type="submit" data-button="quiet">Sign out</button>
+          </form>
+        </div>
+        <!-- /dui:snippet -->
+      </section>
+    </main>
+
+    <footer>
+      <p data-text="small">domestic-ui is MIT licensed.</p>
+    </footer>
+  </body>
+</html>

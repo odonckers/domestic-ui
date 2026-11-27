@@ -313,3 +313,33 @@ test.describe("plain document page", () => {
     expect(main.x).toBeGreaterThanOrEqual(nav.x + nav.width);
   });
 });
+
+/*
+ * App compositions (examples/patterns/compositions.html): arrangements of
+ * existing parts, so these check the parts line up, not new components.
+ */
+test.describe("app compositions", () => {
+  const PAGE = "examples/patterns/compositions.html";
+
+  test("a cluster row reaches the far edge, past the prose measure", async ({ page }) => {
+    await page.setViewportSize(WIDE);
+    await page.goto(PAGE);
+    const list = await box(page.locator('[aria-labelledby="team-title"] ul'));
+    const badge = await box(page.locator('[aria-labelledby="team-title"] li').first().locator("[data-badge]"));
+    expect(Math.abs(list.x + list.width - (badge.x + badge.width))).toBeLessThan(1);
+  });
+
+  test("an account popover lines its text up with its links", async ({ page }) => {
+    await page.setViewportSize(WIDE);
+    await page.goto(PAGE);
+    await page.getByRole("button", { name: "Maria Santos" }).click();
+    const starts = await page.locator("#account").evaluate((pop) =>
+      [...pop.querySelectorAll(":scope > p, nav a, form button")].map((el) => {
+        const range = document.createRange();
+        range.selectNodeContents(el);
+        return range.getBoundingClientRect().x;
+      }),
+    );
+    for (const x of starts) expect(Math.abs(x - starts[0])).toBeLessThan(1);
+  });
+});

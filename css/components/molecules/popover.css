@@ -68,6 +68,9 @@
  *   role="tooltip"                  on a [popover] element: tooltip look,
  *                                   placed above the trigger
  *   popover="auto | manual | hint"  native: auto light-dismisses, manual does not
+ *   Children: with a <nav> of links, the panel takes the menu's inset, so a
+ *   <p> or heading, an <hr> and a <form> with a quiet button line up with
+ *   the links (an account popover).
  *
  * Example
  *   <button type="button" popovertarget="share">Share</button>
@@ -120,6 +123,36 @@
     scale calc(var(--dui-motion-duration-fast) * var(--dui-motion-movement)) var(--dui-motion-easing-exit),
     display var(--dui-motion-duration-fast) allow-discrete,
     overlay var(--dui-motion-duration-fast) allow-discrete;
+}
+
+/*
+ * A popover of links (a disclosure, not a menu): the nav's rows set the inset,
+ * as in a menu (menu-button.css), and the other children line up with them.
+ */
+[popover][data-popover]:has(> nav) {
+  min-inline-size: var(--dui-size-menu-min);
+  padding: var(--dui-space-gap-tight);
+}
+
+[popover][data-popover]:has(> nav) > :is(p, h2, h3, h4, form) {
+  margin: 0;
+}
+
+/* Text starts where the links' text does: past their current-page marker (nav.css). */
+[popover][data-popover]:has(> nav) > :is(p, h2, h3, h4) {
+  padding-block: var(--dui-space-control-block);
+  padding-inline: calc(var(--dui-space-control-inline) + var(--dui-border-width-indicator)) var(--dui-space-control-inline);
+}
+
+[popover][data-popover]:has(> nav) > hr {
+  margin-block: var(--dui-space-2xs);
+}
+
+[popover][data-popover]:has(> nav) > form > button {
+  inline-size: 100%;
+  justify-content: flex-start;
+  color: var(--dui-color-text-muted); /* as the nav's links (nav.css) */
+  padding-inline: calc(var(--dui-space-control-inline) + var(--dui-border-width-indicator) - var(--dui-border-width)) var(--dui-space-control-inline);
 }
 
 [popover][data-popover]:popover-open {
