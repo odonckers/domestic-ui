@@ -194,8 +194,9 @@
   --dui-color-accent-hover: oklch(from var(--dui-color-accent) calc(l - 0.02) c h); /* Accent solid hover. Our choice: 0.02 darker in OKLCH lightness, so white text stays 4.5:1 */
   --dui-color-primary-hover: light-dark(oklch(from var(--dui-color-primary) 26% calc(c + 0.002) h), oklch(from var(--dui-color-primary) 90% calc(c + 0.004) h)); /* Primary fill hover, same hue as the primary */
   --dui-font-heading: var(--dui-font-body);
-  --dui-font-size-ui: var(--dui-step--1); /* Interface text: buttons, fields, selects, nav, menu and listbox items, tabs, badges, tooltips, table cells. 14px at the default font size */
+  --dui-font-size-ui: var(--dui-step--1); /* Interface text: buttons, fields, selects, nav, menu and listbox items, tabs, tooltips, table cells. 14px at the default font size */
   --dui-font-size-field: var(--dui-font-size-ui); /* Text in fields, selects and text areas: the UI size, at least 16px under a coarse pointer (section 2a) */
+  --dui-font-size-badge: var(--dui-font-size-0-75); /* Badge text: 12px, as shadcn/ui sets its badge (text-xs) */
   --dui-font-size-page-title: var(--dui-step-3); /* The h1 of a page header or an app shell: 30px at most */
   --dui-radius-control: calc(var(--dui-radius-2) * var(--dui-radius-scale)); /* Controls, buttons, inline code: 8px times the radius scale */
   --dui-radius-surface: calc(var(--dui-radius-3) * var(--dui-radius-scale)); /* Panels, cards, pre, dialogs, details, media: 12px times the radius scale */
