@@ -12,8 +12,10 @@
  * (WCAG 1.4.3).
  *
  * API
- *   data-badge="neutral | accent | success | warning | danger"
- *   (empty means neutral)
+ *   data-badge="neutral | primary | outline | accent | success | warning | danger"
+ *   (empty means neutral). primary is solid, outline is a bordered chip,
+ *   and the tones are tinted, after shadcn/ui's badge variants
+ *   (https://ui.shadcn.com/docs/components/badge).
  *
  * Example
  *   <span data-badge="success">Paid</span>
@@ -36,18 +38,28 @@
   padding-inline: var(--dui-space-xs);
   background-color: var(--dui-color-surface-sunken);
   color: var(--dui-color-text);
-  border: var(--dui-border-width) solid color-mix(in oklab, currentcolor var(--dui-border-tint-amount), transparent);
+  border: var(--dui-border-width) solid transparent;
 
   /*
    * Half the height of one line: a pill on one line, and a rounded box
    * (not a stadium that cuts into the text) when a long badge wraps in a
    * narrow column. Our choice: let badges wrap rather than widen the page.
    */
-  border-radius: calc(var(--dui-line-height-body) * var(--dui-font-size-ui) / 2 + var(--dui-border-width));
-  font-size: var(--dui-font-size-ui);
-  font-weight: var(--dui-font-weight-strong);
+  border-radius: calc(var(--dui-line-height-body) * var(--dui-font-size-badge) / 2 + var(--dui-border-width));
+  font-size: var(--dui-font-size-badge);
+  font-weight: var(--dui-font-weight-ui);
   line-height: var(--dui-line-height-body);
   vertical-align: baseline;
+}
+
+[data-badge~="primary"] {
+  background-color: var(--dui-color-primary);
+  color: var(--dui-color-primary-contrast);
+}
+
+[data-badge~="outline"] {
+  background-color: transparent;
+  border-color: var(--dui-color-border);
 }
 
 [data-badge~="accent"] {
