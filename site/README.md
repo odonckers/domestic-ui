@@ -262,11 +262,11 @@ a path does not exist or a page is not built. The file is read only when `demos/
 
 To link a demo view from a page, add the page to the view's `pages` after reading the view's source:
 list only the patterns the markup really uses. The page's See also then gets one line, "Demos:
-Orders view (Plain HTML, React, Angular, Astro)", each app linking its source; a page several views
+Orders view (Plain HTML, React, Angular, Astro, Vue, Svelte)", each app linking its source; a page several views
 use gets them on the same line, separated by semicolons. The plain HTML demo (`LIVE_DEMO` in
 `site/lib/pages.mjs`) needs no build, so `site/build.mjs` copies it to `_site/demos/vanilla/` and the
-Views list on `demos.html` gives each view an **Open live** link. The React, Angular and Astro apps
-need a build and are not published.
+Views list on `demos.html` gives each view an **Open live** link. The framework apps need a build
+and are not published.
 
 ## Component API convention
 

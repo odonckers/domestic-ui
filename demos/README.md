@@ -1,7 +1,7 @@
 # Demo apps
 
 The same three views, a household-chores **dashboard**, an **account settings** form and a
-warehouse **orders** admin view, built four ways to show that domestic-ui works with plain HTML and with common frameworks.
+warehouse **orders** admin view, built six ways to show that domestic-ui works with plain HTML and with common frameworks.
 Every view uses the same native markup, the `stack`, `cluster` and `grid` layout primitives, and
 the [atom APIs](../css/components/atoms/README.md): `data-text`, `data-button`, `data-field`,
 `data-badge` and the `role="switch"` checkbox, written exactly as in
@@ -18,6 +18,8 @@ order details sidebar as a `data-list-detail` list and detail.
 | [`react/`](react/) | React + Vite (multi-page) | `/`, `/settings.html`, `/orders.html` |
 | [`angular/`](angular/) | Angular CLI + Angular Router | `/`, `/settings`, `/orders` |
 | [`astro/`](astro/) | Astro, static output | `/`, `/settings/`, `/orders/` |
+| [`vue/`](vue/) | Vue 3 + Vite (multi-page) | `/`, `/settings.html`, `/orders.html` |
+| [`svelte/`](svelte/) | Svelte 5 + Vite (multi-page) | `/`, `/settings.html`, `/orders.html` |
 | [`a11y/`](a11y/) | Shared checker: axe (WCAG 2.2 AA, light and dark) and html-validate | |
 
 Every app links the shipped stylesheet, [`css/domestic.css`](../css/domestic.css), straight from
