@@ -18,7 +18,7 @@ Read [PRINCIPLES.md](PRINCIPLES.md) before changing behavior. [CONTRIBUTING.md](
 ## Commands
 
 - Install: `npm ci`, then `npx playwright install --with-deps` once for the Chromium, Firefox and WebKit builds the pinned Playwright expects.
-- Everything: `npm test` (html-validate, Stylelint, token check, dependency review check, Playwright + axe).
+- Everything: `npm test` (html-validate, Stylelint, token check, dependency review check, markup check, Playwright + axe).
 - Use a free port if anything else may be serving: `PORT=4600 npm test` (default 4173; parallel checkouts otherwise reuse each other's server).
 - One spec: `PORT=4600 npx playwright test tests/atoms.spec.js --project=chromium`
 - Preview: `node site/build.mjs && node scripts/serve.mjs`, then open http://127.0.0.1:4173/_site/index.html

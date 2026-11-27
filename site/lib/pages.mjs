@@ -15,6 +15,7 @@ import { diagramBlock, diagramName } from "./diagrams.mjs";
 import { COMPONENT_GROUPS, LEVELS, THEMES_PAGE } from "./discovery.mjs";
 import { inline, plainText, shiftHeadings, tokenize } from "./markdown.mjs";
 import { previewKind } from "./tokens.mjs";
+import { loadVocabulary, vocabularyMd } from "./vocabulary.mjs";
 import { existsSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 import { BLOB_URL, REPO_URL, THEMES, archiveUrl, byString, escapeHtml, escapeMdCell, fence, firstSentence, mdCode, releaseUrl, slugify } from "./util.mjs";
@@ -1237,12 +1238,29 @@ function guidesIndex(model) {
  * Expand the generated lines of a guide, so its status never goes stale:
  *   {{patterns: tabs, disclosure}}  those patterns with their status, then which are not available yet
  *   {{layouts}}                     the layout primitives
+ *   {{vocabulary}}                  every documented attribute, word, class, element and knob (site/lib/vocabulary.mjs)
+ *   {{page: examples/pages/x.html}} that whole file as an HTML code block, so the markup has one home
  * @param {Model} model
  * @param {Guide} g
  */
 function expandGuide(model, g) {
-  return g.body.replace(/^\{\{\s*(patterns|layouts)\s*(?::\s*([^}]*))?\}\}[ \t]*$/gm, (_, kind, args = "") => {
+  return g.body.replace(/^\{\{\s*(patterns|layouts|vocabulary|page)\s*(?::\s*([^}]*))?\}\}[ \t]*$/gm, (_, kind, args = "") => {
     if (kind === "layouts") return model.layouts.map(componentLine).join("\n");
+    if (kind === "vocabulary") {
+      /** @type {Map<string, string>} css path → docs page */
+      const pages = new Map();
+      for (const c of allComponents(model)) if (c.ownCss) pages.set(c.cssPath, c.sitePath);
+      for (const p of model.patterns) for (const css of p.cssPaths) if (!pages.has(css)) pages.set(css, p.sitePath);
+      // Scopes set on any element are documented with the tokens, not on a component page.
+      const fallback = (/** @type {string} */ file) => (file.startsWith("themes/") ? "principles/themes.html" : /^(tokens|base)\//.test(file) ? "principles/theming.html" : null);
+      return vocabularyMd(loadVocabulary(model.root), (file) => pages.get(`css/${file}`) ?? fallback(file));
+    }
+    if (kind === "page") {
+      const file = args.trim();
+      if (!/^examples\/[\w/-]+\.html$/.test(file) || !existsSync(join(model.root, file))) throw new Error(`${g.contentPath}: no example "${file}"`);
+      const html = readFileSync(join(model.root, file), "utf8").trimEnd();
+      return `[\`${file}\`](${BLOB_URL}${file}):\n\n${fence(html, "html")}`;
+    }
     const list = args
       .split(",")
       .map((/** @type {string} */ s) => s.trim())
@@ -1266,7 +1284,7 @@ function expandGuide(model, g) {
 function guidePage(model, g) {
   return {
     path: g.sitePath,
-    inFull: false,
+    ...(g.full ? {} : { inFull: /** @type {const} */ (false) }),
     section: "guides",
     title: g.title,
     heading: g.title,

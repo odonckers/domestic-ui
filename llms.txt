@@ -4,6 +4,8 @@
 
 Link `css/domestic.css` (copy `css/` from the v0.1.0 release, https://github.com/odonckers/domestic-ui/releases/tag/v0.1.0); semantic HTML needs no classes. Components: one `data-<component>` attribute of space-separated words matched with `~=` (`data-button="primary small"`), no classes; state via native attributes and ARIA. Layout primitives and utilities: `data-action-bar`, `.cluster`, `.grid`, `data-scroll`, `.stack`, `.visually-hidden`. Theme only with semantic `--dui-*` tokens; primitives are internal.
 
+Writing a page? Read [Writing pages with no CSS](https://odonckers.github.io/domestic-ui/guides/writing-pages.md) first: the rules, a whole page to start from and every documented attribute, word, class and element. A page written to it needs no CSS of its own; `node scripts/check-markup.mjs page.html` checks that.
+
 ## Getting started
 
 - [Getting started](https://odonckers.github.io/domestic-ui/index.md): domestic-ui is a CSS design system built on native HTML, custom properties and cascade layers.
@@ -103,6 +105,7 @@ Link `css/domestic.css` (copy `css/` from the v0.1.0 release, https://github.com
 - [Guides](https://odonckers.github.io/domestic-ui/guides/index.md): Step-by-step guides for building with domestic-ui.
 - [Use it with any framework](https://odonckers.github.io/domestic-ui/guides/any-framework.md): The markup is the contract and the framework only holds state. The same three views, built six ways, show how.
 - [From a simple site to an ERP app](https://odonckers.github.io/domestic-ui/guides/simple-site-to-erp-app.md): Five steps from a plain content page to a dense business application, with what is available today.
+- [Writing pages with no CSS](https://odonckers.github.io/domestic-ui/guides/writing-pages.md): The contract for people and coding agents: write semantic HTML in the documented vocabulary, add a web component only where HTML has no element, and the page is styled, themed and accessible with no CSS of its own.
 
 ## Explainers
 

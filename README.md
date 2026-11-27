@@ -82,7 +82,7 @@ Docs pages also link how other design systems handle the same thing, for compari
 
 ## Patterns
 
-Each follows a native element or WAI-ARIA APG pattern where one exists ([Patterns](https://odonckers.github.io/domestic-ui/patterns/index.html)). Guides: [Use it with any framework](https://odonckers.github.io/domestic-ui/guides/any-framework.html), [From a simple site to an ERP app](https://odonckers.github.io/domestic-ui/guides/simple-site-to-erp-app.html).
+Each follows a native element or WAI-ARIA APG pattern where one exists ([Patterns](https://odonckers.github.io/domestic-ui/patterns/index.html)). Guides: [Use it with any framework](https://odonckers.github.io/domestic-ui/guides/any-framework.html), [From a simple site to an ERP app](https://odonckers.github.io/domestic-ui/guides/simple-site-to-erp-app.html), [Writing pages with no CSS](https://odonckers.github.io/domestic-ui/guides/writing-pages.html).
 
 | Pattern | Milestone | Status |
 | --- | --- | --- |

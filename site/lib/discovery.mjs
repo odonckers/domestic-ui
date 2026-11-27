@@ -106,7 +106,8 @@ export const PATTERN_EXAMPLE_DIRS = /** @type {const} */ (["molecules", "organis
  * @property {string} slug
  * @property {string} title
  * @property {string} summary
- * @property {string} body       Markdown, with {{patterns: …}} and {{layouts}} lines
+ * @property {string} body       Markdown, with {{patterns: …}}, {{layouts}}, {{vocabulary}} and {{page: …}} lines
+ * @property {boolean} full      front matter "full: true": also in llms-full.txt (a reference, not a walkthrough)
  * @property {string} contentPath
  * @property {string} sitePath
  */
@@ -563,7 +564,7 @@ export function loadModel(root) {
     const path = `site/content/guides/${f}`;
     const slug = f.replace(/\.md$/, "");
     const { data, body } = parseFrontMatter(read(path));
-    return { slug, title: str(data.title) || titleFromName(slug), summary: str(data.summary), body, contentPath: path, sitePath: `guides/${slug}.html` };
+    return { slug, title: str(data.title) || titleFromName(slug), summary: str(data.summary), body, full: str(data.full) === "true", contentPath: path, sitePath: `guides/${slug}.html` };
   });
 
   /**

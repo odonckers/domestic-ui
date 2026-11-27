@@ -4,6 +4,229 @@
 
 Link `css/domestic.css` (copy `css/` from the v0.1.0 release, https://github.com/odonckers/domestic-ui/releases/tag/v0.1.0); semantic HTML needs no classes. Components: one `data-<component>` attribute of space-separated words matched with `~=` (`data-button="primary small"`), no classes; state via native attributes and ARIA. Layout primitives and utilities: `data-action-bar`, `.cluster`, `.grid`, `data-scroll`, `.stack`, `.visually-hidden`. Theme only with semantic `--dui-*` tokens; primitives are internal.
 
+Writing a page? Read [Writing pages with no CSS](https://odonckers.github.io/domestic-ui/guides/writing-pages.md) first: the rules, a whole page to start from and every documented attribute, word, class and element. A page written to it needs no CSS of its own; `node scripts/check-markup.mjs page.html` checks that.
+
+## Writing pages with no CSS
+
+Page: https://odonckers.github.io/domestic-ui/guides/writing-pages.html
+
+A page built this way links one stylesheet and writes no CSS. Everything it looks like comes from the elements it uses, a few documented attributes, and the [tokens](https://odonckers.github.io/domestic-ui/tokens/index.md) a theme sets. **Our choice:** a closed vocabulary rather than utility classes, so a page says what each part is, not how it should look, and a checker can tell when a page leaves the system.
+
+### The rules
+
+1. Link `css/domestic.css` once, in `<head>`. Optionally link a theme from `css/themes/` after it and set `data-theme` on `<html>`.
+2. Write no `<style>` element and no `style` attribute, except to set a layout primitive's documented custom property (`--stack-gap`, `--grid-min`, `--cluster-justify`, …) or a semantic `--dui-*` token.
+3. Use the native element that already has the meaning: `<button>`, `<a href>`, `<dialog>`, `<details>`, `<label>`, `<fieldset>`, `<table>`, `<search>`, `<time>`. The [first rule of ARIA](https://www.w3.org/TR/using-aria/#rule1) applies: no `role` where an element exists.
+4. Use only the attributes, words and classes in the [vocabulary](#the-vocabulary) below. A word that is not listed does nothing, so it is a mistake, not a style.
+5. Give each page the landmarks in the [skeleton](#an-application-page): a skip link, one `<header>`, a labelled `<nav>`, one `<main id>` and a `<footer>`, and exactly one `<h1>` ([WCAG 2.4.1](https://www.w3.org/WAI/WCAG22/Understanding/bypass-blocks.html), [1.3.1](https://www.w3.org/WAI/WCAG22/Understanding/info-and-relationships.html)).
+6. Label every control with a `<label for>` or a wrapping `<label>`, and name every landmark and region you have more than one of with `aria-label` or `aria-labelledby` ([WCAG 4.1.2](https://www.w3.org/WAI/WCAG22/Understanding/name-role-value.html)).
+7. Load `web-components/<name>.js` as a module for each `dui-*` element on the page. Without it the markup still works as plain HTML ([progressive enhancement](https://developer.mozilla.org/en-US/docs/Glossary/Progressive_Enhancement)).
+8. Check the page from a clone of this repository: `node scripts/check-markup.mjs page.html` fails on a `<style>`, an undocumented attribute, word or class, an inline style that sets anything else, and a `dui-*` element whose module is not loaded. Then check it with [axe](https://github.com/dequelabs/axe-core) and at 320px wide ([WCAG 1.4.10](https://www.w3.org/WAI/WCAG22/Understanding/reflow.html)).
+
+Compose before you invent: most interface "components" are arrangements of elements that already look finished together, such as a sign-in card (a `data-card` holding a form), a stat row (a `data-dashboard` of headed sections) or a confirm dialog (a `data-dialog` with a `<footer>` of buttons). This is rung 3 of the [decision ladder](https://github.com/odonckers/domestic-ui/blob/main/docs/ARCHITECTURE.md#3-the-decision-ladder). When a page needs something no composition can say, that is a gap in domestic-ui: [open an issue](https://github.com/odonckers/domestic-ui/issues/new) instead of adding CSS to the page. The vocabulary is part of the [public API](https://github.com/odonckers/domestic-ui/blob/main/docs/ARCHITECTURE.md#4-public-api-and-naming).
+
+### An application page
+
+The frame of every app screen: the [app shell](https://odonckers.github.io/domestic-ui/patterns/app-shell.md) with its sidebar, then a [page header](https://odonckers.github.io/domestic-ui/components/organisms/page-header.md) and the content. Swap the [dashboard](https://odonckers.github.io/domestic-ui/patterns/dashboard.md) for a [data table](https://odonckers.github.io/domestic-ui/patterns/data-table.md), [large form](https://odonckers.github.io/domestic-ui/patterns/large-forms.md) or [list-detail](https://odonckers.github.io/domestic-ui/patterns/list-detail.md). The [plain HTML demo](https://github.com/odonckers/domestic-ui/tree/main/demos/vanilla) has full dashboard, settings and orders screens written the same way.
+
+[`examples/pages/app-page.html`](https://github.com/odonckers/domestic-ui/blob/main/examples/pages/app-page.html):
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Overview · Northwind</title>
+    <meta name="description" content="The skeleton of an application page: app shell, sidebar navigation, page header and content, with no CSS of its own.">
+    <link rel="stylesheet" href="../../css/domestic.css">
+  </head>
+  <body>
+    <a class="visually-hidden" href="#main">Skip to main content</a>
+
+    <dui-app-shell data-app-shell>
+      <header>
+        <button type="button" aria-controls="app-nav" aria-expanded="true" hidden>
+          <svg data-icon viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true" focusable="false"><path d="M4 6h16M4 12h16M4 18h16"></path></svg>
+          Menu
+        </button>
+        <a href="app-page.html" data-link="quiet"><strong>Northwind</strong></a>
+        <dui-menu>
+          <button type="button" popovertarget="user-menu">Maria Santos</button>
+          <div id="user-menu" popover data-popover>
+            <a href="#profile">Profile</a>
+            <a href="#preferences">Preferences</a>
+            <hr>
+            <button type="button">Sign out</button>
+          </div>
+        </dui-menu>
+      </header>
+
+      <nav id="app-nav" aria-label="Main" data-nav>
+        <ul>
+          <li><a href="app-page.html" aria-current="page">Overview</a></li>
+          <li><a href="#orders">Orders</a></li>
+          <li><a href="#customers">Customers</a></li>
+          <li>
+            <details>
+              <summary>Settings</summary>
+              <ul>
+                <li><a href="#settings-general">General</a></li>
+                <li><a href="#settings-billing">Billing</a></li>
+              </ul>
+            </details>
+          </li>
+        </ul>
+      </nav>
+
+      <main id="main" class="stack">
+        <header data-page-header>
+          <h1>Overview</h1>
+          <p>How the warehouse is doing this week.</p>
+          <div class="cluster">
+            <a href="#new-order" data-button="primary">New order</a>
+            <button type="button" data-button="secondary">Export</button>
+          </div>
+        </header>
+
+        <div data-dashboard>
+          <section aria-labelledby="open-orders-title">
+            <h2 id="open-orders-title">Open orders</h2>
+            <p>18</p>
+            <p data-text="small muted">4 more than last week</p>
+          </section>
+          <section aria-labelledby="shipped-title">
+            <h2 id="shipped-title">Shipped this week</h2>
+            <p>126</p>
+            <p data-text="small muted">Since Monday</p>
+          </section>
+          <section aria-labelledby="late-title">
+            <h2 id="late-title">Late</h2>
+            <p>2</p>
+            <p><span data-badge="danger">Needs attention</span></p>
+          </section>
+          <section data-dashboard="full" aria-labelledby="recent-title">
+            <h2 id="recent-title">Recent orders</h2>
+            <section data-scroll="inline" aria-labelledby="recent-caption" tabindex="0">
+              <table data-table>
+                <caption id="recent-caption">The five newest orders</caption>
+                <thead>
+                  <tr>
+                    <th scope="col">Order</th>
+                    <th scope="col">Customer</th>
+                    <th scope="col">Status</th>
+                    <th scope="col" data-table="number">Total</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <th scope="row"><a href="#nw-2051">NW-2051</a></th>
+                    <td>Maple Street Bakery</td>
+                    <td><span data-badge="warning">Open</span></td>
+                    <td data-table="number">$216.00</td>
+                  </tr>
+                  <tr>
+                    <th scope="row"><a href="#nw-2050">NW-2050</a></th>
+                    <td>Harbor Lane Café</td>
+                    <td><span data-badge="accent">Packed</span></td>
+                    <td data-table="number">$126.00</td>
+                  </tr>
+                  <tr>
+                    <th scope="row"><a href="#nw-2049">NW-2049</a></th>
+                    <td>Riverside Dental</td>
+                    <td><span data-badge="success">Delivered</span></td>
+                    <td data-table="number">$185.00</td>
+                  </tr>
+                  <tr>
+                    <th scope="row"><a href="#nw-2048">NW-2048</a></th>
+                    <td>Summit Climbing Gym</td>
+                    <td><span data-badge>Shipped</span></td>
+                    <td data-table="number">$255.00</td>
+                  </tr>
+                  <tr>
+                    <th scope="row"><a href="#nw-2047">NW-2047</a></th>
+                    <td>Pine &amp; Co. Interiors</td>
+                    <td><span data-badge="danger">Late</span></td>
+                    <td data-table="number">$345.00</td>
+                  </tr>
+                </tbody>
+              </table>
+            </section>
+          </section>
+        </div>
+      </main>
+
+      <footer>
+        <p data-text="small muted">Northwind is an example app. MIT licensed.</p>
+      </footer>
+    </dui-app-shell>
+
+    <script type="module" src="../../web-components/dui-app-shell.js"></script>
+    <script type="module" src="../../web-components/dui-menu.js"></script>
+  </body>
+</html>
+```
+
+### The vocabulary
+
+Every attribute, word, class, custom element and custom property a page may use, read from the API comments in `css/` (the same list the checker uses). Each attribute links to its docs page. Native attributes (`aria-current`, `aria-sort`, `open`, `popover`, `closedby`) are not listed because they are HTML.
+
+Attributes (words combine, space-separated, where it makes sense: `data-button="primary small"`):
+
+- `data-action-bar`: bare ([docs](https://odonckers.github.io/domestic-ui/layouts/action-bar.md))
+- `data-alert`: `danger`, `dismiss`, `info`, `success`, `toasts`, `warning` ([docs](https://odonckers.github.io/domestic-ui/patterns/alerts.md))
+- `data-app-shell`: bare, or `contained`, `page` ([docs](https://odonckers.github.io/domestic-ui/patterns/app-shell.md))
+- `data-badge`: bare, or `accent`, `danger`, `neutral`, `outline`, `primary`, `success`, `warning` ([docs](https://odonckers.github.io/domestic-ui/components/atoms/badge.md))
+- `data-breadcrumb`: bare ([docs](https://odonckers.github.io/domestic-ui/patterns/breadcrumb.md))
+- `data-button`: bare, or `danger`, `icon`, `large`, `primary`, `quiet`, `secondary`, `small` ([docs](https://odonckers.github.io/domestic-ui/components/atoms/button.md))
+- `data-card`: bare, or `link` ([docs](https://odonckers.github.io/domestic-ui/patterns/card.md))
+- `data-color-scheme`: `dark`, `light` ([docs](https://odonckers.github.io/domestic-ui/principles/theming.md))
+- `data-contrast`: bare, or `more` ([docs](https://odonckers.github.io/domestic-ui/principles/theming.md))
+- `data-dashboard`: bare, or `full`, `wide` ([docs](https://odonckers.github.io/domestic-ui/patterns/dashboard.md))
+- `data-density`: `comfortable`, `compact` ([docs](https://odonckers.github.io/domestic-ui/principles/theming.md))
+- `data-dialog`: bare, or `drawer`, `end`, `start` ([docs](https://odonckers.github.io/domestic-ui/patterns/dialog.md))
+- `data-disclosure`: `accordion`, `plain` ([docs](https://odonckers.github.io/domestic-ui/patterns/disclosure.md))
+- `data-field`: bare, or `error`, `hint` ([docs](https://odonckers.github.io/domestic-ui/components/atoms/field.md))
+- `data-filter-bar`: bare ([docs](https://odonckers.github.io/domestic-ui/patterns/filter-bar.md))
+- `data-form-sections`: bare ([docs](https://odonckers.github.io/domestic-ui/patterns/large-forms.md))
+- `data-icon`: bare, or `mirror` ([docs](https://odonckers.github.io/domestic-ui/components/atoms/icon.md))
+- `data-link`: `nav`, `quiet` ([docs](https://odonckers.github.io/domestic-ui/components/atoms/link.md))
+- `data-list-detail`: bare ([docs](https://odonckers.github.io/domestic-ui/patterns/list-detail.md))
+- `data-motion`: bare, or `none`, `reduced` ([docs](https://odonckers.github.io/domestic-ui/principles/theming.md))
+- `data-nav`: bare, or `horizontal`, `vertical` ([docs](https://odonckers.github.io/domestic-ui/patterns/nav.md))
+- `data-page-header`: bare ([docs](https://odonckers.github.io/domestic-ui/components/organisms/page-header.md))
+- `data-pagination`: bare ([docs](https://odonckers.github.io/domestic-ui/patterns/pagination.md))
+- `data-popover`: bare, or `block-start`, `inline-end`, `inline-start` ([docs](https://odonckers.github.io/domestic-ui/patterns/popover.md))
+- `data-scroll`: `block`, `inline` ([docs](https://odonckers.github.io/domestic-ui/layouts/scroll.md))
+- `data-split`: bare, or `1:1`, `1:2`, `2:1` ([docs](https://odonckers.github.io/domestic-ui/patterns/split.md))
+- `data-table`: bare, or `number`, `sortable`, `sticky` ([docs](https://odonckers.github.io/domestic-ui/patterns/data-table.md))
+- `data-text`: `lead`, `muted`, `small` ([docs](https://odonckers.github.io/domestic-ui/components/atoms/text.md))
+- `data-theme`: `calm`, `compact`, `soft` ([docs](https://odonckers.github.io/domestic-ui/principles/themes.md))
+
+Classes: `cluster`, `grid`, `stack`, `visually-hidden`.
+
+Custom elements (load `web-components/<name>.js` as a module): `dui-app-shell`, `dui-combobox`, `dui-menu`, `dui-table`, `dui-tabs`, `dui-toaster`, `dui-toolbar`, `dui-tooltip`.
+
+Knobs, the only custom properties a `style` attribute should set besides semantic `--dui-*` tokens: `--cluster-align`, `--cluster-gap`, `--cluster-justify`, `--dui-contrast`, `--dui-size-pane`, `--dui-size-sidebar`, `--dui-size-sidebar-aux`, `--grid-gap`, `--grid-min`, `--stack-gap`.
+
+### Which pattern for which job
+
+| You need | Use |
+| --- | --- |
+| The frame of an app: bar, sidebar, content | [App shell](https://odonckers.github.io/domestic-ui/patterns/app-shell.md) |
+| A title, description and actions at the top of a screen | [Page header](https://odonckers.github.io/domestic-ui/components/organisms/page-header.md) |
+| Summary numbers and panels that reflow | [Dashboard](https://odonckers.github.io/domestic-ui/patterns/dashboard.md) |
+| A grid of teasers, each with one link | [Card](https://odonckers.github.io/domestic-ui/patterns/card.md) in a [`.grid`](https://odonckers.github.io/domestic-ui/layouts/grid.md) |
+| Rows of records, sorting, selection | [Data table](https://odonckers.github.io/domestic-ui/patterns/data-table.md) with `<dui-table>` |
+| Narrowing a list or table | [Filter bar](https://odonckers.github.io/domestic-ui/patterns/filter-bar.md) |
+| A long form in groups, with Save at the bottom | [Large forms](https://odonckers.github.io/domestic-ui/patterns/large-forms.md) and the [action bar](https://odonckers.github.io/domestic-ui/layouts/action-bar.md) |
+| Settings, or a list beside the selected item | [List-detail](https://odonckers.github.io/domestic-ui/patterns/list-detail.md) |
+| Views of one thing, one at a time | [Tabs](https://odonckers.github.io/domestic-ui/patterns/tabs.md), only when the views are peers; otherwise links |
+| A confirmation or a short task on top of the page | [Dialog](https://odonckers.github.io/domestic-ui/patterns/dialog.md) |
+| Actions behind one button | [Menu button](https://odonckers.github.io/domestic-ui/patterns/menu-button.md) |
+| A status message | [Alerts](https://odonckers.github.io/domestic-ui/patterns/alerts.md): inline, live or a toast |
+| Show more or less | [Disclosure](https://odonckers.github.io/domestic-ui/patterns/disclosure.md) |
+
 ## domestic-ui
 
 Page: https://odonckers.github.io/domestic-ui/index.html
@@ -1728,6 +1951,7 @@ Page: https://odonckers.github.io/domestic-ui/principles/tooling.html
 | `lint:html` | [html-validate](https://html-validate.org/) | `examples/**/*.html` against `html-validate:recommended` |
 | `lint:css` | [Stylelint](https://stylelint.io/) | `css/**/*.css` against `stylelint-config-standard` |
 | `lint:tokens` | `scripts/check-tokens.mjs` | Semantic-only tokens and no literal colors or sizes outside `css/tokens/` |
+| `lint:markup` | `scripts/check-markup.mjs` | Pages use only the vocabulary the CSS API comments document: `examples/pages/` and `demos/vanilla/` have no `<style>`, no inline style but documented custom properties and semantic tokens, and no undocumented class, attribute or word; every example uses documented words and loads the module of each `dui-*` element; every word a CSS selector matches is documented |
 | `test:a11y` | [Playwright](https://playwright.dev/) + [axe-core](https://github.com/dequelabs/axe-core) | Every `examples/**/*.html` (atoms and molecules included) in light and dark, in Chromium, Firefox and WebKit, with tags `wcag2a`, `wcag2aa`, `wcag21a`, `wcag21aa`, `wcag22aa`, including open dialogs and drawers, open popovers and menus, shown tooltips and toasts, every tab selected and every details expanded; no horizontal page overflow and no axe violations at 320×640 and 375×812; no external requests; token contrast pairs (atoms and molecules included) in the default and forest themes; rendered focus-ring and indicator contrast; atom and molecule states through accessibility APIs; molecule keyboard behavior against the APG; no-JavaScript fallbacks; fallbacks for engine-specific features; scoped theming of atoms and molecules; layouts and organisms side by side when wide and stacked when narrow, the sticky action bar never covering the focused field, data table sorting, selection, sticky header and loading state (with and without JavaScript), and 24px targets in compact density; the app shell's landmarks and grid areas, collapse when wide, modal drawers with focus return when narrow, one copy of each sidebar, no-JavaScript fallbacks and axe with the drawers open |
 
 Preview locally with `npm run serve` (a zero-dependency static server) and open
@@ -2979,7 +3203,7 @@ _Diagram: A cluster is a row of buttons, tags or nav links under a heading that 
 #### Cluster
 
 ```html
-<ul class="cluster card">
+<ul class="cluster">
   <li><code>reset</code></li>
   <li><code>tokens</code></li>
   <li><code>base</code></li>
@@ -3035,15 +3259,15 @@ _Diagram: A grid lays out cards or panels in the content area in as many equal c
 
 ```html
 <div class="grid" style="--grid-min: 12rem">
-  <article class="card">
+  <article data-card>
     <h4>Atoms</h4>
     <p>Native elements styled by the base layer, plus a few attributes.</p>
   </article>
-  <article class="card">
+  <article data-card>
     <h4>Molecules</h4>
     <p>Small groups of atoms, such as tabs, dialogs and cards.</p>
   </article>
-  <article class="card">
+  <article data-card>
     <h4>Organisms</h4>
     <p>Larger sections built from molecules. Coming later.</p>
   </article>
@@ -3176,7 +3400,7 @@ _Diagram: A stack is the vertical flow of a page or form in the content area: he
 #### Stack
 
 ```html
-<div class="stack card" style="--stack-gap: var(--dui-space-xs)">
+<div class="stack" style="--stack-gap: var(--dui-space-xs)">
   <p>Stack item one</p>
   <p>Stack item two, with <code>--stack-gap: var(--dui-space-xs)</code></p>
   <p>Stack item three</p>
