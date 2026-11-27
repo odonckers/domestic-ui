@@ -5851,6 +5851,49 @@ _Diagram: The app shell is the whole frame of an app: the app bar across the top
 </aside>
 ```
 
+#### App shell with content on the frame
+
+```html
+<dui-app-shell data-app-shell="contained page" style="--dui-size-pane: 36rem">
+  <header aria-label="Northwind reports">
+    <button type="button" aria-controls="report-nav" aria-expanded="true" hidden>Menu</button>
+    <a href="?view=home" data-link="quiet"><strong>Northwind</strong></a>
+  </header>
+  <nav id="report-nav" aria-label="Reports" data-nav="vertical">
+    <ul>
+      <li><a href="?report=q2">Q2 report</a></li>
+      <li><a href="?report=q3" aria-current="page">Q3 report</a></li>
+    </ul>
+  </nav>
+  <main id="main" class="stack" tabindex="-1">
+    <hgroup>
+      <h2>Q3 report</h2>
+      <p>All regions, July to September.</p>
+    </hgroup>
+    <section data-card aria-labelledby="report-summary-title">
+      <h3 id="report-summary-title">Summary</h3>
+      <p>Revenue grew in every region. Europe led with the Bletchley Instruments renewal; the Americas recovered after a slow July.</p>
+      <p>Open balances fell to €18,400, the lowest this year, after the March invoices were paid.</p>
+    </section>
+    <section data-card aria-labelledby="report-regions-title">
+      <h3 id="report-regions-title">Regions</h3>
+      <dl>
+        <dt>Europe</dt>
+        <dd>€214,000, up 12%</dd>
+        <dt>Americas</dt>
+        <dd>€158,000, up 4%</dd>
+        <dt>Asia Pacific</dt>
+        <dd>€97,000, up 9%</dd>
+      </dl>
+    </section>
+    <section data-card aria-labelledby="report-next-title">
+      <h3 id="report-next-title">Next quarter</h3>
+      <p>Two renewals are due in October. The forecast assumes both renew at the current rate.</p>
+    </section>
+  </main>
+</dui-app-shell>
+```
+
 #### Contained app shell
 
 ```html
@@ -5883,7 +5926,7 @@ _Diagram: The app shell is the whole frame of an app: the app bar across the top
       </li>
     </ul>
   </nav>
-  <main id="main" class="stack">
+  <main id="main" class="stack" tabindex="-1">
     <header data-page-header>
       <h2>Accounts</h2>
       <p>Customers with an open balance.</p>
@@ -5925,6 +5968,7 @@ _Diagram: The app shell is the whole frame of an app: the app bar across the top
 | --- | --- | --- |
 | `data-app-shell` | a wrapper (or `<dui-app-shell>`), after the skip link |  |
 | `data-app-shell="contained"` |  | the shell is `--dui-size-pane` tall and scrolls inside its own box (a shell inside a page section) |
+| `data-app-shell="page"` |  | the page scrolls under a sticky app bar instead of main scrolling inside its panel: main sits on the frame and each `data-card` directly in it is a panel. Combines with contained ("contained page") |
 
 Children, in source order:
 
@@ -5932,12 +5976,16 @@ Children, in source order:
 | --- | --- |
 | `<header>` | the app bar: app name, toggles, search, user menu |
 | `<nav aria-label> or <aside aria-label>` | the primary sidebar (before `<main>`) |
-| `<main id>` | the content |
+| `<main id tabindex="-1">` | the content: the panel that scrolls, or with "page" the frame holding text and `data-card` panels |
 | `<aside aria-label>` | optional auxiliary sidebar (after `<main>`) |
 | `<footer>` | optional |
 | `<button type="button" aria-controls="sidebar-id" aria-expanded="true" hidden>` | a sidebar's toggle; `<dui-app-shell>` shows it. `aria-expanded="false"` in the markup starts the sidebar collapsed when it sits beside main. Icon only (`data-button="quiet icon"`, Lucide panel-left or panel-right, visually hidden name) inside a `<dui-tooltip>` with the same words |
 | `--dui-size-sidebar, --dui-size-sidebar-aux` | sidebar widths beside main |
 | `--dui-size-pane` | max block size of a sidebar beside main; the block size of a contained shell |
+
+#### Scrolling
+
+When the primary sidebar sits beside main, the shell is `--dui-size-pane` tall and main, the content panel, is the scroll container: the app bar, the sidebars and the footer stay where they are and only the panel's content moves. Give `<main>` `tabindex="-1"` so the skip link moves focus into it; the arrow keys and Page Up and Page Down then scroll it (WCAG 2.1.1). `data-app-shell="page"` opts out: main is no panel but sits on the frame with the app bar, the document scrolls, the app bar sticks to the top and main's content slides under it, and each `data-card` directly in main takes the panel's look, so a page can mix headings and text on the frame with one or more panels. Stacked, the document scrolls in both modes. Our choice: the panel stays put by default because an app's chrome should not move while you read its content (Linear and Vercel scroll the panel, not the page); content on the frame is the author's explicit choice. Stacked shells keep page scrolling because a nested scroller on a phone stops the browser's own toolbars from collapsing. The shell's own height follows a media query (a container query cannot style its own container); a shell narrower than the window falls back to scrolling inside its own box.
 
 #### Motion
 
@@ -5960,7 +6008,7 @@ The primary sidebar sits beside main from 48rem of the shell's own inline size, 
 - Without JavaScript both are always visible: stacked above and below main when narrow, beside it when wide.
 - Toggle buttons are native buttons with aria-controls and aria-expanded (APG Disclosure); they carry the hidden attribute in the markup and the script shows them, so there is never a button that does nothing.
 - A collapsed sidebar has the hidden attribute, so it is gone for assistive technology and the Tab order as well.
-- Sidebars that sit beside main stick to the top of the scroll area and scroll on their own, at most --dui-size-pane tall; their columns run to the end of the shell and the footer sits between them, so they never cover it.
+- Sidebars that sit beside main scroll on their own; their columns run to the end of the shell and the footer sits between them, so they never cover it.
 - They are not focus traps and hold focusable links, so the keyboard reaches everything in them (WCAG 2.1.1).
 - Nothing scrolls sideways at 320px (WCAG 1.4.10): the app bar wraps, the search taking its own row.
 
@@ -5970,6 +6018,8 @@ The primary sidebar sits beside main from 48rem of the shell's own inline size, 
 - [HTML `<main>` element](https://html.spec.whatwg.org/multipage/grouping-content.html#the-main-element)
 - [HTML `<aside>` element](https://html.spec.whatwg.org/multipage/sections.html#the-aside-element)
 - [WCAG 1.4.10 Reflow](https://www.w3.org/WAI/WCAG22/Understanding/reflow.html)
+- [MDN `overflow`](https://developer.mozilla.org/en-US/docs/Web/CSS/overflow)
+- [MDN sticky positioning](https://developer.mozilla.org/en-US/docs/Web/CSS/position#sticky_positioning)
 - [linear.app how we redesigned the linear ui](https://linear.app/blog/how-we-redesigned-the-linear-ui)
 - [MDN `grid-template-areas`](https://developer.mozilla.org/en-US/docs/Web/CSS/grid-template-areas)
 - [MDN Container queries](https://developer.mozilla.org/en-US/docs/Web/CSS/Guides/Containment/Container_queries)

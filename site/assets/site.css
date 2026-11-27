@@ -12,47 +12,6 @@
  */
 :root {
   --dui-font-body: inter, system-ui, sans-serif;
-
-  /* The app bar's block size on one row: a control, its block padding and the bottom hairline. */
-  --docs-header-size: calc(var(--dui-size-control) + var(--dui-space-xs) * 2 + var(--dui-border-width));
-}
-
-/*
- * A sticky app bar where the sidebar sits beside main (app-shell.css's
- * 48rem breakpoint). Translucent with backdrop-filter; solid under
- * prefers-reduced-transparency and in forced colors. The floating panels
- * stick below it, and scroll-padding keeps focused and targeted elements
- * clear of it (WCAG 2.4.11).
- * https://developer.mozilla.org/en-US/docs/Web/CSS/backdrop-filter
- * https://developer.mozilla.org/en-US/docs/Web/CSS/@media/prefers-reduced-transparency
- * https://www.w3.org/WAI/WCAG22/Understanding/focus-not-obscured-minimum.html
- */
-@container dui-app-shell (inline-size >= 48rem) {
-  .docs-shell > header {
-    position: sticky;
-    inset-block-start: 0;
-    z-index: 2;
-    background-color: color-mix(in oklab, var(--dui-color-surface-frame) 80%, transparent);
-    backdrop-filter: blur(var(--dui-space-s)) saturate(1.5);
-  }
-
-  .docs-shell > :is(nav, aside) {
-    inset-block-start: calc(var(--docs-header-size) + var(--dui-space-panel-inset));
-    max-block-size: calc(var(--dui-size-pane) - var(--docs-header-size) - var(--dui-space-panel-inset) * 2);
-  }
-}
-
-@media (min-width: 48rem) {
-  :root {
-    scroll-padding-block-start: calc(var(--docs-header-size) + var(--dui-space-s));
-  }
-}
-
-@media (prefers-reduced-transparency: reduce), (forced-colors: active) {
-  .docs-shell > header {
-    background-color: var(--dui-color-surface-frame);
-    backdrop-filter: none;
-  }
 }
 
 /*
@@ -360,25 +319,26 @@
   }
 }
 
-/* Previous and next, in the footer before its small print: at the two ends of the row. */
-.docs-shell > footer > [data-pagination] {
+/*
+ * The page footer ends main (app-shell.css scrolls main inside its panel,
+ * so a footer outside it would stay on screen): previous and next, then
+ * the small print. Previous and next sit at the two ends of the row.
+ */
+.docs-footer {
+  max-inline-size: var(--dui-measure);
+  margin-block-start: var(--dui-space-2xl);
+  padding-block-start: var(--dui-space-m);
+  border-block-start: var(--dui-border-width) solid var(--dui-color-border);
+  color: var(--dui-color-text-muted);
+}
+
+.docs-footer > [data-pagination] {
   max-inline-size: var(--dui-measure);
   margin-block-end: var(--dui-space-l);
 }
 
-.docs-shell > footer > [data-pagination] > ul {
+.docs-footer > [data-pagination] > ul {
   justify-content: space-between;
-}
-
-/*
- * Beside a sidebar (app-shell.css's 48rem breakpoint) main pads by
- * --dui-space-l and the footer by --dui-space-m: line the links up with
- * the page's start edge.
- */
-@container dui-app-shell (inline-size >= 48rem) {
-  .docs-shell > footer > [data-pagination] {
-    margin-inline-start: calc(var(--dui-space-l) - var(--dui-space-m));
-  }
 }
 
 /*

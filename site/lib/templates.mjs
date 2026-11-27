@@ -6,7 +6,8 @@
  * - The frame is the app shell (css/layout/app-shell.css,
  *   web-components/dui-app-shell.js): landmarks in source order, app bar
  *   <header>, the Docs <nav> sidebar, <main>, an optional "On this page"
- *   <aside>, <footer>. Narrow screens get the sidebar as a modal drawer from
+ *   <aside>. The page footer (previous and next, small print) ends <main>,
+ *   which scrolls inside its panel beside the sidebar. Narrow screens get the sidebar as a modal drawer from
  *   the Menu button; without JavaScript it stacks above main.
  * - The skip link comes before the shell and is the first focusable
  *   element (2.4.1 Bypass Blocks). It reuses the .visually-hidden utility,
@@ -108,11 +109,11 @@ ${/role="region"/.test(body) ? `${REGIONS_NOTE}\n` : ""}${renderBreadcrumb(page,
 <h1>${escapeHtml(page.heading)}</h1>
 ${body}
         </article>
-      </main>${toc}
-      <footer>
+        <footer class="docs-footer">
 ${renderPrevNext(page, tree, link)}
-        <p><small>domestic-ui is <a href="${BLOB_URL}LICENSE">MIT licensed</a>. <a href="${REPO_URL}">Source on GitHub</a>. <a href="${escapeHtml(page.source.href)}">${escapeHtml(page.source.label)}</a>. <a href="${link("llms.txt")}">llms.txt</a></small></p>
-      </footer>
+          <p><small>domestic-ui is <a href="${BLOB_URL}LICENSE">MIT licensed</a>. <a href="${REPO_URL}">Source on GitHub</a>. <a href="${escapeHtml(page.source.href)}">${escapeHtml(page.source.label)}</a>. <a href="${link("llms.txt")}">llms.txt</a></small></p>
+        </footer>
+      </main>${toc}
     </dui-app-shell>
 ${searchDialogHtml(link)}
   </body>
