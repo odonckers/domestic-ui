@@ -53,6 +53,10 @@ export const PAIRS = [
   // each fill it touches. Primary adds an inner ring in its text color.
   ["--dui-color-primary-contrast", "--dui-color-primary", 3], // primary inner ring on fill
   ["--dui-color-primary-contrast", "--dui-color-primary-hover", 3], // primary inner ring, hover
+  // Danger buttons: white text on the danger fill and its hover. The fill needs no 3:1
+  // against the page: the visible label identifies the button (PRINCIPLES.md, Non-text contrast).
+  ["--dui-color-danger-contrast", "--dui-color-danger-solid", 4.5],
+  ["--dui-color-danger-contrast", "--dui-color-danger-solid-hover", 4.5],
 
   // Atoms: switch (css/components/atoms/switch.css). Track border and off thumb
   // are --dui-color-border-control on the surface (above).

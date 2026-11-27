@@ -30,7 +30,9 @@
  *
  * Not color alone (WCAG 1.4.1): the error text starts with "Error:" (write it
  * in the markup so every user and screen reader gets it), and an invalid
- * control gets a thick start border as well as the danger color.
+ * control gets a 3px halo around it as well as the danger border, so its
+ * outline changes shape too. Our choice: the halo follows shadcn/ui's
+ * aria-invalid ring, for comparison (https://ui.shadcn.com/docs/components/input).
  * Hide an error that does not apply with the hidden attribute and remove its id
  * from aria-describedby.
  *
@@ -69,19 +71,12 @@
 [data-field="error"] {
   color: var(--dui-color-danger);
   font-size: var(--dui-step--1);
-  font-weight: var(--dui-font-weight-strong);
 }
 
-/*
- * Invalid controls, wherever they are: a color and a shape change.
- * Our choice: the leading corners are square so the accent edge stays straight
- * (see blockquote in css/base/typography.css).
- */
+/* Invalid controls, wherever they are: the danger border and a halo. */
 :is(input, select, textarea):is([aria-invalid="true"], :user-invalid) {
   border-color: var(--dui-color-danger);
-  border-inline-start-width: var(--dui-border-width-emphasis);
-  border-start-start-radius: 0;
-  border-end-start-radius: 0;
+  box-shadow: var(--dui-elevation-control), 0 0 0 var(--dui-focus-width) var(--dui-color-danger-halo);
 }
 
 @media (forced-colors: active) {
