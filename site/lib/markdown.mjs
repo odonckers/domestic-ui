@@ -5,13 +5,16 @@
  * following CommonMark (https://spec.commonmark.org/) and GFM tables
  * (https://github.github.com/gfm/#tables-extension-):
  *
- *   ATX headings, paragraphs, nested lists (by indentation), pipe tables,
- *   fenced code blocks, inline code, **bold**, *italics* / _italics_,
- *   [links](url), <https://autolinks>, backslash escapes, and a short
- *   allowlist of inline HTML tags such as <kbd> and <br>.
+ *   ATX headings, paragraphs, nested lists (by indentation) whose items
+ *   may hold a pipe table, pipe tables, fenced code blocks, inline code,
+ *   **bold**, *italics* / _italics_, [links](url), reference links
+ *   ([text][label], [label][] and [label], with "[label]: url"
+ *   definitions; https://spec.commonmark.org/0.31.2/#link-reference-definitions),
+ *   <https://autolinks>, backslash escapes, and a short allowlist of inline
+ *   HTML tags such as <kbd> and <br>.
  *
  * Everything else is escaped. It is not a general Markdown parser: no
- * block quotes, setext headings, reference links or raw HTML blocks.
+ * block quotes, setext headings or raw HTML blocks.
  */
 import { escapeHtml, unescapeHtml, slugify } from "./util.mjs";
 
@@ -21,6 +24,7 @@ import { escapeHtml, unescapeHtml, slugify } from "./util.mjs";
  * @property {Set<string>} [ids] heading ids already used on the page
  * @property {number} [headingShift] added to every heading level
  * @property {string} [caption] name for tables and code with no heading above them (the page's h1)
+ * @property {Map<string, string>} [refs] link reference definitions, by normalized label (set by markdownToHtml)
  *
  * @typedef {{ type: "heading", level: number, text: string, raw: string }
  *   | { type: "code", lang: string, code: string, raw: string }
@@ -35,6 +39,11 @@ const FENCE = /^ {0,3}(`{3,}|~{3,})\s*([\w-]*)\s*$/;
 const HEADING = /^ {0,3}(#{1,6})\s+(.*?)(?:\s+#+)?\s*$/;
 const LIST_ITEM = /^(\s*)([-*+]|\d{1,9}[.)])(\s+)(.*)$/;
 const TABLE_DELIMITER = /^\s*\|?\s*:?-+:?\s*(\|\s*:?-+:?\s*)*\|?\s*$/;
+/** A link reference definition on one line: [label]: url, optionally "title". */
+const DEFINITION = /^ {0,3}\[([^\]]+)\]:\s*<?([^\s>]+)>?(?:\s+(?:"[^"]*"|'[^']*'|\([^)]*\)))?\s*$/;
+
+/** Labels match case-insensitively with runs of whitespace collapsed (CommonMark). @param {string} label */
+const normalizeLabel = (label) => label.trim().replace(/\s+/g, " ").toLowerCase();
 
 const isTableStart = (lines, i) => lines[i].trim().startsWith("|") && i + 1 < lines.length && TABLE_DELIMITER.test(lines[i + 1]);
 const startsBlock = (lines, i) => FENCE.test(lines[i]) || HEADING.test(lines[i]) || isTableStart(lines, i) || LIST_ITEM.test(lines[i]);
@@ -166,6 +175,14 @@ export function inline(text, options = {}) {
   s = s.replace(/\[([^\]]*)\]\(([^()\s]+)(?:\s+"([^"]*)")?\)/g, (_, label, href) =>
     hold(`<a href="${escapeHtml(resolve(href))}">${emphasis(label)}</a>`),
   );
+  const refs = options.refs;
+  if (refs?.size) {
+    // Full [text][label], collapsed [label][] and shortcut [label]; an undefined label stays text.
+    s = s.replace(/\[([^\[\]]+)\](?:\[([^\[\]]*)\])?(?!\()/g, (all, text, label) => {
+      const href = refs.get(normalizeLabel(label || text));
+      return href === undefined ? all : hold(`<a href="${escapeHtml(resolve(href))}">${emphasis(text)}</a>`);
+    });
+  }
   s = s.replace(INLINE_HTML, (tag) => hold(tag));
   s = emphasis(s);
   while (/\u0000\d+\u0000/.test(s)) s = s.replace(/\u0000(\d+)\u0000/g, (_, n) => slots[Number(n)]);
@@ -200,16 +217,51 @@ export function uniqueId(text, ids) {
   return id;
 }
 
-/** @param {ListItem[]} items @param {Options} options @returns {string} */
-function renderList(items, options) {
+/**
+ * @param {ListItem[]} items
+ * @param {Options} options
+ * @param {(rows: string[][]) => string} table renders a pipe table inside an item
+ * @returns {string}
+ */
+function renderList(items, options, table) {
   const ordered = items[0]?.ordered;
   const start = ordered && items[0].start !== 1 ? ` start="${items[0].start}"` : "";
   const tag = ordered ? "ol" : "ul";
   const lis = items.map((item) => {
-    const nested = item.children.length ? `\n${renderList(item.children, options)}\n` : "";
-    return `<li>${inline(item.text, options)}${nested}</li>`;
+    const nested = item.children.length ? `\n${renderList(item.children, options, table)}\n` : "";
+    return `<li>${itemContent(item.text, options, table)}${nested}</li>`;
   });
   return `<${tag}${start}>\n${lis.join("\n")}\n</${tag}>`;
+}
+
+/**
+ * An item's text as inline Markdown, except pipe tables in it, which
+ * render as tables (a list item holds blocks: https://spec.commonmark.org/0.31.2/#list-items).
+ * @param {string} text
+ * @param {Options} options
+ * @param {(rows: string[][]) => string} table
+ */
+function itemContent(text, options, table) {
+  const lines = text.split("\n");
+  /** @type {string[]} */
+  const parts = [];
+  /** @type {string[]} */
+  let run = [];
+  const flush = () => {
+    if (run.length) parts.push(inline(run.join("\n"), options));
+    run = [];
+  };
+  for (let i = 0; i < lines.length; ) {
+    if (isTableStart(lines, i)) {
+      flush();
+      const rows = [splitRow(lines[i])];
+      i += 2;
+      while (i < lines.length && lines[i].trim().startsWith("|")) rows.push(splitRow(lines[i++]));
+      parts.push(table(rows));
+    } else run.push(lines[i++]);
+  }
+  flush();
+  return parts.join("\n");
 }
 
 /**
@@ -242,7 +294,34 @@ export function markdownToHtml(md, options = {}) {
     seen.set(key, n);
     return n;
   };
-  return tokenize(md)
+  const blocks = tokenize(md);
+  // Link reference definitions start a paragraph (they cannot interrupt one); they render as nothing.
+  /** @type {Map<string, string>} */
+  const refs = new Map();
+  for (const block of blocks) {
+    if (block.type !== "paragraph") continue;
+    const lines = block.text.split("\n");
+    let n = 0;
+    for (let m; n < lines.length && (m = lines[n].match(DEFINITION)); n++) {
+      const label = normalizeLabel(m[1]);
+      if (!refs.has(label)) refs.set(label, m[2]); // the first definition wins
+    }
+    if (n) block.text = lines.slice(n).join("\n");
+  }
+  options = refs.size ? { ...options, refs } : options;
+  /** A pipe table in a region, named by the nearest heading. @param {string[][]} rows */
+  const table = (rows) => {
+    const [head, ...body] = rows;
+    const n = nth("table");
+    const name = n === 1 && heading.id ? `aria-labelledby="${heading.id}"` : `aria-label="${escapeHtml(`${heading.text || "Table"}${n > 1 ? ` (${n})` : ""}`)}"`;
+    const ths = head.map((cell) => `<th scope="col">${inline(cell, options)}</th>`).join("");
+    const trs = body.map(
+      (row) =>
+        `<tr>${row.map((cell, c) => (c === 0 ? `<th scope="row">${inline(cell, options)}</th>` : `<td>${inline(cell, options)}</td>`)).join("")}</tr>`,
+    );
+    return `<div data-scroll="inline" role="region" tabindex="0" ${name}>\n<table ${name}>\n<thead>\n<tr>${ths}</tr>\n</thead>\n<tbody>\n${trs.join("\n")}\n</tbody>\n</table>\n</div>`;
+  };
+  return blocks
     .map((block) => {
       switch (block.type) {
         case "heading": {
@@ -259,21 +338,12 @@ export function markdownToHtml(md, options = {}) {
           const name = `Code${heading.text ? `: ${heading.text}` : ""}${n > 1 ? ` (${n})` : ""}`;
           return `<pre data-scroll="inline" role="region" tabindex="0" aria-label="${escapeHtml(name)}"><code${lang}>${escapeHtml(block.code)}</code></pre>`;
         }
-        case "table": {
-          const [head, ...body] = block.rows;
-          const n = nth("table");
-          const name = n === 1 && heading.id ? `aria-labelledby="${heading.id}"` : `aria-label="${escapeHtml(`${heading.text || "Table"}${n > 1 ? ` (${n})` : ""}`)}"`;
-          const ths = head.map((cell) => `<th scope="col">${inline(cell, options)}</th>`).join("");
-          const trs = body.map(
-            (row) =>
-              `<tr>${row.map((cell, c) => (c === 0 ? `<th scope="row">${inline(cell, options)}</th>` : `<td>${inline(cell, options)}</td>`)).join("")}</tr>`,
-          );
-          return `<div data-scroll="inline" role="region" tabindex="0" ${name}>\n<table ${name}>\n<thead>\n<tr>${ths}</tr>\n</thead>\n<tbody>\n${trs.join("\n")}\n</tbody>\n</table>\n</div>`;
-        }
+        case "table":
+          return table(block.rows);
         case "list":
-          return renderList(block.items, options);
+          return renderList(block.items, options, table);
         default:
-          return `<p>${inline(block.text, options)}</p>`;
+          return block.text.trim() ? `<p>${inline(block.text, options)}</p>` : "";
       }
     })
     .join("\n");
