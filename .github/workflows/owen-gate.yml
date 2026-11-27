@@ -10,7 +10,6 @@ name: Owen approval gate
 on:
   pull_request:
     types: [opened, synchronize, reopened]
-  merge_group:
 
 permissions: {}
 

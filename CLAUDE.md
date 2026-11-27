@@ -55,6 +55,7 @@ Read [PRINCIPLES.md](PRINCIPLES.md) before changing behavior. [CONTRIBUTING.md](
 ## Branches, checks and merging
 
 - Never push to `main`. The "Protect main" ruleset requires the `ci` check (and, until it is removed from the ruleset, the retired `owen-gate` check, which always passes) and up-to-date branches; force-pushes and deleting `main` are blocked.
-- Merging takes turns through the [Merge turn](https://github.com/odonckers/domestic-ui/issues/128) issue: when your PR is green, comment `claim #N` there (wait if the newest claim has no `released` and is under 40 minutes old; older is stale), merge `main` into the branch (`git merge origin/main`), squash-merge once CI is green, then comment `released #N`. Outside a turn, merge `main` in only to resolve a conflict. Never rebase or force-push a pushed branch. - Squash merge only, once CI is green. The maintainer merges unless they ask you to in the session; never enable auto-merge. Breaking changes always need the maintainer's go-ahead.
+- Merge when green. Merge `main` into a branch (`git merge origin/main`) only when it is behind or has a conflict. Never rebase or force-push a pushed branch.
+- Squash merge only, once CI is green. The maintainer merges unless they ask you to in the session; never enable auto-merge. Breaking changes always need the maintainer's go-ahead.
 - Outside PRs get the same review and CI as ours; there is no approval label. First-time contributors' CI runs need a maintainer to approve the workflow run.
 - No npm publish, no release tag and no repository-setting change unless the maintainer asks for it in the session.

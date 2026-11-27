@@ -22,13 +22,7 @@ Branch names follow `fix/short-description`, `feat/short-description`, `docs/sho
 
 Every pull request, from inside or outside the project, gets the same review and must pass CI before it merges. GitHub holds CI on a first-time contributor's pull request until a maintainer approves the workflow run.
 
-A pull request squash-merges once it is approved and CI is green on a branch that is up to date with `main`. To keep merges from making each other's branches stale, merging takes turns through the pinned [Merge turn](https://github.com/odonckers/domestic-ui/issues/128) issue:
-
-1. When your pull request is green, check the issue. If the newest `claim` has no matching `released` and is under 40 minutes old, wait.
-2. Comment `claim #<your PR>`, merge `main` into your branch if it is behind, and wait for CI.
-3. Squash-merge when CI is green (or release the turn if a fix will take a while), then comment `released #<your PR>`.
-
-A claim with no `released` after 40 minutes is stale, and the next pull request may take the turn. Outside a turn, merge `main` into a branch only to resolve a conflict.
+A pull request squash-merges once it is approved and CI is green. The ruleset requires the branch to be up to date with `main`, so merge `main` into it when it is behind or has a conflict, and otherwise leave it alone.
 
 `.github/CODEOWNERS` lists @odonckers on every file. That file is informational today: team bots push with the same GitHub account as Owen, so GitHub cannot tell his review apart from a bot's.
 
