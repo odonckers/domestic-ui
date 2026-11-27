@@ -12,7 +12,7 @@ import { DIAGRAM_DIR, checkDiagrams, diagramProblems, loadDiagrams } from "../si
 import { navLabel } from "../site/lib/nav.mjs";
 import { escapeHtml, unescapeHtml } from "../site/lib/util.mjs";
 import { SITE_DIR, WCAG_TAGS, builtPages, livePages, redirectPages, summarize } from "./docs-helpers.js";
-import { blockExternalRequests, examples, schemes } from "./helpers.js";
+import { blockExternalRequests, examples, schemes, withoutMotion } from "./helpers.js";
 
 /*
  * Docs site checks. tests/docs-helpers.js builds _site/ once; see there.
@@ -1250,6 +1250,123 @@ test.describe("docs frame", () => {
       const supported = await page.evaluate(() => matchMedia("(prefers-reduced-transparency: reduce)").matches);
       test.skip(!supported, "this engine has no prefers-reduced-transparency emulation");
       expect(await page.locator("dui-app-shell > header").evaluate((el) => getComputedStyle(el).backdropFilter)).toBe("none");
+    });
+  });
+});
+
+test.describe("docs search", () => {
+  test.use({ viewport: { width: 1280, height: 800 } });
+
+  /** Open the dialog from the app bar's Search button. @param {import("@playwright/test").Page} page */
+  const openSearch = async (page) => {
+    await page.locator("[data-docs-search] button").click();
+    const dialog = page.getByRole("dialog", { name: "Search" });
+    await expect(dialog).toBeVisible();
+    const input = dialog.getByRole("combobox", { name: "Search the docs" });
+    await expect(input).toBeFocused();
+    // Options exist once the index has loaded.
+    await expect.poll(() => page.locator("#docs-search-options option").count()).toBeGreaterThan(100);
+    return { dialog, input };
+  };
+
+  test("the Search button opens a named modal dialog; typing lists pages and headings, Enter on a heading lands on its id", async ({ page, baseURL }) => {
+    const external = await blockExternalRequests(page, /** @type {string} */ (baseURL));
+    await page.goto("_site/index.html");
+    const button = page.locator("[data-docs-search] button");
+    await expect(button).toBeVisible();
+    await expect(button).toHaveAccessibleName("Search");
+    const { dialog, input } = await openSearch(page);
+    expect(await dialog.evaluate((d) => d.matches(":modal"))).toBe(true);
+
+    await input.pressSequentially("dialog");
+    const options = dialog.getByRole("option");
+    await expect(options.first()).toHaveText(/^Dialog and drawer\b/);
+    await expect(dialog.getByRole("option", { name: /^Dialog and drawer › Modal dialog/ })).toBeVisible();
+    const count = await options.count();
+    await expect(dialog.getByRole("status").filter({ hasText: /results?$/ })).toHaveText(`${count} results`);
+
+    // Down Arrow moves through the options with aria-activedescendant, Up Arrow back; focus stays in the input.
+    await input.press("ArrowDown");
+    await expect(input).toHaveAttribute("aria-activedescendant", /-0$/);
+    await input.press("ArrowDown");
+    await input.press("ArrowUp");
+    await expect(input).toHaveAttribute("aria-activedescendant", /-0$/);
+    await expect(input).toBeFocused();
+
+    await input.fill("");
+    await input.pressSequentially("dialog and drawer › modal dialog");
+    await expect(options).toHaveCount(1);
+    await input.press("ArrowDown");
+    await input.press("Enter");
+    await page.waitForURL("**/_site/patterns/dialog.html#modal-dialog");
+    await expect(page.locator("#modal-dialog")).toBeVisible();
+    expect(external).toEqual([]);
+  });
+
+  test("no match shows the empty state; Esc closes the dialog and focus returns to the Search button", async ({ page }) => {
+    await page.goto("_site/index.html");
+    const { dialog, input } = await openSearch(page);
+    await input.pressSequentially("zzzz");
+    await expect(dialog.getByRole("option")).toHaveCount(0);
+    await expect(dialog.locator("[data-search-empty]")).toHaveText("No results for “zzzz”");
+    await expect(dialog.getByRole("status").filter({ hasText: "No results" })).toHaveText("No results");
+    // The first Esc clears the text (the combobox), the next closes the dialog.
+    await input.press("Escape");
+    await expect(input).toHaveValue("");
+    await input.press("Escape");
+    await expect(dialog).toBeHidden();
+    await expect(page.locator("[data-docs-search] button")).toBeFocused();
+  });
+
+  for (const path of ["explainers/drawer.html", "principles/motion.html"]) {
+    test(`works from a nested page (${path})`, async ({ page }) => {
+      await page.goto(`_site/${path}`);
+      const { input } = await openSearch(page);
+      await input.pressSequentially("Getting started");
+      await input.press("ArrowDown");
+      await input.press("Enter");
+      await page.waitForURL("**/_site/index.html");
+    });
+  }
+
+  test("a failed index load says so in the dialog", async ({ page }) => {
+    await page.route("**/search-index.json", (route) => route.fulfill({ status: 500, body: "" }));
+    await page.goto("_site/index.html");
+    await page.locator("[data-docs-search] button").click();
+    await expect(page.locator("[data-search-load]")).toHaveText(/not available/);
+  });
+
+  test("without JavaScript the Search button stays hidden", async ({ browser }) => {
+    const context = await browser.newContext({ javaScriptEnabled: false });
+    const page = await context.newPage();
+    await page.goto("_site/index.html");
+    await expect(page.locator("[data-docs-search]")).toBeHidden();
+    await context.close();
+  });
+
+  for (const scheme of /** @type {const} */ (["light", "dark"])) {
+    test(`axe is clean with the dialog open (${scheme})`, async ({ page }) => {
+      await withoutMotion(page); // axe reads final colors, not a fade
+      await page.emulateMedia({ colorScheme: scheme });
+      await page.goto("_site/index.html");
+      const { input } = await openSearch(page);
+      await input.pressSequentially("tab");
+      await input.press("ArrowDown");
+      const { violations } = await new AxeBuilder({ page }).withTags(WCAG_TAGS).include("#docs-search-dialog").analyze();
+      expect(violations, summarize(violations)).toEqual([]);
+    });
+  }
+
+  test.describe("forced colors", () => {
+    test.use({ forcedColors: "active" });
+
+    test("axe is clean with the dialog open", async ({ page }) => {
+      await withoutMotion(page);
+      await page.goto("_site/index.html");
+      const { input } = await openSearch(page);
+      await input.pressSequentially("tab");
+      const { violations } = await new AxeBuilder({ page }).withTags(WCAG_TAGS).include("#docs-search-dialog").analyze();
+      expect(violations, summarize(violations)).toEqual([]);
     });
   });
 });

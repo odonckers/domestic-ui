@@ -98,9 +98,15 @@ id="main">`, an optional `<aside>` "On this page" and `<footer>`, in that source
 
 - **App bar:** the site name, the top sections (`TOP` in `site/lib/nav.mjs`) as a
   `data-nav="horizontal"` list (`aria-current="page"` on a section's own page, `"true"` on the pages
-  under it), an empty hidden slot for the M4 search, a GitHub link, and the Menu toggle
-  (`aria-controls="docs-nav"`, `hidden` until `<dui-app-shell>` shows it). Below `64rem` of shell
-  width the section links are left out: the sidebar links every page.
+  under it), the Search button (`command="show-modal"` for the search dialog, `hidden` until
+  `site/assets/site.js` shows it; icon only below `30rem` of shell width), the theme menu, a GitHub
+  link, and the Menu toggle (`aria-controls="docs-nav"`, `hidden` until `<dui-app-shell>` shows it).
+  Below `64rem` of shell width the section links are left out: the sidebar links every page.
+- **Search dialog:** after the shell, a modal `<dialog data-dialog closedby="any">` named by its
+  "Search" heading, holding a `<dui-combobox>` labelled "Search the docs" over an empty `<datalist>`.
+  On first open `site.js` fetches `search-index.json` (the URL is in `data-search-index`, relative to
+  the page) and adds one option per page, then one per heading ("Page › Heading"), each hinted with
+  its sidebar entry. Accepting an option goes to the page or `page#id`.
 - **Sidebar:** the Docs entries. Its top-level entries are fixed in `NAV` in `site/lib/nav.mjs`, in
   this order; each links its index page ("Atoms overview") and lists the
 pages of its sections below it, in the order `buildPages()` returns them.

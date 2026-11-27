@@ -142,3 +142,20 @@ test("coloured leading edges are straight: no start-side radius on a thick start
     expect(curved, path).toEqual([]);
   }
 });
+
+test("the search dialog does not scroll sideways at 320 and 375 CSS pixels", async ({ page }) => {
+  for (const viewport of VIEWPORTS) {
+    await page.setViewportSize(viewport);
+    await page.goto("_site/index.html");
+    await page.locator("[data-docs-search] button").click();
+    const input = page.getByRole("combobox", { name: "Search the docs" });
+    await expect(input).toBeFocused();
+    await expect.poll(() => page.locator("#docs-search-options option").count()).toBeGreaterThan(100);
+    await input.pressSequentially("a");
+    await expect(page.locator("#docs-search-dialog [role=option]").first()).toBeVisible();
+    const result = await page.evaluate(overflow);
+    expect(result, `at ${viewport.width}px: ${result}`).toBeNull();
+    const box = await page.locator("#docs-search-dialog").boundingBox();
+    expect(box && box.x >= 0 && box.x + box.width <= viewport.width, `dialog inside the viewport at ${viewport.width}px`).toBe(true);
+  }
+});
