@@ -551,3 +551,13 @@
 dui-app-shell dialog[data-dialog~="drawer"] > :is(nav, aside) {
   margin-block-start: var(--dui-space-s);
 }
+
+/*
+ * Our choice: in a sidebar, a description list's values start on the same
+ * line as their terms. The base indent (css/base/typography.css) helps long
+ * prose lists, but in a narrow panel it reads as a stray gap; the bold term
+ * already tells term and value apart.
+ */
+[data-app-shell] > :is(nav, aside) dd {
+  margin-inline-start: 0;
+}
