@@ -1812,7 +1812,7 @@ Neutral and indigo each have 12 steps in light and in dark. The step number is t
 
 [Custom properties](https://developer.mozilla.org/en-US/docs/Web/CSS/--*).
 
-180 tokens in [`css/tokens/primitives.css`](https://github.com/odonckers/domestic-ui/blob/main/css/tokens/primitives.css). **Light** and **Dark** resolve every `var()` and take one side of [`light-dark()`](https://developer.mozilla.org/en-US/docs/Web/CSS/color_value/light-dark). Previews are decorative.
+181 tokens in [`css/tokens/primitives.css`](https://github.com/odonckers/domestic-ui/blob/main/css/tokens/primitives.css). **Light** and **Dark** resolve every `var()` and take one side of [`light-dark()`](https://developer.mozilla.org/en-US/docs/Web/CSS/color_value/light-dark). Previews are decorative.
 
 ### Neutral, light. Achromatic (chroma 0), as shadcn/ui's neutral base
 
@@ -1895,6 +1895,7 @@ Neutral and indigo each have 12 steps in light and in dark. The step number is t
 | --- | --- | --- | --- |
 | `--dui-color-red-3` | `oklch(95.5% 0.018 27deg)` | `oklch(95.5% 0.018 27deg)` | Step 3, element tint |
 | `--dui-color-red-9` | `oklch(55% 0.19 27deg)` | `oklch(55% 0.19 27deg)` | Step 9, solid With `@media (color-gamut: p3)`: `oklch(55% 0.214 27deg)`. |
+| `--dui-color-red-10` | `oklch(50% 0.19 27deg)` | `oklch(50% 0.19 27deg)` | Step 10, danger fill behind white text (4.5:1), both schemes |
 | `--dui-color-red-11` | `oklch(48% 0.16 27deg)` | `oklch(48% 0.16 27deg)` | Step 11, danger text |
 | `--dui-color-red-dark-3` | `oklch(28% 0.05 27deg)` | `oklch(28% 0.05 27deg)` | Step 3, element tint |
 | `--dui-color-red-dark-9` | `oklch(65% 0.17 27deg)` | `oklch(65% 0.17 27deg)` | Step 9, solid With `@media (color-gamut: p3)`: `oklch(65% 0.215 27deg)`. |
@@ -2135,7 +2136,7 @@ A theme is an override of these tokens on `:root` or on a scoped element. No reb
 
 Colors use [`light-dark()`](https://developer.mozilla.org/en-US/docs/Web/CSS/color_value/light-dark), which picks a value from the used color-scheme of the element where the token is read.
 
-174 tokens in [`css/tokens/semantic.css`](https://github.com/odonckers/domestic-ui/blob/main/css/tokens/semantic.css). **Light** and **Dark** resolve every `var()` and take one side of [`light-dark()`](https://developer.mozilla.org/en-US/docs/Web/CSS/color_value/light-dark). Previews are decorative. † marks a description taken from the semantic token table in [Theming](https://odonckers.github.io/domestic-ui/principles/theming.md).
+177 tokens in [`css/tokens/semantic.css`](https://github.com/odonckers/domestic-ui/blob/main/css/tokens/semantic.css). **Light** and **Dark** resolve every `var()` and take one side of [`light-dark()`](https://developer.mozilla.org/en-US/docs/Web/CSS/color_value/light-dark). Previews are decorative. † marks a description taken from the semantic token table in [Theming](https://odonckers.github.io/domestic-ui/principles/theming.md).
 
 ### Surfaces and text
 
@@ -2172,6 +2173,8 @@ Colors use [`light-dark()`](https://developer.mozilla.org/en-US/docs/Web/CSS/col
 | `--dui-color-accent-indigo` | `oklch(53% 0.215 272deg)` | `oklch(53% 0.215 272deg)` | An indigo accent solid, more vivid on a Display P3 screen. The calm theme points --dui-color-accent at it |
 | `--dui-color-link-visited` | `oklch(46.2% 0.195 299deg)` | `oklch(80.1% 0.127 306deg)` | Visited links |
 | `--dui-color-danger` | `oklch(48% 0.16 27deg)` | `oklch(80% 0.114 27deg)` | Errors and invalid borders |
+| `--dui-color-danger-solid` | `oklch(50% 0.19 27deg)` | `oklch(50% 0.19 27deg)` | Fill of danger buttons, the same red in both schemes, 3:1 against the light page |
+| `--dui-color-danger-contrast` | `oklch(100% 0 0deg)` | `oklch(100% 0 0deg)` | Text on the danger fill, 4.5:1 |
 | `--dui-color-success` | `oklch(47% 0.128 150deg)` | `oklch(80% 0.12 150deg)` | Success messages |
 | `--dui-color-warning` | `oklch(47% 0.098 75deg)` | `oklch(80% 0.12 75deg)` | Warning badges and messages |
 | `--dui-color-info` | `oklch(48% 0.12 245deg)` | `oklch(80% 0.108 245deg)` | Informational alerts, separate from the accent |
@@ -2345,6 +2348,7 @@ Defined in terms of other semantic tokens.
 | `--dui-color-link` | `oklch(from oklch(14.5% 0 0deg) calc(0.47 - max(0, 0.02 - c) * 16.25) calc(c * 0.19 / 0.215) h)` | `oklch(from oklch(98.5% 0 0deg) calc(0.78 + max(0, 0.02 - c) * 10.25) calc(c * 0.11 / 0.215) h)` | Links: the text color with the default neutral accent, told apart by the underline (WCAG 1.4.1) |
 | `--dui-color-focus` | `oklch(from oklch(14.5% 0 0deg) calc(l + max(0, 0.02 - c) * 20.25) c h)` | `oklch(from oklch(from oklch(98.5% 0 0deg) calc(0.78 + max(0, 0.02 - c) * 10.25) calc(c * 0.11 / 0.215) h) calc(l - max(0, 0.02 - c) * 21.25) c h)` | Focus ring, 3:1 (WCAG 1.4.11). A hued accent: the accent solid in light, the accent text in dark. The neutral accent: a mid gray, 55% lightness in light and 56% in dark |
 | `--dui-color-accent-contrast` | `oklch(100% 0 0deg)` | `oklch(from oklch(98.5% 0 0deg) calc(1 - max(0, 0.02 - c) * 42.5) 0 0deg)` | Text on the accent fill: white, except on the neutral dark accent, where it is the dark page color |
+| `--dui-color-danger-solid-hover` | `oklch(from oklch(50% 0.19 27deg) calc(l - 0.04) c h)` | `oklch(from oklch(50% 0.19 27deg) calc(l - 0.04) c h)` | Danger fill hover: 0.04 darker in OKLCH lightness, so white text gains contrast |
 | `--dui-color-accent-hover` | `oklch(from oklch(14.5% 0 0deg) calc(l - 0.02) c h)` | `oklch(from oklch(98.5% 0 0deg) calc(l - 0.02) c h)` | Accent solid hover. Our choice: 0.02 darker in OKLCH lightness, so white text stays 4.5:1 |
 | `--dui-color-primary-hover` | `oklch(from oklch(14.5% 0 0deg) 26% calc(c + 0.002) h)` | `oklch(from oklch(98.5% 0 0deg) 90% calc(c + 0.004) h)` | Primary fill hover, same hue as the primary |
 | `--dui-font-heading` | `system-ui, -apple-system, "Segoe UI Variable Text", "Segoe UI", roboto, "Noto Sans", "Helvetica Neue", arial, sans-serif` | `system-ui, -apple-system, "Segoe UI Variable Text", "Segoe UI", roboto, "Noto Sans", "Helvetica Neue", arial, sans-serif` | Heading font stack † |
@@ -3328,6 +3332,7 @@ _Diagram: Buttons sit at the end of a form in the content area: the primary subm
   <button type="button" data-button="primary">Primary</button>
   <button type="button" data-button="secondary">Secondary</button>
   <button type="button" data-button="quiet">Quiet</button>
+  <button type="button" data-button="danger">Delete</button>
 </div>
 ```
 
@@ -3394,7 +3399,7 @@ _Diagram: Buttons sit at the end of a form in the content area: the primary subm
 
 | Attribute or value | Where | Effect |
 | --- | --- | --- |
-| `data-button="[primary \| secondary \| quiet] [small \| large] [icon]"` | `<button>`, `<input type="submit \| button \| reset">` or `<a href>` | at most one variant word, one size word and icon |
+| `data-button="[primary \| secondary \| quiet \| danger] [small \| large] [icon]"` | `<button>`, `<input type="submit \| button \| reset">` or `<a href>` | at most one variant word, one size word and icon |
 
 - On `<a href>`, it looks like a button and keeps link semantics.
 
@@ -4465,7 +4470,7 @@ _Diagram: A modal dialog sits centred over the dimmed page; a drawer takes the s
   <form method="dialog">
     <footer>
       <button type="submit" value="cancel" data-button="secondary" autofocus>Cancel</button>
-      <button type="submit" value="delete">Delete project</button>
+      <button type="submit" value="delete" data-button="danger">Delete project</button>
     </footer>
   </form>
 </dialog>
@@ -5126,6 +5131,7 @@ _Diagram: Site navigation is the list of main links in the sidebar, with the cur
       </details>
     </li>
     <li><a href="#horizontal-title">Contact</a></li>
+    <li><a href="#horizontal-title" data-button="primary small">Sign up</a></li>
   </ul>
 </nav>
 ```

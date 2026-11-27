@@ -38,6 +38,8 @@
   --dui-color-accent-indigo: light-dark(var(--dui-color-indigo-9), var(--dui-color-indigo-dark-9)); /* An indigo accent solid, more vivid on a Display P3 screen. The calm theme points --dui-color-accent at it */
   --dui-color-link-visited: light-dark(var(--dui-color-purple-11), var(--dui-color-purple-dark-11)); /* Visited links */
   --dui-color-danger: light-dark(var(--dui-color-red-11), var(--dui-color-red-dark-11)); /* Errors and invalid borders */
+  --dui-color-danger-solid: var(--dui-color-red-10); /* Fill of danger buttons, the same red in both schemes, 3:1 against the light page */
+  --dui-color-danger-contrast: var(--dui-color-white); /* Text on the danger fill, 4.5:1 */
   --dui-color-success: light-dark(var(--dui-color-green-11), var(--dui-color-green-dark-11)); /* Success messages */
   --dui-color-warning: light-dark(var(--dui-color-amber-11), var(--dui-color-amber-dark-11)); /* Warning badges and messages */
   --dui-color-info: light-dark(var(--dui-color-blue-11), var(--dui-color-blue-dark-11)); /* Informational alerts, separate from the accent */
@@ -187,6 +189,7 @@
   --dui-color-link: var(--dui-color-accent-text); /* Links: the text color with the default neutral accent, told apart by the underline (WCAG 1.4.1) */
   --dui-color-focus: light-dark(oklch(from var(--dui-color-accent) calc(l + max(0, 0.02 - c) * 20.25) c h), oklch(from var(--dui-color-accent-text) calc(l - max(0, 0.02 - c) * 21.25) c h)); /* Focus ring, 3:1 (WCAG 1.4.11). A hued accent: the accent solid in light, the accent text in dark. The neutral accent: a mid gray, 55% lightness in light and 56% in dark */
   --dui-color-accent-contrast: light-dark(var(--dui-color-white), oklch(from var(--dui-color-accent) calc(1 - max(0, 0.02 - c) * 42.5) 0 0deg)); /* Text on the accent fill: white, except on the neutral dark accent, where it is the dark page color */
+  --dui-color-danger-solid-hover: oklch(from var(--dui-color-danger-solid) calc(l - 0.04) c h); /* Danger fill hover: 0.04 darker in OKLCH lightness, so white text gains contrast */
   --dui-color-accent-hover: oklch(from var(--dui-color-accent) calc(l - 0.02) c h); /* Accent solid hover. Our choice: 0.02 darker in OKLCH lightness, so white text stays 4.5:1 */
   --dui-color-primary-hover: light-dark(oklch(from var(--dui-color-primary) 26% calc(c + 0.002) h), oklch(from var(--dui-color-primary) 90% calc(c + 0.004) h)); /* Primary fill hover, same hue as the primary */
   --dui-font-heading: var(--dui-font-body);

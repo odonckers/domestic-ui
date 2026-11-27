@@ -226,7 +226,7 @@ input:is([type="button"], [type="submit"], [type="reset"]),
 
 :is(button, input:is([type="button"], [type="submit"], [type="reset"])):hover:not(:disabled, [aria-disabled="true"]),
 ::file-selector-button:hover {
-  background-color: var(--dui-color-surface-raised);
+  background-color: var(--dui-color-surface-sunken);
 }
 
 :is(button, input)[type="submit"] {
