@@ -3,7 +3,7 @@ import { existsSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { test, expect } from "@playwright/test";
-import { blockExternalRequests, withoutMotion } from "./helpers.js";
+import { blockExternalRequests, examples, withoutMotion } from "./helpers.js";
 // Builds _site/ when this file is collected, so the docs home is served at /_site/.
 import "./docs-helpers.js";
 
@@ -205,6 +205,38 @@ async function settle(/** @type {import("@playwright/test").Page} */ page) {
   const family = await page.evaluate(() => getComputedStyle(document.body).fontFamily);
   expect(family.toLowerCase()).toContain(font.sans.toLowerCase());
 }
+
+/*
+ * The catalog: every other page under examples/, so a token or component change
+ * that only shows up on, say, the pagination page still fails a shot. Full-page
+ * images in light and dark at both widths, default theme only. The pages above
+ * keep forced colors, open states and the prebuilt themes.
+ * Our choice: full page, because these pages are long specimens and a viewport
+ * crop would leave most of each one unchecked.
+ */
+const shotPaths = new Set(pages.map((shot) => shot.path));
+const catalog = examples.filter((path) => !shotPaths.has(path));
+const catalogAppearances = appearances.filter((appearance) => appearance.forcedColors === "none");
+
+test.describe("catalog", () => {
+  for (const path of catalog) {
+    const id = path.replace(/^examples\//, "").replace(/\.html$/, "").replaceAll("/", "-");
+    for (const viewport of viewports) {
+      for (const appearance of catalogAppearances) {
+        test(`${id} ${viewport.name} ${appearance.name}`, async ({ page, baseURL }) => {
+          const external = await blockExternalRequests(page, /** @type {string} */ (baseURL));
+          await page.setViewportSize({ width: viewport.width, height: viewport.height });
+          await page.emulateMedia({ colorScheme: appearance.colorScheme, forcedColors: appearance.forcedColors, reducedMotion: "reduce" });
+          await installScope(page, { id: "catalog" });
+          await page.goto(path);
+          await settle(page);
+          await expect(page).toHaveScreenshot(`catalog-${id}-${viewport.name}-${appearance.name}.png`, { fullPage: true });
+          expect(external, "screenshot pages must not leave the local server").toEqual([]);
+        });
+      }
+    }
+  }
+});
 
 for (const scope of themeScopes) {
   test.describe(scope.id, () => {

@@ -33,19 +33,23 @@ The default theme should look complete and consistent out of the box. Consumers 
 
 ## Screenshot baselines
 
-`tests/visual.spec.js` records Chromium screenshots of the docs home and the button, field, card, dialog (open), data table, nav and app shell examples. Each page is shot at 1280×800 and 390×844, in light, dark and [forced colors](https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/At-rules/@media/forced-colors). The two widths are the reflow check from [WCAG 2.2 1.4.10](https://www.w3.org/WAI/WCAG22/Understanding/reflow.html). Comparisons use Playwright's [`toHaveScreenshot()`](https://playwright.dev/docs/test-snapshots).
+`tests/visual.spec.js` records Chromium screenshots in two groups, compared with Playwright's [`toHaveScreenshot()`](https://playwright.dev/docs/test-snapshots):
 
-Baselines live in `tests/__screenshots__/`. They are Linux images. On any other operating system the spec skips unless `VISUAL=1` is set, so a macOS `npm test` does not fail on font rendering. Update the baselines in the same pull request as the visual change. On Linux:
+- **Key pages**: the docs home and the button, field, card, dialog (open), data table, nav and app shell examples, plus the themes page. Each is shot at 1280×800 and 390×844, in light, dark and [forced colors](https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/At-rules/@media/forced-colors), and in each prebuilt theme.
+- **Catalog**: every other page under `examples/`, full page, in light and dark at both widths. A new example page joins the catalog on its own; commit its images with the update command below.
+
+The two widths are the reflow check from [WCAG 2.2 1.4.10](https://www.w3.org/WAI/WCAG22/Understanding/reflow.html).
+
+Baselines live in `tests/__screenshots__/`. They are Linux images. On any other operating system the spec skips unless `VISUAL=1` is set, so a macOS `npm test` does not fail on font rendering. Update the baselines in the same pull request as the visual change, and look at every changed image before you commit it.
+
+From any operating system with Docker, after `npm ci`, run the spec in the same Playwright image as CI (the tag is read from `@playwright/test` in `package.json`):
 
 ```bash
-npm run test:visual:update
+npm run test:visual:docker          # compare
+npm run test:visual:docker:update   # rewrite the baselines
 ```
 
-To match the CI browser, run that in the Playwright image named in [`.github/workflows/ci.yml`](.github/workflows/ci.yml) (the tag matches `@playwright/test` in `package.json`):
-
-```bash
-docker run --rm -v "$PWD":/work -w /work -u "$(id -u):$(id -g)" mcr.microsoft.com/playwright:v1.65.1-noble bash -lc "npm ci && npm run test:visual:update"
-```
+Extra arguments go to Playwright, for example `npm run test:visual:docker:update -- -g catalog`. On Linux with the matching browsers installed, `npm run test:visual:update` does the same without Docker.
 
 A prebuilt theme adds an entry to `themeScopes` in the spec and commits the new images with the same command.
 
