@@ -68,7 +68,7 @@ Each is a choice between valid options, not a standard.
   use `aria-disabled` when users should be able to reach the control and read why it is unavailable.
 - **Our choice:** the field's error text starts with the word "Error:" in the markup, rather
   than a CSS icon, so every user and every screen reader gets it with no extra API. Invalid
-  controls also get a thick start border, a shape change as well as a color change.
+  controls also get a 3px halo around them, a shape change as well as a color change.
 - **Our choice:** errors are tied to controls with `aria-describedby`, not `aria-errormessage`,
   because `aria-describedby` has broader screen reader support today (see the support notes on
   [MDN `aria-errormessage`](https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Reference/Attributes/aria-errormessage)).

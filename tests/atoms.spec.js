@@ -185,9 +185,15 @@ test.describe("field", () => {
     }
   });
 
-  test("invalid controls change shape as well as color", async ({ page }) => {
-    const width = (name) => page.getByRole("textbox", { name }).evaluate((el) => Number.parseFloat(getComputedStyle(el).borderInlineStartWidth));
-    expect(await width("Email")).toBeGreaterThan(await width("Display name"));
+  test("invalid controls change shape as well as color: a halo grows around them", async ({ page }) => {
+    // The largest box-shadow spread: the invalid halo is a ring of --dui-focus-width.
+    const spread = (name) =>
+      page.getByRole("textbox", { name }).evaluate((el) => {
+        const lengths = [...getComputedStyle(el).boxShadow.matchAll(/(-?[\d.]+)px\s+(-?[\d.]+)px\s+(-?[\d.]+)px\s+(-?[\d.]+)px/g)];
+        return Math.max(0, ...lengths.map((m) => Number.parseFloat(m[4])));
+      });
+    expect(await spread("Email")).toBeGreaterThanOrEqual(2);
+    expect(await spread("Display name")).toBe(0);
   });
 
   test("native constraint errors get the invalid style after interaction (:user-invalid)", async ({ page }) => {
