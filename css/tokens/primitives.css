@@ -110,6 +110,7 @@
 
   --dui-color-red-3: oklch(95.5% 0.018 27deg); /* Step 3, element tint */
   --dui-color-red-9: oklch(55% 0.19 27deg); /* Step 9, solid */
+  --dui-color-red-10: oklch(50% 0.19 27deg); /* Step 10, danger fill behind white text (4.5:1), both schemes */
   --dui-color-red-11: oklch(48% 0.16 27deg); /* Step 11, danger text */
   --dui-color-red-dark-3: oklch(28% 0.05 27deg); /* Step 3, element tint */
   --dui-color-red-dark-9: oklch(65% 0.17 27deg); /* Step 9, solid */
@@ -231,6 +232,7 @@
   /* Radii */
   --dui-radius-0: 0;
   --dui-radius-1: 0.125rem;
+  --dui-radius-1-5: 0.25rem; /* 4px: checkboxes */
   --dui-radius-2: 0.5rem; /* 8px: controls */
   --dui-radius-3: 0.75rem; /* 12px: surfaces */
   --dui-radius-round: 999rem;
@@ -302,6 +304,7 @@
   --dui-opacity-60: 0.6;
   --dui-mix-3: 3%;
   --dui-mix-8: 8%;
+  --dui-mix-20: 20%;
   --dui-mix-35: 35%;
   --dui-mix-100: 100%;
 }
