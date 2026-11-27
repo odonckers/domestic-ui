@@ -27,6 +27,11 @@ An outside pull request cannot merge until the `owen-gate` check passes, which r
 
 The default theme should look complete and consistent out of the box. Consumers re-theme the system by overriding those tokens.
 
+## Dependencies
+
+The published CSS and web components have no runtime dependencies. A new development dependency comes with a
+security review and a row in [`docs/DEPENDENCIES.md`](docs/DEPENDENCIES.md), in the same pull request.
+
 ## Checks
 
 `npm test` must pass. That run includes html-validate, axe, and stylelint. On Linux it also compares the screenshot baselines.
