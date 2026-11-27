@@ -27,6 +27,10 @@ The default theme should look complete and consistent out of the box. Consumers 
 
 `npm test` must pass. That run includes html-validate, axe, and stylelint. On Linux it also compares the screenshot baselines.
 
+## Dependencies
+
+Every external dependency needs a security review in [SECURITY.md](SECURITY.md#dependency-reviews), in the PR that adds it: npm packages in the root and in each demo app, GitHub Actions, and container images. `npm run lint:deps` (part of `npm test` and CI) fails when one is missing or when a review names something no longer used. That section says what a review covers.
+
 ## Screenshot baselines
 
 `tests/visual.spec.js` records Chromium screenshots of the docs home and the button, field, card, dialog (open), data table, nav and app shell examples. Each page is shot at 1280×800 and 390×844, in light, dark and [forced colors](https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/At-rules/@media/forced-colors). The two widths are the reflow check from [WCAG 2.2 1.4.10](https://www.w3.org/WAI/WCAG22/Understanding/reflow.html). Comparisons use Playwright's [`toHaveScreenshot()`](https://playwright.dev/docs/test-snapshots).
