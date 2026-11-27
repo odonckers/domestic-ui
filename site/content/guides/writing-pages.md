@@ -16,7 +16,7 @@ A page built this way links one stylesheet and writes no CSS. Everything it look
 7. Load `web-components/<name>.js` as a module for each `dui-*` element on the page. Without it the markup still works as plain HTML ([progressive enhancement](https://developer.mozilla.org/en-US/docs/Glossary/Progressive_Enhancement)).
 8. Check the page from a clone of this repository: `node scripts/check-markup.mjs page.html` fails on a `<style>`, an undocumented attribute, word or class, an inline style that sets anything else, and a `dui-*` element whose module is not loaded. Then check it with [axe](https://github.com/dequelabs/axe-core) and at 320px wide ([WCAG 1.4.10](https://www.w3.org/WAI/WCAG22/Understanding/reflow.html)).
 
-Compose before you invent: most interface "components" are arrangements of elements that already look finished together, such as a sign-in card (a `data-card` holding a form), a stat row (a `data-dashboard` of headed sections) or a confirm dialog (a `data-dialog` with a `<footer>` of buttons). This is rung 3 of the [decision ladder](https://github.com/odonckers/domestic-ui/blob/main/docs/ARCHITECTURE.md#3-the-decision-ladder). When a page needs something no composition can say, that is a gap in domestic-ui: [open an issue](https://github.com/odonckers/domestic-ui/issues/new) instead of adding CSS to the page. The vocabulary is part of the [public API](https://github.com/odonckers/domestic-ui/blob/main/docs/ARCHITECTURE.md#4-public-api-and-naming).
+Compose before you invent: most interface "components" are arrangements of elements that already look finished together, such as a sign-in card (a `data-card` holding a form), a [stat row](site:patterns/stat-row.html) (a `.grid` of small cards) or a confirm dialog (a `data-dialog` with a `<footer>` of buttons). This is rung 3 of the [decision ladder](https://github.com/odonckers/domestic-ui/blob/main/docs/ARCHITECTURE.md#3-the-decision-ladder). When a page needs something no composition can say, that is a gap in domestic-ui: [open an issue](https://github.com/odonckers/domestic-ui/issues/new) instead of adding CSS to the page. The vocabulary is part of the [public API](https://github.com/odonckers/domestic-ui/blob/main/docs/ARCHITECTURE.md#4-public-api-and-naming).
 
 ## An application page
 
@@ -49,6 +49,11 @@ Every attribute, word, class, custom element and custom property a page may use,
 | The frame of an app: bar, sidebar, content | [App shell](site:patterns/app-shell.html) |
 | A title, description and actions at the top of a screen | [Page header](site:components/organisms/page-header.html) |
 | Summary numbers and panels that reflow | [Dashboard](site:patterns/dashboard.html) |
+| A row of headline numbers | [Stat row](site:patterns/stat-row.html) |
+| A list or table with nothing in it yet | [Empty state](site:patterns/empty-state.html) |
+| Team members with their roles | [People list](site:patterns/people-list.html) |
+| Recent events, newest first | [Notifications list](site:patterns/notifications-list.html) |
+| The signed-in person's links and sign out | [Account menu](site:patterns/account-menu.html) |
 | A grid of teasers, each with one link | [Card](site:patterns/card.html) in a [`.grid`](site:layouts/grid.html) |
 | Rows of records, sorting, selection | [Data table](site:patterns/data-table.html) with `<dui-table>` |
 | Narrowing a list or table | [Filter bar](site:patterns/filter-bar.html) |

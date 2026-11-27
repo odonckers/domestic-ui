@@ -37,6 +37,9 @@
   gap: var(--cluster-gap, var(--dui-space-s));
   justify-content: var(--cluster-justify, flex-start);
   align-items: var(--cluster-align, center);
+
+  /* A row of items, not running text: the prose measure on <p> and <li> (css/base/document.css) does not cap it, so space-between reaches the far edge. */
+  max-inline-size: none;
 }
 
 :where(ul, ol).cluster {

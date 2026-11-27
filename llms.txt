@@ -82,6 +82,10 @@ Writing a page? Read [Writing pages with no CSS](https://odonckers.github.io/dom
 - [Tabs](https://odonckers.github.io/domestic-ui/patterns/tabs.md): Available. Sections of content shown one at a time, chosen from a list of tabs. Follows [APG Tabs pattern](https://www.w3.org/WAI/ARIA/apg/patterns/tabs/).
 - [Toolbar](https://odonckers.github.io/domestic-ui/patterns/toolbar.md): Available. A row of related controls that is one stop in the tab order. Follows [APG Toolbar pattern](https://www.w3.org/WAI/ARIA/apg/patterns/toolbar/).
 - [Typeahead](https://odonckers.github.io/domestic-ui/patterns/typeahead.md): Available. A text field that suggests values as you type: `<datalist>` first, an APG combobox where it falls short. Follows [HTML `<datalist>` element](https://html.spec.whatwg.org/multipage/form-elements.html#the-datalist-element), [APG Combobox pattern](https://www.w3.org/WAI/ARIA/apg/patterns/combobox/).
+- [Account menu](https://odonckers.github.io/domestic-ui/patterns/account-menu.md): Available. The signed-in person's name and email, links to their account pages and a sign-out button, in a popover. Follows [APG Disclosure pattern](https://www.w3.org/WAI/ARIA/apg/patterns/disclosure/).
+- [Empty state](https://odonckers.github.io/domestic-ui/patterns/empty-state.md): Available. What a list or table shows before it has anything in it, with the action that adds the first item. **Our choice:** A composition, not a component: a `data-card` section with a heading, one muted sentence and a cluster of button links.
+- [Notifications list](https://odonckers.github.io/domestic-ui/patterns/notifications-list.md): Available. Recent events, newest first, each a linked sentence with the time it happened. **Our choice:** A composition, not a component: a `data-card` section holding an ordered `.stack` list, each item one paragraph with a link and a small muted `<time>`.
+- [People list](https://odonckers.github.io/domestic-ui/patterns/people-list.md): Available. A list of people, each with a name, an email and a role badge at the end of the row. **Our choice:** A composition, not a component: a `.stack` list whose items are `.cluster` rows with `--cluster-justify: space-between`, the name in `<strong>` above a small muted email.
 
 ## Organisms
 
@@ -92,6 +96,7 @@ Writing a page? Read [Writing pages with no CSS](https://odonckers.github.io/dom
 - [Data table](https://odonckers.github.io/domestic-ui/patterns/data-table.md): Available. Rows of records in a native `<table>` with a caption, header cells and optional sorting. Follows [HTML `<table>` element](https://html.spec.whatwg.org/multipage/tables.html#the-table-element), [APG Table pattern](https://www.w3.org/WAI/ARIA/apg/patterns/table/).
 - [Filter bar](https://odonckers.github.io/domestic-ui/patterns/filter-bar.md): Available. A row of native form controls that narrows a list or table. **Our choice:** No standard exists: a `<form>` in `<search>` with labelled controls, and the result count as a status message.
 - [Large forms](https://odonckers.github.io/domestic-ui/patterns/large-forms.md): Available. Long forms split into labelled groups, in one or more columns. Follows [HTML `<form>` element](https://html.spec.whatwg.org/multipage/forms.html#the-form-element), [HTML `<fieldset>` element](https://html.spec.whatwg.org/multipage/form-elements.html#the-fieldset-element).
+- [Stat row](https://odonckers.github.io/domestic-ui/patterns/stat-row.md): Available. A row of headline numbers, each a small card with a label, the value and a note. **Our choice:** A composition, not a component: a `.grid` of `data-card` articles, each a muted heading, a lead paragraph with the number in `<strong>` and a small note.
 
 ## Web components
 

@@ -23,7 +23,7 @@ A page built this way links one stylesheet and writes no CSS. Everything it look
 7. Load `web-components/<name>.js` as a module for each `dui-*` element on the page. Without it the markup still works as plain HTML ([progressive enhancement](https://developer.mozilla.org/en-US/docs/Glossary/Progressive_Enhancement)).
 8. Check the page from a clone of this repository: `node scripts/check-markup.mjs page.html` fails on a `<style>`, an undocumented attribute, word or class, an inline style that sets anything else, and a `dui-*` element whose module is not loaded. Then check it with [axe](https://github.com/dequelabs/axe-core) and at 320px wide ([WCAG 1.4.10](https://www.w3.org/WAI/WCAG22/Understanding/reflow.html)).
 
-Compose before you invent: most interface "components" are arrangements of elements that already look finished together, such as a sign-in card (a `data-card` holding a form), a stat row (a `data-dashboard` of headed sections) or a confirm dialog (a `data-dialog` with a `<footer>` of buttons). This is rung 3 of the [decision ladder](https://github.com/odonckers/domestic-ui/blob/main/docs/ARCHITECTURE.md#3-the-decision-ladder). When a page needs something no composition can say, that is a gap in domestic-ui: [open an issue](https://github.com/odonckers/domestic-ui/issues/new) instead of adding CSS to the page. The vocabulary is part of the [public API](https://github.com/odonckers/domestic-ui/blob/main/docs/ARCHITECTURE.md#4-public-api-and-naming).
+Compose before you invent: most interface "components" are arrangements of elements that already look finished together, such as a sign-in card (a `data-card` holding a form), a [stat row](https://odonckers.github.io/domestic-ui/patterns/stat-row.md) (a `.grid` of small cards) or a confirm dialog (a `data-dialog` with a `<footer>` of buttons). This is rung 3 of the [decision ladder](https://github.com/odonckers/domestic-ui/blob/main/docs/ARCHITECTURE.md#3-the-decision-ladder). When a page needs something no composition can say, that is a gap in domestic-ui: [open an issue](https://github.com/odonckers/domestic-ui/issues/new) instead of adding CSS to the page. The vocabulary is part of the [public API](https://github.com/odonckers/domestic-ui/blob/main/docs/ARCHITECTURE.md#4-public-api-and-naming).
 
 ### An application page
 
@@ -335,6 +335,11 @@ Knobs, the only custom properties a `style` attribute should set besides semanti
 | The frame of an app: bar, sidebar, content | [App shell](https://odonckers.github.io/domestic-ui/patterns/app-shell.md) |
 | A title, description and actions at the top of a screen | [Page header](https://odonckers.github.io/domestic-ui/components/organisms/page-header.md) |
 | Summary numbers and panels that reflow | [Dashboard](https://odonckers.github.io/domestic-ui/patterns/dashboard.md) |
+| A row of headline numbers | [Stat row](https://odonckers.github.io/domestic-ui/patterns/stat-row.md) |
+| A list or table with nothing in it yet | [Empty state](https://odonckers.github.io/domestic-ui/patterns/empty-state.md) |
+| Team members with their roles | [People list](https://odonckers.github.io/domestic-ui/patterns/people-list.md) |
+| Recent events, newest first | [Notifications list](https://odonckers.github.io/domestic-ui/patterns/notifications-list.md) |
+| The signed-in person's links and sign out | [Account menu](https://odonckers.github.io/domestic-ui/patterns/account-menu.md) |
 | A grid of teasers, each with one link | [Card](https://odonckers.github.io/domestic-ui/patterns/card.md) in a [`.grid`](https://odonckers.github.io/domestic-ui/layouts/grid.md) |
 | Rows of records, sorting, selection | [Data table](https://odonckers.github.io/domestic-ui/patterns/data-table.md) with `<dui-table>` |
 | Narrowing a list or table | [Filter bar](https://odonckers.github.io/domestic-ui/patterns/filter-bar.md) |
@@ -5498,6 +5503,8 @@ _Diagram: A popover opens from a button, such as Share beside the page heading, 
 | `role="tooltip"` | a `[popover]` element | tooltip look, placed above the trigger |
 | `popover="auto \| manual \| hint"` |  | native: auto light-dismisses, manual does not |
 
+Children: with a `<nav>` of links, the panel takes the menu's inset, so a `<p>` or heading, an `<hr>` and a `<form>` with a quiet button line up with the links (an account popover).
+
 #### Positioning
 
 A popover opened by popovertarget (or by showPopover() with a source) has its invoker as an implicit anchor, so position-area places it next to the button and position-try-fallbacks flips it when it would overflow. Inside @supports only; where anchor positioning is missing the popover sits centered at the bottom of the viewport, readable and clear of the content it belongs to.
@@ -6174,6 +6181,72 @@ For comparison only; these are not the standard this system follows.
 - [Apple Human Interface Guidelines: Combo boxes](https://developer.apple.com/design/human-interface-guidelines/combo-boxes)
 - Material Design 3: No equivalent
 - [Vercel Geist: Combobox](https://vercel.com/geist/combobox)
+
+## Account menu
+
+Page: https://odonckers.github.io/domestic-ui/patterns/account-menu.html
+
+The signed-in person's name and email, links to their account pages and a sign-out button, in a popover.
+
+**Our choice:** A disclosure, not an ARIA menu: the items are links and one form button, so a `data-popover` holding a `<nav>` keeps Tab order and link semantics; the popover lines its other children up with the links.
+
+_Diagram: An account menu opens from the person's name at the end of the header, with their name and email, account links and a sign-out button._
+
+### Live example
+
+#### Account menu
+
+```html
+<button type="button" popovertarget="account" data-button="quiet">Maria Santos</button>
+<div id="account" popover data-popover>
+  <p>
+    <strong>Maria Santos</strong><br>
+    <span data-text="small muted">maria@northwind.example</span>
+  </p>
+  <hr>
+  <nav aria-label="Account" data-nav>
+    <ul>
+      <li><a href="#profile">Profile</a></li>
+      <li><a href="#billing">Billing</a></li>
+      <li><a href="#settings">Settings</a></li>
+    </ul>
+  </nav>
+  <hr>
+  <form action="#sign-out" method="post">
+    <button type="submit" data-button="quiet">Sign out</button>
+  </form>
+</div>
+```
+
+### Attributes
+
+#### Keyboard
+
+See the keyboard section of the [APG Disclosure pattern](https://www.w3.org/WAI/ARIA/apg/patterns/disclosure/).
+
+### Accessibility
+
+- Links that go to other pages are not a menu ([menu button](https://github.com/odonckers/domestic-ui/blob/main/menu-button.html) explains when a menu fits). Tab moves through the links and the sign-out button.
+- Sign out is a form that posts, not a link, so following or prefetching a link never signs anyone out ([HTTP semantics, safe methods](https://www.rfc-editor.org/rfc/rfc9110#section-9.2.1)).
+- The button's name is the person's name, so it reads as whose account this is.
+
+### Specifications
+
+- [APG Disclosure pattern](https://www.w3.org/WAI/ARIA/apg/patterns/disclosure/)
+- [HTML popover attribute](https://html.spec.whatwg.org/multipage/popover.html)
+
+### See also
+
+- [Molecules](https://odonckers.github.io/domestic-ui/molecules/index.md)
+- Source: [`examples/patterns/compositions.html`](https://github.com/odonckers/domestic-ui/blob/main/examples/patterns/compositions.html)
+
+### How other systems do it
+
+For comparison only; these are not the standard this system follows.
+
+- [Apple Human Interface Guidelines: Menus](https://developer.apple.com/design/human-interface-guidelines/menus)
+- [Material Design 3: Menus](https://m3.material.io/components/menus/overview)
+- [Vercel Geist: Menu](https://vercel.com/geist/menu)
 
 ## App shell
 
@@ -7321,6 +7394,55 @@ For comparison only; these are not the standard this system follows.
 - Material Design 3: No equivalent
 - [Vercel Geist: Table](https://vercel.com/geist/table)
 
+## Empty state
+
+Page: https://odonckers.github.io/domestic-ui/patterns/empty-state.html
+
+What a list or table shows before it has anything in it, with the action that adds the first item.
+
+**Our choice:** A composition, not a component: a `data-card` section with a heading, one muted sentence and a cluster of button links.
+
+_Diagram: An empty state fills the content area where a list would be, with a heading, a sentence and the action that adds the first item._
+
+### Live example
+
+#### Empty state
+
+```html
+<section data-card aria-labelledby="no-invoices">
+  <h3 id="no-invoices">No invoices yet</h3>
+  <p data-text="muted">Invoices you create or import show up here, with their status and amount due.</p>
+  <p class="cluster">
+    <a href="#new-invoice" data-button="primary">Create an invoice</a>
+    <a href="#import" data-button="secondary">Import from CSV</a>
+  </p>
+</section>
+```
+
+### Accessibility
+
+- Put the empty state where the list or table would be, under the same page heading, so the page keeps its structure.
+- Say what will appear here and how to add it. The first action is the primary button; any other is secondary.
+- After a search or filter that matches nothing, say so and offer to clear it, rather than suggesting the person create something.
+
+### Specifications
+
+- [HTML `<section>` element](https://html.spec.whatwg.org/multipage/sections.html#the-section-element)
+- [WCAG 3.3.2 Labels or Instructions](https://www.w3.org/WAI/WCAG22/Understanding/labels-or-instructions.html)
+
+### See also
+
+- [Molecules](https://odonckers.github.io/domestic-ui/molecules/index.md)
+- Source: [`examples/patterns/compositions.html`](https://github.com/odonckers/domestic-ui/blob/main/examples/patterns/compositions.html)
+
+### How other systems do it
+
+For comparison only; these are not the standard this system follows.
+
+- Apple Human Interface Guidelines: No equivalent
+- Material Design 3: No equivalent
+- [Vercel Geist: Empty State](https://vercel.com/geist/empty-state)
+
 ## Filter bar
 
 Page: https://odonckers.github.io/domestic-ui/patterns/filter-bar.html
@@ -7849,6 +7971,140 @@ For comparison only; these are not the standard this system follows.
 - [Material Design 3: Canonical layout examples: List-detail](https://m3.material.io/foundations/layout/canonical-examples/list-detail)
 - Vercel Geist: No equivalent
 
+## Notifications list
+
+Page: https://odonckers.github.io/domestic-ui/patterns/notifications-list.html
+
+Recent events, newest first, each a linked sentence with the time it happened.
+
+**Our choice:** A composition, not a component: a `data-card` section holding an ordered `.stack` list, each item one paragraph with a link and a small muted `<time>`.
+
+_Diagram: A notifications list sits in a card in the content area, newest first, each item a linked sentence with its time below._
+
+### Live example
+
+#### Notifications list
+
+```html
+<section data-card aria-labelledby="inbox-title">
+  <h3 id="inbox-title">Notifications</h3>
+  <ol class="stack">
+    <li>
+      <p>
+        <a href="#inv-0318">Analytical Engines Ltd. paid INV-2025-0318</a><br>
+        <span data-text="small muted"><time datetime="2026-11-27T09:12">Today, 9:12</time></span>
+      </p>
+    </li>
+    <li>
+      <p>
+        <a href="#inv-0316">INV-2025-0316 is 60 days overdue</a> <span data-badge="warning">Overdue</span><br>
+        <span data-text="small muted"><time datetime="2026-11-26T16:40">Yesterday, 16:40</time></span>
+      </p>
+    </li>
+    <li>
+      <p>
+        <a href="#team">Amara Okafor accepted your invitation</a><br>
+        <span data-text="small muted"><time datetime="2026-11-24T11:05">Monday, 11:05</time></span>
+      </p>
+    </li>
+  </ol>
+  <footer>
+    <a href="#all-notifications">See all notifications</a>
+  </footer>
+</section>
+```
+
+### Accessibility
+
+- An ordered list, because the order (newest first) means something.
+- Each link says what happened, so it makes sense out of context ([WCAG 2.4.4](https://www.w3.org/WAI/WCAG22/Understanding/link-purpose-in-context.html)). `<time datetime>` gives the machine-readable moment.
+- A notification that arrives while the page is open is a status message: announce it with a [toast](https://github.com/odonckers/domestic-ui/blob/main/alerts.html), and add it to this list.
+
+### Specifications
+
+- [HTML `<ol>` element](https://html.spec.whatwg.org/multipage/grouping-content.html#the-ol-element)
+- [HTML `<time>` element](https://html.spec.whatwg.org/multipage/text-level-semantics.html#the-time-element)
+- [WCAG 2.4.4 Link Purpose (In Context)](https://www.w3.org/WAI/WCAG22/Understanding/link-purpose-in-context.html)
+
+### See also
+
+- [Molecules](https://odonckers.github.io/domestic-ui/molecules/index.md)
+- Source: [`examples/patterns/compositions.html`](https://github.com/odonckers/domestic-ui/blob/main/examples/patterns/compositions.html)
+
+### How other systems do it
+
+For comparison only; these are not the standard this system follows.
+
+- [Apple Human Interface Guidelines: Notifications](https://developer.apple.com/design/human-interface-guidelines/notifications)
+- [Material Design 3: Lists](https://m3.material.io/components/lists/overview)
+- Vercel Geist: No equivalent
+
+## People list
+
+Page: https://odonckers.github.io/domestic-ui/patterns/people-list.html
+
+A list of people, each with a name, an email and a role badge at the end of the row.
+
+**Our choice:** A composition, not a component: a `.stack` list whose items are `.cluster` rows with `--cluster-justify: space-between`, the name in `<strong>` above a small muted email.
+
+_Diagram: A people list sits in a card in the content area, one row per person with their name and email and a role badge at the end._
+
+### Live example
+
+#### People list
+
+```html
+<section data-card aria-labelledby="team-title">
+  <h3 id="team-title">Team</h3>
+  <ul class="stack">
+    <li class="cluster" style="--cluster-justify: space-between">
+      <p>
+        <strong>Maria Santos</strong><br>
+        <span data-text="small muted">maria@northwind.example</span>
+      </p>
+      <span data-badge>Owner</span>
+    </li>
+    <li class="cluster" style="--cluster-justify: space-between">
+      <p>
+        <strong>Kenji Watanabe</strong><br>
+        <span data-text="small muted">kenji@northwind.example</span>
+      </p>
+      <span data-badge>Admin</span>
+    </li>
+    <li class="cluster" style="--cluster-justify: space-between">
+      <p>
+        <strong>Amara Okafor</strong><br>
+        <span data-text="small muted">amara@northwind.example</span>
+      </p>
+      <span data-badge="accent">Invited</span>
+    </li>
+  </ul>
+</section>
+```
+
+### Accessibility
+
+- The role is text in a badge, never a colour alone ([WCAG 1.4.1](https://www.w3.org/WAI/WCAG22/Understanding/use-of-color.html)).
+- When people need sorting, filtering or bulk actions, use a [data table](https://github.com/odonckers/domestic-ui/blob/main/data-table.html) instead.
+
+### Specifications
+
+- [HTML `<ul>` element](https://html.spec.whatwg.org/multipage/grouping-content.html#the-ul-element)
+- [WCAG 1.4.1 Use of Color](https://www.w3.org/WAI/WCAG22/Understanding/use-of-color.html)
+
+### See also
+
+- [Molecules](https://odonckers.github.io/domestic-ui/molecules/index.md)
+- Source: [`examples/patterns/compositions.html`](https://github.com/odonckers/domestic-ui/blob/main/examples/patterns/compositions.html)
+
+### How other systems do it
+
+For comparison only; these are not the standard this system follows.
+
+- [Apple Human Interface Guidelines: Lists and tables](https://developer.apple.com/design/human-interface-guidelines/lists-and-tables)
+- [Material Design 3: Lists](https://m3.material.io/components/lists/overview)
+- Vercel Geist: No equivalent
+
 ## Split
 
 Page: https://odonckers.github.io/domestic-ui/patterns/split.html
@@ -7977,6 +8233,69 @@ For comparison only; these are not the standard this system follows.
 
 - [Apple Human Interface Guidelines: Split views](https://developer.apple.com/design/human-interface-guidelines/split-views)
 - [Material Design 3: Scaffold: Panes](https://m3.material.io/foundations/layout/scaffold/panes)
+- Vercel Geist: No equivalent
+
+## Stat row
+
+Page: https://odonckers.github.io/domestic-ui/patterns/stat-row.html
+
+A row of headline numbers, each a small card with a label, the value and a note.
+
+**Our choice:** A composition, not a component: a `.grid` of `data-card` articles, each a muted heading, a lead paragraph with the number in `<strong>` and a small note.
+
+_Diagram: A row of small cards at the top of the content area, each with a label, a large number and a note._
+
+### Live example
+
+#### Stat row
+
+```html
+<section class="grid" aria-label="This month">
+  <article data-card>
+    <h3 data-text="small muted">Revenue</h3>
+    <p data-text="lead"><strong>€45,231</strong></p>
+    <p data-text="small muted">Up 20% on last month</p>
+  </article>
+  <article data-card>
+    <h3 data-text="small muted">New customers</h3>
+    <p data-text="lead"><strong>2,350</strong></p>
+    <p data-text="small muted">Up 180 on last month</p>
+  </article>
+  <article data-card>
+    <h3 data-text="small muted">Open orders</h3>
+    <p data-text="lead"><strong>128</strong></p>
+    <p data-text="small muted">12 due to ship today</p>
+  </article>
+  <article data-card>
+    <h3 data-text="small muted">Refunds</h3>
+    <p data-text="lead"><strong>€1,204</strong></p>
+    <p><span data-badge="warning">3 waiting</span></p>
+  </article>
+</section>
+```
+
+### Accessibility
+
+- Each stat is a card with its label as the heading, so screen reader users can move between stats by heading.
+- Write the change in words ("Up 20% on last month"), not only as a colour or an arrow ([WCAG 1.4.1](https://www.w3.org/WAI/WCAG22/Understanding/use-of-color.html)).
+- The row reflows from four columns to one without media queries; for a page of headed sections use the [dashboard](https://github.com/odonckers/domestic-ui/blob/main/dashboard.html) instead.
+
+### Specifications
+
+- [HTML `<article>` element](https://html.spec.whatwg.org/multipage/sections.html#the-article-element)
+- [WCAG 1.3.1 Info and Relationships](https://www.w3.org/WAI/WCAG22/Understanding/info-and-relationships.html)
+
+### See also
+
+- [Organisms](https://odonckers.github.io/domestic-ui/organisms/index.md)
+- Source: [`examples/patterns/compositions.html`](https://github.com/odonckers/domestic-ui/blob/main/examples/patterns/compositions.html)
+
+### How other systems do it
+
+For comparison only; these are not the standard this system follows.
+
+- Apple Human Interface Guidelines: No equivalent
+- [Material Design 3: Cards](https://m3.material.io/components/cards/overview)
 - Vercel Geist: No equivalent
 
 ## Web components

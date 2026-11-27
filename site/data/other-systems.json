@@ -443,6 +443,58 @@
         "title": "Grids & spacing: Density"
       },
       "geist": null
+    },
+    "patterns/stat-row": {
+      "apple": null,
+      "material": {
+        "url": "https://m3.material.io/components/cards/overview",
+        "title": "Cards"
+      },
+      "geist": null
+    },
+    "patterns/empty-state": {
+      "apple": null,
+      "material": null,
+      "geist": {
+        "url": "https://vercel.com/geist/empty-state",
+        "title": "Empty State"
+      }
+    },
+    "patterns/people-list": {
+      "apple": {
+        "url": "https://developer.apple.com/design/human-interface-guidelines/lists-and-tables",
+        "title": "Lists and tables"
+      },
+      "material": {
+        "url": "https://m3.material.io/components/lists/overview",
+        "title": "Lists"
+      },
+      "geist": null
+    },
+    "patterns/notifications-list": {
+      "apple": {
+        "url": "https://developer.apple.com/design/human-interface-guidelines/notifications",
+        "title": "Notifications"
+      },
+      "material": {
+        "url": "https://m3.material.io/components/lists/overview",
+        "title": "Lists"
+      },
+      "geist": null
+    },
+    "patterns/account-menu": {
+      "apple": {
+        "url": "https://developer.apple.com/design/human-interface-guidelines/menus",
+        "title": "Menus"
+      },
+      "material": {
+        "url": "https://m3.material.io/components/menus/overview",
+        "title": "Menus"
+      },
+      "geist": {
+        "url": "https://vercel.com/geist/menu",
+        "title": "Menu"
+      }
     }
   }
 }

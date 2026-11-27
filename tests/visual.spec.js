@@ -102,6 +102,14 @@ const pages = [
   { id: "data-table", path: "examples/organisms/data-table.html" },
   { id: "nav", path: "examples/molecules/nav.html" },
   { id: "app-shell", path: "examples/app-shell.html" },
+  {
+    id: "compositions",
+    path: "examples/patterns/compositions.html",
+    prepare: async (page) => {
+      await page.getByRole("button", { name: "Maria Santos" }).click();
+      await expect(page.getByRole("navigation", { name: "Account" })).toBeVisible();
+    },
+  },
   // The theme preview frame paints its heading face on its own schedule, so its pixels vary run to run; docs.spec covers what it shows.
   { id: "themes-page", path: "_site/principles/themes.html", mask: ['iframe[title="Live example: Theme preview"]'] },
 ];
