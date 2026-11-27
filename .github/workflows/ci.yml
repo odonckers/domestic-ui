@@ -41,6 +41,7 @@ jobs:
       - run: npm run lint:css
       - run: npm run lint:tokens
       - run: npm run lint:markup
+      - run: npm run lint:deps
       - name: Generated README.md and llms files are up to date
         run: node site/build.mjs --check
 
