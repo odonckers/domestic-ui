@@ -25,6 +25,9 @@
  * visually hidden hint is added to the caption (", column headers with
  * buttons are sortable."), only once the buttons exist.
  *
+ * Successor: None proposed.
+ * Retire when: Kept.
+ *
  * API
  *   <dui-table>                 wraps the <table data-table> (and its scroll
  *                               container), a role="status" element for the
