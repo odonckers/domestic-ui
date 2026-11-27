@@ -28,9 +28,9 @@ Link `css/domestic.css` (copy `css/` from the v0.1.0 release, https://github.com
 
 ## Tokens
 
-- [Tokens](https://odonckers.github.io/domestic-ui/tokens/index.md): The two tiers of domestic-ui design tokens: 358 custom properties with their light and dark values.
-- [Primitive tokens](https://odonckers.github.io/domestic-ui/tokens/primitives.md): All 181 primitive tokens in css/tokens/primitives.css (internal), with resolved light and dark values.
-- [Semantic tokens](https://odonckers.github.io/domestic-ui/tokens/semantic.md): All 177 semantic tokens in css/tokens/semantic.css (public theming API), with resolved light and dark values.
+- [Tokens](https://odonckers.github.io/domestic-ui/tokens/index.md): The two tiers of domestic-ui design tokens: 360 custom properties with their light and dark values.
+- [Primitive tokens](https://odonckers.github.io/domestic-ui/tokens/primitives.md): All 182 primitive tokens in css/tokens/primitives.css (internal), with resolved light and dark values.
+- [Semantic tokens](https://odonckers.github.io/domestic-ui/tokens/semantic.md): All 178 semantic tokens in css/tokens/semantic.css (public theming API), with resolved light and dark values.
 - [Compact density](https://odonckers.github.io/domestic-ui/patterns/density.md): Available. A compact density token that tightens spacing for data-heavy screens. **Our choice:** No standard exists: `data-density="compact"` on any ancestor re-derives the density tokens; text size never changes and targets stay at least 24 by 24 CSS pixels.
 
 ## Base
@@ -99,6 +99,7 @@ Link `css/domestic.css` (copy `css/` from the v0.1.0 release, https://github.com
 ## Guides
 
 - [Guides](https://odonckers.github.io/domestic-ui/guides/index.md): Step-by-step guides for building with domestic-ui.
+- [Use it with any framework](https://odonckers.github.io/domestic-ui/guides/any-framework.md): The markup is the contract and the framework only holds state. The same three views, built six ways, show how.
 - [From a simple site to an ERP app](https://odonckers.github.io/domestic-ui/guides/simple-site-to-erp-app.md): Five steps from a plain content page to a dense business application, with what is available today.
 
 ## Explainers
@@ -122,7 +123,9 @@ Link `css/domestic.css` (copy `css/` from the v0.1.0 release, https://github.com
 - [Angular](https://github.com/odonckers/domestic-ui/tree/main/demos/angular): The dashboard, account settings and orders views in Angular 22: standalone components, three routes (`''`, `'settings'` and `'orders'`) with Angular Router, a `title` per route, and `routerLinkActive` with `ariaCurrentWhenActive="page"` for the current link.
 - [Astro](https://github.com/odonckers/domestic-ui/tree/main/demos/astro): The dashboard, account settings and orders views as three static Astro pages (`src/pages/index.astro`, `src/pages/settings.astro` and `src/pages/orders.astro`) sharing `src/layouts/Base.astro`.
 - [React](https://github.com/odonckers/domestic-ui/tree/main/demos/react): The dashboard, account settings and orders views in React 19 with Vite, as a three-page [multi-page app](https://vite.dev/guide/build#multi-page-app) (`index.html`, `settings.html` and `orders.html`).
+- [Svelte](https://github.com/odonckers/domestic-ui/tree/main/demos/svelte): The dashboard, account settings and orders views in Svelte 5 with Vite, as a three-page [multi-page app](https://vite.dev/guide/build#multi-page-app) (`index.html`, `settings.html` and `orders.html`).
 - [Plain HTML](https://github.com/odonckers/domestic-ui/tree/main/demos/vanilla): The dashboard, account settings and orders views as three static HTML files, with no build step.
+- [Vue](https://github.com/odonckers/domestic-ui/tree/main/demos/vue): The dashboard, account settings and orders views in Vue 3 with Vite, as a three-page [multi-page app](https://vite.dev/guide/build#multi-page-app) (`index.html`, `settings.html` and `orders.html`) of single-file components.
 - [Views](https://odonckers.github.io/domestic-ui/demos.md): Dashboard, Account settings and Orders, with each app's source file.
 
 ## Contributing
