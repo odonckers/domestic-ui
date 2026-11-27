@@ -35,7 +35,10 @@ Every explainer has these sections, in this order:
 7. **Accessibility mappings**: roles, states, and what assistive technology users should hear.
 8. **Alternatives considered**, each with why it was rejected.
 9. **Prior art**, with links. We cite; we do not copy.
-10. **Open questions**.
+10. **Mapping to a future standard**: the nearest standards effort (an Open UI component, a WHATWG or CSSWG
+    issue) or "none known", how our markup would map onto it, and what a page would rename if it shipped.
+    Where an effort exists, our names follow it.
+11. **Open questions**.
 
 Names follow HTML and ARIA conventions (lowercase, no abbreviations, states in native attributes)
 so a pattern could map onto a future native element or attribute.

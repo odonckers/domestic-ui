@@ -175,6 +175,13 @@ selected item.
 - [Apple Human Interface Guidelines: Split views](https://developer.apple.com/design/human-interface-guidelines/split-views):
   list and detail columns that collapse to one on compact widths.
 
+## Mapping to a future standard
+
+None known for a fixed-ratio split or a list-detail pair; both are standard CSS layout switched by a [container
+query](https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_containment/Container_queries). A resizable divider would
+map onto the [APG Window Splitter](https://www.w3.org/WAI/ARIA/apg/patterns/windowsplitter/) pattern, or onto a native
+splitter if HTML ever gains one; that is why this explainer leaves the divider out today.
+
 ## Open questions
 
 - **A resizable divider.** If added, it MUST follow the APG Window Splitter pattern (a focusable
